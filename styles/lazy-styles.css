@@ -1,0 +1,367 @@
+@import "/hlx_fonts/pnv6nym.css";
+
+/* below the fold */
+
+main p {
+    line-height: 1.5em;
+}
+
+main .template-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+main .template-list > div {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    margin: 20px;
+    justify-content: flex-end;
+    border: 1px solid #ccc;
+}
+
+main .how-to-steps > div {
+  display: flex;
+  text-align: left;
+}
+main .how-to-steps .tip > p {
+  color: #82919b;
+  font-weight: 300;
+  font-size: 1.2em;
+}
+
+main .how-to-steps .tip > h3 {
+  margin-top: 6px;
+}
+
+main .how-to-steps .number span {
+  background-color: #fcce00;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: bold;
+  height: 2.25rem;
+  width: 2.25rem;
+  display: inline-block;
+  line-height: 2rem;
+  padding-top: 0.1rem;
+  width: 2.25rem;
+  padding-left: 0.8rem;
+  box-sizing: border-box;
+  margin-right: 16px;
+}
+
+
+
+main .list {
+    list-style: none;
+    text-align: left;
+    margin-left: 4em;
+    box-sizing: border-box;
+}
+
+main .list ol li {
+    margin: 2em 0;
+    display: block;
+    position: relative;
+    counter-increment: licount;
+  }
+
+main .list ol li::before {
+    background-color: #fcce00;
+    border-radius: 50%;
+    color: #fff;
+    content: counter(licount);
+    font-size: 1.25rem;
+    font-weight: bold;
+    height: 2.25rem;
+    line-height: 2rem;
+    width: 2.25rem;
+    left: -4em;
+    display: inline-block;
+    position: absolute;
+    text-align: center;
+  }
+
+  main ol {
+      text-align: left;
+  }
+
+  main ul {
+    text-align: left;
+  }
+
+  .a-b-test {
+    display: none;
+  }
+
+main .blog-posts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+main .tutorials .filters .tag-filter {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 5px 20px;
+  margin: 5px;
+  display: inline-block;
+}
+
+main .tutorials .filters .tag-filter.selected {
+  background-color: #1473e6;
+  color: white;
+  font-weight: 700;
+}
+
+main .tutorials-container .results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+} 
+
+main .tutorials-container .results.hidden {
+  display: none;
+}
+
+main .tutorials-container .results .tutorial-card {
+  width: 275px;
+  display: flex;
+  flex-direction: column;
+  margin: 20px
+}
+
+main .tutorials-container .results .tutorial-card-img {
+  height: 168px;
+  position: relative;
+}
+
+main .tutorials-container .results .tutorial-card-img.noimg {
+  background: linear-gradient(135deg, rgba(238,140,63,1) 0%, rgba(229,66,50,1) 47%, rgba(155,38,103,1) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+main .tutorial-card .title {
+  font-size: 1.3em;
+}
+
+main .tutorials-container .results .tutorial-card-img .badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  border: 3px solid white;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background-image: url(/icons/spark.svg);
+}
+
+main .tutorials-container .results .tutorial-card-img .duration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  border: 2px solid white;
+  border-radius: 20px;
+  color: white;
+  padding: 2px 10px 4px 10px;
+  font-size: 0.8em;
+}
+
+main .overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main .overlay .overlay-video {
+  margin: 50px;
+}
+
+
+main .tutorials-container .results .tutorial-card-tags span {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  color: lightgray;
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 5px;
+}
+
+main .filter-pages {
+  text-align: left;
+}
+
+main .filter-pages .results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+main .filter-pages .results .card {
+  display: flex;
+  flex-direction: column;
+  width: 217px;
+  margin: 10px;
+  background-color: #eee;
+}
+
+main .filter-pages .results .card img {
+  height: 140px;
+  width: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+main .filter-pages .stats {
+  color: grey;
+  padding: 10px 0;
+}
+
+
+main .filter-pages .results .card-body {
+  padding: 0 10px;
+
+}
+main .filter-pages .results .card-body p {
+  font-size: 0.7em;
+}
+main .filter-pages .results .card-body p b {
+  background-color: lightsalmon;
+}
+
+main .filter-pages input {
+  font-size: 30px;
+  border: none;
+  width: 100%;
+  border-bottom: 1px solid lightgray
+}
+
+main video {
+  max-width: 100%;
+}
+
+main .blog-posts .card {
+  display: flex;
+  flex-direction: column;
+  width: 290px;
+  margin: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+main .blog-posts .card .card-image {
+  line-height: 0;
+}
+
+main .blog-posts .card .card-image img {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+main .blog-posts .card .card-body {
+  padding: 20px;
+  border: 1px solid lightgrey;
+  border-radius: 0 0 5px 5px;
+  border-top: none;
+  height: 300px;
+}
+
+main .blog-posts .card .card-body p {
+  font-size: 1rem;
+}
+/* blog page */
+
+.blog-page main .section-wrapper:not(.hero) {
+    text-align: left;
+}
+
+.blog-page main > .section-wrapper:not(.hero) > div {
+    background-color: white;
+    max-width: 900px;
+}
+
+.blog-page main > .section-wrapper:not(.hero) {
+    background-color: #ddd;
+}
+
+.blog-page main h2 {
+    font-size: 2.4rem;
+}
+
+.blog-page main h3 {
+    font-size: 1.8rem;
+}
+
+  footer div.grey {
+    color: #82919b;
+    background-color: #35414c;
+    padding: 20px;
+  }
+
+  footer div.grey p {
+    font-size: 0.9em;
+  }
+
+  footer div.dark {
+    background-color: #242c33;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+footer > div > div {
+    max-width: 800px;
+    margin: auto;
+}
+footer div.grey a:any-link {
+    color: white;
+    text-decoration: none;
+}
+
+  footer div.dark a:any-link {
+    color: white;
+    text-decoration: none;
+  }
+
+  footer div.dark ul {
+    list-style: none;
+    padding: 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9em;
+  }
+
+  footer div.dark ul li {
+    margin: 0;
+    padding: 0;
+    width: 250px;
+    padding: 5px;
+  }
+  @media (min-width: 600px) {
+    p, ul, ol {
+        font-size: 1.2rem;
+    }
+  }
+
+@media (min-width: 900px) {
+    p, ul, ol {
+        font-size: 1.4rem;
+    }
+      
+}

@@ -1,0 +1,126 @@
+body {
+    font-family: 'adobe-clean', 'Adobe Clean';
+    margin: 0;
+    padding: 0;
+}
+header {
+    height: 64px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    margin: 20px;
+}
+
+header .icon {
+    height: 35px;
+    width: 35px;
+    position: relative;
+    top: 0;
+    margin-right: 10px;
+}
+
+header .logo {
+    display: inline-flex;
+    align-self: center;
+    font-size: 27px;
+    font-weight: 200;
+    margin: 5px;
+    color: #888;
+}
+
+a.button:any-link {
+    text-decoration: none;
+    border-radius: 18px;
+    padding: 0px 1.2em;
+    height: 36px;
+    outline: none;
+    text-align: center;
+    line-height: 34px;
+    font-size: 1rem;
+    background-color: #1473e6;
+    font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color .4s;
+    margin: 10px;
+    display: inline-block;
+}
+
+main {
+    text-align: center;
+}
+
+main img {
+    max-width: 100%;
+}
+
+main .section-wrapper>div {
+    margin: auto; 
+    max-width: 950px;
+    padding: 64px 32px;
+}
+
+main .hero {
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,.25);
+    position: relative;
+    padding: 64px 32px;
+}
+
+main .hero.hero-noimage {
+    color: black;
+}
+
+main .hero h1 {
+    font-size: 2em;
+    font-weight: 900;
+}
+
+main .hero .hero-bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    z-index: -1;
+}
+
+main .hero .hero-bg img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.blog-page main .byline {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.blog-page main .byline img {
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+    margin-bottom: -3px;
+    opacity: 0.5;
+}
+
+main .section-wrapper.hero > div {
+    padding: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (min-width:600px) {
+    main>.hero h1 {
+        font-size: 3em;
+    }
+}
+
+@media (min-width:900px) {
+    main>.hero h1 {
+        font-size: 3.5em;
+    }
+}

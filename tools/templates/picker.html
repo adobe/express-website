@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <title>Spark - Template picker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+      body {
+        font-family: 'Adobe Clean';
+      }
+
+      main {
+        padding: 20px;
+        font-size: 1.3rem;
+        line-height: 1.2em;
+      }
+
+      main select {
+        font-size: 1rem;
+        border: none;
+        border-bottom: solid 1px grey;
+        padding-top: 5px;
+      }
+    
+      main input {
+        width: 50%;
+        font-size: 2rem;
+        border: none;
+        border-bottom: solid 1px grey;
+        padding-top: 5px;
+      }
+
+      main .filter {
+        padding: 20px 10px 20px 10px;
+      }
+
+      main button {
+        border-radius: 1em;
+        padding: 5px 20px;
+        font-size: 1.5rem;
+      }
+
+
+      #results {
+        display: flex;
+        flex-wrap: wrap;
+        padding-bottom: 150px;
+      }
+
+      #results .template {
+        user-select: none;
+
+        margin: 10px;
+
+        max-width: 240px;
+        width: 240px; 
+        max-height: 240px;
+        height: 240px;
+        min-height: 240px;
+
+        align-self: flex-end;
+        background-color: #dce0e3;
+        margin: 15px 8px 65px 16px;
+        position: relative;
+      }
+
+      #results .template .thumbnail-container {
+        height: 100%;
+        position: relative;
+        width: 100%;
+      }
+
+      #results .template img {
+        background: #dce0e3 center center/contain no-repeat;
+        height: 100%;
+        object-fit: contain;
+        width: 100%;
+        float: left;
+      }
+
+      #results .template a {
+        text-decoration: none;
+      }
+
+      #results .template .title {
+        background-color: #fff;
+        border: solid 1px #dce0e3;
+        padding: 10px;
+
+        text-align: left;
+        font-weight: 400;
+        font-size: 13px;
+        min-height: 48px;
+      }
+
+      #results .selected {
+        opacity: 0.2;
+        background-color: lightgrey;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #selectionPanel {
+        position: fixed;
+        bottom: 0;
+        background-color: lightsalmon;
+        padding-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        left: 0;
+        user-select: none;
+      }
+
+      #selectionPanel button:disabled {
+        background-color: #ccc;
+        color: grey;
+      }
+
+      #selectionPanel button {
+        background-color: #F25749;
+        color: white;
+        position: absolute;
+        right: 10px;
+        bottom: 50px;
+        border: 1px solid white;
+        font-size: 13px;
+      }
+
+
+      #selectionPanel #selectedList {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      #selectionPanel .selectedTemplate {
+        user-select: none;
+        margin: 10px;
+        max-width: 100px;
+        width: 100x;
+        max-height: 100px;
+        height: 100px;
+        min-height: 100px;
+        align-self: flex-end;
+        background-color: #dce0e3;
+        position: relative;
+      }
+
+      #selectionPanel .selectedTemplate img {
+        background: #dce0e3 center center/contain no-repeat;
+        height: 100%;
+        object-fit: contain;
+        width: 100%;
+        float: left;
+      }
+
+    </style>
+    <script>
+      let nbSelected = 0;
+      const templateSelection = {};
+
+      const find = async (q) => {
+        const params = {
+          q,
+          filters: 'branchURL:*',
+        }
+        const urlParams = new URLSearchParams(Object.entries(params));
+        const res = await fetch(`https://spark-search.adobe.io/v2/content?${urlParams}`, { 
+          headers: { 
+            'x-api-key': 'Helix_Spark_Content_Search'
+          },
+        });
+
+        const json = await res.json();
+        return json._embedded && json._embedded.results ? json._embedded.results : [];
+      }
+
+      const unselect = (id) => {
+        delete templateSelection[id];
+        nbSelected--;
+
+        const elem = document.querySelector(`#results [data-id="${id}"]`);
+        if (elem) {
+          elem.classList.remove('selected');
+        }
+        drawSelection();
+      }
+
+      const select = (id, template) => {
+        templateSelection[id] = template;
+        nbSelected++;
+
+        const elem = document.querySelector(`#results [data-id="${id}"]`);
+        if (elem) {
+          elem.classList.add('selected');
+        }
+        drawSelection();
+      }
+
+      const drawSelection = () => {
+        const selectedList = document.getElementById('selectedList');
+        let html = '';
+        for(let p in templateSelection) {
+          const t = templateSelection[p];
+          html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
+              <img src="${t.img}">
+            </div>`;
+        };
+
+        const selectionPanel = document.getElementById('selectionPanel');
+        if (html === '') {
+          selectionPanel.classList.add('hidden');
+          selectedList.innerHTML = html;
+        } else {
+          selectedList.innerHTML = html;
+          selectionPanel.classList.remove('hidden');
+        }
+      }
+
+      const search = async () => {
+        const q = document.getElementById('search');
+        const array = await find(q.value || '');
+        if (array) {
+          const resultContainer = document.querySelector('#results');
+          resultContainer.innerHTML = '';
+          array.forEach(t => {
+            const href = t.rendition.href
+              .replace('\{format\}', 'jpg')
+              .replace('\{dimension\}', 'width')
+              .replace('\{size\}', t.rendition.maxWidth || 1200);
+
+            const template = document.createElement('div');
+            template.classList.add('template');
+            template.setAttribute('data-id', t.branchURL);
+
+            template.innerHTML += `
+              <div class="thumbnail-container">
+                <img src="${href}">
+              </div>
+              <a href="${t.branchURL}" target="_blank">
+                <div class="title">${t.title}</div>
+              </a>`;
+
+            template.addEventListener('click', () => {
+              if (template.classList.contains('selected')) {
+                unselect(t.branchURL);
+              } else {
+                select(t.branchURL, {
+                  img: href,
+                  title: t.title,
+                  branchURL: t.branchURL
+                });
+              }
+
+              const copySelectionButton = document.getElementById('copyselection');
+              if (nbSelected > 0) {
+                copySelectionButton.disabled = false;
+              } else {
+                copySelectionButton.disabled = true;
+              }
+            });
+
+            resultContainer.append(template);
+          });
+        }        
+      }
+
+      const IMG_EXPORT_WIDTH = 180;
+
+      const insert = (template) => {
+        const tbody = document.querySelector('#copybuffer tbody');
+        
+        const row = document.createElement('tr');
+        tbody.append(row);
+
+        const imgCell = document.createElement('td');
+        imgCell.style.border = '1px solid black';
+        imgCell.style.textAlign = 'center';
+        imgCell.style.verticalAlign = 'middle';
+
+        row.append(imgCell);
+        const img = document.createElement('img');
+        img.src = template.img;
+        img.alt = template.title;
+        img.width = IMG_EXPORT_WIDTH;
+
+        imgCell.append(img);
+
+        const linkCell = document.createElement('td');
+        linkCell.style.border = '1px solid black';
+        linkCell.style.textAlign = 'left';
+        linkCell.style.verticalAlign = 'middle';
+        row.append(linkCell);
+        const link = document.createElement('a');
+        link.href = template.branchURL;
+        link.innerHTML = 'Edit this template';
+        linkCell.append(link);
+
+        img.height = (IMG_EXPORT_WIDTH / img.naturalWidth) * img.naturalHeight;
+      }
+
+      const copyHTMLToClipboard = (html) => {
+        const callback = (e) => {
+          e.clipboardData.setData('text/html', html);
+          e.clipboardData.setData('text/plain', html);
+          e.preventDefault();
+        };
+
+        document.addEventListener('copy', callback);
+        document.execCommand('copy');
+        document.removeEventListener('copy', callback);
+      };
+
+      const clear = () => {
+        const tbody = document.querySelector('#copybuffer tbody');
+        tbody.innerHTML = '';
+      }
+
+      const copy = () => {
+
+        clear();
+
+        for(let p in templateSelection) {
+          insert(templateSelection[p]);
+        }
+
+        const div = document.getElementById('copybuffer');
+        copyHTMLToClipboard(div.innerHTML);
+      }
+
+      const searchOnReturn = (event) => {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          search();
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>Pick your templates</h1>
+      <div class="filter">
+        <input autocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
+        <button type="button" onclick="search()">Search</button>
+      </div>
+      <div id="results"></div>
+      <div id="selectionPanel" class="hidden">
+        <div id="selectedList"></div>
+        <button type="button" onclick="copy()" id="copyselection" disabled="true">Copy Selection</button>
+      </div>
+    </main>
+    <div class="hidden" id="copybuffer">
+      <table cellpadding="0" cellspacing="0" style="border: 1px solid black; border-spacing: 0; width: 100%">
+        <thead>
+            <tr>
+              <th style="border: 1px solid black; background-color: rgb(211, 211, 211);" colspan="2">Template List</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    
+    <script>
+      window.addEventListener('DOMContentLoaded', async (event) => {
+        
+      });
+    </script>
+  </body>
+</html>

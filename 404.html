@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Adobe Spark: Page not found</title>
+  <script type="text/javascript">
+	window.isErrorPage = true;
+	window.errorCode = '404';
+  </script>
+  <esi:include src="/head.html" onerror="continue"/>
+</head>
+<body>
+  <!--  header -->
+  <header><esi:include src="/header.plain.html" onerror="continue"/></header>
+  <!--  main content -->
+  <main>
+	  <div class="default">
+		<h2></h2>
+		<p class="detail"></p>
+		<nav class="list">
+			<a class="gotohome" href="/"></a>
+			<a class="searchadobe" href="https://adobe.com/search.html"></a>
+		</nav>
+		<cite>
+			<a href="https://www.behance.net/rsvn" target="_blank">The Story Begins Here by Risfan Fardiansyah</a>	
+		</cite>
+	  </div>
+  </main>
+  <!--  footer -->
+  <footer><esi:include src="/footer.plain.html"  onerror="continue"/></footer>
+</body>
+</html>
