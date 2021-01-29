@@ -343,7 +343,7 @@ function decorateHowTo() {
   })
 }
 
-function decorateABTests() {
+async function decorateABTests() {
   let runTest=true;
   let reason='';
 
@@ -385,7 +385,13 @@ function decorateABTests() {
           test-=e.traffic;
       })
   
-      if (selectedUrl) window.location.replace(selectedUrl);
+      if (selectedUrl) {
+        console.log(selectedUrl);
+        const plainUrl=selectedUrl.replace('.html', '')+'.plain.html';
+        const resp=await fetch(plainUrl); 
+        const html=await resp.text();
+        document.querySelector('main').innerHTML=html;
+      }
   } else {
       console.log(`Test is not run => ${reason}`);
   }
@@ -762,9 +768,9 @@ function decorateMetaData() {
   }
 }
 
-function decoratePage() {
+async function decoratePage() {
+    await decorateABTests();
     decoratePictures();
-    decorateABTests();
     decorateTables();
     wrapSections('main>div');
     decorateHeader();
