@@ -254,6 +254,74 @@ main video {
   max-width: 100%;
 }
 
+main .steps-container {
+  background-color: #eee;
+}
+
+main .steps {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+  margin: auto;
+}
+
+main .steps > div {
+  display: flex;
+  text-align: left;
+  align-items: center;
+}
+
+main .checker-board-dark-container {
+  background-color: black;
+  color: white;
+}
+
+main .embed-internal-domore h2::after {
+  content: ' \25BC';
+}
+
+main .embed-internal-domore h2.open::after {
+  content: ' \25B2';
+}
+
+main .embed-internal-domore .actions {
+  display: none;
+  justify-content: center;
+}
+
+main .embed-internal-domore .actions > p {
+  margin: 2px 0;
+}
+
+main .embed-internal-domore .actions.open {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+
+@media (min-width: 800px) {
+
+  main .checker-board {
+    max-width: 900px;
+  }
+  
+  main .checker-board > div {
+    display: flex;
+  }
+
+  main .checker-board > div:nth-child(odd) {
+    flex-direction: row-reverse;
+  }
+
+  main .checker-board > div > div{
+    width: 50%;
+    padding: 20px;
+    text-align: left;
+  }
+}
+
 main .blog-posts .card {
   display: flex;
   flex-direction: column;

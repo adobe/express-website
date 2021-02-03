@@ -95,13 +95,52 @@ function decoratePictures() {
   }
 }
 
+function decorateDoMoreEmbed() {
+  document.querySelectorAll('div.embed-internal-domore > div').forEach(($domore) => {
+    const $ps=$domore.querySelectorAll(':scope>p');
+    const $h2=$domore.querySelector(':scope>h2');
+    if ($h2) {
+      $h2.addEventListener('click',(evt) => {
+        $action.classList.toggle('open');
+        $h2.classList.toggle('open');
+      });
+    }
+    const $action=createTag('div', {class: 'actions'});
+    $ps.forEach(($p) => {
+      $action.append($p);
+    });
+    $domore.append($action);
+  });
+}
+
+function decorateCheckerBoards() {
+  const blobPrefix = "https://hlx.blob.core.windows.net/external/";
+  document.querySelectorAll(`div.checker-board a[href^="${blobPrefix}`).forEach(($a) => {
+    if ($a.href.endsWith('.mp4')) {
+      const hostPrefix = location.hostname.includes('localhost')?'https://spark-website--adobe.hlx.live':'';
+      const $cell = $a.closest('div');
+      const vid=$a.href.substring(blobPrefix.length).split('#')[0];
+      $cell.innerHTML=`<video playsinline autoplay loop muted><source loading="lazy" src="${hostPrefix}/hlx_${vid}.mp4" type="video/mp4"></video>`;
+    }
+  })
+}
+
 function decorateBlocks() {
   document.querySelectorAll('div.block').forEach(($block) => {
+    const classes = Array.from($block.classList.values());
+    const blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
     if ($section) {
-      const classes = Array.from($block.classList.values());
-      $section.classList.add(`${classes[0]}-container`);
+      $section.classList.add(`${blockName}-container`);
     }
+    const blocksWithOptions = ['checker-board'];
+    blocksWithOptions.forEach((b) => {
+      if (blockName.startsWith(`${b}-`)) {
+        const options = blockName.substring(b.length+1).split('-');
+        $block.classList.add(b);
+        $block.classList.add(...options);
+      }
+    });
   });
 }
 
@@ -822,6 +861,8 @@ async function decoratePage() {
   decorateBlogPage();
   decorateTutorials();
   decorateMetaData();
+  decorateCheckerBoards();
+  decorateDoMoreEmbed();
 }
 
 decoratePage();
