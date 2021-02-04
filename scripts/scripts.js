@@ -97,15 +97,15 @@ function decoratePictures() {
 
 function decorateDoMoreEmbed() {
   document.querySelectorAll('div.embed-internal-domore > div').forEach(($domore) => {
-    const $ps=$domore.querySelectorAll(':scope>p');
-    const $h2=$domore.querySelector(':scope>h2');
+    const $ps = $domore.querySelectorAll(':scope>p');
+    const $h2 = $domore.querySelector(':scope>h2');
+    const $action = createTag('div', { class: 'actions' });
     if ($h2) {
-      $h2.addEventListener('click',(evt) => {
+      $h2.addEventListener('click', () => {
         $action.classList.toggle('open');
         $h2.classList.toggle('open');
       });
     }
-    const $action=createTag('div', {class: 'actions'});
     $ps.forEach(($p) => {
       $action.append($p);
     });
@@ -114,15 +114,15 @@ function decorateDoMoreEmbed() {
 }
 
 function decorateCheckerBoards() {
-  const blobPrefix = "https://hlx.blob.core.windows.net/external/";
+  const blobPrefix = 'https://hlx.blob.core.windows.net/external/';
   document.querySelectorAll(`div.checker-board a[href^="${blobPrefix}`).forEach(($a) => {
     if ($a.href.endsWith('.mp4')) {
-      const hostPrefix = location.hostname.includes('localhost')?'https://spark-website--adobe.hlx.live':'';
+      const hostPrefix = window.location.hostname.includes('localhost') ? 'https://spark-website--adobe.hlx.live' : '';
       const $cell = $a.closest('div');
-      const vid=$a.href.substring(blobPrefix.length).split('#')[0];
-      $cell.innerHTML=`<video playsinline autoplay loop muted><source loading="lazy" src="${hostPrefix}/hlx_${vid}.mp4" type="video/mp4"></video>`;
+      const vid = $a.href.substring(blobPrefix.length).split('#')[0];
+      $cell.innerHTML = `<video playsinline autoplay loop muted><source loading="lazy" src="${hostPrefix}/hlx_${vid}.mp4" type="video/mp4"></video>`;
     }
-  })
+  });
 }
 
 function decorateBlocks() {
@@ -136,7 +136,7 @@ function decorateBlocks() {
     const blocksWithOptions = ['checker-board'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
-        const options = blockName.substring(b.length+1).split('-');
+        const options = blockName.substring(b.length + 1).split('-');
         $block.classList.add(b);
         $block.classList.add(...options);
       }
