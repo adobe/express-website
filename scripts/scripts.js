@@ -152,8 +152,8 @@ function decorateAnimations() {
     const $parent = $a.parentNode;
 
     if (href.endsWith('.mp4')) {
-      // const isAnimation=$a.closest('.animation')?true:false;
-      const isAnimation = true;
+      const isAnimation = !!$a.closest('.animation');
+      // const isAnimation = true;
 
       let attribs = { controls: '' };
       if (isAnimation) {
