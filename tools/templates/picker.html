@@ -214,13 +214,13 @@
         let html = '';
         for(let p in templateSelection) {
           const t = templateSelection[p];
-          if (t.animated) {
+          if (t.animation) {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
-                <video src="${t.media}" autoplay="true" loop="true">
+                <video src="${t.animation}" autoplay="true" loop="true">
               </div>`;
           } else {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
-                <img src="${t.media}">
+                <img src="${t.img}">
               </div>`;
             }
         };
@@ -247,19 +247,17 @@
               .replace('\{dimension\}', 'width')
               .replace('\{size\}', t.rendition.maxWidth || 1200);
 
-            const screenshot = href;
-
-            if (t.animated) {
-              const animationRoot = t.rendition.href.split('rendition')[0];
-              const version = t.rendition.href.split('/version/')[1].split('/')[0];
-              href = animationRoot + "dcx/" + t.id + "/content/videoRendition.mp4/version/" + version;
-            }
+            const img = href;
 
             const template = document.createElement('div');
             template.classList.add('template');
             template.setAttribute('data-id', t.branchURL);
 
             if (t.animated) {
+              const animationRoot = t.rendition.href.split('rendition')[0];
+              const version = t.rendition.href.split('/version/')[1].split('/')[0];
+              href = animationRoot + "dcx/" + t.id + "/content/videoRendition.mp4/version/" + version;
+
               template.innerHTML += `
                 <div class="thumbnail-container">
                   <video src="${href}" autoplay="true" loop="true">
@@ -286,11 +284,10 @@
                 unselect(t.branchURL);
               } else {
                 select(t.branchURL, {
-                  media: href,
-                  screenshot,
+                  img,
                   title: t.title,
                   branchURL: t.branchURL,
-                  animated: t.animated
+                  animation: t.animated ? href : null,
                 });
               }
 
@@ -322,16 +319,16 @@
 
         row.append(imgCell);
         const img = document.createElement('img');
-        img.src = template.screenshot;
+        img.src = template.img;
         img.alt = template.title;
         img.width = IMG_EXPORT_WIDTH;
 
         imgCell.append(img);
 
-        if (template.animated) {
+        if (template.animation) {
           imgCell.append(document.createElement('br'));
           const link = document.createElement('a');
-          link.href = template.media;
+          link.href = template.animation;
           link.innerHTML = 'Animation';
           imgCell.append(link);
         }
