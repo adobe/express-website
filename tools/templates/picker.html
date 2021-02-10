@@ -171,22 +171,6 @@
       let nbSelected = 0;
       const templateSelection = {};
 
-      const find = async (q) => {
-        const params = {
-          q,
-          filters: 'branchURL:*',
-        }
-        const urlParams = new URLSearchParams(Object.entries(params));
-        const res = await fetch(`https://spark-search.adobe.io/v2/content?${urlParams}`, { 
-          headers: { 
-            'x-api-key': 'Helix_Spark_Content_Search'
-          },
-        });
-
-        const json = await res.json();
-        return json._embedded && json._embedded.results ? json._embedded.results : [];
-      }
-
       const unselect = (id) => {
         delete templateSelection[id];
         nbSelected--;
@@ -214,13 +198,15 @@
         let html = '';
         for(let p in templateSelection) {
           const t = templateSelection[p];
-          if (t.animation) {
+          if (t.animated) {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
-                <video src="${t.animation}" autoplay="true" loop="true">
+                <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${t.thumbnail}">
+                  <source src="${t.asset}" type="video/mp4">
+                </video>
               </div>`;
           } else {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
-                <img src="${t.img}">
+                <img src="${t.thumbnail}">
               </div>`;
             }
         };
@@ -235,19 +221,75 @@
         }
       }
 
+      const API_ROOT = 'https://spark-search.adobe.io';
+
+      async function asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+          await callback(array[index], index, array);
+        }
+      }
+
       const search = async () => {
+        const resultContainer = document.querySelector('#results');
+        resultContainer.innerHTML = '';
+
         const q = document.getElementById('search');
-        const array = await find(q.value || '');
-        if (array) {
-          const resultContainer = document.querySelector('#results');
-          resultContainer.innerHTML = '';
-          array.forEach(t => {
-            let href = t.rendition.href
+
+        if (window.history.pushState) {
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.set('q', q.value);
+
+          const url = new URL(window.location.href);
+          url.search = searchParams.toString();
+          window.history.pushState({
+            path: url.href
+          }, '', url.href);
+        }
+        
+        const params = {
+          q: q.value,
+          filters: 'branchURL:*',
+          limit: 100,
+        };
+
+        const options = { 
+          headers: { 
+            'x-api-key': 'Helix_Spark_Content_Search'
+          },
+        };
+
+        const urlParams = new URLSearchParams(Object.entries(params));
+
+        let res = await fetch(`${API_ROOT}/v2/content?${urlParams}`, options);
+
+        let json = await res.json();
+        let results = json && json._embedded && json._embedded.results ? json._embedded.results : [];
+
+        const allResults = [];
+        let duplicates = 0;
+        const searchTotal = json._embedded.total;
+        let total = 0;
+        while (results.length > 0) {
+          await asyncForEach(results, async t => {
+            // API seems to return duplicates
+
+            if (allResults.indexOf(t.id) !== -1) {
+              return;
+            } else {
+              allResults.push(t.id);
+            }
+
+            total++;
+
+            let asset = t.rendition.href
               .replace('\{format\}', 'jpg')
               .replace('\{dimension\}', 'width')
               .replace('\{size\}', t.rendition.maxWidth || 1200);
 
-            const img = href;
+            const thumbnail = t.rendition.href
+              .replace('\{format\}', 'jpg')
+              .replace('\{dimension\}', 'width')
+              .replace('\{size\}', 240);
 
             const template = document.createElement('div');
             template.classList.add('template');
@@ -256,11 +298,13 @@
             if (t.animated) {
               const animationRoot = t.rendition.href.split('rendition')[0];
               const version = t.rendition.href.split('/version/')[1].split('/')[0];
-              href = animationRoot + "dcx/" + t.id + "/content/videoRendition.mp4/version/" + version;
+              asset = animationRoot + "dcx/" + t.id + "/content/videoRendition.mp4/version/" + version;
 
               template.innerHTML += `
                 <div class="thumbnail-container">
-                  <video src="${href}" autoplay="true" loop="true">
+                    <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${thumbnail}">
+                  <source src="${asset}" type="video/mp4">
+                </video>
                 </div>
                 <a href="${t.branchURL}" target="_blank">
                   <div class="title">${t.title}</div>
@@ -268,7 +312,7 @@
             } else {
               template.innerHTML += `
                 <div class="thumbnail-container">
-                  <img src="${href}">
+                  <img loading="lazy" src="${thumbnail}">
                 </div>
                 <a href="${t.branchURL}" target="_blank">
                   <div class="title">${t.title}</div>
@@ -284,10 +328,11 @@
                 unselect(t.branchURL);
               } else {
                 select(t.branchURL, {
-                  img,
+                  asset,
+                  thumbnail,
                   title: t.title,
                   branchURL: t.branchURL,
-                  animation: t.animated ? href : null,
+                  animated: t.animated,
                 });
               }
 
@@ -301,7 +346,18 @@
 
             resultContainer.append(template);
           });
-        }        
+
+          if (json._links && json._links.next && json._links.next.href) {
+            res = await fetch(`${API_ROOT}${json._links.next.href}`, options);
+
+            json = await res.json();
+            results = json && json._embedded && json._embedded.results ? json._embedded.results : [];
+          } else {
+            results = [];
+          }
+        }
+
+        console.log(`Showing a total of ${total}/${searchTotal} templates`);
       }
 
       const IMG_EXPORT_WIDTH = 180;
@@ -319,16 +375,16 @@
 
         row.append(imgCell);
         const img = document.createElement('img');
-        img.src = template.img;
+        img.src = template.animated ? template.thumbnail : template.asset;
         img.alt = template.title;
         img.width = IMG_EXPORT_WIDTH;
 
         imgCell.append(img);
 
-        if (template.animation) {
+        if (template.animated) {
           imgCell.append(document.createElement('br'));
           const link = document.createElement('a');
-          link.href = template.animation;
+          link.href = template.asset;
           link.innerHTML = 'Animation';
           imgCell.append(link);
         }
@@ -406,5 +462,15 @@
         <tbody></tbody>
       </table>
     </div>
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q');
+        if (q) {
+          document.getElementById('search').value = q;
+          search();
+        }
+      });
+    </script>
   </body>
 </html>
