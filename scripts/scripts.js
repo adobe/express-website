@@ -57,8 +57,72 @@ function tableToDivs($table, cols) {
   return ($cards);
 }
 
-function decorateTables() {
-  document.querySelectorAll('main div>table').forEach(($table) => {
+function getLocale(url) {
+  const locale=url.pathname.split('/')[1];
+  if (/^[a-z-]{2}(-[a-zA-Z-]*)?-[A-Z]{2}$/.test(locale)) {
+    return locale;
+  }
+  return 'en-US';
+}
+
+async function fetchBlueprint(pathname) {
+  if (window.spark.$blueprint) {
+    return (window.spark.$blueprint)
+  }
+
+  const bpPath = pathname.substr(pathname.indexOf('/',1)).split('.')[0];
+  const resp = await fetch(`${bpPath}.plain.html`);
+  console.log ('fetching...');
+  const body = await resp.text();
+  const $main=createTag('main');
+  $main.innerHTML = body;
+  decorateTables($main);
+  window.spark.$blueprint = $main;
+  return ($main);
+}
+
+async function decorateTemplateLists() {
+  const $templateLists=Array.from(document.querySelectorAll('main .template-list'));
+  for (let i = 0; i < $templateLists.length; i+=1) {
+    const $block = $templateLists[i];
+    console.log('template-lists');
+    const rows = $block.children.length;
+    const locale = getLocale(window.location);
+    if (rows == 0 && locale !== 'en-US') {
+      const $blueprint = await fetchBlueprint(window.location.pathname);
+      $block.innerHTML = $blueprint.querySelectorAll(`.template-list`)[i].innerHTML;
+    }
+  }
+
+  /* --- inherit hero image, this should go somewhere else --- */
+  const $heroPicture = document.querySelector('.hero-bg');
+  console.log($heroPicture);
+  console.log(window.spark.$blueprint);
+
+  if (!$heroPicture && window.spark.$blueprint) {
+    const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
+    console.log($bpHeroImage);
+    if ($bpHeroImage) {
+      const $heroSection = document.querySelector('main .hero');
+      const $heroDiv = document.querySelector('main .hero > div');
+      const $p = createTag('p');
+      const $pic = createTag('picture', {class: 'hero-bg'});
+      $pic.appendChild($bpHeroImage);
+      $p.append($pic);
+
+      $heroSection.classList.remove('hero-noimage');
+      $heroDiv.prepend($p);
+    }
+  }
+}
+
+function decorateTables($root) {
+  let prefix = ''
+  if (!$root) {
+    prefix = 'main';
+    $root = document;
+  }
+  $root.querySelectorAll(`${prefix} div>table`).forEach(($table) => {
     const $cols = $table.querySelectorAll('thead tr th');
     let cols = Array.from($cols).map((e) => toClassName(e.textContent)).filter((e) => (!!e));
     let $div = {};
@@ -331,6 +395,7 @@ function postLCP() {
   loadLazyFooter();
   if (window.location.search === '?martech') loadScript('/scripts/martech.js');
   decorateBlogPosts();
+  decorateTemplateLists();
 }
 
 function decorateHero() {
@@ -865,6 +930,7 @@ async function decoratePage() {
   decorateDoMoreEmbed();
 }
 
+window.spark={};
 decoratePage();
 
 export { loadScript as default };
