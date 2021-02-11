@@ -41,7 +41,7 @@ window.marketingtech = {
   adobe: {
     launch: {
       property: 'global',
-      environment: 'prod',
+      environment: 'production',
     },
     analytics: {
       additionalAccounts: 'adbemmarvelweb.prod',
