@@ -46,7 +46,11 @@ window.marketingtech = {
     analytics: {
       additionalAccounts: 'adbemmarvelweb.prod',
     },
+    target: true,
   },
+};
+window.targetGlobalSettings = {
+  bodyHidingEnabled: false,
 };
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js');
