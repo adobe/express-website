@@ -273,9 +273,12 @@ function loadCSS(href) {
   document.head.appendChild(link);
 }
 
-function loadScript(url, callback) {
+function loadScript(url, callback, type) {
   const $head = document.querySelector('head');
   const $script = createTag('script', { src: url });
+  if (type) {
+    $script.setAttribute('type',type);
+  }
   $head.append($script);
   $script.onload = callback;
 }
@@ -393,7 +396,7 @@ function postLCP() {
   decorateAnimations();
   loadCSS('/styles/lazy-styles.css');
   loadLazyFooter();
-  if (window.location.search !== '?nomartech') loadScript('/scripts/martech.js');
+  if (window.location.search !== '?nomartech') loadScript('/scripts/martech.js', null, 'module');
   decorateBlogPosts();
   decorateTemplateLists();
 }
