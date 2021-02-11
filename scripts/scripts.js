@@ -396,7 +396,11 @@ function postLCP() {
   decorateAnimations();
   loadCSS('/styles/lazy-styles.css');
   loadLazyFooter();
-  if (window.location.search !== '?nomartech') loadScript('/scripts/martech.js', null, 'module');
+  if (window.location.search !== '?nomartech') {
+    setTimeout(() => {
+      loadScript('/scripts/martech.js', null, 'module');
+    }, 2000);
+  }
   decorateBlogPosts();
   decorateTemplateLists();
 }
