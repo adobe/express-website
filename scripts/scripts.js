@@ -397,9 +397,13 @@ function postLCP() {
   loadCSS('/styles/lazy-styles.css');
   loadLazyFooter();
   if (window.location.search !== '?nomartech') {
+    let ms=2000;
+    const usp=new URLSearchParams(window.location.search);
+    const delay=usp.get('delay');
+    if (delay) ms=+delay;
     setTimeout(() => {
       loadScript('/scripts/martech.js', null, 'module');
-    }, 2000);
+    }, ms);
   }
   decorateBlogPosts();
   decorateTemplateLists();
@@ -455,7 +459,7 @@ async function fetchFullIndex(indices) {
       // eslint-disable-next-line no-console
       console.log(`${url}: ${json.data.length}`);
       json.data.sort((e1, e2) => e1.path.localeCompare(e2.path));
-      fullIndex.push(...json.data);
+      fullIndex.push(...json.data.filter((e) => !!e.path));
     }
   }));
   return (fullIndex);
