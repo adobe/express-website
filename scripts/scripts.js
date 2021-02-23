@@ -58,68 +58,18 @@ function tableToDivs($table, cols) {
 }
 
 function getLocale(url) {
-  const locale=url.pathname.split('/')[1];
+  const locale = url.pathname.split('/')[1];
   if (/^[a-z-]{2}(-[a-zA-Z-]*)?-[A-Z]{2}$/.test(locale)) {
     return locale;
   }
   return 'en-US';
 }
 
-async function fetchBlueprint(pathname) {
-  if (window.spark.$blueprint) {
-    return (window.spark.$blueprint)
-  }
-
-  const bpPath = pathname.substr(pathname.indexOf('/',1)).split('.')[0];
-  const resp = await fetch(`${bpPath}.plain.html`);
-  console.log ('fetching...');
-  const body = await resp.text();
-  const $main=createTag('main');
-  $main.innerHTML = body;
-  decorateTables($main);
-  window.spark.$blueprint = $main;
-  return ($main);
-}
-
-async function decorateTemplateLists() {
-  const $templateLists=Array.from(document.querySelectorAll('main .template-list'));
-  for (let i = 0; i < $templateLists.length; i+=1) {
-    const $block = $templateLists[i];
-    console.log('template-lists');
-    const rows = $block.children.length;
-    const locale = getLocale(window.location);
-    if (rows == 0 && locale !== 'en-US') {
-      const $blueprint = await fetchBlueprint(window.location.pathname);
-      $block.innerHTML = $blueprint.querySelectorAll(`.template-list`)[i].innerHTML;
-    }
-  }
-
-  /* --- inherit hero image, this should go somewhere else --- */
-  const $heroPicture = document.querySelector('.hero-bg');
-  console.log($heroPicture);
-  console.log(window.spark.$blueprint);
-
-  if (!$heroPicture && window.spark.$blueprint) {
-    const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
-    console.log($bpHeroImage);
-    if ($bpHeroImage) {
-      const $heroSection = document.querySelector('main .hero');
-      const $heroDiv = document.querySelector('main .hero > div');
-      const $p = createTag('p');
-      const $pic = createTag('picture', {class: 'hero-bg'});
-      $pic.appendChild($bpHeroImage);
-      $p.append($pic);
-
-      $heroSection.classList.remove('hero-noimage');
-      $heroDiv.prepend($p);
-    }
-  }
-}
-
 function decorateTables($root) {
-  let prefix = ''
+  let prefix = '';
   if (!$root) {
     prefix = 'main';
+    // eslint-disable-next-line no-param-reassign
     $root = document;
   }
   $root.querySelectorAll(`${prefix} div>table`).forEach(($table) => {
@@ -157,6 +107,23 @@ function decoratePictures() {
       $parent.appendChild($pic);
     });
   }
+}
+
+async function fetchBlueprint(pathname) {
+  if (window.spark.$blueprint) {
+    return (window.spark.$blueprint);
+  }
+
+  const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
+  const resp = await fetch(`${bpPath}.plain.html`);
+  // eslint-disable-next-line no-console
+  console.log('fetching...');
+  const body = await resp.text();
+  const $main = createTag('main');
+  $main.innerHTML = body;
+  decorateTables($main);
+  window.spark.$blueprint = $main;
+  return ($main);
 }
 
 function decorateDoMoreEmbed() {
@@ -277,7 +244,7 @@ function loadScript(url, callback, type) {
   const $head = document.querySelector('head');
   const $script = createTag('script', { src: url });
   if (type) {
-    $script.setAttribute('type',type);
+    $script.setAttribute('type', type);
   }
   $head.append($script);
   $script.onload = callback;
@@ -392,15 +359,48 @@ function decorateBlogPosts() {
   });
 }
 
+async function decorateTemplateLists() {
+  const $templateLists = Array.from(document.querySelectorAll('main .template-list'));
+  for (let i = 0; i < $templateLists.length; i += 1) {
+    const $block = $templateLists[i];
+    const rows = $block.children.length;
+    const locale = getLocale(window.location);
+    if (rows === 0 && locale !== 'en-US') {
+      // eslint-disable-next-line no-await-in-loop
+      const $blueprint = await fetchBlueprint(window.location.pathname);
+      $block.innerHTML = $blueprint.querySelectorAll('.template-list')[i].innerHTML;
+    }
+  }
+
+  /* --- inherit hero image, this should go somewhere else --- */
+  const $heroPicture = document.querySelector('.hero-bg');
+
+  if (!$heroPicture && window.spark.$blueprint) {
+    const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
+    if ($bpHeroImage) {
+      const $heroSection = document.querySelector('main .hero');
+      const $heroDiv = document.querySelector('main .hero > div');
+      const $p = createTag('p');
+      const $pic = createTag('picture', { class: 'hero-bg' });
+      $pic.appendChild($bpHeroImage);
+      $p.append($pic);
+
+      $heroSection.classList.remove('hero-noimage');
+      $heroDiv.prepend($p);
+    }
+  }
+}
+
 function postLCP() {
+  const martechUrl = '/scripts/martech.js';
   decorateAnimations();
   loadCSS('/styles/lazy-styles.css');
   loadLazyFooter();
-  if (window.location.search !== '?nomartech') {
-    let ms=2000;
-    const usp=new URLSearchParams(window.location.search);
-    const delay=usp.get('delay');
-    if (delay) ms=+delay;
+  if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+    let ms = 2000;
+    const usp = new URLSearchParams(window.location.search);
+    const delay = usp.get('delay');
+    if (delay) ms = +delay;
     setTimeout(() => {
       loadScript('/scripts/martech.js', null, 'module');
     }, ms);
@@ -433,9 +433,6 @@ function decorateHero() {
   if ($heroPicture) {
     $heroPicture.classList.add('hero-bg');
     const $heroImage = $heroPicture.querySelector('img');
-    // eslint-disable-next-line no-console
-    console.log($heroImage);
-
     if ($heroImage.complete) {
       postLCP();
     } else {
@@ -613,9 +610,27 @@ function decorateHowTo() {
   });
 }
 
-async function decorateABTests() {
+async function checkTesting(url) {
+  const pathname = new URL(url).pathname.split('.')[0];
+  const resp = await fetch('/testing.json');
+  const json = await resp.json();
+  const matches = json.data.filter((test) => {
+    const testPath = new URL(test['Test URLs']).pathname.split('.')[0];
+    return testPath === pathname;
+  });
+
+  return (!!matches.length);
+}
+
+async function decorateTesting() {
   let runTest = true;
   let reason = '';
+
+  if (await checkTesting(window.location.href)) {
+    // eslint-disable-next-line no-console
+    console.log('rushing martech');
+    loadScript('/scripts/martech.js', null, 'module');
+  }
 
   if (!window.location.host.includes('adobe.com')) {
     runTest = false;
@@ -677,7 +692,7 @@ async function decorateABTests() {
     }
   } else {
     // eslint-disable-next-line no-console
-    console.log(`Test is not run => ${reason}`);
+    // console.log(`Test is not run => ${reason}`);
   }
 }
 function playYouTubeVideo(vid, $element) {
@@ -923,7 +938,7 @@ function decorateMetaData() {
 }
 
 async function decoratePage() {
-  await decorateABTests();
+  await decorateTesting();
   decoratePictures();
   decorateTables();
   wrapSections('main>div');
@@ -941,7 +956,7 @@ async function decoratePage() {
   decorateDoMoreEmbed();
 }
 
-window.spark={};
+window.spark = {};
 decoratePage();
 
 export { loadScript as default };
