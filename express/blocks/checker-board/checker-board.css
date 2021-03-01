@@ -1,0 +1,38 @@
+/*
+ * Copyright 2021 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+main .checker-board-dark-container {
+  background-color: black;
+  color: white;
+}
+
+@media (min-width: 800px) {
+
+  main .checker-board {
+    max-width: 900px;
+  }
+  
+  main .checker-board > div {
+    display: flex;
+  }
+
+  main .checker-board > div:nth-child(odd) {
+    flex-direction: row-reverse;
+  }
+
+  main .checker-board > div > div{
+    width: 50%;
+    padding: 20px;
+    text-align: left;
+  }
+}
+

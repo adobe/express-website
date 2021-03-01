@@ -91,20 +91,8 @@ function decorateDoMoreEmbed() {
   });
 }
 
-function decorateCheckerBoards() {
-  const blobPrefix = 'https://hlx.blob.core.windows.net/external/';
-  document.querySelectorAll(`div.checker-board a[href^="${blobPrefix}`).forEach(($a) => {
-    if ($a.href.endsWith('.mp4')) {
-      const hostPrefix = window.location.hostname.includes('localhost') ? 'https://spark-website--adobe.hlx.live' : '';
-      const $cell = $a.closest('div');
-      const vid = $a.href.substring(blobPrefix.length).split('#')[0];
-      $cell.innerHTML = `<video playsinline autoplay loop muted><source loading="lazy" src="${hostPrefix}/hlx_${vid}.mp4" type="video/mp4"></video>`;
-    }
-  });
-}
-
 function decorateBlocks() {
-  document.querySelectorAll('main > div > div').forEach(async ($block) => {
+  document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
@@ -114,14 +102,20 @@ function decorateBlocks() {
     const blocksWithOptions = ['checker-board'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
-        blockName = b;
         const options = blockName.substring(b.length + 1).split('-');
+        blockName = b;
         $block.classList.add(b);
         $block.classList.add(...options);
       }
     });
     $block.classList.add('block');
-    import(`/express/blocks/${blockName}/${blockName}`).then((fn) => fn($block, blockName));
+    import(`/express/blocks/${blockName}/${blockName}.js`)
+      .then((mod) => {
+        console.log(blockName, mod);
+        mod.default($block, blockName);
+      })
+      .catch((err) => console.log('failed to load module', err));
+
     loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
   });
 }
@@ -295,9 +289,9 @@ async function decorateTemplateLists() {
 }
 
 function postLCP() {
-  const martechUrl = '/scripts/martech.js';
-  decorateAnimations();
-  loadCSS('/styles/lazy-styles.css');
+  const martechUrl = '/express/scripts/martech.js';
+  loadCSS('/express/styles/lazy-styles.css');
+  decorateBlocks();
   loadLazyFooter();
   if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
@@ -845,7 +839,6 @@ async function decoratePage() {
   wrapSections('main>div');
   decorateHeader();
   decorateHero();
-  decorateBlocks();
   decorateTemplate();
   decorateButtons();
   decorateHowTo();
@@ -853,7 +846,6 @@ async function decoratePage() {
   decorateBlogPage();
   decorateTutorials();
   decorateMetaData();
-  decorateCheckerBoards();
   decorateDoMoreEmbed();
 }
 
