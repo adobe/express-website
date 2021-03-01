@@ -9,16 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global window */
 
-module.exports = {
-  root: true,
-  extends: '@adobe/helix',
-  rules: {
-    // allow reassigning param
-    'no-param-reassign': [2, { props: false }],
-    allowImportExportEverywhere: true,
-  },
-  parserOptions: {
-    sourceType: 'module',
-  },
-};
+export default function decorateCheckerBoards($block) {
+  const blobPrefix = 'https://hlx.blob.core.windows.net/external/';
+  const $a = $block.querySelector(`a[href^="${blobPrefix}`);
+  if ($a.href.endsWith('.mp4')) {
+    const hostPrefix = window.location.hostname.includes('localhost') ? 'https://spark-website--adobe.hlx.live' : '';
+    const $cell = $a.closest('div');
+    const vid = $a.href.substring(blobPrefix.length).split('#')[0];
+    $cell.innerHTML = `<video playsinline autoplay loop muted><source loading="lazy" src="${hostPrefix}/hlx_${vid}.mp4" type="video/mp4"></video>`;
+  }
+}

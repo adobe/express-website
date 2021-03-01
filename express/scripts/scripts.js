@@ -15,7 +15,7 @@ function toClassName(name) {
   return (name.toLowerCase().replace(/[^0-9a-z]/gi, '-'));
 }
 
-function createTag(name, attrs) {
+export function createTag(name, attrs) {
   const el = document.createElement(name);
   if (typeof attrs === 'object') {
     for (const [key, value] of Object.entries(attrs)) {
@@ -35,52 +35,12 @@ function wrapSections(element) {
   });
 }
 
-function tableToDivs($table, cols) {
-  const $rows = $table.querySelectorAll('tbody tr');
-  const $cards = createTag('div', { class: `${cols.join('-')} block` });
-  $rows.forEach(($tr) => {
-    const $card = createTag('div');
-    $tr.querySelectorAll('td').forEach(($td, i) => {
-      const $div = createTag('div', cols.length > 1 ? { class: cols[i] } : {});
-      $div.innerHTML = $td.innerHTML;
-      $div.childNodes.forEach(($child) => {
-        if ($child.nodeName === '#text') {
-          const $p = createTag('p');
-          $p.innerHTML = $child.nodeValue;
-          $child.parentElement.replaceChild($p, $child);
-        }
-      });
-      $card.append($div);
-    });
-    $cards.append($card);
-  });
-  return ($cards);
-}
-
 function getLocale(url) {
   const locale = url.pathname.split('/')[1];
   if (/^[a-z-]{2}(-[a-zA-Z-]*)?-[A-Z]{2}$/.test(locale)) {
     return locale;
   }
   return 'en-US';
-}
-
-function decorateTables($root) {
-  let prefix = '';
-  if (!$root) {
-    prefix = 'main';
-    // eslint-disable-next-line no-param-reassign
-    $root = document;
-  }
-  $root.querySelectorAll(`${prefix} div>table`).forEach(($table) => {
-    const $cols = $table.querySelectorAll('thead tr th');
-    let cols = Array.from($cols).map((e) => toClassName(e.textContent)).filter((e) => (!!e));
-    let $div = {};
-    /* workaround for import */
-    if (cols.length === 0) cols = ['template-list'];
-    $div = tableToDivs($table, cols);
-    $table.parentNode.replaceChild($div, $table);
-  });
 }
 
 function addDivClasses($element, selector, classes) {
@@ -97,18 +57,6 @@ function decorateHeader() {
   $header.querySelector('.susi a').classList.add('button');
 }
 
-function decoratePictures() {
-  if (!document.querySelector('picture')) {
-    const helixImages = document.querySelectorAll('main img[src^="/hlx_"');
-    helixImages.forEach(($img) => {
-      const $pic = createTag('picture');
-      const $parent = $img.parentNode;
-      $pic.appendChild($img);
-      $parent.appendChild($pic);
-    });
-  }
-}
-
 async function fetchBlueprint(pathname) {
   if (window.spark.$blueprint) {
     return (window.spark.$blueprint);
@@ -121,7 +69,6 @@ async function fetchBlueprint(pathname) {
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
-  decorateTables($main);
   window.spark.$blueprint = $main;
   return ($main);
 }
@@ -144,22 +91,10 @@ function decorateDoMoreEmbed() {
   });
 }
 
-function decorateCheckerBoards() {
-  const blobPrefix = 'https://hlx.blob.core.windows.net/external/';
-  document.querySelectorAll(`div.checker-board a[href^="${blobPrefix}`).forEach(($a) => {
-    if ($a.href.endsWith('.mp4')) {
-      const hostPrefix = window.location.hostname.includes('localhost') ? 'https://spark-website--adobe.hlx.live' : '';
-      const $cell = $a.closest('div');
-      const vid = $a.href.substring(blobPrefix.length).split('#')[0];
-      $cell.innerHTML = `<video playsinline autoplay loop muted><source loading="lazy" src="${hostPrefix}/hlx_${vid}.mp4" type="video/mp4"></video>`;
-    }
-  });
-}
-
 function decorateBlocks() {
-  document.querySelectorAll('div.block').forEach(($block) => {
+  document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
     const classes = Array.from($block.classList.values());
-    const blockName = classes[0];
+    let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
     if ($section) {
       $section.classList.add(`${blockName}-container`);
@@ -168,60 +103,20 @@ function decorateBlocks() {
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-');
+        blockName = b;
         $block.classList.add(b);
         $block.classList.add(...options);
       }
     });
-  });
-}
+    $block.classList.add('block');
+    import(`/express/blocks/${blockName}/${blockName}.js`)
+      .then((mod) => {
+        console.log(blockName, mod);
+        mod.default($block, blockName);
+      })
+      .catch((err) => console.log('failed to load module', err));
 
-function decorateAnimations() {
-  document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
-    const href = $a.getAttribute('href');
-    const url = new URL(href);
-    const helixId = url.pathname.split('/')[2];
-    const $parent = $a.parentNode;
-
-    if (href.endsWith('.mp4')) {
-      const isAnimation = !!$a.closest('.animation');
-      // const isAnimation = true;
-
-      let attribs = { controls: '' };
-      if (isAnimation) {
-        attribs = {
-          playsinline: '', autoplay: '', loop: '', muted: '',
-        };
-      }
-      const $poster = $a.closest('div').querySelector('img');
-      if ($poster) {
-        attribs.poster = $poster.src;
-        $poster.remove();
-      }
-
-      const $video = createTag('video', attribs);
-      /*
-      if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
-        href='/hlx_'+href.split('/')[4].replace('#image','');
-      }
-      */
-      $video.innerHTML = `<source src="${href}" type="video/mp4">`;
-      $a.parentNode.replaceChild($video, $a);
-      if (isAnimation) {
-        $video.addEventListener('canplay', () => {
-          $video.muted = true;
-          $video.play();
-        });
-      }
-    }
-
-    if (href.endsWith('.gif')) {
-      $a.parentNode.replaceChild(createTag('img', { src: `/hlx_${helixId}.gif` }), $a);
-    }
-
-    const $next = $parent.nextElementSibling;
-    if ($next && $next.tagName === 'P' && $next.innerHTML.trim().startsWith('<em>')) {
-      $next.classList.add('legend');
-    }
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
   });
 }
 
@@ -229,18 +124,20 @@ function decorateAnimations() {
  * Loads a CSS file.
  * @param {string} href The path to the CSS file
  */
-function loadCSS(href) {
-  const link = document.createElement('link');
-  link.setAttribute('rel', 'stylesheet');
-  link.setAttribute('href', href);
-  link.onload = () => {
-  };
-  link.onerror = () => {
-  };
-  document.head.appendChild(link);
+export function loadCSS(href) {
+  if (!document.querySelector(`head > link[href="${href}"]`)) {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', href);
+    link.onload = () => {
+    };
+    link.onerror = () => {
+    };
+    document.head.appendChild(link);
+  }
 }
 
-function loadScript(url, callback, type) {
+export function loadScript(url, callback, type) {
   const $head = document.querySelector('head');
   const $script = createTag('script', { src: url });
   if (type) {
@@ -392,9 +289,9 @@ async function decorateTemplateLists() {
 }
 
 function postLCP() {
-  const martechUrl = '/scripts/martech.js';
-  decorateAnimations();
-  loadCSS('/styles/lazy-styles.css');
+  const martechUrl = '/express/scripts/martech.js';
+  loadCSS('/express/styles/lazy-styles.css');
+  decorateBlocks();
   loadLazyFooter();
   if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
@@ -624,7 +521,7 @@ async function checkTesting(url) {
 
 async function decorateTesting() {
   let runTest = true;
-  let reason = '';
+  // let reason = '';
 
   if (await checkTesting(window.location.href)) {
     // eslint-disable-next-line no-console
@@ -634,18 +531,18 @@ async function decorateTesting() {
 
   if (!window.location.host.includes('adobe.com')) {
     runTest = false;
-    reason = 'not prod host';
+    // reason = 'not prod host';
   }
   if (window.location.hash) {
     runTest = false;
-    reason = 'suppressed by #';
+    // reason = 'suppressed by #';
   }
   if (window.location.search === '?test') {
     runTest = true;
   }
   if (navigator.userAgent.match(/bot|crawl|spider/i)) {
     runTest = false;
-    reason = 'bot detected';
+    // reason = 'bot detected';
   }
 
   if (runTest) {
@@ -939,12 +836,9 @@ function decorateMetaData() {
 
 async function decoratePage() {
   await decorateTesting();
-  decoratePictures();
-  decorateTables();
   wrapSections('main>div');
   decorateHeader();
   decorateHero();
-  decorateBlocks();
   decorateTemplate();
   decorateButtons();
   decorateHowTo();
@@ -952,11 +846,8 @@ async function decoratePage() {
   decorateBlogPage();
   decorateTutorials();
   decorateMetaData();
-  decorateCheckerBoards();
   decorateDoMoreEmbed();
 }
 
 window.spark = {};
 decoratePage();
-
-export { loadScript as default };

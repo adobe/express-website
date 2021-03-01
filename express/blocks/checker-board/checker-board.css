@@ -10,15 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-module.exports = {
-  root: true,
-  extends: '@adobe/helix',
-  rules: {
-    // allow reassigning param
-    'no-param-reassign': [2, { props: false }],
-    allowImportExportEverywhere: true,
-  },
-  parserOptions: {
-    sourceType: 'module',
-  },
-};
+main .checker-board-dark-container {
+  background-color: black;
+  color: white;
+}
+
+@media (min-width: 800px) {
+
+  main .checker-board {
+    max-width: 900px;
+  }
+  
+  main .checker-board > div {
+    display: flex;
+  }
+
+  main .checker-board > div:nth-child(odd) {
+    flex-direction: row-reverse;
+  }
+
+  main .checker-board > div > div{
+    width: 50%;
+    padding: 20px;
+    text-align: left;
+  }
+}
+
