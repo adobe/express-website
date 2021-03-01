@@ -624,7 +624,7 @@ async function checkTesting(url) {
 
 async function decorateTesting() {
   let runTest = true;
-  let reason = '';
+  // let reason = '';
 
   if (await checkTesting(window.location.href)) {
     // eslint-disable-next-line no-console
@@ -634,18 +634,18 @@ async function decorateTesting() {
 
   if (!window.location.host.includes('adobe.com')) {
     runTest = false;
-    reason = 'not prod host';
+    // reason = 'not prod host';
   }
   if (window.location.hash) {
     runTest = false;
-    reason = 'suppressed by #';
+    // reason = 'suppressed by #';
   }
   if (window.location.search === '?test') {
     runTest = true;
   }
   if (navigator.userAgent.match(/bot|crawl|spider/i)) {
     runTest = false;
-    reason = 'bot detected';
+    // reason = 'bot detected';
   }
 
   if (runTest) {
