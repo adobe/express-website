@@ -16,6 +16,7 @@ module.exports = {
   rules: {
     // allow reassigning param
     'no-param-reassign': [2, { props: false }],
+    allowImportExportEverywhere: true,
   },
   parserOptions: {
     sourceType: 'module',
