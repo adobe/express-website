@@ -52,9 +52,41 @@ function addDivClasses($element, selector, classes) {
 
 function decorateHeader() {
   const $header = document.querySelector('header');
-  const classes = ['logo', 'susi'];
-  addDivClasses($header, ':scope>p', classes);
-  $header.querySelector('.susi a').classList.add('button');
+
+  /* init header with placeholder */
+  
+  $header.innerHTML = `
+  <div class="placeholder">
+    <div class="mobile">
+      <div class="hamburger"></div>
+      <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
+      <div class="signin">Sign In</div>
+    </div>
+    <div class="desktop">
+      <div class="top">
+        <div class="left">
+          <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"><span class="adobe">Adobe</span></div>
+          <div class="section">
+            <span class="drop">Creativity & Design</span>
+          </div>
+          <div class="section">
+            <span class="selected">Spark</span>
+            <span class="drop">Learn & Support</span>
+            <span><a href="#" class="button primary">Choose a plan</a></span>
+          </div>
+        </div>
+        <div class="right">
+          <div class="search"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" focusable="false">
+          <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
+      </svg></div>
+          <div class="signing">Sign In</div>
+        </div>
+      </div>
+      <div class="bottom">
+        <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
+      </div>
+    </div>
+  `;
 }
 
 async function fetchBlueprint(pathname) {

@@ -5,27 +5,171 @@ body {
 }
 header {
     height: 64px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+header .desktop {
+    display: none;
+}
+
+header .mobile {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    height: 64px;
     box-sizing: border-box;
-    margin: 20px;
+    padding: 20px 16px 20px 21px;
+    color: #2c2c2c;
 }
 
-header .icon {
-    height: 35px;
-    width: 35px;
-    position: relative;
-    top: 0;
-    margin-right: 10px;
+header .mobile .hamburger {
+    font-size: 19px;
 }
 
-header .logo {
-    display: inline-flex;
-    align-self: center;
-    font-size: 27px;
-    font-weight: 200;
-    margin: 5px;
-    color: #888;
+header .mobile .signin {
+    font-size: 14px;
+}
+
+header .mobile .logo img {
+    height: 24px;
+    width: 24px;
+    padding-left: 15px;
+}
+
+header .mobile .hamburger::before {
+    content: "\2630";
+}
+
+@media (min-width: 1200px) {
+
+    header {
+        height: 98px;
+        background-size: 1201px auto;
+        b_ackground-image: url(/express/gnav-placeholder/backdrop2.png);
+    }
+
+    header .mobile {
+        display: none;
+    }
+
+    header .desktop {
+        display: block;
+        color: #2c2c2c;
+        font-size: 14px;
+    }
+
+    header .desktop .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+        border-bottom: 1px solid #EAEAEA;
+    }
+
+    header .desktop .top .left {
+        display: flex;
+        align-items: center;
+    }
+
+    header .desktop .logo {
+        width: 124px;
+        box-sizing: border-box;
+        padding-left: 21px;
+        display: flex;
+        font-weight: 600;
+    }
+
+    header .desktop .logo img {
+        height: 24px;
+        width: 24px;
+        padding-top: 4px;
+    }
+
+    header .desktop .logo span {
+        color: #fa0f00;
+        font-size: 18px;
+        padding-left: 12px;
+        display: block;
+        padding-top: 3px;
+    }
+
+    header .desktop .top .section {
+        border-left: 1px solid #EAEAEA;
+        height: 64px;
+        padding: 0 8px;
+    }
+
+    header .desktop .top .section span {
+        padding: 0 12px;    
+    }
+
+    header .desktop .top .button {
+        font-size: 14px;
+        height: 32px;
+        margin-left: 0;
+        padding: 0px 20px 3px 20px;
+    }
+
+    header .desktop .top .selected {
+        font-weight: 600;
+    }
+
+    header .desktop .top .right {
+        padding: 0 10px;
+    }
+
+    header .desktop .top .right > div {
+        padding: 0 5px;
+    }
+
+    header .desktop .top .right > div.search {
+        padding: 2px 10px;
+    
+    }
+
+    header .desktop .bottom {
+        color: #707070;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    header .desktop .bottom > span {
+        padding: 0 8px;
+    }
+    
+    header .desktop .drop {
+        display: flex;
+        align-items: center;
+    }
+
+    header .desktop .drop::after {
+        display: flex;
+        width: 6px;
+        height: 6px;
+        border-top-width: 0;
+        border-left-width: 0;
+        border-bottom-width: 1px;
+        border-right-width: 1px;
+        border-style: solid;
+        border-color: #2c2c2c;
+        transform-origin: 75% 75%;
+        transform: rotate( 45deg );
+        transition: transform .1s ease;
+        content: "";
+        margin-left: 5px;
+        margin-right: 2.25px;
+    }
+
+    header .desktop .top .right {
+        display: flex;
+        align-items: center;
+    }
+
+    header .desktop .top .left .section {
+        display: flex;
+        align-items: center;
+    }
 }
 
 a.button:any-link {
