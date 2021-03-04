@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window */
+/* global */
 
 export default function decorate($block) {
   const $a = $block.querySelector('a');
@@ -20,4 +20,4 @@ export default function decorate($block) {
   $parent.appendChild($a);
   $a.innerHTML = picture;
   $a.className = '';
-} 
+}

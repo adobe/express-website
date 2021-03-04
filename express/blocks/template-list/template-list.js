@@ -9,13 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window */
+/* global window fetch document */
 
 import {
-    getLocale,
-    createTag,
-  } from '../../scripts/scripts.js';
-  
+  getLocale,
+  createTag,
+} from '../../scripts/scripts.js';
 
 async function fetchBlueprint(pathname) {
   if (window.spark.$blueprint) {
@@ -30,9 +29,8 @@ async function fetchBlueprint(pathname) {
   const $main = createTag('main');
   $main.innerHTML = body;
   window.spark.$blueprint = $main;
-  console.log($main);
   return ($main);
-}  
+}
 
 async function decorateTemplateList($block) {
   const rows = $block.children.length;
@@ -46,15 +44,11 @@ async function decorateTemplateList($block) {
     $parent.appendChild($a);
     $a.innerHTML = picture;
     $a.className = '';
-
-    console.log($a);
-  })
+  });
 
   if (rows === 0 && locale !== 'en-US') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
-
-    console.log(i);
 
     // eslint-disable-next-line no-await-in-loop
     const $blueprint = await fetchBlueprint(window.location.pathname);
@@ -67,7 +61,6 @@ async function decorateTemplateList($block) {
     const $heroPicture = document.querySelector('.hero-bg');
 
     if (!$heroPicture && window.spark.$blueprint) {
-      console.log ('replace hero')
       const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
       if ($bpHeroImage) {
         const $heroSection = document.querySelector('main .hero');
@@ -87,5 +80,3 @@ async function decorateTemplateList($block) {
 export default function decorate($block) {
   decorateTemplateList($block);
 }
-
-  
