@@ -1,0 +1,34 @@
+main .how-to-steps > div {
+    display: flex;
+    text-align: left;
+  }
+  main .how-to-steps .tip > p {
+    color: #82919b;
+    font-weight: 300;
+    font-size: 1.2em;
+  }
+  
+  main .how-to-steps .tip > h3 {
+    margin-top: 40px;
+    font-size: 28px;
+    line-height: 32px;
+    font-weight: 800;
+  }
+  
+  main .how-to-steps .number span {
+    background-color: #fcce00;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: bold;
+    height: 2.25rem;
+    width: 2.25rem;
+    display: inline-block;
+    line-height: 2rem;
+    padding-top: 0.1rem;
+    width: 2.25rem;
+    padding-left: 0.8rem;
+    box-sizing: border-box;
+    margin-right: 16px;
+  }
+  

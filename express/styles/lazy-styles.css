@@ -9,61 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-@import "/hlx_fonts/pnv6nym.css";
+@import "https://use.typekit.net/aaz7dvd.css";
 
 /* below the fold */
 
 main p {
     line-height: 1.5em;
 }
-
-main .template-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-
-main .template-list > div {
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    margin: 20px;
-    justify-content: flex-end;
-    border: 1px solid #ccc;
-}
-
-main .how-to-steps > div {
-  display: flex;
-  text-align: left;
-}
-main .how-to-steps .tip > p {
-  color: #82919b;
-  font-weight: 300;
-  font-size: 1.2em;
-}
-
-main .how-to-steps .tip > h3 {
-  margin-top: 6px;
-}
-
-main .how-to-steps .number span {
-  background-color: #fcce00;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: bold;
-  height: 2.25rem;
-  width: 2.25rem;
-  display: inline-block;
-  line-height: 2rem;
-  padding-top: 0.1rem;
-  width: 2.25rem;
-  padding-left: 0.8rem;
-  box-sizing: border-box;
-  margin-right: 16px;
-}
-
 
 
 main .list {

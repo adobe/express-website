@@ -3,6 +3,9 @@ body {
     margin: 0;
     padding: 0;
 }
+
+/* gnav placeholder */
+
 header {
     height: 64px;
     box-sizing: border-box;
@@ -190,6 +193,8 @@ a.button:any-link {
     display: inline-block;
 }
 
+/* make page : hero */
+
 main {
     text-align: center;
 }
@@ -198,17 +203,11 @@ main img {
     max-width: 100%;
 }
 
-main .section-wrapper>div {
-    margin: auto; 
-    max-width: 950px;
-    padding: 64px 32px;
-}
-
 main .hero {
     color: white;
     text-shadow: 1px 1px 2px rgba(0,0,0,.25);
     position: relative;
-    padding: 64px 32px;
+    padding: 120px 0;
 }
 
 main .hero.hero-noimage {
@@ -216,9 +215,23 @@ main .hero.hero-noimage {
 }
 
 main .hero h1 {
-    font-size: 2em;
+    font-size: 45px;
     font-weight: 900;
+    margin: 0 16px;
+    line-height: 49px;
 }
+
+main .hero h2 {
+    font-size: 20px;
+    line-height: 28px;
+    margin: 32px 32px;
+    font-weight: 400;
+}
+
+main .hero p, main .hero a.button:any-link {
+    margin: 0;
+}
+
 
 main .hero .hero-bg {
     position: absolute;
@@ -236,6 +249,96 @@ main .hero .hero-bg img {
     object-fit: cover;
 }
 
+main .hero > div {
+    padding: 0;
+}
+
+@media (min-width:600px) {
+    main .hero h1 {
+        font-size: 60px;
+        line-height: 64px;
+    }
+
+    main .hero h2 {
+        font-size: 24px;
+        line-height: 28px;
+        margin-bottom: 40px;
+    }
+
+    main .hero {
+        padding: 80px 0;
+    }
+
+    main .hero>div {
+        max-width: 672px;
+        margin: auto;
+    }
+    
+    
+}
+
+@media (min-width:900px) {
+    main>.hero h1 {
+        font-size: 3.5em;
+    }
+}
+
+
+/* make page : default content */
+
+main .section-wrapper > div {
+    margin: auto; 
+    max-width: 672px;
+    padding: 0 32px;
+}
+
+main .section-wrapper h2 {
+    font-size: 36px;
+    line-height: 40px;
+    margin: 0;
+    margin-top: 120px;
+    text-align: left;
+    font-weight: 800;
+}
+
+
+main .section-wrapper h2:first-of-type {
+    text-align: center;
+}
+
+main .section-wrapper p {
+    font-size: 20px;
+    line-height: 24px;
+    margin: 32px 0;
+    text-align: left;
+}
+
+main .section-wrapper p:first-of-type {
+    text-align: center;
+}
+
+main .section-wrapper p.button-container {
+    text-align: center;
+}
+
+@media (min-width:600px) {
+    main .section-wrapper h2 {
+        font-size: 45px;
+        line-height: 49px;
+        margin-top: 80px;
+        text-align: center;
+    }
+
+    main .section-wrapper p {
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+}
+
+
+/* blog page */
+
 .blog-page main .byline {
     font-size: 0.8em;
     color: #888;
@@ -247,24 +350,4 @@ main .hero .hero-bg img {
     display: inline-block;
     margin-bottom: -3px;
     opacity: 0.5;
-}
-
-main .section-wrapper.hero > div {
-    padding: 0;
-}
-
-.hidden {
-    display: none;
-}
-
-@media (min-width:600px) {
-    main>.hero h1 {
-        font-size: 3em;
-    }
-}
-
-@media (min-width:900px) {
-    main>.hero h1 {
-        font-size: 3.5em;
-    }
 }

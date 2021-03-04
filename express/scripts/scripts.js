@@ -35,7 +35,7 @@ function wrapSections(element) {
   });
 }
 
-function getLocale(url) {
+export function getLocale(url) {
   const locale = url.pathname.split('/')[1];
   if (/^[a-z-]{2}(-[a-zA-Z-]*)?-[A-Z]{2}$/.test(locale)) {
     return locale;
@@ -89,22 +89,6 @@ function decorateHeader() {
   `;
 }
 
-async function fetchBlueprint(pathname) {
-  if (window.spark.$blueprint) {
-    return (window.spark.$blueprint);
-  }
-
-  const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
-  const resp = await fetch(`${bpPath}.plain.html`);
-  // eslint-disable-next-line no-console
-  console.log('fetching...');
-  const body = await resp.text();
-  const $main = createTag('main');
-  $main.innerHTML = body;
-  window.spark.$blueprint = $main;
-  return ($main);
-}
-
 function decorateDoMoreEmbed() {
   document.querySelectorAll('div.embed-internal-domore > div').forEach(($domore) => {
     const $ps = $domore.querySelectorAll(':scope>p');
@@ -131,7 +115,7 @@ function decorateBlocks() {
     if ($section) {
       $section.classList.add(`${blockName}-container`);
     }
-    const blocksWithOptions = ['checker-board'];
+    const blocksWithOptions = ['checker-board', 'template-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-');
@@ -288,43 +272,11 @@ function decorateBlogPosts() {
   });
 }
 
-async function decorateTemplateLists() {
-  const $templateLists = Array.from(document.querySelectorAll('main .template-list'));
-  for (let i = 0; i < $templateLists.length; i += 1) {
-    const $block = $templateLists[i];
-    const rows = $block.children.length;
-    const locale = getLocale(window.location);
-    if (rows === 0 && locale !== 'en-US') {
-      // eslint-disable-next-line no-await-in-loop
-      const $blueprint = await fetchBlueprint(window.location.pathname);
-      $block.innerHTML = $blueprint.querySelectorAll('.template-list')[i].innerHTML;
-    }
-  }
-
-  /* --- inherit hero image, this should go somewhere else --- */
-  const $heroPicture = document.querySelector('.hero-bg');
-
-  if (!$heroPicture && window.spark.$blueprint) {
-    const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
-    if ($bpHeroImage) {
-      const $heroSection = document.querySelector('main .hero');
-      const $heroDiv = document.querySelector('main .hero > div');
-      const $p = createTag('p');
-      const $pic = createTag('picture', { class: 'hero-bg' });
-      $pic.appendChild($bpHeroImage);
-      $p.append($pic);
-
-      $heroSection.classList.remove('hero-noimage');
-      $heroDiv.prepend($p);
-    }
-  }
-}
-
 function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   decorateBlocks();
-  loadLazyFooter();
+  //loadLazyFooter();
   if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
     const usp = new URLSearchParams(window.location.search);
@@ -335,7 +287,6 @@ function postLCP() {
     }, ms);
   }
   decorateBlogPosts();
-  decorateTemplateLists();
 }
 
 function decorateHero() {
@@ -346,7 +297,7 @@ function decorateHero() {
   if ($h1) {
     const $main = document.querySelector('main');
     if ($main.children.length === 1) {
-      $heroSection = createTag('div', { class: 'section-wrapper hero' });
+      $heroSection = createTag('div', { class: 'hero' });
       const $div = createTag('div');
       $heroSection.append($div);
       if ($heroPicture) {
@@ -357,6 +308,7 @@ function decorateHero() {
     } else {
       $heroSection = $h1.closest('.section-wrapper');
       $heroSection.classList.add('hero');
+      $heroSection.classList.remove('section-wrapper');
     }
   }
   if ($heroPicture) {
@@ -453,10 +405,12 @@ function decorateButtons() {
     if (!$a.querySelector('img')) {
       if ($up.childNodes.length === 1 && $up.tagName === 'P') {
         $a.className = 'button secondary';
+        $up.classList.add('button-container');
       }
       if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
           && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
         $a.className = 'button primary';
+        $twoUp.classList.add('button-container');
       }
     }
   });
@@ -499,44 +453,6 @@ function decorateBlogPage() {
     $postedOn.remove();
     decorateLegacyLinks();
   }
-}
-
-function decorateHowTo() {
-  const $head = document.head;
-  document.querySelectorAll('main .how-to-steps').forEach(($howto) => {
-    const $heading = $howto.previousElementSibling;
-    const $rows = Array.from($howto.children);
-    const $schema = createTag('script', { type: 'application/ld+json' });
-    const schema = {
-      '@context': 'http://schema.org',
-      '@type': 'HowTo',
-      name: $heading.textContent,
-      step: [],
-    };
-
-    $rows.forEach(($row, i) => {
-      const $cells = Array.from($row.children);
-      const $number = createTag('div', { class: 'number' });
-      $number.innerHTML = `<span>${i + 1}</span>`;
-      $row.prepend($number);
-      schema.step.push({
-        '@type': 'HowToStep',
-        position: i + 1,
-        name: $cells[0].textContent,
-        itemListElement: {
-          '@type': 'HowToDirection',
-          text: $cells[1].textContent,
-        },
-      });
-      const $h3 = createTag('h3');
-      $h3.innerHTML = $cells[0].textContent;
-      $cells[1].prepend($h3);
-      $cells[1].classList.add('tip');
-      $cells[0].remove();
-    });
-    $schema.innerHTML = JSON.stringify(schema);
-    $head.append($schema);
-  });
 }
 
 async function checkTesting(url) {
@@ -873,7 +789,6 @@ async function decoratePage() {
   decorateHero();
   decorateTemplate();
   decorateButtons();
-  decorateHowTo();
   decorateMigratedPages();
   decorateBlogPage();
   decorateTutorials();

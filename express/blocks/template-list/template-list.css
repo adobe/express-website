@@ -1,0 +1,25 @@
+main .template-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+main .template-list > div p {
+    margin: 0;
+}
+
+main .template-list > div {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    margin: 20px;
+    justify-content: flex-end;
+    border: 1px solid #ccc;
+}
+
+main .template-list.large > div {
+    width: 100%;
+    margin: 0;
+    border: 0;
+}
