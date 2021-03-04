@@ -474,7 +474,7 @@ async function decorateTesting() {
   if (await checkTesting(window.location.href)) {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
-    loadScript('/scripts/martech.js', null, 'module');
+    loadScript('/express/scripts/martech.js', null, 'module');
   }
 
   if (!window.location.host.includes('adobe.com')) {
