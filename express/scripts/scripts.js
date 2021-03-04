@@ -283,7 +283,7 @@ function postLCP() {
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
-      loadScript('/scripts/martech.js', null, 'module');
+      loadScript(martechUrl, null, 'module');
     }, ms);
   }
   decorateBlogPosts();
