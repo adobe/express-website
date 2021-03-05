@@ -711,7 +711,24 @@ function decorateMetaData() {
   }
 }
 
+function loadtemplateCSS() {
+  // todo: read from page metadata
+  const path = window.location.pathname;
+  let template = 'default';
+  if (path.includes('/make/')) {
+    template = 'make';
+  } else if (path.includes('/20')) {
+    tenplate = 'blog';
+  } else if (path.endsWith('/')
+    || path.endsWith('/index.html')
+    || path.endsWith('/index')) {
+    template = 'home';
+  }
+  loadCSS(`/express/styles/${template}.css`);
+}
+
 async function decoratePage() {
+  loadtemplateCSS();
   await decorateTesting();
   wrapSections('main>div');
   decorateHeader();
