@@ -164,54 +164,6 @@ main .tutorials-container .results .tutorial-card-tags span {
   margin: 5px;
 }
 
-main .filter-pages {
-  text-align: left;
-}
-
-main .filter-pages .results {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-main .filter-pages .results .card {
-  display: flex;
-  flex-direction: column;
-  width: 217px;
-  margin: 10px;
-  background-color: #eee;
-}
-
-main .filter-pages .results .card img {
-  height: 140px;
-  width: 100%;
-  object-fit: cover;
-  object-position: center center;
-}
-
-main .filter-pages .stats {
-  color: grey;
-  padding: 10px 0;
-}
-
-
-main .filter-pages .results .card-body {
-  padding: 0 10px;
-
-}
-main .filter-pages .results .card-body p {
-  font-size: 0.7em;
-}
-main .filter-pages .results .card-body p b {
-  background-color: lightsalmon;
-}
-
-main .filter-pages input {
-  font-size: 30px;
-  border: none;
-  width: 100%;
-  border-bottom: 1px solid lightgray
-}
 
 main video {
   max-width: 100%;

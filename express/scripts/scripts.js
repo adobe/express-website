@@ -191,7 +191,7 @@ async function loadLazyFooter() {
   });
 }
 
-function readBlockConfig($block) {
+export function readBlockConfig($block) {
   const config = {};
   $block.querySelectorAll(':scope>div').forEach(($row) => {
     if ($row.children && $row.children[1]) {
@@ -324,77 +324,6 @@ function decorateHero() {
   } else {
     $heroSection.classList.add('hero-noimage');
     postLCP();
-  }
-}
-
-async function fetchFullIndex(indices) {
-  const fullIndex = [];
-
-  await Promise.all(indices.map(async (url) => {
-    if (url) {
-      const resp = await fetch(url);
-      const json = await resp.json();
-      // eslint-disable-next-line no-console
-      console.log(`${url}: ${json.data.length}`);
-      json.data.sort((e1, e2) => e1.path.localeCompare(e2.path));
-      fullIndex.push(...json.data.filter((e) => !!e.path));
-    }
-  }));
-  return (fullIndex);
-}
-
-function filterMigratedPages(filter) {
-  const $results = document.getElementById('page-filter-results');
-  const $stats = document.getElementById('page-filter-stats');
-  $results.innerHTML = '';
-  const index = window.fullIndex;
-  let counter = 0;
-  if (index) {
-    index.forEach((page) => {
-      if (page.path.includes(filter)) {
-        counter += 1;
-        let { path } = page;
-        if (!path.startsWith('/')) path = `/${path}`;
-        path = path.replace('.html', '');
-        let markedUpPath = path;
-        if (filter) markedUpPath = path.split(filter).join(`<b>${filter}</b>`);
-        const $card = createTag('div', { class: 'card' });
-        $card.innerHTML = `<div class="card-image">
-          <img loading="lazy" src="${page.image}">
-        </div>
-        <div class="card-body">
-          <h3>${page.title}</h3>
-          <p>${markedUpPath}</p>
-        </div>`;
-        $card.addEventListener('click', () => {
-          window.location.href = path;
-        });
-        $results.appendChild($card);
-      }
-    });
-  }
-  $stats.innerHTML = `${counter} page${counter !== 1 ? 's' : ''} found`;
-}
-
-async function decorateMigratedPages() {
-  const $filterPages = document.querySelector('main .filter-pages');
-  if ($filterPages) {
-    const config = readBlockConfig($filterPages);
-
-    $filterPages.innerHTML = `<input type="text" id="page-filter" placeholder="type to filter" />
-    <div class="stats" id="page-filter-stats"></div>
-    <div class="results" id="page-filter-results"></div>`;
-
-    const $pageFilter = document.getElementById('page-filter');
-    $pageFilter.addEventListener('keyup', () => {
-      filterMigratedPages($pageFilter.value);
-    });
-
-    const indices = config.indices.split('.json').map((e) => (e ? `${e}.json` : undefined));
-
-    window.fullIndex = await fetchFullIndex(indices);
-
-    filterMigratedPages($pageFilter.value);
   }
 }
 
@@ -789,7 +718,6 @@ async function decoratePage() {
   decorateHero();
   decorateTemplate();
   decorateButtons();
-  decorateMigratedPages();
   decorateBlogPage();
   decorateTutorials();
   decorateMetaData();

@@ -1,0 +1,70 @@
+main .filter-pages {
+    margin-top: 64px;
+    text-align: left;
+  }
+
+  main .filter-pages-container > div {
+      max-width: 100%;
+  }
+
+  
+  main .filter-pages .results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  main .filter-pages .results .card {
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    margin: 16px;
+  }
+  
+  main .filter-pages .results .card img {
+    height: 240px;
+    width: 240px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 10px;
+  }
+  
+  main .filter-pages .stats {
+    color: lightgrey;
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  
+  main .filter-pages .results .card-body {
+    padding: 0 15px;
+  
+  }
+
+  main .filter-pages .results .card-body h3 {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    color: #1473E6;
+  }
+
+  main .filter-pages .results .card-body p {
+    font-size: 0.7em;
+    margin: 0;
+    text-align: left;
+    line-height: normal;
+  }
+  main .filter-pages .results .card-body p b {
+    background-color: lightsalmon;
+  }
+  
+  main .filter-pages input {
+    font-size: 30px;
+    border: none;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    font-weight: 800;
+    font-family: adobe-clean;
+  }
+  
