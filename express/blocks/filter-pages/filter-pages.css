@@ -47,6 +47,10 @@ main .filter-pages {
     margin: 0;
     font-size: 16px;
     color: #1473E6;
+    font-weight: 600;
+    text-align: left;
+    line-height: 1.1em;
+    margin-bottom: 3px;
   }
 
   main .filter-pages .results .card-body p {

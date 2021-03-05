@@ -35,7 +35,6 @@ async function fetchBlueprint(pathname) {
 }
 
 async function decorateTemplateList($block) {
-
   $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
     const $parent = $a.closest('div');
     $a.remove();

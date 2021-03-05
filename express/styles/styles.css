@@ -351,19 +351,3 @@ main .section-wrapper p.button-container {
     }
 
 }
-
-
-/* blog page */
-
-.blog-page main .byline {
-    font-size: 0.8em;
-    color: #888;
-}
-
-.blog-page main .byline img {
-    height: 1em;
-    width: 1em;
-    display: inline-block;
-    margin-bottom: -3px;
-    opacity: 0.5;
-}
