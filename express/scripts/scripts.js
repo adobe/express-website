@@ -711,8 +711,7 @@ function decorateMetaData() {
   }
 }
 
-function loadtemplateCSS() {
-  // todo: read from page metadata
+function setTemplate() {
   const path = window.location.pathname;
   let template = 'default';
   if (path.includes('/make/')) {
@@ -724,11 +723,12 @@ function loadtemplateCSS() {
     || path.endsWith('/index')) {
     template = 'home';
   }
-  loadCSS(`/express/styles/${template}.css`);
+  // todo: read template from page metadata
+  document.documentElement.classList.add(template);
 }
 
 async function decoratePage() {
-  loadtemplateCSS();
+  setTemplate();
   await decorateTesting();
   wrapSections('main>div');
   decorateHeader();
