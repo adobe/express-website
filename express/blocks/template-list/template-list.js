@@ -35,11 +35,8 @@ async function fetchBlueprint(pathname) {
 }
 
 async function decorateTemplateList($block) {
-  const rows = $block.children.length;
-  const locale = getLocale(window.location);
 
   $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
-    console.log($a);
     const $parent = $a.closest('div');
     $a.remove();
     const picture = $parent.innerHTML;
@@ -48,6 +45,13 @@ async function decorateTemplateList($block) {
     $a.innerHTML = picture;
     $a.className = '';
   });
+
+  const rows = $block.children.length;
+  const locale = getLocale(window.location);
+
+  if (rows > 6) {
+    $block.classList.add('masonry');
+  }
 
   if (rows === 0 && locale !== 'en-US') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));

@@ -44,6 +44,9 @@ main .template-list > div {
     width: 300px;
     margin: 32px;
     justify-content: flex-end;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 
@@ -71,11 +74,28 @@ main .template-list.large > div img {
     
     main .template-list > div img {
         width: 240px;
-    }    
+    }
+    
+    main .template-list.masonry {
+        display: block;
+        columns: 240px 2;
+        margin: auto;
+        column-gap: 32px;
+        width: 528px;
+    }
+
 }
 
 @media (min-width: 900px) {
     main .template-list-container > div {
         max-width: 1000px;
+    }
+
+    main .template-list.masonry {
+        display: block;
+        columns: 240px 3;
+        margin: auto;
+        column-gap: 32px;
+        width: 792px;
     }
 }

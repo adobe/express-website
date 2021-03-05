@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window */
+/* eslint-disable import/named, import/extensions */
 
 export default function decorateCheckerBoards($block) {
   const blobPrefix = 'https://hlx.blob.core.windows.net/external/';
