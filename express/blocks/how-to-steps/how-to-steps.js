@@ -11,6 +11,7 @@
  */
 
 /* global document */
+/* eslint-disable import/named, import/extensions */
 
 import {
   createTag,

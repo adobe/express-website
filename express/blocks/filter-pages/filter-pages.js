@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window fetch document */
+/* eslint-disable import/named, import/extensions */
 
 import {
   createTag,
