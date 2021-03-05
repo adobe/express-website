@@ -36,7 +36,8 @@ async function decorateTemplateList($block) {
   const rows = $block.children.length;
   const locale = getLocale(window.location);
 
-  $block.querySelectorAll('div > div:first-of-type a').forEach(($a) => {
+  $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
+    console.log($a);
     const $parent = $a.closest('div');
     $a.remove();
     const picture = $parent.innerHTML;

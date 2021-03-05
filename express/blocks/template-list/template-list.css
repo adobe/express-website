@@ -3,6 +3,35 @@ main .template-list {
     flex-wrap: wrap;
     justify-content: center;
     margin: 40px 0;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+}
+
+main .template-list a:any-link {
+    text-decoration: none;
+    color: #1473E6;
+    padding-left: 16px;
+    padding-top: 6px;
+    display: flex;
+}
+
+main .template-list div > div:nth-child(2) a:any-link::after {
+    display: flex;
+    width: 6px;
+    height: 6px;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+    border-style: solid;
+    border-color: #1473E6;
+    transform-origin: 75% 75%;
+    transform: rotate( -45deg );
+    content: "";
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 2.25px;
 }
 
 main .template-list > div p {
@@ -12,14 +41,41 @@ main .template-list > div p {
 main .template-list > div {
     display: flex;
     flex-direction: column;
-    width: 250px;
-    margin: 20px;
+    width: 300px;
+    margin: 32px;
     justify-content: flex-end;
-    border: 1px solid #ccc;
+}
+
+
+main .template-list > div img {
+    border-radius: 10px;
+    width: 300px;
 }
 
 main .template-list.large > div {
     width: 100%;
     margin: 0;
     border: 0;
+}
+
+main .template-list.large > div img {
+    width: 100%;
+}
+
+
+@media (min-width: 600px) {
+    main .template-list > div {
+        width: 240px;
+        margin: 12px;
+    }
+    
+    main .template-list > div img {
+        width: 240px;
+    }    
+}
+
+@media (min-width: 900px) {
+    main .template-list-container > div {
+        max-width: 1000px;
+    }
 }

@@ -49,7 +49,6 @@ header .mobile .hamburger::before {
     header {
         height: 98px;
         background-size: 1201px auto;
-        b_ackground-image: url(/express/gnav-placeholder/backdrop2.png);
     }
 
     header .mobile {
