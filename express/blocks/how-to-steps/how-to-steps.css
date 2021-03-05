@@ -13,6 +13,7 @@ main .how-to-steps > div {
     font-size: 28px;
     line-height: 32px;
     font-weight: 800;
+    text-align: left;
   }
   
   main .how-to-steps .number span {
