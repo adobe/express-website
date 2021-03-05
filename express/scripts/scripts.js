@@ -711,7 +711,20 @@ function decorateMetaData() {
   }
 }
 
+function setTemplate() {
+  const path = window.location.pathname;
+  let template = 'default';
+  if (path.includes('/make/')) {
+    template = 'make';
+  } else if (path.includes('/20')) {
+    template = 'blog';
+  }
+  // todo: read template from page metadata
+  document.documentElement.classList.add(template);
+}
+
 async function decoratePage() {
+  setTemplate();
   await decorateTesting();
   wrapSections('main>div');
   decorateHeader();
