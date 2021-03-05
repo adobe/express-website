@@ -717,11 +717,7 @@ function setTemplate() {
   if (path.includes('/make/')) {
     template = 'make';
   } else if (path.includes('/20')) {
-    tenplate = 'blog';
-  } else if (path.endsWith('/')
-    || path.endsWith('/index.html')
-    || path.endsWith('/index')) {
-    template = 'home';
+    template = 'blog';
   }
   // todo: read template from page metadata
   document.documentElement.classList.add(template);
