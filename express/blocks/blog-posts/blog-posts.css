@@ -1,0 +1,31 @@
+
+main .blog-posts .card {
+    display: flex;
+    flex-direction: column;
+    width: 290px;
+    margin: 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+  main .blog-posts .card .card-image {
+    line-height: 0;
+  }
+  
+  main .blog-posts .card .card-image img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+  
+  main .blog-posts .card .card-body {
+    padding: 20px;
+    border: 1px solid lightgrey;
+    border-radius: 0 0 5px 5px;
+    border-top: none;
+    height: 300px;
+  }
+  
+  main .blog-posts .card .card-body p {
+    font-size: 1rem;
+  }
+  

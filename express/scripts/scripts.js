@@ -206,72 +206,6 @@ export function readBlockConfig($block) {
   return config;
 }
 
-async function fetchBlogIndex() {
-  const resp = await fetch('/blog-index.json');
-  const json = await resp.json();
-  return (json.data);
-}
-
-async function filterBlogPosts(locale, filters) {
-  if (!window.blogIndex) {
-    window.blogIndex = await fetchBlogIndex();
-  }
-  const index = window.blogIndex;
-
-  const f = {};
-  for (const name of Object.keys(filters)) {
-    const vals = filters[name];
-    let v = vals;
-    if (!Array.isArray(vals)) {
-      v = [vals];
-    }
-    // eslint-disable-next-line no-console
-    console.log(v);
-    f[name] = v.map((e) => e.toLowerCase().trim());
-  }
-
-  const result = index.filter((post) => {
-    let matchedAll = true;
-    for (const name of Object.keys(f)) {
-      let matched = false;
-      f[name].forEach((val) => {
-        if (post[name].toLowerCase().includes(val)) {
-          matched = true;
-        }
-      });
-      if (!matched) {
-        matchedAll = false;
-        break;
-      }
-    }
-    return (matchedAll);
-  });
-
-  return (result);
-}
-
-function decorateBlogPosts() {
-  document.querySelectorAll('main .blog-posts').forEach(async ($blogPosts) => {
-    const config = readBlockConfig($blogPosts);
-    const posts = await filterBlogPosts('en-US', config);
-    $blogPosts.innerHTML = '';
-    posts.forEach((post) => {
-      const $card = createTag('div', { class: 'card' });
-      $card.innerHTML = `<div class="card-image">
-        <img loading="lazy" src="${post.image}">
-      </div>
-      <div class="card-body">
-        <h3>${post.title}</h3>
-        <p>${post.teaser}</p>
-      </div>`;
-      $card.addEventListener('click', () => {
-        window.location.href = `/${post.path}`;
-      });
-      $blogPosts.appendChild($card);
-    });
-  });
-}
-
 function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
@@ -286,7 +220,6 @@ function postLCP() {
       loadScript(martechUrl, null, 'module');
     }, ms);
   }
-  decorateBlogPosts();
 }
 
 function decorateHero() {
