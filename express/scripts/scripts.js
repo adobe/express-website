@@ -127,7 +127,6 @@ function decorateBlocks() {
     $block.classList.add('block');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
-        console.log(blockName, mod);
         mod.default($block, blockName);
       })
       .catch((err) => console.log('failed to load module', err));
