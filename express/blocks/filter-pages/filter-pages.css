@@ -19,6 +19,7 @@ main .filter-pages {
     flex-direction: column;
     width: 240px;
     margin: 16px;
+    cursor: pointer;
   }
   
   main .filter-pages .results .card img {
