@@ -9,18 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* eslint-env mocha */
+import { JSDOM } from 'jsdom';
+import { readBlockConfig } from '../../express/scripts/scripts';
 
-module.exports = {
-  root: true,
-  extends: '@adobe/helix',
-  rules: {
-    // allow reassigning param
-    'no-param-reassign': [2, { props: false }],
-  },
-  parser: '@babel/eslint-parser',
-  parserOptions: {
-    allowImportExportEverywhere: true,
-    sourceType: 'module',
-    requireConfigFile: false,
-  },
-};
+describe('scripts#readBlockConfig', () => {
+  it('readBlockConfig', () => {
+    const dom = JSDOM.fragment(
+      '',
+    );
+
+    readBlockConfig(dom.window.document);
+
+    // eslint-disable-next-line no-console
+    console.log(dom.window.document.body.innerHTML);
+  });
+});

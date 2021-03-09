@@ -13,10 +13,9 @@
 
 import {
   createTag,
-  loadCSS,
 } from '../../scripts/scripts';
 
-export default function decorate($block) {
+export default function decorate() {
   document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
     const href = $a.getAttribute('href');
     const url = new URL(href);

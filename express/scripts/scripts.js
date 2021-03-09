@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window, navigator, document, fetch */
+/* eslint-disable no-console */
 
 function toClassName(name) {
   return (name.toLowerCase().replace(/[^0-9a-z]/gi, '-'));
@@ -43,18 +44,18 @@ export function getLocale(url) {
   return 'en-US';
 }
 
-function addDivClasses($element, selector, classes) {
-  const $children = $element.querySelectorAll(selector);
-  $children.forEach(($div, i) => {
-    $div.classList.add(classes[i]);
-  });
-}
+// function addDivClasses($element, selector, classes) {
+//   const $children = $element.querySelectorAll(selector);
+//   $children.forEach(($div, i) => {
+//     $div.classList.add(classes[i]);
+//   });
+// }
 
 function decorateHeader() {
   const $header = document.querySelector('header');
 
   /* init header with placeholder */
-  
+
   $header.innerHTML = `
   <div class="placeholder">
     <div class="mobile">
@@ -87,6 +88,23 @@ function decorateHeader() {
       </div>
     </div>
   `;
+}
+
+/**
+ * Loads a CSS file.
+ * @param {string} href The path to the CSS file
+ */
+export function loadCSS(href) {
+  if (!document.querySelector(`head > link[href="${href}"]`)) {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', href);
+    link.onload = () => {
+    };
+    link.onerror = () => {
+    };
+    document.head.appendChild(link);
+  }
 }
 
 function decorateDoMoreEmbed() {
@@ -135,23 +153,6 @@ function decorateBlocks() {
   });
 }
 
-/**
- * Loads a CSS file.
- * @param {string} href The path to the CSS file
- */
-export function loadCSS(href) {
-  if (!document.querySelector(`head > link[href="${href}"]`)) {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', href);
-    link.onload = () => {
-    };
-    link.onerror = () => {
-    };
-    document.head.appendChild(link);
-  }
-}
-
 export function loadScript(url, callback, type) {
   const $head = document.querySelector('head');
   const $script = createTag('script', { src: url });
@@ -162,33 +163,33 @@ export function loadScript(url, callback, type) {
   $script.onload = callback;
 }
 
-async function loadLazyFooter() {
-  const resp = await fetch('/lazy-footer.plain.html');
-  const inner = await resp.text();
-  const $footer = document.querySelector('footer');
-  $footer.innerHTML = inner;
-  $footer.querySelectorAll('a').forEach(($a) => {
-    const url = new URL($a.href);
-    if (url.hostname === 'spark.adobe.com') {
-      const slash = url.pathname.endsWith('/') ? 1 : 0;
-      $a.href = url.pathname.substr(0, url.pathname.length - slash);
-    }
-  });
-  wrapSections('footer>div');
-  addDivClasses($footer, 'footer > div', ['dark', 'grey', 'grey']);
-  const $div = createTag('div', { class: 'hidden' });
-  const $dark = document.querySelector('footer .dark>div');
+// async function loadLazyFooter() {
+//   const resp = await fetch('/lazy-footer.plain.html');
+//   const inner = await resp.text();
+//   const $footer = document.querySelector('footer');
+//   $footer.innerHTML = inner;
+//   $footer.querySelectorAll('a').forEach(($a) => {
+//     const url = new URL($a.href);
+//     if (url.hostname === 'spark.adobe.com') {
+//       const slash = url.pathname.endsWith('/') ? 1 : 0;
+//       $a.href = url.pathname.substr(0, url.pathname.length - slash);
+//     }
+//   });
+//   wrapSections('footer>div');
+//   addDivClasses($footer, 'footer > div', ['dark', 'grey', 'grey']);
+//   const $div = createTag('div', { class: 'hidden' });
+//   const $dark = document.querySelector('footer .dark>div');
 
-  Array.from($dark.children).forEach(($e, i) => {
-    if (i) $div.append($e);
-  });
+//   Array.from($dark.children).forEach(($e, i) => {
+//     if (i) $div.append($e);
+//   });
 
-  $dark.append($div);
+//   $dark.append($div);
 
-  $dark.addEventListener('click', () => {
-    $div.classList.toggle('hidden');
-  });
-}
+//   $dark.addEventListener('click', () => {
+//     $div.classList.toggle('hidden');
+//   });
+// }
 
 export function readBlockConfig($block) {
   const config = {};
@@ -209,7 +210,7 @@ function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   decorateBlocks();
-  //loadLazyFooter();
+  // loadLazyFooter();
   if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
     const usp = new URLSearchParams(window.location.search);
@@ -271,7 +272,7 @@ function decorateButtons() {
       if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
           && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
         $a.className = 'button primary';
-        $twoUp.classList.add('button-container');
+        $twoup.classList.add('button-container');
       }
     }
   });
@@ -287,14 +288,14 @@ function decorateTemplate() {
   }
 }
 
-function decorateLegacyLinks() {
-  const legacy = 'https://blog.adobespark.com/';
-  document.querySelectorAll(`a[href^="${legacy}"]`).forEach(($a) => {
-    // eslint-disable-next-line no-console
-    console.log($a);
-    $a.href = $a.href.substring(0, $a.href.length - 1).substring(legacy.length - 1);
-  });
-}
+// function decorateLegacyLinks() {
+//   const legacy = 'https://blog.adobespark.com/';
+//   document.querySelectorAll(`a[href^="${legacy}"]`).forEach(($a) => {
+//     // eslint-disable-next-line no-console
+//     console.log($a);
+//     $a.href = $a.href.substring(0, $a.href.length - 1).substring(legacy.length - 1);
+//   });
+// }
 
 async function checkTesting(url) {
   const pathname = new URL(url).pathname.split('.')[0];
