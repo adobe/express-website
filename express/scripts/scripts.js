@@ -629,7 +629,7 @@ function setTemplate() {
   let template = 'default';
   if (path.includes('/make/')) {
     template = 'make';
-  } else if (path.includes('/20')) {
+  } else if (path.includes('/20') || path.includes('/blog/')) {
     template = 'blog';
   }
   // todo: read template from page metadata

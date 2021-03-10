@@ -309,7 +309,14 @@ main .section-wrapper h3 {
     font-weight: 800;
 }
 
-
+main .section-wrapper h4 {
+    font-size: 22px;
+    line-height: 26px;
+    margin: 0;
+    margin-top: 56px;
+    text-align: left;
+    font-weight: 800;
+}
 
 main .section-wrapper h2:first-of-type {
     text-align: center;
@@ -345,9 +352,29 @@ main .section-wrapper p.button-container {
         text-align: center;
     }
 
+    main .section-wrapper h4 {
+        font-size: 28px;
+        line-height: 32px;
+        margin-top: 56px;
+        text-align: center;
+    }
+    
+
     main .section-wrapper p {
         font-size: 18px;
         line-height: 22px;
     }
 
+}
+
+
+.blog main .section-wrapper h3 {
+    font-size: 36px;
+    line-height: 40px;
+    margin-top: 64px;
+    text-align: left;
+}
+
+.blog main .section-wrapper h4 {
+    text-align: left;
 }
