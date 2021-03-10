@@ -650,6 +650,7 @@ async function decoratePage() {
   decorateTutorials();
   decorateMetaData();
   decorateDoMoreEmbed();
+  document.body.classList.add('appear');
 }
 
 window.spark = {};

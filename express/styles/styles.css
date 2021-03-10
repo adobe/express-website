@@ -2,6 +2,11 @@ body {
     font-family: 'adobe-clean', 'Adobe Clean';
     margin: 0;
     padding: 0;
+    display: none;
+}
+
+body.appear {
+    display: block;
 }
 
 /* gnav placeholder */
