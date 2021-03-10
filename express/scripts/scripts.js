@@ -299,14 +299,17 @@ function decorateTemplate() {
 
 async function checkTesting(url) {
   const pathname = new URL(url).pathname.split('.')[0];
-  const resp = await fetch('/testing.json');
-  const json = await resp.json();
-  const matches = json.data.filter((test) => {
-    const testPath = new URL(test['Test URLs']).pathname.split('.')[0];
-    return testPath === pathname;
-  });
+  const resp = await fetch('/express/testing.json');
+  if (resp.ok) {
+    const json = await resp.json();
+    const matches = json.data.filter((test) => {
+      const testPath = new URL(test['Test URLs']).pathname.split('.')[0];
+      return testPath === pathname;
+    });
+    return (!!matches.length);
+  }
 
-  return (!!matches.length);
+  return false;
 }
 
 async function decorateTesting() {
