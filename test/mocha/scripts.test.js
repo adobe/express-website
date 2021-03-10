@@ -11,7 +11,7 @@
  */
 /* eslint-env mocha */
 import { JSDOM } from 'jsdom';
-import { readBlockConfig } from '../../express/scripts/scripts';
+import { readBlockConfig } from '../../express/scripts/scripts.js';
 
 describe('scripts#readBlockConfig', () => {
   it('readBlockConfig', () => {

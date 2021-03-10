@@ -11,7 +11,7 @@
  */
 /* global window */
 
-import { loadScript } from './scripts';
+import { loadScript } from './scripts.js';
 
 function handleConsentSettings() {
   try {

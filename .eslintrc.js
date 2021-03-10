@@ -16,6 +16,9 @@ module.exports = {
   rules: {
     // allow reassigning param
     'no-param-reassign': [2, { props: false }],
+    'import/extensions': ['error', {
+      js: 'always',
+    }],
   },
   parser: '@babel/eslint-parser',
   parserOptions: {

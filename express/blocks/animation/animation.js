@@ -13,7 +13,7 @@
 
 import {
   createTag,
-} from '../../scripts/scripts';
+} from '../../scripts/scripts.js';
 
 export default function decorate() {
   document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
