@@ -44,6 +44,15 @@ export function getLocale(url) {
   return 'en-US';
 }
 
+export function addBlockClasses($block, classNames) {
+  const $rows = Array.from($block.children);
+  $rows.forEach(($row) => {
+    classNames.forEach((className, i) => {
+      $row.children[i].className = className;
+    });
+  });
+}
+
 // function addDivClasses($element, selector, classes) {
 //   const $children = $element.querySelectorAll(selector);
 //   $children.forEach(($div, i) => {

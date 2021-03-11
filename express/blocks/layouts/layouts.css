@@ -1,0 +1,100 @@
+main .layouts {
+    padding-top: 64px;
+}
+
+main .layouts div:first-of-type {
+    margin-top: 0;
+}
+
+main .layouts .layout {
+    height: 0;
+    overflow: hidden;
+    background: white;
+    position: relative;
+    border: 2px dashed #D9D9D9;
+    border-radius: 10px;
+    margin: 32px auto;
+    cursor: pointer;
+    background-color: #F4F4F4;
+    width: 311px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+main .layouts .layout-inside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+main .layouts .layout:hover {
+    border-color: #1473E6;
+}
+
+main .layouts .layout-icon {
+    font-size: 36px;
+    font-weight: 800;
+    color: #484848;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); 
+    margin: auto;
+    left: 0;
+    right: 0;
+}
+
+main .layouts .layout-icon svg {
+    height: 38px;
+    width: 38px;
+    fill: #484848;
+}
+
+main .layouts .layout-description {
+    color: #1473E6;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+}
+
+main .layouts .layout-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width:600px) {
+    main .layouts .layout {
+        width: 250px;
+      }
+    
+      main .layouts {
+        display: block;
+        columns: 240px 2;
+        margin: auto;
+        column-gap: 32px;
+        width: 528px;
+      } 
+}
+
+@media (min-width:900px) {
+    main .layouts .layout {
+        width: 240px;
+      }
+    
+      main .layouts {
+        display: block;
+        columns: 240px 3;
+        margin: auto;
+        column-gap: 32px;
+        width: 792px;
+      } 
+}

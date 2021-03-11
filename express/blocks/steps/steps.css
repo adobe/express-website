@@ -8,6 +8,7 @@ main .steps h3 {
     font-size: 22px;
     line-height: 26px;
     margin-top: 0;
+    text-align: left;
 }
 
 main .steps p {
@@ -39,4 +40,16 @@ main .steps-dark-container {
     padding: 1px 0;
     color: white;
     margin: 120px 0;
+}
+
+@media (min-width:900px) {
+    main .steps {
+        display: flex;
+    }
+
+    main .steps > div {
+        display: flex;
+        margin: 0 16px;
+        width: 30%;
+    } 
 }

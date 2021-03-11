@@ -1,4 +1,11 @@
 main .columns > div {
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+@media (min-width:900px) {
+    main .columns > div {
+        flex-direction: row;
+    }    
 }

@@ -11,12 +11,10 @@
  */
 /* global */
 
+import {
+  addBlockClasses,
+} from '../../scripts/scripts.js';
+
 export default function decorate($block) {
-  const $rows = Array.from($block.children);
-  const classNames = ['step-image', 'step-description'];
-  $rows.forEach(($row) => {
-    classNames.forEach((className, i) => {
-      $row.children[i].className = className;
-    });
-  });
+  addBlockClasses($block, ['step-image', 'step-description']);
 }
