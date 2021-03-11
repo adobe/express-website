@@ -599,35 +599,6 @@ function decorateTutorials() {
   });
 }
 
-function decorateMetaData() {
-  const $meta = document.querySelector('main .metadata');
-  if ($meta) {
-    const metaconfig = readBlockConfig($meta);
-    const mapping = {
-      title: ['og:title', 'twitter:title'],
-      description: ['og:description', 'twitter:description', 'description'],
-    };
-    if (metaconfig.title) document.title = metaconfig.title;
-
-    for (const a of Object.keys(mapping)) {
-      if (metaconfig[a]) {
-        mapping[a].forEach((b) => {
-          let $elem;
-          if (b.includes(':')) {
-            $elem = document.querySelector(`head meta[property="${b}"]`);
-          } else {
-            $elem = document.querySelector(`head meta[name="${b}"]`);
-          }
-          if ($elem) {
-            $elem.setAttribute('content', metaconfig[a]);
-          }
-        });
-      }
-    }
-    $meta.remove();
-  }
-}
-
 function setTemplate() {
   const path = window.location.pathname;
   let template = 'default';
@@ -664,7 +635,6 @@ async function decoratePage() {
   decorateTemplate();
   decorateButtons();
   decorateTutorials();
-  decorateMetaData();
   decorateDoMoreEmbed();
   setLCPTrigger();
   document.body.classList.add('appear');
