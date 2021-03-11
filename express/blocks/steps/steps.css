@@ -42,6 +42,12 @@ main .steps-dark-container {
     margin: 120px 0;
 }
 
+@media (min-width:376px) {
+  main .steps {
+    margin-bottom: 80px;
+  }
+}
+
 @media (min-width:900px) {
     main .steps {
         display: flex;
@@ -49,7 +55,7 @@ main .steps-dark-container {
 
     main .steps > div {
         display: flex;
-        margin: 0 16px;
+        margin: 0 16px 0 0;
         width: 30%;
-    } 
+    }
 }

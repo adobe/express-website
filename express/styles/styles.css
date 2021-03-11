@@ -380,6 +380,14 @@ main .section-wrapper p.button-container {
     text-align: center;
 }
 
+main .section-wrapper.steps-dark-container > div {
+  padding: 120px 32px 0 32px;
+}
+
+main .section-wrapper.steps-dark-container > div > h2 {
+  margin: 0;
+}
+
 @media (min-width:376px) {
     main {
       margin-top: 66px;
@@ -418,21 +426,15 @@ main .section-wrapper p.button-container {
         font-size: 18px;
         line-height: 22px;
     }
-}
+  
+    main .section-wrapper.steps-dark-container > div {
+      padding: 80px 32px 0 32px;
+    }
+  }
 
-@media (min-width:1200px) {
+@media (min-width:900px) {
   main .section-wrapper > div {
     max-width: 1024px;
-  }
-
-  main .section-wrapper div.columns > div > div {
-    width: 50%;
-    text-align: left;
-  }
-
-  main .section-wrapper h1 {
-    font-size: 60px;
-    line-height: 64px;
   }
 
   main .section-wrapper h5 + p,
@@ -447,6 +449,16 @@ main .section-wrapper p.button-container {
   }
 }
 
+@media(min-width:1200px) {
+  main .section-wrapper h1 {
+    font-size: 60px;
+    line-height: 64px;
+  }
+
+  main .section-wrapper.steps-dark-container > div > h2 {
+    text-align: left;
+  }
+}
 
 .blog main .section-wrapper h3 {
     font-size: 36px;

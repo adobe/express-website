@@ -8,4 +8,9 @@ main .columns > div {
     main .columns > div {
         flex-direction: row;
     }    
-}
+
+    main .section-wrapper div.columns > div > div {
+      width: 50%;
+      text-align: left;
+    }
+  }
