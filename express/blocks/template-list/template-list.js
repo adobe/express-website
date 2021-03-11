@@ -52,7 +52,7 @@ async function decorateTemplateList($block) {
     $block.classList.add('masonry');
   }
 
-  if (rows === 0 && locale !== 'en-US') {
+  if (rows === 0 && locale !== 'en') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 

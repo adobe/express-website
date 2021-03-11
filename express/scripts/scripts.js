@@ -38,10 +38,10 @@ function wrapSections(element) {
 
 export function getLocale(url) {
   const locale = url.pathname.split('/')[1];
-  if (/^[a-z-]{2}(-[a-zA-Z-]*)?-[A-Z]{2}$/.test(locale)) {
+  if (/^[a-z]{2}$/.test(locale)) {
     return locale;
   }
-  return 'en-US';
+  return 'en';
 }
 
 export function addBlockClasses($block, classNames) {
@@ -655,7 +655,7 @@ function registerPerformanceLogger() {
       const entries = entryList.getEntries();
       stamp(JSON.stringify(entries));
     });
-    polcp.observe({ type: 'largest-contentful-paint', buffered: true});
+    polcp.observe({ type: 'largest-contentful-paint', buffered: true });
     const pores = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       entries.forEach((entry) => {
