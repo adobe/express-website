@@ -32,7 +32,7 @@ export default function decorate($block) {
     layouts.push(layout);
   });
   $block.innerHTML = '';
-  const knownIcons = ['instagram', 'youtube', 'facebook', 'twitter'];
+  const knownIcons = ['instagram', 'youtube', 'facebook', 'twitter', 'snapchat'];
   layouts.forEach((layout) => {
     const $layout = createTag('div', { class: 'layout', style: `padding-top: ${layout.ratio * 100}%` });
     let iconString = layout.icon;

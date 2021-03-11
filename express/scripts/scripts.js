@@ -637,6 +637,13 @@ function setLCPTrigger() {
   }
 }
 
+function fixIcons() {
+  document.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
+    console.log($use.href);
+    $use.setAttribute('href', `/express/icons.svg#${$use.getAttribute('href').split('#')[1]}`);
+  });
+}
+
 async function decoratePage() {
   setTemplate();
   await decorateTesting();
@@ -645,6 +652,7 @@ async function decoratePage() {
   decorateHero();
   decorateTemplate();
   decorateButtons();
+  fixIcons();
   decorateTutorials();
   decorateDoMoreEmbed();
   setLCPTrigger();
