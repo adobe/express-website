@@ -133,7 +133,7 @@ function decorateBlocks() {
     if ($section) {
       $section.classList.add(`${blockName}-container`);
     }
-    const blocksWithOptions = ['checker-board', 'template-list'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-');
@@ -224,10 +224,11 @@ function postLCP() {
 
 function decorateHero() {
   const $h1 = document.querySelector('main h1');
-  const $heroPicture = $h1.parentElement.querySelector('picture');
-  let $heroSection;
+  // check if h1 is inside a block
 
-  if ($h1) {
+  if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+    const $heroPicture = $h1.parentElement.querySelector('picture');
+    let $heroSection;
     const $main = document.querySelector('main');
     if ($main.children.length === 1) {
       $heroSection = createTag('div', { class: 'hero' });
@@ -243,20 +244,11 @@ function decorateHero() {
       $heroSection.classList.add('hero');
       $heroSection.classList.remove('section-wrapper');
     }
-  }
-  if ($heroPicture) {
-    $heroPicture.classList.add('hero-bg');
-    const $heroImage = $heroPicture.querySelector('img');
-    if ($heroImage.complete) {
-      postLCP();
+    if ($heroPicture) {
+      $heroPicture.classList.add('hero-bg');
     } else {
-      $heroImage.addEventListener('load', () => {
-        postLCP();
-      });
+      $heroSection.classList.add('hero-noimage');
     }
-  } else {
-    $heroSection.classList.add('hero-noimage');
-    postLCP();
   }
 }
 
@@ -639,6 +631,21 @@ function setTemplate() {
   document.documentElement.classList.add(template);
 }
 
+function setLCPTrigger() {
+  const $lcpCandidate = document.querySelector('main img');
+  if ($lcpCandidate) {
+    if ($lcpCandidate.complete) {
+      postLCP();
+    } else {
+      $lcpCandidate.addEventListener('load', () => {
+        postLCP();
+      });
+    }
+  } else {
+    postLCP();
+  }
+}
+
 async function decoratePage() {
   setTemplate();
   await decorateTesting();
@@ -650,6 +657,7 @@ async function decoratePage() {
   decorateTutorials();
   decorateMetaData();
   decorateDoMoreEmbed();
+  setLCPTrigger();
   document.body.classList.add('appear');
 }
 

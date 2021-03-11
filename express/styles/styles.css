@@ -296,6 +296,14 @@ main .section-wrapper > div {
     padding: 0 32px;
 }
 
+main .section-wrapper h1 {
+    font-size: 45px;
+    line-height: 49px;
+    margin: 0;
+    margin-top: 64px;
+    font-weight: 800;
+}
+
 main .section-wrapper h2 {
     font-size: 36px;
     line-height: 40px;
@@ -323,8 +331,10 @@ main .section-wrapper h4 {
     font-weight: 800;
 }
 
-main .section-wrapper h2:first-of-type {
-    text-align: center;
+main .section-wrapper h5 {
+    font-size: 22px;
+    line-height: 26px;
+    font-weight: bold;
 }
 
 main .section-wrapper p {
@@ -332,10 +342,6 @@ main .section-wrapper p {
     line-height: 24px;
     margin: 32px 0;
     text-align: left;
-}
-
-main .section-wrapper p:first-of-type {
-    text-align: center;
 }
 
 main .section-wrapper p.button-container {

@@ -1,0 +1,42 @@
+main .steps {
+    margin-top: 56px;
+    text-align: left;
+    margin-bottom: 120px;
+}
+
+main .steps h3 {
+    font-size: 22px;
+    line-height: 26px;
+    margin-top: 0;
+}
+
+main .steps p {
+    font-size: 18px;
+    line-height: 22px;
+    margin: 0;
+    text-align: left;
+}
+
+main .steps > div {
+    display: flex;
+    margin: 16px 0;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: #292929;
+}
+
+main .steps .step-image {
+    width: 32px;
+    margin-right: 8px;
+}
+
+main .steps .step-description {
+    width: 100%;
+}
+
+main .steps-dark-container {
+    background-color: black;
+    padding: 1px 0;
+    color: white;
+    margin: 120px 0;
+}
