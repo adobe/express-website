@@ -189,12 +189,27 @@ a.button:any-link {
     line-height: 34px;
     font-size: 1rem;
     background-color: #1473e6;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     color: #fff;
     transition: background-color .4s;
     margin: 10px;
     display: inline-block;
+}
+
+a.button > svg {
+  float: left;
+  display: inline;
+  width: 20px;
+  height: 20px;
+  margin: 8px 8px 8px 0;
+  fill: currentColor;
+  color: currentColor;
+}
+
+a.button > svg > use {
+  fill: currentColor;
+  color: currentColor;
 }
 
 /* make page : hero */
@@ -290,6 +305,10 @@ main .hero > div {
 
 /* make page : default content */
 
+main {
+  margin-top: 106px;
+}
+
 main .section-wrapper > div {
     margin: auto; 
     max-width: 672px;
@@ -300,7 +319,6 @@ main .section-wrapper h1 {
     font-size: 45px;
     line-height: 49px;
     margin: 0;
-    margin-top: 64px;
     font-weight: 800;
 }
 
@@ -337,6 +355,20 @@ main .section-wrapper h5 {
     font-weight: bold;
 }
 
+main .section-wrapper h1 + h5 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: normal;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+main .section-wrapper h5 + p {
+  font-size: 16px;
+  text-align: center;
+  margin: 0;
+}
+
 main .section-wrapper p {
     font-size: 20px;
     line-height: 24px;
@@ -348,7 +380,11 @@ main .section-wrapper p.button-container {
     text-align: center;
 }
 
-@media (min-width:600px) {
+@media (min-width:376px) {
+    main {
+      margin-top: 66px;
+    }
+  
     main .section-wrapper h2 {
         font-size: 45px;
         line-height: 49px;
@@ -370,7 +406,14 @@ main .section-wrapper p.button-container {
         text-align: center;
     }
     
-
+    main .section-wrapper h1 + h5 {
+      font-size: 24px;
+      line-height: 29px;
+      font-weight: normal;
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+    
     main .section-wrapper p {
         font-size: 18px;
         line-height: 22px;
