@@ -3,12 +3,12 @@ version: 1
 indices:
   blog:
     source: html
-    fetch: https://{repo}-{owner}.project-helix.page/{path}
+    fetch: https://{repo}-{owner}.hlx.page/{path}
     include:
-      - '20[1-3][0-9]/[01][0-9]/[0-3][0-9]/*.(docx|md)'
+      - 'express/learn/blog/*.(docx|md)'
     exclude:
       - '**/Document.*'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/blog-index.xlsx?d=w2f1369f931484d648bcc30968d83cded&csf=1&web=1&e=fg63wS
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/express/learn/blog/query-index.xlsx?d=w24dec97b02f04be084a8ccc8c02382bf&csf=1&web=1&e=aybVc5
     properties:
       author:
         select: main > div:nth-of-type(1) > p:nth-of-type(2)
@@ -45,12 +45,13 @@ indices:
 
   website: &default
     source: html
-    fetch: https://{repo}-{owner}.project-helix.page/{path}
+    fetch: https://{repo}-{owner}.hlx.page/{path}
     include:
-      - '(make|templates)/**/*.(docx|md)'
+      - 'express/**/*.(docx|md)'
     exclude:
       - '**/Document.*'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/query-index.xlsx?d=w894f33df61b343bf94859b3ec87ed012&csf=1&web=1&e=JJcnUD
+      - 'express/learn/blog/**'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/express/query-index.xlsx?d=wc39f807e76884c2eb5b9e5181329ac6e&csf=1&web=1&e=WFpcpD
     properties:
       title:
         select: head > meta[property="og:title"]
@@ -69,86 +70,56 @@ indices:
         value: |
           match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
 
-  denmark:
-    <<: *default
-    include:
-      - 'da-DK/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/da-DK/query-index.xlsx?d=w34ec316202704023ae4921e142817af9&csf=1&web=1&e=qeBh1t
-
   germany:
     <<: *default
     include:
-      - 'de-DE/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/de-DE/query-index.xlsx?d=waf21c362e52e4b0884549e99a94559dc&csf=1&web=1&e=Fdk30c
+      - 'de/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/de/express/query-index.xlsx?d=wd6f7543049cf4838a6b617d706b25d12&csf=1&web=1&e=bgQp9g
 
   spain:
     <<: *default
     include:
-      - 'es-ES/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/es-ES/query-index.xlsx?d=w6ba5c3d25e2d415096f918f9b0d16449&csf=1&web=1&e=oEMrGf
-
-  finland:
-    <<: *default
-    include:
-      - 'fi-FI/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/fi-FI/query-index.xlsx?d=wbcd10f9ff54e4383879118af4c138e50&csf=1&web=1&e=e5NDmm
+      - 'es/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/es/express/query-index.xlsx?d=w0f26b5bbff824048bb64d25abdec6542&csf=1&web=1&e=59vIYN
 
   france:
     <<: *default
     include:
-      - 'fr-FR/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/fr-FR/query-index.xlsx?d=w9b22eda6e56448afa50f5a6f32e13667&csf=1&web=1&e=vh9QFh
+      - 'fr/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/fr/express/query-index.xlsx?d=w224c7112bb3c4f1ca61d474471692e26&csf=1&web=1&e=tNGQpC
 
   italy:
     <<: *default
     include:
-      - 'it-IT/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/it-IT/query-index.xlsx?d=w96cd087a998c4398b64f7a0fd02f9d23&csf=1&web=1&e=bzFIT6
+      - 'it/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/it/express/query-index.xlsx?d=wf5fe76ac74c84137bc971ddb26c4c025&csf=1&web=1&e=iCAPc1
 
   japan:
     <<: *default
     include:
-      - 'ja-JP/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/ja-JP/query-index.xlsx?d=w4a9640dc295b436198e93cd41dda88f0&csf=1&web=1&e=dsJW31
+      - 'jp/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/jp/express/query-index.xlsx?d=wbb195af834f14eb893a69fb45c8647b7&csf=1&web=1&e=7HQUIf
 
   korea:
     <<: *default
     include:
-      - 'ko-KR/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/ko-KR/query-index.xlsx?d=w5f70bfa2846f4b32bd494515f16a1a1c&csf=1&web=1&e=5BYelj
-
-  norway:
-    <<: *default
-    include:
-      - 'nb-NO/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/nb-NO/query-index.xlsx?d=w91e0ce70cc8b4eb9b96f998357678df1&csf=1&web=1&e=RoQbEY
+      - 'kr/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/kr/express/query-index.xlsx?d=w6eb6c21b8313419ab341631c55901a7d&csf=1&web=1&e=3m9As0
 
   netherlands:
     <<: *default
     include:
-      - 'nl-NL/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/nl-NL/query-index.xlsx?d=wf708becba51b46b2a8ee22d0fc2d1235&csf=1&web=1&e=didBoW
+      - 'nl/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/nl/express/query-index.xlsx?d=wfd7830086887453aa33a6567e3bbea21&csf=1&web=1&e=3eJ9xU
 
   brasil:
     <<: *default
     include:
-      - 'pt-BR/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/pt-BR/query-index.xlsx?d=w3dbeff4403034f3a9bc03dfb28c8da65&csf=1&web=1&e=1VpwLM
-
-  sweden:
-    <<: *default
-    include:
-      - 'sv-SE/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/sv-SE/query-index.xlsx?d=w34788cef298e4153a53114321d90cadd&csf=1&web=1&e=dGRvwC
-
-  china:
-    <<: *default
-    include:
-      - 'zh-Hans-CN/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/zh-Hans-CN/query-index.xlsx?d=w217d1db4ba2847278e5eaa3bae6dbb4e&csf=1&web=1&e=vkTQAw
+      - 'br/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/br/express/query-index.xlsx?d=wcd1a04cc66824c01860b79578357f48f&csf=1&web=1&e=GgwHs3
 
   taiwan:
     <<: *default
     include:
-      - 'zh-Hant-TW/(make|templates)/**/*.(docx|md)'
-    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/zh-Hant-TW/query-index.xlsx?d=w8873df701f1c4962983d41516d8400ce&csf=1&web=1&e=8fvaGg
+      - 'tw/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/tw/express/query-index.xlsx?d=wda3497ec33844e609aacbaaf66e05893&csf=1&web=1&e=vg6Emc
