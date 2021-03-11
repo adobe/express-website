@@ -11,13 +11,8 @@
  */
 /* global */
 
+import { linkImage } from '../../scripts/scripts.js';
+
 export default function decorate($block) {
-  const $a = $block.querySelector('a');
-  const $parent = $a.closest('div');
-  $a.remove();
-  const picture = $parent.innerHTML;
-  $parent.innerHTML = '';
-  $parent.appendChild($a);
-  $a.innerHTML = picture;
-  $a.className = '';
+  linkImage($block);
 }

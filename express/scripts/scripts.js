@@ -26,6 +26,17 @@ export function createTag(name, attrs) {
   return el;
 }
 
+export function linkImage($elem) {
+  const $a = $elem.querySelector('a');
+  const $parent = $a.closest('div');
+  $a.remove();
+  const picture = $parent.innerHTML;
+  $parent.innerHTML = '';
+  $parent.appendChild($a);
+  $a.innerHTML = picture;
+  $a.className = '';
+}
+
 function wrapSections(element) {
   document.querySelectorAll(element).forEach(($div) => {
     if (!$div.id) {

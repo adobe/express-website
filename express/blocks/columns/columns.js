@@ -11,7 +11,17 @@
  */
 /* global */
 
+import { linkImage } from '../../scripts/scripts.js';
+
 export default function decorate($block) {
-  const numRows = $block.children.length;
-  return (numRows);
+  const $rows = Array.from($block.children);
+  $rows.forEach(($row) => {
+    const $cells = Array.from($row.children);
+    $cells.forEach(($cell) => {
+      /* this probably needs to be tighter and possibly earlier */
+      if ($cell.querySelector('img') && $cell.querySelector('a')) {
+        linkImage($cell);
+      }
+    });
+  });
 }
