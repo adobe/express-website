@@ -15,12 +15,11 @@ import {
   createTag,
 } from '../../scripts/scripts.js';
 
-
 export default function decorate($block) {
   const $layouts = Array.from($block.children);
   const layouts = [];
-  $layouts.forEach($layout => {
-    const row = Array.from($layout.children).map($e => $e.textContent);
+  $layouts.forEach(($layout) => {
+    const row = Array.from($layout.children).map(($e) => $e.textContent);
     const layout = {
       name: row[0],
       res: row[1],
@@ -33,7 +32,7 @@ export default function decorate($block) {
     layouts.push(layout);
   });
   $block.innerHTML = '';
-  const knownIcons = ["instagram", "youtube", "facebook", "twitter"];
+  const knownIcons = ['instagram', 'youtube', 'facebook', 'twitter'];
   layouts.forEach((layout) => {
     const $layout = createTag('div', { class: 'layout', style: `padding-top: ${layout.ratio * 100}%` });
     let iconString = layout.icon;
