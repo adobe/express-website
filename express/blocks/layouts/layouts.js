@@ -47,9 +47,13 @@ export default function decorate($block) {
         <div class="layout-description">${layout.name} - ${layout.res}</div>
       </div>
     </div>`;
-    $layout.addEventListener('click', () => {
-      window.location.href = layout.link;
-    });
+
+    if (layout.link) {
+      $layout.addEventListener('click', () => {
+        window.location.href = layout.link;
+      });
+    }
+
     $block.append($layout);
     console.log($layout);
   });
