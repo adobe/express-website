@@ -394,8 +394,8 @@ main .section-wrapper.steps-dark-container > div > h2 {
     }
   
     main .section-wrapper h2 {
-        font-size: 45px;
-        line-height: 49px;
+        font-size: 36px;
+        line-height: 39px;
         margin-top: 80px;
         text-align: center;
     }
@@ -435,6 +435,10 @@ main .section-wrapper.steps-dark-container > div > h2 {
 @media (min-width:900px) {
   main .section-wrapper > div {
     max-width: 1024px;
+  }
+
+  main .section-wrapper h2 {
+    text-align: left;
   }
 
   main .section-wrapper h5 + p,

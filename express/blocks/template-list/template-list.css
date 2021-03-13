@@ -16,6 +16,10 @@ main .template-list a:any-link {
     display: flex;
 }
 
+main .template-list > div > div:first-child > a:any-link {
+  padding-left: 0;
+}
+
 main .template-list div > div:nth-child(2) a:any-link::after {
     display: flex;
     width: 6px;
@@ -63,6 +67,10 @@ main .template-list.large > div {
 
 main .template-list.large > div img {
     width: 100%;
+}
+
+main .template-list + .button-container > a {
+  margin: 0;
 }
 
 

@@ -1,5 +1,5 @@
 main .layouts {
-    padding-top: 64px;
+  margin: 56px 0 120px 0;
 }
 
 main .layouts div:first-of-type {
@@ -28,7 +28,7 @@ main .layouts .layout-inside {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 16px;
+    padding: 16px 0;
     box-sizing: border-box;
     display: flex;
     align-items: stretch;
@@ -79,7 +79,7 @@ main .layouts .layout-content {
       main .layouts {
         display: block;
         columns: 240px 2;
-        margin: auto;
+        margin: 80px auto;
         column-gap: 32px;
         width: 528px;
       } 
@@ -93,7 +93,6 @@ main .layouts .layout-content {
       main .layouts {
         display: block;
         columns: 240px 3;
-        margin: auto;
         column-gap: 32px;
         width: 792px;
       } 
