@@ -688,4 +688,4 @@ function registerPerformanceLogger() {
   }
 }
 
-registerPerformanceLogger();
+if (window.name.includes('performance')) registerPerformanceLogger();
