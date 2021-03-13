@@ -16,6 +16,7 @@
 import {
   getLocale,
   createTag,
+  linkImage,
 } from '../../scripts/scripts.js';
 
 async function fetchBlueprint(pathname) {
@@ -35,16 +36,6 @@ async function fetchBlueprint(pathname) {
 }
 
 async function decorateTemplateList($block) {
-  $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
-    const $parent = $a.closest('div');
-    $a.remove();
-    const picture = $parent.innerHTML;
-    $parent.innerHTML = '';
-    $parent.appendChild($a);
-    $a.innerHTML = picture;
-    $a.className = '';
-  });
-
   const rows = $block.children.length;
   const locale = getLocale(window.location);
 
@@ -63,7 +54,6 @@ async function decorateTemplateList($block) {
     if ($bpBlock) {
       $block.innerHTML = $bpBlock.innerHTML;
     }
-
     const $heroPicture = document.querySelector('.hero-bg');
 
     if (!$heroPicture && window.spark.$blueprint) {
@@ -81,6 +71,25 @@ async function decorateTemplateList($block) {
       }
     }
   }
+
+  $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
+    const $parent = $a.closest('div');
+    if ($a.textContent.startsWith('https://')) {
+      linkImage($parent);
+    } else {
+      const $picture = $parent.querySelector('picture');
+      const $video = createTag('video', {
+        playsinline: '',
+        autoplay: '',
+        loop: '',
+        muted: '',
+      });
+      $video.innerHTML = `<source src="${$a.href}" type="video/mp4">`;
+      $parent.replaceChild($video, $picture);
+      $a.remove();
+      $video.play();
+    }
+  });
 }
 
 export default function decorate($block) {

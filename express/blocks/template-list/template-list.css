@@ -50,7 +50,7 @@ main .template-list > div {
 }
 
 
-main .template-list > div img {
+main .template-list > div img, main .template-list > div video {
     border-radius: 10px;
     width: 300px;
 }
