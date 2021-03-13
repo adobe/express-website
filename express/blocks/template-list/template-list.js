@@ -87,7 +87,10 @@ async function decorateTemplateList($block) {
       $video.innerHTML = `<source src="${$a.href}" type="video/mp4">`;
       $parent.replaceChild($video, $picture);
       $a.remove();
-      $video.play();
+      $video.addEventListener('canplay', () => {
+        $video.muted = true;
+        $video.play();
+      });
     }
   });
 }
