@@ -107,3 +107,19 @@ main .template-list + .button-container > a {
         width: 792px;
     }
 }
+
+@media (min-width: 1200px) {
+  main .template-list-container > div {
+      max-width: 1056px;
+  }
+
+  main .template-list {
+      display: block;
+      columns: 240px 4;
+      margin: auto;
+      column-gap: 32px;
+      width: 1056px;
+      position: relative;
+      left: -16px;
+  }
+}

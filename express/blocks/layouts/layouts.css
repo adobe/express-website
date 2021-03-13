@@ -93,7 +93,6 @@ main .layouts .layout-content {
       main .layouts {
         display: block;
         columns: 240px 3;
-        column-gap: 32px;
         width: 792px;
       } 
 }
