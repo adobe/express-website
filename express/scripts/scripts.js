@@ -290,15 +290,15 @@ function decorateButtons() {
   });
 }
 
-function decorateTemplate() {
-  if (window.location.pathname.includes('/make/')) {
-    document.body.classList.add('make-page');
-  }
-  const year = window.location.pathname.match(/\/20\d\d\//);
-  if (year) {
-    document.body.classList.add('blog-page');
-  }
-}
+// function decorateTemplate() {
+//   if (window.location.pathname.includes('/make/')) {
+//     document.body.classList.add('make-page');
+//   }
+//   const year = window.location.pathname.match(/\/20\d\d\//);
+//   if (year) {
+//     document.body.classList.add('blog-page');
+//   }
+// }
 
 // function decorateLegacyLinks() {
 //   const legacy = 'https://blog.adobespark.com/';
@@ -650,7 +650,6 @@ async function decoratePage() {
   wrapSections('main>div');
   decorateHeader();
   decorateHero();
-  decorateTemplate();
   decorateButtons();
   fixIcons();
   decorateTutorials();
