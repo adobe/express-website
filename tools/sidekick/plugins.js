@@ -43,7 +43,7 @@
         const stashInner = sk.config.innerHost;
         const stashPurge = sk.config.purgeHost;
         //sk.config.innerHost = `master--${sk.config.innerHost}`;
-        sk.config.purgeHost = sk.config.innerHost.replace('main--', 'master--');
+        sk.config.purgeHost = sk.config.purgeHost.replace('main--', 'master--');
         console.log(`custom reload ${sk.config.innerHost} ${sk.config.purgeHost}`);
         sk
           .publish(path, true)
