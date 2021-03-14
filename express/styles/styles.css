@@ -305,10 +305,6 @@ main .hero > div {
 
 /* make page : default content */
 
-main {
-  margin-top: 106px;
-}
-
 main .section-wrapper > div {
     margin: auto; 
     max-width: 672px;
@@ -376,6 +372,10 @@ main .section-wrapper p {
     text-align: left;
 }
 
+main .section-wrapper.columns-container {
+  margin-top: 106px;
+}
+
 main .section-wrapper p.button-container {
     text-align: center;
 }
@@ -389,10 +389,6 @@ main .section-wrapper.steps-dark-container > div > h2 {
 }
 
 @media (min-width:376px) {
-    main {
-      margin-top: 66px;
-    }
-  
     main .section-wrapper h2 {
         font-size: 36px;
         line-height: 39px;
@@ -427,6 +423,10 @@ main .section-wrapper.steps-dark-container > div > h2 {
         line-height: 22px;
     }
   
+    main .section-wrapper.columns-container {
+      margin-top: 66px;
+    }
+
     main .section-wrapper.steps-dark-container > div {
       padding: 80px 32px 0 32px;
     }
