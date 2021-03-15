@@ -55,11 +55,15 @@ async function fetchFullIndex(indices) {
 
   await Promise.all(indices.map(async (url) => {
     if (url) {
-      const resp = await fetch(url);
-      const json = await resp.json();
-      // eslint-disable-next-line no-console
-      console.log(`${url}: ${json.data.length}`);
-      fullIndex.push(...json.data.filter((e) => !!e.path));
+      try {
+        const resp = await fetch(url);
+        const json = await resp.json();
+        // eslint-disable-next-line no-console
+        console.log(`${url}: ${json.data.length}`);
+        fullIndex.push(...json.data.filter((e) => !!e.path));
+      } catch (e) {
+        // something went wrong
+      }
     }
   }));
   fullIndex.forEach((e) => {
