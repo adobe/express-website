@@ -40,11 +40,11 @@
         const { location } = sk;
         const path = location.pathname;
         sk.showModal('Please wait …', true);
-        const stashInner = sk.config.innerHost;
+        // const stashInner = sk.config.innerHost;
         const stashPurge = sk.config.purgeHost;
-        //sk.config.innerHost = `master--${sk.config.innerHost}`;
+        // sk.config.innerHost = `master--${sk.config.innerHost}`;
         sk.config.purgeHost = sk.config.purgeHost.replace('main--', 'master--');
-        console.log(`custom reload ${sk.config.innerHost} ${sk.config.purgeHost}`);
+        // console.log(`custom reload ${sk.config.innerHost} ${sk.config.purgeHost}`);
         sk
           .publish(path, true)
           .then((resp) => {
@@ -56,7 +56,7 @@
                 JSON.stringify(resp),
               ], true, 0);
             }
-            //sk.config.innerHost = stashInner;
+            // sk.config.innerHost = stashInner;
             sk.config.purgeHost = stashPurge;
           });
       },
