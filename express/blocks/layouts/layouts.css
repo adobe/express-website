@@ -54,7 +54,7 @@ main .layouts .layout-icon {
 main .layouts .layout-icon svg {
     height: 38px;
     width: 38px;
-    fill: #484848;
+    fill: currentColor;
 }
 
 main .layouts .layout-description {
