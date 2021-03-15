@@ -388,7 +388,7 @@ main .section-wrapper.steps-dark-container > div > h2 {
   margin: 0;
 }
 
-@media (min-width:376px) {
+@media (min-width:600px) {
     main .section-wrapper h2 {
         font-size: 36px;
         line-height: 39px;

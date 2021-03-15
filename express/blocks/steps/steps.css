@@ -42,7 +42,7 @@ main .steps-dark-container {
     margin: 120px 0;
 }
 
-@media (min-width:376px) {
+@media (min-width:600px) {
   main .steps {
     margin-bottom: 80px;
   }
