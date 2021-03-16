@@ -232,7 +232,7 @@ main .hero {
 }
 
 main .hero.hero-noimage {
-    color: black;
+    background-color: #000;
 }
 
 main .hero h1 {
@@ -249,8 +249,13 @@ main .hero h2 {
     font-weight: 400;
 }
 
-main .hero p, main .hero a.button:any-link {
-    margin: 0;
+main .hero p {
+  margin: 16px 0;
+  font-size: 1.25rem;
+}
+
+main .hero a.button:any-link {
+  text-shadow: none;
 }
 
 
