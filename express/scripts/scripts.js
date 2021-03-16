@@ -164,7 +164,7 @@ function decorateBlocks() {
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
-        const options = blockName.substring(b.length + 1).split('-');
+        const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
         blockName = b;
         $block.classList.add(b);
         $block.classList.add(...options);
