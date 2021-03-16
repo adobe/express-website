@@ -54,6 +54,5 @@ export default function decorate($block) {
     }
 
     $block.append($layout);
-    console.log($layout);
   });
 }
