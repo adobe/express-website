@@ -36,13 +36,8 @@ async function fetchBlueprint(pathname) {
 }
 
 async function decorateTemplateList($block) {
-  const rows = $block.children.length;
+  let rows = $block.children.length;
   const locale = getLocale(window.location);
-
-  if (rows > 6) {
-    $block.classList.add('masonry');
-  }
-
   if (rows === 0 && locale !== 'en') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
@@ -72,9 +67,19 @@ async function decorateTemplateList($block) {
     }
   }
 
+  rows = $block.children.length;
+
+  if (rows > 6) {
+    $block.classList.add('masonry');
+  }
+
+  if (rows === 1) {
+    $block.classList.add('large');
+  }
+
   $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
     const $parent = $a.closest('div');
-    if ($a.textContent.startsWith('https://')) {
+    if ($a.href.includes('.app.link')) {
       linkImage($parent);
     } else {
       const $picture = $parent.querySelector('picture');

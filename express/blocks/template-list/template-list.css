@@ -65,6 +65,10 @@ main .template-list.large > div {
     border: 0;
 }
 
+main .template-list.large > div > div {
+    margin: auto;
+}
+
 main .template-list.large > div img {
     width: 100%;
 }
