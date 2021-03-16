@@ -7,6 +7,7 @@ main .quotes {
 }
 
 main .quotes .quote {
+  box-sizing: border-box;
   border-radius: 20px;
   margin: 0 auto;
   background-color: #FFF;
@@ -63,6 +64,11 @@ main .quotes .quote .author .summary p {
     padding-bottom: 80px;
     flex-direction: row;
     gap: 16px;
+    width: 722px;
+  }
+
+  main .quotes .quote {
+    width: 230px;
   }
 
 }

@@ -1,6 +1,6 @@
 main .cards {
   margin: 0 auto;
-  padding: 16px 0 120px 0;
+  padding: 16px 0 56px 0;
   display: flex;
   flex-direction: column;
 }
@@ -74,13 +74,10 @@ main .cards.large .card .content p {
 
 @media (min-width:900px) {
     main .cards {
-    padding-top: 80px;
+    padding-top: 0;
     width: 800px;
     flex-direction: row;
-  }
-
-  main .cards {
-    padding-bottom: 80px;
+    padding-bottom: 0;
   }
 
   main .cards .card {

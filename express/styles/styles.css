@@ -316,8 +316,12 @@ main .section-wrapper:first-of-type {
   padding: 120px 0;
 }
 
-main .section-wrapper:not(:first-of-type) {
+main .section-wrapper {
   padding-top: 120px;
+}
+
+main .section-wrapper:first-of-type {
+  padding: 0;
 }
 
 main .section-wrapper > div {
@@ -429,13 +433,21 @@ main .section-wrapper.quotes-dark-container h5 {
   color: #FFF;
 }
 
+main .section-wrapper.banner-container {
+  padding-top: 0;
+}
+
 @media (min-width:600px) {
   main .section-wrapper:first-of-type {
     padding: 80px 0;
   }
   
-  main .section-wrapper:not(:first-of-type) {
+  main .section-wrapper {
     padding-top: 80px;
+  }
+
+  main .section-wrapper:first-of-type {
+    padding-top: 0;
   }
   
     main .section-wrapper h2 {
@@ -492,8 +504,13 @@ main .section-wrapper.quotes-dark-container h5 {
   }
 
   main .section-wrapper.cards-container {
+    padding-top: 80px;
     background-color: unset;
   }
+
+  main .section-wrapper.banner-container {
+    padding-top: 80px;
+  }    
 }
 
 @media(min-width:1200px) {

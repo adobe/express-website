@@ -3,6 +3,7 @@ main .icon-list {
   font-size: 1.125rem;
   width: 300px;
   margin: 0 auto;
+  padding-bottom: 80px;
 }
 
 main .icon-list > div {
@@ -36,6 +37,7 @@ main .icon-list .icon {
 @media (min-width:900px) {
   main .icon-list {
     width: 792px;
+    padding-bottom: 0;
   }
 }
 
