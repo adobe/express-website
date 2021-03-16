@@ -29,7 +29,7 @@ main .icon-list .icon {
   main .icon-list {
     columns: 2;
     column-gap: 32px;
-    width: 528px;
+    width: 588px;
   }
 }
 
