@@ -1,0 +1,41 @@
+main .icon-list {
+  text-align: left;
+  font-size: 1.125rem;
+  width: 300px;
+  margin: 0 auto;
+}
+
+main .icon-list > div {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 32px;
+}
+
+main .icon-list > div > div:first-child {
+  min-width: 64px;
+}
+
+main .icon-list > div > div:last-child {
+  flex-grow: 1;
+}
+
+main .icon-list .icon {
+  fill: currentColor;
+  width: 40px;
+  height: 40px;
+}
+
+@media (min-width:600px) {
+  main .icon-list {
+    columns: 2;
+    column-gap: 32px;
+    width: 528px;
+  }
+}
+
+@media (min-width:900px) {
+  main .icon-list {
+    width: 792px;
+  }
+}
+

@@ -12,8 +12,16 @@
 /* global window, navigator, document, fetch, performance, PerformanceObserver */
 /* eslint-disable no-console */
 
-function toClassName(name) {
-  return (name.toLowerCase().replace(/[^0-9a-z]/gi, '-'));
+export function toClassName(name) {
+  return name && typeof name === 'string'
+    ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-')
+    : '';
+}
+
+export function getIcon(icon) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
+    <use href="/express/icons.svg#${icon}"></use>
+  </svg>`;
 }
 
 export function createTag(name, attrs) {
