@@ -228,7 +228,7 @@ main .hero {
     color: white;
     text-shadow: 1px 1px 2px rgba(0,0,0,.25);
     position: relative;
-    padding: 120px 0;
+    padding: 120px 32px;
 }
 
 main .hero.hero-noimage {
@@ -238,7 +238,7 @@ main .hero.hero-noimage {
 main .hero h1 {
     font-size: 45px;
     font-weight: 900;
-    margin: 0 16px;
+    margin: 0;
     line-height: 49px;
 }
 
@@ -412,6 +412,15 @@ main .section-wrapper.steps-dark-container > div > h2 {
   margin: 0;
 }
 
+main .section-wrapper.cards-container {
+  background-color: #F1F3F4;
+  padding: 0;
+}
+
+main .section-wrapper.cards-container > div {
+  padding: 0;
+}
+
 @media (min-width:600px) {
   main .section-wrapper:first-of-type {
     padding: 80px 0;
@@ -464,7 +473,7 @@ main .section-wrapper.steps-dark-container > div > h2 {
   }
 
   main .section-wrapper h2 {
-    text-align: left;
+    /* text-align: left; */
   }
 
   main .section-wrapper h5 + p,
@@ -476,6 +485,10 @@ main .section-wrapper.steps-dark-container > div > h2 {
     margin-left: 0;
     font-size: 13px;
     font-weight: 500;
+  }
+
+  main .section-wrapper.cards-container {
+    background-color: unset;
   }
 }
 
