@@ -20,9 +20,7 @@ import {
 function addPages(index, filter, $block) {
   index.forEach((page) => {
     if (page.path.includes(filter)) {
-      let { path } = page;
-      if (!path.startsWith(' ')) path = path.substr(1);
-      path = path.replace('.html', '');
+      const { path } = page;
       const $card = createTag('div', { class: 'card' });
       $card.innerHTML = `<div class="card-image">
             <img loading="lazy" src="${page.image.replace('width=2000', 'width=750')}">
