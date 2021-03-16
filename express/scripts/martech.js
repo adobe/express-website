@@ -11,7 +11,7 @@
  */
 /* global window */
 
-import { loadScript } from './scripts.js';
+import { loadScript, getLocale } from './scripts.js';
 
 function handleConsentSettings() {
   try {
@@ -52,6 +52,43 @@ window.marketingtech = {
 };
 window.targetGlobalSettings = {
   bodyHidingEnabled: false,
+};
+
+const pageName = `adobe.com:${window.location.pathname.split('/').join(':')}`;
+const locale = getLocale(window.location);
+
+const langs = {
+  en: 'en-US',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  it: 'it-IT',
+  da: 'da-DK',
+  es: 'es-ES',
+  fi: 'fi-FI',
+  jp: 'ja-JP',
+  kr: 'ko-KR',
+  no: 'nb-NO',
+  nl: 'nl-NL',
+  br: 'pt-BR',
+  se: 'sv-SE',
+  tw: 'zh-Hant-TW',
+  cn: 'zh-Hans-CN',
+};
+
+const language = langs[locale];
+let category = 'design';
+if (window.location.pathname.includes('/photo')) category = 'photo';
+if (window.location.pathname.includes('/video')) category = 'video';
+
+window.digitalData = {
+  page: {
+    pageInfo: {
+      pageName,
+      language,
+      siteSection: 'adobe.com:express',
+      category,
+    },
+  },
 };
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js');
