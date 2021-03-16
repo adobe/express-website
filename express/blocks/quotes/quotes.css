@@ -1,0 +1,68 @@
+main .quotes {
+  margin: 40px auto 0 auto;
+  padding-bottom: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+main .quotes .quote {
+  border-radius: 20px;
+  margin: 0 auto;
+  background-color: #FFF;
+  width: 344px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+main .quotes .quote .content {
+  padding-top: 28px;
+  font-size: 1.125rem;
+  text-align: left;
+  flex-grow: 1;
+}
+
+main .quotes .quote .content::before {
+  content: "“";
+  display: block;
+  position: absolute;
+  margin-top: -50px;
+  width: 36px;
+  text-align: left;
+  font-size: 72px;
+  font-weight: 800;
+}
+
+main .quotes .quote .author {
+  display: flex;
+  margin-top: 16px;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  align-self: baseline;
+}
+
+main .quotes .quote .author .image picture {
+  width: 42px;
+  padding-right: 16px;
+}
+
+main .quotes .quote .author .summary p {
+  text-align: left;
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+
+@media (min-width:900px) {
+  main .quotes {
+    margin-top: 56px;
+    padding-bottom: 80px;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+}

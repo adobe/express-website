@@ -159,9 +159,9 @@ function decorateBlocks() {
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
     if ($section) {
-      $section.classList.add(`${blockName}-container`);
+      $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
