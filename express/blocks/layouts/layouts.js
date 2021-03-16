@@ -13,6 +13,7 @@
 
 import {
   createTag,
+  getIcon,
 } from '../../scripts/scripts.js';
 
 export default function decorate($block) {
@@ -37,9 +38,7 @@ export default function decorate($block) {
     const $layout = createTag('div', { class: 'layout', style: `padding-top: ${layout.ratio * 100}%` });
     let iconString = layout.icon;
     if (knownIcons.includes(iconString)) {
-      iconString = `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${layout.icon}">
-      <use href="/express/icons.svg#${layout.icon}"></use>
-      </svg>`;
+      iconString = getIcon(layout.icon);
     }
     $layout.innerHTML = `<div class="layout-inside">
       <div class="layout-content">
