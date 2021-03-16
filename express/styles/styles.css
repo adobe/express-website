@@ -1,5 +1,7 @@
 body {
     font-family: 'adobe-clean', 'Adobe Clean';
+    background-color: #FFF;
+    color: #232323;
     margin: 0;
     padding: 0;
     display: none;
