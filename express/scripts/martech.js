@@ -76,9 +76,12 @@ const langs = {
 };
 
 const language = langs[locale];
-let category = 'design';
-if (window.location.pathname.includes('/photo')) category = 'photo';
-if (window.location.pathname.includes('/video')) category = 'video';
+let category = '';
+if (window.location.pathname.includes('/create/') || window.location.pathname.includes('/feature/')) {
+  category = 'design';
+  if (window.location.pathname.includes('/photo')) category = 'photo';
+  if (window.location.pathname.includes('/video')) category = 'video';
+}
 
 window.digitalData = {
   page: {
