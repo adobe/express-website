@@ -1,0 +1,14 @@
+main .banner {
+  border-radius: 20px;
+  background-color: #000;
+  color: #FFF;
+  padding: 32px;
+  margin: 32px auto;
+}
+
+@media (min-width:900px) {
+  main .banner {
+    margin-top: 0;
+    margin-bottom: 80px;
+  }
+}
