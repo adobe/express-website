@@ -1,21 +1,18 @@
 main .steps {
     margin-top: 56px;
     text-align: left;
-    margin-bottom: 120px;
 }
 
 main .steps h3 {
     font-size: 22px;
     line-height: 26px;
     margin-top: 0;
-    text-align: left;
 }
 
 main .steps p {
     font-size: 18px;
     line-height: 22px;
     margin: 0;
-    text-align: left;
 }
 
 main .steps > div {
@@ -37,19 +34,7 @@ main .steps .step-description {
 
 main .steps-dark-container {
     background-color: black;
-    padding: 1px 0;
     color: white;
-    margin: 120px 0;
-}
-
-@media (min-width:600px) {
-  main .steps {
-    margin-bottom: 80px;
-  }
-
-  main .steps-dark-container {
-    margin: 80px 0;
-  }
 }
 
 @media (min-width:900px) {
