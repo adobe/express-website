@@ -1,0 +1,55 @@
+main .sticky-promo-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1473E6;
+    color: white;
+    padding: 24px;
+    padding-right: 36px;
+    font-weight: 800;
+    line-height: 2em;
+}
+
+main .sticky-promo-bar a:any-link {
+    color: white;
+    border: 2px solid white;
+    border-radius: 20px;
+    padding: 3px 10px 5px 10px;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+main .sticky-promo-bar .close {
+    color: white;
+    position: absolute;
+    margin-top: 0;
+    margin-left: 0;
+    width: 21px;
+    height: 21px;
+    top: 30px;
+    right: 25px;
+  }
+  
+  main .sticky-promo-bar .close:before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    width: 21px;
+    height: 1px;
+    background-color: currentColor;
+    transform: rotate(-45deg);
+  }
+  
+  main .sticky-promo-bar .close:after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    width: 21px;
+    height: 1px;
+    background-color: currentColor;
+    transform: rotate(45deg);
+  }

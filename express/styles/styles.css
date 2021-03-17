@@ -235,6 +235,10 @@ main .hero.hero-noimage {
     background-color: #000;
 }
 
+main .hero.hero-noimage a:any-link{
+  color: white;
+}
+
 main .hero h1 {
     font-size: 45px;
     font-weight: 900;
