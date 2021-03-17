@@ -20,7 +20,7 @@
 
   sk.add({
     id: 'templates',
-    condition: (s) => s.isEditor() && (s.location.search.includes('.docx&') || s.location.search.includes('doc.aspx?') || s.location.search.includes('.md&')),
+    condition: (s) => s.isEditor() && (s.location.pathname.includes('/:w:/'),
     button: {
       text: 'Templates',
       action: () => {
