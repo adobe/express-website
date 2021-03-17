@@ -3,12 +3,12 @@ main .page-list {
     text-align: left;
   }
 
-  main .page-list-container > div {
+  main .page-list-container  .page-list-images > div {
       max-width: 100%;
   }
 
   
-  main .page-list {
+  main .page-list .page-list-images {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -36,7 +36,7 @@ main .page-list {
   
   }
 
-  main .page-list .card-body h3 {
+  main .page-list .card-body h3, main .page-list .page-list-additional p a:any-link {
     padding: 0;
     margin: 0;
     font-size: 16px;
@@ -45,6 +45,7 @@ main .page-list {
     text-align: left;
     line-height: 1.1em;
     margin-bottom: 3px;
+    text-decoration: none;
   }
 
   main .page-list .card-body p {
@@ -53,3 +54,23 @@ main .page-list {
     text-align: left;
     line-height: normal;
   }  
+
+  main .page-list .page-list-additional p {
+    margin: 12px 0;
+  }
+
+  main .page-list .page-list-additional {
+    max-width: 400px;
+    margin: 64px auto;
+    text-align: center;
+  }
+
+  @media (min-width: 900px) {
+    main .page-list .page-list-additional {
+      max-width: 800px;
+      columns: 2 30px;
+    }
+    main .page-list .page-list-additional p:first-of-type {
+      margin-top: 0;
+    }
+  }

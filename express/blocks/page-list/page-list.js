@@ -18,20 +18,34 @@ import {
 } from '../../scripts/scripts.js';
 
 function addPages(index, filter, $block) {
+  const $images = createTag('div', { class: 'page-list-images' });
+  const $additional = createTag('div', { class: 'page-list-additional' });
+  $block.appendChild($images);
+  $block.appendChild($additional);
+
+  const images = [];
+
   index.forEach((page) => {
     if (page.path.includes(filter)) {
-      const { path } = page;
-      const $card = createTag('div', { class: 'card' });
-      $card.innerHTML = `<div class="card-image">
-            <img loading="lazy" src="${page.image.replace('width=2000', 'width=750')}">
-          </div>
-          <div class="card-body">
-            <h3>${page.title}</h3>
-          </div>`;
-      $card.addEventListener('click', () => {
-        window.location.href = path;
-      });
-      $block.appendChild($card);
+      const { path, image, title } = page;
+      if (!images.includes(image)) {
+        const $card = createTag('div', { class: 'card' });
+        $card.innerHTML = `<div class="card-image">
+              <img loading="lazy" src="${image.replace('width=2000', 'width=750')}">
+            </div>
+            <div class="card-body">
+              <h3>${title}</h3>
+            </div>`;
+        $card.addEventListener('click', () => {
+          window.location.href = path;
+        });
+        $images.appendChild($card);
+        images.push(image);
+      } else {
+        const $p = createTag('p');
+        $p.innerHTML = `<a href="${path}">${title}</a>`;
+        $additional.appendChild($p);
+      }
     }
   });
 }
