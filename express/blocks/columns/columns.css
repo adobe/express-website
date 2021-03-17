@@ -4,6 +4,10 @@ main .columns > div {
     align-items: center;
 }
 
+main .columns-container > div {
+  max-width: 1024px;
+}
+
 @media (min-width:900px) {
     main .columns > div {
         flex-direction: row;

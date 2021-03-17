@@ -492,9 +492,6 @@ main .section-wrapper.banner-container {
 }
 
 @media (min-width:900px) {
-  main .section-wrapper > div {
-    max-width: 1024px;
-  }
 
   main .section-wrapper h5 + p,
   main .section-wrapper p.button-container {

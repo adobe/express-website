@@ -71,6 +71,10 @@ main .layouts .layout-content {
     height: 100%;
 }
 
+main .layouts-container > div {
+  max-width: 1024px;
+}
+
 @media (min-width:600px) {
     main .layouts .layout {
         width: 250px;

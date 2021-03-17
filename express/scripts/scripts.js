@@ -652,9 +652,41 @@ function fixIcons() {
   });
 }
 
+export function unwrapBlock($block) {
+  const $section = $block.parentNode;
+  const $elems = [...$section.children];
+  const $blockSection = createTag('div');
+  const $postBlockSection = createTag('div');
+  $section.parentNode.appendChild($blockSection);
+  $section.parentNode.appendChild($postBlockSection);
+
+  let $appendTo;
+  console.log($appendTo)
+
+  $elems.forEach(($e) => {
+    console.log($e);
+    if ($e === $block) $appendTo = $blockSection;
+    console.log($appendTo);
+    if ($appendTo) {
+      $appendTo.appendChild($e);
+      $appendTo = $postBlockSection;
+    }
+  });
+}
+
+function splitSections() {
+  document.querySelectorAll('main > div > div').forEach(($block) => {
+    const blocksToSplit = ['template-list', 'layouts'];
+    if (blocksToSplit.includes($block.className)) {
+      unwrapBlock($block);
+    }
+  });
+}
+
 async function decoratePage() {
   setTemplate();
   await decorateTesting();
+  splitSections();
   wrapSections('main>div');
   decorateHeader();
   decorateHero();
