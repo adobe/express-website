@@ -1,16 +1,17 @@
 main .steps {
     margin-top: 56px;
-    text-align: left;
 }
 
 main .steps h3 {
     font-size: 22px;
+    text-align: left;
     line-height: 26px;
     margin-top: 0;
 }
 
 main .steps p {
     font-size: 18px;
+    text-align: left;
     line-height: 22px;
     margin: 0;
 }
