@@ -20,7 +20,7 @@
 
   sk.add({
     id: 'templates',
-    condition: (s) => s.isEditor() && (s.location.pathname.includes('/:w:/'),
+    condition: (s) => s.isEditor() && (s.location.pathname.includes('/:w:/') || s.location.href.includes('doc.aspx?')),
     button: {
       text: 'Templates',
       action: () => {
