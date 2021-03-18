@@ -54,14 +54,14 @@ function animateHeader($header, words) {
   $header.innerHTML = $header.innerHTML.replace('[x]', headerWordTemplate);
   const $headerWord = $header.children[0];
   setInterval(() => {
-    $headerWord.classList.add('hidden');
+    $headerWord.style.opacity = '0';
     setTimeout(() => {
       i += 1;
-      if (i > max) {
+      if (i >= max) {
         i = 0;
       }
       $headerWord.innerHTML = words[i];
-      $headerWord.classList.remove('hidden');
+      $headerWord.style.opacity = '1';
     }, 1500);
   }, 4000);
 }
@@ -75,11 +75,68 @@ function decorateHeader($block, header) {
   animateHeader($header, words);
 }
 
-function decoratePlans(plans, features) {
-
+function buildPlanDropdown() {
+  const $dropdown = createTag('select', { class: 'plan-dropdown' });
+  const $option1 = createTag('option', { value: 'Option 1' });
+  $option1.innerHTML = 'Option 1';
+  $dropdown.append($option1);
+  return $dropdown;
 }
 
-function decorateTable(features) {
+function decoratePlans($block, plans) {
+  const $plans = createTag('div', { class: 'pricing-plans' });
+  $block.append($plans);
+  plans.forEach((plan) => {
+    const title = plan['Plan Title'];
+    const description = plan['Plan Description'];
+    const imageName = plan['Plan Image'];
+    const imagePath = `icons/${imageName}.svg`;
+    const price = plan['Plan Current Price'];
+    const fullPrice = plan['Plan Full Price'];
+    const pricingText = plan['Plan Pricing Text'];
+
+    const $plan = createTag('div', { class: 'pricing-plan' });
+    $plans.append($plan);
+    const $header = createTag('div', { class: 'pricing-plan-header' });
+    $plan.append($header);
+    const $headerContainer = createTag('div');
+    $header.append($headerContainer);
+    const $title = createTag('span');
+    $title.innerHTML = title;
+    $headerContainer.append($title);
+    const $description = createTag('p');
+    $description.innerHTML = description;
+    $headerContainer.append($description);
+    const $icon = createTag('img', { src: imagePath, class: 'plan-icon' });
+    $header.append($icon);
+    const $pricing = createTag('div', { class: 'pricing-plan-pricing' });
+
+    if (price === 'Free') {
+      $pricing.innerHTML = '<strong>Free</strong>';
+    } else {
+      $pricing.innerHTML = `<span>US $<strong>${price}</strong>/mo</span>`;
+      if (price !== fullPrice) {
+        $pricing.innerHTML += `<span class="previous-pricing">US $<strong>${fullPrice}</strong>/mo</span>`;
+      }
+    }
+    $plan.append($pricing);
+    if (pricingText) {
+      const $pricingText = createTag('span', { class: 'pricing-plan-secondary' });
+      $pricingText.innerHTML = pricingText;
+      $plan.append($pricingText);
+    }
+    const $footer = createTag('div', { class: 'plan-footer' });
+    $plan.append($footer);
+    if (price !== 'Free') {
+      const $dropdown = buildPlanDropdown();
+      $footer.append($dropdown);
+    }
+    const $cta = createTag('input', { type: 'submit', class: 'plan-cta' });
+    $footer.append($cta);
+  });
+}
+
+function decorateTable($block, features) {
 
 }
 
@@ -94,8 +151,8 @@ async function decoratePricing($block) {
   $block.innerHTML = '';
 
   decorateHeader($block, header);
-  decoratePlans(plans, features);
-  decorateTable(features);
+  decoratePlans($block, plans);
+  decorateTable($block, features);
 }
 
 export default function decorate($block) {
