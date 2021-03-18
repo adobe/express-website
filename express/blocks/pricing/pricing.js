@@ -184,9 +184,18 @@ function decoratePlans($block, plans, planOptions) {
     const imagePath = `icons/${imageName}.svg`;
     const $plan = createTag('div', { class: 'plan' });
     const options = getPlanOptions(title, planOptions);
+    const promotion = plan['Plan Special'];
     $plans.append($plan);
     const $header = createTag('div', { class: 'plan-header' });
     $plan.append($header);
+    if (promotion) {
+      $plan.classList.add('promotional');
+      const $promotionalHeader = createTag('div', { class: 'plan-promotional-header' });
+      $plan.append($promotionalHeader);
+      const $promotionalHeaderText = createTag('span');
+      $promotionalHeaderText.innerHTML = promotion;
+      $promotionalHeader.append($promotionalHeaderText);
+    }
     const $headerContainer = createTag('div');
     $header.append($headerContainer);
     const $title = createTag('span');
