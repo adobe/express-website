@@ -33,13 +33,18 @@ main .steps .step-description {
     width: 100%;
 }
 
-main .steps-dark-container {
+main .section-wrapper.steps-dark-container {
     background-color: black;
     color: white;
+    padding: 120px 0;
 }
 
 @media (min-width:900px) {
-    main .steps {
+  main .section-wrapper.steps-dark-container {
+    padding: 80px 0;
+  }
+
+  main .steps {
         display: flex;
     }
 
