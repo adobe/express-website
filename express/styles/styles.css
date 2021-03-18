@@ -354,11 +354,11 @@ main .hero > div {
 
 /* make page : default content */
 
-main .section-wrapper:first-of-type {
-  padding: 120px 0;
+main .section-wrapper {
+  padding-top: 60px;
 }
 
-main .section-wrapper {
+main .section-wrapper:first-of-type {
   padding-top: 120px;
 }
 
@@ -457,11 +457,7 @@ main .section-wrapper.steps-dark-container > div > h2 {
 
 main .section-wrapper.cards-container {
   background-color: #F1F3F4;
-  padding: 0;
-}
-
-main .section-wrapper.cards-container > div {
-  padding: 0;
+  padding-top: 0;
 }
 
 main .section-wrapper.quotes-dark-container {
@@ -480,14 +476,14 @@ main .section-wrapper.banner-container {
 }
 
 @media (min-width:600px) {
-  main .section-wrapper:first-of-type {
-    padding: 80px 0;
+  main .section-wrapper {
+    padding-top: 40px;
   }
   
-  main .section-wrapper {
+  main .section-wrapper:first-of-type {
     padding-top: 80px;
   }
-
+  
   main .section-wrapper:first-of-type {
     padding-top: 0;
   }
@@ -543,7 +539,6 @@ main .section-wrapper.banner-container {
   }
 
   main .section-wrapper.cards-container {
-    padding-top: 80px;
     background-color: unset;
   }
 }
