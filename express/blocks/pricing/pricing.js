@@ -94,14 +94,10 @@ function getPlanOptions(planTitle, planOptions) {
 }
 
 function replaceUrlParam(url, paramName, paramValue) {
-  const parameterValue = paramValue == null ? '' : paramValue;
-  const pattern = new RegExp(`\\b(${paramName}=).*?(&|#|$)`);
-  if (url.search(pattern) >= 0) {
-    return url.replace(pattern, `$1${parameterValue}$2`);
-  }
-  const newUrl = url.replace(/[?#]$/, '');
-  const urlCharacter = newUrl.indexOf('?') > 0 ? '&' : '?';
-  return `${newUrl}${urlCharacter}${paramName}=${parameterValue}`;
+  const params = url.searchParams;
+  params.set(paramName, paramValue);
+  url.search = params.toString();
+  return url.toString();
 }
 
 function buildUrl(optionUrl, optionPlan) {
