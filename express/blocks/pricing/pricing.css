@@ -1,16 +1,131 @@
-main .pricing {
-    background-color: yellow;
-}
+@media (min-width: 1200px) {
 
-.pricing-header {
-    color: rgb(40, 70, 96);
-}
+    .pricing-container {
+        background-color: rgba(242,244,245,1);
+    }
 
-.pricing-header span {
-    color: rgb(16, 196, 89);
-    transition: 1.5s opacity ease;
-}
+    .pricing-container>div {
+        max-width: 1140px!important;
+    }
 
-.pricing-header span.hidden {
-    opacity: 0;
+    .pricing {
+        padding-top: 100px;
+        display: flex;
+        align-items: start;
+    }
+
+    .pricing-header {
+        text-align: left!important;
+        color: rgb(40, 70, 96);
+        width: 300px;
+        padding-right: 100px;
+    }
+
+    .pricing-header span {
+        color: rgb(16, 196, 89);
+        transition: 1.5s opacity ease;
+    }
+
+    .pricing-plans {
+        display: inline-flex;
+        justify-content: space-between;
+        width: 900px;
+    }
+
+    .pricing-plan {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        width: 210px;
+        height: 300px;
+        padding: 20px;
+        align-items: center;
+    }
+
+    .pricing-plan-header {
+        display: flex;
+        text-align: left;
+        border-bottom: 1px #DBDBDB solid;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        min-height: 110px;
+    }
+
+    .pricing-plan-header img {
+        align-self: start;
+        width: 50px;
+        height: 50px;
+    }
+
+    .pricing-plan-header>div>span {
+        font-weight: 900;
+        font-size: 20px;
+        color: rgb(53,65,76);
+        text-transform: uppercase;
+        text-align: left;
+    }
+
+    .pricing-plan-header>div>p {
+        margin: 10px 0;
+        font-size: 13px;
+        color: rgb(53,65,76);
+    }
+
+    .pricing-plan-pricing {
+        margin-top: 10px;
+        font-size: 14px;
+        color: rgb(53,65,76);
+    }
+
+    .pricing-plan-pricing strong {
+        font-size: 24px;
+        color: black;
+    }
+
+    .previous-pricing {
+        position: relative;
+        margin-left: 20px;
+    }
+
+    .previous-pricing::after {
+        position: absolute;
+        content: '';
+        width: 110%;
+        top: 45%;
+        left: -5%;
+        height: 2px;
+        background-color: red;
+    }
+
+    .pricing-plan-secondary {
+        font-size: 13px;
+        color: rgb(130, 145, 155);
+    }
+
+    .plan-footer {
+        margin-top: auto;
+    }
+
+    .plan-dropdown {
+        padding: 7px 10px;
+        border-radius: 5px;
+        width: 165px;
+        border: 1px solid #dce0e3;
+    }
+
+    .plan-cta {
+        width: 145px;
+        height: 40px;
+        font-size: 16px;
+        font-weight: 900;
+        background-color: #5167CF;
+        color: white;
+        border-radius: 24px;
+        border: none;
+        margin-top: 1em;
+        cursor: pointer;
+        outline: none;
+        transition: .2s all ease-in;
+    }
 }
