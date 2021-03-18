@@ -546,10 +546,6 @@ main .section-wrapper.banner-container {
     padding-top: 80px;
     background-color: unset;
   }
-
-  main .section-wrapper.banner-container {
-    padding-top: 80px;
-  }    
 }
 
 @media(min-width:1200px) {
