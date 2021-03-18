@@ -9,6 +9,7 @@ main .sticky-promo-bar {
     padding-right: 36px;
     font-weight: 800;
     line-height: 2em;
+    z-index: 10;
 }
 
 main .sticky-promo-bar a:any-link {
