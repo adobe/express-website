@@ -638,7 +638,7 @@ function setTemplate() {
 }
 
 function setLCPTrigger() {
-  const $lcpCandidate = document.querySelector('main img');
+  const $lcpCandidate = document.querySelector('main > div:first-of-type img');
   if ($lcpCandidate) {
     if ($lcpCandidate.complete) {
       postLCP();
