@@ -18,12 +18,6 @@ export function toClassName(name) {
     : '';
 }
 
-export function getIcon(icon) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
-    <use href="/express/icons.svg#${icon}"></use>
-  </svg>`;
-}
-
 export function createTag(name, attrs) {
   const el = document.createElement(name);
   if (typeof attrs === 'object') {
@@ -32,6 +26,19 @@ export function createTag(name, attrs) {
     }
   }
   return el;
+}
+
+export function getIcon(icon) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
+    <use href="/express/icons.svg#${icon}"></use>
+  </svg>`;
+}
+
+export function getIconElement(icon) {
+  console.log(icon);
+  const $div = createTag('div');
+  $div.innerHTML = getIcon(icon);
+  return ($div.children[0]);
 }
 
 export function linkImage($elem) {
@@ -175,7 +182,7 @@ function decorateBlocks() {
       .then((mod) => {
         mod.default($block, blockName, document);
       })
-      .catch((err) => console.log('failed to load module', err));
+      .catch((err) => console.log(`failed to load module for ${blockName}`, err));
 
     loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
   });
@@ -649,9 +656,22 @@ function setLCPTrigger() {
 }
 
 function fixIcons() {
+  /* backwards compatible icon handling, deprecated */
   document.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
-    console.log($use.href);
     $use.setAttribute('href', `/express/icons.svg#${$use.getAttribute('href').split('#')[1]}`);
+  });
+
+  /* new icons handling */
+  document.querySelectorAll('img').forEach(($img) => {
+    const alt = $img.getAttribute('alt');
+    if (alt) {
+      const lowerAlt = alt.toLowerCase();
+      if (lowerAlt.includes('icon:')) {
+        const icon = lowerAlt.split('icon:')[1].trim().split(' ');
+        const $picture = $img.closest('picture');
+        $picture.parentElement.replaceChild(getIconElement(icon), $picture);
+      }
+    }
   });
 }
 
@@ -665,9 +685,7 @@ export function unwrapBlock($block) {
 
   let $appendTo;
   $elems.forEach(($e) => {
-    console.log($e);
     if ($e === $block) $appendTo = $blockSection;
-    console.log($appendTo);
     if ($appendTo) {
       $appendTo.appendChild($e);
       $appendTo = $postBlockSection;

@@ -287,7 +287,11 @@ main .hero a.button:any-link {
   text-shadow: none;
 }
 
-
+main .icon {
+  height: 1em;
+  width: 1em;
+  color: currentColor;
+}
 main .hero .hero-bg {
     position: absolute;
     top: 0;
@@ -354,11 +358,11 @@ main .hero > div {
 
 /* make page : default content */
 
-main .section-wrapper:first-of-type {
-  padding: 120px 0;
+main .section-wrapper {
+  padding-top: 60px;
 }
 
-main .section-wrapper {
+main .section-wrapper:first-of-type {
   padding-top: 120px;
 }
 
@@ -443,25 +447,13 @@ main .section-wrapper p.button-container {
     margin-bottom: 0;
 }
 
-main .section-wrapper.steps-dark-container {
-  padding: 120px 0;
-}
-
-main .section-wrapper.steps-dark-container > div {
-  padding: 0 32px;
-}
-
 main .section-wrapper.steps-dark-container > div > h2 {
   margin: 0;
 }
 
 main .section-wrapper.cards-container {
   background-color: #F1F3F4;
-  padding: 0;
-}
-
-main .section-wrapper.cards-container > div {
-  padding: 0;
+  padding-top: 0;
 }
 
 main .section-wrapper.quotes-dark-container {
@@ -475,19 +467,15 @@ main .section-wrapper.quotes-dark-container h5 {
   color: #FFF;
 }
 
-main .section-wrapper.banner-container {
-  padding-top: 0;
-}
-
 @media (min-width:600px) {
-  main .section-wrapper:first-of-type {
-    padding: 80px 0;
+  main .section-wrapper {
+    padding-top: 40px;
   }
   
-  main .section-wrapper {
+  main .section-wrapper:first-of-type {
     padding-top: 80px;
   }
-
+  
   main .section-wrapper:first-of-type {
     padding-top: 0;
   }
@@ -523,10 +511,6 @@ main .section-wrapper.banner-container {
         font-size: 18px;
         line-height: 22px;
     }
-  
-    main .section-wrapper.steps-dark-container {
-      padding: 80px 0;
-    }
 }
 
 @media (min-width:900px) {
@@ -543,7 +527,6 @@ main .section-wrapper.banner-container {
   }
 
   main .section-wrapper.cards-container {
-    padding-top: 80px;
     background-color: unset;
   }
 }
@@ -552,10 +535,6 @@ main .section-wrapper.banner-container {
   main .section-wrapper h1 {
     font-size: 60px;
     line-height: 64px;
-  }
-
-  main .section-wrapper.steps-dark-container > div > h2 {
-    text-align: left;
   }
 }
 
