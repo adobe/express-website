@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global document */
+
 /* eslint-disable import/named, import/extensions */
 
 import {
@@ -17,9 +17,9 @@ import {
   readBlockConfig,
 } from '../../scripts/scripts.js';
 
-export default function decorate($block) {
+export default function decorate($block, name, doc) {
   const config = readBlockConfig($block);
-  const $headings = document.querySelectorAll('main h2, main h3, main h4, main .table-of-contents');
+  const $headings = doc.querySelectorAll('main h2, main h3, main h4, main .table-of-contents');
   let skip = true;
   const $toc = createTag('div', { class: 'toc' });
   $headings.forEach(($h) => {

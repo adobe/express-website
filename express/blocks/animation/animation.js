@@ -9,14 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global document */
 
 import {
   createTag,
 } from '../../scripts/scripts.js';
 
-export default function decorate() {
-  document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
+export default function decorate($block, name, doc) {
+  doc.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
     const href = $a.getAttribute('href');
     const url = new URL(href);
     const helixId = url.pathname.split('/')[2];
