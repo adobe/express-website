@@ -37,8 +37,42 @@ async function fetchFeatures(sheet) {
   return json.data;
 }
 
-function decorateHeader(header) {
+function buildWordList(header) {
+  const words = [];
+  header.forEach((row) => {
+    const word = row['Header Words'];
+    words.push(word);
+  });
+  return words;
+}
 
+function animateHeader($header, words) {
+  let i = 0;
+  const max = words.length;
+  const firstWord = words[0];
+  const headerWordTemplate = `<span id="pricing-header-word">${firstWord}</span>`;
+  $header.innerHTML = $header.innerHTML.replace('[x]', headerWordTemplate);
+  const $headerWord = $header.children[0];
+  setInterval(() => {
+    $headerWord.classList.add('hidden');
+    setTimeout(() => {
+      i += 1;
+      if (i > max) {
+        i = 0;
+      }
+      $headerWord.innerHTML = words[i];
+      $headerWord.classList.remove('hidden');
+    }, 1500);
+  }, 4000);
+}
+
+function decorateHeader($block, header) {
+  const headerText = header[0]['Header Title'];
+  const $header = createTag('h2', { class: 'pricing-header' });
+  const words = buildWordList(header);
+  $header.innerHTML = headerText;
+  $block.append($header);
+  animateHeader($header, words);
 }
 
 function decoratePlans(plans, features) {
@@ -57,12 +91,13 @@ async function decoratePricing($block) {
   const plans = await fetchPlans(sheet);
   const features = await fetchFeatures(sheet);
 
-  decorateHeader(header);
+  $block.innerHTML = '';
+
+  decorateHeader($block, header);
   decoratePlans(plans, features);
   decorateTable(features);
 }
 
 export default function decorate($block) {
-  console.log('decorate pricing');
   decoratePricing($block);
 }
