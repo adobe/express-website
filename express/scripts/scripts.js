@@ -639,6 +639,9 @@ function setLCPTrigger() {
       $lcpCandidate.addEventListener('load', () => {
         postLCP();
       });
+      $lcpCandidate.addEventListener('error', () => {
+        postLCP();
+      });
     }
   } else {
     postLCP();
