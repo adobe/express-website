@@ -1,38 +1,38 @@
 @media (min-width: 1200px) {
 
-    .pricing-container {
+    main .pricing-container {
         background-color: rgba(242,244,245,1);
     }
 
-    .pricing-container>div {
+    main .pricing-container>div {
         max-width: 1140px!important;
     }
 
-    .pricing {
+    main .pricing {
         padding-top: 100px;
         display: flex;
         align-items: start;
     }
 
-    .pricing-header {
+    main .pricing .pricing-header {
         text-align: left!important;
         color: rgb(40, 70, 96);
         width: 300px;
         padding-right: 100px;
     }
 
-    .pricing-header span {
+    main .pricing .pricing-header span {
         color: rgb(16, 196, 89);
         transition: 1.5s opacity ease;
     }
 
-    .pricing-plans {
+    main .pricing .pricing-plans {
         display: inline-flex;
         justify-content: space-between;
         width: 900px;
     }
 
-    .plan {
+    main .pricing .plan {
         position: relative;
         display: flex;
         flex-direction: column;
@@ -43,7 +43,28 @@
         align-items: center;
     }
 
-    .plan-header {
+    main .pricing .plan.promotional {
+        border: 2px #5167CF solid;
+        width: 206px;
+        height: 296px;
+    }
+
+    .plan-promotional-header {
+        position: absolute;
+        display: flex;
+        background: linear-gradient(#FFDA00, #e6ab00);
+        height: 30px;
+        width: 250px;
+        top: -32px;
+        font-weight: 600;
+        font-size: 12px;
+        color: black;
+        border-radius: 7px 7px 0 0;
+        align-items: center;
+        justify-content: center;
+    }
+
+    main .pricing .plan-header {
         display: flex;
         text-align: left;
         border-bottom: 1px #DBDBDB solid;
@@ -52,13 +73,13 @@
         min-height: 110px;
     }
 
-    .plan-header img {
+    main .pricing .plan-header img {
         align-self: start;
         width: 50px;
         height: 50px;
     }
 
-    .plan-header>div>span {
+    main .pricing .plan-header>div>span {
         font-weight: 900;
         font-size: 20px;
         color: rgb(53,65,76);
@@ -66,29 +87,34 @@
         text-align: left;
     }
 
-    .plan-header>div>p {
+    main .pricing .plan-header>div>p {
         margin: 10px 0;
         font-size: 13px;
         color: rgb(53,65,76);
     }
 
-    .plan-pricing {
+    main .pricing .plan-pricing {
         margin-top: 10px;
         font-size: 14px;
         color: rgb(53,65,76);
     }
 
-    .plan-pricing strong {
+    main .pricing .plan-pricing strong {
         font-size: 22px;
         color: black;
     }
 
-    .previous-pricing {
+    main .pricing .previous-pricing {
         position: relative;
         margin-left: 20px;
+        color: rgb(130, 145, 155);
     }
 
-    .previous-pricing::after {
+    main .pricing .previous-pricing strong {
+        color: rgb(130, 145, 155);
+    }
+
+    main .pricing .previous-pricing::after {
         position: absolute;
         content: '';
         width: 110%;
@@ -98,23 +124,23 @@
         background-color: red;
     }
 
-    .plan-secondary {
+    main .pricing .plan-secondary {
         font-size: 13px;
         color: rgb(130, 145, 155);
     }
 
-    .plan-footer {
+    main .pricing .plan-footer {
         margin-top: auto;
     }
 
-    .plan-dropdown {
+    main .pricing .plan-dropdown {
         padding: 7px 10px;
         border-radius: 5px;
         width: 165px;
         border: 1px solid #dce0e3;
     }
 
-    .plan-cta {
+    main .pricing .plan-cta {
         display: block;
         width: 145px;
         padding: 10px 0;
