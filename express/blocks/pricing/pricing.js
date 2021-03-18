@@ -30,6 +30,13 @@ async function fetchPlans(sheet) {
   return json.data;
 }
 
+async function fetchPlanOptions(sheet) {
+  const url = `./${sheet}.json?sheet=plan-options`;
+  const resp = await fetch(url);
+  const json = await resp.json();
+  return json.data;
+}
+
 async function fetchFeatures(sheet) {
   const url = `./${sheet}.json?sheet=table`;
   const resp = await fetch(url);
@@ -75,15 +82,99 @@ function decorateHeader($block, header) {
   animateHeader($header, words);
 }
 
-function buildPlanDropdown() {
-  const $dropdown = createTag('select', { class: 'plan-dropdown' });
-  const $option1 = createTag('option', { value: 'Option 1' });
-  $option1.innerHTML = 'Option 1';
-  $dropdown.append($option1);
-  return $dropdown;
+function getPlanOptions(planTitle, planOptions) {
+  const options = [];
+  planOptions.forEach((option) => {
+    const optionPlan = option['Option Plan'];
+    if (planTitle === optionPlan) {
+      options.push(option);
+    }
+  });
+  return options;
 }
 
-function decoratePlans($block, plans) {
+function replaceUrlParam(url, paramName, paramValue) {
+  const params = url.searchParams;
+  params.set(paramName, paramValue);
+  url.search = params.toString();
+  return url.toString();
+}
+
+function buildUrl(optionUrl, optionPlan) {
+  const planUrl = new URL(optionUrl);
+  const currentUrl = new URL(window.location.href);
+  let rUrl = planUrl.searchParams.get('rUrl');
+  if (currentUrl.searchParams.has('host')) {
+    const hostParam = currentUrl.searchParams.get('host');
+    if (hostParam === 'spark.adobe.com') {
+      planUrl.hostname = 'commerce.adobe.com';
+      rUrl = rUrl.replace('spark.adobe.com', hostParam);
+    } else if (hostParam.includes('qa.adobeprojectm.com')) {
+      planUrl.hostname = 'commerce.adobe.com';
+      rUrl = rUrl.replace('spark.adobe.com', hostParam);
+    } else if (hostParam.includes('.adobeprojectm.com')) {
+      planUrl.hostname = 'commerce-stg.adobe.com';
+      rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
+      rUrl = rUrl.replace('spark.adobe.com', hostParam);
+    }
+  }
+  if (currentUrl.searchParams.has('touchpointName')) {
+    rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
+  }
+  if (currentUrl.searchParams.has('destinationUrl') && optionPlan === 'Individual') {
+    rUrl = replaceUrlParam(rUrl, 'destinationUrl', currentUrl.searchParams.get('destinationUrl'));
+  }
+  if (currentUrl.searchParams.has('srcUrl')) {
+    rUrl = replaceUrlParam(rUrl, 'srcUrl', currentUrl.searchParams.get('srcUrl'));
+  }
+  if (currentUrl.searchParams.has('code')) {
+    planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
+  }
+  planUrl.searchParams.set('rUrl', rUrl);
+  return planUrl.href;
+}
+
+function selectPlanOption($plan, option) {
+  const priceString = option['Option Price'].split('/');
+  const fullPriceString = option['Option Full Price'].split('/');
+  const price = priceString[0];
+  const priceUnit = priceString[1];
+  const fullPrice = fullPriceString[0];
+  const fullPriceUnit = fullPriceString[1];
+  const text = option['Option Text'];
+  const cta = option['Option CTA'];
+  const ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
+
+  const $pricing = $plan.querySelector('.plan-pricing');
+  const $pricingText = $plan.querySelector('.plan-secondary');
+  const $cta = $plan.querySelector('.plan-cta');
+
+  if (price === 'Free') {
+    $pricing.innerHTML = '<strong>Free</strong>';
+  } else {
+    $pricing.innerHTML = `<span>US $<strong>${price}</strong>/${priceUnit}</span>`;
+    if (price !== fullPrice) {
+      $pricing.innerHTML += `<span class="previous-pricing">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+    }
+  }
+  if (text) {
+    $pricingText.innerHTML = text;
+  }
+
+  $cta.innerHTML = cta;
+  $cta.href = ctaUrl;
+}
+
+function addDropdownEventListener($plan, options) {
+  const $dropdown = $plan.querySelector('.plan-dropdown');
+
+  $dropdown.addEventListener('change', (e) => {
+    const option = options[e.target.selectedIndex];
+    selectPlanOption($plan, option);
+  });
+}
+
+function decoratePlans($block, plans, planOptions) {
   const $plans = createTag('div', { class: 'pricing-plans' });
   $block.append($plans);
   plans.forEach((plan) => {
@@ -91,13 +182,10 @@ function decoratePlans($block, plans) {
     const description = plan['Plan Description'];
     const imageName = plan['Plan Image'];
     const imagePath = `icons/${imageName}.svg`;
-    const price = plan['Plan Current Price'];
-    const fullPrice = plan['Plan Full Price'];
-    const pricingText = plan['Plan Pricing Text'];
-
-    const $plan = createTag('div', { class: 'pricing-plan' });
+    const $plan = createTag('div', { class: 'plan' });
+    const options = getPlanOptions(title, planOptions);
     $plans.append($plan);
-    const $header = createTag('div', { class: 'pricing-plan-header' });
+    const $header = createTag('div', { class: 'plan-header' });
     $plan.append($header);
     const $headerContainer = createTag('div');
     $header.append($headerContainer);
@@ -109,30 +197,29 @@ function decoratePlans($block, plans) {
     $headerContainer.append($description);
     const $icon = createTag('img', { src: imagePath, class: 'plan-icon' });
     $header.append($icon);
-    const $pricing = createTag('div', { class: 'pricing-plan-pricing' });
-
-    if (price === 'Free') {
-      $pricing.innerHTML = '<strong>Free</strong>';
-    } else {
-      $pricing.innerHTML = `<span>US $<strong>${price}</strong>/mo</span>`;
-      if (price !== fullPrice) {
-        $pricing.innerHTML += `<span class="previous-pricing">US $<strong>${fullPrice}</strong>/mo</span>`;
-      }
-    }
+    const $pricing = createTag('div', { class: 'plan-pricing' });
     $plan.append($pricing);
-    if (pricingText) {
-      const $pricingText = createTag('span', { class: 'pricing-plan-secondary' });
-      $pricingText.innerHTML = pricingText;
-      $plan.append($pricingText);
-    }
+    const $pricingText = createTag('span', { class: 'plan-secondary' });
+    $plan.append($pricingText);
     const $footer = createTag('div', { class: 'plan-footer' });
     $plan.append($footer);
-    if (price !== 'Free') {
-      const $dropdown = buildPlanDropdown();
+    if (options.length > 1) {
+      const $dropdown = createTag('select', { class: 'plan-dropdown' });
+      let i = 0;
+      options.forEach((option) => {
+        const name = option['Option Name'];
+        const $option = createTag('option', { value: i });
+        $option.innerHTML = name;
+        $dropdown.append($option);
+        i += 1;
+      });
       $footer.append($dropdown);
+      addDropdownEventListener($plan, options);
     }
-    const $cta = createTag('input', { type: 'submit', class: 'plan-cta' });
+    const $cta = createTag('a', { class: 'plan-cta' });
     $footer.append($cta);
+
+    selectPlanOption($plan, options[0]);
   });
 }
 
@@ -146,12 +233,13 @@ async function decoratePricing($block) {
 
   const header = await fetchHeader(sheet);
   const plans = await fetchPlans(sheet);
+  const planOptions = await fetchPlanOptions(sheet);
   const features = await fetchFeatures(sheet);
 
   $block.innerHTML = '';
 
   decorateHeader($block, header);
-  decoratePlans($block, plans);
+  decoratePlans($block, plans, planOptions);
   decorateTable($block, features);
 }
 
