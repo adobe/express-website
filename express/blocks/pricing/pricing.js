@@ -13,24 +13,25 @@
 
 import {
   createTag,
+  readBlockConfig,
 } from '../../scripts/scripts.js';
 
 async function fetchHeader(sheet) {
-  const url = `/${sheet}.json?sheet=header`;
+  const url = `./${sheet}.json?sheet=header`;
   const resp = await fetch(url);
   const json = await resp.json();
   return json.data;
 }
 
 async function fetchPlans(sheet) {
-  const url = `/${sheet}.json?sheet=plans`;
+  const url = `./${sheet}.json?sheet=plans`;
   const resp = await fetch(url);
   const json = await resp.json();
   return json.data;
 }
 
 async function fetchFeatures(sheet) {
-  const url = `/${sheet}.json?sheet=features`;
+  const url = `./${sheet}.json?sheet=table`;
   const resp = await fetch(url);
   const json = await resp.json();
   return json.data;
@@ -49,8 +50,8 @@ function decorateTable(features) {
 }
 
 async function decoratePricing($block) {
-  const $rows = $block.children;
-  const sheet = $rows[1];
+  const config = readBlockConfig($block);
+  const { sheet } = config;
 
   const header = await fetchHeader(sheet);
   const plans = await fetchPlans(sheet);
