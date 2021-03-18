@@ -8,6 +8,6 @@ main .banner {
 
 @media (min-width:900px) {
   main .banner {
-    margin: 80px auto;
+    margin: 40px auto;
   }
 }
