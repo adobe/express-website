@@ -457,6 +457,7 @@ main .section-wrapper.steps-dark-container > div > h2 {
 
 main .section-wrapper.cards-container {
   background-color: #F1F3F4;
+  padding-top: 0;
 }
 
 main .section-wrapper.quotes-dark-container {
