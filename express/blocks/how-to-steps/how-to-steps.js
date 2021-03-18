@@ -10,14 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-/* global document */
 /* eslint-disable import/named, import/extensions */
 
 import {
   createTag,
 } from '../../scripts/scripts.js';
 
-export default function decorate($block) {
+export default function decorate($block, name, doc) {
   const $howto = $block;
   const $heading = $howto.previousElementSibling;
   const $rows = Array.from($howto.children);
@@ -47,6 +46,6 @@ export default function decorate($block) {
     $cells[0].remove();
   });
   $schema.innerHTML = JSON.stringify(schema);
-  const $head = document.head;
+  const $head = doc.head;
   $head.append($schema);
 }

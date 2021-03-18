@@ -173,7 +173,7 @@ function decorateBlocks() {
     $block.classList.add('block');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
-        mod.default($block, blockName);
+        mod.default($block, blockName, document);
       })
       .catch((err) => console.log('failed to load module', err));
 
@@ -637,6 +637,9 @@ function setLCPTrigger() {
       postLCP();
     } else {
       $lcpCandidate.addEventListener('load', () => {
+        postLCP();
+      });
+      $lcpCandidate.addEventListener('error', () => {
         postLCP();
       });
     }
