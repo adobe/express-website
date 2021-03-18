@@ -27,6 +27,7 @@ main .steps > div {
 main .steps .step-image {
     width: 32px;
     margin-right: 8px;
+    margin-top: 4px;
 }
 
 main .steps .step-description {
@@ -37,6 +38,13 @@ main .steps-dark-container {
     background-color: black;
     color: white;
 }
+
+main .steps .icon {
+    fill: currentColor;
+    width: 24px;
+    height: 24px;
+  }
+  
 
 @media (min-width:900px) {
     main .steps {
