@@ -80,7 +80,6 @@ main .cards.large .card .content p {
     width: 800px;
     padding: 80px 0 80px 0;
     flex-direction: row;
-    padding-bottom: 0;
   }
 
   main .cards .card {
