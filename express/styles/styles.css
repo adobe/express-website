@@ -287,7 +287,11 @@ main .hero a.button:any-link {
   text-shadow: none;
 }
 
-
+main .icon {
+  height: 1em;
+  width: 1em;
+  color: currentColor;
+}
 main .hero .hero-bg {
     position: absolute;
     top: 0;

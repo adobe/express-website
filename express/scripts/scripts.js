@@ -685,9 +685,7 @@ export function unwrapBlock($block) {
 
   let $appendTo;
   $elems.forEach(($e) => {
-    console.log($e);
     if ($e === $block) $appendTo = $blockSection;
-    console.log($appendTo);
     if ($appendTo) {
       $appendTo.appendChild($e);
       $appendTo = $postBlockSection;
