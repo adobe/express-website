@@ -1,3 +1,16 @@
 main .pricing {
     background-color: yellow;
 }
+
+.pricing-header {
+    color: rgb(40, 70, 96);
+}
+
+.pricing-header span {
+    color: rgb(16, 196, 89);
+    transition: 1.5s opacity ease;
+}
+
+.pricing-header span.hidden {
+    opacity: 0;
+}
