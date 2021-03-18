@@ -702,8 +702,22 @@ function splitSections() {
   });
 }
 
+function setTheme() {
+  let $theme = document.querySelector("meta[name='Theme']");
+  if (!$theme) $theme = document.querySelector("meta[name='theme']");
+  if ($theme) {
+    const theme = $theme.getAttribute('content');
+    if (theme) {
+      const themeClass = toClassName(theme);
+      const $main = document.querySelector('main');
+      $main.classList.add(themeClass);
+    }
+  }
+}
+
 async function decoratePage() {
   setTemplate();
+  setTheme();
   await decorateTesting();
   splitSections();
   wrapSections('main>div');
