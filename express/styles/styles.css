@@ -226,17 +226,30 @@ main img {
 
 main .hero {
     color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,.25);
     position: relative;
     padding: 120px 32px;
 }
 
 main .hero.hero-noimage {
-    background-color: #000;
+    color: black;
+    padding-top: 64px;
+    padding-bottom: 0;
+}
+
+main .hero.hero-noimage + .section-wrapper {
+  padding-top: 0;
+}
+
+main .hero.hero-noimage > div {
+  max-width: 1024px;
+}
+
+main .hero.hero-noimage a.button:any-link {
+  color: white;
 }
 
 main .hero.hero-noimage a:any-link{
-  color: white;
+  color: black;
 }
 
 main .hero h1 {
@@ -251,6 +264,18 @@ main .hero h2 {
     line-height: 28px;
     margin: 32px 32px;
     font-weight: 400;
+}
+
+main .hero h5 {
+  font-size: 18px;
+  font-weight: 500;
+  max-width: 672px;
+  margin: auto;
+  margin-top: 32px;
+}
+
+main .hero.hero-noimage p {
+  font-size: 14px;
 }
 
 main .hero p {
@@ -294,6 +319,19 @@ main .hero > div {
         line-height: 28px;
         margin-bottom: 40px;
     }
+
+    main .hero h5 {
+      font-size: 22px;
+      font-weight: 500;
+      max-width: 672px;
+      margin: auto;
+      margin-top: 32px;
+    }
+
+    main .hero.hero-noimage p {
+      font-size: 14px;
+    }    
+
 
     main .hero {
         padding: 80px 0;
