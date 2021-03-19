@@ -1,0 +1,56 @@
+main .contact {
+    margin-top: 40px;
+}
+
+main .contact .contact-row {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+main .contact .contact-container {
+    display: flex;
+    background-color: white;
+    width: 680px;
+    height: 80px;
+    align-items: center;
+    border-radius: 5px;
+}
+
+main .contact .contact-title {
+    width: 200px;
+    font-size: 18px;
+    color: black;
+    font-weight: 600;
+    margin-right: 80px;
+}
+
+main .contact .contact-phone-container {
+    width: 220px;
+}
+
+main .contact .contact-phone {
+    font-size: 18px;
+    color: rgb(130, 145, 156);
+}
+
+main .contact .contact-phone a {
+    color: #1473e6!important;
+    text-decoration: none!important;
+}
+
+main .contact .contact-text-container {
+    width: 460px;
+}
+
+main .contact .contact-text {
+    padding: 0 20px;
+    font-size: 14px;
+    color: rgb(53, 65, 76);
+}
+
+main .contact .contact-text a {
+    color: #1473e6!important;
+    text-decoration: none!important;
+}

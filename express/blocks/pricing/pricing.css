@@ -6,6 +6,7 @@
 
     main .pricing-container>div {
         max-width: 1140px!important;
+        padding-bottom: 40px;
     }
 
     main .pricing {
@@ -194,6 +195,7 @@
         min-width: 40px;
         text-align: right;
         padding-top: 2px;
+
     }
 
     main .pricing .feature-special span {
@@ -227,4 +229,33 @@
     main .pricing .feature-column:last-child {
         margin-right: 0;
     }
+}
+
+main .pricing-container>div>p {
+    margin-top: 20px;
+    margin-bottom: 60px;
+    font-size: 14px;
+    color: #82919c;
+}
+
+main .pricing-container>div>p a {
+    color: #82919c!important;
+}
+
+main .pricing-container .icon-creativecloud {
+    margin-top: 40px;
+    width: 32px;
+    height: 24px;
+    fill: grey;
+}
+
+main .pricing-container>div>h5 {
+    font-weight: normal;
+    font-size: 16px;
+    color: #82919c;
+}
+
+main .pricing-container>div>h5 a {
+    color: #1473e6!important;
+    text-decoration: none!important;
 }
