@@ -96,12 +96,20 @@ window.digitalData = {
 
 function textToName(text) {
   const splits = text.toLowerCase().split(' ');
-  const camelCase = splits.map((s, i) => (i ? s : s.charAt(0).toUpperCase() + s.slice(1))).join('');
+  const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
   return (camelCase);
 }
 
-function trackButtonClick($button) {
-  const eventName = textToName($button.textContent);
+function trackButtonClick($a) {
+  let eventName = 'linkEvent'
+  if ($a.textContent) {
+    eventName = textToName($a.textContent);
+  } else {
+    const $img = $a.querySelector('img');
+    if ($img && $img.getAttribute('alt')) {
+      eventName = textToName($img.getAttribute('alt'));
+    }
+  }
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('digitalData.primaryEvent.eventInfo.eventName', eventName);
 
@@ -111,9 +119,9 @@ function trackButtonClick($button) {
 }
 
 function decorateAnalyticsEvents() {
-  document.querySelectorAll('main .button').forEach(($button) => {
-    $button.addEventListener('click', () => {
-      trackButtonClick($button);
+  document.querySelectorAll('main a').forEach(($a) => {
+    $a.addEventListener('click', () => {
+      trackButtonClick($a);
     });
   });
 }
