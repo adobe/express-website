@@ -110,6 +110,15 @@ function trackButtonClick($a) {
       eventName = textToName($img.getAttribute('alt'));
     }
   }
+
+  window.digitalData = {
+    primaryEvent: {
+      eventInfo: {
+        eventName: `adobe.com:express:${eventName}`,
+      },
+    },
+  };
+
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('digitalData.primaryEvent.eventInfo.eventName', eventName);
   // eslint-disable-next-line no-underscore-dangle
