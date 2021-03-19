@@ -111,6 +111,7 @@ function trackButtonClick($a) {
     }
   }
 
+  /*
   window.digitalData = {
     primaryEvent: {
       eventInfo: {
@@ -118,6 +119,7 @@ function trackButtonClick($a) {
       },
     },
   };
+  */
 
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('digitalData.primaryEvent.eventInfo.eventName', eventName);
