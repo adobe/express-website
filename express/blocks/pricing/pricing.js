@@ -14,6 +14,7 @@
 import {
   createTag,
   readBlockConfig,
+  toClassName,
 } from '../../scripts/scripts.js';
 
 async function fetchHeader(sheet) {
@@ -233,7 +234,70 @@ function decoratePlans($block, plans, planOptions) {
 }
 
 function decorateTable($block, features) {
-
+  const categories = [];
+  const categoryContainers = [];
+  const $features = createTag('div', { class: 'features' });
+  $block.append($features);
+  features.forEach((feature) => {
+    const { Category, Description, Special } = feature;
+    const columnOneCheck = feature['Column 1'];
+    const columnTwoCheck = feature['Column 2'];
+    const columnThreeCheck = feature['Column 3'];
+    if (!categories.includes(Category)) {
+      const imageName = toClassName(Category);
+      const categoryImage = `icons/${imageName}.svg`;
+      const $category = createTag('div', { class: 'category' });
+      $features.append($category);
+      const $categoryHeader = createTag('div', { class: 'category-header' });
+      $category.append($categoryHeader);
+      const $categoryImage = createTag('img', { src: categoryImage, class: 'category-image' });
+      $categoryHeader.append($categoryImage);
+      const $categoryText = createTag('span', { class: 'category-text' });
+      $categoryText.innerHTML = Category;
+      $categoryHeader.append($categoryText);
+      categories.push(Category);
+      categoryContainers[Category] = $category;
+    }
+    const $feature = createTag('div', { class: 'feature' });
+    categoryContainers[Category].append($feature);
+    const $featureSpecial = createTag('div', { class: 'feature-special' });
+    $feature.append($featureSpecial);
+    if (Special) {
+      const $specialText = createTag('span');
+      $specialText.innerHTML = Special;
+      $featureSpecial.append($specialText);
+    }
+    const $featureText = createTag('div', { class: 'feature-text' });
+    $featureText.innerHTML = Description;
+    $feature.append($featureText);
+    const $featureColumnOne = createTag('div', { class: 'feature-column' });
+    $feature.append($featureColumnOne);
+    const $columnOneImage = createTag('img');
+    if (columnOneCheck === 'Y') {
+      $columnOneImage.src = 'icons/checkmark.svg';
+    } else {
+      $columnOneImage.src = 'icons/crossmark.svg';
+    }
+    $featureColumnOne.append($columnOneImage);
+    const $featureColumnTwo = createTag('div', { class: 'feature-column' });
+    const $columnTwoImage = createTag('img');
+    if (columnTwoCheck === 'Y') {
+      $columnTwoImage.src = 'icons/checkmark.svg';
+    } else {
+      $columnTwoImage.src = 'icons/crossmark.svg';
+    }
+    $featureColumnTwo.append($columnTwoImage);
+    $feature.append($featureColumnTwo);
+    const $featureColumnThree = createTag('div', { class: 'feature-column' });
+    const $columnThreeImage = createTag('img');
+    if (columnThreeCheck === 'Y') {
+      $columnThreeImage.src = 'icons/checkmark.svg';
+    } else {
+      $columnThreeImage.src = 'icons/crossmark.svg';
+    }
+    $featureColumnThree.append($columnThreeImage);
+    $feature.append($featureColumnThree);
+  });
 }
 
 async function decoratePricing($block) {
