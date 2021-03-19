@@ -1,0 +1,25 @@
+main .list {
+    max-width: 1140px;
+    margin: 40px auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+main .list .item {
+    margin-bottom: 50px;
+    width: 310px;
+}
+
+main .list .item-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+main .list .item-text {
+    margin-top: 0;
+    font-size: 14px;
+    color: rgb(40, 60, 96);
+    text-align: center;
+    line-height: 1.4;
+}
