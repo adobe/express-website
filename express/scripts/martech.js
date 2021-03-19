@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window */
+/* global window document digitalData */
 
 import { loadScript, getLocale } from './scripts.js';
 
@@ -94,5 +94,31 @@ window.digitalData = {
   },
 };
 
+function textToName(text) {
+  const splits = text.toLowerCase().split(' ');
+  const camelCase = splits.map((s, i) => (i ? s : s.charAt(0).toUpperCase() + s.slice(1))).join('');
+  return (camelCase);
+}
+
+function trackButtonClick($button) {
+  const eventName = textToName($button.textContent);
+  // eslint-disable-next-line no-underscore-dangle
+  digitalData._set('digitalData.primaryEvent.eventInfo.eventName', eventName);
+
+  // eslint-disable-next-line no-underscore-dangle
+  digitalData._delete('digitalData.primaryEvent.eventInfo.eventName');
+  console.log(eventName);
+}
+
+function decorateAnalyticsEvents() {
+  document.querySelectorAll('main .button').forEach(($button) => {
+    $button.addEventListener('click', () => {
+      trackButtonClick($button);
+    });
+  });
+}
+
 loadScript('https://www.adobe.com/marketingtech/main.min.js');
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
+
+decorateAnalyticsEvents();
