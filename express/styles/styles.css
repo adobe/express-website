@@ -216,6 +216,10 @@ a.button > svg > use {
 
 /* make page : hero */
 
+main.light-grey {
+  background-color: #f4f4f4;	
+}
+
 main {
     text-align: center;
 }

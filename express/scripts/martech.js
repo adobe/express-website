@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window */
+/* global window document digitalData _satellite */
 
 import { loadScript, getLocale } from './scripts.js';
 
@@ -94,5 +94,40 @@ window.digitalData = {
   },
 };
 
+function textToName(text) {
+  const splits = text.toLowerCase().split(' ');
+  const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
+  return (camelCase);
+}
+
+function trackButtonClick($a) {
+  let eventName = 'linkEvent'
+  if ($a.textContent) {
+    eventName = textToName($a.textContent);
+  } else {
+    const $img = $a.querySelector('img');
+    if ($img && $img.getAttribute('alt')) {
+      eventName = textToName($img.getAttribute('alt'));
+    }
+  }
+  // eslint-disable-next-line no-underscore-dangle
+  digitalData._set('digitalData.primaryEvent.eventInfo.eventName', eventName);
+  // eslint-disable-next-line no-underscore-dangle
+  _satellite.track('event', { digitalData: digitalData._snapshot() });
+  // eslint-disable-next-line no-underscore-dangle
+  digitalData._delete('digitalData.primaryEvent.eventInfo.eventName');
+  console.log(eventName);
+}
+
+function decorateAnalyticsEvents() {
+  document.querySelectorAll('main a').forEach(($a) => {
+    $a.addEventListener('click', () => {
+      trackButtonClick($a);
+    });
+  });
+}
+
 loadScript('https://www.adobe.com/marketingtech/main.min.js');
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
+
+decorateAnalyticsEvents();
