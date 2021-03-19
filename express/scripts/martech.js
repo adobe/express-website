@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document digitalData */
+/* global window document digitalData _satellite */
 
 import { loadScript, getLocale } from './scripts.js';
 
@@ -112,7 +112,8 @@ function trackButtonClick($a) {
   }
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('digitalData.primaryEvent.eventInfo.eventName', eventName);
-
+  // eslint-disable-next-line no-underscore-dangle
+  _satellite.track('event', { digitalData: digitalData._snapshot() });
   // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('digitalData.primaryEvent.eventInfo.eventName');
   console.log(eventName);
