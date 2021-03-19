@@ -17,7 +17,7 @@ import {
   readBlockConfig,
 } from '../../scripts/scripts.js';
 
-function addPages(index, filter, $block) {
+function addPages(index, config, $block) {
   const $images = createTag('div', { class: 'page-list-images' });
   const $additional = createTag('div', { class: 'page-list-additional' });
   $block.appendChild($images);
@@ -26,9 +26,9 @@ function addPages(index, filter, $block) {
   const images = [];
 
   index.forEach((page) => {
-    if (page.path.includes(filter)) {
+    if (page.path.includes(config.filter)) {
       const { path, image, title } = page;
-      if (!images.includes(image)) {
+      if (!images.includes(image) && (images.length < +config.images)) {
         const $card = createTag('div', { class: 'card' });
         $card.innerHTML = `<div class="card-image">
               <img loading="lazy" src="${image.replace('width=2000', 'width=750')}">
@@ -73,7 +73,7 @@ async function decoratePageList($block) {
   const config = readBlockConfig($block);
   $block.innerHTML = '';
   const index = await fetchIndex();
-  addPages(index, config.filter, $block);
+  addPages(index, config, $block);
 }
 
 export default function decorate($block) {

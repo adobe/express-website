@@ -2,6 +2,9 @@ main .page-list {
     margin-top: 64px;
     text-align: left;
   }
+  main .page-list-container  > div {
+    max-width: 100%;
+  }
 
   main .page-list-container  .page-list-images > div {
       max-width: 100%;
