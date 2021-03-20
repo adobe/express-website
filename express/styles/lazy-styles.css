@@ -112,12 +112,6 @@ main .list ol li::before {
     display: none;
   }
 
-main .blog-posts {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
 main .tutorials .filters .tag-filter {
   border: 1px solid lightgray;
   border-radius: 5px;

@@ -23,17 +23,31 @@ async function fetchBlogIndex() {
   return (json.data);
 }
 
-async function filterBlogPosts(locale, filters) {
+function getFeatured(index, urls) {
+  const paths = urls.map((url) => new URL(url).pathname.split('.')[0]);
+  const results = index.filter((post) => {
+    const path = post.path.split('.')[0];
+    return (paths.includes(path));
+  });
+  return (results);
+}
+
+async function filterBlogPosts(locale, config) {
   if (!window.blogIndex) {
     window.blogIndex = await fetchBlogIndex();
   }
   const index = window.blogIndex;
 
+  const featured = getFeatured(index, config.featured);
+
+  const result = featured;
+
+  /* filter posts by tag and author */
   const f = {};
-  for (const name of Object.keys(filters)) {
+  for (const name of Object.keys(config)) {
     const filterNames = ['tag', 'author'];
     if (filterNames.includes(name)) {
-      const vals = filters[name];
+      const vals = config[name];
       let v = vals;
       if (!Array.isArray(vals)) {
         v = [vals];
@@ -44,7 +58,8 @@ async function filterBlogPosts(locale, filters) {
     }
   }
 
-  const result = index.filter((post) => {
+  /* filter and ignore if already in result */
+  const feed = index.filter((post) => {
     let matchedAll = true;
     for (const name of Object.keys(f)) {
       let matched = false;
@@ -58,41 +73,58 @@ async function filterBlogPosts(locale, filters) {
         break;
       }
     }
-    return (matchedAll);
+    return (matchedAll && !result.includes(post));
   });
+
+  result.push(...feed);
 
   return (result);
 }
 
 async function decorateBlogPosts($blogPosts) {
   let posts = [];
+  let config = {};
 
-  if ($blogPosts.querySelector('a')) {
+  if ($blogPosts.querySelector(':scope > div:first-of-type > div:first-of-type > a')) {
     /* handle links */
 
-    const links = [];
-    $blogPosts.querySelectorAll('a').forEach(($a) => {
-      links.push($a.href);
-    });
-
-    $blogPosts.innerHTML = '';
+    const links = [...$blogPosts.querySelectorAll('a')].map(($a) => $a.href);
 
     /* needs fixing to work with links */
-    posts = await filterBlogPosts('en-US', { path: links });
+    config = {
+      featured: links,
+      featuredOnly: true,
+    };
   } else {
-    const config = readBlockConfig($blogPosts);
-    posts = await filterBlogPosts('en-US', config);
+    config = readBlockConfig($blogPosts);
   }
+
+  console.log(config);
+  posts = await filterBlogPosts('en-US', config);
+
+  const hasHero = config.featured && !config.featuredOnly;
+
   $blogPosts.innerHTML = '';
-  posts.forEach((post) => {
+  const $cards = createTag('div', { class: 'cards' });
+  posts.forEach((post, i) => {
     const {
       path, title, teaser, tags, image,
     } = post;
 
-    const eyebrow = JSON.parse(tags)[0].replace('-', ' ');
-    const $card = createTag('div', { class: 'card' });
+    const tagsArr = JSON.parse(tags);
+    const eyebrow = tagsArr[0] ? tagsArr[0].replace('-', ' ') : '';
+    const isHero = hasHero && !i;
+    const imagePath = image.split('?')[0].split('_')[1];
+    let pictureTag = `<picture><img src="./media_${imagePath}?$format=webply&optimize=medium&width=750"></picture>`;
+    if (isHero) {
+      pictureTag = `<picture>
+        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&format=webply&optimize=medium">
+        <img src="./media_${imagePath}?width=2000&format=webply&optimize=medium">
+      </picture>`;
+    }
+    const $card = createTag('div', { class: `${isHero ? 'hero-card' : 'card'}` });
     $card.innerHTML = `<div class="card-image">
-          <img loading="lazy" src="${image}">
+          ${pictureTag}
         </div>
         <div class="card-body">
         <p class="eyebrow">${eyebrow}</p>
@@ -102,8 +134,10 @@ async function decorateBlogPosts($blogPosts) {
     $card.addEventListener('click', () => {
       window.location.href = `${path}`;
     });
-    $blogPosts.appendChild($card);
+    if (isHero) $blogPosts.appendChild($card);
+    else $cards.appendChild($card);
   });
+  $blogPosts.appendChild($cards);
 }
 
 export default function decorate($block) {
