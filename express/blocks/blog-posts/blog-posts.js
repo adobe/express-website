@@ -31,14 +31,17 @@ async function filterBlogPosts(locale, filters) {
 
   const f = {};
   for (const name of Object.keys(filters)) {
-    const vals = filters[name];
-    let v = vals;
-    if (!Array.isArray(vals)) {
-      v = [vals];
+    const filterNames = ['tag', 'author'];
+    if (filterNames.includes(name)) {
+      const vals = filters[name];
+      let v = vals;
+      if (!Array.isArray(vals)) {
+        v = [vals];
+      }
+      // eslint-disable-next-line no-console
+      console.log(v);
+      f[name] = v.map((e) => e.toLowerCase().trim());
     }
-    // eslint-disable-next-line no-console
-    console.log(v);
-    f[name] = v.map((e) => e.toLowerCase().trim());
   }
 
   const result = index.filter((post) => {
