@@ -83,10 +83,10 @@ async function decorateBlogPosts($blogPosts) {
   $blogPosts.innerHTML = '';
   posts.forEach((post) => {
     const {
-      path, title, teaser, tags, image
+      path, title, teaser, tags, image,
     } = post;
 
-    const eyebrow = JSON.parse(tags)[0].replace('-',' ');
+    const eyebrow = JSON.parse(tags)[0].replace('-', ' ');
     const $card = createTag('div', { class: 'card' });
     $card.innerHTML = `<div class="card-image">
           <img loading="lazy" src="${image}">
