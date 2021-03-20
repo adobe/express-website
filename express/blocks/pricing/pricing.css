@@ -142,22 +142,6 @@
         border: 1px solid #dce0e3;
     }
 
-    main .pricing .plan-cta {
-        display: block;
-        width: 145px;
-        padding: 10px 0;
-        margin: 1em auto 0 auto;
-        font-size: 16px;
-        font-weight: 900;
-        background-color: #5167CF;
-        color: white;
-        border-radius: 24px;
-        border: none;
-        outline: none;
-        transition: .2s all ease-in;
-        text-decoration: none;
-    }
-
     main .pricing .features {
         margin-top: 20px;
         width: 1200px;
