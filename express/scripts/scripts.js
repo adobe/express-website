@@ -229,14 +229,23 @@ export function loadScript(url, callback, type) {
 export function readBlockConfig($block) {
   const config = {};
   $block.querySelectorAll(':scope>div').forEach(($row) => {
-    if ($row.children && $row.children[1]) {
-      const name = toClassName($row.children[0].textContent);
-      const $a = $row.children[1].querySelector('a');
-      let value = '';
-      if ($a) value = $a.href;
-      else value = $row.children[1].textContent;
-      config[name] = value;
-    }
+    if ($row.children) {
+      const $cols = [...$row.children];
+      if ($cols[1]) {
+        const $value = $cols[1];
+        const name = toClassName($cols[0].textContent);
+        let value = '';
+        if ($value.querySelector('a')) {
+          const $as = [...$value.querySelectorAll('a')];
+          if ($as.length === 1) {
+            value = $as[0].href;
+          } else {
+            value = $as.map(($a) => $a.href);
+          }
+        } else value = $row.children[1].textContent;
+        config[name] = value;
+      }
+    };
   });
   return config;
 }
@@ -293,12 +302,17 @@ function decorateButtons() {
     const $twoup = $a.parentElement.parentElement;
     if (!$a.querySelector('img')) {
       if ($up.childNodes.length === 1 && $up.tagName === 'P') {
-        $a.className = 'button secondary';
+        $a.className = 'button primary';
         $up.classList.add('button-container');
       }
       if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
           && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
         $a.className = 'button primary';
+        $twoup.classList.add('button-container');
+      }
+      if ($up.childNodes.length === 1 && $up.tagName === 'EM'
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+        $a.className = 'button secondary';
         $twoup.classList.add('button-container');
       }
     }
