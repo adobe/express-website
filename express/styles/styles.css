@@ -199,6 +199,12 @@ a.button:any-link {
     display: inline-block;
 }
 
+a.button.secondary:any-link {
+  border: solid 2px #1473e6;
+  background-color: #FFF;
+  color: #1473e6;
+}
+
 a.button > svg {
   float: left;
   display: inline;
