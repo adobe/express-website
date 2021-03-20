@@ -18,7 +18,7 @@ import {
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
-  const resp = await fetch('/blog-index.json');
+  const resp = await fetch('/blog/query-index.json');
   const json = await resp.json();
   return (json.data);
 }
@@ -82,16 +82,22 @@ async function decorateBlogPosts($blogPosts) {
   }
   $blogPosts.innerHTML = '';
   posts.forEach((post) => {
+    const {
+      path, title, teaser, tags, image
+    } = post;
+
+    const eyebrow = JSON.parse(tags)[0].replace('-',' ');
     const $card = createTag('div', { class: 'card' });
     $card.innerHTML = `<div class="card-image">
-          <img loading="lazy" src="${post.image}">
+          <img loading="lazy" src="${image}">
         </div>
         <div class="card-body">
-          <h3>${post.title}</h3>
-          <p>${post.teaser}</p>
+        <p class="eyebrow">${eyebrow}</p>
+        <h3>${title}</h3>
+          <p>${teaser}</p>
         </div>`;
     $card.addEventListener('click', () => {
-      window.location.href = `/${post.path}`;
+      window.location.href = `${path}`;
     });
     $blogPosts.appendChild($card);
   });

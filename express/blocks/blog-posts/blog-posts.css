@@ -1,3 +1,11 @@
+main .blog-posts-container > div {
+  max-width: 100%;
+}
+
+
+main .blog-posts {
+  margin-top: 64px;
+}
 
 main .blog-posts .card {
     display: flex;
@@ -15,17 +23,34 @@ main .blog-posts .card {
     height: 200px;
     object-fit: cover;
     width: 100%;
+    border-radius: 10px 10px 0 0;
   }
+
+  main .blog-posts .card .card-body h3 {
+    font-size: 18px;
+    line-height: 22px;
+    margin-top: 0;
+  }
+ 
   
+  main .blog-posts .card .card-body .eyebrow {
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #1473e6;
+  } 
+
   main .blog-posts .card .card-body {
-    padding: 20px;
+    padding: 16px;
     border: 1px solid lightgrey;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 10px 10px;
     border-top: none;
-    height: 300px;
+    height: 200px;
   }
   
   main .blog-posts .card .card-body p {
     font-size: 1rem;
+    margin: 12px 0;
   }
   
