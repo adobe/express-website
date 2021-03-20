@@ -37,7 +37,7 @@ async function filterBlogPosts(locale, config) {
     window.blogIndex = await fetchBlogIndex();
   }
   const index = window.blogIndex;
-
+  if (!Array.isArray(config.featured)) config.featured = [config.featured];
   const featured = getFeatured(index, config.featured);
 
   const result = featured;
@@ -93,7 +93,6 @@ async function decorateBlogPosts($blogPosts) {
     /* handle links */
 
     const links = [...$blogPosts.querySelectorAll('a')].map(($a) => $a.href);
-    console.log('links only');
 
     /* needs fixing to work with links */
     config = {
