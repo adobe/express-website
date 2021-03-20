@@ -302,6 +302,7 @@ main .icon {
   width: 1em;
   color: currentColor;
 }
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
@@ -355,8 +356,6 @@ main .hero > div {
         max-width: 672px;
         margin: auto;
     }
-    
-    
 }
 
 @media (min-width:900px) {
@@ -476,6 +475,68 @@ main .section-wrapper.quotes-dark-container h4,
 main .section-wrapper.quotes-dark-container h5 {
   color: #FFF;
 }
+
+/* blog styling */
+
+.blog main .hero {
+  margin: 0;
+  padding: 0;
+}
+
+.blog main .hero > div {
+  margin: auto;
+  max-width: 1000px;
+  width: 100%;
+
+}
+
+.blog main .hero {
+  color: black;
+}
+
+.blog main .hero .blog-header .eyebrow {
+  text-transform: uppercase;
+  margin: 0;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #aaa;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: .1em;
+  font-weight: 600;
+}
+
+.blog main .hero .blog-header .author {
+  margin-top: 32px;
+  display: flex;
+}
+
+.blog main .hero .blog-header .author .name {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.blog main .hero .blog-header img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.blog main .hero .blog-header {
+  text-align: left;
+  margin: 32px;
+}
+
+.blog div.section-wrapper {
+  text-align: left;
+}
+
+.blog main div.section-wrapper h2, .blog main div.section-wrapper h3  {
+  text-align: left;
+}
+
 
 @media (min-width:600px) {
   main .section-wrapper {

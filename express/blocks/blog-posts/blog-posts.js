@@ -42,42 +42,43 @@ async function filterBlogPosts(locale, config) {
 
   const result = featured;
 
-  /* filter posts by tag and author */
-  const f = {};
-  for (const name of Object.keys(config)) {
-    const filterNames = ['tag', 'author'];
-    if (filterNames.includes(name)) {
-      const vals = config[name];
-      let v = vals;
-      if (!Array.isArray(vals)) {
-        v = [vals];
-      }
-      // eslint-disable-next-line no-console
-      console.log(v);
-      f[name] = v.map((e) => e.toLowerCase().trim());
-    }
-  }
-
-  /* filter and ignore if already in result */
-  const feed = index.filter((post) => {
-    let matchedAll = true;
-    for (const name of Object.keys(f)) {
-      let matched = false;
-      f[name].forEach((val) => {
-        if (post[name].toLowerCase().includes(val)) {
-          matched = true;
+  if (!config.featuredOnly) {
+    /* filter posts by tag and author */
+    const f = {};
+    for (const name of Object.keys(config)) {
+      const filterNames = ['tag', 'author'];
+      if (filterNames.includes(name)) {
+        const vals = config[name];
+        let v = vals;
+        if (!Array.isArray(vals)) {
+          v = [vals];
         }
-      });
-      if (!matched) {
-        matchedAll = false;
-        break;
+        // eslint-disable-next-line no-console
+        console.log(v);
+        f[name] = v.map((e) => e.toLowerCase().trim());
       }
     }
-    return (matchedAll && !result.includes(post));
-  });
 
-  result.push(...feed);
+    /* filter and ignore if already in result */
+    const feed = index.filter((post) => {
+      let matchedAll = true;
+      for (const name of Object.keys(f)) {
+        let matched = false;
+        f[name].forEach((val) => {
+          if (post[name].toLowerCase().includes(val)) {
+            matched = true;
+          }
+        });
+        if (!matched) {
+          matchedAll = false;
+          break;
+        }
+      }
+      return (matchedAll && !result.includes(post));
+    });
 
+    result.push(...feed);
+  }
   return (result);
 }
 
@@ -85,10 +86,14 @@ async function decorateBlogPosts($blogPosts) {
   let posts = [];
   let config = {};
 
-  if ($blogPosts.querySelector(':scope > div:first-of-type > div:first-of-type > a')) {
+  let $rows = [...$blogPosts.children];
+  let $firstRow = [...$rows[0].children];
+
+  if ($rows.length === 1 && $firstRow.length === 1) {
     /* handle links */
 
     const links = [...$blogPosts.querySelectorAll('a')].map(($a) => $a.href);
+    console.log('links only');
 
     /* needs fixing to work with links */
     config = {

@@ -28,6 +28,19 @@ export function createTag(name, attrs) {
   return el;
 }
 
+function getMeta(name) {
+  let value = '';
+  const nameLower = name.toLowerCase();
+  const $metas = [...document.querySelectorAll('meta')].filter(($m) => {
+    const nameAttr = $m.getAttribute('name');
+    const propertyAttr = $m.getAttribute('property');
+    return ((nameAttr && nameLower === nameAttr.toLowerCase())
+    || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+  });
+  if ($metas[0]) value = $metas[0].getAttribute('content');
+  return value;
+}
+
 export function getIcon(icon) {
   return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
     <use href="/express/icons.svg#${icon}"></use>
@@ -266,7 +279,18 @@ function postLCP() {
   }
 }
 
+async function fetchAuthorImage($image, author) {
+  const resp = await fetch(`/blog/authors/${toClassName(author)}.plain.html`);
+  const main = await resp.text();
+  const $div = createTag('div');
+  $div.innerHTML = main;
+  const $img = $div.querySelector('img');
+  const src = $img.src.replace('width=2000', 'width=200');
+  $image.src = src;
+}
+
 function decorateHero() {
+  const isBlog = document.documentElement.classList.contains('blog');
   const $h1 = document.querySelector('main h1');
   // check if h1 is inside a block
 
@@ -274,14 +298,41 @@ function decorateHero() {
     const $heroPicture = $h1.parentElement.querySelector('picture');
     let $heroSection;
     const $main = document.querySelector('main');
-    if ($main.children.length === 1) {
+    if ($main.children.length === 1 || isBlog) {
       $heroSection = createTag('div', { class: 'hero' });
       const $div = createTag('div');
-      $heroSection.append($div);
-      if ($heroPicture) {
-        $div.append($heroPicture);
+      if (isBlog) {
+        $heroSection.append($div);
+        const $blogHeader = createTag('div', { class: 'blog-header' });
+        $div.append($blogHeader);
+        const $eyebrow = createTag('div', { class: 'eyebrow' });
+        const tagString = getMeta('article:tag');
+        const tags = tagString.split(',');
+        $eyebrow.innerHTML = 'Content & Social Marketing';
+        // $eyebrow.innerHTML = tags[0];
+        $blogHeader.append($eyebrow);
+        $blogHeader.append($h1);
+        const author = getMeta('author');
+        const date = getMeta('publication-date');
+        const $author = createTag('div', { class: 'author' });
+        $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
+        <div>
+          <div class="name">${author}</div>
+          <div class="date">${date}</div>
+        </div>`;
+        fetchAuthorImage($author.querySelector('img'), author);
+        $blogHeader.append($author);
+        $div.append($blogHeader);
+        if ($heroPicture) {
+          $div.append($heroPicture);
+        }
+      } else {
+        $heroSection.append($div);
+        if ($heroPicture) {
+          $div.append($heroPicture);
+        }
+        $div.append($h1);
       }
-      $div.append($h1);
       $main.prepend($heroSection);
     } else {
       $heroSection = $h1.closest('.section-wrapper');
@@ -289,7 +340,9 @@ function decorateHero() {
       $heroSection.classList.remove('section-wrapper');
     }
     if ($heroPicture) {
-      $heroPicture.classList.add('hero-bg');
+      if (!isBlog) {
+        $heroPicture.classList.add('hero-bg');
+      }
     } else {
       $heroSection.classList.add('hero-noimage');
     }
@@ -709,7 +762,7 @@ export function unwrapBlock($block) {
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts'];
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
@@ -717,15 +770,11 @@ function splitSections() {
 }
 
 function setTheme() {
-  let $theme = document.querySelector("meta[name='Theme']");
-  if (!$theme) $theme = document.querySelector("meta[name='theme']");
-  if ($theme) {
-    const theme = $theme.getAttribute('content');
-    if (theme) {
-      const themeClass = toClassName(theme);
-      const $main = document.querySelector('main');
-      $main.classList.add(themeClass);
-    }
+  const theme = getMeta('theme');
+  if (theme) {
+    const themeClass = toClassName(theme);
+    const $main = document.querySelector('main');
+    $main.classList.add(themeClass);
   }
 }
 

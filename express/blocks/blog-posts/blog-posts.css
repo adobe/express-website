@@ -35,13 +35,16 @@ main .blog-posts .hero-card .card-image img {
   margin: 0;
 }
 
+main .blog-posts .card, main .blog-posts .hero-card {
+  cursor: pointer;
+}
+
 main .blog-posts .card {
     display: flex;
     flex-direction: column;
     width: 350px;
     margin: 10px;
     text-align: left;
-    cursor: pointer;
   }
   main .blog-posts .card .card-image {
     line-height: 0;
@@ -79,14 +82,19 @@ main .blog-posts .card {
   }
  
   
-  main .blog-posts .card-body .eyebrow {
+  main .blog-posts .card .card-body p {
+    font-size: 1rem;
+    margin: 12px 0;
+  }
+  
+  main .blog-posts .card-body p.eyebrow {
     text-transform: uppercase;
     margin: 0;
     margin-bottom: 12px;
     font-weight: 600;
     color: #aaa;
-    font-size: 0.75rem;
-    line-height: 1rem;
+    font-size: 12px;
+    line-height: 16px;
     letter-spacing: .1em;
     font-weight: 600;
   } 
@@ -97,11 +105,6 @@ main .blog-posts .card {
     border-radius: 0 0 10px 10px;
     border-top: none;
     height: 200px;
-  }
-  
-  main .blog-posts .card .card-body p {
-    font-size: 1rem;
-    margin: 12px 0;
   }
 
 @media (min-width: 600px) {
