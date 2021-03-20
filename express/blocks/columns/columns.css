@@ -15,7 +15,10 @@ main .columns-container > div {
 
     main .section-wrapper div.columns > div > div {
       width: 50%;
-      text-align: left;
       padding: 10px;
     }
-  }
+
+    main .section-wrapper div.columns > div > div * {
+      text-align: left;
+    }
+}
