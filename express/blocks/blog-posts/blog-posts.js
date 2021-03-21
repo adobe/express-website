@@ -86,8 +86,8 @@ async function decorateBlogPosts($blogPosts) {
   let posts = [];
   let config = {};
 
-  let $rows = [...$blogPosts.children];
-  let $firstRow = [...$rows[0].children];
+  const $rows = [...$blogPosts.children];
+  const $firstRow = [...$rows[0].children];
 
   if ($rows.length === 1 && $firstRow.length === 1) {
     /* handle links */

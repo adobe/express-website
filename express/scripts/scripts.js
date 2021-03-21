@@ -48,7 +48,6 @@ export function getIcon(icon) {
 }
 
 export function getIconElement(icon) {
-  console.log(icon);
   const $div = createTag('div');
   $div.innerHTML = getIcon(icon);
   return ($div.children[0]);
@@ -258,7 +257,7 @@ export function readBlockConfig($block) {
         } else value = $row.children[1].textContent;
         config[name] = value;
       }
-    };
+    }
   });
   return config;
 }
@@ -307,6 +306,7 @@ function decorateHero() {
         $div.append($blogHeader);
         const $eyebrow = createTag('div', { class: 'eyebrow' });
         const tagString = getMeta('article:tag');
+        // eslint-disable-next-line no-unused-vars
         const tags = tagString.split(',');
         $eyebrow.innerHTML = 'Content & Social Marketing';
         // $eyebrow.innerHTML = tags[0];
