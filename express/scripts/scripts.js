@@ -314,14 +314,16 @@ function decorateHero() {
         $blogHeader.append($h1);
         const author = getMeta('author');
         const date = getMeta('publication-date');
-        const $author = createTag('div', { class: 'author' });
-        $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
-        <div>
-          <div class="name">${author}</div>
-          <div class="date">${date}</div>
-        </div>`;
-        fetchAuthorImage($author.querySelector('img'), author);
-        $blogHeader.append($author);
+        if (author) {
+          const $author = createTag('div', { class: 'author' });
+          $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
+          <div>
+            <div class="name">${author}</div>
+            <div class="date">${date}</div>
+          </div>`;
+          fetchAuthorImage($author.querySelector('img'), author);
+          $blogHeader.append($author);
+        } 
         $div.append($blogHeader);
         if ($heroPicture) {
           $div.append($heroPicture);

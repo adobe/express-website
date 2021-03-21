@@ -39,6 +39,9 @@ main .blog-posts .hero-card .card-image img {
   margin: 0;
 }
 
+main .blog-posts {
+  text-align: center;
+}
 main .blog-posts .card, main .blog-posts .hero-card {
   cursor: pointer;
 }
