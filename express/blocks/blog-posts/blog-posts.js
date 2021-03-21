@@ -103,12 +103,11 @@ async function decorateBlogPosts($blogPosts) {
     config = readBlockConfig($blogPosts);
   }
 
-  console.log(config);
+  $blogPosts.innerHTML = '';
   posts = await filterBlogPosts('en-US', config);
 
   const hasHero = config.featured && !config.featuredOnly;
 
-  $blogPosts.innerHTML = '';
   const $cards = createTag('div', { class: 'cards' });
   posts.forEach((post, i) => {
     const {
