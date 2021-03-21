@@ -20,15 +20,25 @@ import {
 async function fetchBlogIndex() {
   const resp = await fetch('/blog/query-index.json');
   const json = await resp.json();
-  return (json.data);
+  const byPath = {};
+  json.data.forEach((post) => {
+    byPath[post.path.split('.')[0]] = post;
+  });
+  const index = { data: json.data, byPath };
+  return (index);
 }
 
 function getFeatured(index, urls) {
   const paths = urls.map((url) => new URL(url).pathname.split('.')[0]);
-  const results = index.filter((post) => {
-    const path = post.path.split('.')[0];
-    return (paths.includes(path));
+  const results = [];
+  paths.forEach((path) => {
+    const post = index.byPath[path];
+    if (post) {
+      results.push(post);
+    }
   });
+
+  console.log(results);
   return (results);
 }
 
@@ -60,7 +70,7 @@ async function filterBlogPosts(locale, config) {
     }
 
     /* filter and ignore if already in result */
-    const feed = index.filter((post) => {
+    const feed = index.data.filter((post) => {
       let matchedAll = true;
       for (const name of Object.keys(f)) {
         let matched = false;
