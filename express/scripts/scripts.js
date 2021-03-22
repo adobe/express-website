@@ -279,7 +279,7 @@ function postLCP() {
 }
 
 async function fetchAuthorImage($image, author) {
-  const resp = await fetch(`/blog/authors/${toClassName(author)}.plain.html`);
+  const resp = await fetch(`/express/learn/blog/authors/${toClassName(author)}.plain.html`);
   const main = await resp.text();
   if (resp.status === 200) {
     const $div = createTag('div');
