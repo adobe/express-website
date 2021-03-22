@@ -281,11 +281,13 @@ function postLCP() {
 async function fetchAuthorImage($image, author) {
   const resp = await fetch(`/blog/authors/${toClassName(author)}.plain.html`);
   const main = await resp.text();
-  const $div = createTag('div');
-  $div.innerHTML = main;
-  const $img = $div.querySelector('img');
-  const src = $img.src.replace('width=2000', 'width=200');
-  $image.src = src;
+  if (resp.status === 200) {
+    const $div = createTag('div');
+    $div.innerHTML = main;
+    const $img = $div.querySelector('img');
+    const src = $img.src.replace('width=2000', 'width=200');
+    $image.src = src;
+  }
 }
 
 function decorateHero() {
