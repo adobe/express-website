@@ -751,8 +751,9 @@ export function unwrapBlock($block) {
   const $elems = [...$section.children];
   const $blockSection = createTag('div');
   const $postBlockSection = createTag('div');
-  $section.parentNode.appendChild($blockSection);
-  $section.parentNode.appendChild($postBlockSection);
+  const $nextSection = $section.nextSibling;
+  $section.parentNode.insertBefore($blockSection, $nextSection);
+  $section.parentNode.insertBefore($postBlockSection, $nextSection);
 
   let $appendTo;
   $elems.forEach(($e) => {

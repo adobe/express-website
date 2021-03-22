@@ -1,5 +1,7 @@
 main .layouts {
-  margin: 56px 0 0 0;
+  margin: 0 auto 0 auto;
+  width: 200px;
+
 }
 
 main .layouts div:first-of-type {
@@ -13,10 +15,10 @@ main .layouts .layout {
     position: relative;
     border: 2px dashed #D9D9D9;
     border-radius: 10px;
-    margin: 32px auto;
+    margin: 48px auto;
     cursor: pointer;
     background-color: #F4F4F4;
-    width: 311px;
+    width: 200px;
     -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
     break-inside: avoid;
@@ -28,7 +30,7 @@ main .layouts .layout-inside {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 16px 0;
+    padding: 6px 0;
     box-sizing: border-box;
     display: flex;
     align-items: stretch;
@@ -40,7 +42,7 @@ main .layouts .layout:hover {
 }
 
 main .layouts .layout-icon {
-    font-size: 36px;
+    font-size: 23px;
     font-weight: 800;
     color: #484848;
     position: absolute;
@@ -49,6 +51,7 @@ main .layouts .layout-icon {
     margin: auto;
     left: 0;
     right: 0;
+    padding-bottom: 10px;
 }
 
 main .layouts .layout-icon svg {
@@ -63,6 +66,7 @@ main .layouts .layout-description {
     bottom: 0px;
     left: 0;
     right: 0;
+    font-size: 12px;
 }
 
 main .layouts .layout-content {
@@ -72,31 +76,40 @@ main .layouts .layout-content {
 }
 
 main .layouts-container > div {
-  max-width: 1024px;
+  max-width: 100%;
 }
 
-@media (min-width:600px) {
+@media (min-width:500px) {
     main .layouts .layout {
-        width: 250px;
+        width: 200px;
       }
     
       main .layouts {
         display: block;
-        columns: 240px 2;
+        columns: 200px 2;
         margin: 0 auto;
-        column-gap: 32px;
-        width: 528px;
+        column-gap: 48px;
+        width: 448px;
       } 
 }
 
-@media (min-width:900px) {
-    main .layouts .layout {
-        width: 240px;
-      }
-    
+@media (min-width:720px) {
       main .layouts {
-        display: block;
-        columns: 240px 3;
-        width: 792px;
+        columns: 200px 3;
+        width: 696px;
       } 
+}
+
+@media (min-width:1000px) {
+  main .layouts {
+    columns: 200px 4;
+    width: 944px;
+  } 
+}
+
+@media (min-width:1250px) {
+  main .layouts {
+    columns: 200px 5;
+    width: 1192px;
+  } 
 }
