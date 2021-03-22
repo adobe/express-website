@@ -323,7 +323,7 @@ function decorateHero() {
           </div>`;
           fetchAuthorImage($author.querySelector('img'), author);
           $blogHeader.append($author);
-        } 
+        }
         $div.append($blogHeader);
         if ($heroPicture) {
           $div.append($heroPicture);

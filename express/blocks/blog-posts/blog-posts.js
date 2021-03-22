@@ -38,7 +38,6 @@ function getFeatured(index, urls) {
     }
   });
 
-  console.log(results);
   return (results);
 }
 
@@ -104,7 +103,6 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
   const limit = hasHero ? 13 : 12;
 
   let $cards = $blogPosts.querySelector('.cards');
-  console.log($cards);
   if (!$cards) {
     $cards = createTag('div', { class: 'cards' });
     $blogPosts.appendChild($cards);
@@ -143,7 +141,6 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     else $cards.append($card);
   }
   if (posts.length > offset + limit) {
-    console.log('loadmore');
     const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
     $loadMore.innerHTML = 'Load more articles';
     $blogPosts.append($loadMore);

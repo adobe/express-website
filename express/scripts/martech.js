@@ -101,7 +101,7 @@ function textToName(text) {
 }
 
 function trackButtonClick($a) {
-  let eventName = 'linkEvent'
+  let eventName = 'linkEvent';
   if ($a.textContent) {
     eventName = textToName($a.textContent);
   } else {
@@ -117,7 +117,6 @@ function trackButtonClick($a) {
   _satellite.track('event', { digitalData: digitalData._snapshot() });
   // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('digitalData.primaryEvent.eventInfo.eventName');
-  console.log(eventName);
 }
 
 function decorateAnalyticsEvents() {
