@@ -55,7 +55,7 @@ window.targetGlobalSettings = {
 };
 
 const locale = getLocale(window.location);
-const pathSegments = window.location.pathname.split('/');
+const pathSegments = window.location.pathname.substr(1).split('/');
 if (locale !== 'en') pathSegments.shift();
 const pageName = `adobe.com:${pathSegments.join(':')}`;
 
