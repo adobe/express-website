@@ -54,8 +54,10 @@ window.targetGlobalSettings = {
   bodyHidingEnabled: false,
 };
 
-const pageName = `adobe.com:${window.location.pathname.split('/').join(':')}`;
 const locale = getLocale(window.location);
+const pathSegments = window.location.pathname.split('/');
+if (locale !== 'en') pathSegments.shift();
+const pageName = `adobe.com:${pathSegments.join(':')}`;
 
 const langs = {
   en: 'en-US',
@@ -101,13 +103,14 @@ function textToName(text) {
 }
 
 function trackButtonClick($a) {
-  let eventName = 'linkEvent';
+  const prefix = 'adobe.com:express:';
+  let eventName = `${prefix}linkEvent`;
   if ($a.textContent) {
-    eventName = textToName($a.textContent);
+    eventName = prefix + textToName($a.textContent);
   } else {
     const $img = $a.querySelector('img');
     if ($img && $img.getAttribute('alt')) {
-      eventName = textToName($img.getAttribute('alt'));
+      eventName = prefix + textToName($img.getAttribute('alt'));
     }
   }
 
