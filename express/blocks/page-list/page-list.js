@@ -56,7 +56,7 @@ async function fetchIndex() {
   const indexURL = locale === 'en' ? '/express/query-index.json' : `/${locale}/query-index.json`;
   */
 
-  const indexURL = '/drafts/uncled/query-index.json';
+  const indexURL = '/express/dev-query-index.json';
   try {
     const resp = await fetch(indexURL);
     const json = await resp.json();
