@@ -18,7 +18,7 @@ import {
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
-  const resp = await fetch('/blog/query-index.json');
+  const resp = await fetch('/express/learn/blog/dev-query-index.json');
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {
