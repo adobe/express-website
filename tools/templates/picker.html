@@ -233,11 +233,11 @@
         const resultContainer = document.querySelector('#results');
         resultContainer.innerHTML = '';
 
-        const q = document.getElementById('search');
+        const search = document.getElementById('search');
 
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
-          searchParams.set('q', q.value);
+          searchParams.set('q', search.value);
 
           const url = new URL(window.location.href);
           url.search = searchParams.toString();
@@ -245,10 +245,22 @@
             path: url.href
           }, '', url.href);
         }
-        
+
+        let q = '';
+        let branchURL = '';
+
+        search.value.split(' ').forEach(s => {
+          try {
+            const link = new URL(s);
+            branchURL += `${link.pathname.substring(1)} `;
+          } catch(e) {
+            q += `${s} `;
+          }
+        });
+
         const params = {
-          q: q.value,
-          filters: 'branchURL:*',
+          q,
+          filters: `branchURL:${branchURL || '*'}`,
           limit: 100,
         };
 
