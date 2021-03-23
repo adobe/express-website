@@ -77,7 +77,10 @@ const langs = {
   cn: 'zh-Hans-CN',
 };
 const language = langs[locale];
-const htmlLang = language.split('-').pop().join('-');
+
+const langSplits = language.split('-');
+langSplits.pop();
+const htmlLang = langSplits.join('-');
 
 document.documentElement.setAttribute('lang', htmlLang);
 
