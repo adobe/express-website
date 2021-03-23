@@ -17,7 +17,8 @@ import {
 } from '../../scripts/scripts.js';
 
 function masonrize(masonry, $masonry) {
-  const numCols = Math.floor((window.innerWidth - 64) / 252);
+  const width = window.innerWidth > 1400 ? 1400 : window.innerWidth;
+  const numCols = Math.floor((width - 64) / 252);
   if (numCols !== masonry.numCols) {
     masonry.numCols = numCols;
     const columns = [];
