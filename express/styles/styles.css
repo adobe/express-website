@@ -115,9 +115,8 @@ header .mobile .hamburger::before {
 
     header .desktop .top .button {
         font-size: 14px;
-        height: 32px;
         margin-left: 0;
-        padding: 0px 20px 3px 20px;
+        padding: 5px 20px 7px 20px;
     }
 
     header .desktop .top .selected {
