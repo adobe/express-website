@@ -4,6 +4,10 @@ main .columns > div {
     align-items: center;
 }
 
+main .columns.top > div {
+  align-items: top;
+}
+
 main .columns-container > div {
   max-width: 1024px;
 }
