@@ -53,6 +53,10 @@ main .template-list > div {
     break-inside: avoid;
 }
 
+main .template-list > div:first-of-type {
+    margin-top: 0px;
+}
+
 
 main .template-list > div img, main .template-list > div video {
     border-radius: 10px;
