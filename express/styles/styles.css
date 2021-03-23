@@ -184,11 +184,10 @@ header .mobile .hamburger::before {
 a.button:any-link {
     text-decoration: none;
     border-radius: 18px;
-    padding: 0px 1.2em;
-    height: 36px;
+    padding: 5px 1.2em 7px 1.2em;
     outline: none;
     text-align: center;
-    line-height: 34px;
+    line-height: 20px;
     font-size: 1rem;
     background-color: #1473e6;
     font-weight: 600;
