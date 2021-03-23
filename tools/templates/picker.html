@@ -245,12 +245,24 @@
             path: url.href
           }, '', url.href);
         }
-        
-        const params = {
+
+        let link;
+        try {
+          link = new URL(q.value);
+        } catch(e) {}
+
+        let params = {
           q: q.value,
           filters: 'branchURL:*',
           limit: 100,
         };
+
+        if (link) {
+          params = {
+            filters: `branchURL:${link.pathname.substring(1)}`,
+            limit: 100,
+          };
+        }
 
         const options = { 
           headers: { 
