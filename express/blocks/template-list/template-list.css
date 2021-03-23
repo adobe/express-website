@@ -78,6 +78,11 @@ main .template-list + .button-container > a {
 }
 
 
+main .template-list.masonry > div:first-of-type {
+    margin-top: 0px;
+}
+
+
 @media (min-width: 600px) {
     main .template-list > div {
         width: 240px;
@@ -117,7 +122,7 @@ main .template-list + .button-container > a {
       max-width: 1056px;
   }
 
-  main .template-list {
+  main .template-list.masonry {
       display: block;
       columns: 240px 4;
       margin: auto;

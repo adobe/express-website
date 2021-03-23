@@ -34,10 +34,6 @@ indices:
         select: head > meta[name=x-source-hash
         value: |
           attribute(el, 'content')
-      external-path:
-        select: head > meta[property="og:url"]
-        value: |
-          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
       category:
         select: head > meta[name="category"]
         value: |
@@ -46,6 +42,10 @@ indices:
         select: head > meta[property="article:tag"]
         values: |
           attribute(el, 'content')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
 
   website: &default
     source: html
@@ -69,10 +69,10 @@ indices:
         select: head > meta[name=x-source-hash
         value: |
           attribute(el, 'content')
-      external-path:
-        select: head > meta[property="og:url"]
+      lastModified:
+        select: none
         value: |
-          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
 
   germany:
     <<: *default
