@@ -213,6 +213,7 @@ export function loadScript(url, callback, type) {
   }
   $head.append($script);
   $script.onload = callback;
+  return $script;
 }
 
 // async function loadLazyFooter() {
@@ -279,6 +280,8 @@ function postLCP() {
     if (delay) ms = +delay;
     setTimeout(() => {
       loadScript(martechUrl, null, 'module');
+      loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
+      loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
     }, ms);
   }
 }
