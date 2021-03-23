@@ -280,10 +280,6 @@ function postLCP() {
     if (delay) ms = +delay;
     setTimeout(() => {
       loadScript(martechUrl, null, 'module');
-      if (usp.get('gnav') === 'true') {
-        loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
-        loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
-      }
     }, ms);
   }
 }
