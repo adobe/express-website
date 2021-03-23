@@ -62,3 +62,10 @@ main .steps .icon {
         width: 30%;
     }
 }
+
+
+@media (min-width:1200px) {
+    main .section-wrapper.steps-dark-container > div {
+      max-width: 900px;
+    }
+}  
