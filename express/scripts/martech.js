@@ -102,6 +102,19 @@ window.fedsConfig = {
   content: {
     experience: 'acom/cc-mega-menu/spark-localnav',
   },
+  breadcrumbs: {
+    showLogo: false,
+    links: [
+      {
+        title: 'Home',
+        url: 'https://www.adobe.com/express.html',
+      },
+      {
+        title: 'Adobe Creative Cloud',
+        url: 'https://www.adobe.com/creativecloud.html',
+      },
+    ],
+  },
 };
 
 window.adobeid = {
