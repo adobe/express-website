@@ -98,13 +98,13 @@ export function addBlockClasses($block, classNames) {
 //   });
 // }
 
-function decorateHeader() {
+function decorateHeaderAndFooter() {
   const $header = document.querySelector('header');
 
   /* init header with placeholder */
 
   $header.innerHTML = `
-  <div class="placeholder">
+  <div id="feds-header" class="placeholder">
     <div class="mobile">
       <div class="hamburger"></div>
       <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
@@ -134,6 +134,11 @@ function decorateHeader() {
         <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
       </div>
     </div>
+  `;
+
+  document.querySelector('footer').innerHTML = `
+    <div id="feds-footer"></div>
+    <div class="evidon-notice-link"></div>
   `;
 }
 
@@ -789,7 +794,7 @@ async function decoratePage() {
   await decorateTesting();
   splitSections();
   wrapSections('main>div');
-  decorateHeader();
+  decorateHeaderAndFooter();
   decorateHero();
   decorateButtons();
   fixIcons();

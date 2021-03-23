@@ -96,6 +96,14 @@ window.digitalData = {
   },
 };
 
+window.fedsConfig = {
+  ...window.fedsConfig,
+  locale: language,
+  content: {
+    experience: 'acom/cc-mega-menu/spark-localnav',
+  },
+};
+
 function textToName(text) {
   const splits = text.toLowerCase().split(' ');
   const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
