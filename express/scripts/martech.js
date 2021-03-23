@@ -104,6 +104,12 @@ window.fedsConfig = {
   },
 };
 
+window.adobeid = {
+  client_id: 'spark-helix',
+  scope: 'AdobeID,openid',
+  locale: language,
+};
+
 function textToName(text) {
   const splits = text.toLowerCase().split(' ');
   const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
