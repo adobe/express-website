@@ -1,40 +1,34 @@
 main .layouts {
-  margin: 0 auto 0 auto;
-  width: 200px;
-
+  margin: 0 auto;
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 
-main .layouts div:first-of-type {
-    margin-top: 0;
+main .layouts .masonry-col {
+  width: 252px;
 }
+
 
 main .layouts .layout {
-    height: 0;
-    overflow: hidden;
-    background: white;
-    position: relative;
-    border: 2px dashed #D9D9D9;
-    border-radius: 10px;
-    margin: 48px auto;
-    cursor: pointer;
-    background-color: #F4F4F4;
-    width: 200px;
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
+  display: inline-block;
+  margin: 24px;
+  width: 200px;
+  overflow: hidden;
+  background: white;
+  border: 2px dashed #D9D9D9;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #F4F4F4;
+}
 
 main .layouts .layout-inside {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     padding: 6px 0;
     box-sizing: border-box;
     display: flex;
     align-items: stretch;
     justify-content: center;
+    height: 100%;
   }
 
 main .layouts .layout:hover {
@@ -77,39 +71,4 @@ main .layouts .layout-content {
 
 main .layouts-container > div {
   max-width: 100%;
-}
-
-@media (min-width:500px) {
-    main .layouts .layout {
-        width: 200px;
-      }
-    
-      main .layouts {
-        display: block;
-        columns: 200px 2;
-        margin: 0 auto;
-        column-gap: 48px;
-        width: 448px;
-      } 
-}
-
-@media (min-width:720px) {
-      main .layouts {
-        columns: 200px 3;
-        width: 696px;
-      } 
-}
-
-@media (min-width:1000px) {
-  main .layouts {
-    columns: 200px 4;
-    width: 944px;
-  } 
-}
-
-@media (min-width:1250px) {
-  main .layouts {
-    columns: 200px 5;
-    width: 1192px;
-  } 
 }
