@@ -107,7 +107,7 @@ window.fedsConfig = {
     links: [
       {
         title: 'Home',
-        url: 'https://www.adobe.com/express.html',
+        url: 'https://www.adobe.com/express/index.html',
       },
       {
         title: 'Adobe Creative Cloud',
