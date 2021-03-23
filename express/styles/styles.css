@@ -628,3 +628,8 @@ main .section-wrapper.quotes-dark-container h5 {
 .blog main .section-wrapper h4 {
     text-align: left;
 }
+
+main .section-wrapper > div {
+  max-width: 830px;
+}
+
