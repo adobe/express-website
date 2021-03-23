@@ -78,8 +78,11 @@ main .template-list + .button-container > a {
 }
 
 
-main .template-list.masonry > div:first-of-type {
+main .template-list.masonry > div {
     margin-top: 0px;
+    padding: 0;
+    margin-bottom: 0;
+    padding-bottom: 32px;
 }
 
 
