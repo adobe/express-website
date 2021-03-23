@@ -53,10 +53,6 @@ main .template-list > div {
     break-inside: avoid;
 }
 
-main .template-list > div:first-of-type {
-    margin-top: 0px;
-}
-
 
 main .template-list > div img, main .template-list > div video {
     border-radius: 10px;
@@ -79,6 +75,11 @@ main .template-list.large > div img {
 
 main .template-list + .button-container > a {
   margin: 0;
+}
+
+
+main .template-list.masonry > div:first-of-type {
+    margin-top: 0px;
 }
 
 
@@ -121,7 +122,7 @@ main .template-list + .button-container > a {
       max-width: 1056px;
   }
 
-  main .template-list {
+  main .template-list.masonry {
       display: block;
       columns: 240px 4;
       margin: auto;
