@@ -3,6 +3,7 @@ main .layouts {
   display: flex;
   width: 100%;
   justify-content: center;
+  max-width: 1400px;
 }
 
 main .layouts .masonry-col {
