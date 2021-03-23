@@ -38,6 +38,7 @@ main .section-wrapper.steps-dark-container {
     background-color: black;
     color: white;
     padding: 120px 0;
+    margin-top: 110px;
 }
 
 main .steps .icon {

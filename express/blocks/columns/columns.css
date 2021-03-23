@@ -1,3 +1,7 @@
+main .columns {
+  margin-top: 70px;
+}
+
 main .columns > div {
     display: flex;
     flex-direction: column;
@@ -10,6 +14,10 @@ main .columns.top > div {
 
 main .columns-container > div {
   max-width: 1024px;
+}
+
+main .columns a > p:empty {
+  display: none;
 }
 
 @media (min-width:900px) {
