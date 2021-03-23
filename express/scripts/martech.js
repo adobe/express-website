@@ -76,8 +76,11 @@ const langs = {
   tw: 'zh-Hant-TW',
   cn: 'zh-Hans-CN',
 };
-
 const language = langs[locale];
+const htmlLang = language.split('-').pop().join('-');
+
+document.documentElement.setAttribute('lang', htmlLang);
+
 let category = '';
 if (window.location.pathname.includes('/create/') || window.location.pathname.includes('/feature/')) {
   category = 'design';
