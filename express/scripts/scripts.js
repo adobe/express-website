@@ -193,10 +193,9 @@ function resolveFragments() {
       }
       let $fragment = $marker.closest('main > div');
       const $markerContainer = $marker.parentNode;
-      $marker.remove();
-      if ($markerContainer.children.length === 0) {
+      if ($markerContainer.children.length === 1) {
         // empty section with marker, remove and use content from next section
-        const $emptyFragment = $fragment;
+        const $emptyFragment = $markerContainer.parentNode;
         $fragment = $emptyFragment.nextElementSibling;
         $emptyFragment.remove();
       }
@@ -204,10 +203,12 @@ function resolveFragments() {
         console.log(`no content found for fragment "${marker}"`);
         return;
       }
-      $cell.innerHTML = '';
-      Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
-      $fragment.remove();
-      console.log(`fragment "${marker}" resolved`);
+      setTimeout(() => {
+        $cell.innerHTML = '';
+        Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+        $fragment.remove();
+        console.log(`fragment "${marker}" resolved`);
+      }, 500);
     });
 }
 
