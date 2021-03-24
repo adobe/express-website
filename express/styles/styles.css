@@ -488,6 +488,10 @@ main .section-wrapper.quotes-dark-container h5 {
   color: #FFF;
 }
 
+main .section-wrapper .hero {
+  color: initial;
+}
+
 /* blog styling */
 
 .blog main .hero {
