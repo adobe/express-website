@@ -100,7 +100,7 @@ window.fedsConfig = {
   ...window.fedsConfig,
   locale: language,
   content: {
-    experience: 'acom/cc-mega-menu/spark-localnav',
+    experience: 'cc-express/spark-gnav',
   },
   breadcrumbs: {
     showLogo: false,
