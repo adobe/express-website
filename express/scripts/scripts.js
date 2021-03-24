@@ -195,8 +195,10 @@ function resolveFragments() {
       const $markerContainer = $marker.parentNode;
       $marker.remove();
       if ($markerContainer.children.length === 0) {
-        // empty section with marker, use content from next section
-        $fragment = $fragment.nextElementSibling;
+        // empty section with marker, remove and use content from next section
+        const $emptyFragment = $fragment;
+        $fragment = $emptyFragment.nextElementSibling;
+        $emptyFragment.remove();
       }
       if (!$fragment) {
         console.log(`no content found for fragment "${marker}"`);
@@ -615,7 +617,6 @@ async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
-  // resolveFragments();
   splitSections();
   wrapSections('main>div');
   decorateHeaderAndFooter();
