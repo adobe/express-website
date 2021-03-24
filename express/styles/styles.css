@@ -181,7 +181,7 @@ header .mobile .hamburger::before {
 }
 
 footer {
-  margin: 120px;
+  margin-top: 120px;
 }
 
 a.button:any-link {
