@@ -180,6 +180,10 @@ header .mobile .hamburger::before {
     }
 }
 
+footer {
+  margin: 120px;
+}
+
 a.button:any-link {
     text-decoration: none;
     border-radius: 18px;
