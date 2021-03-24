@@ -157,7 +157,7 @@ function decorateAnalyticsEvents() {
   });
 }
 
-if (new URLSearchParams(window.location.search).get('gnav') === 'true') {
+if (new URLSearchParams(window.location.search).get('gnav') !== 'false') {
   loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
   loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 }
