@@ -108,19 +108,6 @@ window.fedsConfig = {
   content: {
     experience: 'cc-express/spark-gnav',
   },
-  breadcrumbs: {
-    showLogo: false,
-    links: [
-      {
-        title: 'Home',
-        url: 'https://www.adobe.com/express/index.html',
-      },
-      {
-        title: 'Adobe Creative Cloud',
-        url: 'https://www.adobe.com/creativecloud.html',
-      },
-    ],
-  },
 };
 
 window.adobeid = {
