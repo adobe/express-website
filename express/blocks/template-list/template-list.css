@@ -85,7 +85,6 @@ main .template-list.masonry > div {
     padding-bottom: 32px;
 }
 
-
 @media (min-width: 600px) {
     main .template-list > div {
         width: 240px;
@@ -118,6 +117,13 @@ main .template-list.masonry > div {
         column-gap: 32px;
         width: 792px;
     }
+
+  /* template-list inside columns */
+
+  main .columns .template-list {
+    margin-top: 0;
+    margin-left: 40px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -133,5 +139,22 @@ main .template-list.masonry > div {
       width: 1056px;
       position: relative;
       left: -16px;
+  }
+
+  /* template-list inside columns */
+
+  main .columns .template-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  main .columns .template-list > div {
+    justify-content: flex-start;
+    min-width: 132px;
+  }
+
+  main .columns .template-list a:any-link {
+    font-size: 0.875rem;
+    font-weight: 500;;
   }
 }
