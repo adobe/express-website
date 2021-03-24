@@ -397,6 +397,11 @@ main .section-wrapper h2 {
     font-weight: 800;
 }
 
+main .section-wrapper > div > h2 {
+  margin-top: 80px
+}
+
+
 main .section-wrapper * + h2 {
     margin-top: 120px;
 }
