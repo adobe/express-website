@@ -321,6 +321,10 @@ main .hero > div {
     padding: 0;
 }
 
+main .hero a:any-link {
+  color: currentColor;
+}
+
 @media (min-width:600px) {
     main .hero h1 {
         font-size: 60px;
@@ -354,12 +358,20 @@ main .hero > div {
         max-width: 672px;
         margin: auto;
     }
+
+    main .hero .columns > div {
+      display: flex;
+      margin: auto;
+      justify-content: center;
+    }
+
 }
 
 @media (min-width:900px) {
     main>.hero h1 {
         font-size: 3.5em;
     }
+        
 }
 
 

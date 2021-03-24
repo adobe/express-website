@@ -1,0 +1,21 @@
+main .feature-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+
+main .feature-list img {
+    width: 32px;
+}
+
+main .feature-list > div {
+    width: 200px;
+    padding: 20px;
+}
+
+main .feature-list h3 {
+    font-size: 22px;
+}
