@@ -38,6 +38,7 @@ main .section-wrapper.steps-dark-container {
     background-color: black;
     color: white;
     padding: 120px 0;
+    margin-top: 110px;
 }
 
 main .steps .icon {
@@ -62,3 +63,10 @@ main .steps .icon {
         width: 30%;
     }
 }
+
+
+@media (min-width:1200px) {
+    main .section-wrapper.steps-dark-container > div {
+      max-width: 900px;
+    }
+}  

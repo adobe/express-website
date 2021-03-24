@@ -1,5 +1,5 @@
 body {
-    font-family: 'adobe-clean', 'Adobe Clean';
+    font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
     background-color: #FFF;
     color: #232323;
     margin: 0;
@@ -115,9 +115,8 @@ header .mobile .hamburger::before {
 
     header .desktop .top .button {
         font-size: 14px;
-        height: 32px;
         margin-left: 0;
-        padding: 0px 20px 3px 20px;
+        padding: 5px 20px 7px 20px;
     }
 
     header .desktop .top .selected {
@@ -181,14 +180,18 @@ header .mobile .hamburger::before {
     }
 }
 
+footer {
+  
+  margin-top: 120px;
+}
+
 a.button:any-link {
     text-decoration: none;
     border-radius: 18px;
-    padding: 0px 1.2em;
-    height: 36px;
+    padding: 5px 1.2em 7px 1.2em;
     outline: none;
     text-align: center;
-    line-height: 34px;
+    line-height: 20px;
     font-size: 1rem;
     background-color: #1473e6;
     font-weight: 600;
@@ -197,6 +200,12 @@ a.button:any-link {
     transition: background-color .4s;
     margin: 10px;
     display: inline-block;
+}
+
+a.button.secondary:any-link {
+  border: solid 2px #1473e6;
+  background-color: #FFF;
+  color: #1473e6;
 }
 
 a.button > svg {
@@ -296,6 +305,7 @@ main .icon {
   width: 1em;
   color: currentColor;
 }
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
@@ -314,6 +324,10 @@ main .hero .hero-bg img {
 
 main .hero > div {
     padding: 0;
+}
+
+main .hero a:any-link {
+  color: currentColor;
 }
 
 @media (min-width:600px) {
@@ -349,14 +363,20 @@ main .hero > div {
         max-width: 672px;
         margin: auto;
     }
-    
-    
+
+    main .hero .columns > div {
+      display: flex;
+      margin: auto;
+      justify-content: center;
+    }
+
 }
 
 @media (min-width:900px) {
     main>.hero h1 {
         font-size: 3.5em;
     }
+        
 }
 
 
@@ -394,6 +414,11 @@ main .section-wrapper h2 {
     font-weight: 800;
 }
 
+main .section-wrapper > div > h2 {
+  margin-top: 80px
+}
+
+
 main .section-wrapper * + h2 {
     margin-top: 120px;
 }
@@ -404,6 +429,15 @@ main .section-wrapper h3 {
     margin: 0;
     font-weight: 800;
 }
+
+main .section-wrapper > div > h3  {
+  margin-top: 64px;
+}
+
+main .section-wrapper > div > h3:first-child  {
+  margin-top: 0px;
+}
+
 
 main .section-wrapper * + h2 {
     margin-top: 64px;
@@ -470,6 +504,72 @@ main .section-wrapper.quotes-dark-container h4,
 main .section-wrapper.quotes-dark-container h5 {
   color: #FFF;
 }
+
+main .section-wrapper .hero {
+  color: initial;
+}
+
+/* blog styling */
+
+.blog main .hero {
+  margin: 0;
+  padding: 0;
+}
+
+.blog main .hero > div {
+  margin: auto;
+  max-width: 1000px;
+  width: 100%;
+
+}
+
+.blog main .hero {
+  color: black;
+}
+
+.blog main .hero .blog-header .eyebrow {
+  text-transform: uppercase;
+  margin: 0;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #aaa;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: .1em;
+  font-weight: 600;
+}
+
+.blog main .hero .blog-header .author {
+  margin-top: 32px;
+  display: flex;
+}
+
+.blog main .hero .blog-header .author .name {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.blog main .hero .blog-header img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.blog main .hero .blog-header {
+  text-align: left;
+  margin: 32px;
+}
+
+.blog div.section-wrapper {
+  text-align: left;
+}
+
+.blog main div.section-wrapper h2, .blog main div.section-wrapper h3  {
+  text-align: left;
+}
+
 
 @media (min-width:600px) {
   main .section-wrapper {
@@ -552,3 +652,8 @@ main .section-wrapper.quotes-dark-container h5 {
 .blog main .section-wrapper h4 {
     text-align: left;
 }
+
+main .section-wrapper > div {
+  max-width: 830px;
+}
+

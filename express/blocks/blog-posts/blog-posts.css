@@ -1,12 +1,59 @@
+main .blog-posts-container {
+  padding: 0;
+}
+
+main .blog-posts-container > div {
+  max-width: 100%;
+  padding: 0;
+}
+
+main .blog-posts .cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 16px;
+}
+
+main .blog-posts .hero-card {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+}
+
+main .blog-posts .hero-card .card-image {
+  width: 100%;
+  padding-bottom: 66.67%;
+  position: relative;
+}
+
+main .blog-posts .hero-card .card-image img {
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+main .blog-posts {
+  text-align: center;
+}
+main .blog-posts .card, main .blog-posts .hero-card {
+  cursor: pointer;
+}
 
 main .blog-posts .card {
     display: flex;
     flex-direction: column;
-    width: 290px;
+    width: 350px;
     margin: 10px;
     text-align: left;
-    cursor: pointer;
   }
+  
   main .blog-posts .card .card-image {
     line-height: 0;
   }
@@ -15,17 +62,77 @@ main .blog-posts .card {
     height: 200px;
     object-fit: cover;
     width: 100%;
+    border-radius: 10px 10px 0 0;
   }
+
+  main .blog-posts .hero-card .card-body {
+    max-width: 700px;
+    margin: auto;
+    text-align: center;
+    margin: 16px;
+  }
+
+  main .blog-posts .hero-card .card-body p {
+    margin: 12px 0;
   
-  main .blog-posts .card .card-body {
-    padding: 20px;
-    border: 1px solid lightgrey;
-    border-radius: 0 0 5px 5px;
-    border-top: none;
-    height: 300px;
   }
+
+  main .blog-posts .hero-card .card-body h3 {
+    text-align: center;
+    font-size: 28px;
+    line-height: 32px;
+  }
+
+  main .blog-posts .card-body h3 {
+    font-size: 18px;
+    line-height: 22px;
+    margin-top: 0;
+    text-align: left;
+  }
+ 
   
   main .blog-posts .card .card-body p {
     font-size: 1rem;
+    margin: 12px 0;
   }
   
+  main .blog-posts .card-body p.eyebrow {
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #aaa;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: .1em;
+    font-weight: 600;
+  } 
+
+  main .blog-posts .card .card-body {
+    padding: 16px;
+    border: 1px solid lightgrey;
+    border-radius: 0 0 10px 10px;
+    border-top: none;
+    height: 200px;
+  }
+
+@media (min-width: 600px) {
+  main .blog-posts .hero-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  main .blog-posts .hero-card .card-image {
+    height: 320px;
+    padding-bottom: 0;
+  }
+
+  main .blog-posts .hero-card .card-body {
+    text-align: left;
+  }
+
+  main .blog-posts .hero-card .card-body h3 {
+    text-align: left;
+  }
+
+}  

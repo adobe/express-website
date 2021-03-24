@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global fetch */
+/* global window, fetch */
 
 import {
   createTag,
@@ -148,7 +148,7 @@ function selectPlanOption($plan, option) {
 
   const $pricing = $plan.querySelector('.plan-pricing');
   const $pricingText = $plan.querySelector('.plan-secondary');
-  const $cta = $plan.querySelector('.plan-cta');
+  const $cta = $plan.querySelector('.button.primary');
 
   if (price === 'Free') {
     $pricing.innerHTML = '<strong>Free</strong>';
@@ -226,7 +226,7 @@ function decoratePlans($block, plans, planOptions) {
       $footer.append($dropdown);
       addDropdownEventListener($plan, options);
     }
-    const $cta = createTag('a', { class: 'plan-cta' });
+    const $cta = createTag('a', { class: 'button primary' });
     $footer.append($cta);
 
     selectPlanOption($plan, options[0]);

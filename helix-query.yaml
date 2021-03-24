@@ -11,37 +11,41 @@ indices:
     target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/express/learn/blog/query-index.xlsx?d=w24dec97b02f04be084a8ccc8c02382bf&csf=1&web=1&e=aybVc5
     properties:
       author:
-        select: main > div:nth-of-type(1) > p:nth-of-type(2)
+        select: head > meta[name="author"]
         value: |
-          match(el, '[bB]y (.*)')
+          attribute(el, 'content')
       title:
         select: head > meta[property="og:title"]
         value: |
           attribute(el, 'content')
       date:
-        select: main > div:nth-of-type(1) > p:nth-of-type(3)
+        select: head > meta[name="publication-date"]
         value: |
-          parseTimestamp(el, '[Posted on] MM-DD-YYYY')
+          parseTimestamp(attribute(el, 'content'), 'MM/DD/YYYY')
       image:
         select: head > meta[property="og:image"]
         value: |
           match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
       teaser:
-        select: main > div:nth-of-type(1) > p:nth-of-type(4)
+        select: head > meta[name="description"]
         value: |
-          words(textContent(el), 0, 20)
+          attribute(el, 'content')
       sourceHash:
         select: head > meta[name=x-source-hash
         value: |
           attribute(el, 'content')
-      external-path:
-        select: head > meta[property="og:url"]
+      category:
+        select: head > meta[name="category"]
         value: |
-          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+          attribute(el, 'content')
       tags:
-        select: main > div:nth-of-type(1) > p:last-of-type
+        select: head > meta[property="article:tag"]
         values: |
-          match(el, '(Tags: )? ([^,]+)')
+          attribute(el, 'content')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
 
   website: &default
     source: html
@@ -65,10 +69,10 @@ indices:
         select: head > meta[name=x-source-hash
         value: |
           attribute(el, 'content')
-      external-path:
-        select: head > meta[property="og:url"]
+      lastModified:
+        select: none
         value: |
-          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
 
   germany:
     <<: *default

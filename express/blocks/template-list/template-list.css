@@ -78,6 +78,13 @@ main .template-list + .button-container > a {
 }
 
 
+main .template-list.masonry > div {
+    margin-top: 0px;
+    padding: 0;
+    margin-bottom: 0;
+    padding-bottom: 32px;
+}
+
 @media (min-width: 600px) {
     main .template-list > div {
         width: 240px;
@@ -110,6 +117,13 @@ main .template-list + .button-container > a {
         column-gap: 32px;
         width: 792px;
     }
+
+  /* template-list inside columns */
+
+  main .columns .template-list {
+    margin-top: 0;
+    margin-left: 40px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -117,7 +131,7 @@ main .template-list + .button-container > a {
       max-width: 1056px;
   }
 
-  main .template-list {
+  main .template-list.masonry {
       display: block;
       columns: 240px 4;
       margin: auto;
@@ -125,5 +139,22 @@ main .template-list + .button-container > a {
       width: 1056px;
       position: relative;
       left: -16px;
+  }
+
+  /* template-list inside columns */
+
+  main .columns .template-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  main .columns .template-list > div {
+    justify-content: flex-start;
+    min-width: 132px;
+  }
+
+  main .columns .template-list a:any-link {
+    font-size: 0.875rem;
+    font-weight: 500;;
   }
 }

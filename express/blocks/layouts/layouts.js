@@ -9,12 +9,44 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window */
+/* global window  */
 
 import {
   createTag,
   getIcon,
 } from '../../scripts/scripts.js';
+
+function masonrize(masonry, $masonry) {
+  const width = window.innerWidth > 1400 ? 1400 : window.innerWidth;
+  const numCols = Math.floor((width - 64) / 252);
+  if (numCols !== masonry.numCols) {
+    masonry.numCols = numCols;
+    const columns = [];
+    for (let i = 0; i < numCols; i += 1) {
+      columns.push({
+        cells: [],
+        outerHeight: 0,
+      });
+    }
+
+    masonry.cells.forEach((cell) => {
+      const minOuterHeight = Math.min(...columns.map((column) => column.outerHeight));
+      const column = columns.find((col) => col.outerHeight === minOuterHeight);
+      column.cells.push(cell);
+      column.outerHeight += cell.outerHeight;
+    });
+
+    $masonry.innerHTML = '';
+
+    columns.forEach((column) => {
+      const $column = createTag('div', { class: 'masonry-col' });
+      column.cells.forEach((cell) => {
+        $column.append(cell.element);
+      });
+      $masonry.append($column);
+    });
+  }
+}
 
 export default function decorate($block) {
   const $layouts = Array.from($block.children);
@@ -35,7 +67,7 @@ export default function decorate($block) {
   $block.innerHTML = '';
   const knownIcons = ['instagram', 'youtube', 'facebook', 'twitter', 'snapchat'];
   layouts.forEach((layout) => {
-    const $layout = createTag('div', { class: 'layout', style: `padding-top: ${layout.ratio * 100}%` });
+    const $layout = createTag('div', { class: 'layout', style: `height: ${layout.ratio * 200}px` });
     let iconString = layout.icon;
     if (knownIcons.includes(iconString)) {
       iconString = getIcon(layout.icon);
@@ -54,5 +86,16 @@ export default function decorate($block) {
     }
 
     $block.append($layout);
+  });
+
+  const cells = [...$block.children].map(($cell) => ({
+    element: $cell,
+    outerHeight: $cell.offsetHeight,
+  }));
+
+  const masonry = { numCols: 0, cells };
+  masonrize(masonry, $block);
+  window.addEventListener('resize', () => {
+    masonrize(masonry, $block);
   });
 }

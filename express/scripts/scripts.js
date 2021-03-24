@@ -28,6 +28,19 @@ export function createTag(name, attrs) {
   return el;
 }
 
+function getMeta(name) {
+  let value = '';
+  const nameLower = name.toLowerCase();
+  const $metas = [...document.querySelectorAll('meta')].filter(($m) => {
+    const nameAttr = $m.getAttribute('name');
+    const propertyAttr = $m.getAttribute('property');
+    return ((nameAttr && nameLower === nameAttr.toLowerCase())
+    || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+  });
+  if ($metas[0]) value = $metas[0].getAttribute('content');
+  return value;
+}
+
 export function getIcon(icon) {
   return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
     <use href="/express/icons.svg#${icon}"></use>
@@ -35,7 +48,6 @@ export function getIcon(icon) {
 }
 
 export function getIconElement(icon) {
-  console.log(icon);
   const $div = createTag('div');
   $div.innerHTML = getIcon(icon);
   return ($div.children[0]);
@@ -86,13 +98,13 @@ export function addBlockClasses($block, classNames) {
 //   });
 // }
 
-function decorateHeader() {
+function decorateHeaderAndFooter() {
   const $header = document.querySelector('header');
 
   /* init header with placeholder */
 
   $header.innerHTML = `
-  <div class="placeholder">
+  <div id="feds-header" class="placeholder">
     <div class="mobile">
       <div class="hamburger"></div>
       <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
@@ -122,6 +134,11 @@ function decorateHeader() {
         <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
       </div>
     </div>
+  `;
+
+  document.querySelector('footer').innerHTML = `
+    <div id="feds-footer"></div>
+    <div class="evidon-notice-link"></div>
   `;
 }
 
@@ -160,6 +177,40 @@ function decorateDoMoreEmbed() {
   });
 }
 
+function resolveFragments() {
+  Array.from(document.querySelectorAll('main > div div'))
+    .filter(($cell) => /^\[[A-Za-z0-9 -_]+\]$/mg.test($cell.textContent))
+    .forEach(($cell) => {
+      const marker = $cell.textContent
+        .substring(1, $cell.textContent.length - 1)
+        .toLocaleLowerCase();
+      // find the fragment with the marker
+      const $marker = Array.from(document.querySelectorAll('main > div h3'))
+        .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
+      if (!$marker) {
+        console.log(`no fragment with marker "${marker}" found`);
+        return;
+      }
+      let $fragment = $marker.closest('main > div');
+      const $markerContainer = $marker.parentNode;
+      $marker.remove();
+      if ($markerContainer.children.length === 0) {
+        // empty section with marker, remove and use content from next section
+        const $emptyFragment = $fragment;
+        $fragment = $emptyFragment.nextElementSibling;
+        $emptyFragment.remove();
+      }
+      if (!$fragment) {
+        console.log(`no content found for fragment "${marker}"`);
+        return;
+      }
+      $cell.innerHTML = '';
+      Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+      $fragment.remove();
+      console.log(`fragment "${marker}" resolved`);
+    });
+}
+
 function decorateBlocks() {
   document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
     const classes = Array.from($block.classList.values());
@@ -168,7 +219,7 @@ function decorateBlocks() {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'columns'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -180,7 +231,9 @@ function decorateBlocks() {
     $block.classList.add('block');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
-        mod.default($block, blockName, document);
+        if (mod.default) {
+          mod.default($block, blockName, document);
+        }
       })
       .catch((err) => console.log(`failed to load module for ${blockName}`, err));
 
@@ -196,6 +249,7 @@ export function loadScript(url, callback, type) {
   }
   $head.append($script);
   $script.onload = callback;
+  return $script;
 }
 
 // async function loadLazyFooter() {
@@ -229,13 +283,22 @@ export function loadScript(url, callback, type) {
 export function readBlockConfig($block) {
   const config = {};
   $block.querySelectorAll(':scope>div').forEach(($row) => {
-    if ($row.children && $row.children[1]) {
-      const name = toClassName($row.children[0].textContent);
-      const $a = $row.children[1].querySelector('a');
-      let value = '';
-      if ($a) value = $a.href;
-      else value = $row.children[1].textContent;
-      config[name] = value;
+    if ($row.children) {
+      const $cols = [...$row.children];
+      if ($cols[1]) {
+        const $value = $cols[1];
+        const name = toClassName($cols[0].textContent);
+        let value = '';
+        if ($value.querySelector('a')) {
+          const $as = [...$value.querySelectorAll('a')];
+          if ($as.length === 1) {
+            value = $as[0].href;
+          } else {
+            value = $as.map(($a) => $a.href);
+          }
+        } else value = $row.children[1].textContent;
+        config[name] = value;
+      }
     }
   });
   return config;
@@ -245,6 +308,7 @@ function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   decorateBlocks();
+  resolveFragments();
   // loadLazyFooter();
   if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
@@ -257,7 +321,20 @@ function postLCP() {
   }
 }
 
+async function fetchAuthorImage($image, author) {
+  const resp = await fetch(`/express/learn/blog/authors/${toClassName(author)}.plain.html`);
+  const main = await resp.text();
+  if (resp.status === 200) {
+    const $div = createTag('div');
+    $div.innerHTML = main;
+    const $img = $div.querySelector('img');
+    const src = $img.src.replace('width=2000', 'width=200');
+    $image.src = src;
+  }
+}
+
 function decorateHero() {
+  const isBlog = document.documentElement.classList.contains('blog');
   const $h1 = document.querySelector('main h1');
   // check if h1 is inside a block
 
@@ -265,14 +342,44 @@ function decorateHero() {
     const $heroPicture = $h1.parentElement.querySelector('picture');
     let $heroSection;
     const $main = document.querySelector('main');
-    if ($main.children.length === 1) {
+    if ($main.children.length === 1 || isBlog) {
       $heroSection = createTag('div', { class: 'hero' });
       const $div = createTag('div');
-      $heroSection.append($div);
-      if ($heroPicture) {
-        $div.append($heroPicture);
+      if (isBlog) {
+        $heroSection.append($div);
+        const $blogHeader = createTag('div', { class: 'blog-header' });
+        $div.append($blogHeader);
+        const $eyebrow = createTag('div', { class: 'eyebrow' });
+        const tagString = getMeta('article:tag');
+        // eslint-disable-next-line no-unused-vars
+        const tags = tagString.split(',');
+        $eyebrow.innerHTML = 'Content & Social Marketing';
+        // $eyebrow.innerHTML = tags[0];
+        $blogHeader.append($eyebrow);
+        $blogHeader.append($h1);
+        const author = getMeta('author');
+        const date = getMeta('publication-date');
+        if (author) {
+          const $author = createTag('div', { class: 'author' });
+          $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
+          <div>
+            <div class="name">${author}</div>
+            <div class="date">${date}</div>
+          </div>`;
+          fetchAuthorImage($author.querySelector('img'), author);
+          $blogHeader.append($author);
+        }
+        $div.append($blogHeader);
+        if ($heroPicture) {
+          $div.append($heroPicture);
+        }
+      } else {
+        $heroSection.append($div);
+        if ($heroPicture) {
+          $div.append($heroPicture);
+        }
+        $div.append($h1);
       }
-      $div.append($h1);
       $main.prepend($heroSection);
     } else {
       $heroSection = $h1.closest('.section-wrapper');
@@ -280,7 +387,9 @@ function decorateHero() {
       $heroSection.classList.remove('section-wrapper');
     }
     if ($heroPicture) {
-      $heroPicture.classList.add('hero-bg');
+      if (!isBlog) {
+        $heroPicture.classList.add('hero-bg');
+      }
     } else {
       $heroSection.classList.add('hero-noimage');
     }
@@ -293,12 +402,17 @@ function decorateButtons() {
     const $twoup = $a.parentElement.parentElement;
     if (!$a.querySelector('img')) {
       if ($up.childNodes.length === 1 && $up.tagName === 'P') {
-        $a.className = 'button secondary';
+        $a.className = 'button primary';
         $up.classList.add('button-container');
       }
       if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
           && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
         $a.className = 'button primary';
+        $twoup.classList.add('button-container');
+      }
+      if ($up.childNodes.length === 1 && $up.tagName === 'EM'
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+        $a.className = 'button secondary';
         $twoup.classList.add('button-container');
       }
     }
@@ -412,219 +526,6 @@ async function decorateTesting() {
     // console.log(`Test is not run => ${reason}`);
   }
 }
-function playYouTubeVideo(vid, $element) {
-  $element.innerHTML = `<iframe width="720" height="405" src="https://www.youtube.com/embed/${vid}?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-
-  /*
-  const ytPlayerScript='https://www.youtube.com/iframe_api';
-  if (!document.querySelector(`script[src="${ytPlayerScript}"]`)) {
-    const tag = document.createElement('script');
-    tag.src = ytPlayerScript;
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  }
-
-  if (typeof YT !== 'undefined' && YT.Player) {
-    const player = new YT.Player($element.id, {
-      height: $element.clientHeight,
-      width: $element.clientWidth,
-      videoId: vid,
-      events: {
-          'onReady': (event) => {
-            event.target.playVideo();
-          },
-        }
-    });
-  } else {
-    setTimeout(() => {
-      playYouTubeVideo(vid, $element);
-    }, 100)
-  }
-  */
-}
-
-function displayTutorial(tutorial) {
-  if (tutorial.link.includes('youtu')) {
-    const $overlay = createTag('div', { class: 'overlay' });
-    const $video = createTag('div', { class: 'overlay-video', id: 'overlay-video' });
-    $overlay.appendChild($video);
-    window.location.hash = toClassName(tutorial.title);
-    const $main = document.querySelector('main');
-    $main.append($overlay);
-    const yturl = new URL(tutorial.link);
-    let vid = yturl.searchParams.get('v');
-    if (!vid) {
-      vid = yturl.pathname.substr(1);
-    }
-    $overlay.addEventListener('click', () => {
-      window.location.hash = '';
-      $overlay.remove();
-    });
-
-    playYouTubeVideo(vid, $video);
-  } else {
-    window.location.href = tutorial.link;
-  }
-
-  // eslint-disable-next-line no-console
-  console.log(tutorial.link);
-}
-
-function createTutorialCard(tutorial) {
-  const $card = createTag('div', { class: 'tutorial-card' });
-  let img;
-  let noimg = '';
-  if (tutorial.img) {
-    img = `<img src="${tutorial.img}">`;
-  } else {
-    img = `<div class="badge"></div><div class="title">${tutorial.title}</div>`;
-    noimg = 'noimg';
-  }
-
-  $card.innerHTML = `<div class="tutorial-card-image">
-  </div>
-  <div class="tutorial-card-img ${noimg}">
-    ${img}
-    <div class="duration">${tutorial.time}</div>
-  </div>
-  <div class="tutorial-card-title">
-  <h3>${tutorial.title}</h3>
-  </div>
-  <div class="tutorial-card-tags">
-  <span>${tutorial.tags.join('</span><span>')}</span>
-  </div>
-  `;
-  $card.addEventListener('click', () => {
-    displayTutorial(tutorial);
-  });
-  return ($card);
-}
-
-function displayTutorialsByCatgory(tutorials, $results, category) {
-  $results.innerHTML = '';
-
-  const matches = tutorials.filter((tut) => tut.categories.includes(category));
-  matches.forEach((match) => {
-    $results.appendChild(createTutorialCard(match));
-  });
-}
-
-function toggleCategories($section, show) {
-  const children = Array.from($section.children);
-  let afterTutorials = false;
-  children.forEach(($e) => {
-    // eslint-disable-next-line no-console
-    console.log($e);
-    if (afterTutorials) {
-      if (show) {
-        $e.classList.remove('hidden');
-      } else {
-        $e.classList.add('hidden');
-      }
-    }
-    if ($e.classList.contains('tutorials')) {
-      afterTutorials = true;
-    }
-  });
-}
-
-function displayFilteredTutorials(tutorials, $results, $filters) {
-  $results.innerHTML = '';
-  const $section = $results.closest('.section-wrapper > div');
-  // eslint-disable-next-line no-console
-  console.log($section);
-  const filters = (Array.from($filters)).map((f) => f.textContent);
-  if (filters.length) {
-    toggleCategories($section, false);
-    const matches = tutorials.filter((tut) => filters.every((v) => tut.tags.includes(v)));
-    matches.forEach((match) => {
-      $results.appendChild(createTutorialCard(match));
-    });
-  } else {
-    toggleCategories($section, true);
-  }
-}
-
-function decorateTutorials() {
-  document.querySelectorAll('main .tutorials').forEach(($tutorials) => {
-    const tutorials = [];
-    const $section = $tutorials.closest('.section-wrapper > div');
-    const allTags = [];
-    const $rows = Array.from($tutorials.children);
-    $rows.forEach(($row, i) => {
-      // eslint-disable-next-line no-console
-      console.log(i);
-      const $cells = Array.from($row.children);
-      const $tags = $cells[3];
-      const $categories = $cells[2];
-      const $title = $cells[0];
-      const $img = $cells[4];
-
-      const tags = Array.from($tags.children).map(($tag) => $tag.textContent);
-      const categories = Array.from($categories.children).map(($cat) => $cat.textContent);
-      const time = $cells[1].textContent;
-      const title = $title.textContent;
-      const link = $title.querySelector('a').href;
-      const img = $img.querySelector('img') ? $img.querySelector('img').src : undefined;
-
-      tutorials.push({
-        title, link, time, tags, categories, img,
-      });
-
-      tags.forEach((tag) => {
-        if (!allTags.includes(tag)) allTags.push(tag);
-      });
-    });
-
-    $tutorials.innerHTML = '';
-    let $results = createTag('div', { class: 'results' });
-    $tutorials.appendChild($results);
-
-    const $filters = createTag('div', { class: 'filters' });
-    allTags.forEach((tag) => {
-      const $tagFilter = createTag('span', { class: 'tag-filter' });
-      $tagFilter.innerHTML = tag;
-      $filters.appendChild($tagFilter);
-      $tagFilter.addEventListener('click', () => {
-        $tagFilter.classList.toggle('selected');
-        displayFilteredTutorials(tutorials, $results, $filters.querySelectorAll('.selected'));
-      });
-    });
-
-    $tutorials.prepend($filters);
-
-    const $children = Array.from($section.children);
-    let filterFor = '';
-    $children.forEach(($e) => {
-      // eslint-disable-next-line no-console
-      console.log($e.tagName);
-      if ($e.tagName === 'H2') {
-        if (filterFor) {
-          $results = createTag('div', { class: 'results' });
-          displayTutorialsByCatgory(tutorials, $results, filterFor);
-          $section.insertBefore($results, $e);
-        }
-        filterFor = $e.textContent;
-      }
-    });
-
-    if (filterFor) {
-      $results = createTag('div', { class: 'results' });
-      displayTutorialsByCatgory(tutorials, $results, filterFor);
-      $section.appendChild($results);
-    }
-
-    if (window.location.hash !== '#') {
-      const video = window.location.hash.substr(1);
-      tutorials.forEach((tutorial) => {
-        if (toClassName(tutorial.title) === video) {
-          displayTutorial(tutorial);
-        }
-      });
-    }
-  });
-}
-
 function setTemplate() {
   const path = window.location.pathname;
   let template = 'default';
@@ -680,8 +581,9 @@ export function unwrapBlock($block) {
   const $elems = [...$section.children];
   const $blockSection = createTag('div');
   const $postBlockSection = createTag('div');
-  $section.parentNode.appendChild($blockSection);
-  $section.parentNode.appendChild($postBlockSection);
+  const $nextSection = $section.nextSibling;
+  $section.parentNode.insertBefore($blockSection, $nextSection);
+  $section.parentNode.insertBefore($postBlockSection, $nextSection);
 
   let $appendTo;
   $elems.forEach(($e) => {
@@ -695,7 +597,7 @@ export function unwrapBlock($block) {
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts'];
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
@@ -703,15 +605,11 @@ function splitSections() {
 }
 
 function setTheme() {
-  let $theme = document.querySelector("meta[name='Theme']");
-  if (!$theme) $theme = document.querySelector("meta[name='theme']");
-  if ($theme) {
-    const theme = $theme.getAttribute('content');
-    if (theme) {
-      const themeClass = toClassName(theme);
-      const $main = document.querySelector('main');
-      $main.classList.add(themeClass);
-    }
+  const theme = getMeta('theme');
+  if (theme) {
+    const themeClass = toClassName(theme);
+    const $main = document.querySelector('main');
+    $main.classList.add(themeClass);
   }
 }
 
@@ -721,11 +619,10 @@ async function decoratePage() {
   await decorateTesting();
   splitSections();
   wrapSections('main>div');
-  decorateHeader();
+  decorateHeaderAndFooter();
   decorateHero();
   decorateButtons();
   fixIcons();
-  decorateTutorials();
   decorateDoMoreEmbed();
   setLCPTrigger();
   document.body.classList.add('appear');

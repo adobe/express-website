@@ -15,9 +15,12 @@ import { linkImage } from '../../scripts/scripts.js';
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  $rows.forEach(($row) => {
+  $rows.forEach(($row, rowNum) => {
     const $cells = Array.from($row.children);
-    $cells.forEach(($cell) => {
+    $cells.forEach(($cell, cellNum) => {
+      if (cellNum === 0 && $block.classList.contains('numbered')) {
+        $cell.innerHTML = `<span class="num">${rowNum + 1}/${$rows.length} —</span>${$cell.innerHTML}`;
+      }
       /* this probably needs to be tighter and possibly earlier */
       if ($cell.querySelector('img') && $cell.querySelector('a')) {
         linkImage($cell);

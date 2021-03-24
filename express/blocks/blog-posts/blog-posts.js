@@ -18,85 +18,160 @@ import {
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
-  const resp = await fetch('/blog-index.json');
+  const resp = await fetch('/express/learn/blog/dev-query-index.json');
   const json = await resp.json();
-  return (json.data);
+  const byPath = {};
+  json.data.forEach((post) => {
+    byPath[post.path.split('.')[0]] = post;
+  });
+  const index = { data: json.data, byPath };
+  return (index);
 }
 
-async function filterBlogPosts(locale, filters) {
+function getFeatured(index, urls) {
+  const paths = urls.map((url) => new URL(url).pathname.split('.')[0]);
+  const results = [];
+  paths.forEach((path) => {
+    const post = index.byPath[path];
+    if (post) {
+      results.push(post);
+    }
+  });
+
+  return (results);
+}
+
+async function filterBlogPosts(locale, config) {
   if (!window.blogIndex) {
     window.blogIndex = await fetchBlogIndex();
   }
+  const result = [];
   const index = window.blogIndex;
-
-  const f = {};
-  for (const name of Object.keys(filters)) {
-    const vals = filters[name];
-    let v = vals;
-    if (!Array.isArray(vals)) {
-      v = [vals];
-    }
-    // eslint-disable-next-line no-console
-    console.log(v);
-    f[name] = v.map((e) => e.toLowerCase().trim());
+  if (config.featured) {
+    if (!Array.isArray(config.featured)) config.featured = [config.featured];
+    const featured = getFeatured(index, config.featured);
+    result.push(...featured);
   }
 
-  const result = index.filter((post) => {
-    let matchedAll = true;
-    for (const name of Object.keys(f)) {
-      let matched = false;
-      f[name].forEach((val) => {
-        if (post[name].toLowerCase().includes(val)) {
-          matched = true;
+  if (!config.featuredOnly) {
+    /* filter posts by tag and author */
+    const f = {};
+    for (const name of Object.keys(config)) {
+      const filterNames = ['tag', 'author'];
+      if (filterNames.includes(name)) {
+        const vals = config[name];
+        let v = vals;
+        if (!Array.isArray(vals)) {
+          v = [vals];
         }
-      });
-      if (!matched) {
-        matchedAll = false;
-        break;
+        // eslint-disable-next-line no-console
+        console.log(v);
+        f[name] = v.map((e) => e.toLowerCase().trim());
       }
     }
-    return (matchedAll);
-  });
 
+    /* filter and ignore if already in result */
+    const feed = index.data.filter((post) => {
+      let matchedAll = true;
+      for (const name of Object.keys(f)) {
+        let matched = false;
+        f[name].forEach((val) => {
+          if (post[name].toLowerCase().includes(val)) {
+            matched = true;
+          }
+        });
+        if (!matched) {
+          matchedAll = false;
+          break;
+        }
+      }
+      return (matchedAll && !result.includes(post));
+    });
+
+    result.push(...feed);
+  }
   return (result);
 }
 
-async function decorateBlogPosts($blogPosts) {
+async function decorateBlogPosts($blogPosts, config, offset = 0) {
   let posts = [];
 
-  if ($blogPosts.querySelector('a')) {
-    /* handle links */
+  posts = await filterBlogPosts('en-US', config);
 
-    const links = [];
-    $blogPosts.querySelectorAll('a').forEach(($a) => {
-      links.push($a.href);
-    });
+  const hasHero = config.featured && !config.featuredOnly && !offset;
 
-    $blogPosts.innerHTML = '';
+  const limit = hasHero ? 13 : 12;
 
-    /* needs fixing to work with links */
-    posts = await filterBlogPosts('en-US', { path: links });
-  } else {
-    const config = readBlockConfig($blogPosts);
-    posts = await filterBlogPosts('en-US', config);
+  let $cards = $blogPosts.querySelector('.cards');
+  if (!$cards) {
+    $cards = createTag('div', { class: 'cards' });
+    $blogPosts.appendChild($cards);
   }
-  $blogPosts.innerHTML = '';
-  posts.forEach((post) => {
-    const $card = createTag('div', { class: 'card' });
+
+  for (let i = offset; i < offset + limit; i += 1) {
+    const post = posts[i];
+    const {
+      path, title, teaser, tags, image,
+    } = post;
+
+    const tagsArr = JSON.parse(tags);
+    const eyebrow = tagsArr[0] ? tagsArr[0].replace('-', ' ') : '';
+    const isHero = hasHero && !i;
+    const imagePath = image.split('?')[0].split('_')[1];
+    let pictureTag = `<picture><img src="./media_${imagePath}?$format=webply&optimize=medium&width=750"></picture>`;
+    if (isHero) {
+      pictureTag = `<picture>
+        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&format=webply&optimize=medium">
+        <img src="./media_${imagePath}?width=2000&format=webply&optimize=medium">
+      </picture>`;
+    }
+    const $card = createTag('div', { class: `${isHero ? 'hero-card' : 'card'}` });
     $card.innerHTML = `<div class="card-image">
-          <img loading="lazy" src="${post.image}">
+          ${pictureTag}
         </div>
         <div class="card-body">
-          <h3>${post.title}</h3>
-          <p>${post.teaser}</p>
+        <p class="eyebrow">${eyebrow}</p>
+        <h3>${title}</h3>
+          <p>${teaser}</p>
         </div>`;
     $card.addEventListener('click', () => {
-      window.location.href = `/${post.path}`;
+      window.location.href = `${path}`;
     });
-    $blogPosts.appendChild($card);
-  });
+    if (isHero) $blogPosts.prepend($card);
+    else $cards.append($card);
+  }
+  if (posts.length > offset + limit) {
+    const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
+    $loadMore.innerHTML = 'Load more articles';
+    $blogPosts.append($loadMore);
+    $loadMore.addEventListener('click', (event) => {
+      event.preventDefault();
+      $loadMore.remove();
+      decorateBlogPosts($blogPosts, config, offset + limit);
+    });
+  }
 }
 
 export default function decorate($block) {
-  decorateBlogPosts($block);
+  let config = {};
+
+  const $rows = [...$block.children];
+  const $firstRow = [...$rows[0].children];
+
+  if ($rows.length === 1 && $firstRow.length === 1) {
+    /* handle links */
+
+    const links = [...$block.querySelectorAll('a')].map(($a) => $a.href);
+
+    /* needs fixing to work with links */
+    config = {
+      featured: links,
+      featuredOnly: true,
+    };
+  } else {
+    config = readBlockConfig($block);
+  }
+  $block.innerHTML = '';
+
+  decorateBlogPosts($block, config);
 }

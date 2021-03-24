@@ -11,13 +11,25 @@
  */
 
 /* fonts */
+ @font-face {
+  font-family:"adobe-clean";
+  src:url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff2"),url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff"),url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("opentype");
+  font-display:swap;font-style:normal;font-weight:900;
+  }
 
  @font-face {
   font-family:"adobe-clean";
   src:url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
   font-display:swap;font-style:normal;font-weight:400;
   }
-  
+
+  @font-face {
+    font-family:"adobe-clean";
+    src:url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff2"),url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"),url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
+    font-display:swap;font-style:normal;font-weight:700;
+    }
+    
+    
   @font-face {
   font-family:"adobe-clean";
   src:url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff2"),url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff"),url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("opentype");
@@ -26,22 +38,10 @@
   
   @font-face {
   font-family:"adobe-clean";
-  src:url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff2"),url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"),url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
-  font-display:swap;font-style:normal;font-weight:700;
-  }
-  
-  @font-face {
-  font-family:"adobe-clean";
   src:url("https://use.typekit.net/af/37eaae/00000000000000003b9b3f83/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/37eaae/00000000000000003b9b3f83/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/37eaae/00000000000000003b9b3f83/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("opentype");
   font-display:swap;font-style:normal;font-weight:300;
   }
-  
-  @font-face {
-  font-family:"adobe-clean";
-  src:url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff2"),url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff"),url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("opentype");
-  font-display:swap;font-style:normal;font-weight:900;
-  }
-  
+    
   @font-face {
   font-family:"adobe-clean";
   src:url("https://use.typekit.net/af/a0c22f/00000000000000003b9b3f84/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3") format("woff2"),url("https://use.typekit.net/af/a0c22f/00000000000000003b9b3f84/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3") format("woff"),url("https://use.typekit.net/af/a0c22f/00000000000000003b9b3f84/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i3&v=3") format("opentype");
@@ -111,110 +111,6 @@ main .list ol li::before {
   .a-b-test {
     display: none;
   }
-
-main .blog-posts {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-main .tutorials .filters .tag-filter {
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  padding: 5px 20px;
-  margin: 5px;
-  display: inline-block;
-}
-
-main .tutorials .filters .tag-filter.selected {
-  background-color: #1473e6;
-  color: white;
-  font-weight: 700;
-}
-
-main .tutorials-container .results {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-} 
-
-main .tutorials-container .results.hidden {
-  display: none;
-}
-
-main .tutorials-container .results .tutorial-card {
-  width: 275px;
-  display: flex;
-  flex-direction: column;
-  margin: 20px
-}
-
-main .tutorials-container .results .tutorial-card-img {
-  height: 168px;
-  position: relative;
-}
-
-main .tutorials-container .results .tutorial-card-img.noimg {
-  background: linear-gradient(135deg, rgba(238,140,63,1) 0%, rgba(229,66,50,1) 47%, rgba(155,38,103,1) 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-main .tutorial-card .title {
-  font-size: 1.3em;
-}
-
-main .tutorials-container .results .tutorial-card-img .badge {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  border: 3px solid white;
-  border-radius: 50%;
-  height: 30px;
-  width: 30px;
-  background-image: url(/icons/spark.svg);
-}
-
-main .tutorials-container .results .tutorial-card-img .duration {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  border: 2px solid white;
-  border-radius: 20px;
-  color: white;
-  padding: 2px 10px 4px 10px;
-  font-size: 0.8em;
-}
-
-main .overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-main .overlay .overlay-video {
-  margin: 50px;
-}
-
-
-main .tutorials-container .results .tutorial-card-tags span {
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  color: lightgray;
-  display: inline-block;
-  padding: 4px 10px;
-  margin: 5px;
-}
 
 
 main video {

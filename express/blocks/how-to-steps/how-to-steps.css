@@ -14,6 +14,7 @@ main .how-to-steps > div {
     line-height: 32px;
     font-weight: 800;
     text-align: left;
+    margin-bottom: 20px;
   }
   
   main .how-to-steps .number span {

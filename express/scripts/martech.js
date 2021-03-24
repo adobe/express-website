@@ -54,15 +54,17 @@ window.targetGlobalSettings = {
   bodyHidingEnabled: false,
 };
 
-const pageName = `adobe.com:${window.location.pathname.split('/').join(':')}`;
 const locale = getLocale(window.location);
+const pathSegments = window.location.pathname.substr(1).split('/');
+if (locale !== 'en') pathSegments.shift();
+const pageName = `adobe.com:${pathSegments.join(':')}`;
 
 const langs = {
   en: 'en-US',
   fr: 'fr-FR',
   de: 'de-DE',
   it: 'it-IT',
-  da: 'da-DK',
+  dk: 'da-DK',
   es: 'es-ES',
   fi: 'fi-FI',
   jp: 'ja-JP',
@@ -74,8 +76,14 @@ const langs = {
   tw: 'zh-Hant-TW',
   cn: 'zh-Hans-CN',
 };
-
 const language = langs[locale];
+
+const langSplits = language.split('-');
+langSplits.pop();
+const htmlLang = langSplits.join('-');
+
+document.documentElement.setAttribute('lang', htmlLang);
+
 let category = '';
 if (window.location.pathname.includes('/create/') || window.location.pathname.includes('/feature/')) {
   category = 'design';
@@ -94,6 +102,20 @@ window.digitalData = {
   },
 };
 
+window.fedsConfig = {
+  ...window.fedsConfig,
+  locale: language,
+  content: {
+    experience: 'cc-express/spark-gnav',
+  },
+};
+
+window.adobeid = {
+  client_id: 'spark-helix',
+  scope: 'AdobeID,openid',
+  locale: language,
+};
+
 function textToName(text) {
   const splits = text.toLowerCase().split(' ');
   const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
@@ -101,13 +123,14 @@ function textToName(text) {
 }
 
 function trackButtonClick($a) {
-  let eventName = 'linkEvent'
+  const prefix = 'adobe.com:express:';
+  let eventName = `${prefix}linkEvent`;
   if ($a.textContent) {
-    eventName = textToName($a.textContent);
+    eventName = prefix + textToName($a.textContent);
   } else {
     const $img = $a.querySelector('img');
     if ($img && $img.getAttribute('alt')) {
-      eventName = textToName($img.getAttribute('alt'));
+      eventName = prefix + textToName($img.getAttribute('alt'));
     }
   }
 
@@ -117,7 +140,6 @@ function trackButtonClick($a) {
   _satellite.track('event', { digitalData: digitalData._snapshot() });
   // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('digitalData.primaryEvent.eventInfo.eventName');
-  console.log(eventName);
 }
 
 function decorateAnalyticsEvents() {
@@ -126,6 +148,11 @@ function decorateAnalyticsEvents() {
       trackButtonClick($a);
     });
   });
+}
+
+if (new URLSearchParams(window.location.search).get('gnav') !== 'false') {
+  loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
+  loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 }
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js');
