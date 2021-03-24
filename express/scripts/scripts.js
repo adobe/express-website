@@ -198,6 +198,7 @@ function resolveFragments() {
       }
       $cell.innerHTML = '';
       Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+      $fragment.remove();
       console.log(`fragment "${marker}" resolved`);
     });
 }
