@@ -193,19 +193,22 @@ function resolveFragments() {
       }
       let $fragment = $marker.closest('main > div');
       const $markerContainer = $marker.parentNode;
-      $marker.remove();
-      if ($markerContainer.children.length === 0) {
-        // empty section with marker, use content from next section
-        $fragment = $fragment.nextElementSibling;
+      if ($markerContainer.children.length === 1) {
+        // empty section with marker, remove and use content from next section
+        const $emptyFragment = $markerContainer.parentNode;
+        $fragment = $emptyFragment.nextElementSibling;
+        $emptyFragment.remove();
       }
       if (!$fragment) {
         console.log(`no content found for fragment "${marker}"`);
         return;
       }
-      $cell.innerHTML = '';
-      Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
-      $fragment.remove();
-      console.log(`fragment "${marker}" resolved`);
+      setTimeout(() => {
+        $cell.innerHTML = '';
+        Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+        $fragment.remove();
+        console.log(`fragment "${marker}" resolved`);
+      }, 500);
     });
 }
 
@@ -615,7 +618,6 @@ async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
-  // resolveFragments();
   splitSections();
   wrapSections('main>div');
   decorateHeaderAndFooter();
