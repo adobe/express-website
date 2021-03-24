@@ -33,12 +33,16 @@ main .columns > div span.num + * {
   display:inline;
 }
 
+main .columns.center > div {
+  align-items: center;
+}
+
 @media (min-width:900px) {
     main .columns > div {
         flex-direction: row;
         align-items: flex-start;
         text-align: left;
-    }    
+    }
 
     main .section-wrapper div.columns > div > div {
       width: 50%;
