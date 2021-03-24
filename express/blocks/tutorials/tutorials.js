@@ -150,7 +150,7 @@ function decorateTutorials($tutorials) {
   const $section = $tutorials.closest('.section-wrapper > div');
   const allTags = [];
   const $rows = Array.from($tutorials.children);
-  $rows.forEach(($row, i) => {
+  $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
     const $tags = $cells[3];
     const $categories = $cells[2];

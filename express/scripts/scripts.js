@@ -172,6 +172,37 @@ function decorateDoMoreEmbed() {
   });
 }
 
+function resolveFragments() {
+  Array.from(document.querySelectorAll('main > div div'))
+    .filter(($cell) => /^\[[A-Za-z0-9 -_]+\]$/mg.test($cell.textContent))
+    .forEach(($cell) => {
+      const marker = $cell.textContent
+        .substring(1, $cell.textContent.length - 1)
+        .toLocaleLowerCase();
+      // find the fragment with the marker
+      const $marker = Array.from(document.querySelectorAll('main > div h3'))
+        .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
+      if (!$marker) {
+        console.log(`no fragment with marker "${marker}" found`);
+        return;
+      }
+      let $fragment = $marker.closest('main > div');
+      $marker.remove();
+      if ($fragment.children.length === 0) {
+        // empty section with marker, use content from next section
+        $fragment = $fragment.nextElementSibling;
+      }
+      if (!$fragment) {
+        console.log(`no content found for fragment "${marker}"`);
+        return;
+      }
+      $cell.innerHTML = '';
+      Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+      $fragment.remove();
+      console.log(`fragment "${marker}" resolved`);
+    });
+}
+
 function decorateBlocks() {
   document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
     const classes = Array.from($block.classList.values());
@@ -192,7 +223,9 @@ function decorateBlocks() {
     $block.classList.add('block');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
-        mod.default($block, blockName, document);
+        if (mod.default) {
+          mod.default($block, blockName, document);
+        }
       })
       .catch((err) => console.log(`failed to load module for ${blockName}`, err));
 
@@ -574,6 +607,7 @@ async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
+  resolveFragments();
   splitSections();
   wrapSections('main>div');
   decorateHeader();
