@@ -192,8 +192,9 @@ function resolveFragments() {
         return;
       }
       let $fragment = $marker.closest('main > div');
+      const $markerContainer = $marker.parentNode;
       $marker.remove();
-      if ($fragment.children.length === 0) {
+      if ($markerContainer.children.length === 0) {
         // empty section with marker, use content from next section
         $fragment = $fragment.nextElementSibling;
       }
@@ -305,6 +306,7 @@ function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   decorateBlocks();
+  resolveFragments();
   // loadLazyFooter();
   if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
@@ -613,7 +615,7 @@ async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
-  resolveFragments();
+  // resolveFragments();
   splitSections();
   wrapSections('main>div');
   decorateHeaderAndFooter();
