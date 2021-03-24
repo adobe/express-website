@@ -64,7 +64,7 @@ const langs = {
   fr: 'fr-FR',
   de: 'de-DE',
   it: 'it-IT',
-  da: 'da-DK',
+  dk: 'da-DK',
   es: 'es-ES',
   fi: 'fi-FI',
   jp: 'ja-JP',
