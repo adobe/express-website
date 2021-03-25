@@ -8,6 +8,10 @@ main .columns > div {
     align-items: center;
 }
 
+main .columns.table > div {
+  align-items: flex-start;
+}
+
 main .columns.top > div {
   align-items: top;
 }
@@ -40,7 +44,6 @@ main .columns.center > div {
 @media (min-width:900px) {
     main .columns > div {
         flex-direction: row;
-        align-items: flex-start;
         text-align: left;
     }
 

@@ -67,6 +67,7 @@ export function linkImage($elem) {
 function wrapSections(element) {
   document.querySelectorAll(element).forEach(($div) => {
     if (!$div.id) {
+      console.log('wrap section', $div);
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
@@ -183,7 +184,8 @@ function resolveFragments() {
     .forEach(($cell) => {
       const marker = $cell.textContent
         .substring(1, $cell.textContent.length - 1)
-        .toLocaleLowerCase();
+        .toLocaleLowerCase()
+        .trim();
       // find the fragment with the marker
       const $marker = Array.from(document.querySelectorAll('main > div h3'))
         .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
@@ -594,6 +596,10 @@ export function unwrapBlock($block) {
       $appendTo = $postBlockSection;
     }
   });
+
+  if (!$postBlockSection.hasChildNodes()) {
+    $postBlockSection.remove();
+  }
 }
 
 function splitSections() {
