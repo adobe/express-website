@@ -596,6 +596,10 @@ export function unwrapBlock($block) {
       $appendTo = $postBlockSection;
     }
   });
+
+  if (!$postBlockSection.hasChildNodes()) {
+    $postBlockSection.remove();
+  }
 }
 
 function splitSections() {
