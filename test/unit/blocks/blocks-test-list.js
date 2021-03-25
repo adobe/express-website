@@ -48,6 +48,10 @@ export default [
     input: 'input/columns.singlerow.doc.html',
     expected: 'expected/columns.singlerow.block.html',
   }, {
+    name: 'Columns - 3 rows',
+    input: 'input/columns.table.3.doc.html',
+    expected: 'expected/columns.table.3.block.html',
+  }, {
     name: 'Columns - 3 numbered rows',
     input: 'input/columns.table.numbered.3.doc.html',
     expected: 'expected/columns.table.numbered.3.block.html',
