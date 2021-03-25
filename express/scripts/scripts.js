@@ -311,7 +311,7 @@ function postLCP() {
   decorateBlocks();
   resolveFragments();
   // loadLazyFooter();
-  if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+  if (!(window.location.search === '?nomartech' || window.location.hostname === 'localhost' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
     const usp = new URLSearchParams(window.location.search);
     const delay = usp.get('delay');
@@ -599,6 +599,7 @@ export function unwrapBlock($block) {
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'blog-posts'];
+
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
