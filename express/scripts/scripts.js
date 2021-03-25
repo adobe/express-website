@@ -67,6 +67,7 @@ export function linkImage($elem) {
 function wrapSections(element) {
   document.querySelectorAll(element).forEach(($div) => {
     if (!$div.id) {
+      console.log('wrap section', $div);
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
@@ -183,7 +184,8 @@ function resolveFragments() {
     .forEach(($cell) => {
       const marker = $cell.textContent
         .substring(1, $cell.textContent.length - 1)
-        .toLocaleLowerCase();
+        .toLocaleLowerCase()
+        .trim();
       // find the fragment with the marker
       const $marker = Array.from(document.querySelectorAll('main > div h3'))
         .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
@@ -197,6 +199,7 @@ function resolveFragments() {
         // empty section with marker, remove and use content from next section
         const $emptyFragment = $markerContainer.parentNode;
         $fragment = $emptyFragment.nextElementSibling;
+        console.log('remove section', $emptyFragment);
         $emptyFragment.remove();
       }
       if (!$fragment) {
@@ -206,6 +209,7 @@ function resolveFragments() {
       setTimeout(() => {
         $cell.innerHTML = '';
         Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+        console.log('remove section', $fragment);
         $fragment.remove();
         console.log(`fragment "${marker}" resolved`);
       }, 500);
