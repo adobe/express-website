@@ -34,7 +34,7 @@ function setSize($cols, $flex, $hero) {
   const minWidth = 260;
   const w = $cols.parentNode.offsetWidth;
   $cols.style.width = `${Math.floor(w / minWidth) * minWidth}px`;
-  $flex.style.height = `${(window.innerHeight - $hero.offsetHeight)}px`;  
+  $flex.style.height = `${(window.innerHeight - $hero.offsetHeight)}px`;
 }
 
 function showHide($block, $ptl) {
