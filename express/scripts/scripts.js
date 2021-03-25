@@ -199,7 +199,6 @@ function resolveFragments() {
         // empty section with marker, remove and use content from next section
         const $emptyFragment = $markerContainer.parentNode;
         $fragment = $emptyFragment.nextElementSibling;
-        console.log('remove section', $emptyFragment);
         $emptyFragment.remove();
       }
       if (!$fragment) {
@@ -209,7 +208,6 @@ function resolveFragments() {
       setTimeout(() => {
         $cell.innerHTML = '';
         Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
-        console.log('remove section', $fragment);
         $fragment.remove();
         console.log(`fragment "${marker}" resolved`);
       }, 500);
