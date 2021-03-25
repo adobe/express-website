@@ -30,6 +30,13 @@ function addPages(index, config, $block) {
   $block.appendChild($ul);
 }
 
+function setSize($cols, $flex, $hero) {
+  const minWidth = 260;
+  const w = $cols.parentNode.offsetWidth;
+  $cols.style.width = `${Math.floor(w / minWidth) * minWidth}px`;
+  $flex.style.height = `${(window.innerHeight - $hero.offsetHeight)}px`;  
+}
+
 function showHide($block, $ptl) {
   if (window.innerWidth < 600) {
     $block.classList.add('hidden');
@@ -61,26 +68,37 @@ async function fetchIndex() {
 
 async function decoratePageList($block) {
   const config = readBlockConfig($block);
-  $block.innerHTML = '';
-
-  const $browse = createTag('button', { class: 'page-list-browse-button hidden' });
-  $browse.innerHTML = config.label;
-  $block.appendChild($browse);
-  const $section = $block.closest('.section-wrapper');
-  $section.parentNode.insertBefore($browse, $section);
 
   // shorten hero
   const $hero = document.querySelector('.hero');
   $hero.classList.add('hero-short');
 
   const $flex = document.querySelector('main .page-list-container > div');
-  $flex.style.height = `${(window.innerHeight - $hero.offsetHeight)}px`;
+
+  $flex.innerHTML = `
+  <div class="page-list-left">
+    <div class="page-list block">
+      <ul class="page-list-ul">
+      </ul>
+    </div>
+  </div>
+  <div class="page-list-right">
+  </div>
+  `;
+
+  // eslint-disable-next-line no-param-reassign
+  $block = $flex.querySelector('.page-list');
+
+  const $browse = createTag('button', { class: 'page-list-browse-button hidden' });
+  $browse.innerHTML = config.label;
+  const $section = $block.closest('.section-wrapper');
+  $section.parentNode.insertBefore($browse, $section);
 
   // get $tlc
   const $tlc = document.querySelector('.template-list-container');
   const $ptl = $tlc.firstChild;
   $ptl.classList.add('page-template-list');
-  $block.parentNode.appendChild($ptl);
+  $flex.querySelector('.page-list-right').appendChild($ptl);
   $tlc.remove();
 
   $browse.addEventListener('click', () => {
@@ -94,8 +112,10 @@ async function decoratePageList($block) {
   });
 
   showHide($block, $ptl);
+  setSize($ptl, $flex, $hero);
   window.addEventListener('resize', () => {
     showHide($block, $ptl);
+    setSize($ptl, $flex, $hero);
   });
 
   const index = await fetchIndex();
