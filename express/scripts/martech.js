@@ -108,6 +108,11 @@ window.fedsConfig = {
   content: {
     experience: 'cc-express/spark-gnav',
   },
+  profile: {
+    customSignIn: () => {
+      window.location.href = 'https://spark.adobe.com/sp';
+    },
+  },
 };
 
 window.adobeid = {
