@@ -80,7 +80,7 @@ export function getLocale(url) {
   if (/^[a-z]{2}$/.test(locale)) {
     return locale;
   }
-  return 'en';
+  return 'us';
 }
 
 export function addBlockClasses($block, classNames) {
