@@ -38,7 +38,7 @@ async function fetchBlueprint(pathname) {
 async function decorateTemplateList($block) {
   let rows = $block.children.length;
   const locale = getLocale(window.location);
-  if (rows === 0 && locale !== 'en') {
+  if (rows === 0 && locale !== 'us') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 

@@ -56,11 +56,11 @@ window.targetGlobalSettings = {
 
 const locale = getLocale(window.location);
 const pathSegments = window.location.pathname.substr(1).split('/');
-if (locale !== 'en') pathSegments.shift();
+if (locale !== 'us') pathSegments.shift();
 const pageName = `adobe.com:${pathSegments.join(':')}`;
 
 const langs = {
-  en: 'en-US',
+  us: 'en-US',
   fr: 'fr-FR',
   de: 'de-DE',
   it: 'it-IT',
@@ -107,6 +107,11 @@ window.fedsConfig = {
   locale: language,
   content: {
     experience: 'cc-express/spark-gnav',
+  },
+  profile: {
+    customSignIn: () => {
+      window.location.href = 'https://spark.adobe.com/sp';
+    },
   },
 };
 
