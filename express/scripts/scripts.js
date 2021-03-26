@@ -360,7 +360,7 @@ function resolveFragments() {
 }
 
 function decorateBlocks() {
-  document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
+  document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
@@ -377,6 +377,13 @@ function decorateBlocks() {
       }
     });
     $block.classList.add('block');
+    $block.setAttribute('data-block-name', blockName);
+  });
+}
+
+function loadBlocks() {
+  document.querySelectorAll('main div.section-wrapper > div > .block').forEach(async ($block) => {
+    const blockName = $block.getAttribute('data-block-name');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
         if (mod.default) {
@@ -455,7 +462,7 @@ export function readBlockConfig($block) {
 function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
-  decorateBlocks();
+  loadBlocks();
   resolveFragments();
   // loadLazyFooter();
   if (!(window.location.search === '?nomartech' || window.location.hostname === 'localhost' || document.querySelector(`head script[src="${martechUrl}"]`))) {
@@ -776,6 +783,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
+  decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();
   document.body.classList.add('appear');
