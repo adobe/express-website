@@ -78,10 +78,12 @@ main .template-list + .button-container > a {
 }
 
 
-main .template-list.masonry > div:first-of-type {
+main .template-list.masonry > div {
     margin-top: 0px;
+    padding: 0;
+    margin-bottom: 0;
+    padding-bottom: 32px;
 }
-
 
 @media (min-width: 600px) {
     main .template-list > div {
@@ -115,6 +117,13 @@ main .template-list.masonry > div:first-of-type {
         column-gap: 32px;
         width: 792px;
     }
+
+  /* template-list inside columns */
+
+  main .columns .template-list {
+    margin-top: 0;
+    margin-left: 40px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -130,5 +139,22 @@ main .template-list.masonry > div:first-of-type {
       width: 1056px;
       position: relative;
       left: -16px;
+  }
+
+  /* template-list inside columns */
+
+  main .columns .template-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  main .columns .template-list > div {
+    justify-content: flex-start;
+    min-width: 132px;
+  }
+
+  main .columns .template-list a:any-link {
+    font-size: 0.875rem;
+    font-weight: 500;;
   }
 }

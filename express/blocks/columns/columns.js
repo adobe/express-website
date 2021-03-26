@@ -15,9 +15,28 @@ import { linkImage } from '../../scripts/scripts.js';
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  $rows.forEach(($row) => {
+  if ($rows.length > 1) {
+    $block.classList.add('table');
+  }
+  $rows.forEach(($row, rowNum) => {
     const $cells = Array.from($row.children);
-    $cells.forEach(($cell) => {
+    $cells.forEach(($cell, cellNum) => {
+      if (cellNum === 0 && $block.classList.contains('numbered')) {
+        // add number to first cell
+        let num = rowNum + 1;
+        if ($rows.length > 9) {
+          // stylize with total for 10 or more items
+          num = `${num}/${$rows.length} —`;
+          if (rowNum < 9) {
+            // pad number with 0
+            num = `0${num}`;
+          }
+        } else {
+          // regular ordered list style for 1 to 9 items
+          num = `${num}.`;
+        }
+        $cell.innerHTML = `<span class="num">${num}</span>${$cell.innerHTML}`;
+      }
       /* this probably needs to be tighter and possibly earlier */
       if ($cell.querySelector('img') && $cell.querySelector('a')) {
         linkImage($cell);

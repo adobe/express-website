@@ -38,7 +38,7 @@ async function fetchBlueprint(pathname) {
 async function decorateTemplateList($block) {
   let rows = $block.children.length;
   const locale = getLocale(window.location);
-  if (rows === 0 && locale !== 'en') {
+  if (rows === 0 && locale !== 'us') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 
@@ -79,7 +79,7 @@ async function decorateTemplateList($block) {
 
   $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
     const $parent = $a.closest('div');
-    if ($a.href.includes('.app.link')) {
+    if (!$a.href.includes('.mp4')) {
       linkImage($parent);
     } else {
       const $picture = $parent.querySelector('picture');

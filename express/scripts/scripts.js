@@ -67,6 +67,7 @@ export function linkImage($elem) {
 function wrapSections(element) {
   document.querySelectorAll(element).forEach(($div) => {
     if (!$div.id) {
+      console.log('wrap section', $div);
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
@@ -79,8 +80,153 @@ export function getLocale(url) {
   if (/^[a-z]{2}$/.test(locale)) {
     return locale;
   }
-  return 'en';
+  return 'us';
 }
+
+export function getCurrency(locale) {
+  const currencies = {
+    ar: 'ARS',
+    at: 'EUR',
+    au: 'AUD',
+    be: 'EUR',
+    bg: 'EUR',
+    br: 'BRL',
+    ca: 'CAD',
+    ch: 'CHF',
+    cl: 'CLP',
+    co: 'COP',
+    cr: 'USD',
+    cy: 'EUR',
+    cz: 'EUR',
+    de: 'EUR',
+    dk: 'DKK',
+    ec: 'USD',
+    ee: 'EUR',
+    es: 'EUR',
+    fi: 'EUR',
+    fr: 'EUR',
+    gb: 'GBP',
+    gr: 'EUR',
+    gt: 'USD',
+    hk: 'HKD',
+    hu: 'EUR',
+    id: 'IDR',
+    ie: 'EUR',
+    il: 'ILS',
+    in: 'INR',
+    it: 'EUR',
+    jp: 'JPY',
+    kr: 'KRW',
+    lt: 'EUR',
+    lu: 'EUR',
+    lv: 'EUR',
+    mt: 'EUR',
+    mx: 'MXN',
+    my: 'MYR',
+    nl: 'EUR',
+    no: 'NOK',
+    nz: 'AUD',
+    pe: 'PEN',
+    ph: 'PHP',
+    pl: 'EUR',
+    pt: 'EUR',
+    ro: 'EUR',
+    ru: 'RUB',
+    se: 'SEK',
+    sg: 'SGD',
+    si: 'EUR',
+    sk: 'EUR',
+    th: 'THB',
+    tw: 'TWD',
+    us: 'USD',
+    ve: 'USD',
+    za: 'USD',
+    ae: 'USD',
+    bh: 'BHD',
+    eg: 'EGP',
+    jo: 'JOD',
+    kw: 'KWD',
+    om: 'OMR',
+    qa: 'USD',
+    sa: 'SAR',
+    ua: 'USD',
+    dz: 'USD',
+    lb: 'LBP',
+    ma: 'USD',
+    tn: 'USD',
+    ye: 'USD',
+    am: 'USD',
+    az: 'USD',
+    ge: 'USD',
+    md: 'USD',
+    tm: 'USD',
+    by: 'USD',
+    kz: 'USD',
+    kg: 'USD',
+    tj: 'USD',
+    uz: 'USD',
+    bo: 'USD',
+    do: 'USD',
+    hr: 'EUR',
+    ke: 'USD',
+    lk: 'USD',
+    mo: 'HKD',
+    mu: 'USD',
+    ng: 'USD',
+    pa: 'USD',
+    py: 'USD',
+    sv: 'USD',
+    tt: 'USD',
+    uy: 'USD',
+    vn: 'USD',
+  };
+  return currencies[locale];
+}
+
+function getCookie(cname) {
+  const name = `${cname}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i += 1) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
+function getCountry() {
+  let country = getCookie('international');
+  if (!country) {
+    country = getLocale(window.location);
+  }
+  return (country);
+}
+
+export async function getOffer(offerId) {
+  const country = getCountry();
+  console.log(country);
+  const currency = getCurrency(country);
+  const resp = await fetch('/express/system/offers.json');
+  const json = await resp.json();
+  const upperCountry = country.toUpperCase();
+  const offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
+
+  if (offer) {
+    const unitPrice = offer.p;
+    const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F`;
+    return {
+      country, currency, unitPrice, commerceURL,
+    };
+  }
+  return {};
+}
+
+window.getOffer = getOffer;
 
 export function addBlockClasses($block, classNames) {
   const $rows = Array.from($block.children);
@@ -98,13 +244,13 @@ export function addBlockClasses($block, classNames) {
 //   });
 // }
 
-function decorateHeader() {
+function decorateHeaderAndFooter() {
   const $header = document.querySelector('header');
 
   /* init header with placeholder */
 
   $header.innerHTML = `
-  <div class="placeholder">
+  <div id="feds-header" class="placeholder">
     <div class="mobile">
       <div class="hamburger"></div>
       <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
@@ -130,10 +276,12 @@ function decorateHeader() {
           <div class="signing">Sign In</div>
         </div>
       </div>
-      <div class="bottom">
-        <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
-      </div>
     </div>
+  `;
+
+  document.querySelector('footer').innerHTML = `
+    <div id="feds-footer"></div>
+    <div class="evidon-notice-link"></div>
   `;
 }
 
@@ -172,15 +320,51 @@ function decorateDoMoreEmbed() {
   });
 }
 
+function resolveFragments() {
+  Array.from(document.querySelectorAll('main > div div'))
+    .filter(($cell) => /^\[[A-Za-z0-9 -_]+\]$/mg.test($cell.textContent))
+    .forEach(($cell) => {
+      const marker = $cell.textContent
+        .substring(1, $cell.textContent.length - 1)
+        .toLocaleLowerCase()
+        .trim();
+      // find the fragment with the marker
+      const $marker = Array.from(document.querySelectorAll('main > div h3'))
+        .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
+      if (!$marker) {
+        console.log(`no fragment with marker "${marker}" found`);
+        return;
+      }
+      let $fragment = $marker.closest('main > div');
+      const $markerContainer = $marker.parentNode;
+      if ($markerContainer.children.length === 1) {
+        // empty section with marker, remove and use content from next section
+        const $emptyFragment = $markerContainer.parentNode;
+        $fragment = $emptyFragment.nextElementSibling;
+        $emptyFragment.remove();
+      }
+      if (!$fragment) {
+        console.log(`no content found for fragment "${marker}"`);
+        return;
+      }
+      setTimeout(() => {
+        $cell.innerHTML = '';
+        Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+        $fragment.remove();
+        console.log(`fragment "${marker}" resolved`);
+      }, 500);
+    });
+}
+
 function decorateBlocks() {
-  document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
+  document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
     if ($section) {
       $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'columns'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -190,9 +374,18 @@ function decorateBlocks() {
       }
     });
     $block.classList.add('block');
+    $block.setAttribute('data-block-name', blockName);
+  });
+}
+
+function loadBlocks() {
+  document.querySelectorAll('main div.section-wrapper > div > .block').forEach(async ($block) => {
+    const blockName = $block.getAttribute('data-block-name');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
-        mod.default($block, blockName, document);
+        if (mod.default) {
+          mod.default($block, blockName, document);
+        }
       })
       .catch((err) => console.log(`failed to load module for ${blockName}`, err));
 
@@ -208,6 +401,7 @@ export function loadScript(url, callback, type) {
   }
   $head.append($script);
   $script.onload = callback;
+  return $script;
 }
 
 // async function loadLazyFooter() {
@@ -265,9 +459,10 @@ export function readBlockConfig($block) {
 function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
-  decorateBlocks();
+  loadBlocks();
+  resolveFragments();
   // loadLazyFooter();
-  if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+  if (!(window.location.search === '?nomartech' || window.location.hostname === 'localhost' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
     const usp = new URLSearchParams(window.location.search);
     const delay = usp.get('delay');
@@ -483,219 +678,6 @@ async function decorateTesting() {
     // console.log(`Test is not run => ${reason}`);
   }
 }
-function playYouTubeVideo(vid, $element) {
-  $element.innerHTML = `<iframe width="720" height="405" src="https://www.youtube.com/embed/${vid}?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-
-  /*
-  const ytPlayerScript='https://www.youtube.com/iframe_api';
-  if (!document.querySelector(`script[src="${ytPlayerScript}"]`)) {
-    const tag = document.createElement('script');
-    tag.src = ytPlayerScript;
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-  }
-
-  if (typeof YT !== 'undefined' && YT.Player) {
-    const player = new YT.Player($element.id, {
-      height: $element.clientHeight,
-      width: $element.clientWidth,
-      videoId: vid,
-      events: {
-          'onReady': (event) => {
-            event.target.playVideo();
-          },
-        }
-    });
-  } else {
-    setTimeout(() => {
-      playYouTubeVideo(vid, $element);
-    }, 100)
-  }
-  */
-}
-
-function displayTutorial(tutorial) {
-  if (tutorial.link.includes('youtu')) {
-    const $overlay = createTag('div', { class: 'overlay' });
-    const $video = createTag('div', { class: 'overlay-video', id: 'overlay-video' });
-    $overlay.appendChild($video);
-    window.location.hash = toClassName(tutorial.title);
-    const $main = document.querySelector('main');
-    $main.append($overlay);
-    const yturl = new URL(tutorial.link);
-    let vid = yturl.searchParams.get('v');
-    if (!vid) {
-      vid = yturl.pathname.substr(1);
-    }
-    $overlay.addEventListener('click', () => {
-      window.location.hash = '';
-      $overlay.remove();
-    });
-
-    playYouTubeVideo(vid, $video);
-  } else {
-    window.location.href = tutorial.link;
-  }
-
-  // eslint-disable-next-line no-console
-  console.log(tutorial.link);
-}
-
-function createTutorialCard(tutorial) {
-  const $card = createTag('div', { class: 'tutorial-card' });
-  let img;
-  let noimg = '';
-  if (tutorial.img) {
-    img = `<img src="${tutorial.img}">`;
-  } else {
-    img = `<div class="badge"></div><div class="title">${tutorial.title}</div>`;
-    noimg = 'noimg';
-  }
-
-  $card.innerHTML = `<div class="tutorial-card-image">
-  </div>
-  <div class="tutorial-card-img ${noimg}">
-    ${img}
-    <div class="duration">${tutorial.time}</div>
-  </div>
-  <div class="tutorial-card-title">
-  <h3>${tutorial.title}</h3>
-  </div>
-  <div class="tutorial-card-tags">
-  <span>${tutorial.tags.join('</span><span>')}</span>
-  </div>
-  `;
-  $card.addEventListener('click', () => {
-    displayTutorial(tutorial);
-  });
-  return ($card);
-}
-
-function displayTutorialsByCatgory(tutorials, $results, category) {
-  $results.innerHTML = '';
-
-  const matches = tutorials.filter((tut) => tut.categories.includes(category));
-  matches.forEach((match) => {
-    $results.appendChild(createTutorialCard(match));
-  });
-}
-
-function toggleCategories($section, show) {
-  const children = Array.from($section.children);
-  let afterTutorials = false;
-  children.forEach(($e) => {
-    // eslint-disable-next-line no-console
-    console.log($e);
-    if (afterTutorials) {
-      if (show) {
-        $e.classList.remove('hidden');
-      } else {
-        $e.classList.add('hidden');
-      }
-    }
-    if ($e.classList.contains('tutorials')) {
-      afterTutorials = true;
-    }
-  });
-}
-
-function displayFilteredTutorials(tutorials, $results, $filters) {
-  $results.innerHTML = '';
-  const $section = $results.closest('.section-wrapper > div');
-  // eslint-disable-next-line no-console
-  console.log($section);
-  const filters = (Array.from($filters)).map((f) => f.textContent);
-  if (filters.length) {
-    toggleCategories($section, false);
-    const matches = tutorials.filter((tut) => filters.every((v) => tut.tags.includes(v)));
-    matches.forEach((match) => {
-      $results.appendChild(createTutorialCard(match));
-    });
-  } else {
-    toggleCategories($section, true);
-  }
-}
-
-function decorateTutorials() {
-  document.querySelectorAll('main .tutorials').forEach(($tutorials) => {
-    const tutorials = [];
-    const $section = $tutorials.closest('.section-wrapper > div');
-    const allTags = [];
-    const $rows = Array.from($tutorials.children);
-    $rows.forEach(($row, i) => {
-      // eslint-disable-next-line no-console
-      console.log(i);
-      const $cells = Array.from($row.children);
-      const $tags = $cells[3];
-      const $categories = $cells[2];
-      const $title = $cells[0];
-      const $img = $cells[4];
-
-      const tags = Array.from($tags.children).map(($tag) => $tag.textContent);
-      const categories = Array.from($categories.children).map(($cat) => $cat.textContent);
-      const time = $cells[1].textContent;
-      const title = $title.textContent;
-      const link = $title.querySelector('a').href;
-      const img = $img.querySelector('img') ? $img.querySelector('img').src : undefined;
-
-      tutorials.push({
-        title, link, time, tags, categories, img,
-      });
-
-      tags.forEach((tag) => {
-        if (!allTags.includes(tag)) allTags.push(tag);
-      });
-    });
-
-    $tutorials.innerHTML = '';
-    let $results = createTag('div', { class: 'results' });
-    $tutorials.appendChild($results);
-
-    const $filters = createTag('div', { class: 'filters' });
-    allTags.forEach((tag) => {
-      const $tagFilter = createTag('span', { class: 'tag-filter' });
-      $tagFilter.innerHTML = tag;
-      $filters.appendChild($tagFilter);
-      $tagFilter.addEventListener('click', () => {
-        $tagFilter.classList.toggle('selected');
-        displayFilteredTutorials(tutorials, $results, $filters.querySelectorAll('.selected'));
-      });
-    });
-
-    $tutorials.prepend($filters);
-
-    const $children = Array.from($section.children);
-    let filterFor = '';
-    $children.forEach(($e) => {
-      // eslint-disable-next-line no-console
-      console.log($e.tagName);
-      if ($e.tagName === 'H2') {
-        if (filterFor) {
-          $results = createTag('div', { class: 'results' });
-          displayTutorialsByCatgory(tutorials, $results, filterFor);
-          $section.insertBefore($results, $e);
-        }
-        filterFor = $e.textContent;
-      }
-    });
-
-    if (filterFor) {
-      $results = createTag('div', { class: 'results' });
-      displayTutorialsByCatgory(tutorials, $results, filterFor);
-      $section.appendChild($results);
-    }
-
-    if (window.location.hash !== '#') {
-      const video = window.location.hash.substr(1);
-      tutorials.forEach((tutorial) => {
-        if (toClassName(tutorial.title) === video) {
-          displayTutorial(tutorial);
-        }
-      });
-    }
-  });
-}
-
 function setTemplate() {
   const path = window.location.pathname;
   let template = 'default';
@@ -763,11 +745,16 @@ export function unwrapBlock($block) {
       $appendTo = $postBlockSection;
     }
   });
+
+  if (!$postBlockSection.hasChildNodes()) {
+    $postBlockSection.remove();
+  }
 }
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'blog-posts'];
+
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
@@ -789,11 +776,11 @@ async function decoratePage() {
   await decorateTesting();
   splitSections();
   wrapSections('main>div');
-  decorateHeader();
+  decorateHeaderAndFooter();
   decorateHero();
   decorateButtons();
   fixIcons();
-  decorateTutorials();
+  decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();
   document.body.classList.add('appear');
