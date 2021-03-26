@@ -53,6 +53,7 @@ main .blog-posts .card {
     margin: 10px;
     text-align: left;
   }
+  
   main .blog-posts .card .card-image {
     line-height: 0;
   }

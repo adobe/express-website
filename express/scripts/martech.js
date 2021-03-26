@@ -69,7 +69,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
   const locale = getLocale(w.location);
   const pathSegments = pathname.substr(1).split('/');
-  if (locale !== 'en') pathSegments.shift();
+  if (locale !== 'us') pathSegments.shift();
   const pageName = `adobe.com:${pathSegments.join(':')}`;
   const langs = {
     en: 'en-US',
@@ -90,6 +90,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   };
 
   const language = langs[locale];
+  const langSplits = language.split('-');
+  langSplits.pop();
+
+  const htmlLang = langSplits.join('-');
+
+  document.documentElement.setAttribute('lang', htmlLang);
+
   let category;
   if (
     pathname.includes('/create/')
@@ -131,6 +138,25 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   //------------------------------------------------------------------------------------
   // set some global and persistent data layer properties
   //------------------------------------------------------------------------------------
+
+  window.fedsConfig = {
+    ...window.fedsConfig,
+    locale: language,
+    content: {
+      experience: 'cc-express/spark-gnav',
+    },
+    profile: {
+      customSignIn: () => {
+        window.location.href = 'https://spark.adobe.com/sp';
+      },
+    },
+  };
+
+  window.adobeid = {
+    client_id: 'spark-helix',
+    scope: 'AdobeID,openid',
+    locale: language,
+  };
 
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.pageName', pageName);

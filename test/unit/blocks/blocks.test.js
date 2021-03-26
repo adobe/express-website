@@ -26,9 +26,14 @@ const getFragment = (html) => {
 const trim = (html) => html
   .replace(/^\s*/gm, '')
   .replace(/\s*$/gm, '')
-  .replace(/\n/gm, '');
+  .replace(/\n/gm, '')
+  .replace(/\/>\s*</gm, '/><');
 
 const fragmentToString = (fragment) => {
+  if (fragment.outerHTML) {
+    return trim(fragment.outerHTML);
+  }
+
   let html = '';
   fragment.children.forEach((c) => {
     html += c.outerHTML;
@@ -62,7 +67,7 @@ describe('Block tests', () => {
       const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
       mod.default(block, blockName, doc);
 
-      expect(fragmentToString(block)).to.be.equal(fragmentToString(expected));
+      expect(fragmentToString(expected)).to.be.equal(fragmentToString(block));
     });
   });
 });
