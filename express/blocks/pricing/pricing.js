@@ -58,20 +58,26 @@ function animateHeader($header, words) {
   let i = 0;
   const max = words.length;
   const firstWord = words[0];
-  const headerWordTemplate = `<span id="pricing-header-word">${firstWord}</span>`;
+  const headerWordTemplate = `<span id="pricing-header-word" aria-hidden="true">${firstWord}</span>`;
   $header.innerHTML = $header.innerHTML.replace('[x]', headerWordTemplate);
+  $header.setAttribute('aria-label', $header.innerText);
   const $headerWord = $header.children[0];
-  setInterval(() => {
+  const interval = setInterval(() => {
     $headerWord.style.opacity = '0';
     setTimeout(() => {
       i += 1;
       if (i >= max) {
         i = 0;
       }
+
       $headerWord.innerHTML = words[i];
       $headerWord.style.opacity = '1';
     }, 1500);
   }, 4000);
+  $headerWord.addEventListener('click', () => {
+    clearInterval(interval);
+    $headerWord.style.cursor = 'inherit';
+  });
 }
 
 function decorateHeader($block, header) {
@@ -155,7 +161,7 @@ function selectPlanOption($plan, option) {
   } else {
     $pricing.innerHTML = `<span>US $<strong>${price}</strong>/${priceUnit}</span>`;
     if (price !== fullPrice) {
-      $pricing.innerHTML += `<span class="previous-pricing">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from US $${fullPrice}/${fullPriceUnit}">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
     }
   }
   if (text) {
@@ -205,7 +211,7 @@ function decoratePlans($block, plans, planOptions) {
     const $description = createTag('p');
     $description.innerHTML = description;
     $headerContainer.append($description);
-    const $icon = createTag('img', { src: imagePath, class: 'plan-icon' });
+    const $icon = createTag('img', { src: imagePath, class: 'plan-icon', alt: '' });
     $header.append($icon);
     const $pricing = createTag('div', { class: 'plan-pricing' });
     $plan.append($pricing);
@@ -215,6 +221,7 @@ function decoratePlans($block, plans, planOptions) {
     $plan.append($footer);
     if (options.length > 1) {
       const $dropdown = createTag('select', { class: 'plan-dropdown' });
+      $dropdown.setAttribute('arial-label', 'Select your plan');
       let i = 0;
       options.forEach((option) => {
         const name = option['Option Name'];
@@ -235,9 +242,9 @@ function decoratePlans($block, plans, planOptions) {
 
 function decorateTable($block, features) {
   const categories = [];
-  const categoryContainers = [];
-  const $features = createTag('div', { class: 'features' });
-  $block.append($features);
+  const $featuresTable = createTag('table', { class: 'features' });
+  let odd = false;
+  $block.append($featuresTable);
   features.forEach((feature) => {
     const { Category, Description, Special } = feature;
     const columnOneCheck = feature['Column 1'];
@@ -246,40 +253,46 @@ function decorateTable($block, features) {
     if (!categories.includes(Category)) {
       const imageName = toClassName(Category);
       const categoryImage = `icons/${imageName}.svg`;
-      const $category = createTag('div', { class: 'category' });
-      $features.append($category);
-      const $categoryHeader = createTag('div', { class: 'category-header' });
-      $category.append($categoryHeader);
+      const $categoryRow = createTag('tr', { class: 'category' });
+      $featuresTable.append($categoryRow);
+      const $featureLogoColumn = createTag('td');
+      $categoryRow.append($featureLogoColumn);
       const $categoryImage = createTag('img', { src: categoryImage, class: 'category-image' });
-      $categoryHeader.append($categoryImage);
-      const $categoryText = createTag('span', { class: 'category-text' });
-      $categoryText.innerHTML = Category;
-      $categoryHeader.append($categoryText);
+      $featureLogoColumn.append($categoryImage);
+      const $categoryHeaderColumn = createTag('td', { class: 'category-text' });
+      $categoryHeaderColumn.innerHTML = Category;
+      $categoryRow.append($categoryHeaderColumn);
       categories.push(Category);
-      categoryContainers[Category] = $category;
+      odd = false;
     }
-    const $feature = createTag('div', { class: 'feature' });
-    categoryContainers[Category].append($feature);
-    const $featureSpecial = createTag('div', { class: 'feature-special' });
-    $feature.append($featureSpecial);
+    const $featureRow = createTag('tr', { class: 'feature' });
+    if (odd) {
+      $featureRow.classList.add('odd');
+    }
+    odd = !odd;
+    $featuresTable.append($featureRow);
+    const $featureSpecialColumn = createTag('td', { class: 'feature-special' });
+    $featureRow.append($featureSpecialColumn);
     if (Special) {
       const $specialText = createTag('span');
       $specialText.innerHTML = Special;
-      $featureSpecial.append($specialText);
+      $featureSpecialColumn.append($specialText);
     }
-    const $featureText = createTag('div', { class: 'feature-text' });
+    const $featureText = createTag('td', { class: 'feature-text' });
     $featureText.innerHTML = Description;
-    $feature.append($featureText);
-    const $featureColumnOne = createTag('div', { class: 'feature-column' });
-    $feature.append($featureColumnOne);
+    $featureRow.append($featureText);
+    const $featureColumnOne = createTag('td', { class: 'feature-column' });
+    $featureRow.append($featureColumnOne);
     const $columnOneImage = createTag('img');
     if (columnOneCheck === 'Y') {
       $columnOneImage.src = 'icons/checkmark.svg';
+      $columnOneImage.alt = 'Yes';
     } else {
       $columnOneImage.src = 'icons/crossmark.svg';
+      $columnOneImage.alt = '';
     }
     $featureColumnOne.append($columnOneImage);
-    const $featureColumnTwo = createTag('div', { class: 'feature-column' });
+    const $featureColumnTwo = createTag('td', { class: 'feature-column' });
     const $columnTwoImage = createTag('img');
     if (columnTwoCheck === 'Y') {
       $columnTwoImage.src = 'icons/checkmark.svg';
@@ -287,8 +300,8 @@ function decorateTable($block, features) {
       $columnTwoImage.src = 'icons/crossmark.svg';
     }
     $featureColumnTwo.append($columnTwoImage);
-    $feature.append($featureColumnTwo);
-    const $featureColumnThree = createTag('div', { class: 'feature-column' });
+    $featureRow.append($featureColumnTwo);
+    const $featureColumnThree = createTag('td', { class: 'feature-column' });
     const $columnThreeImage = createTag('img');
     if (columnThreeCheck === 'Y') {
       $columnThreeImage.src = 'icons/checkmark.svg';
@@ -296,7 +309,7 @@ function decorateTable($block, features) {
       $columnThreeImage.src = 'icons/crossmark.svg';
     }
     $featureColumnThree.append($columnThreeImage);
-    $feature.append($featureColumnThree);
+    $featureRow.append($featureColumnThree);
   });
 }
 
