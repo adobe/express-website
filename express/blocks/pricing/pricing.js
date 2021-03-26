@@ -137,6 +137,10 @@ function buildUrl(optionUrl, optionPlan) {
   if (currentUrl.searchParams.has('code')) {
     planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
   }
+  if (currentUrl.searchParams.get('rUrl')) {
+    rUrl = currentUrl.searchParams.get('rUrl');
+  }
+
   planUrl.searchParams.set('rUrl', rUrl);
   return planUrl.href;
 }
