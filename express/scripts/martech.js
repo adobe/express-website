@@ -9,16 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global w document digitalData _satellite */
+/* global window document digitalData _satellite */
 
 import { loadScript, getLocale } from './scripts.js';
 
-var 
-  // this saves on file size when this file gets minified...
-  w = window,
-  d = document,
-  loc = w.location,
-  pathname = loc.pathname;
+// this saves on file size when this file gets minified...
+const w = window;
+const d = document;
+const loc = w.location;
+const { pathname } = loc;
 
 function handleConsentSettings() {
   try {
@@ -64,16 +63,15 @@ w.targetGlobalSettings = {
 };
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
-
   //------------------------------------------------------------------------------------
   // gathering the data
   //------------------------------------------------------------------------------------
 
-  let locale = getLocale(w.location);
-  let pathSegments = pathname.substr(1).split('/');
+  const locale = getLocale(w.location);
+  const pathSegments = pathname.substr(1).split('/');
   if (locale !== 'en') pathSegments.shift();
-  let pageName = `adobe.com:${pathSegments.join(':')}`;
-  let langs = {
+  const pageName = `adobe.com:${pathSegments.join(':')}`;
+  const langs = {
     en: 'en-US',
     fr: 'fr-FR',
     de: 'de-DE',
@@ -91,11 +89,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     cn: 'zh-Hans-CN',
   };
 
-  let language = langs[locale];
+  const language = langs[locale];
   let category;
   if (
-    pathname.includes('/create/') || 
-    pathname.includes('/feature/')
+    pathname.includes('/create/')
+    || pathname.includes('/feature/')
   ) {
     category = 'design';
     if (pathname.includes('/photo')) category = 'photo';
@@ -104,10 +102,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   let sparkLandingPageType;
   // seo
   if (
-    pathname.includes('/create/') || 
-    pathname.includes('/make/') || 
-    pathname.includes('/feature/') || 
-    pathname.includes('/discover/')
+    pathname.includes('/create/')
+    || pathname.includes('/make/')
+    || pathname.includes('/feature/')
+    || pathname.includes('/discover/')
   ) {
     sparkLandingPageType = 'seo';
   // blog
@@ -126,12 +124,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   ) {
     sparkLandingPageType = 'edu';
   }
-  let sparkUserType = 'knownNotAuth'; // (w.adobeIMS && w.adobeIMS.isUserAuthenticated()) ? '' : '';
-  let url = new URL(loc.href);
-  let sparkTouchpoint = url.searchParams.get('touchpointName');
-  
+  const sparkUserType = 'knownNotAuth'; // (w.adobeIMS && w.adobeIMS.isUserAuthenticated()) ? '' : '';
+  const url = new URL(loc.href);
+  const sparkTouchpoint = url.searchParams.get('touchpointName');
 
-  
   //------------------------------------------------------------------------------------
   // set some global and persistent data layer properties
   //------------------------------------------------------------------------------------
@@ -148,7 +144,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   //------------------------------------------------------------------------------------
   // spark specific global and persistent data layer properties
   //------------------------------------------------------------------------------------
-  
+
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.pageurl', loc.href);
   // eslint-disable-next-line no-underscore-dangle
@@ -172,15 +168,15 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   digitalData._set('spark.eventData.premiumEntitled', '');
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.displayedLanguage', language);
+  // TODO: I don't know how to capture this
   // eslint-disable-next-line no-underscore-dangle
-  // digitalData._set('spark.eventData.deviceLanguage', language); // NOTE: I don't know how to capture this
+  // digitalData._set('spark.eventData.deviceLanguage', language);
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.pagename', pageName);
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.platformName', 'web');
   // eslint-disable-next-line no-underscore-dangle
-  digitalData._set('spark.eventData.contextualData3', 'category:' + category);
-  
+  digitalData._set('spark.eventData.contextualData3', `category:${category}`);
 
   //------------------------------------------------------------------------------------
   // Fire the viewedPage event
@@ -196,41 +192,41 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // eslint-disable-next-line no-underscore-dangle
   _satellite.track('event', { digitalData: digitalData._snapshot() });
 
-  //------------------------------------------------------------------------------------
   // Fire the landing:viewedPage event
-  //------------------------------------------------------------------------------------
-
   if (
-    sparkLandingPageType === 'seo' || 
-    sparkLandingPageType === 'pricing' || 
-    sparkLandingPageType === 'edu'
+    sparkLandingPageType === 'seo'
+    || sparkLandingPageType === 'pricing'
+    || sparkLandingPageType === 'edu'
   ) {
-
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', 'landing:viewedPage');
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', 'landing:viewedPage');
 
-    // eslint-disable-next-line no-underscore-dangle
-    _satellite.track('event', { digitalData: digitalData._snapshot() });
+    _satellite.track('event', {
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData: digitalData._snapshot(),
+    });
 
+  // Fire the blog:viewedPage event
   } else if (
     sparkLandingPageType === 'blog'
   ) {
-
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', 'blog:viewedPage');
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', 'blog:viewedPage');
 
-    // eslint-disable-next-line no-underscore-dangle
-    _satellite.track('event', { digitalData: digitalData._snapshot() });
+    _satellite.track('event', {
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData: digitalData._snapshot(),
+    });
 
+  // Fire the displayPurchasePanel event
   } else if (
-    sparkLandingPageType === 'pricing' && 
-    sparkTouchpoint
+    sparkLandingPageType === 'pricing'
+    && sparkTouchpoint
   ) {
-
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', 'displayPurchasePanel');
     // eslint-disable-next-line no-underscore-dangle
@@ -238,19 +234,18 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.trigger', sparkTouchpoint);
 
-    // eslint-disable-next-line no-underscore-dangle
-    _satellite.track('event', { digitalData: digitalData._snapshot() });
-
+    _satellite.track('event', {
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData: digitalData._snapshot(),
+    });
   }
-  
+
   // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('primaryEvent.eventInfo.eventName');
   // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('spark.eventData.eventName');
   // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('spark.eventData.sendTimestamp');
-
-  
 
   function textToName(text) {
     const splits = text.toLowerCase().split(' ');
@@ -259,48 +254,44 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   }
 
   function appendLinkText(eventName, $a) {
-    let
-      $img,
-      alt;
+    let $img;
+    let alt;
+    let newEventName;
 
     if ($a.textContent) {
-      eventName += textToName($a.textContent);
+      newEventName = eventName + textToName($a.textContent);
     } else {
-      if (
-        ($img = $a.querySelector('img')) && 
-        (alt = $img.getAttribute('alt'))
-      ) {
-        eventName += textToName(alt);
+      $img = $a.querySelector('img');
+      alt = $img && $img.getAttribute('alt');
+      if (alt) {
+        newEventName = eventName + textToName(alt);
+      } else {
+        newEventName = eventName;
       }
     }
 
-    return eventName;
+    return newEventName;
   }
 
   function trackButtonClick($a) {
-    let
-      adobeEventName = 'adobe.com:express:cta:',
-      sparkEventName,
-      
-      $templateContainer,
-      $cardContainer,
-      $img,
-      alt,
-      cardPosition;
+    let adobeEventName = 'adobe.com:express:cta:';
+    let sparkEventName;
+    const $templateContainer = $a.closest('.template-list');
+    let $cardContainer;
+    let $img;
+    let alt;
+    let cardPosition;
 
     // Template button click
-    if (
-      ($templateContainer = $a.closest('.template-list'))
-    ) {
-
+    if ($templateContainer) {
       adobeEventName += 'template:';
 
+      $cardContainer = $a.closest('.template-list > div');
+      $img = $cardContainer && $cardContainer.querySelector('img');
+      alt = $img && $img.getAttribute('alt');
+
       // try to get the image alternate text
-      if (
-        ($cardContainer = $a.closest('.template-list > div')) &&
-        ($img = $cardContainer.querySelector('img')) && 
-        (alt = $img.getAttribute('alt'))
-      ) {
+      if (alt) {
         adobeEventName += textToName(alt);
       } else {
         adobeEventName += 'Click';
@@ -310,58 +301,50 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
     // CTA in the hero
     } else if ($a.closest('.hero')) {
-      adobeEventName = appendLinkText(adobeEventName + 'hero:', $a);
+      adobeEventName = appendLinkText(`${adobeEventName}hero:`, $a);
       sparkEventName = 'landing:ctaPressed';
 
     // Click in the pricing block
     } else if ($a.closest('.pricing')) {
-
       // get the position of the card in the plans
-      cardPosition = Array.prototype.slice.call(
-        document.querySelectorAll('.plan')
-      ).indexOf(
-        $a.closest('.plan')
-      ) + 1;
+      cardPosition = Array.prototype.slice.call(document.querySelectorAll('.plan')).indexOf($a.closest('.plan')) + 1;
 
       // Buy Now
       if ($a.hostname.includes('commerce.adobe.com')) {
-
         // individual
         if ($a.search.includes('spark.adobe.com')) {
-          adobeEventName += 'pricing:individual:'+cardPosition+':buyNow:Click';
+          adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
         // team
         } else if ($a.search.includes('adminconsole.adobe.com')) {
-          adobeEventName += 'pricing:team:'+cardPosition+':buyNow:Click';
+          adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
         }
 
         sparkEventName = 'beginPurchaseFlow';
 
       // anything else
       } else {
-        adobeEventName += 'pricing:starter:'+cardPosition+':getStarted:Click';
+        adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
         sparkEventName = 'pricing:ctaPressed';
       }
 
       // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData5', 'cardPosition:' + cardPosition);
+      digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
 
     // Click in the pricing block
     } else if (sparkLandingPageType === 'pricing') {
-
       // edu link
       if (
         $a.pathname.includes('/edu')
       ) {
-        adobeEventName += 'pricing:eduLink:Click'
+        adobeEventName += 'pricing:eduLink:Click';
         sparkEventName = 'landing:eduSeoPagePressed';
 
       // business enterprise link
       } else if (
         $a.pathname.includes('business/enterprise')
       ) {
-        adobeEventName += 'pricing:enterpriseLink:Click'
+        adobeEventName += 'pricing:enterpriseLink:Click';
         sparkEventName = 'landing:businessSeoPagePressed';
-      
       // all other links
       } else {
         adobeEventName = appendLinkText(adobeEventName, $a);
@@ -379,10 +362,8 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', sparkEventName);
 
-
     // eslint-disable-next-line no-underscore-dangle
     _satellite.track('event', { digitalData: digitalData._snapshot() });
-
 
     // eslint-disable-next-line no-underscore-dangle
     digitalData._delete('primaryEvent.eventInfo.eventName');
@@ -393,8 +374,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   }
 
   function decorateAnalyticsEvents() {
-    d.querySelectorAll('main a')
-    .forEach(($a) => {
+    d.querySelectorAll('main a').forEach(($a) => {
       $a.addEventListener('click', () => {
         trackButtonClick($a);
       });
@@ -402,26 +382,20 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   }
 
   function pollForPricingBlock() {
-    let
-      pollingTimer;
-
-    pollingTimer = setTimeout(() => {
-      let 
-        $plansBlock = d.querySelector('.pricing-plans');
+    const pollingTimer = setTimeout(() => {
+      const $plansBlock = d.querySelector('.pricing-plans');
 
       if ($plansBlock) {
         decorateAnalyticsEvents();
       } else {
         pollForPricingBlock();
       }
-
     }, 300);
 
     // make sure we don't poll forever
     setTimeout(() => {
       clearTimeout(pollingTimer);
     }, 4000);
-
   }
 
   if (sparkLandingPageType === 'pricing') {
@@ -429,9 +403,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   } else {
     decorateAnalyticsEvents();
   }
-
 });
 
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
-
-
