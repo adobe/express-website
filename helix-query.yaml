@@ -73,6 +73,10 @@ indices:
         select: none
         value: |
           parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+      shortTitle:
+        select: head > meta[name="short-title"]
+        value: |
+          attribute(el, 'content')
 
   germany:
     <<: *default

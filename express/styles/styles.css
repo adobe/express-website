@@ -400,6 +400,10 @@ main .section-wrapper > div {
     padding: 0 32px;
 }
 
+main .section-wrapper > div:empty {
+  padding: 0;
+}
+
 main .section-wrapper h1 {
     font-size: 45px;
     line-height: 49px;
