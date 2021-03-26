@@ -20,7 +20,7 @@ header {
     height: 98px;
     background-image: url(/express/icons/adobe-spark.png);
     background-repeat: no-repeat;
-    background-size: 22px;
+    background-size: auto 22px;
     background-position: bottom 5px center;
 }
 
