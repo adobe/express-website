@@ -657,3 +657,11 @@ main .section-wrapper > div {
   max-width: 830px;
 }
 
+/* jank protection for async sections */
+
+main .page-list-container, main .page-list {
+  opacity: 0;
+  height: 100vh;
+  transition: opacity 100ms;
+}
+

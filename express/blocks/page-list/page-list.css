@@ -1,3 +1,7 @@
+main .page-list-container.appear, main .page-list.appear {
+  opacity: 1;
+}
+
 main .page-list {
     text-align: left;
     box-sizing: border-box;

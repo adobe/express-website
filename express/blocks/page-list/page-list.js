@@ -121,6 +121,8 @@ async function decoratePageList($block) {
   const index = await fetchIndex();
   index.sort((e1, e2) => e1.shortTitle.localeCompare(e2.shortTitle));
   addPages(index, config, $block);
+  $section.classList.add('appear');
+  $block.classList.add('appear');
 }
 
 export default function decorate($block) {
