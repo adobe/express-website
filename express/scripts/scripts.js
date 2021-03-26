@@ -83,6 +83,151 @@ export function getLocale(url) {
   return 'us';
 }
 
+export function getCurrency(locale) {
+  const currencies = {
+    ar: 'ARS',
+    at: 'EUR',
+    au: 'AUD',
+    be: 'EUR',
+    bg: 'EUR',
+    br: 'BRL',
+    ca: 'CAD',
+    ch: 'CHF',
+    cl: 'CLP',
+    co: 'COP',
+    cr: 'USD',
+    cy: 'EUR',
+    cz: 'EUR',
+    de: 'EUR',
+    dk: 'DKK',
+    ec: 'USD',
+    ee: 'EUR',
+    es: 'EUR',
+    fi: 'EUR',
+    fr: 'EUR',
+    gb: 'GBP',
+    gr: 'EUR',
+    gt: 'USD',
+    hk: 'HKD',
+    hu: 'EUR',
+    id: 'IDR',
+    ie: 'EUR',
+    il: 'ILS',
+    in: 'INR',
+    it: 'EUR',
+    jp: 'JPY',
+    kr: 'KRW',
+    lt: 'EUR',
+    lu: 'EUR',
+    lv: 'EUR',
+    mt: 'EUR',
+    mx: 'MXN',
+    my: 'MYR',
+    nl: 'EUR',
+    no: 'NOK',
+    nz: 'AUD',
+    pe: 'PEN',
+    ph: 'PHP',
+    pl: 'EUR',
+    pt: 'EUR',
+    ro: 'EUR',
+    ru: 'RUB',
+    se: 'SEK',
+    sg: 'SGD',
+    si: 'EUR',
+    sk: 'EUR',
+    th: 'THB',
+    tw: 'TWD',
+    us: 'USD',
+    ve: 'USD',
+    za: 'USD',
+    ae: 'USD',
+    bh: 'BHD',
+    eg: 'EGP',
+    jo: 'JOD',
+    kw: 'KWD',
+    om: 'OMR',
+    qa: 'USD',
+    sa: 'SAR',
+    ua: 'USD',
+    dz: 'USD',
+    lb: 'LBP',
+    ma: 'USD',
+    tn: 'USD',
+    ye: 'USD',
+    am: 'USD',
+    az: 'USD',
+    ge: 'USD',
+    md: 'USD',
+    tm: 'USD',
+    by: 'USD',
+    kz: 'USD',
+    kg: 'USD',
+    tj: 'USD',
+    uz: 'USD',
+    bo: 'USD',
+    do: 'USD',
+    hr: 'EUR',
+    ke: 'USD',
+    lk: 'USD',
+    mo: 'HKD',
+    mu: 'USD',
+    ng: 'USD',
+    pa: 'USD',
+    py: 'USD',
+    sv: 'USD',
+    tt: 'USD',
+    uy: 'USD',
+    vn: 'USD',
+  };
+  return currencies[locale];
+}
+
+function getCookie(cname) {
+  const name = `${cname}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i += 1) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
+function getCountry() {
+  let country = getCookie('international');
+  if (!country) {
+    country = getLocale(window.location);
+  }
+  return (country);
+}
+
+export async function getOffer(offerId) {
+  const country = getCountry();
+  console.log(country);
+  const currency = getCurrency(country);
+  const resp = await fetch('/express/system/offers.json');
+  const json = await resp.json();
+  const upperCountry = country.toUpperCase();
+  const offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
+
+  if (offer) {
+    const unitPrice = offer.p;
+    const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F`;
+    return {
+      country, currency, unitPrice, commerceURL,
+    };
+  }
+  return {};
+}
+
+window.getOffer = getOffer;
+
 export function addBlockClasses($block, classNames) {
   const $rows = Array.from($block.children);
   $rows.forEach(($row) => {
