@@ -235,9 +235,9 @@ function decoratePlans($block, plans, planOptions) {
 
 function decorateTable($block, features) {
   const categories = [];
-  const categoryContainers = [];
-  const $features = createTag('div', { class: 'features' });
-  $block.append($features);
+  const $featuresTable = createTag('table', { class: 'features' });
+  let odd = false;
+  $block.append($featuresTable);
   features.forEach((feature) => {
     const { Category, Description, Special } = feature;
     const columnOneCheck = feature['Column 1'];
@@ -246,32 +246,36 @@ function decorateTable($block, features) {
     if (!categories.includes(Category)) {
       const imageName = toClassName(Category);
       const categoryImage = `icons/${imageName}.svg`;
-      const $category = createTag('div', { class: 'category' });
-      $features.append($category);
-      const $categoryHeader = createTag('div', { class: 'category-header' });
-      $category.append($categoryHeader);
+      const $categoryRow = createTag('tr', { class: 'category' });
+      $featuresTable.append($categoryRow);
+      const $featureLogoColumn = createTag('td');
+      $categoryRow.append($featureLogoColumn);
       const $categoryImage = createTag('img', { src: categoryImage, class: 'category-image' });
-      $categoryHeader.append($categoryImage);
-      const $categoryText = createTag('span', { class: 'category-text' });
-      $categoryText.innerHTML = Category;
-      $categoryHeader.append($categoryText);
+      $featureLogoColumn.append($categoryImage);
+      const $categoryHeaderColumn = createTag('td', { class: 'category-text' });
+      $categoryHeaderColumn.innerHTML = Category;
+      $categoryRow.append($categoryHeaderColumn);
       categories.push(Category);
-      categoryContainers[Category] = $category;
+      odd = false;
     }
-    const $feature = createTag('div', { class: 'feature' });
-    categoryContainers[Category].append($feature);
-    const $featureSpecial = createTag('div', { class: 'feature-special' });
-    $feature.append($featureSpecial);
+    const $featureRow = createTag('tr', { class: 'feature' });
+    if (odd) {
+      $featureRow.classList.add('odd');
+    }
+    odd = !odd;
+    $featuresTable.append($featureRow);
+    const $featureSpecialColumn = createTag('td', { class: 'feature-special' });
+    $featureRow.append($featureSpecialColumn);
     if (Special) {
       const $specialText = createTag('span');
       $specialText.innerHTML = Special;
-      $featureSpecial.append($specialText);
+      $featureSpecialColumn.append($specialText);
     }
-    const $featureText = createTag('div', { class: 'feature-text' });
+    const $featureText = createTag('td', { class: 'feature-text' });
     $featureText.innerHTML = Description;
-    $feature.append($featureText);
-    const $featureColumnOne = createTag('div', { class: 'feature-column' });
-    $feature.append($featureColumnOne);
+    $featureRow.append($featureText);
+    const $featureColumnOne = createTag('td', { class: 'feature-column' });
+    $featureRow.append($featureColumnOne);
     const $columnOneImage = createTag('img');
     if (columnOneCheck === 'Y') {
       $columnOneImage.src = 'icons/checkmark.svg';
@@ -279,7 +283,7 @@ function decorateTable($block, features) {
       $columnOneImage.src = 'icons/crossmark.svg';
     }
     $featureColumnOne.append($columnOneImage);
-    const $featureColumnTwo = createTag('div', { class: 'feature-column' });
+    const $featureColumnTwo = createTag('td', { class: 'feature-column' });
     const $columnTwoImage = createTag('img');
     if (columnTwoCheck === 'Y') {
       $columnTwoImage.src = 'icons/checkmark.svg';
@@ -287,8 +291,8 @@ function decorateTable($block, features) {
       $columnTwoImage.src = 'icons/crossmark.svg';
     }
     $featureColumnTwo.append($columnTwoImage);
-    $feature.append($featureColumnTwo);
-    const $featureColumnThree = createTag('div', { class: 'feature-column' });
+    $featureRow.append($featureColumnTwo);
+    const $featureColumnThree = createTag('td', { class: 'feature-column' });
     const $columnThreeImage = createTag('img');
     if (columnThreeCheck === 'Y') {
       $columnThreeImage.src = 'icons/checkmark.svg';
@@ -296,7 +300,7 @@ function decorateTable($block, features) {
       $columnThreeImage.src = 'icons/crossmark.svg';
     }
     $featureColumnThree.append($columnThreeImage);
-    $feature.append($featureColumnThree);
+    $featureRow.append($featureColumnThree);
   });
 }
 
