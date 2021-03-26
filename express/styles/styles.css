@@ -24,10 +24,6 @@ header {
     background-position: bottom 7px center;
 }
 
-#feds-topnav .feds-navList {
-  border-bottom: 1px solid #eaeaea;
-}
-
 header .desktop {
     display: none;
 }
