@@ -139,20 +139,20 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // set some global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
-  window.fedsConfig = {
-    ...window.fedsConfig,
+  w.fedsConfig = {
+    ...w.fedsConfig,
     locale: language,
     content: {
       experience: 'cc-express/spark-gnav',
     },
     profile: {
       customSignIn: () => {
-        window.location.href = 'https://spark.adobe.com/sp';
+        w.location.href = 'https://spark.adobe.com/sp';
       },
     },
   };
 
-  window.adobeid = {
+  w.adobeid = {
     client_id: 'spark-helix',
     scope: 'AdobeID,openid',
     locale: language,
@@ -411,28 +411,29 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     });
   }
 
-  function pollForPricingBlock() {
-    const pollingTimer = setTimeout(() => {
-      const $plansBlock = d.querySelector('.pricing-plans');
+  // function pollForPricingBlock() {
+  //   const pollingTimer = setTimeout(() => {
+  //     const $plansBlock = d.querySelector('.pricing-plans');
 
-      if ($plansBlock) {
-        decorateAnalyticsEvents();
-      } else {
-        pollForPricingBlock();
-      }
-    }, 300);
+  //     if ($plansBlock) {
+  //       decorateAnalyticsEvents();
+  //     } else {
+  //       pollForPricingBlock();
+  //     }
+  //   }, 300);
 
-    // make sure we don't poll forever
-    setTimeout(() => {
-      clearTimeout(pollingTimer);
-    }, 4000);
-  }
+  //   // make sure we don't poll forever
+  //   setTimeout(() => {
+  //     clearTimeout(pollingTimer);
+  //   }, 4000);
+  // }
 
-  if (sparkLandingPageType === 'pricing') {
-    pollForPricingBlock();
-  } else {
-    decorateAnalyticsEvents();
-  }
+  // if (sparkLandingPageType === 'pricing') {
+  //   pollForPricingBlock();
+  // } else {
+  //   decorateAnalyticsEvents();
+  // }
+  decorateAnalyticsEvents();
 });
 
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
