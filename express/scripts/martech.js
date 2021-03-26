@@ -90,7 +90,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   };
 
   let language = langs[locale];
-  if (!language) language = 'us';
+  if (!language) language = 'en-US';
   const langSplits = language.split('-');
   langSplits.pop();
 
