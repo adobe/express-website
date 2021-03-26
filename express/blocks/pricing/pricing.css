@@ -26,6 +26,7 @@
     main .pricing .pricing-header span {
         color: rgb(16, 196, 89);
         transition: 1.5s opacity ease;
+        cursor: pointer;
     }
 
     main .pricing .pricing-plans {
