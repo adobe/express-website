@@ -41,10 +41,18 @@ function getMeta(name) {
   return value;
 }
 
-export function getIcon(icon) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
-    <use href="/express/icons.svg#${icon}"></use>
-  </svg>`;
+export function getIcon(icon, alt = icon) {
+  const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
+    'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
+    'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
+    'upload', 'resize', 'download', 'creativecloud'];
+  if (symbols.includes(icon)) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
+      <use href="/express/icons.svg#${icon}"></use>
+    </svg>`;
+  } else {
+    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt}">`);
+  }
 }
 
 export function getIconElement(icon) {
