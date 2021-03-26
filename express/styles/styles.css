@@ -18,9 +18,9 @@ header {
     box-sizing: border-box;
     border-bottom: 1px solid #EAEAEA;
     height: 98px;
-    background-image: url(/express/icons/spark.svg);
+    background-image: url(/express/icons/adobe-spark.png);
     background-repeat: no-repeat;
-    background-size: 22px 22px;
+    background-size: 22px;
     background-position: bottom 5px center;
 }
 
