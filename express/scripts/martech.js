@@ -438,3 +438,9 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 });
 
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
+
+loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
+
+loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
+
+loadScript('https://www.adobe.com/marketingtech/main.min.js');
