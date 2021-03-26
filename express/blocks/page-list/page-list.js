@@ -24,7 +24,7 @@ function addPages(index, config, $block) {
     if (page.path.includes(config.filter)) {
       const { path, shortTitle } = page;
       const $p = createTag('li');
-      $p.innerHTML = `<a href="${path}">${shortTitle}</a>`;
+      $p.innerHTML = `<a href="${path.split('.')[0]}">${shortTitle}</a>`;
       $ul.appendChild($p);
     }
   });
