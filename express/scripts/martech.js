@@ -72,7 +72,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   if (locale !== 'us') pathSegments.shift();
   const pageName = `adobe.com:${pathSegments.join(':')}`;
   const langs = {
-    en: 'en-US',
+    us: 'en-US',
     fr: 'fr-FR',
     de: 'de-DE',
     it: 'it-IT',
@@ -89,7 +89,8 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     cn: 'zh-Hans-CN',
   };
 
-  const language = langs[locale];
+  let language = langs[locale];
+  if (!language) language = 'us';
   const langSplits = language.split('-');
   langSplits.pop();
 
