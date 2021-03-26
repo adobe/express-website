@@ -19,6 +19,8 @@ main .blog-posts .hero-card {
   box-sizing: border-box;
   margin: 0;
   border: 0;
+  text-decoration: unset;
+  color: unset;
 }
 
 main .blog-posts .hero-card .card-image {
@@ -52,6 +54,8 @@ main .blog-posts .card {
     width: 350px;
     margin: 10px;
     text-align: left;
+    text-decoration: unset;
+    color: unset;
   }
 
   main .blog-posts .card .card-image {
