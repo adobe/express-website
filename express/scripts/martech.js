@@ -280,7 +280,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     let $cardContainer;
     let $img;
     let alt;
-    let cardPosition;
+    // let cardPosition;
 
     // Template button click
     if ($templateContainer) {
@@ -306,29 +306,33 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
     // Click in the pricing block
     } else if ($a.closest('.pricing')) {
-      // get the position of the card in the plans
-      cardPosition = Array.prototype.slice.call(document.querySelectorAll('.plan')).indexOf($a.closest('.plan')) + 1;
+      // allow the pricing block to handle this analytics
+      return;
 
-      // Buy Now
-      if ($a.hostname.includes('commerce.adobe.com')) {
-        // individual
-        if ($a.search.includes('spark.adobe.com')) {
-          adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
-        // team
-        } else if ($a.search.includes('adminconsole.adobe.com')) {
-          adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
-        }
+      // // get the position of the card in the plans
+      // cardPosition = Array.prototype.slice.call(document.querySelectorAll('.plan'))
+      // .indexOf($a.closest('.plan')) + 1;
 
-        sparkEventName = 'beginPurchaseFlow';
+      // // Buy Now
+      // if ($a.hostname.includes('commerce.adobe.com')) {
+      //   // individual
+      //   if ($a.search.includes('spark.adobe.com')) {
+      //     adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
+      //   // team
+      //   } else if ($a.search.includes('adminconsole.adobe.com')) {
+      //     adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
+      //   }
 
-      // anything else
-      } else {
-        adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
-        sparkEventName = 'pricing:ctaPressed';
-      }
+      //   sparkEventName = 'beginPurchaseFlow';
 
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
+      // // anything else
+      // } else {
+      //   adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
+      //   sparkEventName = 'pricing:ctaPressed';
+      // }
+
+      // // eslint-disable-next-line no-underscore-dangle
+      // digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
 
     // Click in the pricing block
     } else if (sparkLandingPageType === 'pricing') {
