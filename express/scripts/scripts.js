@@ -276,9 +276,6 @@ function decorateHeaderAndFooter() {
           <div class="signing">Sign In</div>
         </div>
       </div>
-      <div class="bottom">
-        <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
-      </div>
     </div>
   `;
 

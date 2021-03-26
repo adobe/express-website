@@ -54,7 +54,6 @@ header .mobile .hamburger::before {
 @media (min-width: 1200px) {
 
     header {
-        height: 98px;
         background-size: 1201px auto;
     }
 
