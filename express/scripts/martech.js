@@ -429,8 +429,8 @@ async function showRegionPicker() {
   const $regionPicker = createTag('div', { id: 'region-picker' });
   $body.appendChild($regionPicker);
   const locale = getLocale(window.location);
-  const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com/' : '';
-  const resp = await fetch(`${host}${locale === 'us' ? '' : locale}/`);
+  const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com' : '';
+  const resp = await fetch(`${host}/${locale === 'us' ? '' : locale}/`);
   const html = await resp.text();
   const $div = createTag('div');
   $div.innerHTML = html;
