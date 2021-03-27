@@ -17,34 +17,6 @@ import {
   toClassName,
 } from '../../scripts/scripts.js';
 
-async function fetchHeader(sheet) {
-  const url = `./${sheet}.json?sheet=header`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
-async function fetchPlans(sheet) {
-  const url = `./${sheet}.json?sheet=plans`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
-async function fetchPlanOptions(sheet) {
-  const url = `./${sheet}.json?sheet=plan-options`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
-async function fetchFeatures(sheet) {
-  const url = `./${sheet}.json?sheet=table`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
 async function fetchPricingTab(sheet, tab) {
   const url = `./${sheet}.json?sheet=${tab}`;
   const resp = await fetch(url);
