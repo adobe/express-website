@@ -86,7 +86,7 @@ async function decorateTemplateList($block) {
   //       +- "Edit this template"
   //
   // make copy of children to avoid modifying list while looping
-  for (const $tmplt of Array.from($block.children)) {
+  for (let $tmplt of Array.from($block.children)) {
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
       const $a = createTag('a', {
@@ -94,6 +94,8 @@ async function decorateTemplateList($block) {
         class: 'template',
       });
       $a.append(...$tmplt.childNodes);
+      $tmplt.remove();
+      $tmplt = $a;
       $block.append($a);
 
       // convert A to SPAN
@@ -102,30 +104,36 @@ async function decorateTemplateList($block) {
       $link.parentNode.append($newLink);
       $link.remove();
     }
-  }
 
-  // wrap "linked images" with link
-  $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
-    const $parent = $a.closest('div');
-    if (!$a.href.includes('.mp4')) {
-      linkImage($parent);
-    } else {
-      const $picture = $parent.querySelector('picture');
-      const $video = createTag('video', {
-        playsinline: '',
-        autoplay: '',
-        loop: '',
-        muted: '',
-      });
-      $video.innerHTML = `<source src="${$a.href}" type="video/mp4">`;
-      $parent.replaceChild($video, $picture);
-      $a.remove();
-      $video.addEventListener('canplay', () => {
-        $video.muted = true;
-        $video.play();
-      });
+    // wrap "linked images" with link
+    const $imgLink = $tmplt.querySelector(':scope > div:first-of-type a');
+    if ($imgLink) {
+      const $parent = $imgLink.closest('div');
+      if (!$imgLink.href.includes('.mp4')) {
+        linkImage($parent);
+      } else {
+        const $picture = $tmplt.querySelector('picture');
+        if ($picture) {
+          const $video = createTag('video', {
+            playsinline: '',
+            autoplay: '',
+            loop: '',
+            muted: '',
+          });
+          $video.append(createTag('source', {
+            src: $imgLink.href,
+            type: 'video/mp4',
+          }));
+          $parent.replaceChild($video, $picture);
+          $imgLink.remove();
+          $video.addEventListener('canplay', () => {
+            $video.muted = true;
+            $video.play();
+          });
+        }
+      }
     }
-  });
+  }
 }
 
 export default function decorate($block) {
