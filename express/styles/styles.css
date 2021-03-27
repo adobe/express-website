@@ -696,3 +696,9 @@ main .page-list-container, main .page-list {
   height: 100vh;
   transition: opacity 100ms;
 }
+
+main .page-list-container, main .pricing {
+  opacity: 0;
+  height: 100vh;
+  transition: opacity 100ms;
+}

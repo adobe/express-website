@@ -491,6 +491,8 @@ async function decoratePricing($block) {
   decorateHeader($block, header);
   decoratePlans($block, plans, planOptions);
   decorateTable($block, features);
+
+  $block.classList.add('appear');
 }
 
 export default function decorate($block) {
