@@ -26,6 +26,7 @@
     main .pricing .pricing-header span {
         color: rgb(16, 196, 89);
         transition: 1.5s opacity ease;
+        cursor: pointer;
     }
 
     main .pricing .pricing-plans {
@@ -144,47 +145,44 @@
 
     main .pricing .features {
         margin-top: 20px;
-        width: 1200px;
+        width: 1140px;
+        border-collapse: collapse;
     }
 
-    main .pricing .category-header {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 10px 0;
-        margin-top: 20px;
+    main .pricing .category {
+        padding-top: 50px;
     }
 
     main .pricing .category-image {
-        width: 30px;
+        padding: 30px 0 10px 0;
+        margin-left: 5px;
     }
 
     main .pricing .category-text {
-        margin-left: 20px;
+        padding: 25px 0 10px 10px;
         font-size: 21px;
         color: rgb(53, 65, 76);
         font-weight: 600;
+        text-align: left;
     }
 
     main .pricing .feature {
-        display: flex;
-        padding: 15px 0;
-    }
-
-    main .pricing .feature:nth-child(even) {
         background-color: white;
     }
 
-    main .pricing .feature-special {
-        min-width: 40px;
-        text-align: right;
-        padding-top: 2px;
+    main .pricing .feature.odd {
+        background-color: rgba(242,244,245,1)
+    }
 
+    main .pricing .feature-special {
+        width: 40px;
+        text-align: center;
+        height: 40px;
+        padding-bottom: 4px;
     }
 
     main .pricing .feature-special span {
         background-color: rgba(15,196,89,1);
-        height: 50px;
         border-radius: 3px;
         font-weight: bolder;
         font-size: 10px;
@@ -193,25 +191,18 @@
     }
 
     main .pricing .feature-text {
-        margin-left: 10px;
-        margin-right: 10px;
+        padding: 15px 10px;
         text-align: left;
-        width: 300px;
+        width: 220px;
         font-size: 14px;
         color: rgb(53, 65, 76);
         line-height: 1.2;
     }
 
     main .pricing .feature-column {
-        width: 250px;
-        margin-right: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    main .pricing .feature-column:last-child {
-        margin-right: 0;
+        width: 200px;
+        padding-top: 5px;
+        padding-left: 10px;
     }
 }
 

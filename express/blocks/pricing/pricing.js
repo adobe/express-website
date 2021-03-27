@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window, fetch */
+/* global window, fetch, digitalData, _satellite */
 
 import {
   createTag,
@@ -58,20 +58,26 @@ function animateHeader($header, words) {
   let i = 0;
   const max = words.length;
   const firstWord = words[0];
-  const headerWordTemplate = `<span id="pricing-header-word">${firstWord}</span>`;
+  const headerWordTemplate = `<span id="pricing-header-word" aria-hidden="true">${firstWord}</span>`;
   $header.innerHTML = $header.innerHTML.replace('[x]', headerWordTemplate);
+  $header.setAttribute('aria-label', $header.innerText);
   const $headerWord = $header.children[0];
-  setInterval(() => {
+  const interval = setInterval(() => {
     $headerWord.style.opacity = '0';
     setTimeout(() => {
       i += 1;
       if (i >= max) {
         i = 0;
       }
+
       $headerWord.innerHTML = words[i];
       $headerWord.style.opacity = '1';
     }, 1500);
   }, 4000);
+  $headerWord.addEventListener('click', () => {
+    clearInterval(interval);
+    $headerWord.style.cursor = 'inherit';
+  });
 }
 
 function decorateHeader($block, header) {
@@ -131,6 +137,10 @@ function buildUrl(optionUrl, optionPlan) {
   if (currentUrl.searchParams.has('code')) {
     planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
   }
+  if (currentUrl.searchParams.get('rUrl')) {
+    rUrl = currentUrl.searchParams.get('rUrl');
+  }
+
   planUrl.searchParams.set('rUrl', rUrl);
   return planUrl.href;
 }
@@ -155,7 +165,7 @@ function selectPlanOption($plan, option) {
   } else {
     $pricing.innerHTML = `<span>US $<strong>${price}</strong>/${priceUnit}</span>`;
     if (price !== fullPrice) {
-      $pricing.innerHTML += `<span class="previous-pricing">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from US $${fullPrice}/${fullPriceUnit}">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
     }
   }
   if (text) {
@@ -205,7 +215,7 @@ function decoratePlans($block, plans, planOptions) {
     const $description = createTag('p');
     $description.innerHTML = description;
     $headerContainer.append($description);
-    const $icon = createTag('img', { src: imagePath, class: 'plan-icon' });
+    const $icon = createTag('img', { src: imagePath, class: 'plan-icon', alt: '' });
     $header.append($icon);
     const $pricing = createTag('div', { class: 'plan-pricing' });
     $plan.append($pricing);
@@ -215,6 +225,7 @@ function decoratePlans($block, plans, planOptions) {
     $plan.append($footer);
     if (options.length > 1) {
       const $dropdown = createTag('select', { class: 'plan-dropdown' });
+      $dropdown.setAttribute('arial-label', 'Select your plan');
       let i = 0;
       options.forEach((option) => {
         const name = option['Option Name'];
@@ -229,15 +240,175 @@ function decoratePlans($block, plans, planOptions) {
     const $cta = createTag('a', { class: 'button primary' });
     $footer.append($cta);
 
+    $cta.addEventListener('click', () => {
+      let adobeEventName;
+      let sparkEventName;
+      const option = {};
+      // get the position of the card in the plans
+      const cardPosition = Array.prototype.slice.call($plans.children).indexOf($plan) + 1;
+      // determine whether individual | starter | etc.
+      // Buy Now
+      if ($cta.hostname.includes('commerce.adobe.com')) {
+        // individual
+        if ($cta.search.includes('spark.adobe.com')) {
+          adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
+        // team
+        } else if ($cta.search.includes('adminconsole.adobe.com')) {
+          adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
+        }
+        sparkEventName = 'beginPurchaseFlow';
+      // anything else
+      } else {
+        adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
+        sparkEventName = 'pricing:ctaPressed';
+      }
+
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.eventName', sparkEventName);
+      // TODO: option.priceWithoutTax - price withou tax if you have it, otherwise ignore this
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.amountWithoutTax', option.priceWithoutTax);
+      // TODO: option.billingFrequency - Set to Monthly or whatever is in the drop-down
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.billingFrequency', option.billingFrequency);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.cardPosition', cardPosition);
+      // TODO: option.commitmentType - Month, year, or whatever
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.commitmentType', option.commitmentType);
+      // TODO: option.currencyCode - USD or whatever currency type is being used
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.currencyCode', option.currencyCode);
+      // TODO: option.offerId - 08A2CD1688E89927614A5F402329DB5B or whatever the offer is
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.offerId', option.offerId);
+      // TODO: option.price - the price with tax or whatever price
+      // value you have if non-distinguishable
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.price', option.price);
+      // TODO: option.productName - If there is a user friendly product name, put it here
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.productName', option.productName);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.quantity', 1);
+      //   primaryProduct: {
+      //     productInfo: {
+      //       amountWithoutTax:'79.99',
+      //       billingFrequency:'MONTHLY',
+      //       cardPosition:'1',
+      //       commitmentType:'YEAR',
+      //       currencyCode:'USD',
+      //       label:'ccle_direct_indirect_team',//
+      //       offerId:'08A2CD1688E89927614A5F402329DB5B',
+      //       price:'59.99',
+      //       productCode:'ccle_direct_indirect_team',
+      //       productName: '', //product Name -> 'Creative Cloud All Apps'
+      // or as per the details available of the product
+      //       sku:'65296994',
+      //       quantity:''//Number of licenses
+      //     }
+      //   }
+      // TODO: option.priceWithoutTax - price withou tax if you have it, otherwise ignore this
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData3', `amountWithoutTax:${option.priceWithoutTax}`);
+      // TODO: option.billingFrequency - Set to Monthly or whatever is in the drop-down
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData4', `billingFrequency:${option.billingFrequency}`);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
+      // TODO: option.commitmentType - Month, year, or whatever
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData6', `commitmentType:${option.commitmentType}`);
+      // TODO: option.currencyCode - USD or whatever currency type is being used
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData7', `currencyCode:${option.currencyCode}`);
+      // TODO: option.offerId - 08A2CD1688E89927614A5F402329DB5B or whatever the offer is
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData9', `offerId:${option.offerId}`);
+      // TODO: option.price - the price with tax or whatever price
+      // value you have if non-distinguishable
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData10', `price:${option.price}`);
+      // TODO: option.productName - If there is a user friendly product name, put it here
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData12', `productName:${option.productName}`);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+      // spark.eventData.contextualData3: 'amountWithoutTax:79.99' or
+      // whatever is set in primaryProduct.productInfo.amountWithoutTax
+      // spark.eventData.contextualData4: 'billingFrequency:MONTHLY'
+      // spark.eventData.contextualData5: 'cardPosition:1'
+      // spark.eventData.contextualData6: 'commitmentType:YEAR'
+      // spark.eventData.contextualData7: 'currencyCode:USD'
+      // spark.eventData.contextualData8: 'label:ccle_direct_indirect_team'
+      // spark.eventData.contextualData9: 'offerId:08A2CD1688E89927614A5F402329DB5B'
+      // spark.eventData.contextualData10: 'price:59.99'
+      // spark.eventData.contextualData11: 'productCode:ccle_direct_indirect_team'
+      // spark.eventData.contextualData12: 'productName: '', //product Name ->
+      // 'Creative Cloud All Apps' or as per the details available of the product
+      // spark.eventData.contextualData13: 'sku:65296994'
+      // spark.eventData.contextualData14: 'quantity:''//Number of licenses"
+
+      // eslint-disable-next-line no-underscore-dangle
+      _satellite.track('event', { digitalData: digitalData._snapshot() });
+
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.amountWithoutTax');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.billingFrequency');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.cardPosition');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.commitmentType');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.currencyCode');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.offerId');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.price');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.productName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.quantity');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData3');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData4');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData5');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData6');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData7');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData9');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData10');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData12');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData14');
+    });
+
     selectPlanOption($plan, options[0]);
   });
 }
 
 function decorateTable($block, features) {
   const categories = [];
-  const categoryContainers = [];
-  const $features = createTag('div', { class: 'features' });
-  $block.append($features);
+  const $featuresTable = createTag('table', { class: 'features' });
+  let odd = false;
+  $block.append($featuresTable);
   features.forEach((feature) => {
     const { Category, Description, Special } = feature;
     const columnOneCheck = feature['Column 1'];
@@ -246,40 +417,46 @@ function decorateTable($block, features) {
     if (!categories.includes(Category)) {
       const imageName = toClassName(Category);
       const categoryImage = `icons/${imageName}.svg`;
-      const $category = createTag('div', { class: 'category' });
-      $features.append($category);
-      const $categoryHeader = createTag('div', { class: 'category-header' });
-      $category.append($categoryHeader);
+      const $categoryRow = createTag('tr', { class: 'category' });
+      $featuresTable.append($categoryRow);
+      const $featureLogoColumn = createTag('td');
+      $categoryRow.append($featureLogoColumn);
       const $categoryImage = createTag('img', { src: categoryImage, class: 'category-image' });
-      $categoryHeader.append($categoryImage);
-      const $categoryText = createTag('span', { class: 'category-text' });
-      $categoryText.innerHTML = Category;
-      $categoryHeader.append($categoryText);
+      $featureLogoColumn.append($categoryImage);
+      const $categoryHeaderColumn = createTag('td', { class: 'category-text' });
+      $categoryHeaderColumn.innerHTML = Category;
+      $categoryRow.append($categoryHeaderColumn);
       categories.push(Category);
-      categoryContainers[Category] = $category;
+      odd = false;
     }
-    const $feature = createTag('div', { class: 'feature' });
-    categoryContainers[Category].append($feature);
-    const $featureSpecial = createTag('div', { class: 'feature-special' });
-    $feature.append($featureSpecial);
+    const $featureRow = createTag('tr', { class: 'feature' });
+    if (odd) {
+      $featureRow.classList.add('odd');
+    }
+    odd = !odd;
+    $featuresTable.append($featureRow);
+    const $featureSpecialColumn = createTag('td', { class: 'feature-special' });
+    $featureRow.append($featureSpecialColumn);
     if (Special) {
       const $specialText = createTag('span');
       $specialText.innerHTML = Special;
-      $featureSpecial.append($specialText);
+      $featureSpecialColumn.append($specialText);
     }
-    const $featureText = createTag('div', { class: 'feature-text' });
+    const $featureText = createTag('td', { class: 'feature-text' });
     $featureText.innerHTML = Description;
-    $feature.append($featureText);
-    const $featureColumnOne = createTag('div', { class: 'feature-column' });
-    $feature.append($featureColumnOne);
+    $featureRow.append($featureText);
+    const $featureColumnOne = createTag('td', { class: 'feature-column' });
+    $featureRow.append($featureColumnOne);
     const $columnOneImage = createTag('img');
     if (columnOneCheck === 'Y') {
       $columnOneImage.src = 'icons/checkmark.svg';
+      $columnOneImage.alt = 'Yes';
     } else {
       $columnOneImage.src = 'icons/crossmark.svg';
+      $columnOneImage.alt = '';
     }
     $featureColumnOne.append($columnOneImage);
-    const $featureColumnTwo = createTag('div', { class: 'feature-column' });
+    const $featureColumnTwo = createTag('td', { class: 'feature-column' });
     const $columnTwoImage = createTag('img');
     if (columnTwoCheck === 'Y') {
       $columnTwoImage.src = 'icons/checkmark.svg';
@@ -287,8 +464,8 @@ function decorateTable($block, features) {
       $columnTwoImage.src = 'icons/crossmark.svg';
     }
     $featureColumnTwo.append($columnTwoImage);
-    $feature.append($featureColumnTwo);
-    const $featureColumnThree = createTag('div', { class: 'feature-column' });
+    $featureRow.append($featureColumnTwo);
+    const $featureColumnThree = createTag('td', { class: 'feature-column' });
     const $columnThreeImage = createTag('img');
     if (columnThreeCheck === 'Y') {
       $columnThreeImage.src = 'icons/checkmark.svg';
@@ -296,7 +473,7 @@ function decorateTable($block, features) {
       $columnThreeImage.src = 'icons/crossmark.svg';
     }
     $featureColumnThree.append($columnThreeImage);
-    $feature.append($featureColumnThree);
+    $featureRow.append($featureColumnThree);
   });
 }
 

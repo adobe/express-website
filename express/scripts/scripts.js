@@ -41,10 +41,18 @@ function getMeta(name) {
   return value;
 }
 
-export function getIcon(icon) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
-    <use href="/express/icons.svg#${icon}"></use>
-  </svg>`;
+export function getIcon(icon, alt = icon) {
+  const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
+    'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
+    'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
+    'upload', 'resize', 'download', 'creativecloud'];
+  if (symbols.includes(icon)) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
+      <use href="/express/icons.svg#${icon}"></use>
+    </svg>`;
+  } else {
+    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt}">`);
+  }
 }
 
 export function getIconElement(icon) {
@@ -276,9 +284,6 @@ function decorateHeaderAndFooter() {
           <div class="signing">Sign In</div>
         </div>
       </div>
-      <div class="bottom">
-        <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
-      </div>
     </div>
   `;
 
@@ -360,7 +365,7 @@ function resolveFragments() {
 }
 
 function decorateBlocks() {
-  document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
+  document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
@@ -377,6 +382,13 @@ function decorateBlocks() {
       }
     });
     $block.classList.add('block');
+    $block.setAttribute('data-block-name', blockName);
+  });
+}
+
+function loadBlocks() {
+  document.querySelectorAll('main div.section-wrapper > div > .block').forEach(async ($block) => {
+    const blockName = $block.getAttribute('data-block-name');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
         if (mod.default) {
@@ -455,10 +467,10 @@ export function readBlockConfig($block) {
 function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
-  decorateBlocks();
+  loadBlocks();
   resolveFragments();
   // loadLazyFooter();
-  if (!(window.location.search === '?nomartech' || window.location.hostname === 'localhost' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+  if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
     const usp = new URLSearchParams(window.location.search);
     const delay = usp.get('delay');
@@ -776,6 +788,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
+  decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();
   document.body.classList.add('appear');
