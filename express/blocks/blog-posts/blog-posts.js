@@ -125,7 +125,10 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
         <img src="./media_${imagePath}?width=2000&format=webply&optimize=medium">
       </picture>`;
     }
-    const $card = createTag('div', { class: `${isHero ? 'hero-card' : 'card'}` });
+    const $card = createTag('a', {
+      class: `${isHero ? 'hero-card' : 'card'}`,
+      href: path,
+    });
     $card.innerHTML = `<div class="card-image">
           ${pictureTag}
         </div>
@@ -134,9 +137,6 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
         <h3>${title}</h3>
           <p>${teaser}</p>
         </div>`;
-    $card.addEventListener('click', () => {
-      window.location.href = `${path}`;
-    });
     if (isHero) $blogPosts.prepend($card);
     else $cards.append($card);
   }

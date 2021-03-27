@@ -532,11 +532,10 @@ main .section-wrapper .hero {
   margin: 0;
   margin-bottom: 12px;
   font-weight: 600;
-  color: #aaa;
+  color: #696969;
   font-size: 16px;
   line-height: 20px;
   letter-spacing: .1em;
-  font-weight: 600;
 }
 
 .blog main .hero .blog-header .author {
