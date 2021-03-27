@@ -212,7 +212,7 @@ function getCountry() {
   if (!country) {
     country = getLocale(window.location);
   }
-  return (country);
+  return (country.split('_')[0]);
 }
 
 export async function getOffer(offerId) {
