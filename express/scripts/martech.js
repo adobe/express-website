@@ -140,19 +140,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // set some global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
-  w.fedsConfig = {
-    ...w.fedsConfig,
-    locale: language,
-    content: {
-      experience: 'cc-express/spark-gnav',
-    },
-    profile: {
-      customSignIn: () => {
-        w.location.href = 'https://spark.adobe.com/sp';
-      },
-    },
-  };
-
   w.adobeid = {
     client_id: 'spark-helix',
     scope: 'AdobeID,openid',
@@ -439,8 +426,30 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
 
-loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
+const locale = getLocale(window.location);
+
+console.log(locale);
+
+window.fedsConfig = {
+  ...window.fedsConfig,
+  // locale,
+  content: {
+    experience: 'cc-express/spark-gnav',
+  },
+  profile: {
+    customSignIn: () => {
+      window.location.href = 'https://spark.adobe.com/sp';
+    },
+  },
+};
+
+loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js', () => {
+  setTimeout(() => {
+    const gnav = document.getElementById('feds-header');
+    const placeholder = document.getElementById('header-placeholder');
+    gnav.classList.add('appear');
+    placeholder.classList.add('disappear');
+  }, 500);
+}).id = 'feds-script';
 
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
-
-loadScript('https://www.adobe.com/marketingtech/main.min.js');

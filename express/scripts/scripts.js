@@ -255,10 +255,14 @@ export function addBlockClasses($block, classNames) {
 function decorateHeaderAndFooter() {
   const $header = document.querySelector('header');
 
-  /* init header with placeholder */
+  /* init header */
+  const locale = getLocale(window.location);
 
-  $header.innerHTML = `
-  <div id="feds-header" class="placeholder">
+  if (locale === 'us') {
+    $header.innerHTML = `
+    <div id="feds-header">
+    </div>
+    <div id="header-placeholder" class="placeholder">
     <div class="mobile">
       <div class="hamburger"></div>
       <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
@@ -269,12 +273,13 @@ function decorateHeaderAndFooter() {
         <div class="left">
           <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"><span class="adobe">Adobe</span></div>
           <div class="section">
-            <span class="drop">Creativity & Design</span>
-          </div>
-          <div class="section">
-            <span class="selected">Spark</span>
-            <span class="drop">Learn & Support</span>
-            <span><a href="#" class="button primary">Choose a plan</a></span>
+            <span>Adobe Spark</span>
+            <span class="drop">Features</span>
+            <span class="drop">Create</span>
+            <span class="drop">Discover</span>
+            <span class="drop">Learn</span>
+            <span>Compare plans</span>
+            <span><a href="#" class="button primary">Start now</a></span>
           </div>
         </div>
         <div class="right">
@@ -284,8 +289,29 @@ function decorateHeaderAndFooter() {
           <div class="signing">Sign In</div>
         </div>
       </div>
+    </div>`;
+  } else {
+    $header.innerHTML = `
+    <div id="feds-header">
     </div>
-  `;
+    <div id="header-placeholder" class="placeholder">
+    <div class="mobile">
+      <div class="hamburger"></div>
+      <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
+      <div class="signin">Sign In</div>
+    </div>
+    <div class="desktop">
+      <div class="top">
+        <div class="left">
+          <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"><span class="adobe">Adobe</span></div>
+          <div class="section">
+          </div>
+        </div>
+        <div class="right">
+        </div>
+      </div>
+    </div>`;
+  }
 
   document.querySelector('footer').innerHTML = `
     <div id="feds-footer"></div>
