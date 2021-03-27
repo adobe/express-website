@@ -118,11 +118,11 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     const eyebrow = tagsArr[0] ? tagsArr[0].replace('-', ' ') : '';
     const isHero = hasHero && !i;
     const imagePath = image.split('?')[0].split('_')[1];
-    let pictureTag = `<picture><img src="./media_${imagePath}?$format=webply&optimize=medium&width=750"></picture>`;
+    let pictureTag = `<picture><img src="./media_${imagePath}?auto=webp&format=pjpg&optimize=medium&width=750"></picture>`;
     if (isHero) {
       pictureTag = `<picture>
-        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&format=webply&optimize=medium">
-        <img src="./media_${imagePath}?width=2000&format=webply&optimize=medium">
+        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&auto=webp&format=pjpg&optimize=medium">
+        <img src="./media_${imagePath}?width=2000&auto=webp&format=pjpg&optimize=medium">
       </picture>`;
     }
     const $card = createTag('a', {
