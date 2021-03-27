@@ -199,7 +199,7 @@ function decoratePlans($block, plans, planOptions) {
     const title = plan['Plan Title'];
     const description = plan['Plan Description'];
     const imageName = plan['Plan Image'];
-    const imagePath = `icons/${imageName}.svg`;
+    const imagePath = `/express/icons/${imageName}.svg`;
     const $plan = createTag('div', { class: 'plan' });
     const options = getPlanOptions(title, planOptions);
     const promotion = plan['Plan Special'];
@@ -423,7 +423,7 @@ function decorateTable($block, features) {
     const columnThreeCheck = feature['Column 3'];
     if (!categories.includes(Category)) {
       const imageName = toClassName(Category);
-      const categoryImage = `icons/${imageName}.svg`;
+      const categoryImage = `/express/icons/${imageName}.svg`;
       const $categoryRow = createTag('tr', { class: 'category' });
       $featuresTable.append($categoryRow);
       const $featureLogoColumn = createTag('td');
@@ -456,28 +456,28 @@ function decorateTable($block, features) {
     $featureRow.append($featureColumnOne);
     const $columnOneImage = createTag('img');
     if (columnOneCheck === 'Y') {
-      $columnOneImage.src = 'icons/checkmark.svg';
+      $columnOneImage.src = '/express/icons/checkmark.svg';
       $columnOneImage.alt = 'Yes';
     } else {
-      $columnOneImage.src = 'icons/crossmark.svg';
+      $columnOneImage.src = '/express/icons/crossmark.svg';
       $columnOneImage.alt = '';
     }
     $featureColumnOne.append($columnOneImage);
     const $featureColumnTwo = createTag('td', { class: 'feature-column' });
     const $columnTwoImage = createTag('img');
     if (columnTwoCheck === 'Y') {
-      $columnTwoImage.src = 'icons/checkmark.svg';
+      $columnTwoImage.src = '/express/icons/checkmark.svg';
     } else {
-      $columnTwoImage.src = 'icons/crossmark.svg';
+      $columnTwoImage.src = '/express/icons/crossmark.svg';
     }
     $featureColumnTwo.append($columnTwoImage);
     $featureRow.append($featureColumnTwo);
     const $featureColumnThree = createTag('td', { class: 'feature-column' });
     const $columnThreeImage = createTag('img');
     if (columnThreeCheck === 'Y') {
-      $columnThreeImage.src = 'icons/checkmark.svg';
+      $columnThreeImage.src = '/express/icons/checkmark.svg';
     } else {
-      $columnThreeImage.src = 'icons/crossmark.svg';
+      $columnThreeImage.src = '/express/icons/crossmark.svg';
     }
     $featureColumnThree.append($columnThreeImage);
     $featureRow.append($featureColumnThree);
