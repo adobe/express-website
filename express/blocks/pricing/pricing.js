@@ -13,6 +13,7 @@
 
 import {
   createTag,
+  getOffer,
   readBlockConfig,
   toClassName,
 } from '../../scripts/scripts.js';
@@ -124,16 +125,26 @@ function buildUrl(optionUrl, optionPlan) {
   return planUrl.href;
 }
 
-function selectPlanOption($plan, option) {
+async function selectPlanOption($plan, option) {
   const priceString = option['Option Price'].split('/');
   const fullPriceString = option['Option Full Price'].split('/');
-  const price = priceString[0];
+  let price = priceString[0];
   const priceUnit = priceString[1];
-  const fullPrice = fullPriceString[0];
+  let fullPrice = fullPriceString[0];
   const fullPriceUnit = fullPriceString[1];
   const text = option['Option Text'];
   const cta = option['Option CTA'];
-  const ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
+  const offerId = option['OfferID'];
+  let ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
+  let currency = '$';
+
+  if (offerId) {
+    const offer = await getOffer(offerId);
+    currency = offer.currency;
+    price = offer.unitPrice;
+    ctaUrl = offer.commerceURL;
+    console.log (offer);
+  }
 
   const $pricing = $plan.querySelector('.plan-pricing');
   const $pricingText = $plan.querySelector('.plan-secondary');
@@ -142,9 +153,9 @@ function selectPlanOption($plan, option) {
   if (price === 'Free') {
     $pricing.innerHTML = '<strong>Free</strong>';
   } else {
-    $pricing.innerHTML = `<span>US $<strong>${price}</strong>/${priceUnit}</span>`;
+    $pricing.innerHTML = `<span>${currency}<strong>${price}</strong>/${priceUnit}</span>`;
     if (price !== fullPrice) {
-      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from US $${fullPrice}/${fullPriceUnit}">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from ${currency} ${fullPrice}/${fullPriceUnit}">${currency}<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
     }
   }
   if (text) {
