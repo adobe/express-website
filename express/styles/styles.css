@@ -189,7 +189,7 @@ a.button:any-link {
     text-decoration: none;
     border-radius: 18px;
     padding: 5px 1.2em 7px 1.2em;
-    /*outline: none; (keep outline for a11n */
+    /*outline: none; (keep outline for a11n) */
     text-align: center;
     line-height: 20px;
     font-size: 1rem;
@@ -667,4 +667,3 @@ main .page-list-container, main .page-list {
   height: 100vh;
   transition: opacity 100ms;
 }
-
