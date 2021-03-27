@@ -42,6 +42,7 @@ function getMeta(name) {
 }
 
 export function getIcon(icon, alt = icon) {
+  console.log(icon);
   const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
     'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
     'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
@@ -58,7 +59,7 @@ export function getIcon(icon, alt = icon) {
 export function getIconElement(icon) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icon);
-  return ($div.children[0]);
+  return ($div.firstChild);
 }
 
 export function linkImage($elem) {
@@ -754,7 +755,7 @@ function fixIcons() {
     if (alt) {
       const lowerAlt = alt.toLowerCase();
       if (lowerAlt.includes('icon:')) {
-        const icon = lowerAlt.split('icon:')[1].trim().split(' ');
+        const icon = lowerAlt.split('icon:')[1].trim().split(' ')[0];
         const $picture = $img.closest('picture');
         $picture.parentElement.replaceChild(getIconElement(icon), $picture);
       }
