@@ -45,6 +45,13 @@ async function fetchFeatures(sheet) {
   return json.data;
 }
 
+async function fetchPricingTab(sheet, tab) {
+  const url = `./${sheet}.json?sheet=${tab}`;
+  const resp = await fetch(url);
+  const json = await resp.json();
+  return json.data;
+}
+
 function buildWordList(header) {
   const words = [];
   header.forEach((row) => {
@@ -477,14 +484,27 @@ function decorateTable($block, features) {
   });
 }
 
+async function fetchPricingSheet(sheet) {
+  const data = {};
+  const tabs = ['header', 'plans', 'plan-options', 'table'];
+  const names = ['header', 'plans', 'planOptions', 'features'];
+  await Promise.all(tabs.map(async (tab, i) => {
+    try {
+      data[names[i]] = await fetchPricingTab(sheet, tab);
+    } catch (e) {
+      // something went wrong
+    }
+  }));
+  return data;
+}
+
 async function decoratePricing($block) {
   const config = readBlockConfig($block);
   const { sheet } = config;
 
-  const header = await fetchHeader(sheet);
-  const plans = await fetchPlans(sheet);
-  const planOptions = await fetchPlanOptions(sheet);
-  const features = await fetchFeatures(sheet);
+  const {
+    header, plans, planOptions, features,
+  } = await fetchPricingSheet(sheet);
 
   $block.innerHTML = '';
 

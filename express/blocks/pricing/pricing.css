@@ -1,3 +1,8 @@
+main .pricing.appear {
+    opacity: 1;
+    height: unset;
+}
+
 @media (min-width: 1200px) {
 
     main .pricing-container {
@@ -14,11 +19,6 @@
         display: flex;
         align-items: start;
         flex-wrap: wrap;
-    }
-
-    main .pricing.appear {
-        opacity: 1;
-        height: unset;
     }
 
     main .pricing .pricing-header {
