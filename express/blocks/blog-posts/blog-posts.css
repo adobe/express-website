@@ -19,6 +19,8 @@ main .blog-posts .hero-card {
   box-sizing: border-box;
   margin: 0;
   border: 0;
+  text-decoration: unset;
+  color: unset;
 }
 
 main .blog-posts .hero-card .card-image {
@@ -52,12 +54,14 @@ main .blog-posts .card {
     width: 350px;
     margin: 10px;
     text-align: left;
+    text-decoration: unset;
+    color: unset;
   }
-  
+
   main .blog-posts .card .card-image {
     line-height: 0;
   }
-  
+
   main .blog-posts .card .card-image img {
     height: 200px;
     object-fit: cover;
@@ -74,7 +78,7 @@ main .blog-posts .card {
 
   main .blog-posts .hero-card .card-body p {
     margin: 12px 0;
-  
+
   }
 
   main .blog-posts .hero-card .card-body h3 {
@@ -89,24 +93,23 @@ main .blog-posts .card {
     margin-top: 0;
     text-align: left;
   }
- 
-  
+
+
   main .blog-posts .card .card-body p {
     font-size: 1rem;
     margin: 12px 0;
   }
-  
+
   main .blog-posts .card-body p.eyebrow {
     text-transform: uppercase;
     margin: 0;
     margin-bottom: 12px;
     font-weight: 600;
-    color: #aaa;
+    color: #696969;
     font-size: 12px;
     line-height: 16px;
     letter-spacing: .1em;
-    font-weight: 600;
-  } 
+  }
 
   main .blog-posts .card .card-body {
     padding: 16px;
@@ -135,4 +138,4 @@ main .blog-posts .card {
     text-align: left;
   }
 
-}  
+}

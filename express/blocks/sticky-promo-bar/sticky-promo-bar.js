@@ -16,7 +16,10 @@ import {
 } from '../../scripts/scripts.js';
 
 export default function decorate($block) {
-  const $close = createTag('div', { class: 'close' });
+  const $close = createTag('button', {
+    class: 'close',
+    'aria-label': 'close',
+  });
   $block.appendChild($close);
   $close.addEventListener('click', () => {
     $block.remove();

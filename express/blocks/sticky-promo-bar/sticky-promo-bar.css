@@ -32,10 +32,13 @@ main .sticky-promo-bar .close {
     width: 21px;
     height: 21px;
     top: 18px;
-    right: 25px;
-  }
-  
-  main .sticky-promo-bar .close:before {
+    right: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+main .sticky-promo-bar .close:before {
     content: '';
     position: absolute;
     top: 10px;
@@ -43,9 +46,10 @@ main .sticky-promo-bar .close {
     height: 1px;
     background-color: currentColor;
     transform: rotate(-45deg);
-  }
-  
-  main .sticky-promo-bar .close:after {
+    left: 0;
+}
+
+main .sticky-promo-bar .close:after {
     content: '';
     position: absolute;
     top: 10px;
@@ -53,4 +57,5 @@ main .sticky-promo-bar .close {
     height: 1px;
     background-color: currentColor;
     transform: rotate(45deg);
-  }
+    left: 0;
+}
