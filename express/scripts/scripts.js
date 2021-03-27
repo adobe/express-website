@@ -63,13 +63,14 @@ export function getIconElement(icon) {
 
 export function linkImage($elem) {
   const $a = $elem.querySelector('a');
-  const $parent = $a.closest('div');
-  $a.remove();
-  const picture = $parent.innerHTML;
-  $parent.innerHTML = '';
-  $parent.appendChild($a);
-  $a.innerHTML = picture;
-  $a.className = '';
+  if ($a) {
+    const $parent = $a.closest('div');
+    $a.remove();
+    $a.className = '';
+    $a.innerHTML = '';
+    $a.append(...$parent.childNodes);
+    $parent.append($a);
+  }
 }
 
 function wrapSections(element) {

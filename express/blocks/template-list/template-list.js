@@ -51,8 +51,8 @@ async function decorateTemplateList($block) {
     }
     const $heroPicture = document.querySelector('.hero-bg');
 
-    if (!$heroPicture && window.spark.$blueprint) {
-      const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
+    if (!$heroPicture && $blueprint) {
+      const $bpHeroImage = $blueprint.querySelector('div:first-of-type img');
       if ($bpHeroImage) {
         const $heroSection = document.querySelector('main .hero');
         const $heroDiv = document.querySelector('main .hero > div');
@@ -77,6 +77,34 @@ async function decorateTemplateList($block) {
     $block.classList.add('large');
   }
 
+  // find the edit link and turn the template DIV into the A
+  // A
+  // +- DIV
+  //    +- PICTURE
+  // +- DIV
+  //    +- SPAN
+  //       +- "Edit this template"
+  //
+  // make copy of children to avoid modifying list while looping
+  for (const $tmplt of Array.from($block.children)) {
+    const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
+    if ($link) {
+      const $a = createTag('a', {
+        href: $link.href || '#',
+        class: 'template',
+      });
+      $a.append(...$tmplt.childNodes);
+      $block.append($a);
+
+      // convert A to SPAN
+      const $newLink = createTag('span', { class: 'template-link' });
+      $newLink.append(...$link.childNodes);
+      $link.parentNode.append($newLink);
+      $link.remove();
+    }
+  }
+
+  // wrap "linked images" with link
   $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
     const $parent = $a.closest('div');
     if (!$a.href.includes('.mp4')) {
