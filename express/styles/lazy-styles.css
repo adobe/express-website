@@ -146,3 +146,32 @@ main .blog-posts .card .card-body {
 main .blog-posts .card .card-body p {
   font-size: 1rem;
 }
+
+#region-picker {
+  background-color: #00000080;
+  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: scroll;
+}
+
+#region-picker nav {
+  background-color: white;
+  color: black;
+  margin: auto;
+  max-width: 1024px;
+  width: 90%;
+  padding: 32px;
+}
+
+#region-picker ul {
+  display: block;
+  columns: 280px auto;
+}
+

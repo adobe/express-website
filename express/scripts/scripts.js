@@ -76,7 +76,6 @@ export function linkImage($elem) {
 function wrapSections(element) {
   document.querySelectorAll(element).forEach(($div) => {
     if (!$div.id) {
-      console.log('wrap section', $div);
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
@@ -823,6 +822,19 @@ async function decoratePage() {
 
 window.spark = {};
 decoratePage();
+
+if (document.referrer) {
+  const referrer = new URL(document.referrer);
+  const redirectingHosts = ['www.adobe.com', 'www.stage.adobe.com', 'spark-website--adobe.hlx.live'];
+  if (redirectingHosts.includes(referrer.hostname)
+  && getLocale(referrer) !== getLocale(window.location)) {
+    if (!getCookie('international')) {
+      const refLocale = getLocale(referrer);
+      console.log(`setting international based on redirect to: ${refLocale}`);
+      document.cookie = `international=${refLocale}; path=/`;
+    }
+  }
+}
 
 /* performance instrumentation */
 

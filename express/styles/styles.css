@@ -130,9 +130,8 @@ header {
     }
 
     #header-placeholder .desktop .top .section {
-        border-left: 1px solid #EAEAEA;
         height: 64px;
-        padding: 0 8px 1px 7px;
+        padding: 0 8px 1px 8px;
     }
 
     #header-placeholder .desktop .top .section span {

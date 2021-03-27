@@ -9,9 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document digitalData _satellite */
+/* global window document digitalData _satellite fetch */
 
-import { loadScript, getLocale } from './scripts.js';
+import { loadScript, getLocale, createTag } from './scripts.js';
 
 // this saves on file size when this file gets minified...
 const w = window;
@@ -424,14 +424,49 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   decorateAnalyticsEvents();
 });
 
+async function showRegionPicker() {
+  const $body = document.body;
+  const $regionPicker = createTag('div', { id: 'region-picker' });
+  $body.appendChild($regionPicker);
+  const locale = getLocale(window.location);
+  const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com/' : '';
+  const resp = await fetch(`${host}${locale === 'us' ? '' : locale}/`);
+  const html = await resp.text();
+  const $div = createTag('div');
+  $div.innerHTML = html;
+  const $regionNav = $div.querySelector('nav.language-Navigation');
+  $regionPicker.appendChild($regionNav);
+  $regionPicker.addEventListener('click', (event) => {
+    if (event.target === $regionPicker || event.target === $regionNav) {
+      $regionPicker.remove();
+    }
+  });
+  $regionPicker.querySelectorAll('li a').forEach(($a) => {
+    $a.addEventListener('click', (event) => {
+      const pathSplits = new URL($a.href).pathname.split('/');
+      const prefix = pathSplits[1] ? `/${pathSplits[1]}` : '';
+      const destLocale = pathSplits[1] ? `${pathSplits[1]}` : 'us';
+      const off = locale !== 'us' ? locale.length + 1 : 0;
+      const gPath = window.location.pathname.substr(off);
+      document.cookie = `international=${destLocale}; path=/`;
+      event.preventDefault();
+      window.location.href = prefix + gPath;
+    });
+  });
+}
+
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
 
-const locale = getLocale(window.location);
-
-console.log(locale);
+// const locale = getLocale(window.location);
 
 window.fedsConfig = {
   ...window.fedsConfig,
+
+  footer: {
+    regionModal: () => {
+      showRegionPicker();
+    },
+  },
   // locale,
   content: {
     experience: 'cc-express/spark-gnav',
