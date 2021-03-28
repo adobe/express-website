@@ -585,23 +585,31 @@ function decorateHero() {
 }
 
 function decorateButtons() {
+  const noButtonBlocks = ['template-list'];
   document.querySelectorAll('main a').forEach(($a) => {
-    const $up = $a.parentElement;
-    const $twoup = $a.parentElement.parentElement;
-    if (!$a.querySelector('img')) {
-      if ($up.childNodes.length === 1 && $up.tagName === 'P') {
-        $a.className = 'button primary';
-        $up.classList.add('button-container');
-      }
-      if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
-        $a.className = 'button primary';
-        $twoup.classList.add('button-container');
-      }
-      if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
-        $a.className = 'button secondary';
-        $twoup.classList.add('button-container');
+    const $block = $a.closest('div.section-wrapper > div > div');
+    let blockName;
+    if ($block) {
+      blockName = $block.className;
+    }
+    if (!noButtonBlocks.includes(blockName)) {
+      const $up = $a.parentElement;
+      const $twoup = $a.parentElement.parentElement;
+      if (!$a.querySelector('img')) {
+        if ($up.childNodes.length === 1 && ($up.tagName === 'P' || $up.tagName === 'DIV')) {
+          $a.className = 'button primary';
+          $up.classList.add('button-container');
+        }
+        if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
+            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          $a.className = 'button primary';
+          $twoup.classList.add('button-container');
+        }
+        if ($up.childNodes.length === 1 && $up.tagName === 'EM'
+            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          $a.className = 'button secondary';
+          $twoup.classList.add('button-container');
+        }
       }
     }
   });
