@@ -1,7 +1,6 @@
 main .feature-list {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     justify-content: center;
     margin: auto;
 }
@@ -18,4 +17,5 @@ main .feature-list > div {
 
 main .feature-list h3 {
     font-size: 22px;
+    line-height: 26px;
 }
