@@ -38,8 +38,11 @@ export default function decorate($block) {
         $cell.innerHTML = `<span class="num">${num}</span>${$cell.innerHTML}`;
       }
       /* this probably needs to be tighter and possibly earlier */
-      if ($cell.querySelector('img') && $cell.querySelector('a')) {
-        linkImage($cell);
+      const $a = $cell.querySelector('a');
+      if ($cell.querySelector('img') && $a) {
+        if ($a.textContent.startsWith('https://')) {
+          linkImage($cell);
+        }
       }
     });
   });
