@@ -409,7 +409,9 @@ main .hero a:any-link {
     main>.hero h1 {
         font-size: 3.5em;
     }
-
+    main .hero>div {
+      max-width: 950px;
+    }
 }
 
 
