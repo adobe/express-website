@@ -215,8 +215,9 @@ function getCountry() {
   return (country.split('_')[0]);
 }
 
-export async function getOffer(offerId) {
-  const country = getCountry();
+export async function getOffer(offerId, countryOverride) {
+  let country = getCountry();
+  if (countryOverride) country = countryOverride;
   console.log(country);
   const currency = getCurrency(country);
   const resp = await fetch('/express/system/offers.json');
@@ -226,15 +227,15 @@ export async function getOffer(offerId) {
 
   if (offer) {
     const unitPrice = offer.p;
+    const currencyFormatter = new Intl.NumberFormat(navigator.lang, { style: 'currency', currency });
+    const unitPriceCurrencyFormatted = currencyFormatter.format(unitPrice);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F`;
     return {
-      country, currency, unitPrice, commerceURL,
+      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL,
     };
   }
   return {};
 }
-
-window.getOffer = getOffer;
 
 export function addBlockClasses($block, classNames) {
   const $rows = Array.from($block.children);

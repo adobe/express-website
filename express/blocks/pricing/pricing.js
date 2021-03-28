@@ -134,16 +134,27 @@ async function selectPlanOption($plan, option) {
   const fullPriceUnit = fullPriceString[1];
   const text = option['Option Text'];
   const cta = option['Option CTA'];
+  // eslint-disable-next-line dot-notation
   const offerId = option['OfferID'];
+  const fullPriceOfferId = option['Full Price OfferID'];
   let ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
   let currency = '$';
+  const countryOverride = new URLSearchParams(window.location.search).get('country');
 
   if (offerId) {
-    const offer = await getOffer(offerId);
+    const offer = await getOffer(offerId, countryOverride);
     currency = offer.currency;
-    price = offer.unitPrice;
+    price = offer.unitPriceCurrencyFormatted;
     ctaUrl = offer.commerceURL;
-    console.log (offer);
+    if (!fullPriceOfferId) {
+      fullPrice = offer.unitPriceCurrencyFormatted;
+    }
+  }
+
+  if (fullPriceOfferId) {
+    const fpOffer = await getOffer(fullPriceOfferId, countryOverride);
+    fullPrice = fpOffer.unitPriceCurrencyFormatted;
+    console.log (fpOffer);
   }
 
   const $pricing = $plan.querySelector('.plan-pricing');
@@ -153,9 +164,9 @@ async function selectPlanOption($plan, option) {
   if (price === 'Free') {
     $pricing.innerHTML = '<strong>Free</strong>';
   } else {
-    $pricing.innerHTML = `<span>${currency}<strong>${price}</strong>/${priceUnit}</span>`;
+    $pricing.innerHTML = `<span><strong>${price}</strong>/${priceUnit}</span>`;
     if (price !== fullPrice) {
-      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from ${currency} ${fullPrice}/${fullPriceUnit}">${currency}<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from ${fullPrice}/${fullPriceUnit}"><strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
     }
   }
   if (text) {
