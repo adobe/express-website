@@ -334,6 +334,11 @@ main .icon {
   color: currentColor;
 }
 
+main .hero .icon {
+  height: 2em;
+  width: 2em;
+}
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
