@@ -12,6 +12,7 @@ main .blog-posts .cards {
   flex-wrap: wrap;
   justify-content: center;
   margin: 16px;
+  width: unset;
 }
 
 main .blog-posts .hero-card {
