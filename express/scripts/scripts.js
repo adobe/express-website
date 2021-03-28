@@ -212,6 +212,7 @@ function getCountry() {
   if (!country) {
     country = getLocale(window.location);
   }
+  if (country === 'uk') country = 'gb';
   return (country.split('_')[0]);
 }
 
