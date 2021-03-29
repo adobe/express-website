@@ -50,7 +50,7 @@ function showHide($block, $ptl) {
 
 async function fetchIndex() {
   const locale = getLocale(window.location);
-  const indexURL = locale === 'us' ? '/express/query-index.json' : `/express/${locale}/query-index.json`;
+  const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
   try {
     const resp = await fetch(indexURL);
     const json = await resp.json();
