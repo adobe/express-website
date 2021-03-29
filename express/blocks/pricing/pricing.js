@@ -138,12 +138,12 @@ async function selectPlanOption($plan, option) {
   const offerId = option['OfferID'];
   const fullPriceOfferId = option['Full Price OfferID'];
   let ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
-  let currency = '$';
+  // let currency = '$';
   const countryOverride = new URLSearchParams(window.location.search).get('country');
 
   if (offerId) {
     const offer = await getOffer(offerId, countryOverride);
-    currency = offer.currency;
+    // currency = offer.currency;
     price = offer.unitPriceCurrencyFormatted;
     ctaUrl = offer.commerceURL;
     if (!fullPriceOfferId) {
@@ -154,7 +154,7 @@ async function selectPlanOption($plan, option) {
   if (fullPriceOfferId) {
     const fpOffer = await getOffer(fullPriceOfferId, countryOverride);
     fullPrice = fpOffer.unitPriceCurrencyFormatted;
-    console.log (fpOffer);
+    console.log(fpOffer);
   }
 
   const $pricing = $plan.querySelector('.plan-pricing');

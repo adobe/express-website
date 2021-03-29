@@ -108,7 +108,9 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     $blogPosts.appendChild($cards);
   }
 
-  for (let i = offset; i < offset + limit; i += 1) {
+  const pageEnd = offset + limit;
+  const max = pageEnd > posts.length ? posts.length : pageEnd;
+  for (let i = offset; i < max; i += 1) {
     const post = posts[i];
     const {
       path, title, teaser, tags, image,
@@ -140,14 +142,14 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     if (isHero) $blogPosts.prepend($card);
     else $cards.append($card);
   }
-  if (posts.length > offset + limit) {
+  if (posts.length > pageEnd) {
     const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
     $loadMore.innerHTML = 'Load more articles';
     $blogPosts.append($loadMore);
     $loadMore.addEventListener('click', (event) => {
       event.preventDefault();
       $loadMore.remove();
-      decorateBlogPosts($blogPosts, config, offset + limit);
+      decorateBlogPosts($blogPosts, config, pageEnd);
     });
   }
 }
