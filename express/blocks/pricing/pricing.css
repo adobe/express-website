@@ -1,3 +1,8 @@
+main .pricing.appear {
+    opacity: 1;
+    height: unset;
+}
+
 @media (min-width: 1200px) {
 
     main .pricing-container {

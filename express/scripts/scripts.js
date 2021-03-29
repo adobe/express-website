@@ -41,16 +41,25 @@ function getMeta(name) {
   return value;
 }
 
-export function getIcon(icon) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
-    <use href="/express/icons.svg#${icon}"></use>
-  </svg>`;
+export function getIcon(icon, alt = icon) {
+  console.log(icon);
+  const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
+    'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
+    'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
+    'upload', 'resize', 'download', 'creativecloud'];
+  if (symbols.includes(icon)) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
+      <use href="/express/icons.svg#${icon}"></use>
+    </svg>`;
+  } else {
+    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt}">`);
+  }
 }
 
 export function getIconElement(icon) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icon);
-  return ($div.children[0]);
+  return ($div.firstChild);
 }
 
 export function linkImage($elem) {
@@ -67,7 +76,6 @@ export function linkImage($elem) {
 function wrapSections(element) {
   document.querySelectorAll(element).forEach(($div) => {
     if (!$div.id) {
-      console.log('wrap section', $div);
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
@@ -204,11 +212,13 @@ function getCountry() {
   if (!country) {
     country = getLocale(window.location);
   }
-  return (country);
+  if (country === 'uk') country = 'gb';
+  return (country.split('_')[0]);
 }
 
-export async function getOffer(offerId) {
-  const country = getCountry();
+export async function getOffer(offerId, countryOverride) {
+  let country = getCountry();
+  if (countryOverride) country = countryOverride;
   console.log(country);
   const currency = getCurrency(country);
   const resp = await fetch('/express/system/offers.json');
@@ -218,15 +228,15 @@ export async function getOffer(offerId) {
 
   if (offer) {
     const unitPrice = offer.p;
+    const currencyFormatter = new Intl.NumberFormat(navigator.lang, { style: 'currency', currency });
+    const unitPriceCurrencyFormatted = currencyFormatter.format(unitPrice);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F`;
     return {
-      country, currency, unitPrice, commerceURL,
+      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL,
     };
   }
   return {};
 }
-
-window.getOffer = getOffer;
 
 export function addBlockClasses($block, classNames) {
   const $rows = Array.from($block.children);
@@ -247,10 +257,14 @@ export function addBlockClasses($block, classNames) {
 function decorateHeaderAndFooter() {
   const $header = document.querySelector('header');
 
-  /* init header with placeholder */
+  /* init header */
+  const locale = getLocale(window.location);
 
-  $header.innerHTML = `
-  <div id="feds-header" class="placeholder">
+  if (locale === 'us') {
+    $header.innerHTML = `
+    <div id="feds-header">
+    </div>
+    <div id="header-placeholder" class="placeholder">
     <div class="mobile">
       <div class="hamburger"></div>
       <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
@@ -261,12 +275,13 @@ function decorateHeaderAndFooter() {
         <div class="left">
           <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"><span class="adobe">Adobe</span></div>
           <div class="section">
-            <span class="drop">Creativity & Design</span>
-          </div>
-          <div class="section">
-            <span class="selected">Spark</span>
-            <span class="drop">Learn & Support</span>
-            <span><a href="#" class="button primary">Choose a plan</a></span>
+            <span>Adobe Spark</span>
+            <span class="drop">Features</span>
+            <span class="drop">Create</span>
+            <span class="drop">Discover</span>
+            <span class="drop">Learn</span>
+            <span>Compare plans</span>
+            <span><a href="#" class="button primary">Start now</a></span>
           </div>
         </div>
         <div class="right">
@@ -276,11 +291,29 @@ function decorateHeaderAndFooter() {
           <div class="signing">Sign In</div>
         </div>
       </div>
-      <div class="bottom">
-        <span class="crumb">Home</span> / <span class="crumb">Adobe Creative Cloud</span>
-      </div>
+    </div>`;
+  } else {
+    $header.innerHTML = `
+    <div id="feds-header">
     </div>
-  `;
+    <div id="header-placeholder" class="placeholder">
+    <div class="mobile">
+      <div class="hamburger"></div>
+      <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
+      <div class="signin">Sign In</div>
+    </div>
+    <div class="desktop">
+      <div class="top">
+        <div class="left">
+          <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"><span class="adobe">Adobe</span></div>
+          <div class="section">
+          </div>
+        </div>
+        <div class="right">
+        </div>
+      </div>
+    </div>`;
+  }
 
   document.querySelector('footer').innerHTML = `
     <div id="feds-footer"></div>
@@ -360,7 +393,7 @@ function resolveFragments() {
 }
 
 function decorateBlocks() {
-  document.querySelectorAll('main div.section-wrapper > div > div').forEach(async ($block) => {
+  document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
@@ -377,6 +410,13 @@ function decorateBlocks() {
       }
     });
     $block.classList.add('block');
+    $block.setAttribute('data-block-name', blockName);
+  });
+}
+
+function loadBlocks() {
+  document.querySelectorAll('main div.section-wrapper > div > .block').forEach(async ($block) => {
+    const blockName = $block.getAttribute('data-block-name');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
         if (mod.default) {
@@ -455,10 +495,10 @@ export function readBlockConfig($block) {
 function postLCP() {
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
-  decorateBlocks();
+  loadBlocks();
   resolveFragments();
   // loadLazyFooter();
-  if (!(window.location.search === '?nomartech' || window.location.hostname === 'localhost' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+  if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
     const usp = new URLSearchParams(window.location.search);
     const delay = usp.get('delay');
@@ -545,23 +585,31 @@ function decorateHero() {
 }
 
 function decorateButtons() {
+  const noButtonBlocks = ['template-list'];
   document.querySelectorAll('main a').forEach(($a) => {
-    const $up = $a.parentElement;
-    const $twoup = $a.parentElement.parentElement;
-    if (!$a.querySelector('img')) {
-      if ($up.childNodes.length === 1 && $up.tagName === 'P') {
-        $a.className = 'button primary';
-        $up.classList.add('button-container');
-      }
-      if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
-        $a.className = 'button primary';
-        $twoup.classList.add('button-container');
-      }
-      if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
-        $a.className = 'button secondary';
-        $twoup.classList.add('button-container');
+    const $block = $a.closest('div.section-wrapper > div > div');
+    let blockName;
+    if ($block) {
+      blockName = $block.className;
+    }
+    if (!noButtonBlocks.includes(blockName)) {
+      const $up = $a.parentElement;
+      const $twoup = $a.parentElement.parentElement;
+      if (!$a.querySelector('img')) {
+        if ($up.childNodes.length === 1 && ($up.tagName === 'P' || $up.tagName === 'DIV')) {
+          $a.className = 'button primary';
+          $up.classList.add('button-container');
+        }
+        if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
+            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          $a.className = 'button primary';
+          $twoup.classList.add('button-container');
+        }
+        if ($up.childNodes.length === 1 && $up.tagName === 'EM'
+            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          $a.className = 'button secondary';
+          $twoup.classList.add('button-container');
+        }
       }
     }
   });
@@ -716,7 +764,7 @@ function fixIcons() {
     if (alt) {
       const lowerAlt = alt.toLowerCase();
       if (lowerAlt.includes('icon:')) {
-        const icon = lowerAlt.split('icon:')[1].trim().split(' ');
+        const icon = lowerAlt.split('icon:')[1].trim().split(' ')[0];
         const $picture = $img.closest('picture');
         $picture.parentElement.replaceChild(getIconElement(icon), $picture);
       }
@@ -776,6 +824,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
+  decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();
   document.body.classList.add('appear');
@@ -783,6 +832,19 @@ async function decoratePage() {
 
 window.spark = {};
 decoratePage();
+
+if (document.referrer) {
+  const referrer = new URL(document.referrer);
+  const redirectingHosts = ['www.adobe.com', 'www.stage.adobe.com', 'spark-website--adobe.hlx.live'];
+  if (redirectingHosts.includes(referrer.hostname)
+  && getLocale(referrer) !== getLocale(window.location)) {
+    if (!getCookie('international')) {
+      const refLocale = getLocale(referrer);
+      console.log(`setting international based on redirect to: ${refLocale}`);
+      document.cookie = `international=${refLocale}; path=/`;
+    }
+  }
+}
 
 /* performance instrumentation */
 

@@ -9,37 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window, fetch */
+/* global window, fetch, digitalData, _satellite */
 
 import {
   createTag,
+  getOffer,
   readBlockConfig,
   toClassName,
 } from '../../scripts/scripts.js';
 
-async function fetchHeader(sheet) {
-  const url = `./${sheet}.json?sheet=header`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
-async function fetchPlans(sheet) {
-  const url = `./${sheet}.json?sheet=plans`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
-async function fetchPlanOptions(sheet) {
-  const url = `./${sheet}.json?sheet=plan-options`;
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data;
-}
-
-async function fetchFeatures(sheet) {
-  const url = `./${sheet}.json?sheet=table`;
+async function fetchPricingTab(sheet, tab) {
+  const url = `./${sheet}.json?sheet=${tab}`;
   const resp = await fetch(url);
   const json = await resp.json();
   return json.data;
@@ -137,20 +117,45 @@ function buildUrl(optionUrl, optionPlan) {
   if (currentUrl.searchParams.has('code')) {
     planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
   }
+  if (currentUrl.searchParams.get('rUrl')) {
+    rUrl = currentUrl.searchParams.get('rUrl');
+  }
+
   planUrl.searchParams.set('rUrl', rUrl);
   return planUrl.href;
 }
 
-function selectPlanOption($plan, option) {
+async function selectPlanOption($plan, option) {
   const priceString = option['Option Price'].split('/');
   const fullPriceString = option['Option Full Price'].split('/');
-  const price = priceString[0];
+  let price = priceString[0];
   const priceUnit = priceString[1];
-  const fullPrice = fullPriceString[0];
+  let fullPrice = fullPriceString[0];
   const fullPriceUnit = fullPriceString[1];
   const text = option['Option Text'];
   const cta = option['Option CTA'];
-  const ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
+  // eslint-disable-next-line dot-notation
+  const offerId = option['OfferID'];
+  const fullPriceOfferId = option['Full Price OfferID'];
+  let ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
+  // let currency = '$';
+  const countryOverride = new URLSearchParams(window.location.search).get('country');
+
+  if (offerId) {
+    const offer = await getOffer(offerId, countryOverride);
+    // currency = offer.currency;
+    price = offer.unitPriceCurrencyFormatted;
+    ctaUrl = offer.commerceURL;
+    if (!fullPriceOfferId) {
+      fullPrice = offer.unitPriceCurrencyFormatted;
+    }
+  }
+
+  if (fullPriceOfferId) {
+    const fpOffer = await getOffer(fullPriceOfferId, countryOverride);
+    fullPrice = fpOffer.unitPriceCurrencyFormatted;
+    console.log(fpOffer);
+  }
 
   const $pricing = $plan.querySelector('.plan-pricing');
   const $pricingText = $plan.querySelector('.plan-secondary');
@@ -159,9 +164,9 @@ function selectPlanOption($plan, option) {
   if (price === 'Free') {
     $pricing.innerHTML = '<strong>Free</strong>';
   } else {
-    $pricing.innerHTML = `<span>US $<strong>${price}</strong>/${priceUnit}</span>`;
+    $pricing.innerHTML = `<span><strong>${price}</strong>/${priceUnit}</span>`;
     if (price !== fullPrice) {
-      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from US $${fullPrice}/${fullPriceUnit}">US $<strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from ${fullPrice}/${fullPriceUnit}"><strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
     }
   }
   if (text) {
@@ -188,7 +193,7 @@ function decoratePlans($block, plans, planOptions) {
     const title = plan['Plan Title'];
     const description = plan['Plan Description'];
     const imageName = plan['Plan Image'];
-    const imagePath = `icons/${imageName}.svg`;
+    const imagePath = `/express/icons/${imageName}.svg`;
     const $plan = createTag('div', { class: 'plan' });
     const options = getPlanOptions(title, planOptions);
     const promotion = plan['Plan Special'];
@@ -236,6 +241,166 @@ function decoratePlans($block, plans, planOptions) {
     const $cta = createTag('a', { class: 'button primary' });
     $footer.append($cta);
 
+    $cta.addEventListener('click', () => {
+      let adobeEventName;
+      let sparkEventName;
+      const option = {};
+      // get the position of the card in the plans
+      const cardPosition = Array.prototype.slice.call($plans.children).indexOf($plan) + 1;
+      // determine whether individual | starter | etc.
+      // Buy Now
+      if ($cta.hostname.includes('commerce.adobe.com')) {
+        // individual
+        if ($cta.search.includes('spark.adobe.com')) {
+          adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
+        // team
+        } else if ($cta.search.includes('adminconsole.adobe.com')) {
+          adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
+        }
+        sparkEventName = 'beginPurchaseFlow';
+      // anything else
+      } else {
+        adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
+        sparkEventName = 'pricing:ctaPressed';
+      }
+
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.eventName', sparkEventName);
+      // TODO: option.priceWithoutTax - price withou tax if you have it, otherwise ignore this
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.amountWithoutTax', option.priceWithoutTax);
+      // TODO: option.billingFrequency - Set to Monthly or whatever is in the drop-down
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.billingFrequency', option.billingFrequency);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.cardPosition', cardPosition);
+      // TODO: option.commitmentType - Month, year, or whatever
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.commitmentType', option.commitmentType);
+      // TODO: option.currencyCode - USD or whatever currency type is being used
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.currencyCode', option.currencyCode);
+      // TODO: option.offerId - 08A2CD1688E89927614A5F402329DB5B or whatever the offer is
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.offerId', option.offerId);
+      // TODO: option.price - the price with tax or whatever price
+      // value you have if non-distinguishable
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.price', option.price);
+      // TODO: option.productName - If there is a user friendly product name, put it here
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.productName', option.productName);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('primaryProduct.productInfo.quantity', 1);
+      //   primaryProduct: {
+      //     productInfo: {
+      //       amountWithoutTax:'79.99',
+      //       billingFrequency:'MONTHLY',
+      //       cardPosition:'1',
+      //       commitmentType:'YEAR',
+      //       currencyCode:'USD',
+      //       label:'ccle_direct_indirect_team',//
+      //       offerId:'08A2CD1688E89927614A5F402329DB5B',
+      //       price:'59.99',
+      //       productCode:'ccle_direct_indirect_team',
+      //       productName: '', //product Name -> 'Creative Cloud All Apps'
+      // or as per the details available of the product
+      //       sku:'65296994',
+      //       quantity:''//Number of licenses
+      //     }
+      //   }
+      // TODO: option.priceWithoutTax - price withou tax if you have it, otherwise ignore this
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData3', `amountWithoutTax:${option.priceWithoutTax}`);
+      // TODO: option.billingFrequency - Set to Monthly or whatever is in the drop-down
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData4', `billingFrequency:${option.billingFrequency}`);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
+      // TODO: option.commitmentType - Month, year, or whatever
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData6', `commitmentType:${option.commitmentType}`);
+      // TODO: option.currencyCode - USD or whatever currency type is being used
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData7', `currencyCode:${option.currencyCode}`);
+      // TODO: option.offerId - 08A2CD1688E89927614A5F402329DB5B or whatever the offer is
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData9', `offerId:${option.offerId}`);
+      // TODO: option.price - the price with tax or whatever price
+      // value you have if non-distinguishable
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData10', `price:${option.price}`);
+      // TODO: option.productName - If there is a user friendly product name, put it here
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData12', `productName:${option.productName}`);
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+      // spark.eventData.contextualData3: 'amountWithoutTax:79.99' or
+      // whatever is set in primaryProduct.productInfo.amountWithoutTax
+      // spark.eventData.contextualData4: 'billingFrequency:MONTHLY'
+      // spark.eventData.contextualData5: 'cardPosition:1'
+      // spark.eventData.contextualData6: 'commitmentType:YEAR'
+      // spark.eventData.contextualData7: 'currencyCode:USD'
+      // spark.eventData.contextualData8: 'label:ccle_direct_indirect_team'
+      // spark.eventData.contextualData9: 'offerId:08A2CD1688E89927614A5F402329DB5B'
+      // spark.eventData.contextualData10: 'price:59.99'
+      // spark.eventData.contextualData11: 'productCode:ccle_direct_indirect_team'
+      // spark.eventData.contextualData12: 'productName: '', //product Name ->
+      // 'Creative Cloud All Apps' or as per the details available of the product
+      // spark.eventData.contextualData13: 'sku:65296994'
+      // spark.eventData.contextualData14: 'quantity:''//Number of licenses"
+
+      // eslint-disable-next-line no-underscore-dangle
+      _satellite.track('event', { digitalData: digitalData._snapshot() });
+
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.eventName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.amountWithoutTax');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.billingFrequency');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.cardPosition');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.commitmentType');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.currencyCode');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.offerId');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.price');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.productName');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('primaryProduct.productInfo.quantity');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData3');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData4');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData5');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData6');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData7');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData9');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData10');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData12');
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData._delete('spark.eventData.contextualData14');
+    });
+
     selectPlanOption($plan, options[0]);
   });
 }
@@ -252,7 +417,7 @@ function decorateTable($block, features) {
     const columnThreeCheck = feature['Column 3'];
     if (!categories.includes(Category)) {
       const imageName = toClassName(Category);
-      const categoryImage = `icons/${imageName}.svg`;
+      const categoryImage = `/express/icons/${imageName}.svg`;
       const $categoryRow = createTag('tr', { class: 'category' });
       $featuresTable.append($categoryRow);
       const $featureLogoColumn = createTag('td');
@@ -285,48 +450,63 @@ function decorateTable($block, features) {
     $featureRow.append($featureColumnOne);
     const $columnOneImage = createTag('img');
     if (columnOneCheck === 'Y') {
-      $columnOneImage.src = 'icons/checkmark.svg';
+      $columnOneImage.src = '/express/icons/checkmark.svg';
       $columnOneImage.alt = 'Yes';
     } else {
-      $columnOneImage.src = 'icons/crossmark.svg';
+      $columnOneImage.src = '/express/icons/crossmark.svg';
       $columnOneImage.alt = '';
     }
     $featureColumnOne.append($columnOneImage);
     const $featureColumnTwo = createTag('td', { class: 'feature-column' });
     const $columnTwoImage = createTag('img');
     if (columnTwoCheck === 'Y') {
-      $columnTwoImage.src = 'icons/checkmark.svg';
+      $columnTwoImage.src = '/express/icons/checkmark.svg';
     } else {
-      $columnTwoImage.src = 'icons/crossmark.svg';
+      $columnTwoImage.src = '/express/icons/crossmark.svg';
     }
     $featureColumnTwo.append($columnTwoImage);
     $featureRow.append($featureColumnTwo);
     const $featureColumnThree = createTag('td', { class: 'feature-column' });
     const $columnThreeImage = createTag('img');
     if (columnThreeCheck === 'Y') {
-      $columnThreeImage.src = 'icons/checkmark.svg';
+      $columnThreeImage.src = '/express/icons/checkmark.svg';
     } else {
-      $columnThreeImage.src = 'icons/crossmark.svg';
+      $columnThreeImage.src = '/express/icons/crossmark.svg';
     }
     $featureColumnThree.append($columnThreeImage);
     $featureRow.append($featureColumnThree);
   });
 }
 
+async function fetchPricingSheet(sheet) {
+  const data = {};
+  const tabs = ['header', 'plans', 'plan-options', 'table'];
+  const names = ['header', 'plans', 'planOptions', 'features'];
+  await Promise.all(tabs.map(async (tab, i) => {
+    try {
+      data[names[i]] = await fetchPricingTab(sheet, tab);
+    } catch (e) {
+      // something went wrong
+    }
+  }));
+  return data;
+}
+
 async function decoratePricing($block) {
   const config = readBlockConfig($block);
   const { sheet } = config;
 
-  const header = await fetchHeader(sheet);
-  const plans = await fetchPlans(sheet);
-  const planOptions = await fetchPlanOptions(sheet);
-  const features = await fetchFeatures(sheet);
+  const {
+    header, plans, planOptions, features,
+  } = await fetchPricingSheet(sheet);
 
   $block.innerHTML = '';
 
   decorateHeader($block, header);
   decoratePlans($block, plans, planOptions);
   decorateTable($block, features);
+
+  $block.classList.add('appear');
 }
 
 export default function decorate($block) {

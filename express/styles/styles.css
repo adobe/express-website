@@ -14,16 +14,46 @@ body.appear {
 /* gnav placeholder */
 
 header {
-    height: 64px;
     box-sizing: border-box;
     border-bottom: 1px solid #EAEAEA;
+    height: 135px;
+    background-image: url(/express/icons/adobe-spark.png);
+    background-repeat: no-repeat;
+    background-size: auto 24px;
+    background-position: bottom 24px center;
+    position: relative;
 }
 
-header .desktop {
+#feds-header {
+  opacity: 0;
+}
+
+#feds-header.appear {
+  opacity: 1;
+}
+
+#header-placeholder {
+  height: 64px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  -webkit-font-smoothing: antialiased;
+  border-bottom: 1px solid #EAEAEA;
+  transition: opacity 0.1s;
+  background-color: white;
+}
+
+#header-placeholder.disappear {
+  display: none;
+}
+
+#header-placeholder .desktop {
     display: none;
 }
 
-header .mobile {
+#header-placeholder .mobile {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,55 +63,52 @@ header .mobile {
     color: #2c2c2c;
 }
 
-header .mobile .hamburger {
+#header-placeholder .mobile .hamburger {
     font-size: 19px;
 }
 
-header .mobile .signin {
+#header-placeholder .mobile .signin {
     font-size: 14px;
 }
 
-header .mobile .logo img {
-    height: 24px;
-    width: 24px;
-    padding-left: 15px;
+#header-placeholder .mobile .logo img {
+    height: 26px;
+    width: 26px;
+    padding-left: 17px;
+    transform: translate(0,3px);
 }
 
-header .mobile .hamburger::before {
+#header-placeholder .mobile .hamburger::before {
     content: "\2630";
 }
 
 @media (min-width: 1200px) {
 
-    header {
-        height: 98px;
-        background-size: 1201px auto;
-    }
-
-    header .mobile {
+    #header-placeholder .mobile {
         display: none;
     }
 
-    header .desktop {
+    #header-placeholder .desktop {
         display: block;
         color: #2c2c2c;
         font-size: 14px;
+        max-width: 1440px;
+        margin: auto;
     }
 
-    header .desktop .top {
+    #header-placeholder .desktop .top {
         display: flex;
         justify-content: space-between;
         align-items: center;
         height: 64px;
-        border-bottom: 1px solid #EAEAEA;
     }
 
-    header .desktop .top .left {
+    #header-placeholder .desktop .top .left {
         display: flex;
         align-items: center;
     }
 
-    header .desktop .logo {
+    #header-placeholder .desktop .logo {
         width: 124px;
         box-sizing: border-box;
         padding-left: 21px;
@@ -89,72 +116,73 @@ header .mobile .hamburger::before {
         font-weight: 600;
     }
 
-    header .desktop .logo img {
+    #header-placeholder .desktop .logo img {
         height: 24px;
         width: 24px;
-        padding-top: 4px;
     }
 
-    header .desktop .logo span {
+    #header-placeholder .desktop .logo span {
         color: #fa0f00;
         font-size: 18px;
-        padding-left: 12px;
+        padding-left: 10px;
         display: block;
-        padding-top: 3px;
+        padding-top: 0px;
     }
 
-    header .desktop .top .section {
-        border-left: 1px solid #EAEAEA;
+    #header-placeholder .desktop .top .section {
         height: 64px;
-        padding: 0 8px;
+        padding: 0 8px 1px 8px;
     }
 
-    header .desktop .top .section span {
-        padding: 0 12px;    
+    #header-placeholder .desktop .top .section span {
+        padding: 0 12px;
     }
 
-    header .desktop .top .button {
+    #header-placeholder .desktop .top .button {
         font-size: 14px;
-        margin-left: 0;
-        padding: 5px 20px 7px 20px;
-    }
+        margin-left: 0px;
+        font-weight: 700;
+        padding: 6px 16px 6px 16px;
+        background-color: #1473e6;
+      }
 
-    header .desktop .top .selected {
+    #header-placeholder .desktop .top .selected {
         font-weight: 600;
     }
 
-    header .desktop .top .right {
+    #header-placeholder .desktop .top .right {
         padding: 0 10px;
     }
 
-    header .desktop .top .right > div {
-        padding: 0 5px;
+    #header-placeholder .desktop .top .right > div {
+        padding: 0px 6px 1px 6px;
     }
 
-    header .desktop .top .right > div.search {
-        padding: 2px 10px;
-    
+    #header-placeholder .desktop .top .right > div.search {
+        padding: 6px 10px 2px 12px;
+        fill: currentColor;
+
     }
 
-    header .desktop .bottom {
+    #header-placeholder .desktop .bottom {
         color: #707070;
         padding: 10px 12px;
         font-size: 12px;
     }
 
-    header .desktop .bottom > span {
+    #header-placeholder .desktop .bottom > span {
         padding: 0 8px;
     }
-    
-    header .desktop .drop {
+
+    #header-placeholder .desktop .drop {
         display: flex;
         align-items: center;
     }
 
-    header .desktop .drop::after {
+    #header-placeholder .desktop .drop::after {
         display: flex;
-        width: 6px;
-        height: 6px;
+        width: 5px;
+        height: 5px;
         border-top-width: 0;
         border-left-width: 0;
         border-bottom-width: 1px;
@@ -169,19 +197,19 @@ header .mobile .hamburger::before {
         margin-right: 2.25px;
     }
 
-    header .desktop .top .right {
+    #header-placeholder .desktop .top .right {
         display: flex;
         align-items: center;
     }
 
-    header .desktop .top .left .section {
+    #header-placeholder .desktop .top .left .section {
         display: flex;
         align-items: center;
     }
 }
 
 footer {
-  
+
   margin-top: 120px;
 }
 
@@ -189,7 +217,7 @@ a.button:any-link {
     text-decoration: none;
     border-radius: 18px;
     padding: 5px 1.2em 7px 1.2em;
-    outline: none;
+    /*outline: none; (keep outline for a11n) */
     text-align: center;
     line-height: 20px;
     font-size: 1rem;
@@ -226,7 +254,7 @@ a.button > svg > use {
 /* make page : hero */
 
 main.light-grey {
-  background-color: #f4f4f4;	
+  background-color: #f4f4f4;
 }
 
 main {
@@ -306,6 +334,11 @@ main .icon {
   color: currentColor;
 }
 
+main .hero .icon {
+  height: 2em;
+  width: 2em;
+}
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
@@ -352,7 +385,7 @@ main .hero a:any-link {
 
     main .hero.hero-noimage p {
       font-size: 14px;
-    }    
+    }
 
 
     main .hero {
@@ -376,7 +409,9 @@ main .hero a:any-link {
     main>.hero h1 {
         font-size: 3.5em;
     }
-        
+    main .hero>div {
+      max-width: 950px;
+    }
 }
 
 
@@ -395,7 +430,7 @@ main .section-wrapper:first-of-type {
 }
 
 main .section-wrapper > div {
-    margin: auto; 
+    margin: auto;
     max-width: 672px;
     padding: 0 32px;
 }
@@ -536,11 +571,10 @@ main .section-wrapper .hero {
   margin: 0;
   margin-bottom: 12px;
   font-weight: 600;
-  color: #aaa;
+  color: #696969;
   font-size: 16px;
   line-height: 20px;
   letter-spacing: .1em;
-  font-weight: 600;
 }
 
 .blog main .hero .blog-header .author {
@@ -579,15 +613,15 @@ main .section-wrapper .hero {
   main .section-wrapper {
     padding-top: 40px;
   }
-  
+
   main .section-wrapper:first-of-type {
     padding-top: 80px;
   }
-  
+
   main .section-wrapper:first-of-type {
     padding-top: 0;
   }
-  
+
     main .section-wrapper h2 {
         font-size: 36px;
         line-height: 39px;
@@ -606,7 +640,7 @@ main .section-wrapper .hero {
         margin-top: 56px;
         text-align: center;
     }
-    
+
     main .section-wrapper h1 + h5 {
       font-size: 24px;
       line-height: 29px;
@@ -614,7 +648,7 @@ main .section-wrapper .hero {
       margin-top: 32px;
       margin-bottom: 16px;
     }
-    
+
     main .section-wrapper p {
         font-size: 18px;
         line-height: 22px;
@@ -669,3 +703,8 @@ main .page-list-container, main .page-list {
   transition: opacity 100ms;
 }
 
+main .page-list-container, main .pricing {
+  opacity: 0;
+  height: 100vh;
+  transition: opacity 100ms;
+}

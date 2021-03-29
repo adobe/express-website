@@ -108,7 +108,9 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     $blogPosts.appendChild($cards);
   }
 
-  for (let i = offset; i < offset + limit; i += 1) {
+  const pageEnd = offset + limit;
+  const max = pageEnd > posts.length ? posts.length : pageEnd;
+  for (let i = offset; i < max; i += 1) {
     const post = posts[i];
     const {
       path, title, teaser, tags, image,
@@ -118,14 +120,17 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     const eyebrow = tagsArr[0] ? tagsArr[0].replace('-', ' ') : '';
     const isHero = hasHero && !i;
     const imagePath = image.split('?')[0].split('_')[1];
-    let pictureTag = `<picture><img src="./media_${imagePath}?$format=webply&optimize=medium&width=750"></picture>`;
+    let pictureTag = `<picture><img src="./media_${imagePath}?auto=webp&format=pjpg&optimize=medium&width=750"></picture>`;
     if (isHero) {
       pictureTag = `<picture>
-        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&format=webply&optimize=medium">
-        <img src="./media_${imagePath}?width=2000&format=webply&optimize=medium">
+        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&auto=webp&format=pjpg&optimize=medium">
+        <img src="./media_${imagePath}?width=2000&auto=webp&format=pjpg&optimize=medium">
       </picture>`;
     }
-    const $card = createTag('div', { class: `${isHero ? 'hero-card' : 'card'}` });
+    const $card = createTag('a', {
+      class: `${isHero ? 'hero-card' : 'card'}`,
+      href: path,
+    });
     $card.innerHTML = `<div class="card-image">
           ${pictureTag}
         </div>
@@ -134,20 +139,17 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
         <h3>${title}</h3>
           <p>${teaser}</p>
         </div>`;
-    $card.addEventListener('click', () => {
-      window.location.href = `${path}`;
-    });
     if (isHero) $blogPosts.prepend($card);
     else $cards.append($card);
   }
-  if (posts.length > offset + limit) {
+  if (posts.length > pageEnd) {
     const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
     $loadMore.innerHTML = 'Load more articles';
     $blogPosts.append($loadMore);
     $loadMore.addEventListener('click', (event) => {
       event.preventDefault();
       $loadMore.remove();
-      decorateBlogPosts($blogPosts, config, offset + limit);
+      decorateBlogPosts($blogPosts, config, pageEnd);
     });
   }
 }
