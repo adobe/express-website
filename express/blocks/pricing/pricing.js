@@ -154,6 +154,7 @@ async function selectPlanOption($plan, option) {
   if (fullPriceOfferId) {
     const fpOffer = await getOffer(fullPriceOfferId, countryOverride);
     fullPrice = fpOffer.unitPriceCurrencyFormatted;
+    // eslint-disable-next-line no-console
     console.log(fpOffer);
   }
 

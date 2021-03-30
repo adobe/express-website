@@ -806,16 +806,16 @@ function splitSections() {
   });
 }
 
-function webpPolyfill() {
-  let webpSupport = true;
-  const $canvas = document.createElement('canvas');
-  if ($canvas.getContext && $canvas.getContext('2d')) {
-  // was able or not to get WebP representation
-    webpSupport = $canvas.toDataURL('image/webp').indexOf('data:image/webp') == 0;
-  } else {
-    webpSupport = false;
-  }
-}
+// function webpPolyfill() {
+//   let webpSupport = true;
+//   const $canvas = document.createElement('canvas');
+//   if ($canvas.getContext && $canvas.getContext('2d')) {
+//   // was able or not to get WebP representation
+//     webpSupport = $canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+//   } else {
+//     webpSupport = false;
+//   }
+// }
 
 function setTheme() {
   const theme = getMeta('theme');
@@ -836,7 +836,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
-  //webpPolyfill();
+  // webpPolyfill();
   decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();
