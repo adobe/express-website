@@ -49,8 +49,12 @@ main .quotes .quote .author .image {
   padding-right: 16px;
 }
 
-main .quotes .quote .author .image picture {
+main .quotes .quote .author .image img {
   width: 42px;
+  height: 42px;
+  max-width: unset;
+  border-radius: 21px;
+  box-sizing: border-box;
 }
 
 main .quotes .quote .author .summary p {
