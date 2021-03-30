@@ -807,8 +807,8 @@ function splitSections() {
 }
 
 function supportsWebp() {
-  if (window.name.includes('nowebpsupport')) return false;
-  if (window.name.includes('webpsupport')) return true;
+  if (window.name.includes('nowebp')) return false;
+  if (window.name.includes('webp')) return true;
 
   if (window.webpSupport === undefined) {
     window.webpSupport = true;
@@ -830,7 +830,7 @@ function getOptimizedImageURL(src) {
   if (pathname.includes('media_')) {
     const usp = new URLSearchParams(search);
     usp.delete('auto');
-    if (!supportsWebp) {
+    if (!supportsWebp()) {
       if (pathname.endsWith('.png')) {
         usp.set('format', 'png');
       } else if (pathname.endsWith('.gif')) {
