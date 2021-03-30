@@ -102,9 +102,9 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
 
   const limit = hasHero ? 13 : 12;
 
-  let $cards = $blogPosts.querySelector('.cards');
+  let $cards = $blogPosts.querySelector('.blog-cards');
   if (!$cards) {
-    $cards = createTag('div', { class: 'cards' });
+    $cards = createTag('div', { class: 'blog-cards' });
     $blogPosts.appendChild($cards);
   }
 
@@ -128,13 +128,13 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       </picture>`;
     }
     const $card = createTag('a', {
-      class: `${isHero ? 'hero-card' : 'card'}`,
+      class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,
       href: path,
     });
-    $card.innerHTML = `<div class="card-image">
+    $card.innerHTML = `<div class="blog-card-image">
           ${pictureTag}
         </div>
-        <div class="card-body">
+        <div class="blog-card-body">
         <p class="eyebrow">${eyebrow}</p>
         <h3>${title}</h3>
           <p>${teaser}</p>

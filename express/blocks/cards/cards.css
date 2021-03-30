@@ -1,5 +1,5 @@
 main .cards-container > div, main .cards-dark-container > div {
-  max-width: 1024px;
+  max-width: 870px;
 }
 
 main .cards {
@@ -44,6 +44,10 @@ main .cards .card .card-content p {
 
 main .cards.dark .card {
   background-color: #000;
+}
+
+main .cards a.card {
+  text-decoration: none;
 }
 
 main .cards.dark .card .card-content {
@@ -91,10 +95,6 @@ main .cards.large .card .card-content p, main .cards.large .card .card-content l
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-  }
-
-  main .cards a.card {
-    text-decoration: none;
   }
 
   main .cards .card {
