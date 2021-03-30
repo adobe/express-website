@@ -51,8 +51,8 @@ async function decorateTemplateList($block) {
     }
     const $heroPicture = document.querySelector('.hero-bg');
 
-    if (!$heroPicture && window.spark.$blueprint) {
-      const $bpHeroImage = window.spark.$blueprint.querySelector('div:first-of-type img');
+    if (!$heroPicture && $blueprint) {
+      const $bpHeroImage = $blueprint.querySelector('div:first-of-type img');
       if ($bpHeroImage) {
         const $heroSection = document.querySelector('main .hero');
         const $heroDiv = document.querySelector('main .hero > div');
@@ -77,27 +77,63 @@ async function decorateTemplateList($block) {
     $block.classList.add('large');
   }
 
-  $block.querySelectorAll(':scope > div > div:first-of-type a').forEach(($a) => {
-    const $parent = $a.closest('div');
-    if (!$a.href.includes('.mp4')) {
-      linkImage($parent);
-    } else {
-      const $picture = $parent.querySelector('picture');
-      const $video = createTag('video', {
-        playsinline: '',
-        autoplay: '',
-        loop: '',
-        muted: '',
+  // find the edit link and turn the template DIV into the A
+  // A
+  // +- DIV
+  //    +- PICTURE
+  // +- DIV
+  //    +- SPAN
+  //       +- "Edit this template"
+  //
+  // make copy of children to avoid modifying list while looping
+  for (let $tmplt of Array.from($block.children)) {
+    const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
+    if ($link) {
+      const $a = createTag('a', {
+        href: $link.href || '#',
+        class: 'template',
       });
-      $video.innerHTML = `<source src="${$a.href}" type="video/mp4">`;
-      $parent.replaceChild($video, $picture);
-      $a.remove();
-      $video.addEventListener('canplay', () => {
-        $video.muted = true;
-        $video.play();
-      });
+      $a.append(...$tmplt.childNodes);
+      $tmplt.remove();
+      $tmplt = $a;
+      $block.append($a);
+
+      // convert A to SPAN
+      const $newLink = createTag('span', { class: 'template-link' });
+      $newLink.append(...$link.childNodes);
+      $link.parentNode.append($newLink);
+      $link.remove();
     }
-  });
+
+    // wrap "linked images" with link
+    const $imgLink = $tmplt.querySelector(':scope > div:first-of-type a');
+    if ($imgLink) {
+      const $parent = $imgLink.closest('div');
+      if (!$imgLink.href.includes('.mp4')) {
+        linkImage($parent);
+      } else {
+        const $picture = $tmplt.querySelector('picture');
+        if ($picture) {
+          const $video = createTag('video', {
+            playsinline: '',
+            autoplay: '',
+            loop: '',
+            muted: '',
+          });
+          $video.append(createTag('source', {
+            src: $imgLink.href,
+            type: 'video/mp4',
+          }));
+          $parent.replaceChild($video, $picture);
+          $imgLink.remove();
+          $video.addEventListener('canplay', () => {
+            $video.muted = true;
+            $video.play();
+          });
+        }
+      }
+    }
+  }
 }
 
 export default function decorate($block) {

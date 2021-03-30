@@ -64,13 +64,14 @@ export function getIconElement(icon) {
 
 export function linkImage($elem) {
   const $a = $elem.querySelector('a');
-  const $parent = $a.closest('div');
-  $a.remove();
-  const picture = $parent.innerHTML;
-  $parent.innerHTML = '';
-  $parent.appendChild($a);
-  $a.innerHTML = picture;
-  $a.className = '';
+  if ($a) {
+    const $parent = $a.closest('div');
+    $a.remove();
+    $a.className = '';
+    $a.innerHTML = '';
+    $a.append(...$parent.childNodes);
+    $parent.append($a);
+  }
 }
 
 function wrapSections(element) {
@@ -805,6 +806,67 @@ function splitSections() {
   });
 }
 
+function supportsWebp() {
+  if (window.name.includes('nowebp')) return false;
+  if (window.name.includes('webp')) return true;
+
+  if (window.webpSupport === undefined) {
+    window.webpSupport = true;
+    const $canvas = document.createElement('canvas');
+    if ($canvas.getContext && $canvas.getContext('2d')) {
+      window.webpSupport = $canvas.toDataURL('image/webp').startsWith('data:image/webp');
+    } else {
+      window.webpSupport = false;
+    }
+  }
+  return (window.webpSupport);
+}
+
+function getOptimizedImageURL(src) {
+  console.log(src);
+  const url = new URL(src, window.location.href);
+  let result = src;
+  const { pathname, search } = url;
+  if (pathname.includes('media_')) {
+    const usp = new URLSearchParams(search);
+    usp.delete('auto');
+    if (!supportsWebp()) {
+      if (pathname.endsWith('.png')) {
+        usp.set('format', 'png');
+      } else if (pathname.endsWith('.gif')) {
+        usp.set('format', 'gif');
+      } else {
+        usp.set('format', 'pjpg');
+      }
+    } else {
+      usp.set('format', 'webply');
+    }
+    result = `${src.split('?')[0]}?${usp.toString()}`;
+  }
+  return (result);
+}
+
+function resetAttribute($elem, attrib) {
+  const src = $elem.getAttribute(attrib);
+  if (src) {
+    const oSrc = getOptimizedImageURL(src);
+    if (oSrc !== src) {
+      console.log($elem);
+      console.log(`${src} => ${oSrc}`);
+      $elem.setAttribute(attrib, oSrc);
+    }
+  }
+}
+
+function webpPolyfill() {
+  document.querySelectorAll('img').forEach(($img) => {
+    resetAttribute($img, 'src');
+  });
+  document.querySelectorAll('picture source').forEach(($source) => {
+    resetAttribute($source, 'srcset');
+  });
+}
+
 function setTheme() {
   const theme = getMeta('theme');
   if (theme) {
@@ -824,6 +886,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
+  webpPolyfill();
   decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();

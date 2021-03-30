@@ -8,7 +8,7 @@ main .template-list {
     text-align: left;
 }
 
-main .template-list a:any-link {
+main .template-list .template-link {
     text-decoration: none;
     color: #1473E6;
     padding-left: 16px;
@@ -16,11 +16,7 @@ main .template-list a:any-link {
     display: flex;
 }
 
-main .template-list > div > div:first-child > a:any-link {
-  padding-left: 0;
-}
-
-main .template-list div > div:nth-child(2) a:any-link::after {
+main .template-list .template-link::after {
     display: flex;
     width: 6px;
     height: 6px;
@@ -38,11 +34,11 @@ main .template-list div > div:nth-child(2) a:any-link::after {
     margin-right: 2.25px;
 }
 
-main .template-list > div p {
+main .template-list .template p {
     margin: 0;
 }
 
-main .template-list > div {
+main .template-list .template {
     display: flex;
     flex-direction: column;
     width: 300px;
@@ -51,25 +47,29 @@ main .template-list > div {
     -webkit-column-break-inside: avoid;
     page-break-inside: avoid;
     break-inside: avoid;
+    text-decoration: unset;
 }
 
+main .template-list .template > div:first-child > a:any-link {
+    padding-left: 0;
+}
 
-main .template-list > div img, main .template-list > div video {
+main .template-list .template img, main .template-list .template video {
     border-radius: 10px;
     width: 300px;
 }
 
-main .template-list.large > div {
+main .template-list.large .template {
     width: 100%;
     margin: 0;
     border: 0;
 }
 
-main .template-list.large > div > div {
+main .template-list.large .template > div {
     margin: auto;
 }
 
-main .template-list.large > div img {
+main .template-list.large .template img {
     width: 100%;
 }
 
@@ -78,23 +78,22 @@ main .template-list + .button-container > a {
 }
 
 
-main .template-list.masonry > div {
-    margin-top: 0px;
+main .template-list.masonry .template {
+    margin-top: 0;
+    margin-bottom: 32px;
     padding: 0;
-    margin-bottom: 0;
-    padding-bottom: 32px;
 }
 
 @media (min-width: 600px) {
-    main .template-list > div {
+    main .template-list .template {
         width: 240px;
         margin: 12px;
     }
-    
-    main .template-list > div img {
+
+    main .template-list .template img {
         width: 240px;
     }
-    
+
     main .template-list.masonry {
         display: block;
         columns: 240px 2;
@@ -148,12 +147,12 @@ main .template-list.masonry > div {
     flex-wrap: nowrap;
   }
 
-  main .columns .template-list > div {
+  main .columns .template-list .template {
     justify-content: flex-start;
     min-width: 132px;
   }
 
-  main .columns .template-list a:any-link {
+  main .columns .template-list .template-link {
     font-size: 0.875rem;
     font-weight: 500;;
   }
