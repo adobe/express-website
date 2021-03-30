@@ -11,8 +11,6 @@
  */
 /* global */
 
-import columns from '../columns/columns.js';
-
-export default function dec($block) {
-  return columns($block);
+export default function decorate($block) {
+  return $block;
 }
