@@ -807,6 +807,9 @@ function splitSections() {
 }
 
 function supportsWebp() {
+  if (window.name.includes('nowebpsupport')) return false;
+  if (window.name.includes('webpsupport')) return true;
+
   if (window.webpSupport === undefined) {
     window.webpSupport = true;
     const $canvas = document.createElement('canvas');
