@@ -27,9 +27,8 @@ main .icon-list .icon {
   height: 40px;
 }
 
-main .icon-list h3 {
-  font-size: 22px;
-  line-height: 26px;
+main .icon-list h3, main .icon-list h4 {
+  margin-top: 0;
   text-align: left;
 }
 

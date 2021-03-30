@@ -77,10 +77,11 @@ main .cards.large .card .content p {
 
 @media (min-width:900px) {
   main .cards {
-    width: 800px;
+    width: 850px;
     margin: 0 auto;
     padding: 80px 0 80px 0;
     flex-direction: row;
+    flex-wrap: wrap;
   }
 
   main .cards .card {
