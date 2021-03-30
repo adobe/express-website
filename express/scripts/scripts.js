@@ -806,16 +806,63 @@ function splitSections() {
   });
 }
 
-// function webpPolyfill() {
-//   let webpSupport = true;
-//   const $canvas = document.createElement('canvas');
-//   if ($canvas.getContext && $canvas.getContext('2d')) {
-//   // was able or not to get WebP representation
-//     webpSupport = $canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-//   } else {
-//     webpSupport = false;
-//   }
-// }
+function supportsWebp() {
+  if (window.webpSupport === undefined) {
+    window.webpSupport = true;
+    const $canvas = document.createElement('canvas');
+    if ($canvas.getContext && $canvas.getContext('2d')) {
+      window.webpSupport = $canvas.toDataURL('image/webp').startsWith('data:image/webp');
+    } else {
+      window.webpSupport = false;
+    }
+  }
+  return (window.webpSupport);
+}
+
+function getOptimizedImageURL(src) {
+  console.log(src);
+  const url = new URL(src, window.location.href);
+  let result = src;
+  const { pathname, search } = url;
+  if (pathname.includes('media_')) {
+    const usp = new URLSearchParams(search);
+    usp.delete('auto');
+    if (!supportsWebp) {
+      if (pathname.endsWith('.png')) {
+        usp.set('format', 'png');
+      } else if (pathname.endsWith('.gif')) {
+        usp.set('format', 'gif');
+      } else {
+        usp.set('format', 'pjpg');
+      }
+    } else {
+      usp.set('format', 'webply');
+    }
+    result = `${src.split('?')[0]}?${usp.toString()}`;
+  }
+  return (result);
+}
+
+function resetAttribute($elem, attrib) {
+  const src = $elem.getAttribute(attrib);
+  if (src) {
+    const oSrc = getOptimizedImageURL(src);
+    if (oSrc !== src) {
+      console.log($elem);
+      console.log(`${src} => ${oSrc}`);
+      $elem.setAttribute(attrib, oSrc);
+    }
+  }
+}
+
+function webpPolyfill() {
+  document.querySelectorAll('img').forEach(($img) => {
+    resetAttribute($img, 'src');
+  });
+  document.querySelectorAll('picture source').forEach(($source) => {
+    resetAttribute($source, 'srcset');
+  });
+}
 
 function setTheme() {
   const theme = getMeta('theme');
@@ -836,7 +883,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
-  // webpPolyfill();
+  webpPolyfill();
   decorateBlocks();
   decorateDoMoreEmbed();
   setLCPTrigger();
