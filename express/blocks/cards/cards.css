@@ -70,17 +70,18 @@ main .cards.large .card .content h2 {
   margin-bottom: 32px;
 }
 
-main .cards.large .card .content p {
+main .cards.large .card .content p, main .cards.large .card .content li {
   text-align: left;
   font-size: 1.125rem;
 }
 
 @media (min-width:900px) {
   main .cards {
-    width: 800px;
+    width: 870px;
     margin: 0 auto;
     padding: 80px 0 80px 0;
     flex-direction: row;
+    flex-wrap: wrap;
   }
 
   main .cards .card {
@@ -88,6 +89,7 @@ main .cards.large .card .content p {
     margin-right: 32px;
     background-color: #FFF;
     box-shadow: 0 4px 8px 2px rgba(102, 102, 102, 0.1);
+    margin: 0 20px 16px 20px;
   }
 
   main .cards .card .hero {
@@ -105,7 +107,7 @@ main .cards.large .card .content p {
     margin-bottom: 8px;
   }
 
-  main .cards .card .content p {
+  main .cards .card .content p, main .cards .card .content li {
     font-size: 0.9rem;
   }
 

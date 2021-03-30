@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" height="96" viewBox="0 0 96 96" width="96">
+  <g fill="none" fill-rule="evenodd">
+    <path d="m0 0h96v96h-96z"/>
+    <g stroke-width="2" transform="translate(14 18)">
+      <g stroke="#000" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m46.5 54h-46.5v-54h66v42"/>
+        <path d="m0 9h66"/>
+        <path d="m4.5 4.5h2"/>
+        <path d="m11 4.5h2"/>
+        <path d="m17.5 4.5h2"/>
+      </g>
+      <g stroke="#6914f9" transform="translate(40.5 25.5)">
+        <path d="m31.2 26.1-20.7-15v25.5c0 .75.6 1.05 1.35.45l5.85-5.55 5.55 9.9c.45.75 1.65.9 2.4.3l2.4-1.5c.9-.6 1.2-1.65.75-2.4l-5.4-9.3h7.05c.9 0 1.35-1.95.75-2.4z"/>
+        <g stroke-linecap="round">
+          <path d="m10.5 4.5v-4.5"/>
+          <path d="m4.5 10.5h-4.5"/>
+          <path d="m6 6-3-3"/>
+          <path d="m15 6 3-3"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
