@@ -319,54 +319,23 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       sparkEventName = 'landing:ctaPressed';
 
     // Click in the pricing block
-    } else if ($a.closest('.pricing')) {
-      // allow the pricing block to handle this analytics
-      return;
-
-      // // get the position of the card in the plans
-      // cardPosition = Array.prototype.slice.call(document.querySelectorAll('.plan'))
-      // .indexOf($a.closest('.plan')) + 1;
-
-      // // Buy Now
-      // if ($a.hostname.includes('commerce.adobe.com')) {
-      //   // individual
-      //   if ($a.search.includes('spark.adobe.com')) {
-      //     adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
-      //   // team
-      //   } else if ($a.search.includes('adminconsole.adobe.com')) {
-      //     adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
-      //   }
-
-      //   sparkEventName = 'beginPurchaseFlow';
-
-      // // anything else
-      // } else {
-      //   adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
-      //   sparkEventName = 'pricing:ctaPressed';
-      // }
-
-      // // eslint-disable-next-line no-underscore-dangle
-      // digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
-
-    // Click in the pricing block
     } else if (sparkLandingPageType === 'pricing') {
       // edu link
-      if (
-        $a.pathname.includes('/edu')
-      ) {
-        adobeEventName += 'pricing:eduLink:Click';
+      if ($a.pathname.includes('/edu')) {
+        adobeEventName += 'pricing:education:Click';
         sparkEventName = 'landing:eduSeoPagePressed';
-
       // business enterprise link
-      } else if (
-        $a.pathname.includes('business/enterprise')
-      ) {
-        adobeEventName += 'pricing:enterpriseLink:Click';
+      } else if ($a.pathname.includes('business/enterprise')) {
+        adobeEventName += 'pricing:enterprise:Click';
         sparkEventName = 'landing:businessSeoPagePressed';
-      // all other links
+      // Creative cloud learn more
+      } else if ($a.parentElement.id === 'adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more') {
+        adobeEventName += 'pricing:creativeCloud:learnMore';
+        sparkEventName = 'landing:creativeCloudLearnMorePressed';
+      // View plans
       } else {
-        adobeEventName = appendLinkText(adobeEventName, $a);
-        sparkEventName = 'pricing:ctaPressed';
+        adobeEventName = 'pricing:viewPlans:Click';
+        sparkEventName = 'landing:viewPlansPressed';
       }
 
     // Default clicks

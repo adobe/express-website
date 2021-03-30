@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window, fetch, digitalData, _satellite */
+/* eslint-disable no-underscore-dangle */
 
 import {
   createTag,
@@ -71,10 +72,13 @@ function decorateHeader($block, header) {
 
 function getPlanOptions(planTitle, planOptions) {
   const options = [];
+  let optionId = 0;
   planOptions.forEach((option) => {
     const optionPlan = option['Option Plan'];
     if (planTitle === optionPlan) {
+      option.optionId = optionId;
       options.push(option);
+      optionId += 1;
     }
   });
   return options;
@@ -125,7 +129,118 @@ function buildUrl(optionUrl, optionPlan) {
   return planUrl.href;
 }
 
-async function selectPlanOption($plan, option) {
+function selectPlanAnalytics($plan, options) {
+  const $cta = $plan.querySelector('.button');
+  $cta.addEventListener('click', (e) => {
+    const $optionPlan = e.target.closest('.plan');
+    const $plans = $optionPlan.closest('.pricing-plans');
+    const { optionId } = $optionPlan.dataset;
+    const optionData = options[optionId];
+    const option = {
+      id: optionData.id,
+      position: Array.prototype.slice.call($plans.children).indexOf($plan) + 1,
+      plan: optionData.plan,
+      name: optionData.name,
+      price: optionData.priceUnformatted,
+      frequency: optionData.frequency,
+      currency: optionData.currency,
+    };
+    let adobeEventName;
+    let sparkEventName;
+    // determine whether individual | starter | etc.
+    // Buy Now
+    if ($cta.hostname.includes('commerce.adobe.com')) {
+      // individual
+      if ($cta.search.includes('spark.adobe.com')) {
+        adobeEventName += `pricing:individual:${option.position}:buyNow:Click`;
+        // team
+      } else if ($cta.search.includes('adminconsole.adobe.com')) {
+        adobeEventName += `pricing:team:${option.position}:buyNow:Click`;
+      }
+      sparkEventName = 'beginPurchaseFlow';
+      // anything else
+    } else {
+      adobeEventName += `pricing:starter:${option.position}:getStarted:Click`;
+      sparkEventName = 'pricing:ctaPressed';
+    }
+
+    digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+    digitalData._set('spark.eventData.eventName', sparkEventName);
+    digitalData._set('primaryProduct.productInfo.amountWithoutTax', option.price);
+    digitalData._set('primaryProduct.productInfo.billingFrequency', option.frequency);
+    digitalData._set('primaryProduct.productInfo.cardPosition', option.position);
+    digitalData._set('primaryProduct.productInfo.commitmentType', option.frequency);
+    digitalData._set('primaryProduct.productInfo.currencyCode', option.currency);
+    digitalData._set('primaryProduct.productInfo.offerId', option.id);
+    digitalData._set('primaryProduct.productInfo.price', option.price);
+    digitalData._set('primaryProduct.productInfo.productName', `${option.plan} - ${option.name}`);
+    digitalData._set('primaryProduct.productInfo.quantity', 1);
+    //   primaryProduct: {
+    //     productInfo: {
+    //       amountWithoutTax:'79.99',
+    //       billingFrequency:'MONTHLY',
+    //       cardPosition:'1',
+    //       commitmentType:'YEAR',
+    //       currencyCode:'USD',
+    //       label:'ccle_direct_indirect_team',//
+    //       offerId:'08A2CD1688E89927614A5F402329DB5B',
+    //       price:'59.99',
+    //       productCode:'ccle_direct_indirect_team',
+    //       productName: '', //product Name -> 'Creative Cloud All Apps'
+    // or as per the details available of the product
+    //       sku:'65296994',
+    //       quantity:''//Number of licenses
+    //     }
+    //   }
+    digitalData._set('spark.eventData.contextualData4', `billingFrequency:${option.frequency}`);
+    digitalData._set('spark.eventData.contextualData5', `cardPosition:${option.position}`);
+    digitalData._set('spark.eventData.contextualData6', `commitmentType:${option.frequency}`);
+    digitalData._set('spark.eventData.contextualData7', `currencyCode:${option.currency}`);
+    digitalData._set('spark.eventData.contextualData9', `offerId:${option.id}`);
+    digitalData._set('spark.eventData.contextualData10', `price:${option.price}`);
+    digitalData._set('spark.eventData.contextualData12', `productName:${option.plan} - ${option.name}`);
+    digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+    // spark.eventData.contextualData3: 'amountWithoutTax:79.99' or
+    // whatever is set in primaryProduct.productInfo.amountWithoutTax
+    // spark.eventData.contextualData4: 'billingFrequency:MONTHLY'
+    // spark.eventData.contextualData5: 'cardPosition:1'
+    // spark.eventData.contextualData6: 'commitmentType:YEAR'
+    // spark.eventData.contextualData7: 'currencyCode:USD'
+    // spark.eventData.contextualData8: 'label:ccle_direct_indirect_team'
+    // spark.eventData.contextualData9: 'offerId:08A2CD1688E89927614A5F402329DB5B'
+    // spark.eventData.contextualData10: 'price:59.99'
+    // spark.eventData.contextualData11: 'productCode:ccle_direct_indirect_team'
+    // spark.eventData.contextualData12: 'productName: '', //product Name ->
+    // 'Creative Cloud All Apps' or as per the details available of the product
+    // spark.eventData.contextualData13: 'sku:65296994'
+    // spark.eventData.contextualData14: 'quantity:''//Number of licenses"
+    _satellite.track('event', { digitalData: digitalData._snapshot() });
+    digitalData._delete('primaryEvent.eventInfo.eventName');
+    digitalData._delete('spark.eventData.eventName');
+    digitalData._delete('primaryEvent.eventInfo.eventName');
+    digitalData._delete('spark.eventData.eventName');
+    digitalData._delete('primaryProduct.productInfo.amountWithoutTax');
+    digitalData._delete('primaryProduct.productInfo.billingFrequency');
+    digitalData._delete('primaryProduct.productInfo.cardPosition');
+    digitalData._delete('primaryProduct.productInfo.commitmentType');
+    digitalData._delete('primaryProduct.productInfo.currencyCode');
+    digitalData._delete('primaryProduct.productInfo.offerId');
+    digitalData._delete('primaryProduct.productInfo.price');
+    digitalData._delete('primaryProduct.productInfo.productName');
+    digitalData._delete('primaryProduct.productInfo.quantity');
+    digitalData._delete('spark.eventData.contextualData3');
+    digitalData._delete('spark.eventData.contextualData4');
+    digitalData._delete('spark.eventData.contextualData5');
+    digitalData._delete('spark.eventData.contextualData6');
+    digitalData._delete('spark.eventData.contextualData7');
+    digitalData._delete('spark.eventData.contextualData9');
+    digitalData._delete('spark.eventData.contextualData10');
+    digitalData._delete('spark.eventData.contextualData12');
+    digitalData._delete('spark.eventData.contextualData14');
+  });
+}
+
+async function rebuildOptionWithOffer(option) {
   const priceString = option['Option Price'].split('/');
   const fullPriceString = option['Option Full Price'].split('/');
   let price = priceString[0];
@@ -137,14 +252,16 @@ async function selectPlanOption($plan, option) {
   // eslint-disable-next-line dot-notation
   const offerId = option['OfferID'];
   const fullPriceOfferId = option['Full Price OfferID'];
+  let priceUnformatted = parseFloat(price);
   let ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
-  // let currency = '$';
+  let currency = 'USD';
   const countryOverride = new URLSearchParams(window.location.search).get('country');
 
   if (offerId) {
     const offer = await getOffer(offerId, countryOverride);
-    // currency = offer.currency;
+    currency = offer.currency;
     price = offer.unitPriceCurrencyFormatted;
+    priceUnformatted = offer.unitPrice;
     ctaUrl = offer.commerceURL;
     if (!fullPriceOfferId) {
       fullPrice = offer.unitPriceCurrencyFormatted;
@@ -154,27 +271,47 @@ async function selectPlanOption($plan, option) {
   if (fullPriceOfferId) {
     const fpOffer = await getOffer(fullPriceOfferId, countryOverride);
     fullPrice = fpOffer.unitPriceCurrencyFormatted;
-    console.log(fpOffer);
   }
 
+  option.id = offerId;
+  option.price = price;
+  option.priceUnformatted = priceUnformatted;
+  option.unit = priceUnit;
+  option.fullPrice = fullPrice;
+  option.fullPriceUnit = fullPriceUnit;
+  option.text = text;
+  option.url = ctaUrl;
+  option.cta = cta;
+  option.currency = currency;
+  option.frequency = option['Analytics Frequency do-not-translate'];
+  option.plan = option['Analytics Plan do-not-translate'];
+  option.name = option['Analytics Name do-not-translate'];
+
+  return option;
+}
+
+async function selectPlanOption($plan, option) {
+  $plan.dataset.optionId = option.optionId;
+  if (typeof option.id === 'undefined') {
+    // eslint-disable-next-line no-param-reassign
+    option = await rebuildOptionWithOffer(option);
+  }
   const $pricing = $plan.querySelector('.plan-pricing');
   const $pricingText = $plan.querySelector('.plan-secondary');
   const $cta = $plan.querySelector('.button.primary');
-
-  if (price === 'Free') {
+  if (option.price === 'Free') {
     $pricing.innerHTML = '<strong>Free</strong>';
   } else {
-    $pricing.innerHTML = `<span><strong>${price}</strong>/${priceUnit}</span>`;
-    if (price !== fullPrice) {
-      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from ${fullPrice}/${fullPriceUnit}"><strong>${fullPrice}</strong>/${fullPriceUnit}</span>`;
+    $pricing.innerHTML = `<span><strong>${option.price}</strong>/${option.unit}</span>`;
+    if (option.price !== option.fullPrice) {
+      $pricing.innerHTML += `<span class="previous-pricing" aria-label="Discounted from ${option.fullPrice}/${option.fullPriceUnit}"><strong>${option.fullPrice}</strong>/${option.fullPriceUnit}</span>`;
     }
   }
-  if (text) {
-    $pricingText.innerHTML = text;
+  if (option.text) {
+    $pricingText.innerHTML = option.text;
   }
-
-  $cta.innerHTML = cta;
-  $cta.href = ctaUrl;
+  $cta.innerHTML = option.cta;
+  $cta.href = option.url;
 }
 
 function addDropdownEventListener($plan, options) {
@@ -240,168 +377,8 @@ function decoratePlans($block, plans, planOptions) {
     }
     const $cta = createTag('a', { class: 'button primary' });
     $footer.append($cta);
-
-    $cta.addEventListener('click', () => {
-      let adobeEventName;
-      let sparkEventName;
-      const option = {};
-      // get the position of the card in the plans
-      const cardPosition = Array.prototype.slice.call($plans.children).indexOf($plan) + 1;
-      // determine whether individual | starter | etc.
-      // Buy Now
-      if ($cta.hostname.includes('commerce.adobe.com')) {
-        // individual
-        if ($cta.search.includes('spark.adobe.com')) {
-          adobeEventName += `pricing:individual:${cardPosition}:buyNow:Click`;
-        // team
-        } else if ($cta.search.includes('adminconsole.adobe.com')) {
-          adobeEventName += `pricing:team:${cardPosition}:buyNow:Click`;
-        }
-        sparkEventName = 'beginPurchaseFlow';
-      // anything else
-      } else {
-        adobeEventName += `pricing:starter:${cardPosition}:getStarted:Click`;
-        sparkEventName = 'pricing:ctaPressed';
-      }
-
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.eventName', sparkEventName);
-      // TODO: option.priceWithoutTax - price withou tax if you have it, otherwise ignore this
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.amountWithoutTax', option.priceWithoutTax);
-      // TODO: option.billingFrequency - Set to Monthly or whatever is in the drop-down
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.billingFrequency', option.billingFrequency);
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.cardPosition', cardPosition);
-      // TODO: option.commitmentType - Month, year, or whatever
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.commitmentType', option.commitmentType);
-      // TODO: option.currencyCode - USD or whatever currency type is being used
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.currencyCode', option.currencyCode);
-      // TODO: option.offerId - 08A2CD1688E89927614A5F402329DB5B or whatever the offer is
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.offerId', option.offerId);
-      // TODO: option.price - the price with tax or whatever price
-      // value you have if non-distinguishable
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.price', option.price);
-      // TODO: option.productName - If there is a user friendly product name, put it here
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.productName', option.productName);
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('primaryProduct.productInfo.quantity', 1);
-      //   primaryProduct: {
-      //     productInfo: {
-      //       amountWithoutTax:'79.99',
-      //       billingFrequency:'MONTHLY',
-      //       cardPosition:'1',
-      //       commitmentType:'YEAR',
-      //       currencyCode:'USD',
-      //       label:'ccle_direct_indirect_team',//
-      //       offerId:'08A2CD1688E89927614A5F402329DB5B',
-      //       price:'59.99',
-      //       productCode:'ccle_direct_indirect_team',
-      //       productName: '', //product Name -> 'Creative Cloud All Apps'
-      // or as per the details available of the product
-      //       sku:'65296994',
-      //       quantity:''//Number of licenses
-      //     }
-      //   }
-      // TODO: option.priceWithoutTax - price withou tax if you have it, otherwise ignore this
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData3', `amountWithoutTax:${option.priceWithoutTax}`);
-      // TODO: option.billingFrequency - Set to Monthly or whatever is in the drop-down
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData4', `billingFrequency:${option.billingFrequency}`);
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData5', `cardPosition:${cardPosition}`);
-      // TODO: option.commitmentType - Month, year, or whatever
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData6', `commitmentType:${option.commitmentType}`);
-      // TODO: option.currencyCode - USD or whatever currency type is being used
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData7', `currencyCode:${option.currencyCode}`);
-      // TODO: option.offerId - 08A2CD1688E89927614A5F402329DB5B or whatever the offer is
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData9', `offerId:${option.offerId}`);
-      // TODO: option.price - the price with tax or whatever price
-      // value you have if non-distinguishable
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData10', `price:${option.price}`);
-      // TODO: option.productName - If there is a user friendly product name, put it here
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData12', `productName:${option.productName}`);
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._set('spark.eventData.contextualData14', 'quantity:1');
-      // spark.eventData.contextualData3: 'amountWithoutTax:79.99' or
-      // whatever is set in primaryProduct.productInfo.amountWithoutTax
-      // spark.eventData.contextualData4: 'billingFrequency:MONTHLY'
-      // spark.eventData.contextualData5: 'cardPosition:1'
-      // spark.eventData.contextualData6: 'commitmentType:YEAR'
-      // spark.eventData.contextualData7: 'currencyCode:USD'
-      // spark.eventData.contextualData8: 'label:ccle_direct_indirect_team'
-      // spark.eventData.contextualData9: 'offerId:08A2CD1688E89927614A5F402329DB5B'
-      // spark.eventData.contextualData10: 'price:59.99'
-      // spark.eventData.contextualData11: 'productCode:ccle_direct_indirect_team'
-      // spark.eventData.contextualData12: 'productName: '', //product Name ->
-      // 'Creative Cloud All Apps' or as per the details available of the product
-      // spark.eventData.contextualData13: 'sku:65296994'
-      // spark.eventData.contextualData14: 'quantity:''//Number of licenses"
-
-      // eslint-disable-next-line no-underscore-dangle
-      _satellite.track('event', { digitalData: digitalData._snapshot() });
-
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryEvent.eventInfo.eventName');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.eventName');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryEvent.eventInfo.eventName');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.eventName');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.amountWithoutTax');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.billingFrequency');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.cardPosition');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.commitmentType');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.currencyCode');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.offerId');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.price');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.productName');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('primaryProduct.productInfo.quantity');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData3');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData4');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData5');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData6');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData7');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData9');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData10');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData12');
-      // eslint-disable-next-line no-underscore-dangle
-      digitalData._delete('spark.eventData.contextualData14');
-    });
-
     selectPlanOption($plan, options[0]);
+    selectPlanAnalytics($plan, options);
   });
 }
 
