@@ -62,6 +62,20 @@ export function getIconElement(icon) {
   return ($div.firstChild);
 }
 
+export function linkPicture($picture) {
+  const $nextSib = $picture.parentNode.nextElementSibling;
+  if ($nextSib) {
+    console.log($nextSib);
+    const $a = $nextSib.querySelector('a');
+    if ($a && $a.textContent.startsWith('https://')) {
+      console.log($a);
+      $a.innerHTML = '';
+      $a.className = '';
+      $a.appendChild($picture);
+    }
+  }
+}
+
 export function linkImage($elem) {
   const $a = $elem.querySelector('a');
   if ($a) {
@@ -876,12 +890,21 @@ function setTheme() {
   }
 }
 
+function decorateLinkedPictures() {
+  /* thanks to word online */
+  document.querySelectorAll('main picture').forEach(($picture) => {
+    if (!$picture.closest('div.block')) {
+      linkPicture($picture);
+    }
+  });
+}
+
 async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
   splitSections();
-  wrapSections('main>div');
+  wrapSections('main > div');
   decorateHeaderAndFooter();
   decorateHero();
   decorateButtons();
@@ -889,6 +912,7 @@ async function decoratePage() {
   webpPolyfill();
   decorateBlocks();
   decorateDoMoreEmbed();
+  decorateLinkedPictures();
   setLCPTrigger();
   document.body.classList.add('appear');
 }

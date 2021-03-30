@@ -1,3 +1,9 @@
+main .columns-dark-container {
+  background-color: black;
+  padding-bottom: 120px;
+  color: white;
+}
+
 main .columns {
   margin-top: 70px;
 }
