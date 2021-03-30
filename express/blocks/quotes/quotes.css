@@ -19,7 +19,7 @@ main .quotes .quote {
 
 main .quotes .quote .content {
   padding-top: 28px;
-  font-size: 1.125rem;
+  font-size: 1rem;
   text-align: left;
   flex-grow: 1;
 }
@@ -45,9 +45,12 @@ main .quotes .quote .author {
   align-self: baseline;
 }
 
+main .quotes .quote .author .image {
+  padding-right: 16px;
+}
+
 main .quotes .quote .author .image picture {
   width: 42px;
-  padding-right: 16px;
 }
 
 main .quotes .quote .author .summary p {
@@ -70,5 +73,4 @@ main .quotes .quote .author .summary p {
   main .quotes .quote {
     width: 230px;
   }
-
 }
