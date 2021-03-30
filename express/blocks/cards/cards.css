@@ -70,7 +70,7 @@ main .cards.large .card .content h2 {
   margin-bottom: 32px;
 }
 
-main .cards.large .card .content p {
+main .cards.large .card .content p, main .cards.large .card .content li {
   text-align: left;
   font-size: 1.125rem;
 }
@@ -107,7 +107,7 @@ main .cards.large .card .content p {
     margin-bottom: 8px;
   }
 
-  main .cards .card .content p {
+  main .cards .card .content p, main .cards .card .content li {
     font-size: 0.9rem;
   }
 
