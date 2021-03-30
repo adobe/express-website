@@ -15,7 +15,6 @@ import { linkImage } from '../../scripts/scripts.js';
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  console.log('columns');
   if ($rows.length > 1) {
     $block.classList.add('table');
   }
