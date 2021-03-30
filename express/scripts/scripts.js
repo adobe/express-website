@@ -765,7 +765,7 @@ function fixIcons() {
     if (alt) {
       const lowerAlt = alt.toLowerCase();
       if (lowerAlt.includes('icon:')) {
-        const icon = lowerAlt.split('icon:')[1].trim().split(' ')[0];
+        const icon = lowerAlt.split('icon:')[1].trim().replace(/\s/gm, '-');
         const $picture = $img.closest('picture');
         $picture.parentElement.replaceChild(getIconElement(icon), $picture);
       }

@@ -20,7 +20,9 @@ export default function decorate($block) {
   $block.querySelectorAll(':scope>div').forEach(($row) => {
     if ($row.children && $row.children[1]) {
       const iconName = toClassName($row.children[0].textContent);
-      $row.children[0].innerHTML = iconName ? getIcon(iconName) : '';
+      if (iconName) {
+        $row.children[0].innerHTML = iconName ? getIcon(iconName) : '';
+      }
     }
   });
 }
