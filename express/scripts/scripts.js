@@ -279,7 +279,7 @@ export async function getOffer(offerId, countryOverride) {
     const unitPriceCurrencyFormatted = currencyFormatter.format(unitPrice);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F&lang=${lang}`;
     return {
-      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL,
+      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang,
     };
   }
   return {};
@@ -973,6 +973,12 @@ function decorateSocialIcons() {
       }
     }
   });
+}
+
+function displayEnvs() {
+  const usp = new URLSearchParams(window.location.search);
+  if (usp.has('helix-env')) {
+  }
 }
 
 async function decoratePage() {
