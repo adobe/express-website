@@ -373,7 +373,8 @@ function decorateDoMoreEmbed() {
 
 function resolveFragments() {
   Array.from(document.querySelectorAll('main > div div'))
-    .filter(($cell) => /^\[[A-Za-z0-9 -_]+\]$/mg.test($cell.textContent))
+    .filter(($cell) => $cell.childElementCount === 0)
+    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent))
     .forEach(($cell) => {
       const marker = $cell.textContent
         .substring(1, $cell.textContent.length - 1)
