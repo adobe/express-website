@@ -415,7 +415,7 @@ async function showRegionPicker() {
 
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
 
-// const locale = getLocale(window.location);
+const locale = getLocale(window.location);
 
 window.fedsConfig = {
   ...window.fedsConfig,
@@ -425,7 +425,7 @@ window.fedsConfig = {
       showRegionPicker();
     },
   },
-  // locale,
+  locale,
   content: {
     experience: 'cc-express/spark-gnav',
   },
