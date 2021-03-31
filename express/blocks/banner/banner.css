@@ -6,6 +6,10 @@ main .banner {
   margin: 32px auto;
 }
 
+main .banner a:any-link {
+  color: white;
+}
+
 @media (min-width:900px) {
   main .banner {
     margin: 40px auto;

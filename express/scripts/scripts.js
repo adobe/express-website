@@ -46,7 +46,7 @@ export function getIcon(icon, alt = icon) {
   const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
     'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
     'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
-    'upload', 'resize', 'download', 'creativecloud'];
+    'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape'];
   if (symbols.includes(icon)) {
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       <use href="/express/icons.svg#${icon}"></use>
@@ -60,6 +60,20 @@ export function getIconElement(icon) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icon);
   return ($div.firstChild);
+}
+
+export function linkPicture($picture) {
+  const $nextSib = $picture.parentNode.nextElementSibling;
+  if ($nextSib) {
+    console.log($nextSib);
+    const $a = $nextSib.querySelector('a');
+    if ($a && $a.textContent.startsWith('https://')) {
+      console.log($a);
+      $a.innerHTML = '';
+      $a.className = '';
+      $a.appendChild($picture);
+    }
+  }
 }
 
 export function linkImage($elem) {
@@ -359,7 +373,8 @@ function decorateDoMoreEmbed() {
 
 function resolveFragments() {
   Array.from(document.querySelectorAll('main > div div'))
-    .filter(($cell) => /^\[[A-Za-z0-9 -_]+\]$/mg.test($cell.textContent))
+    .filter(($cell) => $cell.childElementCount === 0)
+    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent))
     .forEach(($cell) => {
       const marker = $cell.textContent
         .substring(1, $cell.textContent.length - 1)
@@ -765,7 +780,7 @@ function fixIcons() {
     if (alt) {
       const lowerAlt = alt.toLowerCase();
       if (lowerAlt.includes('icon:')) {
-        const icon = lowerAlt.split('icon:')[1].trim().split(' ')[0];
+        const icon = lowerAlt.split('icon:')[1].trim().replace(/\s/gm, '-');
         const $picture = $img.closest('picture');
         $picture.parentElement.replaceChild(getIconElement(icon), $picture);
       }
@@ -876,12 +891,21 @@ function setTheme() {
   }
 }
 
+function decorateLinkedPictures() {
+  /* thanks to word online */
+  document.querySelectorAll('main picture').forEach(($picture) => {
+    if (!$picture.closest('div.block')) {
+      linkPicture($picture);
+    }
+  });
+}
+
 async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
   splitSections();
-  wrapSections('main>div');
+  wrapSections('main > div');
   decorateHeaderAndFooter();
   decorateHero();
   decorateButtons();
@@ -889,6 +913,7 @@ async function decoratePage() {
   webpPolyfill();
   decorateBlocks();
   decorateDoMoreEmbed();
+  decorateLinkedPictures();
   setLCPTrigger();
   document.body.classList.add('appear');
 }

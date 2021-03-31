@@ -1,42 +1,47 @@
 main .icon-list {
   text-align: left;
   font-size: 1.125rem;
-  width: 300px;
-  margin: 0 auto;
   padding-bottom: 80px;
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 main .icon-list > div {
   display: flex;
-  flex-direction: row;
   margin-bottom: 32px;
+  width: 350px;
+  margin: 16px;
 }
 
-main .icon-list > div > div:first-child {
-  min-width: 64px;
+main .icon-list p {
+  margin: 8px 0;
 }
 
-main .icon-list > div > div:last-child {
-  flex-grow: 1;
+main .icon-list .icon-list-image {
+  flex: 0 0 48px;
 }
 
-main .icon-list .icon {
+main .icon-list .icon, main .icon-list .icon-list-image img {
   fill: currentColor;
   width: 40px;
   height: 40px;
 }
 
+main .icon-list h3, main .icon-list h4 {
+  margin-top: 0;
+  text-align: left;
+}
+
 @media (min-width:600px) {
   main .icon-list {
-    columns: 2;
-    column-gap: 32px;
-    width: 588px;
+    margin-top: 56px;
   }
 }
 
 @media (min-width:900px) {
   main .icon-list {
-    width: 792px;
     padding-bottom: 0;
   }
 }

@@ -18,15 +18,31 @@ export default function decorate($block) {
   if ($rows.length > 1) {
     $block.classList.add('table');
   }
+
+  let numCols = 0;
+  if ($rows[0]) numCols = $rows[0].children.length;
+
+  if (numCols) $block.classList.add(`width-${numCols}-columns`);
+
+  let total = $rows.length;
+  const isNumberedList = $block.classList.contains('numbered');
+  if (isNumberedList && $block.classList.length > 4) {
+    const i = parseInt($block.classList[3], 10);
+    // eslint-disable-next-line no-restricted-globals
+    if (!isNaN(i)) {
+      total = i;
+    }
+  }
+
   $rows.forEach(($row, rowNum) => {
     const $cells = Array.from($row.children);
     $cells.forEach(($cell, cellNum) => {
-      if (cellNum === 0 && $block.classList.contains('numbered')) {
+      if (cellNum === 0 && isNumberedList) {
         // add number to first cell
         let num = rowNum + 1;
-        if ($rows.length > 9) {
+        if (total > 9) {
           // stylize with total for 10 or more items
-          num = `${num}/${$rows.length} —`;
+          num = `${num}/${total} —`;
           if (rowNum < 9) {
             // pad number with 0
             num = `0${num}`;

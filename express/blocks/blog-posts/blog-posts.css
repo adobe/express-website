@@ -7,7 +7,7 @@ main .blog-posts-container > div {
   padding: 0;
 }
 
-main .blog-posts .cards {
+main .blog-posts .blog-cards {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -15,7 +15,7 @@ main .blog-posts .cards {
   width: unset;
 }
 
-main .blog-posts .hero-card {
+main .blog-posts .blog-hero-card {
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -24,13 +24,13 @@ main .blog-posts .hero-card {
   color: unset;
 }
 
-main .blog-posts .hero-card .card-image {
+main .blog-posts .blog-hero-card .blog-card-image {
   width: 100%;
   padding-bottom: 66.67%;
   position: relative;
 }
 
-main .blog-posts .hero-card .card-image img {
+main .blog-posts .blog-hero-card .blog-card-image img {
   object-fit: cover;
   position: absolute;
   top: 0;
@@ -45,11 +45,11 @@ main .blog-posts .hero-card .card-image img {
 main .blog-posts {
   text-align: center;
 }
-main .blog-posts .card, main .blog-posts .hero-card {
+main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
   cursor: pointer;
 }
 
-main .blog-posts .card {
+main .blog-posts .blog-card {
     display: flex;
     flex-direction: column;
     width: 350px;
@@ -59,36 +59,36 @@ main .blog-posts .card {
     color: unset;
   }
 
-  main .blog-posts .card .card-image {
+  main .blog-posts .blog-card .blog-card-image {
     line-height: 0;
   }
 
-  main .blog-posts .card .card-image img {
+  main .blog-posts .blog-card .blog-card-image img {
     height: 200px;
     object-fit: cover;
     width: 100%;
     border-radius: 10px 10px 0 0;
   }
 
-  main .blog-posts .hero-card .card-body {
+  main .blog-posts .blog-hero-card .blog-card-body {
     max-width: 700px;
     margin: auto;
     text-align: center;
     margin: 16px;
   }
 
-  main .blog-posts .hero-card .card-body p {
+  main .blog-posts .blog-hero-card .blog-card-body p {
     margin: 12px 0;
 
   }
 
-  main .blog-posts .hero-card .card-body h3 {
+  main .blog-posts .blog-hero-card .blog-card-body h3 {
     text-align: center;
     font-size: 28px;
     line-height: 32px;
   }
 
-  main .blog-posts .card-body h3 {
+  main .blog-posts .blog-card-body h3 {
     font-size: 18px;
     line-height: 22px;
     margin-top: 0;
@@ -96,12 +96,12 @@ main .blog-posts .card {
   }
 
 
-  main .blog-posts .card .card-body p {
+  main .blog-posts .blog-card .blog-card-body p {
     font-size: 1rem;
     margin: 12px 0;
   }
 
-  main .blog-posts .card-body p.eyebrow {
+  main .blog-posts .blog-card-body p.eyebrow {
     text-transform: uppercase;
     margin: 0;
     margin-bottom: 12px;
@@ -112,7 +112,7 @@ main .blog-posts .card {
     letter-spacing: .1em;
   }
 
-  main .blog-posts .card .card-body {
+  main .blog-posts .blog-card .blog-card-body {
     padding: 16px;
     border: 1px solid lightgrey;
     border-radius: 0 0 10px 10px;
@@ -121,21 +121,21 @@ main .blog-posts .card {
   }
 
 @media (min-width: 600px) {
-  main .blog-posts .hero-card {
+  main .blog-posts .blog-hero-card {
     display: flex;
     flex-direction: row;
     align-items: center;
   }
-  main .blog-posts .hero-card .card-image {
+  main .blog-posts .blog-hero-card .blog-card-image {
     height: 320px;
     padding-bottom: 0;
   }
 
-  main .blog-posts .hero-card .card-body {
+  main .blog-posts .blog-hero-card .blog-card-body {
     text-align: left;
   }
 
-  main .blog-posts .hero-card .card-body h3 {
+  main .blog-posts .blog-hero-card .blog-card-body h3 {
     text-align: left;
   }
 

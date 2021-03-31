@@ -1,0 +1,161 @@
+main .full-width {
+    color: white;
+    position: relative;
+    padding: 120px 32px;
+}
+
+main .full-width.full-width-noimage {
+    color: black;
+    padding-top: 64px;
+    padding-bottom: 0;
+}
+
+main .full-width-container {
+    margin: 0;
+    padding: 0;
+}
+
+main .full-width-container > div {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: unset;
+  }  
+
+main .full-width-container.full-width-noimage > div {
+  max-width: 1024px;
+}
+
+main .full-width-container.full-width-noimage a.button:any-link {
+  color: white;
+}
+
+main .full-width-container.full-width-noimage a:any-link{
+  color: black;
+}
+
+main .full-width h1 {
+    font-size: 45px;
+    font-weight: 900;
+    margin: 0;
+    line-height: 49px;
+}
+
+main .full-width h2 {
+    font-size: 20px;
+    line-height: 28px;
+    margin: 32px 32px;
+    font-weight: 400;
+}
+
+main .full-width h5 {
+  font-size: 18px;
+  font-weight: 500;
+  max-width: 672px;
+  margin: auto;
+  margin-top: 32px;
+}
+
+main .full-width-container.full-width-noimage p {
+  font-size: 14px;
+}
+
+main .full-width p {
+  margin: 16px 0;
+  font-size: 1.25rem;
+}
+
+main .full-width a.button:any-link {
+  text-shadow: none;
+}
+
+main .icon {
+  height: 1em;
+  width: 1em;
+  color: currentColor;
+}
+
+main .full-width .icon {
+  height: 2em;
+  width: 2em;
+}
+
+main .full-width .full-width-bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    z-index: -1;
+}
+
+main .full-width .full-width-bg img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+main .full-width > div {
+    padding: 0;
+}
+
+main .full-width a:any-link {
+  color: currentColor;
+}
+
+@media (min-width:600px) {
+    main .full-width h1 {
+        font-size: 60px;
+        line-height: 64px;
+    }
+
+    main .full-width h2 {
+        font-size: 24px;
+        line-height: 28px;
+        margin-bottom: 40px;
+    }
+
+    main .full-width h5 {
+      font-size: 22px;
+      font-weight: 500;
+      max-width: 672px;
+      margin: auto;
+      margin-top: 32px;
+    }
+
+    main .full-width.full-width-noimage p {
+      font-size: 14px;
+    }
+
+
+    main .full-width {
+        padding: 120px 0;
+    }
+
+    main .full-width>div {
+        max-width: 672px;
+        margin: auto;
+    }
+
+    main .full-width .columns > div {
+      display: flex;
+      margin: auto;
+      justify-content: center;
+    }
+
+}
+
+@media (min-width:900px) {
+    main>.full-width h1 {
+        font-size: 3.5em;
+    }
+    main .full-width>div {
+      max-width: 950px;
+    }
+
+    main .full-width {
+        padding: 200px 0;
+    }
+
+}

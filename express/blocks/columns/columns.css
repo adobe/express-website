@@ -1,5 +1,16 @@
+main .columns-dark-container {
+  background-color: black;
+  padding-bottom: 120px;
+  color: white;
+}
+
 main .columns {
   margin-top: 70px;
+}
+
+main .columns.width-3-columns h3 {
+  font-size: 28px;
+  line-height: 32px;
 }
 
 main .columns > div {
@@ -8,12 +19,16 @@ main .columns > div {
     align-items: center;
 }
 
+main .columns.centered > div > div {
+  text-align: center;
+}
+
 main .columns.table > div {
   align-items: flex-start;
 }
 
 main .columns.top > div {
-  align-items: top;
+  align-items: flex-start;
 }
 
 main .columns-container > div {
