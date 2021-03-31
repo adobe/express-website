@@ -292,10 +292,8 @@ async function rebuildOptionWithOffer(option) {
 
 async function selectPlanOption($plan, option) {
   $plan.dataset.optionId = option.optionId;
-  if (typeof option.id === 'undefined') {
-    // eslint-disable-next-line no-param-reassign
-    option = await rebuildOptionWithOffer(option);
-  }
+  // eslint-disable-next-line no-param-reassign
+  option = await rebuildOptionWithOffer(option);
   const $pricing = $plan.querySelector('.plan-pricing');
   const $pricingText = $plan.querySelector('.plan-secondary');
   const $cta = $plan.querySelector('.button.primary');
@@ -314,12 +312,16 @@ async function selectPlanOption($plan, option) {
   $cta.href = option.url;
 }
 
-function addDropdownEventListener($plan, options) {
+async function addDropdownEventListener($plan, options) {
   const $dropdown = $plan.querySelector('.plan-dropdown');
 
-  $dropdown.addEventListener('change', (e) => {
+  $dropdown.addEventListener('change', async (e) => {
     const option = options[e.target.selectedIndex];
-    selectPlanOption($plan, option);
+    await selectPlanOption($plan, option);
+
+    digitalData._set('primaryEvent.eventInfo.eventName', `adobe.com:express:CTA:pricing:${option.frequency}:dropDown:Click`);
+    _satellite.track('event', { digitalData: digitalData._snapshot() });
+    digitalData._delete('primaryEvent.eventInfo.eventName');
   });
 }
 
@@ -384,6 +386,7 @@ function decoratePlans($block, plans, planOptions) {
 
 function decorateTable($block, features) {
   const categories = [];
+  let categoryId = 0;
   const $featuresTable = createTag('table', { class: 'features' });
   let odd = false;
   $block.append($featuresTable);
@@ -393,8 +396,7 @@ function decorateTable($block, features) {
     const columnTwoCheck = feature['Column 2'];
     const columnThreeCheck = feature['Column 3'];
     if (!categories.includes(Category)) {
-      const imageName = toClassName(Category);
-      const categoryImage = `/express/icons/${imageName}.svg`;
+      const categoryImage = `/express/icons/feature-category-${categoryId}.svg`;
       const $categoryRow = createTag('tr', { class: 'category' });
       $featuresTable.append($categoryRow);
       const $featureLogoColumn = createTag('td');
@@ -406,6 +408,7 @@ function decorateTable($block, features) {
       $categoryRow.append($categoryHeaderColumn);
       categories.push(Category);
       odd = false;
+      categoryId += 1;
     }
     const $featureRow = createTag('tr', { class: 'feature' });
     if (odd) {
