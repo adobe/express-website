@@ -292,10 +292,8 @@ async function rebuildOptionWithOffer(option) {
 
 async function selectPlanOption($plan, option) {
   $plan.dataset.optionId = option.optionId;
-  if (typeof option.id === 'undefined') {
-    // eslint-disable-next-line no-param-reassign
-    option = await rebuildOptionWithOffer(option);
-  }
+  // eslint-disable-next-line no-param-reassign
+  option = await rebuildOptionWithOffer(option);
   const $pricing = $plan.querySelector('.plan-pricing');
   const $pricingText = $plan.querySelector('.plan-secondary');
   const $cta = $plan.querySelector('.button.primary');
