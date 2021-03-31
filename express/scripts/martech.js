@@ -11,7 +11,12 @@
  */
 /* global window document digitalData _satellite fetch */
 
-import { loadScript, getLocale, createTag } from './scripts.js';
+import {
+  loadScript,
+  getLocale,
+  createTag,
+  getLanguage,
+} from './scripts.js';
 
 // this saves on file size when this file gets minified...
 const w = window;
@@ -71,26 +76,8 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   const pathSegments = pathname.substr(1).split('/');
   if (locale !== 'us') pathSegments.shift();
   const pageName = `adobe.com:${pathSegments.join(':')}`;
-  const langs = {
-    us: 'en-US',
-    fr: 'fr-FR',
-    de: 'de-DE',
-    it: 'it-IT',
-    dk: 'da-DK',
-    es: 'es-ES',
-    fi: 'fi-FI',
-    jp: 'ja-JP',
-    kr: 'ko-KR',
-    no: 'nb-NO',
-    nl: 'nl-NL',
-    br: 'pt-BR',
-    se: 'sv-SE',
-    tw: 'zh-Hant-TW',
-    cn: 'zh-Hans-CN',
-  };
 
-  let language = langs[locale];
-  if (!language) language = 'en-US';
+  const language = getLanguage(getLocale(window.location));
   const langSplits = language.split('-');
   langSplits.pop();
 
@@ -428,7 +415,7 @@ async function showRegionPicker() {
 
 loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
 
-// const locale = getLocale(window.location);
+const locale = getLocale(window.location);
 
 window.fedsConfig = {
   ...window.fedsConfig,
@@ -438,7 +425,7 @@ window.fedsConfig = {
       showRegionPicker();
     },
   },
-  // locale,
+  locale,
   content: {
     experience: 'cc-express/spark-gnav',
   },
