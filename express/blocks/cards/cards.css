@@ -3,9 +3,10 @@ main .cards-container > div, main .cards-dark-container > div {
 }
 
 main .cards {
-  padding: 16px 0 56px 0;
+  padding: 16px 0 0 0;
   display: flex;
   flex-direction: column;
+  margin-bottom: 56px;
 }
 
 main .cards .card {
