@@ -384,6 +384,7 @@ function decoratePlans($block, plans, planOptions) {
 
 function decorateTable($block, features) {
   const categories = [];
+  let categoryId = 0;
   const $featuresTable = createTag('table', { class: 'features' });
   let odd = false;
   $block.append($featuresTable);
@@ -393,8 +394,7 @@ function decorateTable($block, features) {
     const columnTwoCheck = feature['Column 2'];
     const columnThreeCheck = feature['Column 3'];
     if (!categories.includes(Category)) {
-      const imageName = toClassName(Category);
-      const categoryImage = `/express/icons/${imageName}.svg`;
+      const categoryImage = `/express/icons/feature-category-${categoryId}.svg`;
       const $categoryRow = createTag('tr', { class: 'category' });
       $featuresTable.append($categoryRow);
       const $featureLogoColumn = createTag('td');
@@ -406,6 +406,7 @@ function decorateTable($block, features) {
       $categoryRow.append($categoryHeaderColumn);
       categories.push(Category);
       odd = false;
+      categoryId += 1;
     }
     const $featureRow = createTag('tr', { class: 'feature' });
     if (odd) {
