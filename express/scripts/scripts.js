@@ -231,21 +231,53 @@ function getCountry() {
   return (country.split('_')[0]);
 }
 
+export function getLanguage(locale) {
+  const langs = {
+    us: 'en-US',
+    fr: 'fr-FR',
+    de: 'de-DE',
+    it: 'it-IT',
+    dk: 'da-DK',
+    es: 'es-ES',
+    fi: 'fi-FI',
+    jp: 'ja-JP',
+    kr: 'ko-KR',
+    no: 'nb-NO',
+    nl: 'nl-NL',
+    br: 'pt-BR',
+    se: 'sv-SE',
+    tw: 'zh-Hant-TW',
+    cn: 'zh-Hans-CN',
+  };
+
+  let language = langs[locale];
+  if (!language) language = 'en-US';
+
+  return language;
+}
+
 export async function getOffer(offerId, countryOverride) {
   let country = getCountry();
   if (countryOverride) country = countryOverride;
   console.log(country);
-  const currency = getCurrency(country);
+  if (!country) country = 'us';
+  let currency = getCurrency(country);
+  if (!currency) {
+    country = 'us';
+    currency = 'USD';
+  }
   const resp = await fetch('/express/system/offers.json');
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
-  const offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
+  let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
+  if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
 
   if (offer) {
+    const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
     const currencyFormatter = new Intl.NumberFormat(navigator.lang, { style: 'currency', currency });
     const unitPriceCurrencyFormatted = currencyFormatter.format(unitPrice);
-    const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F`;
+    const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F&lang=${lang}`;
     return {
       country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL,
     };
