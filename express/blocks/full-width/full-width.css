@@ -130,7 +130,7 @@ main .full-width a:any-link {
 
 
     main .full-width {
-        padding: 80px 0;
+        padding: 120px 0;
     }
 
     main .full-width>div {
@@ -153,4 +153,9 @@ main .full-width a:any-link {
     main .full-width>div {
       max-width: 950px;
     }
+
+    main .full-width {
+        padding: 200px 0;
+    }
+
 }
