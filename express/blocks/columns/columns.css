@@ -56,6 +56,12 @@ main .columns.center > div {
   align-items: center;
 }
 
+main .columns .social.icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 24px;
+}
+
 @media (min-width:900px) {
     main .columns > div {
         flex-direction: row;

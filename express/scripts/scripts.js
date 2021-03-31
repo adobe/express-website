@@ -46,7 +46,7 @@ export function getIcon(icon, alt = icon) {
   const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
     'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
     'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
-    'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape'];
+    'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape', 'globe'];
   if (symbols.includes(icon)) {
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       <use href="/express/icons.svg#${icon}"></use>
@@ -640,7 +640,7 @@ function decorateButtons() {
     if ($block) {
       blockName = $block.className;
     }
-    if (!noButtonBlocks.includes(blockName)) {
+    if (!noButtonBlocks.includes(blockName) && ($a.href !== $a.textContent)) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -932,6 +932,49 @@ function decorateLinkedPictures() {
   });
 }
 
+function decorateSocialIcons() {
+  document.querySelectorAll('main a').forEach(($a) => {
+    if ($a.href === $a.textContent) {
+      let icon = '';
+      if ($a.href.startsWith('https://www.instagram.com')) {
+        icon = 'instagram';
+      }
+      if ($a.href.startsWith('https://twitter.com')) {
+        icon = 'twitter';
+      }
+      if ($a.href.startsWith('https://www.pinterest.')) {
+        icon = 'pinterest';
+      }
+      if ($a.href.startsWith('https://www.facebook.')) {
+        icon = 'facebook';
+      }
+      if ($a.href.startsWith('https://www.linkedin.com')) {
+        icon = 'linkedin';
+      }
+      if ($a.href.startsWith('https://www.youtube.com')) {
+        icon = 'youtube';
+      }
+      const $parent = $a.parentElement;
+      if (!icon && $parent.previousElementSibling.classList.contains('social-links')) {
+        icon = 'globe';
+      }
+
+      if (icon) {
+        $a.innerHTML = '';
+        const $icon = getIconElement(icon);
+        $icon.classList.add('social');
+        $a.appendChild($icon);
+        if ($parent.previousElementSibling.classList.contains('social-links')) {
+          $parent.previousElementSibling.appendChild($a);
+          $parent.remove();
+        } else {
+          $parent.classList.add('social-links');
+        }
+      }
+    }
+  });
+}
+
 async function decoratePage() {
   setTemplate();
   setTheme();
@@ -946,6 +989,7 @@ async function decoratePage() {
   decorateBlocks();
   decorateDoMoreEmbed();
   decorateLinkedPictures();
+  decorateSocialIcons();
   setLCPTrigger();
   document.body.classList.add('appear');
 }
