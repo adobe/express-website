@@ -314,12 +314,16 @@ async function selectPlanOption($plan, option) {
   $cta.href = option.url;
 }
 
-function addDropdownEventListener($plan, options) {
+async function addDropdownEventListener($plan, options) {
   const $dropdown = $plan.querySelector('.plan-dropdown');
 
-  $dropdown.addEventListener('change', (e) => {
+  $dropdown.addEventListener('change', async (e) => {
     const option = options[e.target.selectedIndex];
-    selectPlanOption($plan, option);
+    await selectPlanOption($plan, option);
+
+    digitalData._set('primaryEvent.eventInfo.eventName', `adobe.com:express:CTA:pricing:${option.frequency}:dropDown:Click`);
+    _satellite.track('event', { digitalData: digitalData._snapshot() });
+    digitalData._delete('primaryEvent.eventInfo.eventName');
   });
 }
 
