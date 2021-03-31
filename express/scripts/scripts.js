@@ -955,7 +955,7 @@ function decorateSocialIcons() {
         icon = 'youtube';
       }
       const $parent = $a.parentElement;
-      if (!icon && $parent.previousElementSibling.classList.contains('social-links')) {
+      if (!icon && $parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
         icon = 'globe';
       }
 
