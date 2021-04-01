@@ -175,3 +175,19 @@ main .blog-posts .card .card-body p {
   columns: 280px auto;
 }
 
+
+.helix-env {
+  position: fixed;
+  display: inline-block;
+  padding: 5px 20px;
+  color: white;
+  background-color: #ff000080;
+  bottom: 0;
+  right: 0;
+}
+
+
+.helix-link-warning {
+  border-color: red !important;
+  border-width: 3px;
+}
