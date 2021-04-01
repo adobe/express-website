@@ -965,7 +965,7 @@ function decorateSocialIcons() {
         const $icon = getIconElement(icon);
         $icon.classList.add('social');
         $a.appendChild($icon);
-        if ($parent.previousElementSibling.classList.contains('social-links')) {
+        if ($parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
           $parent.previousElementSibling.appendChild($a);
           $parent.remove();
         } else {
@@ -1000,7 +1000,7 @@ function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
       const url = new URL($a.href);
-      if (!(url.pathname.startsWith('/sp') || url.pathname.startsWith('/tools/'))) {
+      if (!(url.pathname.startsWith('/sp') || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/'))) {
         console.log(`old link: ${$a}`);
         $a.style.border = '10px solid red';
       }
