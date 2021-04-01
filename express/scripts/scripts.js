@@ -47,7 +47,7 @@ export function getIcon(icon, alt = icon) {
   const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
     'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
     'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
-    'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape', 
+    'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape',
     'globe', 'chevron'];
   if (symbols.includes(icon)) {
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
