@@ -88,16 +88,14 @@ function replaceUrlParam(url, paramName, paramValue) {
   const params = url.searchParams;
   params.set(paramName, paramValue);
   url.search = params.toString();
-  return url.toString();
+  return url;
 }
 
 function buildUrl(optionUrl, optionPlan, country, language) {
   let planUrl = new URL(optionUrl);
 
   planUrl = replaceUrlParam(planUrl, 'co', country);
-  planUrl = new URL(planUrl);
   planUrl = replaceUrlParam(planUrl, 'lang', language);
-  planUrl = new URL(planUrl);
 
   const currentUrl = new URL(window.location.href);
   let rUrl = planUrl.searchParams.get('rUrl');
@@ -115,6 +113,9 @@ function buildUrl(optionUrl, optionPlan, country, language) {
       rUrl = rUrl.replace('spark.adobe.com', hostParam);
     }
   }
+
+  rUrl = new URL(rUrl);
+
   if (currentUrl.searchParams.has('touchpointName')) {
     rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
   }
@@ -132,7 +133,7 @@ function buildUrl(optionUrl, optionPlan, country, language) {
     rUrl = currentUrl.searchParams.get('rUrl');
   }
 
-  planUrl.searchParams.set('rUrl', rUrl);
+  planUrl.searchParams.set('rUrl', rUrl.toString());
   return planUrl.href;
 }
 
