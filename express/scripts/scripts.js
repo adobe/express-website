@@ -9,7 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window, navigator, document, fetch, performance, PerformanceObserver, localStorage */
+/* global window, navigator, document, fetch, performance, PerformanceObserver,
+   localStorage, FontFace */
 /* eslint-disable no-console */
 
 export function toClassName(name) {
@@ -1029,10 +1030,27 @@ function displayEnv() {
   }
 }
 
+async function loadFont(name, url) {
+  const font = new FontFace(name, url);
+  const fontLoaded = await font.load();
+  return (fontLoaded);
+}
+
+async function loadFonts() {
+  try {
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")');  
+  } catch (err) {
+    /* something went wrong */
+    console.log(err);
+  }
+  document.body.classList.add('font-loaded');
+}
+
 async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
+  loadFonts();
   splitSections();
   wrapSections('main > div');
   decorateHeaderAndFooter();
