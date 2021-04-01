@@ -15,7 +15,12 @@ export default function decorate($block) {
   const $fullWidthPicture = $block.querySelector('picture');
   const $section = $block.closest('.section-wrapper');
   if ($fullWidthPicture) {
-    $fullWidthPicture.classList.add('full-width-bg');
+    if ($fullWidthPicture.parentNode.tagName === 'DIV') {
+      $fullWidthPicture.classList.add('full-width-imageonly');
+      $block.classList.add('image-only');
+    } else {
+      $fullWidthPicture.classList.add('full-width-bg');
+    }
   } else {
     $section.classList.add('full-width-noimage');
   }

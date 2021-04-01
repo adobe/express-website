@@ -4,6 +4,10 @@ main .full-width {
     padding: 120px 32px;
 }
 
+main .full-width.image-only {
+  padding-bottom: 0;
+}
+
 main .full-width.full-width-noimage {
     color: black;
     padding-top: 64px;
