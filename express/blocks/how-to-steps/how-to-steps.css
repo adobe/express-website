@@ -4,7 +4,7 @@ main .how-to-steps > div {
   }
   main .how-to-steps .tip > p {
     color: #82919b;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 1.2em;
   }
   
@@ -12,7 +12,7 @@ main .how-to-steps > div {
     margin-top: 40px;
     font-size: 28px;
     line-height: 32px;
-    font-weight: 800;
+    font-weight: 900;
     text-align: left;
     margin-bottom: 20px;
   }
@@ -22,7 +22,7 @@ main .how-to-steps > div {
     border-radius: 50%;
     color: #fff;
     font-size: 1.25rem;
-    font-weight: bold;
+    font-weight: 700;
     height: 2.25rem;
     width: 2.25rem;
     display: inline-block;
