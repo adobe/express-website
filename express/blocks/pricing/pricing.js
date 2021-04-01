@@ -91,8 +91,14 @@ function replaceUrlParam(url, paramName, paramValue) {
   return url.toString();
 }
 
-function buildUrl(optionUrl, optionPlan) {
-  const planUrl = new URL(optionUrl);
+function buildUrl(optionUrl, optionPlan, country, language) {
+  let planUrl = new URL(optionUrl);
+
+  planUrl = replaceUrlParam(planUrl, 'co', country);
+  planUrl = new URL(planUrl);
+  planUrl = replaceUrlParam(planUrl, 'lang', language);
+  planUrl = new URL(planUrl);
+
   const currentUrl = new URL(window.location.href);
   let rUrl = planUrl.searchParams.get('rUrl');
   if (currentUrl.searchParams.has('host')) {
@@ -121,6 +127,7 @@ function buildUrl(optionUrl, optionPlan) {
   if (currentUrl.searchParams.has('code')) {
     planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
   }
+
   if (currentUrl.searchParams.get('rUrl')) {
     rUrl = currentUrl.searchParams.get('rUrl');
   }
@@ -253,8 +260,10 @@ async function rebuildOptionWithOffer(option) {
   const offerId = option['OfferID'];
   const fullPriceOfferId = option['Full Price OfferID'];
   let priceUnformatted = parseFloat(price);
-  let ctaUrl = buildUrl(option['Option Url'], option['Option Plan']);
+  let language = 'en';
+  let country = 'us';
   let currency = 'USD';
+  const ctaUrl = option['Option Url'];
   const countryOverride = new URLSearchParams(window.location.search).get('country');
 
   if (offerId) {
@@ -262,7 +271,8 @@ async function rebuildOptionWithOffer(option) {
     currency = offer.currency;
     price = offer.unitPriceCurrencyFormatted;
     priceUnformatted = offer.unitPrice;
-    ctaUrl = offer.commerceURL;
+    country = offer.country;
+    language = offer.lang;
     if (!fullPriceOfferId) {
       fullPrice = offer.unitPriceCurrencyFormatted;
     }
@@ -280,7 +290,7 @@ async function rebuildOptionWithOffer(option) {
   option.fullPrice = fullPrice;
   option.fullPriceUnit = fullPriceUnit;
   option.text = text;
-  option.url = ctaUrl;
+  option.url = buildUrl(ctaUrl, option['Option Plan'], country, language);
   option.cta = cta;
   option.currency = currency;
   option.frequency = option['Analytics Frequency do-not-translate'];
