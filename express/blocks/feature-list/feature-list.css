@@ -3,11 +3,12 @@ main .feature-list {
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
+    margin-top: 56px;
 }
 
 
 main .feature-list img {
-    width: 32px;
+    height: 48px;
 }
 
 main .feature-list > div {
@@ -16,6 +17,16 @@ main .feature-list > div {
 }
 
 main .feature-list h3 {
+    font-size: 26px;
+    line-height: 30px;
+}
+
+main .feature-list h4 {
     font-size: 22px;
     line-height: 26px;
+    margin-top: 20px;
+}
+
+main .feature-list p {
+    margin-top: 20px;
 }
