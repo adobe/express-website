@@ -533,22 +533,6 @@ main .section-wrapper.cards-container {
   padding-top: 0;
 }
 
-main .section-wrapper.quotes-dark-container {
-  background-color: #000;
-}
-
-main .section-wrapper.quotes-inverted-container .quote {
-  background-color: #000;
-  color: #FFF;
-}
-
-main .section-wrapper.quotes-dark-container h2,
-main .section-wrapper.quotes-dark-container h3,
-main .section-wrapper.quotes-dark-container h4,
-main .section-wrapper.quotes-dark-container h5 {
-  color: #FFF;
-}
-
 main .section-wrapper .hero {
   color: initial;
 }
@@ -712,4 +696,14 @@ main .page-list-container, main .pricing {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;
+}
+
+.helix-env {
+  position: fixed;
+  display: inline-block;
+  padding: 5px 20px;
+  color: white;
+  background-color: #ff000080;
+  bottom: 0;
+  right: 0;
 }

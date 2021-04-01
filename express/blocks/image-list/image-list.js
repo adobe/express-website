@@ -12,5 +12,13 @@
 /* global */
 
 export default function decorate($block) {
-  return $block;
+  const $rows = Array.from($block.children);
+  $rows.forEach(($row) => {
+    const $cells = Array.from($row.children);
+    if ($cells[1]) {
+      const $a = $cells[1].querySelector('a');
+      $a.innerHTML = $cells[0].innerHTML;
+      $cells[0].remove();
+    }
+  });
 }

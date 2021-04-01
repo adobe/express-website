@@ -1,0 +1,19 @@
+main .show-section-only-desktop-container {
+    display: none;
+}
+
+@media (min-width: 600px) {
+    main .show-section-only-desktop-container {
+        display: block;
+    }
+}
+
+main .show-section-only-mobile-container {
+    display: block;
+}
+
+@media (min-width: 600px) {
+    main .show-section-only-mobile-container {
+        display: none;
+    }
+}

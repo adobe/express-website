@@ -6,10 +6,20 @@ main .image-list {
   justify-content: center;
 }
 
+main .image-list.app {
+  margin-top: 20px;
+}
+
 main .image-list img {
   height: 48px;
   padding: 20px;
 }
+
+main .image-list.app img {
+  height: 48px;
+  padding: 8px;
+}
+
 
 main .image-list-container > div {
   max-width: 1024px;

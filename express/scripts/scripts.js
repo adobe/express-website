@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window, navigator, document, fetch, performance, PerformanceObserver */
+/* global window, navigator, document, fetch, performance, PerformanceObserver, localStorage */
 /* eslint-disable no-console */
 
 export function toClassName(name) {
@@ -448,7 +448,7 @@ function decorateBlocks() {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'columns'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'columns', 'show-section-only', 'image-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -975,9 +975,42 @@ function decorateSocialIcons() {
   });
 }
 
-function displayEnvs() {
+export function getHelixEnv() {
+  let envName = localStorage.getItem('helix-env');
+  if (!envName) envName = 'prod';
+  const envs = {
+    stage: {
+      commerce: 'commerce-stg.adobe.com',
+      adminconsole: 'stage.adminconsole.adobe.com',
+      spark: 'stage.adobeprojectm.com',
+    },
+    prod: {
+
+    },
+  };
+  const env = envs[envName];
+  if (env) {
+    env.name = envName;
+  }
+  return env;
+}
+
+function displayEnv() {
   const usp = new URLSearchParams(window.location.search);
   if (usp.has('helix-env')) {
+    const env = usp.get('helix-env');
+    if (env) {
+      localStorage.setItem('helix-env', env);
+    } else {
+      localStorage.removeItem('helix-env');
+    }
+  }
+
+  const env = localStorage.getItem('helix-env');
+  if (env) {
+    const $helixEnv = createTag('div', { class: 'helix-env' });
+    $helixEnv.innerHTML = env + (getHelixEnv(env) ? '' : ' [not found]');
+    document.body.appendChild($helixEnv);
   }
 }
 
@@ -997,6 +1030,7 @@ async function decoratePage() {
   decorateLinkedPictures();
   decorateSocialIcons();
   setLCPTrigger();
+  displayEnv();
   document.body.classList.add('appear');
 }
 
