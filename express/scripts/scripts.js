@@ -1000,7 +1000,9 @@ function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
       const url = new URL($a.href);
-      if (!(url.pathname.startsWith('/sp') || url.pathname === '/' || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/'))) {
+      if (!(url.pathname.startsWith('/sp') || url.pathname === '/'
+      || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
+      || url.pathname.startsWith('/post/'))) {
         console.log(`old link: ${$a}`);
         $a.style.border = '10px solid red';
       }
