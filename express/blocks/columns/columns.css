@@ -77,6 +77,11 @@ main .columns .social.icon {
       text-align: left;
     }
 
+    main .section-wrapper div.columns.centered > div > div * {
+      text-align: center;
+    }
+    
+
   main .columns > div span.num {
     font-size: 22px;
     line-height: 29px;
