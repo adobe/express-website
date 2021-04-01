@@ -16,6 +16,7 @@ import {
   createTag,
   getOffer,
   readBlockConfig,
+  getHelixEnv,
 } from '../../scripts/scripts.js';
 
 async function fetchPricingTab(sheet, tab) {
@@ -112,6 +113,9 @@ function buildUrl(optionUrl, optionPlan, country, language) {
       if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
     }
   }
+
+  const env = getHelixEnv();
+  if (env && env.commerce && planUrl.hostname.includes('commerce')) planUrl.hostname = env.commerce;
 
   if (rUrl) {
     rUrl = new URL(rUrl);

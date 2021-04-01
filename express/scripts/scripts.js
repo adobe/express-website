@@ -975,7 +975,7 @@ function decorateSocialIcons() {
   });
 }
 
-function getHelixEnv() {
+export function getHelixEnv() {
   let envName = localStorage.getItem('helix-env');
   if (!envName) envName = 'prod';
   const envs = {
