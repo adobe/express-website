@@ -1002,7 +1002,7 @@ function displayOldLinkWarning() {
       const url = new URL($a.href);
       if (!(url.pathname.startsWith('/sp') || url.pathname === '/'
       || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
-      || url.pathname.startsWith('/post/'))) {
+      || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/'))) {
         console.log(`old link: ${$a}`);
         $a.style.border = '10px solid red';
       }
