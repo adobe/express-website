@@ -41,7 +41,7 @@ main .columns a > p:empty {
 
 main .columns > div span.num {
   position:relative;
-  font-weight: 800;
+  font-weight: 900;
   font-size: 36px;
   line-height: 39px;
   top:0;

@@ -113,7 +113,7 @@ header {
         box-sizing: border-box;
         padding-left: 21px;
         display: flex;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     #header-placeholder .desktop .logo img {
@@ -147,7 +147,7 @@ header {
       }
 
     #header-placeholder .desktop .top .selected {
-        font-weight: 600;
+        font-weight: 700;
     }
 
     #header-placeholder .desktop .top .right {
@@ -222,7 +222,7 @@ a.button:any-link {
     line-height: 20px;
     font-size: 1rem;
     background-color: #1473e6;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     color: #fff;
     transition: background-color .4s;
@@ -319,7 +319,7 @@ main .hero h2 {
 
 main .hero h5 {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 400;
   max-width: 672px;
   margin: auto;
   margin-top: 32px;
@@ -387,7 +387,7 @@ main .hero a:any-link {
 
     main .hero h5 {
       font-size: 22px;
-      font-weight: 500;
+      font-weight: 400;
       max-width: 672px;
       margin: auto;
       margin-top: 32px;
@@ -453,14 +453,14 @@ main .section-wrapper h1 {
     font-size: 45px;
     line-height: 49px;
     margin: 0;
-    font-weight: 800;
+    font-weight: 900;
 }
 
 main .section-wrapper h2 {
     font-size: 36px;
     line-height: 40px;
     margin: 0;
-    font-weight: 800;
+    font-weight: 900;
 }
 
 main .section-wrapper > div > h2 {
@@ -476,7 +476,7 @@ main .section-wrapper h3 {
     font-size: 28px;
     line-height: 32px;
     margin: 0;
-    font-weight: 800;
+    font-weight: 900;
 }
 
 main .section-wrapper > div > h3  {
@@ -496,7 +496,7 @@ main .section-wrapper h4 {
     font-size: 22px;
     line-height: 26px;
     margin: 0;
-    font-weight: 800;
+    font-weight: 900;
 }
 
 main .section-wrapper * + h4 {
@@ -506,7 +506,7 @@ main .section-wrapper * + h4 {
 main .section-wrapper h5 {
     font-size: 22px;
     line-height: 26px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 main .section-wrapper h1 + h5 {
@@ -569,7 +569,7 @@ main .section-wrapper .hero {
   text-transform: uppercase;
   margin: 0;
   margin-bottom: 12px;
-  font-weight: 600;
+  font-weight: 700;
   color: #696969;
   font-size: 16px;
   line-height: 20px;
@@ -583,7 +583,7 @@ main .section-wrapper .hero {
 
 .blog main .hero .blog-header .author .name {
   margin-top: 10px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .blog main .hero .blog-header img {
@@ -643,7 +643,7 @@ main .section-wrapper .hero {
     main .section-wrapper h1 + h5 {
       font-size: 24px;
       line-height: 29px;
-      font-weight: normal;
+      font-weight: 400;
       margin-top: 32px;
       margin-bottom: 16px;
     }
@@ -664,7 +664,7 @@ main .section-wrapper .hero {
   main .section-wrapper a.button:any-link {
     margin-left: 0;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 400;
   }
 
   main .section-wrapper.cards-container {
