@@ -92,12 +92,14 @@ function replaceUrlParam(url, paramName, paramValue) {
 }
 
 function buildUrl(optionUrl, optionPlan, country, language) {
+  const currentUrl = new URL(window.location.href);
   let planUrl = new URL(optionUrl);
 
+  if (!planUrl.hostname.includes('commerce')) {
+    return planUrl.href;
+  }
   planUrl = replaceUrlParam(planUrl, 'co', country);
   planUrl = replaceUrlParam(planUrl, 'lang', language);
-
-  const currentUrl = new URL(window.location.href);
   let rUrl = planUrl.searchParams.get('rUrl');
   if (currentUrl.searchParams.has('host')) {
     const hostParam = currentUrl.searchParams.get('host');
