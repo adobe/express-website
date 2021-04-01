@@ -16,7 +16,6 @@ import {
   createTag,
   getOffer,
   readBlockConfig,
-  toClassName,
 } from '../../scripts/scripts.js';
 
 async function fetchPricingTab(sheet, tab) {
@@ -103,28 +102,31 @@ function buildUrl(optionUrl, optionPlan, country, language) {
     const hostParam = currentUrl.searchParams.get('host');
     if (hostParam === 'spark.adobe.com') {
       planUrl.hostname = 'commerce.adobe.com';
-      rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
     } else if (hostParam.includes('qa.adobeprojectm.com')) {
       planUrl.hostname = 'commerce.adobe.com';
-      rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
     } else if (hostParam.includes('.adobeprojectm.com')) {
       planUrl.hostname = 'commerce-stg.adobe.com';
-      rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
-      rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
+      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
     }
   }
 
-  rUrl = new URL(rUrl);
+  if (rUrl) {
+    rUrl = new URL(rUrl);
 
-  if (currentUrl.searchParams.has('touchpointName')) {
-    rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
+    if (currentUrl.searchParams.has('touchpointName')) {
+      rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
+    }
+    if (currentUrl.searchParams.has('destinationUrl') && optionPlan === 'Individual') {
+      rUrl = replaceUrlParam(rUrl, 'destinationUrl', currentUrl.searchParams.get('destinationUrl'));
+    }
+    if (currentUrl.searchParams.has('srcUrl')) {
+      rUrl = replaceUrlParam(rUrl, 'srcUrl', currentUrl.searchParams.get('srcUrl'));
+    }
   }
-  if (currentUrl.searchParams.has('destinationUrl') && optionPlan === 'Individual') {
-    rUrl = replaceUrlParam(rUrl, 'destinationUrl', currentUrl.searchParams.get('destinationUrl'));
-  }
-  if (currentUrl.searchParams.has('srcUrl')) {
-    rUrl = replaceUrlParam(rUrl, 'srcUrl', currentUrl.searchParams.get('srcUrl'));
-  }
+
   if (currentUrl.searchParams.has('code')) {
     planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
   }
@@ -133,7 +135,7 @@ function buildUrl(optionUrl, optionPlan, country, language) {
     rUrl = currentUrl.searchParams.get('rUrl');
   }
 
-  planUrl.searchParams.set('rUrl', rUrl.toString());
+  if (rUrl) planUrl.searchParams.set('rUrl', rUrl.toString());
   return planUrl.href;
 }
 
