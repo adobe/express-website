@@ -434,6 +434,7 @@ function resolveFragments() {
       setTimeout(() => {
         $cell.innerHTML = '';
         Array.from($fragment.children).forEach(($elem) => $cell.appendChild($elem));
+        $marker.remove();
         $fragment.remove();
         console.log(`fragment "${marker}" resolved`);
       }, 500);
