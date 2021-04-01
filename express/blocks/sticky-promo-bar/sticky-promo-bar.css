@@ -8,7 +8,6 @@ main .sticky-promo-bar {
     padding: 12px;
     padding-right: 36px;
     font-weight: 800;
-    line-height: 2em;
     z-index: 10;
 }
 
@@ -22,6 +21,8 @@ main .sticky-promo-bar a:any-link {
     font-weight: 500;
     font-size: 0.9em;
     white-space: nowrap;
+    display: inline-block;
+    margin-top: 5px;
 }
 
 main .sticky-promo-bar .close {
