@@ -3,10 +3,12 @@
 
 main .faq-container {
     background-color: #f2f4f5;
+    padding-bottom: 80px;
 }
 
 main .faq {
     text-align: left;
+    padding: 20px 0;
 }
 
 main .faq .faq-accordion {

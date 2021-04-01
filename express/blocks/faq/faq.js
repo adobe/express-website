@@ -13,6 +13,34 @@ import {
   createTag,
 } from '../../scripts/scripts.js';
 
+function closeAllOtherFaqs($faq) {
+  const $block = $faq.parentElement;
+  const accs = $block.getElementsByClassName('faq-accordion');
+  for (let i = 0; i < accs.length; i += 1) {
+    if (accs[i] !== $faq && accs[i].classList.contains('active')) {
+      accs[i].classList.remove('active');
+    }
+  }
+}
+
+function toggleFaq(e) {
+  const $faq = e.target.parentElement;
+  closeAllOtherFaqs($faq);
+  $faq.classList.toggle('active');
+}
+
+function addFaqEventListeners($block) {
+  const faqs = $block.getElementsByClassName('faq-question');
+  for (let i = 0; i < faqs.length; i += 1) {
+    faqs[i].addEventListener('click', toggleFaq);
+    faqs[i].addEventListener('keydown', (event) => {
+      if (event.keyCode === 32 || event.keyCode === 13) {
+        toggleFaq(event);
+      }
+    });
+  }
+}
+
 function decorateFAQBlocks($block) {
   const faqs = [];
   const $rows = Array.from($block.children);
@@ -26,16 +54,13 @@ function decorateFAQBlocks($block) {
       question, answer,
     });
   });
-  
+
   $block.innerHTML = '';
   faqs.forEach((faq) => {
     const { question, answer } = faq;
-    console.log(question);
-    console.log(answer);
 
     const $accordion = createTag('div', { class: 'faq-accordion' });
     $block.append($accordion);
-    console.log($accordion);
 
     const $questionDiv = createTag('div', { class: 'faq-question', tabindex: '0' });
     $accordion.append($questionDiv);
@@ -47,40 +72,9 @@ function decorateFAQBlocks($block) {
     const $answerDiv = createTag('div', { class: 'faq-answer' });
     $accordion.append($answerDiv);
     $answerDiv.innerHTML = answer;
-
   });
 
-  addFaqEventListeners();
-}
-
-function addFaqEventListeners() {
-  const faqs = document.getElementsByClassName("faq-question");
-  for (let i = 0; i < faqs.length; i++) {
-    faqs[i].addEventListener("click", toggleFaq);
-    faqs[i].addEventListener("keydown", event => {
-      if (event.keyCode === 32 || event.keyCode === 13 ) {
-        toggleFaq(event);
-      }
-    });
-  }
-}
-
-function toggleFaq(e) {
-  const faq = e.target.parentElement;
-  closeAllOtherFaqs(faq);
-  faq.classList.toggle("active");
-}
-
-function closeAllOtherFaqs(faq) {
-  const accs = document.getElementsByClassName('faq-accordion');
-  for (let i = 0; i < accs.length; i++) {
-    if (accs[i] == faq) {
-      continue;
-    }
-    if (accs[i].classList.contains('active')) {
-      accs[i].classList.remove('active');
-    }
-  }
+  addFaqEventListeners($block);
 }
 
 export default function decorate($block) {
