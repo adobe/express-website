@@ -590,7 +590,7 @@ function decorateHero() {
         const tagString = getMeta('article:tag');
         // eslint-disable-next-line no-unused-vars
         const tags = tagString.split(',');
-        $eyebrow.innerHTML = 'Content & Social Marketing';
+        $eyebrow.innerHTML = getMeta('category');
         // $eyebrow.innerHTML = tags[0];
         $blogHeader.append($eyebrow);
         $blogHeader.append($h1);
@@ -870,7 +870,7 @@ function supportsWebp() {
   return (window.webpSupport);
 }
 
-function getOptimizedImageURL(src) {
+export function getOptimizedImageURL(src) {
   console.log(src);
   const url = new URL(src, window.location.href);
   let result = src;

@@ -15,10 +15,11 @@
 import {
   createTag,
   readBlockConfig,
+  getOptimizedImageURL,
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
-  const resp = await fetch('/express/learn/blog/dev-query-index.json');
+  const resp = await fetch('/express/learn/blog/query-index.json');
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {
@@ -113,18 +114,20 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
   for (let i = offset; i < max; i += 1) {
     const post = posts[i];
     const {
-      path, title, teaser, tags, image,
+      path, title, teaser, tags, image, category,
     } = post;
 
     const tagsArr = JSON.parse(tags);
-    const eyebrow = tagsArr[0] ? tagsArr[0].replace('-', ' ') : '';
+    const eyebrow = category;
     const isHero = hasHero && !i;
     const imagePath = image.split('?')[0].split('_')[1];
-    let pictureTag = `<picture><img src="./media_${imagePath}?auto=webp&format=pjpg&optimize=medium&width=750"></picture>`;
+    const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
+    const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
+    let pictureTag = `<picture><img src="${imageSrc}"></picture>`;
     if (isHero) {
       pictureTag = `<picture>
-        <source media="(max-width: 400px)" srcset="./media_${imagePath}?width=750&auto=webp&format=pjpg&optimize=medium">
-        <img src="./media_${imagePath}?width=2000&auto=webp&format=pjpg&optimize=medium">
+        <source media="(max-width: 400px)" srcset="${imageSrc}">
+        <img src="${heroSrc}">
       </picture>`;
     }
     const $card = createTag('a', {
