@@ -9,7 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window, navigator, document, fetch, performance, PerformanceObserver, localStorage */
+/* global window, navigator, document, fetch, performance, PerformanceObserver,
+   localStorage, FontFace */
 /* eslint-disable no-console */
 
 export function toClassName(name) {
@@ -542,6 +543,7 @@ export function readBlockConfig($block) {
 }
 
 function postLCP() {
+  loadFonts();
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   loadBlocks();
@@ -590,7 +592,7 @@ function decorateHero() {
         const tagString = getMeta('article:tag');
         // eslint-disable-next-line no-unused-vars
         const tags = tagString.split(',');
-        $eyebrow.innerHTML = 'Content & Social Marketing';
+        $eyebrow.innerHTML = getMeta('category');
         // $eyebrow.innerHTML = tags[0];
         $blogHeader.append($eyebrow);
         $blogHeader.append($h1);
@@ -631,6 +633,25 @@ function decorateHero() {
       $heroSection.classList.add('hero-noimage');
     }
   }
+}
+
+async function loadFont(name, url, weight) {
+  const font = new FontFace(name, url, { weight });
+  const fontLoaded = await font.load();
+  document.fonts.add(fontLoaded);
+  return (fontLoaded);
+}
+
+async function loadFonts() {
+  try {
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
+  } catch (err) {
+    /* something went wrong */
+    console.log(err);
+  }
+  document.body.classList.add('font-loaded');
 }
 
 function decorateButtons() {
@@ -870,7 +891,7 @@ function supportsWebp() {
   return (window.webpSupport);
 }
 
-function getOptimizedImageURL(src) {
+export function getOptimizedImageURL(src) {
   console.log(src);
   const url = new URL(src, window.location.href);
   let result = src;
@@ -965,7 +986,7 @@ function decorateSocialIcons() {
         const $icon = getIconElement(icon);
         $icon.classList.add('social');
         $a.appendChild($icon);
-        if ($parent.previousElementSibling.classList.contains('social-links')) {
+        if ($parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
           $parent.previousElementSibling.appendChild($a);
           $parent.remove();
         } else {
@@ -994,6 +1015,21 @@ export function getHelixEnv() {
     env.name = envName;
   }
   return env;
+}
+
+function displayOldLinkWarning() {
+  if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
+    document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
+      const url = new URL($a.href);
+      if (!(url.pathname.startsWith('/sp') || url.pathname === '/'
+      || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
+      || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
+      || url.pathname.startsWith('/classroom/'))) {
+        console.log(`old link: ${$a}`);
+        $a.style.border = '10px solid red';
+      }
+    });
+  }
 }
 
 function displayEnv() {
@@ -1032,6 +1068,7 @@ async function decoratePage() {
   decorateSocialIcons();
   setLCPTrigger();
   displayEnv();
+  displayOldLinkWarning();
   document.body.classList.add('appear');
 }
 

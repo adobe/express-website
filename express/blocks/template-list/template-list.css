@@ -4,7 +4,7 @@ main .template-list {
     justify-content: center;
     margin: 40px 0;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     text-align: left;
 }
 
@@ -154,6 +154,6 @@ main .template-list.masonry .template {
 
   main .columns .template-list .template-link {
     font-size: 0.875rem;
-    font-weight: 500;;
+    font-weight: 400;;
   }
 }
