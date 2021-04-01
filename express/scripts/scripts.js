@@ -542,6 +542,25 @@ export function readBlockConfig($block) {
   return config;
 }
 
+async function loadFont(name, url, weight) {
+  const font = new FontFace(name, url, { weight });
+  const fontLoaded = await font.load();
+  document.fonts.add(fontLoaded);
+  return (fontLoaded);
+}
+
+async function loadFonts() {
+  try {
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
+    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
+  } catch (err) {
+    /* something went wrong */
+    console.log(err);
+  }
+  document.body.classList.add('font-loaded');
+}
+
 function postLCP() {
   loadFonts();
   const martechUrl = '/express/scripts/martech.js';
@@ -633,25 +652,6 @@ function decorateHero() {
       $heroSection.classList.add('hero-noimage');
     }
   }
-}
-
-async function loadFont(name, url, weight) {
-  const font = new FontFace(name, url, { weight });
-  const fontLoaded = await font.load();
-  document.fonts.add(fontLoaded);
-  return (fontLoaded);
-}
-
-async function loadFonts() {
-  try {
-    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
-    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
-    await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
-  } catch (err) {
-    /* something went wrong */
-    console.log(err);
-  }
-  document.body.classList.add('font-loaded');
 }
 
 function decorateButtons() {
@@ -1075,6 +1075,7 @@ async function decoratePage() {
 window.spark = {};
 decoratePage();
 
+console.log(`referrer: ${document.referrer}`);
 if (document.referrer) {
   const referrer = new URL(document.referrer);
   const redirectingHosts = ['www.adobe.com', 'www.stage.adobe.com', 'spark-website--adobe.hlx.live'];

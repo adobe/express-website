@@ -32,7 +32,7 @@ main .quotes .quote .content::before {
   width: 36px;
   text-align: left;
   font-size: 72px;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 main .quotes .quote .author {

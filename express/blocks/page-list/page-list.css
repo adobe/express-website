@@ -31,7 +31,7 @@ main .page-list-browse-button {
   color: #333;
   outline: none;
   background-color: transparent;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color .4s;
   display: inline-block;

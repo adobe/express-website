@@ -54,7 +54,7 @@ main .full-width h2 {
 
 main .full-width h5 {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 400;
   max-width: 672px;
   margin: auto;
   margin-top: 32px;
@@ -122,7 +122,7 @@ main .full-width a:any-link {
 
     main .full-width h5 {
       font-size: 22px;
-      font-weight: 500;
+      font-weight: 400;
       max-width: 672px;
       margin: auto;
       margin-top: 32px;
