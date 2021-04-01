@@ -697,13 +697,3 @@ main .page-list-container, main .pricing {
   height: 100vh;
   transition: opacity 100ms;
 }
-
-.helix-env {
-  position: fixed;
-  display: inline-block;
-  padding: 5px 20px;
-  color: white;
-  background-color: #ff000080;
-  bottom: 0;
-  right: 0;
-}

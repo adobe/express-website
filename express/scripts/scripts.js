@@ -996,6 +996,18 @@ export function getHelixEnv() {
   return env;
 }
 
+function displayOldLinkWarning() {
+  if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
+    document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
+      const url = new URL($a.href);
+      if (!(url.pathname.startsWith('/sp') || url.pathname.startsWith('/tools/'))) {
+        console.log(`old link: ${$a}`);
+        $a.style.border = '10px solid red';
+      }
+    });
+  }
+}
+
 function displayEnv() {
   const usp = new URLSearchParams(window.location.search);
   if (usp.has('helix-env')) {
@@ -1032,6 +1044,7 @@ async function decoratePage() {
   decorateSocialIcons();
   setLCPTrigger();
   displayEnv();
+  displayOldLinkWarning();
   document.body.classList.add('appear');
 }
 
