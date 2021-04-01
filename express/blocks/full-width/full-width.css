@@ -5,7 +5,7 @@ main .full-width {
 }
 
 main .full-width.image-only {
-  padding-bottom: 0;
+  padding: 120px 0 0 0;
 }
 
 main .full-width.full-width-noimage {
