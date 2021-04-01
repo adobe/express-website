@@ -1076,7 +1076,7 @@ window.spark = {};
 decoratePage();
 
 if (document.referrer) {
-  console.log (`referrer: {$document.referrer}`);
+  console.log(`referrer: ${document.referrer}`);
   const referrer = new URL(document.referrer);
   const redirectingHosts = ['www.adobe.com', 'www.stage.adobe.com', 'spark-website--adobe.hlx.live'];
   if (redirectingHosts.includes(referrer.hostname)
