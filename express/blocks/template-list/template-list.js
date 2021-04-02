@@ -19,6 +19,60 @@ import {
   linkImage,
 } from '../../scripts/scripts.js';
 
+function masonrize($cells, $masonry, force) {
+  const colWidth = 264;
+  const maxWidth = 2000;
+
+  const width = $masonry.offsetWidth > maxWidth ? maxWidth : $masonry.offsetWidth;
+  // console.log($masonry.offsetWidth);
+  let numCols = Math.floor(width / colWidth);
+  if (numCols < 1) numCols = 1;
+  if ((numCols !== $masonry.children.length) || force) {
+    $masonry.innerHTML = '';
+    const columns = [];
+    for (let i = 0; i < numCols; i += 1) {
+      const $column = createTag('div', { class: 'masonry-col' });
+      columns.push({
+        outerHeight: 0,
+        $column,
+      });
+      $masonry.appendChild($column);
+    }
+
+    let incomplete = false;
+    $cells.forEach(($cell) => {
+      const minOuterHeight = Math.min(...columns.map((column) => column.outerHeight));
+      const column = columns.find((col) => col.outerHeight === minOuterHeight);
+      column.$column.append($cell);
+
+      const $image = $cell.querySelector('img');
+      if ($image) {
+        if (!$image.complete) {
+          incomplete = true;
+        }
+      }
+      const $video = $cell.querySelector('video');
+      if ($video) {
+        // console.log(`video ready state ${$video.readyState}`);
+        if ($video.readyState === 0) {
+          incomplete = true;
+        }
+      }
+
+      // console.log(`cell offset height: ${$cell.offsetHeight}`);
+      column.outerHeight += $cell.offsetHeight;
+    });
+
+    if (incomplete) {
+      // console.log ('incomplete retrying in 500ms');
+
+      setTimeout(() => {
+        masonrize($cells, $masonry, true);
+      }, 500);
+    }
+  }
+}
+
 async function fetchBlueprint(pathname) {
   if (window.spark.$blueprint) {
     return (window.spark.$blueprint);
@@ -27,7 +81,7 @@ async function fetchBlueprint(pathname) {
   const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
   const resp = await fetch(`${bpPath}.plain.html`);
   // eslint-disable-next-line no-console
-  console.log(`fetching...${bpPath}`);
+  // console.log(`fetching...${bpPath}`);
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
@@ -133,6 +187,18 @@ async function decorateTemplateList($block) {
         }
       }
     }
+  }
+
+  /* flex masonry */
+  if (rows > 6) {
+    // console.log(`masonry-rows: ${rows}`);
+    const $masonryCells = Array.from($block.children);
+    $block.classList.remove('masonry');
+    $block.classList.add('flex-masonry');
+    masonrize($masonryCells, $block);
+    window.addEventListener('resize', () => {
+      masonrize($masonryCells, $block);
+    });
   }
 }
 

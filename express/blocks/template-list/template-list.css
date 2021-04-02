@@ -77,6 +77,17 @@ main .template-list + .button-container > a {
   margin: 0;
 }
 
+main .template-list.flex-masonry {
+    display: flex;
+    margin-top: 0;
+}
+
+main .template-list.flex-masonry .template {
+    margin-top: 0;
+    margin-bottom: 32px;
+    padding: 0;
+}
+
 
 main .template-list.masonry .template {
     margin-top: 0;
