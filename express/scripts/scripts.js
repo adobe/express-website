@@ -43,7 +43,6 @@ function getMeta(name) {
 }
 
 export function getIcon(icon, alt = icon) {
-  console.log(icon);
   const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
     'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
     'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
@@ -67,10 +66,8 @@ export function getIconElement(icon) {
 export function linkPicture($picture) {
   const $nextSib = $picture.parentNode.nextElementSibling;
   if ($nextSib) {
-    console.log($nextSib);
     const $a = $nextSib.querySelector('a');
     if ($a && $a.textContent.startsWith('https://')) {
-      console.log($a);
       $a.innerHTML = '';
       $a.className = '';
       $a.appendChild($picture);
@@ -893,7 +890,6 @@ function supportsWebp() {
 }
 
 export function getOptimizedImageURL(src) {
-  console.log(src);
   const url = new URL(src, window.location.href);
   let result = src;
   const { pathname, search } = url;
@@ -921,8 +917,6 @@ function resetAttribute($elem, attrib) {
   if (src) {
     const oSrc = getOptimizedImageURL(src);
     if (oSrc !== src) {
-      console.log($elem);
-      console.log(`${src} => ${oSrc}`);
       $elem.setAttribute(attrib, oSrc);
     }
   }

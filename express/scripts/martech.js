@@ -410,6 +410,7 @@ async function showRegionPicker() {
       let domain = '';
       if (window.location.hostname.endsWith('.adobe.com')) domain = ' domain=adobe.com;';
       const cookieValue = `international=${destLocale};${domain} path=/`;
+      // eslint-disable-next-line no-console
       console.log(`setting international based on language switch to: ${cookieValue}`);
       document.cookie = cookieValue;
       event.preventDefault();
