@@ -373,6 +373,11 @@ main .hero a:any-link {
   color: currentColor;
 }
 
+main p {
+  line-height: 1.5em;
+}
+
+
 @media (min-width:600px) {
     main .hero h1 {
         font-size: 60px;
