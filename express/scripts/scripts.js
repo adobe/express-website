@@ -1076,22 +1076,6 @@ async function decoratePage() {
 window.spark = {};
 decoratePage();
 
-console.log(`referrer: ${document.referrer}`);
-if (document.referrer) {
-  const referrer = new URL(document.referrer);
-  const redirectingHosts = ['www.adobe.com', 'www.stage.adobe.com', 'spark-website--adobe.hlx.live'];
-  if (redirectingHosts.includes(referrer.hostname)
-  && getLocale(referrer) !== getLocale(window.location)) {
-    if (!getCookie('international')) {
-      const refLocale = getLocale(referrer);
-      console.log(`setting international based on redirect to: ${refLocale}`);
-      let domain = '';
-      if (window.location.hostname === 'www.adobe.com') domain = ' domain=adobe.com;';
-      document.cookie = `international=${refLocale};${domain} path=/`;
-    }
-  }
-}
-
 /* performance instrumentation */
 
 function stamp(message) {

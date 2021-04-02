@@ -406,7 +406,12 @@ async function showRegionPicker() {
       const destLocale = pathSplits[1] ? `${pathSplits[1]}` : 'us';
       const off = locale !== 'us' ? locale.length + 1 : 0;
       const gPath = window.location.pathname.substr(off);
-      document.cookie = `international=${destLocale}; path=/`;
+
+      let domain = '';
+      if (window.location.hostname.endsWith('.adobe.com')) domain = ' domain=adobe.com;';
+      const cookieValue = `international=${destLocale};${domain} path=/`;
+      console.log(`setting international based on language switch to: ${cookieValue}`);
+      document.cookie = cookieValue;
       event.preventDefault();
       window.location.href = prefix + gPath;
     });
