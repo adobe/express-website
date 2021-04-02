@@ -85,11 +85,6 @@ main .faq .faq-answer ul li {
     list-style: disc;
 }
 
-main .faq .faq-answer ul li ul li {
-    font-size: 18px;
-    line-height: 28px;
-}
-
 main .faq .faq-answer p {
     color: #707070;
     font-size: 18px;
