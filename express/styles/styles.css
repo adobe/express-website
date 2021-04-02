@@ -135,7 +135,17 @@ header {
     }
 
     #header-placeholder .desktop .top .section span {
-        padding: 0 12px;
+        margin: 0 12px;
+    }
+
+    #header-placeholder .desktop .top .section .selected {
+      border-bottom: 2px solid #2c2c2c;
+      padding-top: 2px;
+      font-weight: 700;
+      display: inline-flex;
+      height: 100%;
+      box-sizing: border-box;
+      align-items: center;
     }
 
     #header-placeholder .desktop .top .button {
@@ -144,7 +154,7 @@ header {
         font-weight: 700;
         padding: 6px 16px 5px 16px;
         background-color: #1473e6;
-      }      
+    }      
 
     #header-placeholder .desktop .top .selected {
         font-weight: 700;
@@ -172,6 +182,7 @@ header {
 
     #header-placeholder .desktop .bottom > span {
         padding: 0 8px;
+        align-items: center;
     }
 
     #header-placeholder .desktop .drop {
@@ -179,6 +190,10 @@ header {
         align-items: center;
     }
 
+    #header-placeholder .desktop .selected.drop::after {
+      margin-left: 4px;      
+    }
+    
     #header-placeholder .desktop .drop::after {
         display: flex;
         width: 5px;
@@ -194,7 +209,7 @@ header {
         transition: transform .1s ease;
         content: "";
         margin-left: 5px;
-        margin-right: 2px;
+        margin-right: 3px;
     }
 
     #header-placeholder .desktop .top .right {
