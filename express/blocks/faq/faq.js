@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import {
-  createTag,
+  createTag, getIconElement,
 } from '../../scripts/scripts.js';
 
 function closeAllOtherFaqs($faq) {
@@ -34,7 +34,7 @@ function addFaqEventListeners($block) {
   for (let i = 0; i < faqs.length; i += 1) {
     faqs[i].addEventListener('click', toggleFaq);
     faqs[i].addEventListener('keydown', (event) => {
-      if (event.keyCode === 32 || event.keyCode === 13) {
+      if (event.keyCode === 13) {
         toggleFaq(event);
       }
     });
@@ -66,10 +66,9 @@ function decorateFAQBlocks($block) {
     $accordion.append($questionDiv);
     $questionDiv.innerHTML = question;
 
-    const $chevron = createTag('svg', { class: 'chevron', xmlns: 'http://www.w3.org/2000/svg' });
+    const $chevron = getIconElement('chevron');
+    $chevron.classList.add('chevron');
     $questionDiv.prepend($chevron);
-    const $use = createTag('use', { href: '/express/icons.svg#chevron'})
-    $chevron.prepend($use);
 
     const $answerDiv = createTag('div', { class: 'faq-answer' });
     $accordion.append($answerDiv);

@@ -48,8 +48,6 @@ main .faq .faq-question .chevron {
     color: #1473E6;
     fill: #1473E6;
     pointer-events: none;
-    -webkit-transform: rotate(-90deg);
-    transform: rotate(-90deg);
 }
 
 main .faq .faq-answer {
@@ -71,8 +69,8 @@ main .faq .active .faq-answer {
 }
 
 main .faq .active .chevron {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
 main .faq .faq-answer ul {
