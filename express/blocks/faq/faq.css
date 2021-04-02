@@ -37,7 +37,7 @@ main .faq .faq-question:active {
     user-select: none;
 }
 
-main .faq .faq-question:focus {
+main .faq .faq-question:focus:not(:focus-visible) {
     outline: none;
 }
 
