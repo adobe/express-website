@@ -1085,7 +1085,9 @@ if (document.referrer) {
     if (!getCookie('international')) {
       const refLocale = getLocale(referrer);
       console.log(`setting international based on redirect to: ${refLocale}`);
-      document.cookie = `international=${refLocale}; path=/`;
+      let domain = '';
+      if (window.location.hostname === 'www.adobe.com') domain = ' domain=adobe.com;';
+      document.cookie = `international=${refLocale};${domain} path=/`;
     }
   }
 }
