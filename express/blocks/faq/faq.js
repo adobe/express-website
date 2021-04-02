@@ -66,8 +66,10 @@ function decorateFAQBlocks($block) {
     $accordion.append($questionDiv);
     $questionDiv.innerHTML = question;
 
-    const $chevron = createTag('i', { class: 'chevron fa fa-chevron-down' });
+    const $chevron = createTag('svg', { class: 'chevron', xmlns: 'http://www.w3.org/2000/svg' });
     $questionDiv.prepend($chevron);
+    const $use = createTag('use', { href: '/express/icons.svg#chevron'})
+    $chevron.prepend($use);
 
     const $answerDiv = createTag('div', { class: 'faq-answer' });
     $accordion.append($answerDiv);
