@@ -25,6 +25,8 @@ main .faq .faq-question {
     transition: all .25s ease-in-out;
     overflow-anchor: none;
     cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 
