@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window, navigator, document, fetch, performance, PerformanceObserver,
-   localStorage, FontFace */
+   localStorage, FontFace, sessionStorage */
 /* eslint-disable no-console */
 
 export function toClassName(name) {
@@ -584,6 +584,7 @@ async function loadFonts() {
     document.fonts.add(f900);
     document.fonts.add(f400);
     document.fonts.add(f700);
+    sessionStorage.setItem('helix-fonts', 'loaded');
   } catch (err) {
     /* something went wrong */
     console.log(err);
@@ -1082,6 +1083,9 @@ async function decoratePage() {
   setTemplate();
   setTheme();
   await decorateTesting();
+  if (sessionStorage.getItem('helix-font') === 'loaded') {
+    loadFonts();
+  }
   splitSections();
   wrapSections('main > div');
   decorateHeaderAndFooter();
