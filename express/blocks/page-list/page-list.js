@@ -32,7 +32,7 @@ function addPages(index, config, $block) {
 }
 function setSize($container) {
   const $left = $container.querySelector('.page-list');
-  const $right = $container.querySelector('.page-list-right');
+  const $right = $container.querySelector('.page-list-right .template-list');
   $left.style.height = `${$right.offsetHeight}px`;
 }
 
