@@ -107,7 +107,9 @@ async function decoratePageList($block) {
   });
 
   showHide($block, $ptl);
-  setSize($flex);
+  setTimeout(() => {
+    setSize($flex);
+  }, 500);
   window.addEventListener('resize', () => {
     showHide($block, $ptl);
     setSize($flex);
