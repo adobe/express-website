@@ -437,7 +437,9 @@ window.fedsConfig = {
   },
   profile: {
     customSignIn: () => {
-      window.location.href = 'https://spark.adobe.com/sp';
+      const sparkLang = getLanguage(getLocale(window.location));
+      const sparkPrefix = sparkLang === 'en-US' ? '' : `/${sparkLang}`;
+      window.location.href = `https://spark.adobe.com${sparkPrefix}/sp/`;
     },
   },
 };

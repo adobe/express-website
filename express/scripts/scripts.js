@@ -1048,7 +1048,7 @@ function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
       const url = new URL($a.href);
-      if (!(url.pathname.startsWith('/sp') || url.pathname === '/'
+      if (!(url.pathname.endsWith('/sp/') || url.pathname === '/'
       || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
       || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
       || url.pathname.startsWith('/classroom/'))) {
