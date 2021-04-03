@@ -114,8 +114,10 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
   for (let i = offset; i < max; i += 1) {
     const post = posts[i];
     const {
-      path, title, teaser, image, category,
+      title, teaser, image, category,
     } = post;
+
+    const path = post.path.split('.')[0];
 
     const eyebrow = category;
     const isHero = hasHero && !i;
