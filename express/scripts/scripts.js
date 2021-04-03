@@ -598,10 +598,13 @@ function postLCP() {
   loadCSS('/express/styles/lazy-styles.css');
   loadBlocks();
   resolveFragments();
+
+  const usp = new URLSearchParams(window.location.search);
+  const martech = usp.get('martech');
+
   // loadLazyFooter();
-  if (!(window.location.search === '?nomartech' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+  if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 2000;
-    const usp = new URLSearchParams(window.location.search);
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
@@ -753,8 +756,9 @@ async function checkTesting(url) {
 async function decorateTesting() {
   let runTest = true;
   // let reason = '';
-
-  if (await checkTesting(window.location.href)) {
+  const usp = new URLSearchParams(window.location.search);
+  const martech = usp.get('martech');
+  if ((await checkTesting(window.location.href) && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
     loadScript('/express/scripts/martech.js', null, 'module');
