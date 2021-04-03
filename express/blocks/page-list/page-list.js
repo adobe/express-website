@@ -31,13 +31,6 @@ function addPages(index, config, $block) {
   $block.appendChild($ul);
 }
 
-function setSize($cols, $flex, $hero) {
-  const minWidth = 260;
-  const w = $cols.parentNode.offsetWidth;
-  $cols.style.width = `${Math.floor(w / minWidth) * minWidth}px`;
-  $flex.style.height = `${(window.innerHeight - $hero.offsetHeight)}px`;
-}
-
 function showHide($block, $ptl) {
   if (window.innerWidth < 600) {
     $block.classList.add('hidden');
@@ -109,10 +102,8 @@ async function decoratePageList($block) {
   });
 
   showHide($block, $ptl);
-  setSize($ptl, $flex, $hero);
   window.addEventListener('resize', () => {
     showHide($block, $ptl);
-    setSize($ptl, $flex, $hero);
   });
 
   const index = await fetchIndex();

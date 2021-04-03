@@ -21,9 +21,8 @@ import {
 
 function masonrize($cells, $masonry, force) {
   const colWidth = 264;
-  const maxWidth = 2000;
 
-  const width = $masonry.offsetWidth > maxWidth ? maxWidth : $masonry.offsetWidth;
+  const width = $masonry.offsetWidth;
   // console.log($masonry.offsetWidth);
   let numCols = Math.floor(width / colWidth);
   if (numCols < 1) numCols = 1;

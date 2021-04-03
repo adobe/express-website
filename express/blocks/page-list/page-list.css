@@ -1,6 +1,5 @@
 main .page-list-container.appear, main .page-list.appear {
   opacity: 1;
-  height: unset;
 }
 
 main .page-list {
@@ -49,15 +48,10 @@ main .page-list-browse-button {
 
 
 main .page-list-container > div {
-    height: 500px;
     max-width: 100%;
     display: flex;
     margin: 0;
     box-sizing: border-box;
-  }
-
-main .page-list-container  > div > div {
-    overflow-y: scroll;
   }
 
 main .page-list-container  > div .template-list {
@@ -86,19 +80,15 @@ main .hero-short {
 
 main .page-list-left {
   flex: 0 0 auto;
-  overflow: scroll;
-  height: 100%;
+  overflow-y: scroll;
 }
 main .page-list-right {
   flex: 1 1 auto;
   padding-left: 20px;
-  overflow: scroll;
-  height: 100%;
 }
 
-main .page-template-list > .template-list.masonry {
-  columns: 260px auto;
-  column-gap: 0;
+main .page-template-list > .template-list.flex-masonry {
+  justify-content: flex-start;
 }
 
 
