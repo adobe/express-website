@@ -42,16 +42,6 @@ main .page-list-browse-button {
   font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
 }
 
-@media (min-width: 600px) {
-  main .page-list-browse-button {
-    display: none;
-  } 
-  main .page-list {
-    width: 260px;
-  } 
-}
-
-
 main .page-list-container > div {
     max-width: 100%;
     display: flex;
@@ -85,12 +75,36 @@ main .hero-short {
 
 main .page-list-left {
   flex: 0 0 auto;
-  overflow-y: scroll;
 }
 main .page-list-right {
   flex: 1 1 auto;
-  padding-left: 20px;
 }
+
+main div.section-wrapper.page-list-container > div {
+  padding-left: 6px;
+}
+
+
+@media (min-width: 600px) {
+  main .page-list-left {
+    overflow-y: scroll;
+  }
+  
+  main .page-list-browse-button {
+    display: none;
+  } 
+  main .page-list {
+    width: 260px;
+  } 
+
+  main .page-list-right {
+    padding-left: 20px;
+  }
+  
+}
+
+
+
 
 main .page-template-list > .template-list.flex-masonry {
   justify-content: flex-start;
