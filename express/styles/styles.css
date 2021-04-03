@@ -716,7 +716,7 @@ main .section-wrapper > div {
 
 /* jank protection for async sections */
 
-main .page-list-container, main .page-list {
+main .page-list-container {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;

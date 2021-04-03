@@ -1,6 +1,10 @@
-main .page-list-container.appear, main .page-list.appear {
+main .page-list-container.appear {
   opacity: 1;
   height: unset;
+}
+
+main .page-list.appear {
+  opacity: 1;
 }
 
 main .page-list {

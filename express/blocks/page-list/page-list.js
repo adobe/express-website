@@ -30,6 +30,11 @@ function addPages(index, config, $block) {
   });
   $block.appendChild($ul);
 }
+function setSize($container) {
+  const $left = $container.querySelector('.page-list');
+  const $right = $container.querySelector('.page-list-right');
+  $left.style.height = `${$right.offsetHeight}px`;
+}
 
 function showHide($block, $ptl) {
   if (window.innerWidth < 600) {
@@ -102,8 +107,10 @@ async function decoratePageList($block) {
   });
 
   showHide($block, $ptl);
+  setSize($flex);
   window.addEventListener('resize', () => {
     showHide($block, $ptl);
+    setSize($flex);
   });
 
   const index = await fetchIndex();
