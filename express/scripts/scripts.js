@@ -342,6 +342,13 @@ function getGnavPlaceholder(nav) {
 function decorateHeaderAndFooter() {
   const $header = document.querySelector('header');
 
+  $header.addEventListener('click', (event) => {
+    if (event.target.id === 'feds-topnav') {
+      const root = window.location.href.split('/express/')[0];
+      window.location.href = `${root}/express/`;
+    }
+  });
+
   /* init header */
   const locale = getLocale(window.location);
 
