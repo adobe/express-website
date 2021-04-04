@@ -446,6 +446,15 @@ window.fedsConfig = {
 
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js', () => {
   setTimeout(() => {
+    /* attempt to switch link */
+    if (window.location.pathname.includes('/create/') || window.location.pathname.includes('/discover/')) {
+      const $aNav = document.querySelector('header a.feds-navLink--primaryCta');
+      const $aHero = document.querySelector('main .hero a.button.primary');
+      if ($aNav && $aHero) {
+        $aNav.href = $aHero.href;
+      }
+    }
+
     const gnav = document.getElementById('feds-header');
     const placeholder = document.getElementById('header-placeholder');
     gnav.classList.add('appear');
