@@ -1,0 +1,64 @@
+main .pricing-plan .gradient-border {
+    background: -moz-linear-gradient(135deg, #ffda00 0%, #ff9800 25%, #fd2d00 50%, #d20b48 75%, #8403d1 100%);
+    background: -webkit-linear-gradient(135deg, #ffda00 0%, #ff9800 25%, #fd2d00 50%, #d20b48 75%, #8403d1 100%);
+    background: linear-gradient(135deg, #ffda00 0%, #ff9800 25%, #fd2d00 50%, #d20b48 75%, #8403d1 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffda00",endColorstr="#d10384",GradientType=1);
+    padding: 3px;
+    border-radius: 21px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+    main .pricing-plan .gradient-border {
+        margin-right: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    main .pricing-plan .gradient-border {
+        margin-bottom: 56px;
+    }
+}
+
+main .pricing-plan .inner-rectangle {
+    background: white;
+    border-radius: 18px;
+    padding: 32px 64px;
+    text-align: center;
+}
+
+@media (max-width: 450px) {
+    main .pricing-plan .inner-rectangle {
+        padding: 32px;
+    }
+}
+
+main .pricing-plan .inner-rectangle * {
+    text-align: center !important;
+}
+
+main .pricing-plan .inner-rectangle hr {
+    border: 1px solid #efeff0;
+}
+
+main .pricing-plan p:last-child {
+    margin-bottom: 0;
+}
+
+main .pricing-plan .button-container {
+    margin: 16px 0 0 0;
+}
+
+main .pricing-plan .button-container .button {
+    margin: 0;
+}
+
+main .pricing-plan .price {
+    margin-bottom: 4px;
+}
+
+main .pricing-plan .price strong {
+    font-weight: 900;
+    font-size: 36px;
+}
