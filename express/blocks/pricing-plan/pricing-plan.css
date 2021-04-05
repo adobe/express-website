@@ -15,7 +15,7 @@ main .pricing-plan .gradient-border {
     }
 }
 
-@media (max-width: 600) {
+@media (max-width: 600px) {
     main .pricing-plan .gradient-border {
         margin-bottom: 56px;
     }
