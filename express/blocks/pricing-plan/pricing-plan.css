@@ -9,11 +9,23 @@ main .pricing-plan .gradient-border {
     margin: 0 auto;
 }
 
+@media (min-width: 900px) {
+    main .pricing-plan .gradient-border {
+        margin-right: 40px;
+    }
+}
+
 main .pricing-plan .inner-rectangle {
     background: white;
     border-radius: 18px;
     padding: 32px 64px;
     text-align: center;
+}
+
+@media (max-width: 450px) {
+    main .pricing-plan .inner-rectangle {
+        padding: 32px;
+    }
 }
 
 main .pricing-plan .inner-rectangle * {
