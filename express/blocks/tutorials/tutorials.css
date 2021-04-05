@@ -2,12 +2,18 @@ main .tutorials .filters {
     margin-top: 25px;
 }
 
+main .tutorials .filters .tag-filter:hover {
+  background-color: #eee;
+}  
+
 main .tutorials .filters .tag-filter {
-    border: 1px solid lightgray;
+    border: 2px solid black;
     border-radius: 20px;
-    padding: 4px 20px 6px 20px;
-    margin: 5px;
+    padding: 6px 20px 6px 20px;
+    margin: 8px;
     display: inline-block;
+    font-weight: 700;
+    cursor: pointer;
   }
 
   main .tutorials-container .hidden {
@@ -19,9 +25,11 @@ main .tutorials .filters .tag-filter {
   }
   
   main .tutorials .filters .tag-filter.selected {
-    background-color: #1473e6;
-    color: white;
+    background-color: #ccc;
+    color: black;
     font-weight: 700;
+    padding: 8px 22px 8px 22px;
+    border: 0;
   }
   
   main .tutorials-container .results {
@@ -38,7 +46,7 @@ main .tutorials .filters .tag-filter {
     display: flex;
     flex-direction: column;
     width: 350px;
-    margin: 10px;
+    margin: 20px;
     text-align: left;
   }
   
@@ -47,6 +55,8 @@ main .tutorials .filters .tag-filter {
     position: relative;
     border-radius: 10px 10px 0 0;
     overflow: hidden;
+    border-width: 1px 0 1px 1px;
+    border: 1px solid grey;
   }
 
   main .tutorials-container .results .tutorial-card h3 {
@@ -71,6 +81,7 @@ main .tutorials .filters .tag-filter {
     border: 1px solid grey;
     border-width: 0 1px 0 1px;
     padding: 10px;
+    height: 50px;
   }
 
   main .tutorial-card .tutorial-card-tags {
@@ -78,6 +89,7 @@ main .tutorials .filters .tag-filter {
     border: 1px solid grey;
     border-width: 0 1px 1px 1px;
     padding: 10px;
+    height: 92px;
   }
   
   main .tutorials-container .results .tutorial-card-img .badge {
@@ -120,11 +132,12 @@ main .tutorials .filters .tag-filter {
   
   
   main .tutorials-container .results .tutorial-card-tags span {
-    border: 1px solid #444;
+    border: 2px solid #444;
     border-radius: 20px;
     color: #444;
     display: inline-block;
-    padding: 2px 10px 4px 10px;
+    padding: 6px 20px 6px 20px;
     margin: 5px;
+    font-size: 14px;
   }
   
