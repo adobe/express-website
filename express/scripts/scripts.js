@@ -979,8 +979,8 @@ function setTheme() {
   const theme = getMeta('theme');
   if (theme) {
     const themeClass = toClassName(theme);
-    const $main = document.querySelector('main');
-    $main.classList.add(themeClass);
+    const $body = document.body;
+    $body.classList.add(themeClass);
   }
 }
 
