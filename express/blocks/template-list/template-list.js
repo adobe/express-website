@@ -186,6 +186,11 @@ async function decorateTemplateList($block) {
         }
       }
     }
+
+    // ensure the template div has the template class if not a linked image and no template link
+    if (!$link && !$imgLink) {
+      $tmplt.classList.add('template');
+    }
   }
 
   /* flex masonry */
