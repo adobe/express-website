@@ -321,7 +321,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
         sparkEventName = 'landing:creativeCloudLearnMorePressed';
       // View plans
       } else {
-        adobeEventName = 'pricing:viewPlans:Click';
+        adobeEventName = 'adobe.com:express:CTA:pricing:viewPlans:Click';
         sparkEventName = 'landing:viewPlansPressed';
       }
 
