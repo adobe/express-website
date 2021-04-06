@@ -63,25 +63,24 @@ main .columns .social.icon {
 }
 
 @media (min-width:900px) {
-    main .columns > div {
-        flex-direction: row;
-        text-align: left;
-    }
+  main .columns > div {
+    flex-direction: row;
+    text-align: left;
+  }
 
-    main .section-wrapper div.columns > div > div {
-      width: 50%;
-      padding: 10px;
-    }
+  main .section-wrapper div.columns > div > div {
+    width: 50%;
+    padding: 10px 24px;
+  }
 
-    main .section-wrapper div.columns > div > div * {
-      text-align: left;
-    }
+  main .section-wrapper div.columns > div > div * {
+    text-align: left;
+  }
 
-    main .section-wrapper div.columns.centered > div > div * {
-      text-align: center;
-    }
-    
-
+  main .section-wrapper div.columns.centered > div > div * {
+    text-align: center;
+  }
+  
   main .columns > div span.num {
     font-size: 22px;
     line-height: 29px;
