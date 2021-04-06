@@ -79,6 +79,9 @@ main .columns .social.icon {
 
   main .section-wrapper div.columns.centered > div > div * {
     text-align: center;
+  }
+  
+  main .section-wrapper div.columns.centered > div > div {
     padding: 10px 24px;
   }
 
