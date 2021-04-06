@@ -46,3 +46,11 @@ main .list .item-text {
     width: 220px;
   }
 }
+
+main .list > div > div > :first-child {
+  margin-top: 0;
+}
+
+main .list > div > div > :last-child {
+  margin-bottom: 0;
+}

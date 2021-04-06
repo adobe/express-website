@@ -18,32 +18,32 @@ function decorateList($block) {
 
   const $rows = Array.from($block.children);
   $rows.forEach(($row, i) => {
-    // eslint-disable-next-line no-console
-    console.log(i);
     const $cells = Array.from($row.children);
     const $title = $cells[0];
     const $text = $cells[1];
 
-    const title = $title.textContent;
-    const text = $text.textContent;
-
-    list.push({
-      title, text,
+    if ($title && $text) {
+      const title = $title.textContent;
+      const text = $text.textContent;
+      list.push({
+        title, text,
+      });
+    }
+  });
+  if (list.length > 0) {
+    $block.innerHTML = '';
+    list.forEach((item) => {
+      const { title, text } = item;
+      const $listItem = createTag('div', { class: 'item' });
+      $block.append($listItem);
+      const $title = createTag('h3', { class: 'item-title' });
+      $title.innerHTML = title;
+      $listItem.append($title);
+      const $text = createTag('p', { class: 'item-text' });
+      $text.innerHTML = text;
+      $listItem.append($text);
     });
-  });
-
-  $block.innerHTML = '';
-  list.forEach((item) => {
-    const { title, text } = item;
-    const $listItem = createTag('div', { class: 'item' });
-    $block.append($listItem);
-    const $title = createTag('h3', { class: 'item-title' });
-    $title.innerHTML = title;
-    $listItem.append($title);
-    const $text = createTag('p', { class: 'item-text' });
-    $text.innerHTML = text;
-    $listItem.append($text);
-  });
+  }
 }
 
 export default function decorate($block) {
