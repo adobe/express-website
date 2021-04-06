@@ -277,6 +277,10 @@ main {
     text-align: center;
 }
 
+main a:any-link {
+  color: black;
+}
+
 main img {
     max-width: 100%;
 }
