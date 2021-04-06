@@ -156,6 +156,7 @@ main .template-list.masonry .template {
   main .columns .template-list {
     flex-direction: row;
     flex-wrap: nowrap;
+    justify-content: flex-start;
   }
 
   main .columns .template-list .template {
@@ -165,6 +166,6 @@ main .template-list.masonry .template {
 
   main .columns .template-list .template-link {
     font-size: 0.875rem;
-    font-weight: 400;;
+    font-weight: 400;
   }
 }

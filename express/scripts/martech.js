@@ -91,7 +91,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     || pathname.includes('/feature/')
   ) {
     category = 'design';
-    if (pathname.includes('/photo')) category = 'photo';
+    if (pathname.includes('/image')) category = 'photo';
     if (pathname.includes('/video')) category = 'video';
   }
   let sparkLandingPageType;
