@@ -484,7 +484,8 @@ function decorateBlocks() {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'columns', 'show-section-only', 'image-list'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
+      'columns', 'show-section-only', 'image-list', 'feature-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
