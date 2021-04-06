@@ -161,11 +161,10 @@ function selectPlanAnalytics($plan, options) {
       frequency: optionData.frequency,
       currency: optionData.currency,
     };
-    let adobeEventName;
+    let adobeEventName = 'adobe.com:express:CTA:';
     let sparkEventName;
-    // determine whether individual | starter | etc.
     // Buy Now
-    if ($cta.hostname.includes('commerce.adobe.com')) {
+    if ($cta.hostname.includes('commerce.adobe.com') || $cta.hostname.includes('commerce-stg.adobe.com')) {
       // individual
       if ($cta.search.includes('spark.adobe.com')) {
         adobeEventName += `pricing:individual:${option.position}:buyNow:Click`;
@@ -334,9 +333,10 @@ async function selectPlanOption($plan, option) {
 async function addDropdownEventListener($plan, options) {
   const $dropdown = $plan.querySelector('.plan-dropdown');
 
-  $dropdown.addEventListener('change', async (e) => {
+  $dropdown.addEventListener('change', (e) => {
     const option = options[e.target.selectedIndex];
-    await selectPlanOption($plan, option);
+    selectPlanOption($plan, option);
+    option.frequency = option['Analytics Frequency do-not-translate'];
 
     digitalData._set('primaryEvent.eventInfo.eventName', `adobe.com:express:CTA:pricing:${option.frequency}:dropDown:Click`);
     _satellite.track('event', { digitalData: digitalData._snapshot() });
