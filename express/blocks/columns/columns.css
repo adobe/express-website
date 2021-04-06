@@ -81,6 +81,9 @@ main .columns .social.icon {
       text-align: center;
     }
     
+    main .section-wrapper div.columns.centered > div > div {
+      padding: 10px 24px;
+    }
 
   main .columns > div span.num {
     font-size: 22px;
