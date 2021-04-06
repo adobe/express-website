@@ -56,9 +56,7 @@ w.marketingtech = {
       environment: 'production',
     },
     analytics: {
-      // TODO: Switch these before go live.
-      // additionalAccounts: 'adbemmarvelweb.prod',
-      additionalAccounts: 'adbemmarvelweb.rebootdev2',
+      additionalAccounts: 'adbemmarvelweb.prod',
     },
     target: true,
   },
