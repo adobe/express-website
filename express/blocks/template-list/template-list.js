@@ -144,7 +144,6 @@ async function decorateTemplateList($block) {
     if ($link) {
       const $a = createTag('a', {
         href: $link.href || '#',
-        class: 'template',
       });
       $a.append(...$tmplt.childNodes);
       $tmplt.remove();
@@ -157,6 +156,7 @@ async function decorateTemplateList($block) {
       $link.parentNode.append($newLink);
       $link.remove();
     }
+    $tmplt.classList.add('template');
 
     // wrap "linked images" with link
     const $imgLink = $tmplt.querySelector(':scope > div:first-of-type a');
