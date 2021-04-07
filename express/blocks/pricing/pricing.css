@@ -174,6 +174,10 @@ main .pricing .plan .plan-see-details {
     cursor: pointer;
 }
 
+main .pricing .plan .plan-see-details p {
+    margin-bottom: 0;
+}
+
 main .features {
     display: none;
 }
