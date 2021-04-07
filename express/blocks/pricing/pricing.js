@@ -16,7 +16,8 @@ import {
   createTag,
   getOffer,
   readBlockConfig,
-  getHelixEnv, getIconElement,
+  getHelixEnv,
+  getIconElement,
 } from '../../scripts/scripts.js';
 
 async function fetchPricingTab(sheet, tab) {
@@ -450,7 +451,7 @@ function decoratePlans($block, plans, planOptions, features) {
     });
     selectPlanOption($plan, options[0]);
     selectPlanAnalytics($plan, options);
-    cardId++;
+    cardId += 1;
   });
 }
 
@@ -552,6 +553,7 @@ async function decoratePricing($block) {
 
   $block.innerHTML = '';
 
+  // eslint-disable-next-line no-console
   console.log(features);
 
   decorateHeader($block, header);
