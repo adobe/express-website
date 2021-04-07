@@ -178,6 +178,11 @@ main .pricing .plan .plan-see-details p {
     margin-bottom: 0;
 }
 
+main .pricing .plan .plan-see-details .chevron {
+    margin-top: 32px;
+    margin-left: 5px;
+}
+
 main .features {
     display: none;
 }
