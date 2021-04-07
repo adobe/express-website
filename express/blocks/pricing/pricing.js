@@ -16,7 +16,8 @@ import {
   createTag,
   getOffer,
   readBlockConfig,
-  getHelixEnv, getIconElement,
+  getHelixEnv,
+  getIconElement,
 } from '../../scripts/scripts.js';
 
 async function fetchPricingTab(sheet, tab) {
