@@ -163,23 +163,29 @@ function selectPlanAnalytics($plan, options) {
     };
     let adobeEventName = 'adobe.com:express:CTA:';
     let sparkEventName;
+    let buttonId;
+
     // Buy Now
     if ($cta.hostname.includes('commerce.adobe.com') || $cta.hostname.includes('commerce-stg.adobe.com')) {
       // individual
       if ($cta.search.includes('spark.adobe.com') || $cta.search.includes('adobeprojectm.com')) {
+        buttonId = `individual:${option.position}:buyNow:Click`;
         adobeEventName += `pricing:individual:${option.position}:buyNow:Click`;
         // team
       } else if ($cta.search.includes('adminconsole.adobe.com')) {
+        buttonId = `team:${option.position}:buyNow:Click`;
         adobeEventName += `pricing:team:${option.position}:buyNow:Click`;
       }
       sparkEventName = 'beginPurchaseFlow';
       // anything else
     } else {
+      buttonId = `starter:${option.position}:buyNow:Click`;
       adobeEventName += `pricing:starter:${option.position}:getStarted:Click`;
       sparkEventName = 'pricing:ctaPressed';
     }
 
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+    digitalData._set('primaryEvent.eventData.buttonId', buttonId);
     digitalData._set('spark.eventData.eventName', sparkEventName);
     digitalData._set('primaryProduct.productInfo.amountWithoutTax', option.price);
     digitalData._set('primaryProduct.productInfo.billingFrequency', option.frequency);
@@ -339,7 +345,9 @@ async function addDropdownEventListener($plan, options) {
     option.frequency = option['Analytics Frequency do-not-translate'];
 
     digitalData._set('primaryEvent.eventInfo.eventName', `adobe.com:express:CTA:pricing:${option.frequency}:dropDown:Click`);
+    digitalData._set('spark.eventData.eventName', 'pricing:commitmentTypeSelected');
     _satellite.track('event', { digitalData: digitalData._snapshot() });
+    digitalData._delete('spark.eventData.eventName');
     digitalData._delete('primaryEvent.eventInfo.eventName');
   });
 }
