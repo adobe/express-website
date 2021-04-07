@@ -3,8 +3,159 @@ main .pricing.appear {
     height: unset;
 }
 
-@media (min-width: 1200px) {
+main .pricing .pricing-header {
+    margin-top: 40px;
+    color: rgb(40, 70, 96);
+}
 
+main .pricing .pricing-header span {
+    display: block;
+    color: rgb(16, 196, 89);
+    transition: 1.5s opacity ease;
+    cursor: pointer;
+}
+
+main .pricing .pricing-plans {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+main .pricing .plan {
+    margin-top: 50px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    align-items: center;
+    padding: 20px;
+    color: black;
+}
+
+main .pricing .plan.promotional {
+    margin-top: 80px;
+    position: relative;
+    order: -1;
+    background: rgb(79,94,206);
+    background: linear-gradient(180deg, rgba(79,94,206,1) 0%, rgba(69,147,205,1) 100%);
+    border-radius: 0 0 15px 15px;
+    color: white;
+}
+
+main .pricing .plan .plan-promotional-header {
+    position: absolute;
+    display: flex;
+    background: #10C459;
+    height: 30px;
+    width: 100%;
+    top: -30px;
+    font-weight: 700;
+    font-size: 12px;
+    color: white;
+    border-radius: 15px 15px 0 0;
+    align-items: center;
+    justify-content: center;
+}
+
+main .pricing .plan .plan-header {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    min-height: 110px;
+}
+
+main .pricing .plan .plan-header img {
+    margin: 20px 0;
+    width: 60px;
+    height: 60px;
+}
+
+main .pricing .plan .plan-header>div>span {
+    font-weight: 700;
+    font-size: 36px;
+}
+
+main .pricing .plan .plan-header>div>p {
+    margin: 10px 0;
+    font-size: 13px;
+    padding: 0 40px;
+}
+
+main .pricing .plan .plan-pricing {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+main .pricing .plan .plan-pricing strong {
+    font-size: 32px;
+}
+
+main .pricing .plan .previous-pricing {
+    position: relative;
+    margin-left: 20px;
+}
+
+main .pricing .plan .previous-pricing::after {
+    position: absolute;
+    content: '';
+    width: 110%;
+    top: 42%;
+    left: -5%;
+    height: 3px;
+    background-color: red;
+}
+
+main .pricing .plan .plan-secondary {
+    margin: 20px 0;
+    font-size: 13px;
+}
+
+main .pricing .plan .plan-secondary {
+    margin: 0 0 20px 0;
+    font-size: 13px;
+}
+
+main .pricing .plan .plan-footer {
+    width: 100%;
+    border-bottom: 1px #35414C solid;
+    padding-bottom: 20px;
+}
+
+main .pricing .plan.promotional .plan-footer {
+    border-bottom: none;
+}
+
+main .pricing .plan .plan-dropdown {
+    display: block;
+    padding: 7px 10px;
+    border-radius: 5px;
+    width: 180px;
+    border: 1px solid #dce0e3;
+    margin: 0 auto 10px auto;
+}
+
+main .pricing .plan.promotional .button.primary {
+    background-color: transparent;
+    border: 2px white solid;
+}
+
+main .pricing .plan .button.primary {
+    border: 2px #1473e6 solid;
+}
+
+main .features {
+    display: none;
+}
+
+main .pricing-container .icon-creativecloud {
+    width: 32px;
+    height: 24px;
+    fill: grey;
+}
+
+main #adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more {
+    margin-top: 0;
+}
+
+@media (min-width: 1200px) {
     main .pricing-container {
         background-color: rgba(242,244,245,1);
     }
@@ -22,58 +173,50 @@ main .pricing.appear {
     }
 
     main .pricing .pricing-header {
+        margin-top: 0;
         text-align: left!important;
-        color: rgb(40, 70, 96);
         width: 300px;
         padding-right: 60px;
     }
 
     main .pricing .pricing-header span {
-        color: rgb(16, 196, 89);
-        transition: 1.5s opacity ease;
-        cursor: pointer;
+        display: inline-block;
     }
 
     main .pricing .pricing-plans {
-        display: inline-flex;
+        flex-direction: row;
         justify-content: space-between;
         width: 780px;
     }
 
     main .pricing .plan {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        background-color: white;
+        margin: 0;
         width: 210px;
         height: 300px;
-        padding: 20px;
-        align-items: center;
     }
 
     main .pricing .plan.promotional {
+        margin: 0;
+        order: 0;
+        background: white;
+        border-radius: 0;
         border: 2px #5167CF solid;
         width: 206px;
         height: 296px;
+        color: black;
     }
 
-    main .pricing .plan-promotional-header {
-        position: absolute;
-        display: flex;
+    main .pricing .plan .plan-promotional-header {
         background: linear-gradient(#FFDA00, #e6ab00);
-        height: 30px;
         width: 250px;
         top: -32px;
-        font-weight: 700;
-        font-size: 12px;
         color: black;
         border-radius: 7px 7px 0 0;
-        align-items: center;
-        justify-content: center;
     }
 
-    main .pricing .plan-header {
+    main .pricing .plan .plan-header {
         display: flex;
+        color: rgb(53,65,76);
         text-align: left;
         border-bottom: 1px #DBDBDB solid;
         padding-bottom: 10px;
@@ -81,48 +224,36 @@ main .pricing.appear {
         min-height: 110px;
     }
 
-    main .pricing .plan-header img {
+    main .pricing .plan .plan-header img {
         align-self: start;
         width: 50px;
         height: 50px;
+        margin: 0;
     }
 
-    main .pricing .plan-header>div>span {
-        font-weight: 700;
+    main .pricing .plan .plan-header>div>span {
         font-size: 20px;
-        color: rgb(53,65,76);
         text-transform: uppercase;
         text-align: left;
     }
 
-    main .pricing .plan-header>div>p {
-        margin: 10px 0;
-        font-size: 13px;
+    main .pricing .plan .plan-header>div>p {
+        padding: 0;
+    }
+
+    main .pricing .plan .plan-pricing {
         color: rgb(53,65,76);
     }
 
-    main .pricing .plan-pricing {
-        margin-top: 10px;
-        font-size: 14px;
-        color: rgb(53,65,76);
-    }
-
-    main .pricing .plan-pricing strong {
+    main .pricing .plan .plan-pricing strong {
         font-size: 22px;
-        color: black;
     }
 
-    main .pricing .previous-pricing {
-        position: relative;
-        margin-left: 20px;
+    main .pricing .plan .previous-pricing {
         color: rgb(130, 145, 155);
     }
 
-    main .pricing .previous-pricing strong {
-        color: rgb(130, 145, 155);
-    }
-
-    main .pricing .previous-pricing::after {
+    main .pricing .plan .previous-pricing::after {
         position: absolute;
         content: '';
         width: 110%;
@@ -132,16 +263,17 @@ main .pricing.appear {
         background-color: red;
     }
 
-    main .pricing .plan-secondary {
+    main .pricing .plan .plan-secondary {
         font-size: 13px;
         color: rgb(130, 145, 155);
     }
 
-    main .pricing .plan-footer {
+    main .pricing .plan .plan-footer {
         margin-top: auto;
+        border-bottom: none;
     }
 
-    main .pricing .plan-dropdown {
+    main .pricing .plan .plan-dropdown {
         padding: 7px 10px;
         border-radius: 5px;
         width: 165px;
@@ -149,6 +281,7 @@ main .pricing.appear {
     }
 
     main .pricing .features {
+        display: table;
         margin-top: 20px;
         width: 1140px;
         border-collapse: collapse;
@@ -209,6 +342,15 @@ main .pricing.appear {
         padding-top: 5px;
         padding-left: 10px;
     }
+
+    main .pricing .plan.promotional .button.primary {
+        background-color: #1473e6;
+        border: 2px #1473e6 solid;
+    }
+
+    main .pricing-container .icon-creativecloud {
+        margin-top: 40px;
+    }
 }
 
 main .pricing-container>div>p {
@@ -220,13 +362,6 @@ main .pricing-container>div>p {
 
 main .pricing-container>div>p a {
     color: #82919c!important;
-}
-
-main .pricing-container .icon-creativecloud {
-    margin-top: 40px;
-    width: 32px;
-    height: 24px;
-    fill: grey;
 }
 
 main .pricing-container>div>h5 {

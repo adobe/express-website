@@ -4,6 +4,7 @@ main .contact {
 
 main .contact .contact-row {
     display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
     align-items: center;
     justify-content: center;
@@ -11,46 +12,79 @@ main .contact .contact-row {
 
 main .contact .contact-container {
     display: flex;
+    flex-direction: column;
     background-color: white;
-    width: 680px;
-    height: 80px;
     align-items: center;
-    border-radius: 5px;
 }
 
 main .contact .contact-title {
-    width: 200px;
-    font-size: 18px;
+    font-size: 32px;
     color: black;
     font-weight: 700;
-    margin-right: 80px;
 }
 
 main .contact .contact-phone-container {
-    width: 220px;
+    margin-top: 10px;
 }
 
 main .contact .contact-phone {
-    font-size: 18px;
+    font-size: 14px;
     color: rgb(130, 145, 156);
 }
 
 main .contact .contact-phone a {
-    color: #1473e6!important;
-    text-decoration: none!important;
-}
-
-main .contact .contact-text-container {
-    width: 460px;
+    color: #1473e6 !important;
+    text-decoration: none !important;
 }
 
 main .contact .contact-text {
-    padding: 0 20px;
+    margin-top: 10px;
     font-size: 14px;
     color: rgb(53, 65, 76);
 }
 
 main .contact .contact-text a {
-    color: #1473e6!important;
-    text-decoration: none!important;
+    color: #1473e6 !important;
+    text-decoration: none !important;
+}
+
+@media (min-width: 1200px) {
+    main .contact {
+    }
+
+    main .contact .contact-row {
+        flex-direction: row;
+    }
+
+    main .contact .contact-container {
+        flex-direction: row;
+        width: 680px;
+        height: 80px;
+        border-radius: 5px;
+    }
+
+    main .contact .contact-title {
+        width: 200px;
+        font-size: 18px;
+        margin-right: 80px;
+        text-transform: uppercase;
+    }
+
+    main .contact .contact-phone-container {
+        margin-top: 0;
+        width: 220px;
+    }
+
+    main .contact .contact-phone {
+        font-size: 18px;
+    }
+
+    main .contact .contact-text-container {
+        width: 460px;
+    }
+
+    main .contact .contact-text {
+        margin: 0;
+        padding: 0 20px;
+    }
 }
