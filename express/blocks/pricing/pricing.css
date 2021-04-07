@@ -119,10 +119,6 @@ main .pricing .plan .plan-footer {
     padding-bottom: 20px;
 }
 
-main .pricing .plan.promotional .plan-footer {
-    border-bottom: none;
-}
-
 main .pricing .plan .plan-dropdown {
     display: block;
     padding: 7px 10px;
@@ -141,6 +137,43 @@ main .pricing .plan .button.primary {
     border: 2px #1473e6 solid;
 }
 
+main .pricing .plan .plan-features {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+}
+
+main .pricing .plan .plan-features.active {
+    display: block;
+}
+
+main .pricing .plan .plan-feature {
+    display: flex;
+    margin: 20px 0;
+}
+
+main .pricing .plan .plan-features img {
+
+}
+
+main .pricing .plan .plan-features p {
+    font-size: 13px;
+    text-align: left;
+    line-height: 1.4;
+    margin: 0 0 0 20px;
+}
+
+main .pricing .plan.promotional .plan-features p {
+    color: white;
+}
+
+main .pricing .plan .plan-see-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
 main .features {
     display: none;
 }
@@ -153,6 +186,12 @@ main .pricing-container .icon-creativecloud {
 
 main #adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more {
     margin-top: 0;
+}
+
+@media (min-width: 600px) {
+    main .pricing .plan .plan-features {
+        width: 70%;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -350,6 +389,18 @@ main #adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more {
 
     main .pricing-container .icon-creativecloud {
         margin-top: 40px;
+    }
+
+    main .pricing .plan .plan-features {
+        display: none;
+    }
+
+    main .pricing .plan .plan-features.active {
+        display: none;
+    }
+
+    main .pricing .plan .plan-see-details {
+        display: none;
     }
 }
 

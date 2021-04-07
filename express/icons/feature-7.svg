@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g transform="translate(1 -9565)">
+    <g transform="translate(47.333 -80)" opacity="0.3">
+      <path d="M20.166,15.747A1.648,1.648,0,0,1,18.8,17.364a14.344,14.344,0,0,0-4.634,1.814,1.694,1.694,0,0,1-1.676,0,14.808,14.808,0,0,0-4.634-1.814A1.648,1.648,0,0,1,6.5,15.747V10.068A1.648,1.648,0,0,1,7.861,8.451a14.344,14.344,0,0,0,4.634-1.814,1.638,1.638,0,0,1,1.7,0,14.808,14.808,0,0,0,4.634,1.814,1.648,1.648,0,0,1,1.361,1.617v5.679Z" transform="translate(-45.5 9638.6)"/>
+      <path d="M20.166,15.747A1.648,1.648,0,0,1,18.8,17.364a14.344,14.344,0,0,0-4.634,1.814,1.694,1.694,0,0,1-1.676,0,14.808,14.808,0,0,0-4.634-1.814A1.648,1.648,0,0,1,6.5,15.747V10.068A1.648,1.648,0,0,1,7.861,8.451a14.344,14.344,0,0,0,4.634-1.814,1.638,1.638,0,0,1,1.7,0,14.808,14.808,0,0,0,4.634,1.814,1.648,1.648,0,0,1,1.361,1.617v5.679Z" transform="translate(-45.5 9657.6)"/>
+      <g transform="translate(-49 9652.6)">
+        <path d="M5.9,17.3A11.875,11.875,0,0,1,5.2,1.2" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="1"/>
+        <g transform="translate(0.667)">
+          <path d="M5.933,5.7l-.9.09L4.495,1.389l-4.315.9L0,1.389,5.3.4Z" transform="translate(0 0)"/>
+        </g>
+      </g>
+      <g transform="translate(-45 9652.7)">
+        <path d="M23.6,16.5A12.114,12.114,0,0,0,22.9.3" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="1"/>
+        <g transform="translate(0 0.683)">
+          <path d="M28.061,15.64l-.178-.888-4.352.8L23.088,11.2l-.888.178.622,5.24Z"/>
+        </g>
+      </g>
+      <text transform="translate(-33.5 9654)" fill="#fff" font-size="8" font-family="AdobeClean-Black, Adobe Clean" font-weight="800">
+        <tspan x="0" y="0">1</tspan>
+      </text>
+      <text transform="translate(-34 9673)" fill="#fff" font-size="8" font-family="AdobeClean-Black, Adobe Clean" font-weight="800">
+        <tspan x="0" y="0">2</tspan>
+      </text>
+    </g>
+    <path d="M0,0H32V32H0Z" transform="translate(-1 9565)" fill="none"/>
+  </g>
+</svg>

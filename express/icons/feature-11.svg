@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g transform="translate(-162 -984)">
+    <g transform="translate(6 -53)">
+      <g transform="translate(152 1032)" opacity="0.3">
+        <g transform="translate(6 10)">
+          <path d="M22.707,14.293l-2-2a1,1,0,1,0-1.414,1.414l.293.293H16a1,1,0,0,0-1,1V28H13.869a4,4,0,1,0,0,2H17a1,1,0,0,0,0-2V16h2.586l-.293.293a1,1,0,1,0,1.414,1.414l2-2A1,1,0,0,0,22.707,14.293ZM10,31a2,2,0,1,1,2-2A2,2,0,0,1,10,31Z" transform="translate(-6 -11)" stroke="#f2f4f5" stroke-width="0.5"/>
+          <path d="M46,18a4,4,0,1,0-4-4A4,4,0,0,0,46,18Zm0-6a2,2,0,1,1-2,2A2,2,0,0,1,46,12Z" transform="translate(-24 -10)" stroke="#f2f4f5" stroke-width="0.5"/>
+          <path d="M34,44H33a1,1,0,0,0,0,2h1a1,1,0,1,0,0-2Z" transform="translate(-19 -27)" stroke="#f2f4f5" stroke-width="0.5"/>
+          <path d="M33,44h0a1,1,0,0,0,0,2h0a1,1,0,1,0,0-2Z" transform="translate(-15.208 -27)" stroke="#f2f4f5" stroke-width="0.5"/>
+        </g>
+      </g>
+      <g transform="translate(-9 -3)" opacity="0.3">
+        <line y1="4" x2="4" transform="translate(187.5 1059.5)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5"/>
+        <line y1="4" x2="4" transform="translate(191.5 1059.5) rotate(90)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1.5"/>
+      </g>
+    </g>
+    <path d="M0,0H32V32H0Z" transform="translate(162 984)" fill="none"/>
+  </g>
+</svg>
