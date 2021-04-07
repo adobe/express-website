@@ -367,9 +367,6 @@ function decorateHeaderAndFooter() {
           text: 'Create',
         },
         {
-          text: 'Discover',
-        },
-        {
           text: 'Learn',
         },
         {
