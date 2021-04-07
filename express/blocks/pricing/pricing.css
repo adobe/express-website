@@ -153,7 +153,9 @@ main .pricing .plan .plan-feature {
 }
 
 main .pricing .plan .plan-features img {
-
+    margin-top: 2px;
+    width: 35px;
+    height: 35px;
 }
 
 main .pricing .plan .plan-features p {
@@ -172,6 +174,15 @@ main .pricing .plan .plan-see-details {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+main .pricing .plan .plan-see-details p {
+    margin-bottom: 0;
+}
+
+main .pricing .plan .plan-see-details .chevron {
+    margin-top: 32px;
+    margin-left: 5px;
 }
 
 main .features {
