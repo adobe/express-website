@@ -201,9 +201,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     _satellite.track('event', {
       digitalData: digitalData._snapshot(),
     });
+  }
 
   // Fire the displayPurchasePanel event
-  } else if (
+  if (
     sparkLandingPageType === 'pricing'
     && sparkTouchpoint
   ) {
@@ -296,6 +297,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
         adobeEventName = 'adobe.com:express:CTA:pricing:viewPlans:Click';
         sparkEventName = 'landing:viewPlansPressed';
       }
+
+    // quick actions clicks
+    } else if ($a.href.includes('spark.adobe.com/tools')) {
+      adobeEventName = appendLinkText(adobeEventName, $a);
+      sparkEventName = 'quickAction:ctaPressed';
 
     // Default clicks
     } else {
