@@ -66,6 +66,8 @@ w.targetGlobalSettings = {
 };
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
+  /* eslint-disable no-underscore-dangle */
+
   //------------------------------------------------------------------------------------
   // gathering the data
   //------------------------------------------------------------------------------------
@@ -131,64 +133,49 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     locale: language,
   };
 
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.pageName', pageName);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.language', language);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.siteSection', 'adobe.com:express');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.category', category);
 
   //------------------------------------------------------------------------------------
   // spark specific global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.pageurl', loc.href);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('page.pageInfo.namespace', 'express');
 
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.pageurl', loc.href);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.pageReferrer', d.referrer);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.pageTitle', d.title);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.landingPageType', sparkLandingPageType);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.landingPageReferrer', d.referrer);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.landingPageUrl', loc.href);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.userType', sparkUserType);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.premiumEntitled', '');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.displayedLanguage', language);
   // TODO: I don't know how to capture this
-  // eslint-disable-next-line no-underscore-dangle
   // digitalData._set('spark.eventData.deviceLanguage', language);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.pagename', pageName);
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.platformName', 'web');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.contextualData3', `category:${category}`);
+
+  // quick actions
+
+  // image resize quick action
+  if (pathname.includes('/feature/image/resize')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  }
 
   //------------------------------------------------------------------------------------
   // Fire the viewedPage event
   //------------------------------------------------------------------------------------
 
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('primaryEvent.eventInfo.eventName', 'viewedPage');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.eventName', 'viewedPage');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._set('spark.eventData.sendTimestamp', new Date().getTime());
 
-  // eslint-disable-next-line no-underscore-dangle
   _satellite.track('event', { digitalData: digitalData._snapshot() });
 
   // Fire the landing:viewedPage event
@@ -197,13 +184,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     || sparkLandingPageType === 'pricing'
     || sparkLandingPageType === 'edu'
   ) {
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', 'landing:viewedPage');
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', 'landing:viewedPage');
 
     _satellite.track('event', {
-      // eslint-disable-next-line no-underscore-dangle
       digitalData: digitalData._snapshot(),
     });
 
@@ -211,13 +195,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   } else if (
     sparkLandingPageType === 'blog'
   ) {
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', 'blog:viewedPage');
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', 'blog:viewedPage');
 
     _satellite.track('event', {
-      // eslint-disable-next-line no-underscore-dangle
       digitalData: digitalData._snapshot(),
     });
 
@@ -226,24 +207,17 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     sparkLandingPageType === 'pricing'
     && sparkTouchpoint
   ) {
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', 'displayPurchasePanel');
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', 'displayPurchasePanel');
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.trigger', sparkTouchpoint);
 
     _satellite.track('event', {
-      // eslint-disable-next-line no-underscore-dangle
       digitalData: digitalData._snapshot(),
     });
   }
 
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('primaryEvent.eventInfo.eventName');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('spark.eventData.eventName');
-  // eslint-disable-next-line no-underscore-dangle
   digitalData._delete('spark.eventData.sendTimestamp');
 
   function textToName(text) {
@@ -329,19 +303,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       sparkEventName = 'landing:ctaPressed';
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._set('spark.eventData.eventName', sparkEventName);
 
-    // eslint-disable-next-line no-underscore-dangle
     _satellite.track('event', { digitalData: digitalData._snapshot() });
 
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._delete('primaryEvent.eventInfo.eventName');
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._delete('spark.eventData.eventName');
-    // eslint-disable-next-line no-underscore-dangle
     digitalData._delete('spark.eventData.contextualData5');
   }
 
@@ -376,6 +344,8 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   //   decorateAnalyticsEvents();
   // }
   decorateAnalyticsEvents();
+
+  /* eslint-enable no-underscore-dangle */
 });
 
 async function showRegionPicker() {
