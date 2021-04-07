@@ -166,7 +166,7 @@ function selectPlanAnalytics($plan, options) {
     // Buy Now
     if ($cta.hostname.includes('commerce.adobe.com') || $cta.hostname.includes('commerce-stg.adobe.com')) {
       // individual
-      if ($cta.search.includes('spark.adobe.com')) {
+      if ($cta.search.includes('spark.adobe.com') || $cta.search.includes('adobeprojectm.com')) {
         adobeEventName += `pricing:individual:${option.position}:buyNow:Click`;
         // team
       } else if ($cta.search.includes('adminconsole.adobe.com')) {
