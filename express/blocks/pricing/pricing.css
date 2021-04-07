@@ -178,16 +178,6 @@ main .features {
     display: none;
 }
 
-main .pricing-container .icon-creativecloud {
-    width: 32px;
-    height: 24px;
-    fill: grey;
-}
-
-main #adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more {
-    margin-top: 0;
-}
-
 @media (min-width: 600px) {
     main .pricing .plan .plan-features {
         width: 70%;
@@ -413,15 +403,4 @@ main .pricing-container>div>p {
 
 main .pricing-container>div>p a {
     color: #82919c!important;
-}
-
-main .pricing-container>div>h5 {
-    font-weight: 400;
-    font-size: 16px;
-    color: #82919c;
-}
-
-main .pricing-container>div>h5 a {
-    color: #1473e6!important;
-    text-decoration: none!important;
 }
