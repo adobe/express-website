@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g transform="translate(-162 -697)">
+    <g transform="translate(48.547)" opacity="0.3">
+      <g transform="translate(-0.513 -0.571)">
+        <g transform="translate(128.919 710.081) rotate(45)" stroke="#000" stroke-linejoin="round" stroke-width="1">
+          <rect width="4.796" height="16.904" stroke="none"/>
+          <rect x="0.5" y="0.5" width="3.796" height="15.904" fill="none"/>
+        </g>
+        <g transform="translate(132.282 706.717) rotate(45)" fill="#fff" stroke="#000" stroke-linejoin="round" stroke-width="1">
+          <rect width="4.796" height="5" stroke="none"/>
+          <rect x="0.5" y="0.5" width="3.796" height="4" fill="none"/>
+        </g>
+      </g>
+      <g transform="translate(-1 -1)">
+        <line y2="4" transform="translate(127.5 701.5)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+        <line y2="4" transform="translate(129.5 703.5) rotate(90)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+      </g>
+      <line y2="4" transform="translate(140.5 705.5)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+      <line y2="4" transform="translate(142.5 707.5) rotate(90)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+      <g transform="translate(0 -1)">
+        <line y2="4" transform="translate(135.5 717.5)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+        <line y2="4" transform="translate(137.5 719.5) rotate(90)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="1"/>
+      </g>
+    </g>
+    <path d="M0,0H32V32H0Z" transform="translate(162 697)" fill="none"/>
+  </g>
+</svg>

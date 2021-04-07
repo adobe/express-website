@@ -16,7 +16,7 @@ import {
   createTag,
   getOffer,
   readBlockConfig,
-  getHelixEnv,
+  getHelixEnv, getIconElement,
 } from '../../scripts/scripts.js';
 
 async function fetchPricingTab(sheet, tab) {
@@ -352,9 +352,26 @@ async function addDropdownEventListener($plan, options) {
   });
 }
 
-function decoratePlans($block, plans, planOptions) {
+function addSeeDetailsEventListener($planSeeDetails) {
+  $planSeeDetails.addEventListener('click', (event) => {
+    event.preventDefault();
+    const $seeDetails = event.target.closest('.plan-see-details');
+    const $plan = event.target.closest('.plan');
+    const $planFeatures = $plan.querySelector('.plan-features');
+    if ($planFeatures.classList.contains('active')) {
+      $planFeatures.classList.remove('active');
+      $seeDetails.querySelector('.chevron').style.transform = 'rotate(90deg)';
+    } else {
+      $planFeatures.classList.add('active');
+      $seeDetails.querySelector('.chevron').style.transform = 'rotate(270deg)';
+    }
+  });
+}
+
+function decoratePlans($block, plans, planOptions, features) {
   const $plans = createTag('div', { class: 'pricing-plans' });
   $block.append($plans);
+  let cardId = 1;
   plans.forEach((plan) => {
     const title = plan['Plan Title'];
     const description = plan['Plan Description'];
@@ -406,8 +423,34 @@ function decoratePlans($block, plans, planOptions) {
     }
     const $cta = createTag('a', { class: 'button primary' });
     $footer.append($cta);
+    const $planFeatures = createTag('div', { class: 'plan-features' });
+    if (!promotion) {
+      const $planSeeDetails = createTag('div', { class: 'plan-see-details' });
+      $planSeeDetails.innerHTML = '<p>See details</p>';
+      const $chevron = getIconElement('chevron');
+      $chevron.classList.add('chevron');
+      $chevron.style.transform = 'rotate(90deg)';
+      $planSeeDetails.append($chevron);
+      $plan.append($planSeeDetails);
+      addSeeDetailsEventListener($planSeeDetails);
+    } else {
+      $planFeatures.classList.add('active');
+    }
+    $plan.append($planFeatures);
+    features.forEach((feature) => {
+      if (feature[`Column ${cardId}`]) {
+        const $feature = createTag('div', { class: 'plan-feature' });
+        $planFeatures.append($feature);
+        const $featureImage = createTag('img', { src: `icons/${feature.Image}.svg` });
+        $feature.append($featureImage);
+        const $featureText = createTag('p');
+        $featureText.innerText = feature.Description;
+        $feature.append($featureText);
+      }
+    });
     selectPlanOption($plan, options[0]);
     selectPlanAnalytics($plan, options);
+    cardId++;
   });
 }
 
@@ -509,8 +552,10 @@ async function decoratePricing($block) {
 
   $block.innerHTML = '';
 
+  console.log(features);
+
   decorateHeader($block, header);
-  decoratePlans($block, plans, planOptions);
+  decoratePlans($block, plans, planOptions, features);
   decorateTable($block, features);
 
   $block.classList.add('appear');

@@ -48,7 +48,23 @@ main .contact .contact-text a {
     text-decoration: none !important;
 }
 
+main .contact-container .icon-creativecloud {
+    margin-top: 20px;
+    width: 32px;
+    height: 24px;
+    fill: grey;
+}
+
+main #adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more {
+    margin-top: 0;
+}
+
 @media (min-width: 1200px) {
+    main>.contact-container {
+        background-color: rgba(242,244,245,1);
+        padding-bottom: 40px;
+    }
+
     main .contact {
     }
 
@@ -87,4 +103,15 @@ main .contact .contact-text a {
         margin: 0;
         padding: 0 20px;
     }
+}
+
+main .contact-container>div>h5 {
+    font-weight: 400;
+    font-size: 16px;
+    color: #82919c;
+}
+
+main .contact-container>div>h5 a {
+    color: #1473e6!important;
+    text-decoration: none!important;
 }

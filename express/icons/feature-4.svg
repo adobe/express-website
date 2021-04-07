@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g transform="translate(2174 7765)" opacity="0.3">
+    <g transform="translate(-3130 -4322)">
+      <rect width="1" height="2" transform="translate(969 -3433)"/>
+      <rect width="1" height="2" transform="translate(969 -3430)"/>
+      <rect width="1" height="2" transform="translate(972 -3431) rotate(90)"/>
+      <rect width="1" height="2" transform="translate(969 -3431) rotate(90)"/>
+    </g>
+    <rect width="1" height="1" transform="translate(-2160 -7762)"/>
+    <rect width="1" height="1" transform="translate(-2147 -7759)"/>
+    <rect width="1" height="1" transform="translate(-2148 -7745)"/>
+    <g transform="translate(-3193 -4355)">
+      <rect width="1" height="1" transform="translate(1037 -3393)"/>
+      <rect width="1" height="1" transform="translate(1038 -3392)"/>
+      <rect width="1" height="1" transform="translate(1036 -3392)"/>
+      <rect width="1" height="1" transform="translate(1037 -3391)"/>
+    </g>
+    <g transform="translate(-3191 -4372)">
+      <rect width="1" height="1" transform="translate(1037 -3393)"/>
+      <rect width="1" height="1" transform="translate(1038 -3392)"/>
+      <rect width="1" height="1" transform="translate(1036 -3392)"/>
+      <rect width="1" height="1" transform="translate(1037 -3391)"/>
+    </g>
+    <g transform="translate(-3184 -4359)">
+      <rect width="1" height="1" transform="translate(1037 -3393)"/>
+      <rect width="1" height="1" transform="translate(1038 -3392)"/>
+      <rect width="1" height="1" transform="translate(1036 -3392)"/>
+      <rect width="1" height="1" transform="translate(1037 -3391)"/>
+    </g>
+    <g transform="translate(-3159 -4353)">
+      <path d="M838-3470.839h19v24H838Z" transform="translate(152.499 65.339)" fill="none" stroke="#000" stroke-width="1"/>
+      <path d="M0,0H4.8a0,0,0,0,1,0,0V.8a4,4,0,0,1-4,4H0a0,0,0,0,1,0,0V0A0,0,0,0,1,0,0Z" transform="translate(995.6 -3386.6) rotate(90)" fill="none" stroke="#000" stroke-width="1"/>
+    </g>
+    <path d="M7.7.052,4.8,1a.638.638,0,0,1-.6,0L1.3.052A.987.987,0,0,0,0,1V7.5a4.5,4.5,0,1,0,9,0V1A.987.987,0,0,0,7.7.052Z" transform="translate(-2156.999 -7761.005)"/>
+    <path d="M0,0H32V32H0Z" transform="translate(-2174 -7765)" fill="none"/>
+  </g>
+</svg>
