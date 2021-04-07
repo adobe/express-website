@@ -382,9 +382,9 @@ function decorateHeaderAndFooter() {
     if (window.location.pathname === '/express/') nav.top[0].selected = true;
     if (window.location.pathname.startsWith('/express/feature')) nav.top[1].selected = true;
     if (window.location.pathname.startsWith('/express/create')) nav.top[2].selected = true;
-    if (window.location.pathname.startsWith('/express/discover')) nav.top[3].selected = true;
-    if (window.location.pathname.startsWith('/express/learn')) nav.top[4].selected = true;
-    if (window.location.pathname.startsWith('/express/pricing')) nav.top[5].selected = true;
+    // if (window.location.pathname.startsWith('/express/discover')) nav.top[3].selected = true;
+    if (window.location.pathname.startsWith('/express/learn')) nav.top[3].selected = true;
+    if (window.location.pathname.startsWith('/express/pricing')) nav.top[4].selected = true;
     const html = getGnavPlaceholder(nav);
     $header.innerHTML = html;
   } else {
