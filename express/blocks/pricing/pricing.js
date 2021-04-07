@@ -72,10 +72,11 @@ function decorateHeader($block, header) {
 
 function getPlanOptions(planTitle, planOptions) {
   const options = [];
+  const formattedPlanTitle = planTitle.toLowerCase().trim();
   let optionId = 0;
   planOptions.forEach((option) => {
-    const optionPlan = option['Option Plan'];
-    if (planTitle === optionPlan) {
+    const optionPlan = option['Option Plan'].toLowerCase().trim();
+    if (formattedPlanTitle === optionPlan) {
       option.optionId = optionId;
       options.push(option);
       optionId += 1;
@@ -441,7 +442,7 @@ function decoratePlans($block, plans, planOptions, features) {
       if (feature[`Column ${cardId}`]) {
         const $feature = createTag('div', { class: 'plan-feature' });
         $planFeatures.append($feature);
-        const $featureImage = createTag('img', { src: `icons/${feature.Image}.svg` });
+        const $featureImage = getIconElement(feature.Image);
         $feature.append($featureImage);
         const $featureText = createTag('p');
         $featureText.innerText = feature.Description;
@@ -450,7 +451,7 @@ function decoratePlans($block, plans, planOptions, features) {
     });
     selectPlanOption($plan, options[0]);
     selectPlanAnalytics($plan, options);
-    cardId++;
+    cardId += 1;
   });
 }
 
@@ -545,19 +546,13 @@ async function fetchPricingSheet(sheet) {
 async function decoratePricing($block) {
   const config = readBlockConfig($block);
   const { sheet } = config;
-
   const {
     header, plans, planOptions, features,
   } = await fetchPricingSheet(sheet);
-
   $block.innerHTML = '';
-
-  console.log(features);
-
   decorateHeader($block, header);
   decoratePlans($block, plans, planOptions, features);
   decorateTable($block, features);
-
   $block.classList.add('appear');
 }
 
