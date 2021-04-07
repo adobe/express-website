@@ -367,9 +367,6 @@ function decorateHeaderAndFooter() {
           text: 'Create',
         },
         {
-          text: 'Discover',
-        },
-        {
           text: 'Learn',
         },
         {
@@ -385,9 +382,9 @@ function decorateHeaderAndFooter() {
     if (window.location.pathname === '/express/') nav.top[0].selected = true;
     if (window.location.pathname.startsWith('/express/feature')) nav.top[1].selected = true;
     if (window.location.pathname.startsWith('/express/create')) nav.top[2].selected = true;
-    if (window.location.pathname.startsWith('/express/discover')) nav.top[3].selected = true;
-    if (window.location.pathname.startsWith('/express/learn')) nav.top[4].selected = true;
-    if (window.location.pathname.startsWith('/express/pricing')) nav.top[5].selected = true;
+    // if (window.location.pathname.startsWith('/express/discover')) nav.top[3].selected = true;
+    if (window.location.pathname.startsWith('/express/learn')) nav.top[3].selected = true;
+    if (window.location.pathname.startsWith('/express/pricing')) nav.top[4].selected = true;
     const html = getGnavPlaceholder(nav);
     $header.innerHTML = html;
   } else {
@@ -484,7 +481,8 @@ function decorateBlocks() {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'columns', 'show-section-only', 'image-list'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
+      'columns', 'show-section-only', 'image-list', 'feature-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -1060,7 +1058,7 @@ function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
       const url = new URL($a.href);
-      if (!(url.pathname.endsWith('/sp/') || url.pathname === '/'
+      if (!(url.pathname.endsWith('/sp/') || url.pathname.endsWith('/sp/login') || url.pathname === '/'
       || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
       || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
       || url.pathname.startsWith('/classroom/'))) {

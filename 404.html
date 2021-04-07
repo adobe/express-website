@@ -6,19 +6,43 @@
 	window.isErrorPage = true;
 	window.errorCode = '404';
   </script>
+  <style>
+	
+	.error-404 main {
+		visibility: visible;
+	    background-image: url(https://adobe.com/content/dam/acom/en/error-pages/images/404-1440x612_edge2.jpg);
+		background-size: cover;
+		background-position: 70%;
+		height: 70vh;
+		position: relative;
+		padding: 32px;
+		text-align: left;
+	}
+
+	.error-404 cite {
+		position: absolute;
+		bottom: 32px;
+		left: 32px;
+	}
+
+	.error-404 main .section-wrapper h2 {
+		text-align: left;
+	}
+	
+  </style>
   <esi:include src="/head.html" onerror="continue"/>
 </head>
-<body>
+<body class="error-404">
   <!--  header -->
   <header><esi:include src="/header.plain.html" onerror="continue"/></header>
   <!--  main content -->
-  <main>
-	  <div class="default">
-		<h2></h2>
-		<p class="detail"></p>
-		<nav class="list">
-			<a class="gotohome" href="/"></a>
-			<a class="searchadobe" href="https://adobe.com/search.html"></a>
+  <main> 
+	  <div>
+		<h2>These are uncharted waters.</h2>
+		<p>Sorry that page can't be found.</p>
+		<nav>
+			<a href="/express/">Go to homepage</a>
+			<a href="https://adobe.com/search.html">Search Adobe.com</a>
 		</nav>
 		<cite>
 			<a href="https://www.behance.net/rsvn" target="_blank">The Story Begins Here by Risfan Fardiansyah</a>	
