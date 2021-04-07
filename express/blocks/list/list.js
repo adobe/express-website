@@ -17,7 +17,7 @@ function decorateList($block) {
   const list = [];
 
   const $rows = Array.from($block.children);
-  $rows.forEach(($row, i) => {
+  $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
     const $title = $cells[0];
     const $text = $cells[1];
