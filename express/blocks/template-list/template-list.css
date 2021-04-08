@@ -116,7 +116,7 @@ main .template-list.masonry .template {
 }
 
 @media (min-width: 900px) {
-    main .template-list-container > div {
+    main .template-list-4columns-container > div {
         max-width: 1000px;
     }
 
@@ -137,11 +137,11 @@ main .template-list.masonry .template {
 }
 
 @media (min-width: 1200px) {
-  main .template-list-container > div {
+  main .template-list-4columns-container > div {
       max-width: 1056px;
   }
 
-  main .template-list.masonry {
+  main .template-list._4columns.masonry {
       display: block;
       columns: 240px 4;
       margin: auto;

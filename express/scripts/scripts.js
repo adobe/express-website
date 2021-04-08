@@ -473,6 +473,21 @@ function resolveFragments() {
     });
 }
 
+function getOptionClasses(blockName, b) {
+  if (!blockName.startsWith(`${b}-`)) return [];
+  return blockName
+    .substring(b.length + 1)
+    .split('-')
+    .filter((opt) => !!opt)
+    .map((opt) => {
+      if (/^\d/.test(opt)) {
+        // leading digits are illegal, pad with underscore
+        return `_${opt}`;
+      }
+      return opt;
+    });
+}
+
 function decorateBlocks() {
   document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
@@ -485,7 +500,7 @@ function decorateBlocks() {
       'columns', 'show-section-only', 'image-list', 'feature-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
-        const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+        const options = getOptionClasses(blockName, b);
         blockName = b;
         $block.classList.add(b);
         $block.classList.add(...options);
