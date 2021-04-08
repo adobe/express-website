@@ -1060,7 +1060,7 @@ function displayOldLinkWarning() {
       const url = new URL($a.href);
       if (!(url.pathname.endsWith('/sp/') || url.pathname.endsWith('/sp/login') || url.pathname === '/'
       || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
-      || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
+      || url.pathname.startsWith('/express-apps/') || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
       || url.pathname.startsWith('/classroom/'))) {
         console.log(`old link: ${$a}`);
         $a.style.border = '10px solid red';

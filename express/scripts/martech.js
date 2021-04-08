@@ -16,6 +16,7 @@ import {
   getLocale,
   createTag,
   getLanguage,
+  getHelixEnv,
 } from './scripts.js';
 
 // this saves on file size when this file gets minified...
@@ -413,7 +414,12 @@ window.fedsConfig = {
     customSignIn: () => {
       const sparkLang = getLanguage(getLocale(window.location));
       const sparkPrefix = sparkLang === 'en-US' ? '' : `/${sparkLang}`;
-      window.location.href = `https://spark.adobe.com${sparkPrefix}/sp/`;
+      let sparkLoginUrl = `https://spark.adobe.com${sparkPrefix}/sp/`;
+      const env = getHelixEnv();
+      if (env && env.spark) {
+        sparkLoginUrl = sparkLoginUrl.replace('spark.adobe.com', env.spark);
+      }
+      window.location.href = sparkLoginUrl;
     },
   },
 };
