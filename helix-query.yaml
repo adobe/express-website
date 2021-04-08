@@ -131,3 +131,33 @@ indices:
     include:
       - 'tw/express/**/*.(docx|md)'
     target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/tw/express/query-index.xlsx?d=wda3497ec33844e609aacbaaf66e05893&csf=1&web=1&e=vg6Emc
+
+  china:
+    <<: *default
+    include:
+      - 'cn/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/cn/express/query-index.xlsx?d=w3ffc2a1965cd4502bc6e40944030e960&csf=1&web=1&e=Evor5M
+
+  denmark:
+    <<: *default
+    include:
+      - 'dk/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/dk/express/query-index.xlsx?d=wd6a5382eb3a44a30ad6d8793e1b30f4b&csf=1&web=1&e=K67GKw
+
+  finland:
+    <<: *default
+    include:
+      - 'fi/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/fi/express/query-index.xlsx?d=wbecb0dc23b7a4acfb825d6d341238169&csf=1&web=1&e=QfBH4T
+
+  norway:
+    <<: *default
+    include:
+      - 'no/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/no/express/query-index.xlsx?d=we55ca6e3f2d34875a5afd6c56daa0c4a&csf=1&web=1&e=y5ay1k
+
+  sweden:
+    <<: *default
+    include:
+      - 'se/express/**/*.(docx|md)'
+    target: https://adobe.sharepoint.com/:x:/r/sites/SparkHelix/Shared%20Documents/website/se/express/query-index.xlsx?d=wfc34507ebd59465bb3795c9f1a593f5b&csf=1&web=1&e=DLWVJC
