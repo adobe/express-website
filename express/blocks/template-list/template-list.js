@@ -17,6 +17,7 @@ import {
   getLocale,
   createTag,
   linkImage,
+  webpPolyfill,
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
@@ -84,6 +85,7 @@ async function fetchBlueprint(pathname) {
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
+  webpPolyfill($main);
   window.spark.$blueprint = $main;
   return ($main);
 }

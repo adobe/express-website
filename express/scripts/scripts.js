@@ -964,11 +964,11 @@ function resetAttribute($elem, attrib) {
   }
 }
 
-function webpPolyfill() {
-  document.querySelectorAll('img').forEach(($img) => {
+export function webpPolyfill(element) {
+  element.querySelectorAll('img').forEach(($img) => {
     resetAttribute($img, 'src');
   });
-  document.querySelectorAll('picture source').forEach(($source) => {
+  element.querySelectorAll('picture source').forEach(($source) => {
     resetAttribute($source, 'srcset');
   });
 }
@@ -1101,7 +1101,7 @@ async function decoratePage() {
   decorateHero();
   decorateButtons();
   fixIcons();
-  webpPolyfill();
+  webpPolyfill(document);
   decorateBlocks();
   decorateDoMoreEmbed();
   decorateLinkedPictures();
