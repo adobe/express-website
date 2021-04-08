@@ -370,7 +370,7 @@ function decorateHeaderAndFooter() {
           text: 'Learn',
         },
         {
-          text: 'Compare Plans',
+          text: 'Compare plans',
           type: 'nodrop',
         },
         {
