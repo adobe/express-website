@@ -370,7 +370,7 @@ function decorateHeaderAndFooter() {
           text: 'Learn',
         },
         {
-          text: 'Compare Plans',
+          text: 'Compare plans',
           type: 'nodrop',
         },
         {
@@ -473,21 +473,6 @@ function resolveFragments() {
     });
 }
 
-function getOptionClasses(blockName, b) {
-  if (!blockName.startsWith(`${b}-`)) return [];
-  return blockName
-    .substring(b.length + 1)
-    .split('-')
-    .filter((opt) => !!opt)
-    .map((opt) => {
-      if (/^\d/.test(opt)) {
-        // leading digits are illegal, pad with underscore
-        return `_${opt}`;
-      }
-      return opt;
-    });
-}
-
 function decorateBlocks() {
   document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
@@ -500,7 +485,7 @@ function decorateBlocks() {
       'columns', 'show-section-only', 'image-list', 'feature-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
-        const options = getOptionClasses(blockName, b);
+        const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
         blockName = b;
         $block.classList.add(b);
         $block.classList.add(...options);
@@ -1075,7 +1060,7 @@ function displayOldLinkWarning() {
       const url = new URL($a.href);
       if (!(url.pathname.endsWith('/sp/') || url.pathname.endsWith('/sp/login') || url.pathname === '/'
       || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
-      || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
+      || url.pathname.startsWith('/express-apps/') || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
       || url.pathname.startsWith('/classroom/'))) {
         console.log(`old link: ${$a}`);
         $a.style.border = '10px solid red';
