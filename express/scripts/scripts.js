@@ -494,7 +494,7 @@ function decorateBlocks() {
     let blockName = classes[0];
     const $section = $block.closest('.section-wrapper');
     if ($section) {
-      $section.classList.add(`${blockName}-container`.replaceAll('--', '-'));
+      $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
       'columns', 'show-section-only', 'image-list', 'feature-list'];
