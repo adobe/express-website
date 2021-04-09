@@ -39,14 +39,6 @@ const TIMEOUT = 10000;
     })
     // check CTA button
     .then(() => $browser.findElement($driver.By.css('main a.button.primary')))
-    // check FEDS header
-    .then(() => $browser.findElement($driver.By.css('#feds-header span.feds-navLink-text')))
-    .then((item) => item.getText())
-    .then((text) => assert.equal(text, 'Adobe Spark', `Expected first nav link text in header to be "Adobe Spark", got "${text} instead`))
-    // check FEDS footer
-    .then(() => $browser.findElement($driver.By.css('#feds-footer span.feds-navLink-text')))
-    .then((item) => item.getText())
-    .then((text) => assert.equal(text, 'Adobe Spark', `Expected first nav link text in footer to be "Adobe Spark", got "${text} instead`))
     .then(() => console.log(`${url} successfully verified.`))
     .catch((e) => {
       assert.fail(`Verification of ${url} failed: ${e.message}`);
