@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window, navigator, document, fetch, performance, PerformanceObserver,
-   localStorage, FontFace, sessionStorage */
+   FontFace, sessionStorage */
 /* eslint-disable no-console */
 
 export function toClassName(name) {
