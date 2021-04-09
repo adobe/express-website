@@ -95,15 +95,28 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     if (pathname.includes('/image')) category = 'photo';
     if (pathname.includes('/video')) category = 'video';
   }
+
   let sparkLandingPageType;
-  // seo
+  // home
   if (
+    pathname === '/express'
+    || pathname === '/express/'
+  ) {
+    sparkLandingPageType = 'home';
+  // seo
+  } else if (
     pathname.includes('/create/')
     || pathname.includes('/make/')
     || pathname.includes('/feature/')
     || pathname.includes('/discover/')
   ) {
     sparkLandingPageType = 'seo';
+  // learn
+  } else if (
+    pathname.includes('/learn/')
+    && !pathname.includes('/blog/')
+  ) {
+    sparkLandingPageType = 'learn';
   // blog
   } else if (
     pathname.includes('/learn/blog/')
@@ -119,8 +132,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     pathname.includes('/education/')
   ) {
     sparkLandingPageType = 'edu';
+  // other
+  } else {
+    sparkLandingPageType = 'other';
   }
-  const sparkUserType = 'knownNotAuth'; // (w.adobeIMS && w.adobeIMS.isUserAuthenticated()) ? '' : '';
+  const sparkUserType = (w.adobeIMS && w.adobeIMS.isSignedInUser()) ? 'knownNotAuth' : 'unknown';
   const url = new URL(loc.href);
   const sparkTouchpoint = url.searchParams.get('touchpointName');
 
@@ -159,10 +175,9 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // digitalData._set('spark.eventData.deviceLanguage', language);
   digitalData._set('spark.eventData.pagename', pageName);
   digitalData._set('spark.eventData.platformName', 'web');
-  digitalData._set('spark.eventData.contextualData3', `category:${category}`);
-
-  // quick actions
-
+  if (category) {
+    digitalData._set('spark.eventData.contextualData3', `category:${category}`);
+  }
   // image resize quick action
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
@@ -170,41 +185,27 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   }
 
   //------------------------------------------------------------------------------------
-  // Fire the viewedPage event
+  // Fire extra spark events
   //------------------------------------------------------------------------------------
 
+  // Fire the viewedPage event
   digitalData._set('primaryEvent.eventInfo.eventName', 'viewedPage');
   digitalData._set('spark.eventData.eventName', 'viewedPage');
   digitalData._set('spark.eventData.sendTimestamp', new Date().getTime());
 
-  _satellite.track('event', { digitalData: digitalData._snapshot() });
+  _satellite.track('event', {
+    digitalData: digitalData._snapshot(),
+  });
 
   // Fire the landing:viewedPage event
-  if (
-    sparkLandingPageType === 'seo'
-    || sparkLandingPageType === 'pricing'
-    || sparkLandingPageType === 'edu'
-  ) {
-    digitalData._set('primaryEvent.eventInfo.eventName', 'landing:viewedPage');
-    digitalData._set('spark.eventData.eventName', 'landing:viewedPage');
+  digitalData._set('primaryEvent.eventInfo.eventName', 'landing:viewedPage');
+  digitalData._set('spark.eventData.eventName', 'landing:viewedPage');
 
-    _satellite.track('event', {
-      digitalData: digitalData._snapshot(),
-    });
+  _satellite.track('event', {
+    digitalData: digitalData._snapshot(),
+  });
 
-  // Fire the blog:viewedPage event
-  } else if (
-    sparkLandingPageType === 'blog'
-  ) {
-    digitalData._set('primaryEvent.eventInfo.eventName', 'blog:viewedPage');
-    digitalData._set('spark.eventData.eventName', 'blog:viewedPage');
-
-    _satellite.track('event', {
-      digitalData: digitalData._snapshot(),
-    });
-  }
-
-  // Fire the displayPurchasePanel event
+  // Fire the displayPurchasePanel event if it is the pricing site
   if (
     sparkLandingPageType === 'pricing'
     && sparkTouchpoint
@@ -313,43 +314,40 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
     digitalData._set('spark.eventData.eventName', sparkEventName);
 
-    _satellite.track('event', { digitalData: digitalData._snapshot() });
+    _satellite.track('event', {
+      digitalData: digitalData._snapshot(),
+    });
 
     digitalData._delete('primaryEvent.eventInfo.eventName');
     digitalData._delete('spark.eventData.eventName');
-    digitalData._delete('spark.eventData.contextualData5');
   }
 
   function decorateAnalyticsEvents() {
+    // for tracking all of the links
     d.querySelectorAll('main a').forEach(($a) => {
       $a.addEventListener('click', () => {
         trackButtonClick($a);
       });
     });
+
+    // for tracking just the sticky banner close button
+    const $button = d.querySelector('.sticky-promo-bar button.close');
+    $button.addEventListener('click', () => {
+      const adobeEventName = 'adobe.com:express:cta:startYourFreeTrial:close';
+      const sparkEventName = adobeEventName;
+
+      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+      digitalData._set('spark.eventData.eventName', sparkEventName);
+
+      _satellite.track('event', {
+        digitalData: digitalData._snapshot(),
+      });
+
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      digitalData._delete('spark.eventData.eventName');
+    });
   }
 
-  // function pollForPricingBlock() {
-  //   const pollingTimer = setTimeout(() => {
-  //     const $plansBlock = d.querySelector('.pricing-plans');
-
-  //     if ($plansBlock) {
-  //       decorateAnalyticsEvents();
-  //     } else {
-  //       pollForPricingBlock();
-  //     }
-  //   }, 300);
-
-  //   // make sure we don't poll forever
-  //   setTimeout(() => {
-  //     clearTimeout(pollingTimer);
-  //   }, 4000);
-  // }
-
-  // if (sparkLandingPageType === 'pricing') {
-  //   pollForPricingBlock();
-  // } else {
-  //   decorateAnalyticsEvents();
-  // }
   decorateAnalyticsEvents();
 
   /* eslint-enable no-underscore-dangle */
