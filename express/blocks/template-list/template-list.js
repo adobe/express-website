@@ -111,13 +111,15 @@ async function decorateTemplateList($block) {
       if ($bpHeroImage) {
         const $heroSection = document.querySelector('main .hero');
         const $heroDiv = document.querySelector('main .hero > div');
-        const $p = createTag('p');
-        const $pic = createTag('picture', { class: 'hero-bg' });
-        $pic.appendChild($bpHeroImage);
-        $p.append($pic);
 
-        $heroSection.classList.remove('hero-noimage');
-        $heroDiv.prepend($p);
+        if ($heroSection && !$heroDiv) {
+          const $p = createTag('p');
+          const $pic = createTag('picture', { class: 'hero-bg' });
+          $pic.appendChild($bpHeroImage);
+          $p.append($pic);
+          $heroSection.classList.remove('hero-noimage');
+          $heroDiv.prepend($p);
+        }
       }
     }
   }
