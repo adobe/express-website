@@ -23,7 +23,8 @@ jobs:
           command: npm install
       - persist_to_workspace:
           root: /home/circleci
-          path: project
+          paths:
+            - project
 
   operations:
     executor: node12
