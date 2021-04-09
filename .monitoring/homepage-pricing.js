@@ -57,6 +57,8 @@ async function checkPricingPage(baseUrl) {
     .then(() => $browser.sleep(TIMEOUT))
     // check buy button
     .then(() => $browser.findElement($driver.By.linkText('Buy Now')))
+    .then((button) => button.getAttribute('href'))
+    .then((buyUrl) => assert.ok(buyUrl.startsWith('https://commerce.adobe.com')))
     .then(() => console.log(`${url} successfully verified.`))
     .catch((e) => {
       assert.fail(`Verification of ${url} failed: ${e.message}`);
