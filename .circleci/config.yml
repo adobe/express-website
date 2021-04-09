@@ -42,6 +42,10 @@ workflows:
   version: 2
   build:
     jobs:
+      - build:
+          filters:
+            branches:
+              only: ops
       - operations:
           requires:
             - build
