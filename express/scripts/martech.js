@@ -105,21 +105,29 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     sparkLandingPageType = 'home';
   // seo
   } else if (
-    pathname.includes('/create/')
+    pathname === '/express/create'
+    || pathname.includes('/create/')
+    || pathname === '/express/make'
     || pathname.includes('/make/')
+    || pathname === '/express/feature'
     || pathname.includes('/feature/')
+    || pathname === '/express/discover'
     || pathname.includes('/discover/')
   ) {
     sparkLandingPageType = 'seo';
   // learn
   } else if (
-    pathname.includes('/learn/')
-    && !pathname.includes('/blog/')
+    pathname === '/express/learn'
+    || (
+      pathname.includes('/learn/')
+      && !pathname.includes('/blog/')
+    )
   ) {
     sparkLandingPageType = 'learn';
   // blog
   } else if (
-    pathname.includes('/learn/blog/')
+    pathname === '/express/learn/blog'
+    || pathname.includes('/learn/blog/')
   ) {
     sparkLandingPageType = 'blog';
   // pricing
