@@ -1035,7 +1035,7 @@ function decorateSocialIcons() {
 }
 
 export function getHelixEnv() {
-  let envName = localStorage.getItem('helix-env');
+  let envName = sessionStorage.getItem('helix-env');
   if (!envName) envName = 'prod';
   const envs = {
     stage: {
