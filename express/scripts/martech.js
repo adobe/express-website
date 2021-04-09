@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document digitalData _satellite fetch */
+/* global window document navigator digitalData _satellite fetch */
 
 import {
   loadScript,
@@ -171,8 +171,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   digitalData._set('spark.eventData.userType', sparkUserType);
   digitalData._set('spark.eventData.premiumEntitled', '');
   digitalData._set('spark.eventData.displayedLanguage', language);
-  // TODO: I don't know how to capture this
-  // digitalData._set('spark.eventData.deviceLanguage', language);
+  digitalData._set('spark.eventData.deviceLanguage', navigator.language);
   digitalData._set('spark.eventData.pagename', pageName);
   digitalData._set('spark.eventData.platformName', 'web');
   if (category) {
