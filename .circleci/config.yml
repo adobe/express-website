@@ -1,0 +1,57 @@
+version: 2.1
+executors:
+  node12:
+    docker:
+    - image: circleci/node:12
+      environment:
+        NPM_CONFIG_PREFIX: "~/.npm-global"
+        working_directory: ~/repo
+
+orbs:
+  helix-post-deploy: adobe/helix-post-deploy@2.0.10
+
+jobs:
+  build:
+    executor: node12
+    steps:
+      - checkout
+      - run:
+          name: install latest npm
+          command: sudo npm -g install npm
+      - run:
+          name: Installing Dependencies
+          command: npm install
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
+
+  operations:
+    executor: node12
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - helix-post-deploy/monitoring:
+          newrelic_name: Adobe CC Express - Production Content
+          newrelic_url: https://www.adobe.com/express
+          newrelic_type: browser
+          newrelic_script: ./.monitoring/homepage-pricing.js
+          newrelic_group_policy: Customer Sites
+          newrelic_locations: AWS_US_WEST_1
+          newrelic_frequency: 1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: ops
+      - operations:
+          requires:
+            - build
+          context: Project Helix
+          filters:
+            branches:
+              only: ops
