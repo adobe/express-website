@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global window, navigator, document, fetch, performance, PerformanceObserver,
-   localStorage, FontFace, sessionStorage */
+   FontFace, sessionStorage */
 /* eslint-disable no-console */
 
 export function toClassName(name) {
@@ -1035,7 +1035,7 @@ function decorateSocialIcons() {
 }
 
 export function getHelixEnv() {
-  let envName = localStorage.getItem('helix-env');
+  let envName = sessionStorage.getItem('helix-env');
   if (!envName) envName = 'prod';
   const envs = {
     stage: {
@@ -1048,6 +1048,18 @@ export function getHelixEnv() {
     },
   };
   const env = envs[envName];
+
+  const overrideItem = sessionStorage.getItem('helix-env-overrides');
+  if (overrideItem) {
+    const overrides = JSON.parse(overrideItem);
+    const keys = Object.keys(overrides);
+    env.overrides = keys;
+
+    for (const a of keys) {
+      env[a] = overrides[a];
+    }
+  }
+
   if (env) {
     env.name = envName;
   }
@@ -1069,22 +1081,48 @@ function displayOldLinkWarning() {
   }
 }
 
-function displayEnv() {
-  const usp = new URLSearchParams(window.location.search);
-  if (usp.has('helix-env')) {
-    const env = usp.get('helix-env');
-    if (env) {
-      localStorage.setItem('helix-env', env);
+function setHelixEnv(name, overrides) {
+  if (name) {
+    sessionStorage.setItem('helix-env', name);
+    if (overrides) {
+      sessionStorage.setItem('helix-env-overrides', JSON.stringify(overrides));
     } else {
-      localStorage.removeItem('helix-env');
+      sessionStorage.removeItem('helix-env-overrides');
     }
+  } else {
+    sessionStorage.removeItem('helix-env');
+    sessionStorage.removeItem('helix-env-overrides');
   }
+}
 
-  const env = localStorage.getItem('helix-env');
-  if (env) {
-    const $helixEnv = createTag('div', { class: 'helix-env' });
-    $helixEnv.innerHTML = env + (getHelixEnv(env) ? '' : ' [not found]');
-    document.body.appendChild($helixEnv);
+function displayEnv() {
+  try {
+    /* setup based on URL Params */
+    const usp = new URLSearchParams(window.location.search);
+    if (usp.has('helix-env')) {
+      const env = usp.get('helix-env');
+      setHelixEnv(env);
+    }
+
+    /* setup based on referrer */
+    if (document.referrer) {
+      const url = new URL(document.referrer);
+      if (url.hostname.endsWith === '.adobeprojectm.com') {
+        setHelixEnv('stage', { spark: url.hostname });
+      }
+      if (window.location.hostname !== url.hostname) {
+        console.log(`external referrer detected: ${document.referrer}`);
+      }
+    }
+
+    const env = sessionStorage.getItem('helix-env');
+    if (env) {
+      const $helixEnv = createTag('div', { class: 'helix-env' });
+      $helixEnv.innerHTML = env + (getHelixEnv() ? '' : ' [not found]');
+      document.body.appendChild($helixEnv);
+    }
+  } catch (e) {
+    console.log(`display env failed: ${e.message}`);
   }
 }
 
