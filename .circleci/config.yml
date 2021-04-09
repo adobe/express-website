@@ -48,4 +48,4 @@ workflows:
           context: Project Helix
           filters:
             branches:
-              only: main
+              only: ops
