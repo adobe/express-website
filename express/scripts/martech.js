@@ -366,7 +366,7 @@ async function showRegionPicker() {
   $body.appendChild($regionPicker);
   const locale = getLocale(window.location);
   const regionpath = locale === 'us' ? '/' : `/${locale}/`;
-  const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com' : '';
+  const host = window.location.hostname !== 'www.adobe.com' ? 'https://www.adobe.com' : '';
   const url = `${host}${regionpath}`;
   const resp = await fetch(url);
   const html = await resp.text();
