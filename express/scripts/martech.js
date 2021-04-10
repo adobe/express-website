@@ -362,17 +362,20 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
 async function showRegionPicker() {
   const $body = document.body;
-  const $regionPicker = createTag('div', { id: 'region-picker' });
-  $body.appendChild($regionPicker);
   const locale = getLocale(window.location);
   const regionpath = locale === 'us' ? '/' : `/${locale}/`;
-  const host = window.location.hostname !== 'www.adobe.com' ? 'https://www.adobe.com' : '';
+  const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com' : '';
   const url = `${host}${regionpath}`;
   const resp = await fetch(url);
   const html = await resp.text();
   const $div = createTag('div');
   $div.innerHTML = html;
   const $regionNav = $div.querySelector('nav.language-Navigation');
+  if (!$regionNav) {
+    return;
+  }
+  const $regionPicker = createTag('div', { id: 'region-picker' });
+  $body.appendChild($regionPicker);
   $regionPicker.appendChild($regionNav);
   $regionPicker.addEventListener('click', (event) => {
     if (event.target === $regionPicker || event.target === $regionNav) {
