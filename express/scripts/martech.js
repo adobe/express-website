@@ -339,20 +339,22 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
     // for tracking just the sticky banner close button
     const $button = d.querySelector('.sticky-promo-bar button.close');
-    $button.addEventListener('click', () => {
-      const adobeEventName = 'adobe.com:express:cta:startYourFreeTrial:close';
-      const sparkEventName = adobeEventName;
+    if ($button) {
+      $button.addEventListener('click', () => {
+        const adobeEventName = 'adobe.com:express:cta:startYourFreeTrial:close';
+        const sparkEventName = adobeEventName;
 
-      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-      digitalData._set('spark.eventData.eventName', sparkEventName);
+        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+        digitalData._set('spark.eventData.eventName', sparkEventName);
 
-      _satellite.track('event', {
-        digitalData: digitalData._snapshot(),
+        _satellite.track('event', {
+          digitalData: digitalData._snapshot(),
+        });
+
+        digitalData._delete('primaryEvent.eventInfo.eventName');
+        digitalData._delete('spark.eventData.eventName');
       });
-
-      digitalData._delete('primaryEvent.eventInfo.eventName');
-      digitalData._delete('spark.eventData.eventName');
-    });
+    }
   }
 
   decorateAnalyticsEvents();
