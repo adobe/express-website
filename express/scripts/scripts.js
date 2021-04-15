@@ -276,7 +276,7 @@ export async function getOffer(offerId, countryOverride) {
     const unitPrice = offer.p;
     const currencyFormatter = new Intl.NumberFormat(navigator.lang, { style: 'currency', currency });
     const unitPriceCurrencyFormatted = currencyFormatter.format(unitPrice);
-    const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%2Fspark.adobe.com%2Fsp%2F&lang=${lang}`;
+    const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
     return {
       country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang,
     };
@@ -1055,7 +1055,7 @@ export function getHelixEnv() {
     stage: {
       commerce: 'commerce-stg.adobe.com',
       adminconsole: 'stage.adminconsole.adobe.com',
-      spark: 'stage.adobeprojectm.com',
+      spark: 'express-stage.adobeprojectm.com',
     },
     prod: {
 
@@ -1084,13 +1084,8 @@ function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
       const url = new URL($a.href);
-      if (!(url.pathname.endsWith('/sp/') || url.pathname.endsWith('/sp/login') || url.pathname === '/'
-      || url.pathname.startsWith('/tools/') || url.pathname.startsWith('/page/')
-      || url.pathname.startsWith('/express-apps/') || url.pathname.startsWith('/post/') || url.pathname.startsWith('/video/')
-      || url.pathname.startsWith('/classroom/'))) {
-        console.log(`old link: ${$a}`);
-        $a.style.border = '10px solid red';
-      }
+      console.log(`old link: ${$a}`);
+      $a.style.border = '10px solid red';
     });
   }
 }
@@ -1122,7 +1117,7 @@ function displayEnv() {
     if (document.referrer) {
       const url = new URL(document.referrer);
       if (url.hostname.endsWith('.adobeprojectm.com')) {
-        setHelixEnv('stage', { spark: url.hostname });
+        setHelixEnv('stage', { spark: url.host });
       }
       if (window.location.hostname !== url.hostname) {
         console.log(`external referrer detected: ${document.referrer}`);

@@ -424,10 +424,10 @@ window.fedsConfig = {
     customSignIn: () => {
       const sparkLang = getLanguage(getLocale(window.location));
       const sparkPrefix = sparkLang === 'en-US' ? '' : `/${sparkLang}`;
-      let sparkLoginUrl = `https://spark.adobe.com${sparkPrefix}/sp/`;
+      let sparkLoginUrl = `https://express.adobe.com${sparkPrefix}/sp/`;
       const env = getHelixEnv();
       if (env && env.spark) {
-        sparkLoginUrl = sparkLoginUrl.replace('spark.adobe.com', env.spark);
+        sparkLoginUrl = sparkLoginUrl.replace('express.adobe.com', env.spark);
       }
       window.location.href = sparkLoginUrl;
     },
