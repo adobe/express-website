@@ -77,6 +77,32 @@ function buildUrl(optionUrl, optionPlan, country, language) {
   return planUrl.href;
 }
 
+function decorateIconList($pricingRight) {
+  const $iconList = createTag('div', {class: 'pricing-iconlist'}); 
+  let $iconListRow;
+  let $iconListDescription;
+  [...$pricingRight.firstChild.childNodes].forEach(($e) => {
+    if ($e.tagName == 'IMG' && $e.classList.contains('icon')) {
+      if ($iconListRow) {
+        $iconList.appendChild($iconListRow);
+      }
+      $iconListRow = createTag('div');
+      const $iconDiv = createTag('div', {class: 'pricing-iconlist-icon'});
+      $iconDiv.appendChild($e);
+      $iconListRow.append($iconDiv);
+      $iconListDescription = createTag('div', {class: 'pricing-iconlist-description'});
+      $iconListRow.append($iconListDescription);
+    
+    } else if ($iconListDescription) {
+      $iconListDescription.appendChild($e);
+    }
+  });
+  if ($iconListRow) {
+    $iconList.appendChild($iconListRow);
+  }
+  $pricingRight.appendChild($iconList);
+}
+
 function selectPlan($block, plan) {
   const $title = $block.querySelector('.pricing-plan-title');
   const $dropdown = $block.querySelector('.pricing-plan-dropdown');
@@ -209,6 +235,7 @@ function decoratePricing($block) {
     } else if (index === 1) {
       $right = $row;
       $right.classList.add('pricing-right');
+      decorateIconList($right);
     } else if (index === 2) {
       plans = buildPlans($row);
     } else if (index === 3) {
