@@ -9,14 +9,72 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global window */
 /* eslint-disable no-underscore-dangle */
 
 import {
-  createTag,
+  createTag, getHelixEnv, getOffer,
 } from '../../scripts/scripts.js';
 
-function cleanEmptyParagraphs($block) {
-  $block.querySelectorAll('p:empty').forEach(($p) => $p.remove());
+function replaceUrlParam(url, paramName, paramValue) {
+  const params = url.searchParams;
+  params.set(paramName, paramValue);
+  url.search = params.toString();
+  return url;
+}
+
+function buildUrl(optionUrl, optionPlan, country, language) {
+  const currentUrl = new URL(window.location.href);
+  let planUrl = new URL(optionUrl);
+
+  if (!planUrl.hostname.includes('commerce')) {
+    return planUrl.href;
+  }
+  planUrl = replaceUrlParam(planUrl, 'co', country);
+  planUrl = replaceUrlParam(planUrl, 'lang', language);
+  let rUrl = planUrl.searchParams.get('rUrl');
+  if (currentUrl.searchParams.has('host')) {
+    const hostParam = currentUrl.searchParams.get('host');
+    if (hostParam === 'spark.adobe.com') {
+      planUrl.hostname = 'commerce.adobe.com';
+      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+    } else if (hostParam.includes('qa.adobeprojectm.com')) {
+      planUrl.hostname = 'commerce.adobe.com';
+      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+    } else if (hostParam.includes('.adobeprojectm.com')) {
+      planUrl.hostname = 'commerce-stg.adobe.com';
+      if (rUrl) rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
+      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+    }
+  }
+
+  const env = getHelixEnv();
+  if (env && env.commerce && planUrl.hostname.includes('commerce')) planUrl.hostname = env.commerce;
+
+  if (rUrl) {
+    rUrl = new URL(rUrl);
+
+    if (currentUrl.searchParams.has('touchpointName')) {
+      rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
+    }
+    if (currentUrl.searchParams.has('destinationUrl') && optionPlan === 'Individual') {
+      rUrl = replaceUrlParam(rUrl, 'destinationUrl', currentUrl.searchParams.get('destinationUrl'));
+    }
+    if (currentUrl.searchParams.has('srcUrl')) {
+      rUrl = replaceUrlParam(rUrl, 'srcUrl', currentUrl.searchParams.get('srcUrl'));
+    }
+  }
+
+  if (currentUrl.searchParams.has('code')) {
+    planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
+  }
+
+  if (currentUrl.searchParams.get('rUrl')) {
+    rUrl = currentUrl.searchParams.get('rUrl');
+  }
+
+  if (rUrl) planUrl.searchParams.set('rUrl', rUrl.toString());
+  return planUrl.href;
 }
 
 function selectPlan($block, plan) {
@@ -32,10 +90,19 @@ function selectPlan($block, plan) {
   });
 }
 
-function selectPlanOption($block, planOption) {
+async function selectPlanOption($block, plan, planOption) {
   const $priceLine = $block.querySelector('.pricing-plan-price');
-  const { price, currency, symbol } = planOption;
-  $priceLine.innerHTML = `${currency}${symbol}<span class="price">${price}</span>`;
+  const $cta = $block.querySelector('.cta');
+  const offer = await getOffer(planOption.offerId);
+  if (offer) {
+    plan.currency = offer.currency;
+    plan.price = offer.unitPrice;
+    plan.formatted = offer.unitPriceCurrencyFormatted;
+    plan.country = offer.country;
+    plan.language = offer.lang;
+  }
+  $priceLine.innerHTML = plan.formatted;
+  $cta.href = buildUrl(planOption.link, plan.title, plan.country, plan.language);
 }
 
 function buildPlans($contents) {
@@ -51,6 +118,8 @@ function buildPlans($contents) {
         plan = {
           id: planId,
           title: $content.innerText,
+          country: 'us',
+          language: 'en',
           options: [],
         };
         plans.push(plan);
@@ -59,15 +128,17 @@ function buildPlans($contents) {
 
       if ($content.nodeName === 'P') {
         const $link = $content.querySelector('a');
+        const link = new URL($link.href);
+        const params = link.searchParams;
         plan.options.push({
           id: planOptionId,
+          offerId: params.get('items[0][id]'),
           title: $content.innerText,
           link: $link.href,
           price: '9.99',
           currency: 'US',
           symbol: '$',
         });
-
         planOptionId += 1;
       }
     });
@@ -157,8 +228,16 @@ function decoratePricing($block) {
   $block.innerHTML = '';
   const $planSection = createTag('div', { class: 'pricing-plan' });
   const $planSectionTitle = createTag('h2', { class: 'pricing-plan-title' });
+  $planSectionTitle.dataset.id = '0';
   const $planSectionPrice = createTag('p', { class: 'pricing-plan-price' });
   const $planSectionDropdown = createTag('select', { class: 'pricing-plan-dropdown' });
+  $planSectionDropdown.addEventListener('change', () => {
+    const planId = $planSectionTitle.dataset.id;
+    const planOptionId = $planSectionDropdown.value;
+    const plan = plans[planId];
+    const planOption = plan.options[planOptionId];
+    selectPlanOption($block, plan, planOption);
+  });
   $planSection.append($planSectionTitle);
   $planSection.append($planSectionPrice);
   $planSection.append($planSectionDropdown);
@@ -168,9 +247,8 @@ function decoratePricing($block) {
   const $ctaButton = $block.querySelector('a.button.primary');
   $ctaButton.classList.add('cta');
   selectPlan($block, plans[0]);
-  selectPlanOption($block, plans[0].options[0]);
+  selectPlanOption($block, plans[0], plans[0].options[0]);
   decorateOtherPlans($block, otherPlans);
-  // cleanEmptyParagraphs($block);
 }
 
 export default function decorate($block) {
