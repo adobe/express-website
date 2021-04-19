@@ -1,417 +1,172 @@
-main .pricing.appear {
+.hero #create-standout-content-in-no-time {
+    text-align: left;
+}
+
+.hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
+    text-align: left;
+    margin-left: 0;
+}
+
+main .pricing {
     opacity: 1;
-    height: unset;
+    text-align: left;
+    padding-bottom: 1000px;
 }
 
-main .pricing .pricing-header {
-    margin-top: 40px;
-    color: rgb(40, 70, 96);
+main .pricing .pricing-left img {
+    display: none;
 }
 
-main .pricing .pricing-header span {
-    display: block;
-    color: rgb(16, 196, 89);
-    transition: 1.5s opacity ease;
-    cursor: pointer;
+main .pricing .pricing-plan .pricing-plan-title {
+    margin: 70px 0 0 0;
+    color: black!important;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: left;
 }
 
-main .pricing .pricing-plans {
-    display: inline-flex;
-    flex-direction: column;
-}
-
-main .pricing .plan {
-    margin-top: 50px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    align-items: center;
-    padding: 20px;
-    color: black;
-}
-
-main .pricing .plan.promotional {
-    margin-top: 80px;
-    position: relative;
-    order: -1;
-    background: rgb(79,94,206);
-    background: linear-gradient(180deg, rgba(79,94,206,1) 0%, rgba(69,147,205,1) 100%);
-    border-radius: 0 0 15px 15px;
-    color: white;
-}
-
-main .pricing .plan .plan-promotional-header {
-    position: absolute;
-    display: flex;
-    background: #10C459;
-    height: 30px;
-    width: 100%;
-    top: -30px;
-    font-weight: 700;
-    font-size: 12px;
-    color: white;
-    border-radius: 15px 15px 0 0;
-    align-items: center;
-    justify-content: center;
-}
-
-main .pricing .plan .plan-header {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    min-height: 110px;
-}
-
-main .pricing .plan .plan-header img {
-    margin: 20px 0;
-    width: 60px;
-    height: 60px;
-}
-
-main .pricing .plan .plan-header>div>span {
-    font-weight: 700;
-    font-size: 36px;
-}
-
-main .pricing .plan .plan-header>div>p {
-    margin: 10px 0;
-    font-size: 13px;
-    padding: 0 40px;
-}
-
-main .pricing .plan .plan-pricing {
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-main .pricing .plan .plan-pricing strong {
-    font-size: 32px;
-}
-
-main .pricing .plan .previous-pricing {
-    position: relative;
-    margin-left: 20px;
-}
-
-main .pricing .plan .previous-pricing::after {
-    position: absolute;
-    content: '';
-    width: 110%;
-    top: 42%;
-    left: -5%;
-    height: 3px;
-    background-color: red;
-}
-
-main .pricing .plan .plan-secondary {
-    margin: 20px 0;
-    font-size: 13px;
-}
-
-main .pricing .plan .plan-secondary {
+main .pricing .pricing-plan .pricing-plan-price {
     margin: 0 0 20px 0;
-    font-size: 13px;
+    font-size: 24px;
+    font-weight: 800;
 }
 
-main .pricing .plan .plan-footer {
-    width: 100%;
-    border-bottom: 1px #35414C solid;
-    padding-bottom: 20px;
+main .pricing .pricing-plan .pricing-plan-price .price {
+    margin-top: 10px;
+    font-size: 42px;
 }
 
-main .pricing .plan .plan-dropdown {
-    display: block;
-    padding: 7px 10px;
+main .pricing .pricing-plan .pricing-plan-dropdown {
+    padding: 5px;
     border-radius: 5px;
     width: 180px;
-    border: 1px solid #dce0e3;
-    margin: 0 auto 10px auto;
 }
 
-main .pricing .plan.promotional .button.primary {
-    background-color: transparent;
-    border: 2px white solid;
-}
-
-main .pricing .plan .button.primary {
-    border: 2px #1473e6 solid;
-}
-
-main .pricing .plan .plan-features {
-    display: none;
+main .pricing .cta {
+    background-color: #5c5ce0;
     width: 100%;
-    margin-top: 10px;
+    margin: 20px 0 0 0;
+    padding: 15px 0;
+    border-radius: 30px;
 }
 
-main .pricing .plan .plan-features.active {
+main .pricing .pricing-right img {
+    width: 40px;
+    height: 40px;
+}
+
+main .pricing .pricing-right .other-plans {
+    margin-top: 40px;
+    padding-bottom: 60px;
+}
+
+main .pricing .pricing-right .other-plans .other-plans-title {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+main .pricing .pricing-right .other-plans .other-plan {
+    position: relative;
     display: block;
 }
 
-main .pricing .plan .plan-feature {
-    display: flex;
-    margin: 20px 0;
-}
-
-main .pricing .plan .plan-features img {
-    margin-top: 2px;
-    width: 35px;
-    height: 35px;
-}
-
-main .pricing .plan .plan-features p {
-    font-size: 13px;
-    text-align: left;
-    line-height: 1.4;
-    margin: 0 0 0 20px;
-}
-
-main .pricing .plan.promotional .plan-features p {
-    color: white;
-}
-
-main .pricing .plan .plan-see-details {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+main .pricing .pricing-right .other-plans .other-plan-button {
+    border: 2px #d4d4d4 solid;
+    max-width: 100%;
+    padding: 15px 20px;
+    font-size: 24px;
+    border-radius: 6px;
+    margin-bottom: 20px;
     cursor: pointer;
+    user-select: none;
+    transition: .2s background-color ease-in;
 }
 
-main .pricing .plan .plan-see-details p {
-    margin-bottom: 0;
+main .pricing .pricing-right .other-plans .other-plan-button:hover {
+    background-color: #d4d4d4;
 }
 
-main .pricing .plan .plan-see-details .chevron {
-    margin-top: 32px;
-    margin-left: 5px;
-}
-
-main .features {
+main .pricing .pricing-right .other-plans .other-plan-popup {
     display: none;
+    position: absolute;
+    max-width: 100%;
+    top: 80px;
+    left: 0;
+    background-color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 40px 20px;
+    z-index: 10;
+    box-shadow: 0 0 10px -5px #000000;
+    font-size: 22px;
+}
+
+main .pricing .pricing-right .other-plans .other-plan-popup.active {
+    display: block;
 }
 
 @media (min-width: 600px) {
-    main .pricing .plan .plan-features {
-        width: 70%;
-    }
-}
-
-@media (min-width: 1200px) {
-    main .pricing-container {
-        background-color: rgba(242,244,245,1);
+    .hero #create-standout-content-in-no-time {
+        text-align: center;
     }
 
-    main .pricing-container>div {
-        max-width: 1140px!important;
-        padding-bottom: 40px;
+    .hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
+        text-align: center;
+    }
+
+    main .pricing-container > div {
+        max-width: 1000px;
     }
 
     main .pricing {
-        padding-top: 100px;
         display: flex;
-        align-items: start;
-        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
-    main .pricing .pricing-header {
-        margin-top: 0;
-        text-align: left!important;
-        width: 300px;
-        padding-right: 60px;
+    main .pricing .pricing-left img {
+        margin-top: 20px;
+        display: block;
     }
 
-    main .pricing .pricing-header span {
+    main .pricing .pricing-plan .pricing-plan-title {
+        margin: 0;
+    }
+
+    main .pricing .pricing-plan .pricing-plan-price {
+        margin-top: 10px;
         display: inline-block;
     }
 
-    main .pricing .pricing-plans {
-        flex-direction: row;
-        justify-content: space-between;
-        width: 780px;
+    main .pricing .pricing-plan .pricing-plan-price .price {
+        font-size: 52px;
     }
 
-    main .pricing .plan {
-        margin: 0;
-        width: 210px;
-        height: 300px;
+    main .pricing .pricing-plan .pricing-plan-dropdown {
+        display: inline-block;
+        margin-left: 20px;
     }
 
-    main .pricing .plan.promotional {
-        margin: 0;
-        order: 0;
-        background: white;
-        border-radius: 0;
-        border: 2px #5167CF solid;
-        width: 206px;
-        height: 296px;
-        color: black;
+    main .pricing .pricing-left {
+        width: 45%;
     }
 
-    main .pricing .plan .plan-promotional-header {
-        background: linear-gradient(#FFDA00, #e6ab00);
-        width: 250px;
-        top: -32px;
-        color: black;
-        border-radius: 7px 7px 0 0;
+    main .pricing .pricing-right {
+        width: 45%;
     }
 
-    main .pricing .plan .plan-header {
+    main .pricing .pricing-right .other-plans .other-plans-container {
         display: flex;
-        color: rgb(53,65,76);
-        text-align: left;
-        border-bottom: 1px #DBDBDB solid;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        min-height: 110px;
     }
 
-    main .pricing .plan .plan-header img {
-        align-self: start;
-        width: 50px;
-        height: 50px;
-        margin: 0;
+    main .pricing .pricing-right .other-plans .other-plan {
+        flex: 1;
+        margin-right: 20px;
     }
 
-    main .pricing .plan .plan-header>div>span {
-        font-size: 20px;
-        text-transform: uppercase;
-        text-align: left;
+    main .pricing .pricing-right .other-plans .other-plan-popup {
+        width: 190%;
+        max-width: 190%;
     }
 
-    main .pricing .plan .plan-header>div>p {
-        padding: 0;
-    }
-
-    main .pricing .plan .plan-pricing {
-        color: rgb(53,65,76);
-    }
-
-    main .pricing .plan .plan-pricing strong {
-        font-size: 22px;
-    }
-
-    main .pricing .plan .previous-pricing {
-        color: rgb(130, 145, 155);
-    }
-
-    main .pricing .plan .previous-pricing::after {
-        position: absolute;
-        content: '';
-        width: 110%;
-        top: 45%;
-        left: -5%;
-        height: 2px;
-        background-color: red;
-    }
-
-    main .pricing .plan .plan-secondary {
-        font-size: 13px;
-        color: rgb(130, 145, 155);
-    }
-
-    main .pricing .plan .plan-footer {
-        margin-top: auto;
-        border-bottom: none;
-    }
-
-    main .pricing .plan .plan-dropdown {
-        padding: 7px 10px;
-        border-radius: 5px;
-        width: 165px;
-        border: 1px solid #dce0e3;
-    }
-
-    main .pricing .features {
-        display: table;
-        margin-top: 20px;
-        width: 1140px;
-        border-collapse: collapse;
-    }
-
-    main .pricing .category {
-        padding-top: 50px;
-    }
-
-    main .pricing .category-image {
-        padding: 30px 0 10px 0;
-        margin-left: 5px;
-    }
-
-    main .pricing .category-text {
-        padding: 25px 0 10px 10px;
-        font-size: 21px;
-        color: rgb(53, 65, 76);
-        font-weight: 700;
-        text-align: left;
-    }
-
-    main .pricing .feature {
-        background-color: white;
-    }
-
-    main .pricing .feature.odd {
-        background-color: rgba(242,244,245,1)
-    }
-
-    main .pricing .feature-special {
-        width: 40px;
-        text-align: center;
-        height: 40px;
-        padding-bottom: 4px;
-    }
-
-    main .pricing .feature-special span {
-        background-color: rgba(15,196,89,1);
-        border-radius: 3px;
-        font-weight: 700;
-        font-size: 10px;
-        color: rgb(255, 255, 255);
-        padding: 2px 6px;
-    }
-
-    main .pricing .feature-text {
-        padding: 15px 10px;
-        text-align: left;
-        width: 220px;
-        font-size: 14px;
-        color: rgb(53, 65, 76);
-        line-height: 1.2;
-    }
-
-    main .pricing .feature-column {
-        width: 200px;
-        padding-top: 5px;
-        padding-left: 10px;
-    }
-
-    main .pricing .plan.promotional .button.primary {
-        background-color: #1473e6;
-        border: 2px #1473e6 solid;
-    }
-
-    main .pricing-container .icon-creativecloud {
-        margin-top: 40px;
-    }
-
-    main .pricing .plan .plan-features {
-        display: none;
-    }
-
-    main .pricing .plan .plan-features.active {
-        display: none;
-    }
-
-    main .pricing .plan .plan-see-details {
-        display: none;
-    }
-}
-
-main .pricing-container>div>p {
-    margin-top: 20px;
-    margin-bottom: 60px;
-    font-size: 14px;
-    color: #82919c;
-}
-
-main .pricing-container>div>p a {
-    color: #82919c!important;
 }
