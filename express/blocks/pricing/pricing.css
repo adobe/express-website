@@ -106,6 +106,18 @@ main .pricing .pricing-right .other-plans .other-plan-popup.active {
     display: block;
 }
 
+main .pricing .pricing-right .pricing-iconlist > div {
+    display: flex;
+}
+
+main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-icon {
+    flex: 0 0 50px;
+}
+
+main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
+    flex: 1 1;
+}
+
 @media (min-width: 600px) {
     .hero #create-standout-content-in-no-time {
         text-align: center;

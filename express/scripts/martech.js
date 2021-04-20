@@ -451,6 +451,24 @@ loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.
     const placeholder = document.getElementById('header-placeholder');
     gnav.classList.add('appear');
     placeholder.classList.add('disappear');
+
+    /* switch all links if lower envs */
+    const env = getHelixEnv();
+    if (env && env.spark) {
+
+      // eslint-disable-next-line no-console
+      console.log('lower env detected');
+      document.querySelectorAll('a[href^="https://spark.adobe.com/"]').forEach(($a) => {
+        const hrefURL = new URL($a.href);
+        hrefURL.host = env.spark;
+        $a.setAttribute('href', hrefURL.toString());
+      });
+      document.querySelectorAll('a[href^="https://express.adobe.com/"]').forEach(($a) => {
+        const hrefURL = new URL($a.href);
+        hrefURL.host = env.spark;
+        $a.setAttribute('href', hrefURL.toString());
+      });
+    }
   }, 500);
 }).id = 'feds-script';
 
