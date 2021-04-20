@@ -50,7 +50,12 @@ function buildUrl(optionUrl, optionPlan, country, language) {
 
   const env = getHelixEnv();
   if (env && env.commerce && planUrl.hostname.includes('commerce')) planUrl.hostname = env.commerce;
-
+  if (env && env.spark && rUrl) {
+    const url = new URL(rUrl);
+    url.hostname = env.spark;
+    rUrl = url.toString();
+  }
+  
   if (rUrl) {
     rUrl = new URL(rUrl);
 
