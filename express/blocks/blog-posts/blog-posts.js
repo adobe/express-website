@@ -29,8 +29,8 @@ function sideKickAddDependencyBlogPosts(url) {
 
 async function fetchBlogIndex() {
   const url = '/express/learn/blog/query-index.json';
-  sideKickAddDependencyBlogPosts(url)
   const resp = await fetch(url);
+  sideKickAddDependencyBlogPosts(url)
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {
