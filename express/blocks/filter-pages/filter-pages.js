@@ -69,7 +69,6 @@ async function fetchFullIndex(indices) {
     if (url) {
       try {
         const resp = await fetch(url);
-        addPublishDependencies(url);
         const json = await resp.json();
         // eslint-disable-next-line no-console
         console.log(`${url}: ${json.data.length}`);
@@ -101,7 +100,7 @@ async function decorateFilterPages($filterPages) {
   });
 
   const indices = config.indices.split('.json').map((e) => (e ? `${e}.json` : undefined));
-
+  addPublishDependencies(indices);
   window.fullIndex = await fetchFullIndex(indices);
 
   filterMigratedPages($pageFilter.value);
