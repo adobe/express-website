@@ -18,8 +18,19 @@ import {
   getOptimizedImageURL,
 } from '../../scripts/scripts.js';
 
+function sideKickAddDependencyBlogPosts(url) {
+  window.hlx = window.hlx || {};
+  if (window.hlx.dependencies) {
+    window.hlx.dependencies.push(url);
+  } else { 
+    window.hlx.dependencies = [url]; 
+  }
+}
+
 async function fetchBlogIndex() {
-  const resp = await fetch('/express/learn/blog/query-index.json');
+  const url = '/express/learn/blog/query-index.json';
+  sideKickAddDependencyBlogPosts(url)
+  const resp = await fetch(url);
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {

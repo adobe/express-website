@@ -50,6 +50,15 @@ function filterMigratedPages(filter) {
   $stats.innerHTML = `${counter} page${counter !== 1 ? 's' : ''} found`;
 }
 
+function sideKickAddDependencyFilterPages(url) {
+  window.hlx = window.hlx || {};
+  if (window.hlx.dependencies) {
+    window.hlx.dependencies.push(url);
+  } else { 
+    window.hlx.dependencies = [url]; 
+  }
+}
+
 async function fetchFullIndex(indices) {
   const fullIndex = [];
 
@@ -57,6 +66,7 @@ async function fetchFullIndex(indices) {
     if (url) {
       try {
         const resp = await fetch(url);
+        sideKickAddDependencyFilterPages(url);
         const json = await resp.json();
         // eslint-disable-next-line no-console
         console.log(`${url}: ${json.data.length}`);

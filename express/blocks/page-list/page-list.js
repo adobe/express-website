@@ -46,11 +46,21 @@ function showHide($block, $ptl) {
   }
 }
 
+function sideKickAddDependencyPageList(url) {
+  window.hlx = window.hlx || {};
+  if (window.hlx.dependencies) {
+    window.hlx.dependencies.push(url);
+  } else { 
+    window.hlx.dependencies = [url]; 
+  }
+}
+
 async function fetchIndex() {
   const locale = getLocale(window.location);
   const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
   try {
     const resp = await fetch(indexURL);
+    sideKickAddDependencyPageList(indexURL)
     const json = await resp.json();
     // eslint-disable-next-line no-console
     console.log(`${indexURL}: ${json.data.length}`);
