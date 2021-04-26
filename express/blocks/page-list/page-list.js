@@ -20,7 +20,7 @@ import {
 
 function addPublishDependencies(url) {
   if (!Array.isArray(url)) {
-    url = [url]
+    url = [url];
   }
   window.hlx = window.hlx || {};
   if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
