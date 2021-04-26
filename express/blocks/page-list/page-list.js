@@ -48,7 +48,7 @@ function showHide($block, $ptl) {
 
 function sideKickAddDependencyPageList(url) {
   window.hlx = window.hlx || {};
-  if (window.hlx.dependencies) {
+  if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
     window.hlx.dependencies.push(url);
   } else { 
     window.hlx.dependencies = [url]; 
