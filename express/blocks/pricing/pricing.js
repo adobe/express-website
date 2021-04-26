@@ -50,7 +50,12 @@ function buildUrl(optionUrl, optionPlan, country, language) {
 
   const env = getHelixEnv();
   if (env && env.commerce && planUrl.hostname.includes('commerce')) planUrl.hostname = env.commerce;
-
+  if (env && env.spark && rUrl) {
+    const url = new URL(rUrl);
+    url.hostname = env.spark;
+    rUrl = url.toString();
+  }
+  
   if (rUrl) {
     rUrl = new URL(rUrl);
 
@@ -119,7 +124,10 @@ function selectPlan($block, plan) {
 async function selectPlanOption($block, plan, planOption) {
   const $priceLine = $block.querySelector('.pricing-plan-price');
   const $cta = $block.querySelector('.cta');
-  const offer = await getOffer(planOption.offerId);
+
+  const countryOverride = new URLSearchParams(window.location.search).get('country');
+  const offer = await getOffer(planOption.offerId, countryOverride);
+  
   if (offer) {
     plan.currency = offer.currency;
     plan.price = offer.unitPrice;
