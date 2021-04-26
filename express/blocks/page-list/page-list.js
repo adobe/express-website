@@ -18,6 +18,18 @@ import {
   getLocale,
 } from '../../scripts/scripts.js';
 
+function addPublishDependencies(url) {
+  if (!Array.isArray(url)) {
+    url = [url]
+  }
+  window.hlx = window.hlx || {};
+  if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
+    window.hlx.dependencies.concat(url);
+  } else { 
+    window.hlx.dependencies = url; 
+  }
+}
+
 function addPages(index, config, $block) {
   const $ul = createTag('ul');
   index.forEach((page) => {
@@ -46,21 +58,11 @@ function showHide($block, $ptl) {
   }
 }
 
-function sideKickAddDependencyPageList(url) {
-  window.hlx = window.hlx || {};
-  if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
-    window.hlx.dependencies.push(url);
-  } else { 
-    window.hlx.dependencies = [url]; 
-  }
-}
-
 async function fetchIndex() {
   const locale = getLocale(window.location);
   const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
   try {
     const resp = await fetch(indexURL);
-    sideKickAddDependencyPageList(indexURL)
     const json = await resp.json();
     // eslint-disable-next-line no-console
     console.log(`${indexURL}: ${json.data.length}`);
@@ -72,6 +74,10 @@ async function fetchIndex() {
 }
 
 async function decoratePageList($block) {
+  const locale = getLocale(window.location);
+  const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
+  addPublishDependencies(indexURL)
+
   const config = readBlockConfig($block);
 
   // shorten hero

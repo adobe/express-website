@@ -18,19 +18,20 @@ import {
   getOptimizedImageURL,
 } from '../../scripts/scripts.js';
 
-function sideKickAddDependencyBlogPosts(url) {
+function addPublishDependencies(url) {
+  if (!Array.isArray(url)) {
+    url = [url]
+  }
   window.hlx = window.hlx || {};
   if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
-    window.hlx.dependencies.push(url);
+    window.hlx.dependencies.concat(url);
   } else { 
-    window.hlx.dependencies = [url]; 
+    window.hlx.dependencies = url; 
   }
 }
 
 async function fetchBlogIndex() {
-  const url = '/express/learn/blog/query-index.json';
-  const resp = await fetch(url);
-  sideKickAddDependencyBlogPosts(url)
+  const resp = await fetch('/express/learn/blog/query-index.json');
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {
@@ -106,6 +107,9 @@ async function filterBlogPosts(locale, config) {
 }
 
 async function decorateBlogPosts($blogPosts, config, offset = 0) {
+
+  addPublishDependencies('/express/learn/blog/query-index.json')
+
   let posts = [];
 
   posts = await filterBlogPosts('en-US', config);
