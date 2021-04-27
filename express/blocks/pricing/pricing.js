@@ -55,7 +55,7 @@ function buildUrl(optionUrl, optionPlan, country, language) {
     url.hostname = env.spark;
     rUrl = url.toString();
   }
-  
+
   if (rUrl) {
     rUrl = new URL(rUrl);
 
@@ -83,21 +83,20 @@ function buildUrl(optionUrl, optionPlan, country, language) {
 }
 
 function decorateIconList($pricingRight) {
-  const $iconList = createTag('div', {class: 'pricing-iconlist'}); 
+  const $iconList = createTag('div', { class: 'pricing-iconlist' });
   let $iconListRow;
   let $iconListDescription;
   [...$pricingRight.firstChild.childNodes].forEach(($e) => {
-    if ($e.tagName == 'IMG' && $e.classList.contains('icon')) {
+    if ($e.tagName === 'IMG' && $e.classList.contains('icon')) {
       if ($iconListRow) {
         $iconList.appendChild($iconListRow);
       }
       $iconListRow = createTag('div');
-      const $iconDiv = createTag('div', {class: 'pricing-iconlist-icon'});
+      const $iconDiv = createTag('div', { class: 'pricing-iconlist-icon' });
       $iconDiv.appendChild($e);
       $iconListRow.append($iconDiv);
-      $iconListDescription = createTag('div', {class: 'pricing-iconlist-description'});
+      $iconListDescription = createTag('div', { class: 'pricing-iconlist-description' });
       $iconListRow.append($iconListDescription);
-    
     } else if ($iconListDescription) {
       $iconListDescription.appendChild($e);
     }
@@ -127,7 +126,7 @@ async function selectPlanOption($block, plan, planOption) {
 
   const countryOverride = new URLSearchParams(window.location.search).get('country');
   const offer = await getOffer(planOption.offerId, countryOverride);
-  
+
   if (offer) {
     plan.currency = offer.currency;
     plan.price = offer.unitPrice;
