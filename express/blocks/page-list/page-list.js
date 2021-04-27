@@ -16,19 +16,8 @@ import {
   createTag,
   readBlockConfig,
   getLocale,
+  addPublishDependencies,
 } from '../../scripts/scripts.js';
-
-function addPublishDependencies(url) {
-  if (!Array.isArray(url)) {
-    url = [url];
-  }
-  window.hlx = window.hlx || {};
-  if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
-    window.hlx.dependencies.concat(url);
-  } else { 
-    window.hlx.dependencies = url; 
-  }
-}
 
 function addPages(index, config, $block) {
   const $ul = createTag('ul');

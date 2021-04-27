@@ -16,19 +16,8 @@ import {
   createTag,
   readBlockConfig,
   getOptimizedImageURL,
+  addPublishDependencies,
 } from '../../scripts/scripts.js';
-
-function addPublishDependencies(url) {
-  if (!Array.isArray(url)) {
-    url = [url];
-  }
-  window.hlx = window.hlx || {};
-  if (window.hlx.dependencies && Array.isArray(window.hlx.dependencies)) {
-    window.hlx.dependencies.concat(url);
-  } else { 
-    window.hlx.dependencies = url; 
-  }
-}
 
 async function fetchBlogIndex() {
   const resp = await fetch('/express/learn/blog/query-index.json');
