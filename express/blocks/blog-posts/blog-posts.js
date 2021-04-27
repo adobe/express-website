@@ -96,8 +96,7 @@ async function filterBlogPosts(locale, config) {
 }
 
 async function decorateBlogPosts($blogPosts, config, offset = 0) {
-
-  addPublishDependencies('/express/learn/blog/query-index.json')
+  addPublishDependencies('/express/learn/blog/query-index.json');
 
   let posts = [];
 

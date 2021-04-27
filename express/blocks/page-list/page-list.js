@@ -63,7 +63,7 @@ async function fetchIndex(indexURL) {
 async function decoratePageList($block) {
   const locale = getLocale(window.location);
   const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
-  addPublishDependencies(indexURL)
+  addPublishDependencies(indexURL);
 
   const config = readBlockConfig($block);
 
