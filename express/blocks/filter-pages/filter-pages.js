@@ -15,6 +15,7 @@
 import {
   createTag,
   readBlockConfig,
+  addPublishDependencies,
 } from '../../scripts/scripts.js';
 
 function filterMigratedPages(filter) {
@@ -88,7 +89,7 @@ async function decorateFilterPages($filterPages) {
   });
 
   const indices = config.indices.split('.json').map((e) => (e ? `${e}.json` : undefined));
-
+  addPublishDependencies(indices);
   window.fullIndex = await fetchFullIndex(indices);
 
   filterMigratedPages($pageFilter.value);

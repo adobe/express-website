@@ -162,23 +162,88 @@ main .blog-posts .card .card-body p {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #region-picker nav {
   background-color: white;
   color: black;
   margin: auto;
-  max-width: 1024px;
-  width: 90%;
-  padding: 32px;
+  max-width: 1540px;
+  width: 100%;
+  height: auto;
+  padding: 2rem;
 }
 
-#region-picker ul {
+#region-picker nav .language-Navigation_heading {
+  margin-top: 4px;
+  color: #2c2c2c;
+}
+
+#region-picker nav .language-Navigation_subheading {
+  color: #2c2c2c;
+}
+
+#region-picker nav .language-Navigation_region-List {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  list-style: none;
   display: block;
-  columns: 280px auto;
+  margin-top: 1.5em;
 }
 
+#region-picker nav .language-Navigation_region-List h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #2c2c2c;
+}
+
+#region-picker nav .language-Navigation_region-List li:not(:first-child)>h3 {
+  margin-top: 16px;
+}
+
+#region-picker nav .language-Navigation_region-List li a {
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #0d66d0;
+  -webkit-text-decoration-skip: objects;
+  text-decoration: none;
+  outline: none;
+  color: #1473e6;
+  box-sizing: border-box;
+  border: 0 none;
+}
+
+#region-picker nav .language-Navigation_region-List li a:hover {
+  text-decoration: underline;
+  outline-width: 0;
+}
+
+@media screen and (min-width: 37.5rem) {
+  #region-picker nav .language-Navigation_region-List {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+  }
+  #region-picker nav {
+    width: 40rem;
+  }
+}
+
+@media screen and (min-width: 75rem) {
+  #region-picker nav .language-Navigation_region-List {
+    -webkit-column-count: 5;
+    -moz-column-count: 5;
+    column-count: 5;
+  }
+  #region-picker nav {
+    width: 80vw;
+  }
+}
 
 .helix-env {
   position: fixed;
@@ -189,7 +254,6 @@ main .blog-posts .card .card-body p {
   bottom: 0;
   right: 0;
 }
-
 
 .helix-link-warning {
   border-color: red !important;
