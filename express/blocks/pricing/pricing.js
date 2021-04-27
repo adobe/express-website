@@ -13,7 +13,10 @@
 /* eslint-disable no-underscore-dangle */
 
 import {
-  createTag, getHelixEnv, getOffer,
+  addPublishDependencies,
+  createTag,
+  getHelixEnv,
+  getOffer,
 } from '../../scripts/scripts.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
@@ -283,6 +286,7 @@ function decoratePricing($block) {
   selectPlan($block, plans[0]);
   selectPlanOption($block, plans[0], plans[0].options[0]);
   decorateOtherPlans($block, otherPlans);
+  addPublishDependencies('/express/system/offers.json');
 }
 
 export default function decorate($block) {
