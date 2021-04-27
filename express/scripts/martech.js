@@ -455,7 +455,6 @@ loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.
     /* switch all links if lower envs */
     const env = getHelixEnv();
     if (env && env.spark) {
-
       // eslint-disable-next-line no-console
       console.log('lower env detected');
       document.querySelectorAll('a[href^="https://spark.adobe.com/"]').forEach(($a) => {

@@ -9,8 +9,7 @@ main .columns {
 }
 
 main .columns.width-3-columns h3 {
-  font-size: 28px;
-  line-height: 32px;
+  font-size: var(--heading-font-size-m);
 }
 
 main .columns > div {
