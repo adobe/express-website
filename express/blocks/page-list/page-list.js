@@ -16,6 +16,7 @@ import {
   createTag,
   readBlockConfig,
   getLocale,
+  addPublishDependencies,
 } from '../../scripts/scripts.js';
 
 function addPages(index, config, $block) {
@@ -46,9 +47,7 @@ function showHide($block, $ptl) {
   }
 }
 
-async function fetchIndex() {
-  const locale = getLocale(window.location);
-  const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
+async function fetchIndex(indexURL) {
   try {
     const resp = await fetch(indexURL);
     const json = await resp.json();
@@ -62,6 +61,10 @@ async function fetchIndex() {
 }
 
 async function decoratePageList($block) {
+  const locale = getLocale(window.location);
+  const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
+  addPublishDependencies(indexURL);
+
   const config = readBlockConfig($block);
 
   // shorten hero
@@ -115,7 +118,7 @@ async function decoratePageList($block) {
     setSize($flex);
   });
 
-  const index = await fetchIndex();
+  const index = await fetchIndex(indexURL);
   const shortIndex = index.filter((e) => e.shortTitle);
   shortIndex.sort((e1, e2) => e1.shortTitle.localeCompare(e2.shortTitle));
   addPages(shortIndex, config, $block);

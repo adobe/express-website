@@ -16,6 +16,7 @@ import {
   createTag,
   readBlockConfig,
   getOptimizedImageURL,
+  addPublishDependencies,
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
@@ -95,6 +96,8 @@ async function filterBlogPosts(locale, config) {
 }
 
 async function decorateBlogPosts($blogPosts, config, offset = 0) {
+  addPublishDependencies('/express/learn/blog/query-index.json');
+
   let posts = [];
 
   posts = await filterBlogPosts('en-US', config);
