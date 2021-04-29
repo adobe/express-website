@@ -1,3 +1,8 @@
+main .section-wrapper.cards-container {
+  background-color: #F1F3F4;
+  padding-top: 0;
+}
+
 main .cards-container > div, main .cards-dark-container > div {
   max-width: 870px;
 }
