@@ -320,7 +320,6 @@ main {
 }
 
 main h1, h2, h3, h4, h5, h6 {
-  color: var(--heading-color);
   font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
