@@ -1,15 +1,23 @@
 /* default content */
 
 :root {
-  /* body text */
-  background-color: #FFF;
-  font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
-  font-size: 16px;
-  color: #232323;
+  /* body */
+  --body-background-color: #FFF;
+  --body-alt-background-color: #F4F4F4;
+  --body-font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
+  --body-font-weight: normal;
+  --body-color: #242424;
+  --body-line-height: 1.5;
+  --body-font-size-xxl: 1.5rem; /* 24px */
+  --body-font-size-xl: 1.25rem; /* 20px */
+  --body-font-size-l: 1.125rem; /* 18px */
+  --body-font-size-m: 1rem; /* 16px */
+  --body-font-size-s: 0.875rem; /* 14px */
+  --body-font-size-xs: 0.75rem; /* 12px */
   /* headings */
   --heading-font-family: 'adobe-clean-black', 'Adobe Clean Black', 'adobe-clean', 'Adobe Clean', sans-serif;
   --heading-font-weight: 800;
-  --heading-color: #232323;
+  --heading-color: #242424;
   --heading-line-height: 1.25;
   --heading-font-size-xxxl: 5rem; /* 80px */
   --heading-font-size-xxl: 3.75rem; /* 60px */
@@ -32,6 +40,10 @@
 }
 
 body {
+  background-color: var(--body-background-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  color: var(--body-color);
   margin: 0;
   padding: 0;
   display: none;
@@ -39,12 +51,6 @@ body {
 
 body.appear {
   display: block;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--heading-font-family);
-  font-weight: var(--heading-font-weight);
-  line-height: var(--heading-line-height);
 }
 
 /* gnav placeholder */
@@ -305,34 +311,138 @@ a.button > svg > use {
   color: currentColor;
 }
 
-/* make page : hero */
-
 body.light-grey {
-  background-color: #f4f4f4;
+  background-color: var(--body-alt-background-color);
 }
 
 main {
-    text-align: center;
+  text-align: center;
+}
+
+main h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  line-height: var(--heading-line-height);
+}
+
+main h1 {
+  font-size: var(--heading-font-size-xxl);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+main h2 {
+  font-size: var(--heading-font-size-l);
+}
+
+main h3 {
+  font-size: var(--heading-font-size-m);
+}
+
+main h4,
+main h5 {
+  font-size: var(--heading-font-size-s);
+}
+
+main p {
+  font-size: var(--body-font-size-xl);
+  line-height: var(--body-line-height);
 }
 
 main a:any-link {
-  color: black;
+  color: var(--body-color);
 }
 
 main img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
+@media (min-width:600px) {
+  main .section-wrapper {
+    padding-top: 40px;
+  }
+
+  main .section-wrapper:first-of-type {
+    padding-top: 80px;
+  }
+
+  main .section-wrapper:first-of-type {
+    padding-top: 0;
+  }
+
+  main h2 {
+    font-size: var(--heading-font-size-l);
+    text-align: center;
+  }
+
+  main h3 {
+    font-size: var(--heading-font-size-l);
+      text-align: center;
+  }
+
+  main h4 {
+    font-size: var(--heading-font-size-m);
+    margin-top: 56px;
+    text-align: center;
+  }
+
+  main h1 + h5 {
+    font-size: var(--body-font-size-xxl);
+    font-weight: var(--body-font-weight);
+    margin-top: 32px;
+    margin-bottom: 16px;
+  }
+
+  main p {
+    font-size: var(--body-font-size-l);
+  }
+}
+
+@media (min-width:900px) {
+
+  main h5 + p,
+  main .section-wrapper p.button-container {
+    text-align: unset;
+  }
+
+  main .section-wrapper a.button:any-link {
+    margin-left: 0;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  main .section-wrapper.cards-container {
+    background-color: unset;
+  }
+}
+
+@media(min-width:1200px) {
+  main .section-wrapper h1 {
+    font-size: var(--heading-font-size-l);
+  }
+}
+
+main .section-wrapper > div {
+  max-width: 830px;
+}
+
+.font-loaded main h1 {
+  opacity: 1;
+}
+
+/* hero */
+
 main .hero {
-    color: white;
-    position: relative;
-    padding: 120px 32px;
+  color: white;
+  position: relative;
+  padding: 120px 32px;
 }
 
 main .hero.hero-noimage {
-    color: black;
-    padding-top: 64px;
-    padding-bottom: 0;
+  color: var(--body-color);
+  padding-top: 64px;
+  padding-bottom: 0;
 }
 
 main .hero.hero-noimage + .section-wrapper {
@@ -351,46 +461,31 @@ main .hero.hero-noimage a:any-link{
   color: black;
 }
 
-main h1 {
-  font-family: var(--heading-font-family);
-  font-size: var(--heading-font-size-xxxl);
-  font-weight: var(--heading-font-weight);
-  line-height: var(--heading-line-height);
-  color: var(--heading-color);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.font-loaded main h1 {
-  opacity: 1;
-}
-
-
 main .hero h1 {
   font-size: var(--heading-font-size-xl);
   margin: 0;
 }
 
 main .hero h2 {
-    font-size: var(--heading-font-size-s);
-    margin: 32px 32px;
+  font-size: var(--heading-font-size-s);
+  margin: 32px 32px;
 }
 
 main .hero h5 {
-  font-size: 18px;
-  font-weight: 400;
+  font-size: var(--body-font-size-l);
+  font-weight: var(--body-font-weight);
   max-width: 672px;
   margin: auto;
   margin-top: 32px;
 }
 
 main .hero.hero-noimage p {
-  font-size: 14px;
+  font-size: var(--body-font-size-s);
 }
 
 main .hero p {
   margin: 16px 0;
-  font-size: 1.25rem;
+  font-size: var(--body-font-size-xl);
 }
 
 main .hero a.button:any-link {
@@ -432,50 +527,39 @@ main .hero a:any-link {
   color: currentColor;
 }
 
-main p {
-  line-height: 1.5em;
-}
-
-
 @media (min-width:600px) {
-    main .hero h1 {
-        font-size: 60px;
-        line-height: 64px;
-    }
+  main .hero h2 {
+    font-size: var(--body-font-size-xxl);
+    margin-bottom: 40px;
+  }
 
-    main .hero h2 {
-        font-size: 24px;
-        line-height: 28px;
-        margin-bottom: 40px;
-    }
+  main .hero h5 {
+    font-size: 22px;
+    font-weight: 400;
+    max-width: 672px;
+    margin: auto;
+    margin-top: 32px;
+  }
 
-    main .hero h5 {
-      font-size: 22px;
-      font-weight: 400;
-      max-width: 672px;
-      margin: auto;
-      margin-top: 32px;
-    }
-
-    main .hero.hero-noimage p {
-      font-size: 14px;
-    }
+  main .hero.hero-noimage p {
+    font-size: 14px;
+  }
 
 
-    main .hero {
-        padding: 80px 0;
-    }
+  main .hero {
+    padding: 80px 0;
+  }
 
-    main .hero>div {
-        max-width: 672px;
-        margin: auto;
-    }
+  main .hero>div {
+    max-width: 672px;
+    margin: auto;
+  }
 
-    main .hero .columns > div {
-      display: flex;
-      margin: auto;
-      justify-content: center;
-    }
+  main .hero .columns > div {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+  }
 
 }
 
@@ -504,27 +588,21 @@ main .section-wrapper:first-of-type {
 }
 
 main .section-wrapper > div {
-    margin: auto;
-    max-width: 672px;
-    padding: 0 32px;
+  margin: auto;
+  max-width: 672px;
+  padding: 0 32px;
 }
 
 main .section-wrapper > div:empty {
   padding: 0;
 }
 
-main .section-wrapper h1 {
-    font-size: 45px;
-    line-height: 49px;
-    margin: 0;
-    font-weight: 900;
-}
-
-main .section-wrapper h2 {
-    font-size: 36px;
-    line-height: 40px;
-    margin: 0;
-    font-weight: 900;
+main .section-wrapper h1,
+main .section-wrapper h2,
+main .section-wrapper h3,
+main .section-wrapper h4,
+main .section-wrapper h5 {
+  margin: 0;
 }
 
 main .section-wrapper > div > h2 {
@@ -533,14 +611,7 @@ main .section-wrapper > div > h2 {
 
 
 main .section-wrapper * + h2 {
-    margin-top: 120px;
-}
-
-main .section-wrapper h3 {
-    font-size: 28px;
-    line-height: 32px;
-    margin: 0;
-    font-weight: 900;
+  margin-top: 120px;
 }
 
 main .section-wrapper > div > h3  {
@@ -551,26 +622,12 @@ main .section-wrapper > div > h3:first-child  {
   margin-top: 0px;
 }
 
-
 main .section-wrapper * + h2 {
     margin-top: 64px;
 }
 
-main .section-wrapper h4 {
-    font-size: 22px;
-    line-height: 26px;
-    margin: 0;
-    font-weight: 900;
-}
-
 main .section-wrapper * + h4 {
   margin-top: 56px;
-}
-
-main .section-wrapper h5 {
-    font-size: 22px;
-    line-height: 26px;
-    font-weight: 700;
 }
 
 main .section-wrapper h1 + h5 {
@@ -588,8 +645,6 @@ main .section-wrapper h5 + p {
 }
 
 main .section-wrapper p {
-    font-size: 20px;
-    line-height: 24px;
     margin: 32px 0;
 }
 
@@ -597,15 +652,6 @@ main .section-wrapper p.button-container {
   text-align: center;
   margin-top: 16px;
   margin-bottom: 0;
-}
-
-main .section-wrapper.steps-dark-container > div > h2 {
-  margin: 0;
-}
-
-main .section-wrapper.cards-container {
-  background-color: #F1F3F4;
-  padding-top: 0;
 }
 
 main .section-wrapper .hero {
@@ -672,91 +718,15 @@ main .section-wrapper .hero {
   text-align: left;
 }
 
-
-@media (min-width:600px) {
-  main .section-wrapper {
-    padding-top: 40px;
-  }
-
-  main .section-wrapper:first-of-type {
-    padding-top: 80px;
-  }
-
-  main .section-wrapper:first-of-type {
-    padding-top: 0;
-  }
-
-    main .section-wrapper h2 {
-        font-size: 36px;
-        line-height: 39px;
-        text-align: center;
-    }
-
-    main .section-wrapper h3 {
-        font-size: 36px;
-        line-height: 40px;
-        text-align: center;
-    }
-
-    main .section-wrapper h4 {
-        font-size: 28px;
-        line-height: 32px;
-        margin-top: 56px;
-        text-align: center;
-    }
-
-    main .section-wrapper h1 + h5 {
-      font-size: 24px;
-      line-height: 29px;
-      font-weight: 400;
-      margin-top: 32px;
-      margin-bottom: 16px;
-    }
-
-    main .section-wrapper p {
-        font-size: 18px;
-        line-height: 22px;
-    }
-}
-
-@media (min-width:900px) {
-
-  main .section-wrapper h5 + p,
-  main .section-wrapper p.button-container {
-    text-align: unset;
-  }
-
-  main .section-wrapper a.button:any-link {
-    margin-left: 0;
-    font-size: 13px;
-    font-weight: 400;
-  }
-
-  main .section-wrapper.cards-container {
-    background-color: unset;
-  }
-}
-
-@media(min-width:1200px) {
-  main .section-wrapper h1 {
-    font-size: 60px;
-    line-height: 64px;
-  }
-}
-
 .blog main .section-wrapper h3 {
-    font-size: 36px;
-    line-height: 40px;
-    margin-top: 64px;
-    text-align: left;
+  font-size: 36px;
+  line-height: 40px;
+  margin-top: 64px;
+  text-align: left;
 }
 
 .blog main .section-wrapper h4 {
-    text-align: left;
-}
-
-main .section-wrapper > div {
-  max-width: 830px;
+  text-align: left;
 }
 
 /* jank protection for async sections */
