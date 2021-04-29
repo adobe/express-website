@@ -791,7 +791,7 @@ function decorateButtons() {
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
         if ($up.childNodes.length === 1 && ($up.tagName === 'P' || $up.tagName === 'DIV')) {
-          $a.className = 'button primary';
+          $a.className = 'button accent'; // default
           $up.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
