@@ -232,8 +232,8 @@ main .blog-posts .card .card-body p {
 
 @media screen and (min-width: 37.5rem) {
   #region-picker nav .language-Navigation_region-List {
-    -moz-column-count: 3;
     -webkit-column-count: 3;
+    -moz-column-count: 3;
     column-count: 3;
   }
   #region-picker nav {
@@ -243,8 +243,8 @@ main .blog-posts .card .card-body p {
 
 @media screen and (min-width: 75rem) {
   #region-picker nav .language-Navigation_region-List {
-    -moz-column-count: 5;
     -webkit-column-count: 5;
+    -moz-column-count: 5;
     column-count: 5;
   }
   #region-picker nav {
