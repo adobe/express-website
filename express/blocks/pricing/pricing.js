@@ -281,7 +281,7 @@ function decoratePricing($block) {
   $left.prepend($planSection);
   $block.append($left);
   $block.append($right);
-  const $ctaButton = $block.querySelector('a.button.primary');
+  const $ctaButton = $block.querySelector('a.button.accent');
   $ctaButton.classList.add('cta');
   selectPlan($block, plans[0]);
   selectPlanOption($block, plans[0], plans[0].options[0]);

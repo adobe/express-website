@@ -10,3 +10,9 @@
  * governing permissions and limitations under the License.
  */
 /* global */
+
+export default function decorate($block) {
+  $block.querySelectorAll('a.button').forEach(($button) => {
+    $button.classList.add('large');
+  });
+}

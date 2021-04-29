@@ -266,6 +266,10 @@ header {
     }
 }
 
+header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
+  background-color: #5C5CE0;
+}
+
 footer {
 
   margin-top: 120px;
@@ -276,16 +280,17 @@ footer {
 a.button:any-link,
 a.button.medium:any-link {
     text-decoration: none;
-    border-radius: 15px;
+    border-radius: 16px;
     padding: 5px 1.2em 6px 1.2em;
     /*outline: none; (keep outline for a11n) */
     text-align: center;
     font-size: var(--body-font-size-s);
     font-style: normal; 
-    background-color: #5C5CE0;
     font-weight: 500;
+    line-height: var(--body-line-height);
     cursor: pointer;
     color: #fff;
+    background-color: #5C5CE0;
     transition: background-color .4s;
     margin: 10px;
     display: inline-block;
@@ -299,7 +304,7 @@ a.button.xlarge:any-link {
 
 a.button.large:any-link {
   padding: 10px 1.5em 10px 1.5em;
-  border-radius: 20px;
+  border-radius: 21px;
 }
 
 a.button.small:any-link {
@@ -428,12 +433,6 @@ main img {
   main h5 + p,
   main .section-wrapper p.button-container {
     text-align: unset;
-  }
-
-  main .section-wrapper a.button:any-link {
-    margin-left: 0;
-    font-size: 13px;
-    font-weight: 400;
   }
 
   main .section-wrapper.cards-container {

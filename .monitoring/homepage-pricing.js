@@ -38,7 +38,7 @@ const TIMEOUT = 10000;
       assert.ok(lang === 'en', `Expected language to be "en", got "${lang}" instead`);
     })
     // check CTA button
-    .then(() => $browser.findElement($driver.By.css('main a.button.primary')))
+    .then(() => $browser.findElement($driver.By.css('main a.button.accent')))
     .then(() => console.log(`${url} successfully verified.`))
     .catch((e) => {
       assert.fail(`Verification of ${url} failed: ${e.message}`);

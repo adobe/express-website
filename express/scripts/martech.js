@@ -441,7 +441,7 @@ loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.
       || window.location.pathname.includes('/discover/')
       || window.location.pathname.includes('/feature/')) {
       const $aNav = document.querySelector('header a.feds-navLink--primaryCta');
-      const $aHero = document.querySelector('main > div:first-of-type a.button.primary');
+      const $aHero = document.querySelector('main > div:first-of-type a.button.accent');
       if ($aNav && $aHero) {
         $aNav.href = $aHero.href;
       }
