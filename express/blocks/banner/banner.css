@@ -1,17 +1,33 @@
+main .section-wrapper.banner-container {
+  background-color: var(--color-info-accent);
+  padding: 120px 15px;
+}
+
+main .section-wrapper.banner-container > div {
+  padding: 0;
+}
+
 main .banner {
-  border-radius: 20px;
-  background-color: #000;
-  color: #FFF;
-  padding: 32px;
-  margin: 32px auto;
+  padding: 0;
+  margin: 0 auto;
+  color: var(--color-gray-0);
+}
+
+main .banner h2, main .banner h3 {
+  color: var(--color-gray-0);
+}
+
+main .banner p.button-container {
+  margin-top: 56px;
 }
 
 main .banner a:any-link {
-  color: white;
+  color: var(--color-gray-0);
 }
 
 @media (min-width:900px) {
-  main .banner {
-    margin: 40px auto;
+  main .section-wrapper.banner-container {
+    padding-left: 56px;
+    padding-right: 56px;
   }
 }
