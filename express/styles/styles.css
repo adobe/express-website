@@ -283,6 +283,10 @@ header {
     }
 }
 
+header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
+  background-color: var(--color-info-accent);
+}
+
 footer {
 
   margin-top: 120px;
@@ -290,30 +294,55 @@ footer {
 
 /* buttons */
 
-a.button:any-link {
+a.button:any-link,
+a.button.medium:any-link {
     text-decoration: none;
-    border-radius: 18px;
+    border-radius: 16px;
     padding: 5px 1.2em 6px 1.2em;
     /*outline: none; (keep outline for a11n) */
     text-align: center;
-    line-height: 20px;
-    font-size: 1rem;
-    background-color: #1473e6;
-    font-weight: 700;
+    font-size: var(--body-font-size-s);
+    font-style: normal; 
+    font-weight: 500;
+    line-height: var(--body-line-height);
     cursor: pointer;
-    color: #fff;
+    color: var(--color-gray-0);
+    background-color: var(--color-info-accent);
     transition: background-color .4s;
     margin: 10px;
     display: inline-block;
 }
 
-a.button.secondary:any-link {
-  border: solid 2px #1473e6;
-  background-color: #FFF;
-  color: #1473e6;
+a.button.xlarge:any-link {
+  padding: 13px 1.5em 13px 1.5em;
+  border-radius: 25px;
+  font-size: var(--body-font-size-m);
 }
 
-a.button > svg {
+a.button.large:any-link {
+  padding: 10px 1.5em 10px 1.5em;
+  border-radius: 21px;
+}
+
+a.button.small:any-link {
+  padding: 4px 1em 4px 1em;
+  border-radius: 12px;
+  font-size: var(--body-font-size-xs);
+}
+
+a.button.primary:any-link,
+a.button.medium.primary:any-link {
+  background-color: var(--color-gray-800);
+}
+
+a.button.secondary:any-link,
+a.button.medium.secondary:any-link {
+  background-color: var(--color-gray-300);
+  color: var(--color-gray-800);
+}
+
+a.button > svg,
+a.button.medium > svg {
   float: left;
   display: inline;
   width: 20px;
@@ -323,7 +352,8 @@ a.button > svg {
   color: currentColor;
 }
 
-a.button > svg > use {
+a.button > svg > use,
+a.button.medium > svg > use {
   fill: currentColor;
   color: currentColor;
 }
@@ -420,12 +450,6 @@ main img {
   main h5 + p,
   main .section-wrapper p.button-container {
     text-align: unset;
-  }
-
-  main .section-wrapper a.button:any-link {
-    margin-left: 0;
-    font-size: 13px;
-    font-weight: 400;
   }
 
   main .section-wrapper.cards-container {
