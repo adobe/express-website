@@ -284,7 +284,7 @@ header {
 }
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
-  background-color: #5C5CE0;
+  background-color: var(--color-info-accent);
 }
 
 footer {
@@ -306,8 +306,8 @@ a.button.medium:any-link {
     font-weight: 500;
     line-height: var(--body-line-height);
     cursor: pointer;
-    color: #fff;
-    background-color: #5C5CE0;
+    color: var(--color-gray-0);
+    background-color: var(--color-info-accent);
     transition: background-color .4s;
     margin: 10px;
     display: inline-block;
@@ -332,13 +332,13 @@ a.button.small:any-link {
 
 a.button.primary:any-link,
 a.button.medium.primary:any-link {
-  background-color: #212121;
+  background-color: var(--color-gray-800);
 }
 
 a.button.secondary:any-link,
 a.button.medium.secondary:any-link {
-  background-color: #D0D0D0;
-  color: #212121;
+  background-color: var(--color-gray-300);
+  color: var(--color-gray-800);
 }
 
 a.button > svg,
