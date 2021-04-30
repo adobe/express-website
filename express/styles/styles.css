@@ -1,7 +1,7 @@
 /* default content */
 
 :root {
-  --color-gray-0: #FFF;
+  --color-white: #FFF;
   --color-gray-100: #F8F8F8;
   --color-gray-200: #E8E8E8;
   --color-gray-300: #D4D4D4;
@@ -10,7 +10,7 @@
   --color-gray-600: #686868;
   --color-gray-700: #444;
   --color-gray-800: #242424;
-  --color-gray-900: #000;
+  --color-black: #000;
   --color-brand-title: #000B1D;
   --color-info-accent: #5C5CE0;
   --color-info-accent-hover: #4646C6;
@@ -19,7 +19,7 @@
   --color-premium: #EBCF2D;
 
   /* body */
-  --body-background-color: var(--color-gray-0);
+  --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-200);
   --body-font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
   --body-font-weight: normal;
@@ -81,7 +81,7 @@ header {
     background-size: auto 42px;
     background-position: bottom 24px center;
     position: relative;
-    background-color: var(--color-gray-0);
+    background-color: #FFF;
 }
 
 #feds-header {
@@ -305,7 +305,7 @@ a.button:any-link {
     font-weight: 600;
     line-height: var(--body-line-height);
     cursor: pointer;
-    color: var(--color-gray-0);
+    color: var(--color-white);
     background-color: var(--color-info-accent);
     transition: background-color .4s;
     margin: 10px;

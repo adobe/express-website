@@ -10,11 +10,11 @@ main .section-wrapper.banner-container > div {
 main .banner {
   padding: 0;
   margin: 0 auto;
-  color: var(--color-gray-0);
+  color: var(--color-white);
 }
 
 main .banner h2, main .banner h3 {
-  color: var(--color-gray-0);
+  color: var(--color-white);
 }
 
 main .banner p.button-container {
@@ -22,7 +22,7 @@ main .banner p.button-container {
 }
 
 main .banner a:any-link {
-  color: var(--color-gray-0);
+  color: var(--color-white);
 }
 
 @media (min-width:900px) {
