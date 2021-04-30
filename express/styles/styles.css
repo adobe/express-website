@@ -1,12 +1,29 @@
 /* default content */
 
 :root {
+  --color-gray-0: #FFF;
+  --color-gray-100: #F8F8F8;
+  --color-gray-200: #E8E8E8;
+  --color-gray-300: #D4D4D4;
+  --color-gray-400: #B6B6B6;
+  --color-gray-500: #909090;
+  --color-gray-600: #686868;
+  --color-gray-700: #444;
+  --color-gray-800: #242424;
+  --color-gray-900: #000;
+  --color-brand-title: #000B1D;
+  --color-info-accent: #5C5CE0;
+  --color-info-accent-hover: #4646C6;
+  --color-info-accent-down: #3D3DB4;
+  --color-info-accent-light: #DEDEF9;
+  --color-premium: #EBCF2D;
+
   /* body */
-  --body-background-color: #FFF;
-  --body-alt-background-color: #F4F4F4;
+  --body-background-color: var(--color-gray-0);
+  --body-alt-background-color: var(--color-gray-200);
   --body-font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
   --body-font-weight: normal;
-  --body-color: #242424;
+  --body-color: var(--color-gray-800);
   --body-line-height: 1.5;
   --body-font-size-xxl: 1.5rem; /* 24px */
   --body-font-size-xl: 1.25rem; /* 20px */
@@ -17,7 +34,7 @@
   /* headings */
   --heading-font-family: 'adobe-clean-black', 'Adobe Clean Black', 'adobe-clean', 'Adobe Clean', sans-serif;
   --heading-font-weight: 800;
-  --heading-color: #242424;
+  --heading-color: var(--color-gray-800);
   --heading-line-height: 1.25;
   --heading-font-size-xxxl: 5rem; /* 80px */
   --heading-font-size-xxl: 3.75rem; /* 60px */
@@ -64,7 +81,7 @@ header {
     background-size: auto 42px;
     background-position: bottom 24px center;
     position: relative;
-    background-color: white;
+    background-color: var(--color-gray-0);
 }
 
 #feds-header {
