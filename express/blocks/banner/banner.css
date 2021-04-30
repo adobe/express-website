@@ -1,6 +1,5 @@
 main .section-wrapper.banner-container {
-  /* TODO: replace by global color variable */
-  background-color: #5C5CE0;
+  background-color: var(--color-info-accent);
   padding: 120px 15px;
 }
 
@@ -11,11 +10,11 @@ main .section-wrapper.banner-container > div {
 main .banner {
   padding: 0;
   margin: 0 auto;
-  color: #FFF
+  color: var(--color-gray-0);
 }
 
 main .banner h2, main .banner h3 {
-  color: #FFF;
+  color: var(--color-gray-0);
 }
 
 main .banner p.button-container {
@@ -23,7 +22,7 @@ main .banner p.button-container {
 }
 
 main .banner a:any-link {
-  color: #FFF;
+  color: var(--color-gray-0);
 }
 
 @media (min-width:900px) {
