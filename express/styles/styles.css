@@ -294,16 +294,15 @@ footer {
 
 /* buttons */
 
-a.button:any-link,
-a.button.medium:any-link {
+a.button:any-link {
     text-decoration: none;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 5px 1.2em 6px 1.2em;
     /*outline: none; (keep outline for a11n) */
     text-align: center;
     font-size: var(--body-font-size-s);
     font-style: normal; 
-    font-weight: 500;
+    font-weight: 600;
     line-height: var(--body-line-height);
     cursor: pointer;
     color: var(--color-gray-0);
@@ -330,19 +329,40 @@ a.button.small:any-link {
   font-size: var(--body-font-size-xs);
 }
 
-a.button.primary:any-link,
-a.button.medium.primary:any-link {
+a.button.primary:any-link {
   background-color: var(--color-gray-800);
 }
 
-a.button.secondary:any-link,
-a.button.medium.secondary:any-link {
+a.button.secondary:any-link {
   background-color: var(--color-gray-300);
   color: var(--color-gray-800);
 }
 
-a.button > svg,
-a.button.medium > svg {
+a.button.light:any-link {
+  background-color: var(--color-white);
+  color: var(--color-info-accent);
+  border: solid 2px var(--color-info-accent);
+}
+
+a.button.primary.light:any-link,
+a.button.secondary.light:any-link {
+  color: var(--color---color-gray-800);
+}
+
+a.button.primary.light:any-link {
+  border-color: var(--color-gray-800);
+}
+
+a.button.secondary.light:any-link {
+  border-color: var(--color-gray-300);
+}
+
+a.button.dark:any-link {
+  color: var(--color-gray-0);
+  border: solid 2px var(--color-gray-0);
+}
+
+a.button > svg {
   float: left;
   display: inline;
   width: 20px;
@@ -352,8 +372,7 @@ a.button.medium > svg {
   color: currentColor;
 }
 
-a.button > svg > use,
-a.button.medium > svg > use {
+a.button > svg > use {
   fill: currentColor;
   color: currentColor;
 }
