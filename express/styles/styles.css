@@ -358,8 +358,8 @@ a.button.secondary.light:any-link {
 }
 
 a.button.dark:any-link {
-  color: var(--color-gray-0);
-  border: solid 2px var(--color-gray-0);
+  color: var(--color-white);
+  border: solid 2px var(--color-white);
 }
 
 a.button > svg {
