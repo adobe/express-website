@@ -314,18 +314,18 @@ a.button:any-link {
 
 a.button.xlarge:any-link {
   padding: 13px 1.5em 13px 1.5em;
-  border-radius: 25px;
+  border-radius: 27px;
   font-size: var(--body-font-size-m);
 }
 
 a.button.large:any-link {
   padding: 10px 1.5em 10px 1.5em;
-  border-radius: 21px;
+  border-radius: 22px;
 }
 
 a.button.small:any-link {
   padding: 4px 1em 4px 1em;
-  border-radius: 12px;
+  border-radius: 15px;
   font-size: var(--body-font-size-xs);
 }
 
