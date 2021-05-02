@@ -12,6 +12,10 @@
 
 export default [
   {
+    name: 'No block name',
+    input: 'input/noname.doc.html',
+    expected: 'expected/noname.block.html',
+  }, {
     name: 'Table of Contents - 1 level',
     input: 'input/table-of-contents.1level.doc.html',
     expected: 'expected/table-of-contents.1level.block.html',
