@@ -18,6 +18,7 @@ module.exports = (config) => {
       { pattern: './express/**/*.js', type: 'module', included: false },
       { pattern: './test/unit/**/*.test.js', type: 'module' },
       { pattern: './test/unit/blocks/**/*.html' },
+      { pattern: './test/unit/mocks/**/*.json', type: 'module' },
       { pattern: './test/unit/blocks/blocks-test-list.js', type: 'module' },
     ],
     reporters: ['mocha'],
@@ -25,6 +26,8 @@ module.exports = (config) => {
     proxies: {
       '/express': '/base/express',
       '/blocks': '/base/test/unit/blocks',
+      '/express/testing.json': '/base/test/unit/mocks/express/testing.json',
+      '/express/system/offers.json': '/base/test/unit/mocks/express/system/offers.json',
     },
     colors: true,
     logLevel: config.LOG_INFO,

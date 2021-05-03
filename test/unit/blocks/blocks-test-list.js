@@ -83,6 +83,9 @@ export default [
     name: 'Banner - h4 - converted to h3',
     input: 'input/banner.h4.doc.html',
     expected: 'expected/banner.h3.block.html',
-
+  }, {
+    name: 'Commerce CTA',
+    input: 'input/commerce-cta.doc.html',
+    expected: 'expected/commerce-cta.block.html',
   },
 ];
