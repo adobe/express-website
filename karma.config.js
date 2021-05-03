@@ -18,7 +18,7 @@ module.exports = (config) => {
       { pattern: './express/**/*.js', type: 'module', included: false },
       { pattern: './test/unit/**/*.test.js', type: 'module' },
       { pattern: './test/unit/blocks/**/*.html' },
-      { pattern: './test/unit/mocks/**/*.json', type: 'module' },
+      { pattern: './test/unit/mocks/**/*.json', served: true, included: false },
       { pattern: './test/unit/blocks/blocks-test-list.js', type: 'module' },
     ],
     reporters: ['mocha'],
