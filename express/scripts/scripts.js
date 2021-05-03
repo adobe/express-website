@@ -1003,7 +1003,6 @@ export function normalizeHeadings(block, allowedHeadings) {
       }
       if (level === 0) {
         // did not find a match -> try to "downgrade" the heading
-        // eslint-disable-next-line no-plusplus
         while (allowed.indexOf(`h${level}`) === -1 && level < 7) {
           level += 1;
         }
