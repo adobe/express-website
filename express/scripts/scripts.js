@@ -991,7 +991,7 @@ export function unwrapBlock($block) {
   }
 }
 
-export function convertHeading(container, selector, targetHeadingLevel) {
+export function convertElement(selector, targetHeadingLevel, container = document) {
   container.querySelectorAll(selector).forEach((h) => {
     h.outerHTML = `<${targetHeadingLevel}>${h.textContent}</${targetHeadingLevel}>`;
   });
