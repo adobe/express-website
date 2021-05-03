@@ -1,8 +1,12 @@
 {
-  "country": "us",
-  "currency": "USD",
-  "unitPrice": 9.99,
-  "unitPriceCurrencyFormatted": "US$9.99",
-  "commerceURL": "https://commerce.adobe.com/checkout?cli=spark&co=us&items%5B0%5D%5Bid%5D=0EDBD95A29C6EE10FB2B323A041E3AFF&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=en",
-  "lang": "en"
+  "total": 1,
+  "offset": 0,
+  "limit": 1,
+  "data": [
+    {
+      "c": "US",
+      "p": 9.99,
+      "o": "0EDBD95A29C6EE10FB2B323A041E3AEF"
+    }  
+  ]
 }
