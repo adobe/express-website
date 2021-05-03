@@ -991,6 +991,12 @@ export function unwrapBlock($block) {
   }
 }
 
+export function convertHeading(container, selector, targetHeadingLevel) {
+  container.querySelectorAll(selector).forEach((h) => {
+    h.outerHTML = `<${targetHeadingLevel}>${h.textContent}</${targetHeadingLevel}>`;
+  });
+}
+
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner'];
