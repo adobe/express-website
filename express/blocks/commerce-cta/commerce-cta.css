@@ -19,5 +19,5 @@
 
 .commerce-cta .pricing-plan-price .pricing-plan-cadence {
   font-size: var(--body-font-size-xxl);
-  font-family: var(--body-font-family);
+  font-weight: 600;
 }
