@@ -87,5 +87,9 @@ export default [
     name: 'Commerce CTA',
     input: 'input/commerce-cta.doc.html',
     expected: 'expected/commerce-cta.block.html',
+  }, {
+    name: 'Commerce CTA - custom cadence',
+    input: 'input/commerce-cta.cadence.doc.html',
+    expected: 'expected/commerce-cta.cadence.block.html',
   },
 ];
