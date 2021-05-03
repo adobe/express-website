@@ -80,6 +80,6 @@ async function decorateCommerceCTA($block) {
   addPublishDependencies('/express/system/offers.json');
 }
 
-export default function decorate($block) {
-  decorateCommerceCTA($block);
+export default async function decorate($block) {
+  return decorateCommerceCTA($block);
 }
