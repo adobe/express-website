@@ -490,6 +490,7 @@ function decorateBlocks() {
   document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
+    if (!blockName) return;
     const $section = $block.closest('.section-wrapper');
     if ($section) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
