@@ -11,15 +11,13 @@
  */
 /* global */
 
+import {
+  normalizeHeadings,
+} from '../../scripts/scripts.js';
+
 export default function decorate($block) {
-  // convert h1 => h2
-  $block.querySelectorAll('h1').forEach((h) => {
-    h.outerHTML = `<h2>${h.textContent}</h2>`;
-  });
-  // convert h4, h5, h6 => h3
-  $block.querySelectorAll('h4, h5, h6').forEach((h) => {
-    h.outerHTML = `<h3>${h.textContent}</h3>`;
-  });
+  normalizeHeadings($block, ['h2', 'h3']);
+
   // button on dark background
   $block.querySelectorAll('a.button').forEach((button) => button.classList.add('dark'));
 }

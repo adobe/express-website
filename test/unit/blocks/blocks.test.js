@@ -66,7 +66,7 @@ describe('Block tests', () => {
 
       if (blockName) {
         const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
-        mod.default(block, blockName, doc);
+        await mod.default(block, blockName, doc);
       }
 
       expect(fragmentToString(block)).to.be.equal(fragmentToString(expected));

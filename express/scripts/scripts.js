@@ -118,7 +118,33 @@ export function getLocale(url) {
   return 'us';
 }
 
+function getCookie(cname) {
+  const name = `${cname}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i += 1) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+}
+
+function getCountry() {
+  let country = getCookie('international');
+  if (!country) {
+    country = getLocale(window.location);
+  }
+  if (country === 'uk') country = 'gb';
+  return (country.split('_')[0]);
+}
+
 export function getCurrency(locale) {
+  const loc = locale || getCountry();
   const currencies = {
     ar: 'ARS',
     at: 'EUR',
@@ -215,32 +241,7 @@ export function getCurrency(locale) {
     uy: 'USD',
     vn: 'USD',
   };
-  return currencies[locale];
-}
-
-function getCookie(cname) {
-  const name = `${cname}=`;
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const ca = decodedCookie.split(';');
-  for (let i = 0; i < ca.length; i += 1) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return '';
-}
-
-function getCountry() {
-  let country = getCookie('international');
-  if (!country) {
-    country = getLocale(window.location);
-  }
-  if (country === 'uk') country = 'gb';
-  return (country.split('_')[0]);
+  return currencies[loc];
 }
 
 export function getLanguage(locale) {
@@ -268,6 +269,11 @@ export function getLanguage(locale) {
   return language;
 }
 
+export function formatPrice(price, currency) {
+  return new Intl.NumberFormat(navigator.lang, { style: 'currency', currency })
+    .format(price);
+}
+
 export async function getOffer(offerId, countryOverride) {
   let country = getCountry();
   if (countryOverride) country = countryOverride;
@@ -287,8 +293,7 @@ export async function getOffer(offerId, countryOverride) {
   if (offer) {
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
-    const currencyFormatter = new Intl.NumberFormat(navigator.lang, { style: 'currency', currency });
-    const unitPriceCurrencyFormatted = currencyFormatter.format(unitPrice);
+    const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
     return {
       country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang,
@@ -991,9 +996,32 @@ export function unwrapBlock($block) {
   }
 }
 
+export function normalizeHeadings(block, allowedHeadings) {
+  const allowed = allowedHeadings.map((h) => h.toLowerCase());
+  block.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((tag) => {
+    const h = tag.tagName.toLowerCase();
+    if (allowed.indexOf(h) === -1) {
+      // current heading is not in the allowed list -> try first to "promote" the heading
+      let level = parseInt(h.charAt(1), 10) - 1;
+      while (allowed.indexOf(`h${level}`) === -1 && level > 0) {
+        level -= 1;
+      }
+      if (level === 0) {
+        // did not find a match -> try to "downgrade" the heading
+        while (allowed.indexOf(`h${level}`) === -1 && level < 7) {
+          level += 1;
+        }
+      }
+      if (level !== 7) {
+        tag.outerHTML = `<h${level}>${tag.textContent}</h${level}>`;
+      }
+    }
+  });
+}
+
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);

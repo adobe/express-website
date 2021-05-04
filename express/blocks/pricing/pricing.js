@@ -26,7 +26,7 @@ function replaceUrlParam(url, paramName, paramValue) {
   return url;
 }
 
-function buildUrl(optionUrl, optionPlan, country, language) {
+export function buildUrl(optionUrl, optionPlan, country, language) {
   const currentUrl = new URL(window.location.href);
   let planUrl = new URL(optionUrl);
 
@@ -141,7 +141,7 @@ async function selectPlanOption($block, plan, planOption) {
   $cta.href = buildUrl(planOption.link, plan.title, plan.country, plan.language);
 }
 
-function buildPlans($contents) {
+export function buildPlans($contents) {
   const plans = [];
   const $planDivs = Array.from($contents.children);
   let plan;

@@ -1,0 +1,23 @@
+.commerce-cta .pricing-plan-title {
+  font-size: var(--body-font-size-xl);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.commerce-cta .pricing-plan {
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.commerce-cta .pricing-plan-price {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  font-size: var(--heading-font-size-l);
+  margin: auto 0;
+}
+
+.commerce-cta .pricing-plan-price .pricing-plan-cadence {
+  font-size: var(--body-font-size-xxl);
+  font-weight: 600;
+}
