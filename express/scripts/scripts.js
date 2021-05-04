@@ -991,6 +991,29 @@ export function unwrapBlock($block) {
   }
 }
 
+export function normalizeHeadings(block, allowedHeadings) {
+  const allowed = allowedHeadings.map((h) => h.toLowerCase());
+  block.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((tag) => {
+    const h = tag.tagName.toLowerCase();
+    if (allowed.indexOf(h) === -1) {
+      // current heading is not in the allowed list -> try first to "promote" the heading
+      let level = parseInt(h.charAt(1), 10) - 1;
+      while (allowed.indexOf(`h${level}`) === -1 && level > 0) {
+        level -= 1;
+      }
+      if (level === 0) {
+        // did not find a match -> try to "downgrade" the heading
+        while (allowed.indexOf(`h${level}`) === -1 && level < 7) {
+          level += 1;
+        }
+      }
+      if (level !== 7) {
+        tag.outerHTML = `<h${level}>${tag.textContent}</h${level}>`;
+      }
+    }
+  });
+}
+
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq'];
