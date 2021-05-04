@@ -40,7 +40,7 @@ export default async function decorate($block) {
 
   const h2 = div.querySelector('h2');
 
-  const containerDiv = createTag('div', { class: 'promotion-container' });
+  const containerDiv = createTag('div', { class: 'promotion-wrapper' });
 
   const heroPicture = div.querySelector('picture');
   if (heroPicture) {

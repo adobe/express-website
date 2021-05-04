@@ -1016,7 +1016,7 @@ export function normalizeHeadings(block, allowedHeadings) {
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'promotion'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);

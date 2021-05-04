@@ -1,9 +1,10 @@
-main .promotion {
+main .section-wrapper.promotion-container {
   margin-top: 120px;
+  padding-top: 0;
   margin-bottom: 120px;
 }
 
-main .promotion .promotion-container {
+main .promotion .promotion-wrapper {
   border: 1px solid var(--color-gray-300);
   border-radius: 8px;
   margin-top: 56px;
@@ -39,7 +40,7 @@ main .section-wrapper .promotion .promotion-content p.button-container a {
 }
 
 @media (min-width: 900px) {
-  main .promotion div {
+  main .section-wrapper.promotion-container > div {
     max-width: 800px;
   }
 
@@ -54,11 +55,11 @@ main .section-wrapper .promotion .promotion-content p.button-container a {
 }
 
 @media (min-width: 1200px) {
-  main .promotion div {
+  main .section-wrapper.promotion-container > div {
     max-width: 1000px;
   }
 
-  main .promotion .promotion-container {
+  main .promotion .promotion-wrapper {
     display: flex;
   }
 
