@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import {
-  createTag, getIconElement,
+  createTag,
 } from '../../scripts/scripts.js';
 
 function closeAllOtherFaqs($faq) {
@@ -65,10 +65,6 @@ function decorateFAQBlocks($block) {
     const $questionDiv = createTag('div', { class: 'faq-question', tabindex: '0' });
     $accordion.append($questionDiv);
     $questionDiv.innerHTML = question;
-
-    const $chevron = getIconElement('chevron');
-    $chevron.classList.add('chevron');
-    $questionDiv.prepend($chevron);
 
     const $answerDiv = createTag('div', { class: 'faq-answer' });
     $accordion.append($answerDiv);
