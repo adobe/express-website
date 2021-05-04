@@ -83,6 +83,9 @@ export default [
     name: 'Banner - h4 - converted to h3',
     input: 'input/banner.h4.doc.html',
     expected: 'expected/banner.h3.block.html',
-
+  }, {
+    name: 'FAQ - basic',
+    input: 'input/faq.doc.html',
+    expected: 'expected/faq.block.html',
   },
 ];

@@ -993,7 +993,7 @@ export function unwrapBlock($block) {
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
