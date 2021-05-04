@@ -1,36 +1,104 @@
+main .how-to-steps-container > div > h2 {
+  margin-top: 120px;
+  margin-bottom: 80px;
+}
+
+main .how-to-steps-container {
+  padding: 32px 0;
+}
+
+main .how-to-steps-container > div {
+  padding: 0 20px;
+  max-width: 810px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+main .how-to-steps {
+  margin-top: 20px;
+  margin-bottom: 120px;
+}
+
 main .how-to-steps > div {
-    display: flex;
-    text-align: left;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+main .how-to-steps .tip {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+main .how-to-steps .tip-text p {
+  font-size: var(--body-font-size-l);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+main .how-to-steps .tip-text h3 {
+  margin-bottom: 16px;
+  font-size: var(--heading-font-size-s);
+  text-align: left;
+}
+
+main .how-to-steps .tip-number {
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  min-height: 50px;
+  display: block;
+  position: relative;
+  background-color: #e0dcfc;
+  border-radius: 50%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  align-self: center;
+  margin-right: 20px;
+  color: black;
+  font-size: 1.25rem;
+  line-height: 1.25rem;
+  font-weight: 800;
+  -ms-flex-item-align: start;
+  align-self: flex-start;
+}
+
+main .how-to-steps .tip-number span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 600px) {
+  main .how-to-steps .tip-number {
+    width: 70px;
+    min-width: 70px;
+    height: 70px;
+    min-height: 70px;
+    margin-right: 24px;
   }
-  main .how-to-steps .tip > p {
-    color: #82919b;
-    font-weight: 400;
-    font-size: 1.2em;
+  main .how-to-steps .tip-text h3 {
+    font-size: var(--heading-font-size-m);
   }
-  
-  main .how-to-steps .tip > h3 {
-    margin-top: 40px;
-    font-size: 28px;
-    line-height: 32px;
-    font-weight: 900;
-    text-align: left;
-    margin-bottom: 20px;
+  main .how-to-steps .tip-text p {
+    font-size: var(--body-font-size-xl);
   }
-  
-  main .how-to-steps .number span {
-    background-color: #fcce00;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 1.25rem;
-    font-weight: 700;
-    height: 2.25rem;
-    width: 2.25rem;
-    display: inline-block;
-    line-height: 2rem;
-    padding-top: 0.1rem;
-    width: 2.25rem;
-    padding-left: 0.8rem;
-    box-sizing: border-box;
-    margin-right: 16px;
+}
+
+@media (min-width: 900px) {
+  main .how-to-steps-container > div {
+    max-width: 1070px;
+    padding: 0 40px;
   }
-  
+}

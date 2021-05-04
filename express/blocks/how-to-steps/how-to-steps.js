@@ -40,10 +40,19 @@ export default function decorate($block, name, doc) {
       },
     });
     const $h3 = createTag('h3');
-    $h3.innerHTML = `${i + 1}. ${$cells[0].textContent}`;
-    $cells[1].prepend($h3);
-    $cells[1].classList.add('tip');
+    $h3.innerHTML = $cells[0].textContent;
+    const $p = createTag('p');
+    $p.innerHTML = $cells[1].textContent;
+    const $text = createTag('div', { class: 'tip-text' });
+    $text.append($h3);
+    $text.append($p);
+    const $number = createTag('div', { class: 'tip-number' });
+    $number.innerHTML = `<span>${i + 1}</span>`;
     $cells[0].remove();
+    $cells[1].innerHTML = '';
+    $cells[1].classList.add('tip');
+    $cells[1].append($number);
+    $cells[1].append($text);
   });
   $schema.innerHTML = JSON.stringify(schema);
   const $head = doc.head;
