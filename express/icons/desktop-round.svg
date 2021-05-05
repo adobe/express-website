@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <g id="Group_301244" data-name="Group 301244" transform="translate(-23818.619 22195)">
+    <circle id="Ellipse_25119" data-name="Ellipse 25119" cx="50" cy="50" r="50" transform="translate(23818.619 -22195)" fill="#f0f0f0"/>
+    <g id="SLmock_Desktop_22_N" transform="translate(23848.619 -22165)">
+      <g id="SMOCK">
+        <rect id="Canvas" width="40" height="40" fill="rgba(255,19,220,0)"/>
+      </g>
+      <g id="ICONS">
+        <path id="Path_127671" data-name="Path 127671" d="M30.909,0H9.091A9.242,9.242,0,0,0,0,9.365V20.6a9.242,9.242,0,0,0,9.091,9.365h9.091v5.619H14.545a1.874,1.874,0,0,0,0,3.746H25.455a1.874,1.874,0,0,0,0-3.746H21.818V29.968h9.091A9.242,9.242,0,0,0,40,20.6V9.365A9.242,9.242,0,0,0,30.909,0Zm5.455,20.6a5.545,5.545,0,0,1-5.455,5.619H9.091A5.545,5.545,0,0,1,3.636,20.6V9.365A5.545,5.545,0,0,1,9.091,3.746H30.909a5.545,5.545,0,0,1,5.455,5.619Z" fill="#484848"/>
+      </g>
+    </g>
+  </g>
+</svg>
