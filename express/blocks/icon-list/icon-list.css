@@ -15,6 +15,11 @@ main .icon-list > div {
   margin: 16px;
 }
 
+main .icon-list > div.icon-list-column {
+  margin: 0;
+  width: unset;
+}
+
 main .icon-list p {
   margin: 8px 0;
 }
@@ -43,6 +48,117 @@ main .icon-list h3, main .icon-list h4 {
 @media (min-width:900px) {
   main .icon-list {
     padding-bottom: 0;
+  }
+}
+
+/* two column styles */
+
+main .section-wrapper.icon-list-two-column-container {
+  border-top: 12px solid black;
+  border-image: linear-gradient(90deg, #7c84f3, #ff4dd2) 1;
+  padding-top: 0;
+  margin-top: 120px;
+}
+
+main .section-wrapper.icon-list-two-column-container h2 {
+  margin-top: 0;
+}
+
+main .icon-list.two-column {
+  margin: 0;
+  margin-top: 120px;
+  padding: 0;  
+}
+
+main .icon-list > div.icon-list-column {
+  flex-direction: column;
+  flex: 1 1 374px;
+}
+
+main .icon-list > div.icon-list-column > div {
+  display: flex;
+}
+
+main .icon-list .icon-list-heading {
+  min-height: 100px;
+  margin-bottom: 56px;
+}
+
+main .icon-list .icon-list-heading .icon-list-image {
+  flex: 0 0 100px;
+  line-height: 0;
+}
+
+main .icon-list .icon-list-heading .icon-list-description {
+  flex: 1 1 218px;
+  margin-left: 24px;
+  align-self: center;
+}
+
+main .icon-list .icon-list-heading .icon-list-image img {
+  fill: currentColor;
+  width: 100px;
+  height: 100px;
+}
+
+main .icon-list .icon-list-regular {
+  min-height: 72px;
+  margin-bottom: 80px;
+}
+
+main .icon-list .icon-list-regular .icon-list-description h4 {
+  font-size: var(--body-font-size-xxl);
+  font-family: var(--body-font-family);
+  font-weight: 600;
+}
+
+main .icon-list .icon-list-regular .icon-list-description p {
+  font-size: var(--body-font-size-l);
+  margin: 0;
+}
+
+main .icon-list .icon-list-regular .icon-list-image {
+  flex: 0 0 73px;
+  line-height: 0;
+}
+
+main .icon-list .icon-list-regular .icon-list-description {
+  flex: 1 1 245px;
+  margin-left: 24px;
+  align-self: center;
+}
+
+main .icon-list .icon-list-regular .icon-list-image img {
+  fill: currentColor;
+  width: 73px;
+  height: 72px;
+}
+
+main .section-wrapper.icon-list-two-column-container > div {
+  max-width: unset;
+  padding: 120px 16px;
+}  
+
+
+@media (min-width:900px) {
+  main .icon-list.two-column {
+    flex-wrap: nowrap;
+  }
+
+  main .icon-list > div.icon-list-column {
+    padding: 0 32px;  
+  }
+
+  main .section-wrapper.icon-list-two-column-container > div {
+    max-width: unset;
+    padding: 120px 44px;
+  }  
+}
+
+@media (min-width:1200px) {
+  main .section-wrapper.icon-list-two-column-container > div {
+    max-width: 1200px;
+    padding: 120px 88px;
   }
 }
 
