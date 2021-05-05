@@ -19,5 +19,10 @@ export default function decorate($block) {
   normalizeHeadings($block, ['h2', 'h3']);
 
   // button on dark background
-  $block.querySelectorAll('a.button').forEach((button) => button.classList.add('dark'));
+  $block.querySelectorAll('a.button').forEach((button) => {
+    button.classList.remove('primary');
+    button.classList.remove('secondary');
+    button.classList.add('accent');
+    button.classList.add('dark');
+  });
 }
