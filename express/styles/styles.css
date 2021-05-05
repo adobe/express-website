@@ -295,21 +295,25 @@ footer {
 /* buttons */
 
 a.button:any-link {
-    text-decoration: none;
-    border-radius: 18px;
-    padding: 5px 1.2em 6px 1.2em;
-    /*outline: none; (keep outline for a11n) */
-    text-align: center;
-    font-size: var(--body-font-size-s);
-    font-style: normal; 
-    font-weight: 600;
-    line-height: var(--body-line-height);
-    cursor: pointer;
-    color: var(--color-white);
-    background-color: var(--color-info-accent);
-    transition: background-color .4s;
-    margin: 10px;
-    display: inline-block;
+  text-decoration: none;
+  border-radius: 18px;
+  padding: 5px 1.2em 6px 1.2em;
+  /*outline: none; (keep outline for a11n) */
+  text-align: center;
+  font-size: var(--body-font-size-s);
+  font-style: normal; 
+  font-weight: 600;
+  line-height: var(--body-line-height);
+  cursor: pointer;
+  color: var(--color-white);
+  background-color: var(--color-info-accent);
+  transition: background-color .4s;
+  margin: 10px;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 a.button.xlarge:any-link {
