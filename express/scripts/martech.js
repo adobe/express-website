@@ -418,7 +418,7 @@ window.fedsConfig = {
   },
   locale,
   content: {
-    experience: 'cc-express/cc-express-gnav2',
+    experience: 'cc-express/cc-express-gnav',
   },
   profile: {
     customSignIn: () => {
