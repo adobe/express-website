@@ -418,7 +418,7 @@ window.fedsConfig = {
   },
   locale,
   content: {
-    experience: 'cc-express/spark-gnav',
+    experience: 'cc-express/spark-gnav2',
   },
   profile: {
     customSignIn: () => {
