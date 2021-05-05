@@ -784,9 +784,9 @@ function decorateHero() {
   }
 }
 
-function decorateButtons() {
+export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list'];
-  document.querySelectorAll('main a').forEach(($a) => {
+  block.querySelectorAll('main a').forEach(($a) => {
     const $block = $a.closest('div.section-wrapper > div > div');
     let blockName;
     if ($block) {
@@ -953,14 +953,14 @@ function setLCPTrigger() {
   }
 }
 
-function fixIcons() {
+export function fixIcons(block = document) {
   /* backwards compatible icon handling, deprecated */
-  document.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
+  block.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
     $use.setAttribute('href', `/express/icons.svg#${$use.getAttribute('href').split('#')[1]}`);
   });
 
   /* new icons handling */
-  document.querySelectorAll('img').forEach(($img) => {
+  block.querySelectorAll('img').forEach(($img) => {
     const alt = $img.getAttribute('alt');
     if (alt) {
       const lowerAlt = alt.toLowerCase();
@@ -1021,7 +1021,7 @@ export function normalizeHeadings(block, allowedHeadings) {
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq', 'promotion'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
