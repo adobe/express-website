@@ -53,7 +53,7 @@ main .icon-list h3, main .icon-list h4 {
 
 /* two column styles */
 
-main .section-wrapper.icon-list-two-column-container {
+main .section-wrapper.icon-list-highlight-container {
   border-top: 12px solid black;
   border-image: linear-gradient(90deg, #7c84f3, #ff4dd2) 1;
   padding-top: 0;
