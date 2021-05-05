@@ -84,6 +84,11 @@ header {
     background-color: #FFF;
 }
 
+body.nobrand header {
+  height: 64px;
+  background-image: unset;
+}
+
 #feds-header {
   opacity: 0;
 }
@@ -794,13 +799,7 @@ main .section-wrapper .hero {
 
 /* jank protection for async sections */
 
-main .page-list-container {
-  opacity: 0;
-  height: 100vh;
-  transition: opacity 100ms;
-}
-
-main .page-list-container, main .pricing {
+main .page-list-container, main .pricing, main .hero-animation {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;
