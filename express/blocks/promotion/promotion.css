@@ -67,6 +67,10 @@ main .section-wrapper .promotion .promotion-content p.button-container a {
     flex: 50%;
   }
 
+  main .promotion .promotion-hero {
+    border-bottom-left-radius: 8px;
+  }
+
   main .promotion .promotion-hero img {
     border-top-left-radius: 8px;
     border-top-right-radius: 0;
