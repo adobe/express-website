@@ -135,7 +135,7 @@ function moveCarousel($block, increment) {
   toggleControls($block, newLeft);
 }
 
-async function buildCarousel($block) {
+function buildCarousel($block) {
   // add templates to carousel
   const $platform = createTag('div', { class: 'carousel-platform' });
   Array.from($block.children).forEach((t) => $platform.appendChild(t));
@@ -281,8 +281,8 @@ async function decorateTemplateList($block) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
     const $masonryCells = Array.from($block.children);
-    // $block.classList.remove('masonry');
-    // $block.classList.add('flex-masonry');
+    $block.classList.remove('masonry');
+    $block.classList.add('flex-masonry');
     masonrize($masonryCells, $block);
     window.addEventListener('resize', () => {
       masonrize($masonryCells, $block);
