@@ -29,38 +29,4 @@
       },
     },
   });
-
-  // RELOAD temp fix
-
-  sk.add({
-    id: 'reload',
-    override: true,
-    condition: (sidekick) => sidekick.location.host === sidekick.config.innerHost || sidekick.location.hostname === 'localhost',
-    button: {
-      action: () => {
-        const { location } = sk;
-        const path = location.pathname;
-        sk.showModal('Please wait …', true);
-        // const stashInner = sk.config.innerHost;
-        const stashPurge = sk.config.purgeHost;
-        // sk.config.innerHost = `master--${sk.config.innerHost}`;
-        sk.config.purgeHost = sk.config.purgeHost.replace('main--', 'master--');
-        // console.log(`custom reload ${sk.config.innerHost} ${sk.config.purgeHost}`);
-        sk
-          .publish(path, true)
-          .then((resp) => {
-            if (resp && resp.ok) {
-              window.location.reload();
-            } else {
-              sk.showModal([
-                `Failed to reload ${path}. Please try again later.`,
-                JSON.stringify(resp),
-              ], true, 0);
-            }
-            // sk.config.innerHost = stashInner;
-            sk.config.purgeHost = stashPurge;
-          });
-      },
-    },
-  });
 })();
