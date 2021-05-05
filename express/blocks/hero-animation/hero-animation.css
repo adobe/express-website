@@ -1,0 +1,86 @@
+main .hero-animation.appear {
+    opacity: 1;
+    height: unset;
+}
+
+
+main .hero-animation-container {
+    position: relative;
+}
+
+main .hero-animation video {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    z-index: -1;
+    object-fit: cover;
+    width: 100vw;
+    min-height: 375px;
+    object-position: 97%;
+}
+
+main .hero-animation .hero-animation-overlay {
+    padding-top: max(70%, 450px);
+}
+
+main .hero-animation .icon {
+    height: 40px;
+    width: 40px;
+    margin-bottom: 30px;
+}
+
+main .hero-animation .hero-animation-attribution {
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+    position: absolute;
+    top: 350px;
+    left: 50px;
+    display: flex;
+    text-align: left;
+    align-items: center;
+}
+
+main .hero-animation .hero-animation-attribution p {
+    margin: 0;
+    font-weight: 600;
+}
+
+main .hero-animation .hero-animation-attribution img {
+    height: 80px;
+    width: 80px;
+    margin-right: 8px;
+    border-radius: 40px;
+}
+
+
+main .hero-animation .hero-animation-attribution.appear {
+    opacity: 1;
+}
+
+@media (min-width: 900px) {
+    main .hero-animation .hero-animation-overlay {
+        padding-top: 0px;
+        text-align: left;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+        
+    main .hero-animation .hero-animation-attribution.hero-animation-bottom-right {
+        top: unset;
+        left: unset;
+        bottom: 50px;
+        right: 50px;
+    }
+
+    main .hero-animation .hero-animation-attribution.hero-animation-top-right {
+        top: 50px;
+        left: unset;
+        bottom: unset;
+        right: 50px;
+    }
+}
