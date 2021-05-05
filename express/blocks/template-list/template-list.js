@@ -146,7 +146,6 @@ function buildCarousel($block) {
   const $faderRight = createTag('div', { class: 'carousel-fader-right' });
   $block.appendChild($faderLeft);
   $block.appendChild($faderRight);
-  setTimeout(() => toggleControls($block), 500);
   // controls
   const $arrowLeft = createTag('a', { class: 'button carousel-arrow carousel-arrow-left' });
   const $arrowRight = createTag('a', { class: 'button carousel-arrow carousel-arrow-right' });
@@ -154,6 +153,23 @@ function buildCarousel($block) {
   $arrowRight.addEventListener('click', () => moveCarousel($block, -240));
   $faderLeft.appendChild($arrowLeft);
   $faderRight.appendChild($arrowRight);
+  const media = Array.from($block.querySelectorAll('img, video'));
+  const mediaLoaded = [];
+  const mediaCheck = window.setInterval(() => {
+    if (media.length > 0) {
+      // all media loaded
+      window.clearInterval(mediaCheck);
+      toggleControls($block);
+    }
+    media.forEach(($m, i) => {
+      if (parseInt(window.getComputedStyle($m).getPropertyValue('width'), 10)) {
+        // non-zwero width, media loaded
+        mediaLoaded.push(i);
+        media.splice(i, 1);
+      }
+    });
+  }, 50);
+  window.addEventListener('resize', () => toggleControls($block));
 }
 
 async function decorateTemplateList($block) {
@@ -265,8 +281,8 @@ async function decorateTemplateList($block) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
     const $masonryCells = Array.from($block.children);
-    // $block.classList.remove('masonry');
-    // $block.classList.add('flex-masonry');
+    $block.classList.remove('masonry');
+    $block.classList.add('flex-masonry');
     masonrize($masonryCells, $block);
     window.addEventListener('resize', () => {
       masonrize($masonryCells, $block);
