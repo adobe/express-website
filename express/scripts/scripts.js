@@ -787,6 +787,7 @@ function decorateHero() {
 export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list'];
   block.querySelectorAll('main a').forEach(($a) => {
+    $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
     let blockName;
     if ($block) {
