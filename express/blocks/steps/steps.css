@@ -50,8 +50,7 @@ main .section-wrapper.steps-dark-container,
 main .section-wrapper.steps-container {
   padding: 120px 0;
   margin-top: 110px;
-  background: #ff4dd2;
-  background: linear-gradient(15deg, #ff4dd2 0%, #7c84fc 100%);
+  background: var(--gradient-pink-blue);
 }
 
 main .section-wrapper.steps-dark-container > div,
@@ -67,7 +66,6 @@ main .section-wrapper.steps-container > div > h2 {
 }
 
 main .section-wrapper.steps-dark-container .steps > div {
-  background-color: #292929;
   background-color: var(--color-gray-700);
 }
 

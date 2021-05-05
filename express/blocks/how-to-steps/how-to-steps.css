@@ -55,7 +55,7 @@ main .how-to-steps .tip-number {
   min-height: 50px;
   display: block;
   position: relative;
-  background-color: #e0dcfc;
+  background-color: var(--color-info-accent-light);
   border-radius: 50%;
   margin-right: 20px;
   color: black;
