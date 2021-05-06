@@ -57,7 +57,7 @@ function getMeta(name) {
 
 export function getIcon(icon, alt = icon) {
   const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
-    'linkedin', 'twitter', 'youtube', 'discord', 'behance', 'creative-cloud',
+    'linkedin', 'twitter', 'youtube', 'discord', 'behance',
     'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
     'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape',
     'globe', 'chevron'];
@@ -501,7 +501,7 @@ function decorateBlocks() {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
-      'columns', 'show-section-only', 'image-list', 'feature-list'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -784,9 +784,10 @@ function decorateHero() {
   }
 }
 
-function decorateButtons() {
+export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list'];
-  document.querySelectorAll('main a').forEach(($a) => {
+  block.querySelectorAll('main a').forEach(($a) => {
+    $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
     let blockName;
     if ($block) {
@@ -953,14 +954,14 @@ function setLCPTrigger() {
   }
 }
 
-function fixIcons() {
+export function fixIcons(block = document) {
   /* backwards compatible icon handling, deprecated */
-  document.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
+  block.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
     $use.setAttribute('href', `/express/icons.svg#${$use.getAttribute('href').split('#')[1]}`);
   });
 
   /* new icons handling */
-  document.querySelectorAll('img').forEach(($img) => {
+  block.querySelectorAll('img').forEach(($img) => {
     const alt = $img.getAttribute('alt');
     if (alt) {
       const lowerAlt = alt.toLowerCase();
@@ -1021,7 +1022,7 @@ export function normalizeHeadings(block, allowedHeadings) {
 
 function splitSections() {
   document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq'];
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq', 'promotion'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);

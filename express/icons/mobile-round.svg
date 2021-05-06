@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <g id="Group_305116" data-name="Group 305116" transform="translate(-1321.498 -5572.744)">
+    <circle id="Ellipse_25383" data-name="Ellipse 25383" cx="50" cy="50" r="50" transform="translate(1321.498 5572.744)" fill="#f0f0f0"/>
+    <g id="SLmock_Mobile_22_N" transform="translate(1351.498 5602.744)">
+      <g id="SMOCK">
+        <rect id="Canvas" width="40" height="40" fill="rgba(255,19,220,0)"/>
+      </g>
+      <g id="ICONS" transform="translate(7.273)">
+        <path id="Path_127677" data-name="Path 127677" d="M24,0H9.455A5.461,5.461,0,0,0,4,5.455V32.727a5.461,5.461,0,0,0,5.455,5.455H24a5.461,5.461,0,0,0,5.455-5.455V5.455A5.461,5.461,0,0,0,24,0Zm1.818,32.727A1.82,1.82,0,0,1,24,34.545H9.455a1.82,1.82,0,0,1-1.818-1.818V5.455A1.82,1.82,0,0,1,9.455,3.636H24a1.82,1.82,0,0,1,1.818,1.818Z" transform="translate(-4)" fill="#484848"/>
+        <circle id="Ellipse_24755" data-name="Ellipse 24755" cx="1.818" cy="1.818" r="1.818" transform="translate(10.909 29.091)" fill="#484848"/>
+        <path id="Path_127678" data-name="Path 127678" d="M14.455,3H10.818a1.818,1.818,0,1,0,0,3.636h3.636a1.818,1.818,0,0,0,0-3.636Z" transform="translate(0.091 2.455)" fill="#484848"/>
+      </g>
+    </g>
+  </g>
+</svg>
