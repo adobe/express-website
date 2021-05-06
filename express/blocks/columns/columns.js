@@ -60,6 +60,11 @@ export default function decorate($block) {
           linkImage($cell);
         }
       }
+
+      $cell.classList.add('column');
+      if ($cell.tagName == "PICTURE") {
+        $cell.classList.add('column-picture');
+      }
     });
   });
 }
