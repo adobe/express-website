@@ -1091,6 +1091,21 @@ function decorateSocialIcons() {
   });
 }
 
+function makeRelativeLinks() {
+  document.querySelectorAll('main a').forEach(($a) => {
+    if (!$a.href) return;
+    try {
+      const url = new URL($a.href);
+      if (['www.adobe.com', 'www.stage.adobe.com'].includes(url.hostname)) {
+        // make link relative
+        $a.href = `${url.pathname}${url.search}${url.hash}`;
+      }
+    } catch (e) {
+      // invalid url
+    }
+  });
+}
+
 export function getHelixEnv() {
   let envName = sessionStorage.getItem('helix-env');
   if (!envName) envName = 'prod';
@@ -1198,6 +1213,7 @@ async function decoratePage() {
   decorateDoMoreEmbed();
   decorateLinkedPictures();
   decorateSocialIcons();
+  makeRelativeLinks();
   setLCPTrigger();
   displayEnv();
   displayOldLinkWarning();
