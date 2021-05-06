@@ -1,8 +1,9 @@
 main .template-list {
+  max-width: 375px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 20px 0 0 0;
+  margin: 20px auto 0 auto;
   font-size: var(--body-font-size-m);
   font-weight: var(--body-font-weight);
   text-align: left;
@@ -199,6 +200,10 @@ main .template-list.horizontal .template-link {
   main .template-list-container > div,
   main .template-list-horizontal-container > div {
     max-width: 900px;
+  }
+
+  main .template-list {
+    max-width: unset;    
   }
 
   main .template-list .template {
