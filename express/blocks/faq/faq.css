@@ -8,6 +8,11 @@ main .section-wrapper.faq-container > div {
     padding: 0 24px;
 }
 
+main .section-wrapper.faq-container > div > h2 {
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
 main .faq {
     text-align: left;
 }
@@ -61,6 +66,10 @@ main .faq .faq-answer p {
 @media (min-width: 900px) {
     main .section-wrapper.faq-container > div {
         padding: 0 56px;
+    }
+
+    main .section-wrapper.faq-container > div > h2 {
+        margin-bottom: 80px;
     }
 
     main .faq .faq-question {
