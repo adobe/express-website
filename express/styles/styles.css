@@ -17,6 +17,7 @@
   --color-info-accent-down: #3D3DB4;
   --color-info-accent-light: #DEDEF9;
   --color-premium: #EBCF2D;
+  --gradient-pink-blue: linear-gradient(15deg, #ff4dd2 0%, #7c84fc 100%);
 
   /* body */
   --body-background-color: var(--color-white);
