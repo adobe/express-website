@@ -28,7 +28,7 @@ function timecodeToSeconds(timecode) {
 }
 
 function adjustOverlayHeight($overlay) {
-  $overlay.style.minHeight = `${Math.max(window.innerWidth * 700 / 1440, 375)}px`;
+  $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
 }
 export default function decorate($block) {
   const $rows = [...$block.children];
