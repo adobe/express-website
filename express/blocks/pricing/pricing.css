@@ -140,6 +140,18 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
 }
 
 @media (min-width: 900px) {
+    main .pricing .pricing-plan .pricing-plan-dropdown {
+        display: inline-block;
+        margin-left: 20px;
+    }
+
+    main .pricing .cta {
+        margin: 10px auto;
+        width: 327px;
+    }
+}
+
+@media (min-width: 1200px) {
     .hero #create-standout-content-in-no-time {
         text-align: center;
     }
@@ -175,11 +187,6 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
         font-size: 52px;
     }
 
-    main .pricing .pricing-plan .pricing-plan-dropdown {
-        display: inline-block;
-        margin-left: 20px;
-    }
-
     main .pricing .pricing-left {
         width: 45%;
     }
@@ -204,5 +211,6 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
 
     main .pricing .cta {
         margin: 0;
+        width: 100%;
     }
 }
