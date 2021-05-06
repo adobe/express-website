@@ -58,7 +58,7 @@ main .how-to-steps .tip-number {
   background-color: var(--color-info-accent-light);
   border-radius: 50%;
   margin-right: 20px;
-  color: black;
+  color: var(--color-black);
   font-size: 1.25rem;
   line-height: 1.25rem;
   font-weight: 800;
