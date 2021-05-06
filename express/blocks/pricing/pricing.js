@@ -136,7 +136,7 @@ async function selectPlanOption($block, plan, planOption) {
     plan.formatted = `${offer.currency}${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
     plan.language = offer.lang;
-    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|\+]+/g);
+    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|+]+/g);
     plan.formatted = plan.formatted.replace(plan.rawPrice, `<span class="price">${plan.rawPrice}</span>`);
   }
   $priceLine.innerHTML = plan.formatted;
