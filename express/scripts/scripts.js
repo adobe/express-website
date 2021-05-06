@@ -1096,7 +1096,7 @@ function makeRelativeLinks() {
     if (!$a.href) return;
     try {
       const url = new URL($a.href);
-      if (['https://www.adobe.com', 'https://www.stage.adobe.com'].includes(url.hostname)) {
+      if (['www.adobe.com', 'www.stage.adobe.com'].includes(url.hostname)) {
         // make link relative
         $a.href = `${url.pathname}${url.search}${url.hash}`;
       }
