@@ -133,9 +133,11 @@ async function selectPlanOption($block, plan, planOption) {
   if (offer) {
     plan.currency = offer.currency;
     plan.price = offer.unitPrice;
-    plan.formatted = offer.unitPriceCurrencyFormatted;
+    plan.formatted = `${offer.currency}${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
     plan.language = offer.lang;
+    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|\+]+/g);
+    plan.formatted = plan.formatted.replace(plan.rawPrice, `<span class="price">${plan.rawPrice}</span>`);
   }
   $priceLine.innerHTML = plan.formatted;
   $cta.href = buildUrl(planOption.link, plan.title, plan.country, plan.language);
@@ -216,7 +218,28 @@ function decorateOtherPlans($block, otherPlans) {
     $otherPlansContainer.append($plan);
     $planButton.addEventListener('click', (e) => {
       e.preventDefault();
-      $popup.classList.toggle('active');
+      const activePopups = $block.querySelectorAll('.active');
+      if (activePopups) {
+        activePopups.forEach((activePopup) => {
+          if (activePopup !== $popup) {
+            activePopup.classList.remove('active');
+          }
+        });
+      }
+      if ($popup.classList.contains('active')) {
+        $popup.classList.remove('active');
+      } else {
+        if (window.innerWidth > 600) {
+          const index = Array.from($otherPlansContainer.children).indexOf($plan);
+          if (index % 2) {
+            const offset = $planButton.offsetWidth + 20;
+            $popup.style.left = `-${offset}px`;
+          }
+        } else {
+          $popup.style.left = '0';
+        }
+        $popup.classList.add('active');
+      }
     });
   });
 }

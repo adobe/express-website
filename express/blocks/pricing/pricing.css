@@ -7,10 +7,10 @@
     margin-left: 0;
 }
 
-main .pricing {
+main .page-list-container, main .pricing {
     opacity: 1;
     text-align: left;
-    padding-bottom: 1000px;
+    height: auto;
 }
 
 main .pricing .pricing-left img {
@@ -29,25 +29,32 @@ main .pricing .pricing-plan .pricing-plan-price {
     margin: 0 0 20px 0;
     font-size: 24px;
     font-weight: 800;
+    display: inline-flex;
 }
 
 main .pricing .pricing-plan .pricing-plan-price .price {
-    margin-top: 10px;
+    margin-top: -10px;
     font-size: 42px;
 }
 
 main .pricing .pricing-plan .pricing-plan-dropdown {
+    display: block;
     padding: 5px;
     border-radius: 5px;
     width: 180px;
 }
 
+main .section-wrapper .pricing p.button-container {
+    margin-top: 0;
+}
+
 main .pricing .cta {
     background-color: #5c5ce0;
     width: 100%;
-    margin: 20px 0 0 0;
+    margin: 40px 0 0 0;
     padding: 15px 0;
     border-radius: 30px;
+    max-width: none;
 }
 
 main .pricing .pricing-right img {
@@ -108,23 +115,38 @@ main .pricing .pricing-right .other-plans .other-plan-popup.active {
 
 main .pricing .pricing-right .pricing-iconlist > div {
     display: flex;
+    align-items: center;
 }
 
 main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-icon {
-    flex: 0 0 50px;
+    display: flex;
 }
 
 main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
-    flex: 1 1;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    margin-left: 10px;
 }
 
 @media (min-width: 600px) {
+    .hero #create-standout-content-in-no-time {
+        margin: 32px 32px;
+    }
+
+    .hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
+        margin: 32px 32px;
+    }
+}
+
+@media (min-width: 900px) {
     .hero #create-standout-content-in-no-time {
         text-align: center;
     }
 
     .hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
         text-align: center;
+        margin: 30px 30px;
     }
 
     main .pricing-container > div {
@@ -147,7 +169,6 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
 
     main .pricing .pricing-plan .pricing-plan-price {
         margin-top: 10px;
-        display: inline-block;
     }
 
     main .pricing .pricing-plan .pricing-plan-price .price {
@@ -181,4 +202,7 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
         max-width: 190%;
     }
 
+    main .pricing .cta {
+        margin: 0;
+    }
 }
