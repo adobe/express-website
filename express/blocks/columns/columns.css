@@ -90,6 +90,41 @@ main .columns .social.icon {
   margin-right: 24px;
 }
 
+main .columns .column hr {
+  margin-top: 32px;
+}
+
+main .columns .column .columns-iconlist {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+main .columns .column .columns-iconlist > div {
+  display: flex;
+  align-items: center;
+  margin-top: 32px;
+}
+
+main .columns .column .columns-iconlist .columns-iconlist-icon {
+  display: flex;
+}
+
+main .columns .column .columns-iconlist .columns-iconlist-icon img.icon {
+  height: 22px;
+  width: 22px;
+}
+
+main .columns .column .columns-iconlist .columns-iconlist-description {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  margin-left: 10px;
+  text-align: left;
+}
+
+
 @media (min-width:900px) {
   main .columns.top > div {
     align-items: flex-start;
