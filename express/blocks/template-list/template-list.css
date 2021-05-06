@@ -99,6 +99,7 @@ main .template-list.horizontal {
   max-width: 375px;
   margin-left: auto; 
   margin-right: auto;
+  height: 220px;
 }
 
 main .template-list.horizontal .carousel-platform {
