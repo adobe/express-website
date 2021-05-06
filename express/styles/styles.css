@@ -295,8 +295,8 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
 }
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
-  background-color: var(--color-info-accent-hover)!important;;
-  border-color: var(--color-info-accent-hover)!important;;
+  background-color: var(--color-info-accent-hover)!important;
+  border-color: var(--color-info-accent-hover)!important;
 }
 
 footer {
