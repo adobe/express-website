@@ -13,34 +13,6 @@ import {
   createTag,
 } from '../../scripts/scripts.js';
 
-function closeAllOtherFaqs($faq) {
-  const $block = $faq.parentElement;
-  const accs = $block.getElementsByClassName('faq-accordion');
-  for (let i = 0; i < accs.length; i += 1) {
-    if (accs[i] !== $faq && accs[i].classList.contains('active')) {
-      accs[i].classList.remove('active');
-    }
-  }
-}
-
-function toggleFaq(e) {
-  const $faq = e.target.parentElement;
-  closeAllOtherFaqs($faq);
-  $faq.classList.toggle('active');
-}
-
-function addFaqEventListeners($block) {
-  const faqs = $block.getElementsByClassName('faq-question');
-  for (let i = 0; i < faqs.length; i += 1) {
-    faqs[i].addEventListener('click', toggleFaq);
-    faqs[i].addEventListener('keydown', (event) => {
-      if (event.keyCode === 13) {
-        toggleFaq(event);
-      }
-    });
-  }
-}
-
 function decorateFAQBlocks($block) {
   const faqs = [];
   const $rows = Array.from($block.children);
@@ -71,7 +43,22 @@ function decorateFAQBlocks($block) {
     $answerDiv.innerHTML = answer;
   });
 
-  addFaqEventListeners($block);
+  // find previous h2 and move it in the FAQ
+  const section = $block.closest('.section-wrapper');
+  if (section && section.previousElementSibling) {
+    const previousSection = section.previousElementSibling;
+    const h2 = previousSection.querySelector('div > h2:last-of-type');
+    // make sure there is no other element
+    if (h2 && !h2.nextElementSibling) {
+      const previous = h2.previousElementSibling;
+      $block.before(h2);
+
+      if (!previous) {
+        // remove empty previous section
+        previousSection.remove();
+      }
+    }
+  }
 }
 
 export default function decorate($block) {

@@ -8,6 +8,11 @@ main .section-wrapper.faq-container > div {
     padding: 0 24px;
 }
 
+main .section-wrapper.faq-container > div > h2 {
+    margin-top: 0;
+    margin-bottom: 40px;
+}
+
 main .faq {
     text-align: left;
 }
@@ -15,7 +20,7 @@ main .faq {
 main .faq .faq-accordion {
     position: relative;
     height: auto;
-    margin-top: 40px;
+    margin-top: 8px;
     padding: 40px;
     border-radius: 8px;
     background-color: var(--color-white);
@@ -34,28 +39,13 @@ main .faq .faq-question {
     cursor: pointer;
 }
 
-main .faq .faq-question:active {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-main .faq .faq-question:focus:not(:focus-visible) {
-    outline: none;
-}
-
 main .faq .faq-answer {
     padding: 0;
-    display: none;
-}
-
-main .faq .active .faq-question {
-    padding: 0 0 24px 0;
-}
-
-main .faq .active .faq-answer {
     display: block;
+}
+
+main .faq .faq-question {
+    padding: 0 0 24px 0;
 }
 
 main .faq .faq-answer ul {
@@ -76,6 +66,10 @@ main .faq .faq-answer p {
 @media (min-width: 900px) {
     main .section-wrapper.faq-container > div {
         padding: 0 56px;
+    }
+
+    main .section-wrapper.faq-container > div > h2 {
+        margin-bottom: 80px;
     }
 
     main .faq .faq-question {
