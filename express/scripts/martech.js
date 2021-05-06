@@ -434,7 +434,12 @@ window.fedsConfig = {
   },
 };
 
-loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js', () => {
+let prefix = '';
+if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
+  prefix = 'https://www.adobe.com';
+}
+
+loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`, () => {
   setTimeout(() => {
     /* attempt to switch link */
     if (window.location.pathname.includes('/create/')
