@@ -375,7 +375,7 @@ function decorateHeaderAndFooter() {
       signIn: 'Sign In',
       top: [
         {
-          text: 'Adobe Spark',
+          text: 'Adobe Creative Cloud Express',
           type: 'nodrop',
         },
         {

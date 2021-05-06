@@ -219,8 +219,8 @@ body.nobrand header {
         margin-left: 0px;
         font-weight: 700;
         padding: 6px 16px 5px 16px;
-        background-color: #1473e6;
-    }      
+        background-color: var(--color-info-accent);
+    }
 
     #header-placeholder .desktop .top .selected {
         font-weight: 700;
