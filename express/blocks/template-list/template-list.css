@@ -115,7 +115,7 @@ main .template-list.horizontal .carousel-fader-left {
   display: none;
   position: relative;
   height: 220px;
-  width: 150px;
+  width: 60px;
   top: -220px;
   float: left;
   background: linear-gradient(
@@ -130,7 +130,7 @@ main .template-list.horizontal .carousel-fader-right {
   display: none;
   position: relative;
   height: 220px;
-  width: 150px;
+  width: 68px;
   top: -220px;
   float: right;
   background: linear-gradient(
@@ -230,6 +230,11 @@ main .template-list.horizontal .template-link {
 
   main .template-list.horizontal {
     max-width: 800px;
+  }
+
+  main .template-list.horizontal .carousel-fader-left,
+  main .template-list.horizontal .carousel-fader-right {
+    width: 150px;
   }
 }
 
