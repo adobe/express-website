@@ -15,7 +15,7 @@ main .faq {
 main .faq .faq-accordion {
     position: relative;
     height: auto;
-    margin-top: 40px;
+    margin-top: 8px;
     padding: 40px;
     border-radius: 8px;
     background-color: var(--color-white);
@@ -34,28 +34,13 @@ main .faq .faq-question {
     cursor: pointer;
 }
 
-main .faq .faq-question:active {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-main .faq .faq-question:focus:not(:focus-visible) {
-    outline: none;
-}
-
 main .faq .faq-answer {
     padding: 0;
-    display: none;
-}
-
-main .faq .active .faq-question {
-    padding: 0 0 24px 0;
-}
-
-main .faq .active .faq-answer {
     display: block;
+}
+
+main .faq .faq-question {
+    padding: 0 0 24px 0;
 }
 
 main .faq .faq-answer ul {
