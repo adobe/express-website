@@ -291,6 +291,12 @@ body.nobrand header {
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
   background-color: var(--color-info-accent);
+  border-color: var(--color-info-accent);
+}
+
+header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
+  background-color: var(--color-info-accent-hover)!important;;
+  border-color: var(--color-info-accent-hover)!important;;
 }
 
 footer {
