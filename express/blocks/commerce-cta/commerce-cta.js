@@ -61,7 +61,7 @@ async function decorateCommerceCTA($block) {
     plan.formatted = formatPrice(plan.price, getCurrency());
   }
 
-  $ctaButton.href = buildUrl(plan.link, plan.title, plan.country, plan.language);
+  $ctaButton.href = buildUrl(plan.link, plan.country, plan.language);
   $ctaButton.classList.add('large');
 
   const $planSection = createTag('div', { class: 'pricing-plan' });
