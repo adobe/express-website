@@ -133,7 +133,7 @@ async function selectPlanOption($block, plan, planOption) {
   if (offer) {
     plan.currency = offer.currency;
     plan.price = offer.unitPrice;
-    plan.formatted = `${offer.currency}${offer.unitPriceCurrencyFormatted}`;
+    plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
     plan.language = offer.lang;
     plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|+]+/g);
