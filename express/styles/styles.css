@@ -76,10 +76,10 @@ body.appear {
 header {
     box-sizing: border-box;
     border-bottom: 1px solid #EAEAEA;
-    height: 153px;
-    background-image: url(/express/icons/ccx.png);
+    height: 143px;
+    background-image: url(/express/icons/cc-express-logo.svg);
     background-repeat: no-repeat;
-    background-size: auto 42px;
+    background-size: auto 32px;
     background-position: bottom 24px center;
     position: relative;
     background-color: #FFF;
