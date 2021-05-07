@@ -11,7 +11,6 @@ main .quotes .quote {
   border-radius: 20px;
   margin: 0 auto;
   background-color: #FFF;
-  width: 344px;
   padding: 32px;
   display: flex;
   flex-direction: column;
@@ -45,8 +44,12 @@ main .quotes .quote .author {
   align-self: baseline;
 }
 
+main .quotes .quote .author hr {
+  display: none;
+}
+
 main .quotes .quote .author .image {
-  padding-right: 16px;
+  padding-right: 10px;
 }
 
 main .quotes .quote .author .image img {
@@ -64,8 +67,17 @@ main .quotes .quote .author .summary p {
   line-height: 1.2;
 }
 
+main .section-wrapper.quotes-rainbow-container,
 main .section-wrapper.quotes-dark-container {
   margin-top: 120px;
+}
+
+main .section-wrapper.quotes-rainbow-container {
+  background: rgb(124,132,243);
+  background: linear-gradient(345deg, rgba(124,132,243,1) 0%, rgba(255,77,210,1) 100%);
+}
+
+main .section-wrapper.quotes-dark-container {
   background-color: #000;
 }
 
@@ -77,21 +89,43 @@ main .section-wrapper.quotes-inverted-container .quote {
 main .section-wrapper.quotes-dark-container h2,
 main .section-wrapper.quotes-dark-container h3,
 main .section-wrapper.quotes-dark-container h4,
-main .section-wrapper.quotes-dark-container h5 {
+main .section-wrapper.quotes-dark-container h5,
+main .section-wrapper.quotes-rainbow-container h2,
+main .section-wrapper.quotes-rainbow-container h3,
+main .section-wrapper.quotes-rainbow-container h4,
+main .section-wrapper.quotes-rainbow-container h5{
   color: #FFF;
 }
 
 
 @media (min-width:900px) {
+  main .quotes-container {
+    background: rgb(124,132,243);
+    background: linear-gradient(15deg, rgba(124,132,243,1) 0%, rgba(255,77,210,1) 100%);
+  }
+
+  main .quotes-dark-container, main .quotes-rainbow-container {
+    padding-top: 80px;
+  }
+
+  main .quotes-dark-container > div, main .quotes-rainbow-container > div {
+    max-width: 724px;
+  }
+
   main .quotes {
-    margin-top: 56px;
+    margin-top: 0;
     padding-bottom: 80px;
     flex-direction: row;
     gap: 16px;
-    width: 722px;
   }
 
   main .quotes .quote {
-    width: 230px;
+    flex: 1;
+  }
+}
+
+@media (min-width:1200px) {
+  main .quotes-dark-container > div, main .quotes-rainbow-container > div {
+    max-width: 1024px;
   }
 }
