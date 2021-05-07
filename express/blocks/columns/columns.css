@@ -1,11 +1,50 @@
+main .columns-container,
+main .columns-dark-container,
+main .columns-center-container,
+main .columns-top-container {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 40px;
+}
+
+main .columns-container > div,
+main .columns-dark-container > div,
+main .columns-center-container > div,
+main .columns-top-container > div {
+  padding: 0;
+  max-width: 500px;
+}
+
 main .columns-dark-container {
   background-color: black;
   padding-bottom: 120px;
   color: white;
 }
 
-main .columns {
-  margin-top: 70px;
+main .columns p {
+  margin: 16px 0;
+}
+
+main .columns p.button-container {
+  margin: 0;
+  margin-top: 40px;
+}
+
+main .columns .button-container a {
+  margin: 0;
+}
+
+main .columns .column-picture {
+  margin: 15px 0;
+}
+
+main .columns h2 {
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.05;
+}
+
+main .columns.width-2-columns .column-picture {
+  order: 2;
 }
 
 main .columns.width-3-columns h3 {
@@ -13,25 +52,19 @@ main .columns.width-3-columns h3 {
 }
 
 main .columns > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
 }
 
-main .columns.centered > div > div {
+main .columns.center .column {
   text-align: center;
 }
 
-main .columns.table > div {
-  align-items: flex-start;
-}
-
-main .columns.top > div {
-  align-items: flex-start;
-}
-
-main .columns-container > div {
-  max-width: 1024px;
+main .columns.center .column p.button-container {
+  text-align: center;
 }
 
 main .columns a > p:empty {
@@ -39,20 +72,16 @@ main .columns a > p:empty {
 }
 
 main .columns > div span.num {
-  position:relative;
+  position: relative;
   font-weight: 900;
   font-size: 36px;
   line-height: 39px;
-  top:0;
+  top: 0;
   margin-right: 12px;
 }
 
 main .columns > div span.num + * {
   display:inline;
-}
-
-main .columns.center > div {
-  align-items: center;
 }
 
 main .columns .social.icon {
@@ -61,28 +90,113 @@ main .columns .social.icon {
   margin-right: 24px;
 }
 
+main .columns .column hr {
+  margin-top: 32px;
+}
+
+main .columns .column .columns-iconlist {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+main .columns .column .columns-iconlist > div {
+  display: flex;
+  align-items: center;
+  margin-top: 32px;
+}
+
+main .columns .column .columns-iconlist .columns-iconlist-icon {
+  display: flex;
+}
+
+main .columns .column .columns-iconlist .columns-iconlist-icon img.icon,
+main .columns .column .columns-iconlist .columns-iconlist-icon svg.icon {
+  height: 22px;
+  width: 22px;
+}
+
+main .columns .column .columns-iconlist .columns-iconlist-description {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  margin-left: 10px;
+  text-align: left;
+}
+
+
 @media (min-width:900px) {
+  main .columns.top > div {
+    align-items: flex-start;
+  }
+
+  main .columns-container > div,
+  main .columns-dark-container > div,
+  main .columns-center-container > div,
+  main .columns-top-container > div {
+    max-width: 836px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  
   main .columns > div {
     flex-direction: row;
     text-align: left;
+    align-items: center;
+  }
+
+  main .columns .column:not(.column-picture) {
+    padding: 15px;
   }
 
   main .section-wrapper div.columns > div > div {
     width: 50%;
-    padding: 10px 24px;
-  }
-
-  main .section-wrapper div.columns > div > div * {
-    text-align: left;
-  }
-
-  main .section-wrapper div.columns.centered > div > div * {
-    text-align: center;
   }
   
   main .columns > div span.num {
     font-size: 22px;
     line-height: 29px;
     display: block;
+  }  
+
+  main .columns.width-2-columns .column-picture {
+    order: 0;
+  }
+
+  main .columns .column {
+    text-align: left;
+  }
+
+  main .columns .column p.button-container {
+    text-align: left;
+  }
+
+  main .columns .column h2 {
+    text-align: left;
+  }
+
+  main .columns.center .column {
+    text-align: center;
+  }
+
+  main .columns.center .column p.button-container {
+    text-align: center;
+  }
+
+  main .columns.center .column h2 {
+    text-align: center;
   }
 }
+
+
+@media (min-width: 1200px) {
+
+  main .columns-container > div,
+  main .columns-dark-container > div,
+  main .columns-center-container > div,
+  main .columns-top-container > div {
+    max-width: 1024px;
+  }
+}
+  

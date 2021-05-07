@@ -3,7 +3,7 @@ main .sticky-promo-bar {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #1473E6;
+    background-color: var(--color-info-accent);
     color: white;
     padding: 12px;
     padding-right: 36px;

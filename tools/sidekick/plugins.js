@@ -25,7 +25,7 @@
       text: 'Templates',
       action: () => {
         const { config } = sk;
-        window.open(`https://${config.host || config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
+        window.open(`https://${config.outerHost || config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
       },
     },
   });

@@ -95,10 +95,11 @@ main .template-list.masonry .template {
 
 main .template-list.horizontal {
   display: block;
-  overflow-x: hidden;
+  overflow: hidden;
   max-width: 375px;
   margin-left: auto; 
   margin-right: auto;
+  height: 220px;
 }
 
 main .template-list.horizontal .carousel-platform {

@@ -26,7 +26,7 @@ function replaceUrlParam(url, paramName, paramValue) {
   return url;
 }
 
-export function buildUrl(optionUrl, optionPlan, country, language) {
+export function buildUrl(optionUrl, country, language) {
   const currentUrl = new URL(window.location.href);
   let planUrl = new URL(optionUrl);
 
@@ -65,7 +65,7 @@ export function buildUrl(optionUrl, optionPlan, country, language) {
     if (currentUrl.searchParams.has('touchpointName')) {
       rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
     }
-    if (currentUrl.searchParams.has('destinationUrl') && optionPlan === 'Individual') {
+    if (currentUrl.searchParams.has('destinationUrl')) {
       rUrl = replaceUrlParam(rUrl, 'destinationUrl', currentUrl.searchParams.get('destinationUrl'));
     }
     if (currentUrl.searchParams.has('srcUrl')) {
@@ -133,14 +133,14 @@ async function selectPlanOption($block, plan, planOption) {
   if (offer) {
     plan.currency = offer.currency;
     plan.price = offer.unitPrice;
-    plan.formatted = `${offer.currency}${offer.unitPriceCurrencyFormatted}`;
+    plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
     plan.language = offer.lang;
-    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|\+]+/g);
+    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|+]+/g);
     plan.formatted = plan.formatted.replace(plan.rawPrice, `<span class="price">${plan.rawPrice}</span>`);
   }
   $priceLine.innerHTML = plan.formatted;
-  $cta.href = buildUrl(planOption.link, plan.title, plan.country, plan.language);
+  $cta.href = buildUrl(planOption.link, plan.country, plan.language);
 }
 
 export function buildPlans($contents) {

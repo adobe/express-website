@@ -76,10 +76,10 @@ body.appear {
 header {
     box-sizing: border-box;
     border-bottom: 1px solid #EAEAEA;
-    height: 153px;
-    background-image: url(/express/icons/ccx.png);
+    height: 143px;
+    background-image: url(/express/icons/cc-express-logo.svg);
     background-repeat: no-repeat;
-    background-size: auto 42px;
+    background-size: auto 32px;
     background-position: bottom 24px center;
     position: relative;
     background-color: #FFF;
@@ -219,8 +219,8 @@ body.nobrand header {
         margin-left: 0px;
         font-weight: 700;
         padding: 6px 16px 5px 16px;
-        background-color: #1473e6;
-    }      
+        background-color: var(--color-info-accent);
+    }
 
     #header-placeholder .desktop .top .selected {
         font-weight: 700;
@@ -291,11 +291,16 @@ body.nobrand header {
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
   background-color: var(--color-info-accent);
+  border-color: var(--color-info-accent);
+}
+
+header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
+  background-color: var(--color-info-accent-hover)!important;
+  border-color: var(--color-info-accent-hover)!important;
 }
 
 footer {
-
-  margin-top: 120px;
+  margin-top: 0;
 }
 
 /* buttons */
@@ -433,18 +438,19 @@ main img {
   max-width: 100%;
 }
 
+main .section-wrapper {
+  padding-top: 40px;
+}
+
+main .section-wrapper:first-of-type {
+  padding-top: 0;
+}
+
+main .section-wrapper:last-of-type {
+  margin-bottom: 0;
+}
+
 @media (min-width:600px) {
-  main .section-wrapper {
-    padding-top: 40px;
-  }
-
-  main .section-wrapper:first-of-type {
-    padding-top: 80px;
-  }
-
-  main .section-wrapper:first-of-type {
-    padding-top: 0;
-  }
 
   main h2 {
     font-size: var(--heading-font-size-l);

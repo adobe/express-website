@@ -58,6 +58,9 @@ main .section-wrapper.icon-list-highlight-container {
   border-image: linear-gradient(90deg, #7c84f3, #ff4dd2) 1;
   padding-top: 0;
   margin-top: 120px;
+  border-left: 0;
+  border-bottom: 0;
+  border-right: 0;
 }
 
 main .section-wrapper.icon-list-two-column-container h2 {

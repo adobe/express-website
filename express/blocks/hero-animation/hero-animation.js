@@ -27,8 +27,8 @@ function timecodeToSeconds(timecode) {
   return seconds;
 }
 
-function adjustOverlayHeight($video, $overlay) {
-  $overlay.style.minHeight = `${Math.max($video.clientHeight, 375)}px`;
+function adjustOverlayHeight($overlay) {
+  $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
 }
 export default function decorate($block) {
   const $rows = [...$block.children];
@@ -84,9 +84,9 @@ export default function decorate($block) {
         });
 
         window.addEventListener('resize', () => {
-          adjustOverlayHeight($video, $innerDiv);
+          adjustOverlayHeight($innerDiv);
         });
-        adjustOverlayHeight($video, $innerDiv);
+        adjustOverlayHeight($innerDiv);
       }
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
     } else {

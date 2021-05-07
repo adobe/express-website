@@ -1,0 +1,10 @@
+<svg id="ICONS" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <defs>
+    <style>
+      .fill {
+        fill: #444;
+      }
+    </style>
+  </defs>
+  <path class="fill" d="M3,7A.99943.99943,0,0,0,4,6V4h6V19H8a1,1,0,0,0,0,2h6a1,1,0,0,0,0-2H12V4h6V6a1,1,0,0,0,2,0V4a2.0026,2.0026,0,0,0-2-2H4A2.0026,2.0026,0,0,0,2,4V6A.99943.99943,0,0,0,3,7Z"/>
+</svg>

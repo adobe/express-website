@@ -30,17 +30,26 @@ main .hero-animation .hero-animation-overlay {
     padding-top: max(70%, 450px);
 }
 
+main .hero-animation .hero-animation-overlay p {
+    margin: 21px 0;
+}
+
 main .hero-animation .icon {
     height: 40px;
     width: 40px;
-    margin-bottom: 30px;
+    margin-bottom: 11px;
+}
+
+main .hero-animation .icon-adobe-creative-cloud-express {
+    height: 119px;
+    width: 373px;
 }
 
 main .hero-animation .hero-animation-attribution {
     opacity: 0;
     transition: opacity 500ms ease-in-out;
     position: absolute;
-    top: 350px;
+    top: 286px;
     left: 50px;
     display: flex;
     text-align: left;
@@ -49,14 +58,15 @@ main .hero-animation .hero-animation-attribution {
 
 main .hero-animation .hero-animation-attribution p {
     margin: 0;
-    font-weight: 600;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 main .hero-animation .hero-animation-attribution img {
-    height: 80px;
-    width: 80px;
+    height: 132px;
+    width: 132px;
     margin-right: 8px;
-    border-radius: 40px;
+    border-radius: 50%;
 }
 
 
@@ -76,10 +86,12 @@ main .hero-animation .hero-animation-attribution.appear {
 
     main .hero-animation h1 {
         font-size: var(--heading-font-size-l);
+        line-height: 40px;
     }
 
     main .hero-animation .hero-animation-overlay p.button-container {
         text-align: left;
+        margin: 0;
     }
 
     main .hero-animation .hero-animation-overlay p.button-container a.button:any-link {
