@@ -27,12 +27,28 @@ function timecodeToSeconds(timecode) {
   return seconds;
 }
 
-function adjustOverlayHeight($overlay) {
+function adjustLayout($overlay, $attributions, $icon) {
   $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
+  const scale = window.innerWidth / 1440;
+  if (window.innerWidth > 375 * (1440 / 700)) {
+    $attributions.style.transform = `scale(${scale})`;
+    $attributions.style.top = `${scale * 545}px`;
+    $attributions.style.left = `${scale * 1030}px`;
+  } else {
+    $attributions.style.transform = 'scale(0.4)';
+    $attributions.style.top = '300px';
+    $attributions.style.left = '80px';
+  }
+  if (window.innerWidth >= 900) {
+    $icon.src = '/express/icons/adobe-creative-cloud-express.svg';
+  } else {
+    $icon.src = '/express/icons/cc-express-logo.svg';
+  }
 }
 export default function decorate($block) {
   const $rows = [...$block.children];
   const attributions = [];
+  const $attributions = createTag('div', { class: 'hero-animation-attributions' });
   $rows.forEach(($div, i) => {
     if (i === 0) {
       const $a = $div.querySelector('a');
@@ -83,10 +99,12 @@ export default function decorate($block) {
           });
         });
 
+        const $icon = $block.querySelector('.icon');
+
         window.addEventListener('resize', () => {
-          adjustOverlayHeight($innerDiv);
+          adjustLayout($innerDiv, $attributions, $icon);
         });
-        adjustOverlayHeight($innerDiv);
+        adjustLayout($innerDiv, $attributions, $icon);
       }
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
     } else {
@@ -113,7 +131,9 @@ export default function decorate($block) {
         }
       });
       attributions.push(attribution);
+      $attributions.append($div);
     }
   });
+  $block.append($attributions);
   $block.classList.add('appear');
 }

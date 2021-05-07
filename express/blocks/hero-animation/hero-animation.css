@@ -23,11 +23,10 @@ main .hero-animation video {
     object-fit: cover;
     width: 100vw;
     min-height: 375px;
-    object-position: 97%;
+    object-position: 72%;
 }
 
 main .hero-animation .hero-animation-overlay {
-    padding-top: max(70%, 450px);
 }
 
 main .hero-animation .hero-animation-overlay p {
@@ -41,19 +40,26 @@ main .hero-animation .icon {
 }
 
 main .hero-animation .icon-adobe-creative-cloud-express {
-    height: 119px;
-    width: 373px;
+    margin-top: 13px;
+    height: 33px;
+    width: 294px;
+    margin-bottom: 380px;
+}
+
+main .hero-animation .hero-animation-attributions {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 main .hero-animation .hero-animation-attribution {
+    position: absolute;
     opacity: 0;
     transition: opacity 500ms ease-in-out;
-    position: absolute;
-    top: 286px;
-    left: 50px;
     display: flex;
     text-align: left;
     align-items: center;
+    width: 400px;
 }
 
 main .hero-animation .hero-animation-attribution p {
@@ -74,16 +80,30 @@ main .hero-animation .hero-animation-attribution.appear {
     opacity: 1;
 }
 
+main .hero-animation .hero-animation-overlay {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+main .hero-animation h1 {
+    font-size: var(--heading-font-size-xl);
+    line-height: 45px;
+}
+
+
 @media (min-width: 900px) {
     main .hero-animation .hero-animation-overlay {
-        padding-top: 0px;
-        text-align: left;
         width: 35%;
-        display: flex;
         justify-content: center;
-        flex-direction: column;
     }
 
+    main .hero-animation .icon-adobe-creative-cloud-express {
+        height: 119px;
+        width: 373px;
+        margin: 0;
+    }
+    
     main .hero-animation h1 {
         font-size: var(--heading-font-size-l);
         line-height: 40px;
@@ -96,13 +116,6 @@ main .hero-animation .hero-animation-attribution.appear {
 
     main .hero-animation .hero-animation-overlay p.button-container a.button:any-link {
         margin: 0;
-    }
-
-    main .hero-animation .hero-animation-attribution.hero-animation-bottom-right {
-        top: unset;
-        left: unset;
-        bottom: 50px;
-        right: 50px;
     }
 
     main .hero-animation .hero-animation-attribution.hero-animation-top-right {
