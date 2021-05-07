@@ -111,7 +111,8 @@ main .columns .column .columns-iconlist .columns-iconlist-icon {
   display: flex;
 }
 
-main .columns .column .columns-iconlist .columns-iconlist-icon img.icon {
+main .columns .column .columns-iconlist .columns-iconlist-icon img.icon,
+main .columns .column .columns-iconlist .columns-iconlist-icon svg.icon {
   height: 22px;
   width: 22px;
 }

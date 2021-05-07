@@ -18,7 +18,7 @@ function decorateIconList($columnCell) {
   let $iconListRow;
   let $iconListDescription;
   [...$columnCell.childNodes].forEach(($e) => {
-    if ($e.tagName === 'IMG' && $e.classList.contains('icon')) {
+    if ($e.tagName && ($e.tagName === 'IMG' || $e.tagName.toUpperCase() === 'SVG') && $e.classList.contains('icon')) {
       if ($iconListRow) {
         $iconList.appendChild($iconListRow);
       }
@@ -62,7 +62,7 @@ export default function decorate($block) {
   $rows.forEach(($row, rowNum) => {
     const $cells = Array.from($row.children);
     $cells.forEach(($cell, cellNum) => {
-      if ($cell.querySelector('img.icon')) {
+      if ($cell.querySelector('img.icon, svg.icon')) {
         decorateIconList($cell);
       }
 
