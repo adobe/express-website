@@ -300,8 +300,7 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
 }
 
 footer {
-
-  margin-top: 120px;
+  margin-top: 0;
 }
 
 /* buttons */
@@ -439,18 +438,19 @@ main img {
   max-width: 100%;
 }
 
+main .section-wrapper {
+  padding-top: 40px;
+}
+
+main .section-wrapper:first-of-type {
+  padding-top: 0;
+}
+
+main .section-wrapper:last-of-type {
+  margin-bottom: 0;
+}
+
 @media (min-width:600px) {
-  main .section-wrapper {
-    padding-top: 40px;
-  }
-
-  main .section-wrapper:first-of-type {
-    padding-top: 80px;
-  }
-
-  main .section-wrapper:first-of-type {
-    padding-top: 0;
-  }
 
   main h2 {
     font-size: var(--heading-font-size-l);
