@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - _main
 
 jobs:
   ci_trigger:
