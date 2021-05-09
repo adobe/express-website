@@ -1,6 +1,6 @@
 main .quotes {
   margin: 40px auto 0 auto;
-  padding-bottom: 120px;
+  padding-bottom: 40px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -11,7 +11,6 @@ main .quotes .quote {
   border-radius: 20px;
   margin: 0 auto;
   background-color: #FFF;
-  width: 344px;
   padding: 32px;
   display: flex;
   flex-direction: column;
@@ -45,8 +44,12 @@ main .quotes .quote .author {
   align-self: baseline;
 }
 
+main .quotes .quote .author hr {
+  display: none;
+}
+
 main .quotes .quote .author .image {
-  padding-right: 16px;
+  padding-right: 10px;
 }
 
 main .quotes .quote .author .image img {
@@ -64,8 +67,17 @@ main .quotes .quote .author .summary p {
   line-height: 1.2;
 }
 
+main .section-wrapper.quotes-container,
 main .section-wrapper.quotes-dark-container {
-  margin-top: 120px;
+  margin-top: 40px;
+  padding: 40px 0;
+}
+
+main .section-wrapper.quotes-container {
+  background: var(--gradient-pink-blue);
+}
+
+main .section-wrapper.quotes-dark-container {
   background-color: #000;
 }
 
@@ -77,21 +89,41 @@ main .section-wrapper.quotes-inverted-container .quote {
 main .section-wrapper.quotes-dark-container h2,
 main .section-wrapper.quotes-dark-container h3,
 main .section-wrapper.quotes-dark-container h4,
-main .section-wrapper.quotes-dark-container h5 {
+main .section-wrapper.quotes-dark-container h5,
+main .section-wrapper.quotes-container h2,
+main .section-wrapper.quotes-container h3,
+main .section-wrapper.quotes-container h4,
+main .section-wrapper.quotes-container h5{
   color: #FFF;
 }
 
 
-@media (min-width:900px) {
+@media (min-width: 900px) {
+  main .quotes-container {
+    background: var(--gradient-pink-blue);
+  }
+
+  main .quotes-dark-container > div, main .quotes-container > div {
+    max-width: 724px;
+  }
+
   main .quotes {
-    margin-top: 56px;
-    padding-bottom: 80px;
     flex-direction: row;
     gap: 16px;
-    width: 722px;
   }
 
   main .quotes .quote {
-    width: 230px;
+    flex: 1;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .quotes-dark-container > div, main .quotes-container > div {
+    max-width: 1024px;
+  }
+
+  main .section-wrapper.quotes-container,
+  main .section-wrapper.quotes-dark-container {
+    padding: 80px 0;
   }
 }
