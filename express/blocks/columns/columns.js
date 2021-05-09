@@ -94,6 +94,13 @@ export default function decorate($block) {
       if ($cell.tagName === 'PICTURE') {
         $cell.classList.add('column-picture');
       }
+
+      const $pars = $cell.querySelectorAll('p');
+      for (let i = 0; i < $pars.length; i += 1) {
+        if ($pars[i].innerText.match(/Powered by/)) {
+          $pars[i].classList.add('powered-by');
+        }
+      }
     });
   });
 }

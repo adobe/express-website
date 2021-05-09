@@ -38,9 +38,18 @@ main .columns .column-picture {
   margin: 15px 0;
 }
 
+main .columns h1,
 main .columns h2 {
   font-size: var(--heading-font-size-xl);
   line-height: 1.05;
+}
+
+main .columns p {
+  font-size: var(--body-font-size-xl);
+}
+
+main .columns p.powered-by {
+  font-size: var(--body-font-size-m);
 }
 
 main .columns.width-2-columns .column-picture {
@@ -197,6 +206,12 @@ main .columns .column .columns-iconlist .columns-iconlist-description {
   main .columns-center-container > div,
   main .columns-top-container > div {
     max-width: 1024px;
+  }
+
+  main .columns h1,
+  main .columns h2 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 1.08;
   }
 }
   
