@@ -17,13 +17,14 @@ import {
   normalizeHeadings,
   decorateButtons,
   fixIcons,
+  toClassName,
 } from '../../scripts/scripts.js';
 
 const PROMOTION_FOLDER = 'express/promotions';
 
 async function fetchPromotion(name) {
   const locale = getLocale(window.location);
-  const promoURL = `${locale === 'us' ? '' : `/${locale}`}/${PROMOTION_FOLDER}/${name}.plain.html`;
+  const promoURL = `${locale === 'us' ? '' : `/${locale}`}/${PROMOTION_FOLDER}/${toClassName(name)}.plain.html`;
   const resp = await fetch(promoURL);
   if (resp.ok) {
     const html = await resp.text();
@@ -34,8 +35,9 @@ async function fetchPromotion(name) {
 
 export default async function decorate($block) {
   const name = $block.textContent;
-  const html = await fetchPromotion(name);
+  if (!name) return;
 
+  const html = await fetchPromotion(name);
   if (html) {
     const div = createTag('div');
     div.innerHTML = html;
