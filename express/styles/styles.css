@@ -299,6 +299,10 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
   border-color: var(--color-info-accent-hover)!important;
 }
 
+header #feds-header a.feds-navLink:hover .feds-navLink-text {
+  color: var(--color-info-accent-hover);
+}
+
 footer {
   margin-top: 0;
 }
