@@ -1,26 +1,98 @@
+main .image-list-container > div, main .image-list-xl-container > div,
+main .image-list-l-container > div, main .image-list-m-container > div,
+main .image-list-s-container > div, main .image-list-xs-container > div {
+  margin: auto;
+  max-width: 1200px;
+  padding: 0;
+}
+
 main .image-list {
-  margin-top: 70px;
+  margin: 25px;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-main .image-list.app {
-  margin-top: 20px;
+  max-width: 1200px;
 }
 
 main .image-list img {
-  height: 48px;
-  padding: 20px;
+  width: 300px;
+  margin: 12.5px;
+}    
+
+main .image-list .mobile-only {
+  display: block;
+}
+main .image-list .desktop-only {
+  display: none;
 }
 
-main .image-list.app img {
-  height: 48px;
-  padding: 8px;
+
+@media (min-width: 900px) {
+  main .image-list .mobile-only {
+    display: none;
+  }
+  main .image-list .desktop-only {
+    display: block;
+  }
+
+  main .image-list {
+    margin: 45px;
+  }
+  main .image-list.xl img {
+    width: 810px;
+  }    
+  
+  main .image-list.l img {
+    margin: 15px;
+    width: 375px;
+  }
+  
+  main .image-list img {
+    margin: 15px;
+    width: 240px;
+  }
+  
+  main .image-list.s img {
+    margin: 11px;
+    width: 180px;
+  }
+  
+  main .image-list.xs img {
+    margin: 11px;
+    width: 140px;
+  }
+
 }
 
+@media (min-width: 1200px) {
+  
+  main .image-list {
+    margin: 60px;
+  }
 
-main .image-list-container > div {
-  max-width: 1024px;
+  main .image-list.xl img {
+    margin: 0;
+    width: 1080px;
+  }    
+  
+  main .image-list.l img {
+    margin: 20px;
+    width: 500px;
+  }
+  
+  main .image-list img {
+    margin: 15px;
+    width: 330px;
+  }
+  
+  main .image-list.s img {
+    margin: 15px;
+    width: 240px;
+  }
+  
+  main .image-list.xs img {
+    margin: 14px;
+    width: 188px;
+  }
 }
