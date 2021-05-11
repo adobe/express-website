@@ -103,3 +103,10 @@ main .steps .icon {
     display: flex;
   }
 }
+
+@media (min-width: 1200px) {
+  main .section-wrapper.steps-dark-container > div,
+  main .section-wrapper.steps-container > div {
+    max-width: 1024px;
+  }
+}

@@ -88,6 +88,18 @@ export default [
     input: 'input/banner.h4.doc.html',
     expected: 'expected/banner.h3.block.html',
   }, {
+    name: 'Inline Banner - h1 - converted to h2',
+    input: 'input/inline-banner.h1.doc.html',
+    expected: 'expected/inline-banner.h2.block.html',
+  }, {
+    name: 'Inline Banner - inverted if dark container',
+    input: 'input/inline-banner.dark.doc.html',
+    expected: 'expected/inline-banner.inverted.block.html',
+  }, {
+    name: 'Inline Banner - inverted if highlighted container',
+    input: 'input/inline-banner.highlight.doc.html',
+    expected: 'expected/inline-banner.inverted.block.html',
+  }, {
     name: 'Commerce CTA',
     input: 'input/commerce-cta.doc.html',
     expected: 'expected/commerce-cta.block.html',

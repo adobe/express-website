@@ -492,7 +492,7 @@ main .section-wrapper:last-of-type {
 
   main .section-wrapper.cards-container {
     background-color: unset;
-  }
+  }  
 }
 
 @media(min-width:1200px) {
@@ -501,9 +501,6 @@ main .section-wrapper:last-of-type {
   }
 }
 
-main .section-wrapper > div {
-  max-width: 830px;
-}
 
 .font-loaded main h1 {
   opacity: 1;
@@ -667,7 +664,7 @@ main .section-wrapper:first-of-type {
 
 main .section-wrapper > div {
   margin: auto;
-  max-width: 672px;
+  max-width: 375px;
   padding: 0 32px;
 }
 
@@ -734,6 +731,18 @@ main .section-wrapper p.button-container {
 
 main .section-wrapper .hero {
   color: initial;
+}
+
+@media (min-width:900px) {
+  main .section-wrapper > div {
+    max-width: 830px;
+  }
+}
+
+@media (min-width:1200px) {
+  main .section-wrapper > div {
+    max-width: 1024px;
+  }
 }
 
 /* blog styling */
