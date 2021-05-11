@@ -31,7 +31,6 @@ function decorateIconList($columnCell) {
     $iconList.appendChild($iconListRow);
   });
 
-  console.log($icons.length, $before);
   if ($icons.length > 0) {
     $columnCell.insertBefore($iconList, $before.nextSibling);
   }
