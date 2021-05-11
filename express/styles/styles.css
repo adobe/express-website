@@ -324,7 +324,6 @@ a.button:any-link {
   background-color: var(--color-info-accent);
   transition: background-color .4s;
   margin: 10px;
-  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
