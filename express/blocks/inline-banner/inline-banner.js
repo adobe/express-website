@@ -11,7 +11,12 @@
  */
 /* global */
 
+import {
+  normalizeHeadings,
+} from '../../scripts/scripts.js';
+
 export default function decorate($block) {
+  normalizeHeadings($block, ['h2', 'h3']);
   const $section = $block.closest('main .section-wrapper');
   if ($section
     && ($section.className.includes('dark') || $section.className.includes('highlight'))) {
