@@ -511,9 +511,9 @@ main .section-wrapper > div {
 
 /* hero */
 main .hero {
-  color: white;
-  position: relative;
-  padding: 120px 32px 
+  /* color: white; */
+  /* position: relative; */
+  /* padding: 120px 32px */
 }
 
 main .hero.hero-noimage {
@@ -593,7 +593,6 @@ main .hero .hero-bg {
 main .hero .hero-bg img {
     height: 100%;
     width: 100%;
-    object-fit: cover;
 }
 
 main .hero > div {
@@ -615,7 +614,7 @@ main .hero a:any-link {
     font-size: var(--heading-font-size-xl);
     line-height: 1.09;
     text-align:center;
-    margin: 120px 15px 0px 15px; 
+    margin: 120px 15px 0px 15px;
   }
 
   main .hero h2,
@@ -625,10 +624,6 @@ main .hero a:any-link {
     line-height: 1.4;
     text-align:center;
     margin: 24px 15px 0px 15px;
-  }
-
-  main .hero p.button-container {
-    margin: 40px 15px 15px 120px;
   }
 }
 
@@ -655,10 +650,6 @@ main .hero a:any-link {
     margin: 24px 50px 0px 50px;
   }
 
-  main .hero p.button-container {
-    margin: 40px 50px 50px 120px;
-  }
-
   @media (min-width:1200px){
     main .hero {
       width:100vw;
@@ -680,11 +671,6 @@ main .hero a:any-link {
       line-height: 1.4;
       text-align:center;
       margin: 24px 0px 0px 0px;
-    }
-  
-    main .hero p.button-container {
-      text-align:center;
-      margin: 40px 0px 0px 120px;
     }
   }
 }
