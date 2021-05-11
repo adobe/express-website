@@ -12,7 +12,9 @@
 /* global */
 
 export default function decorate($block) {
-  if ($block.closest('main .section-wrapper').className.includes('dark')) {
+  const $section = $block.closest('main .section-wrapper');
+  if ($section
+    && ($section.className.includes('dark') || $section.className.includes('highlight'))) {
     // force inverted style
     $block.classList.add('inverted');
     $block.querySelectorAll('a.button').forEach(($btn) => {
