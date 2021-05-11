@@ -611,7 +611,8 @@ main .hero a:any-link {
   }
 
   main .hero h1{
-    font-size: var(--body-font-size-xl);
+    color: white;
+    font-size: var(--heading-font-size-xl);
     line-height: 1.09;
     text-align:center;
     margin: 120px 15px 0px 15px; 
@@ -619,6 +620,7 @@ main .hero a:any-link {
 
   main .hero h2,
   main .hero p {
+    color: white;
     font-size: var(--body-font-size-xl);
     line-height: 1.4;
     text-align:center;
@@ -630,7 +632,6 @@ main .hero a:any-link {
   }
 }
 
-
 @media (min-width:900px) {
   main .hero {
     width:100vw;
@@ -638,7 +639,8 @@ main .hero a:any-link {
   }
 
   main .hero h1{
-    font-size: var(--body-font-size-xl);
+    color: white;
+    font-size: var(--heading-font-size-xl);
     line-height: 1.09;
     text-align:center;
     margin: 120px 50px 0px 50px; 
@@ -646,6 +648,7 @@ main .hero a:any-link {
 
   main .hero h2,
   main .hero p {
+    color: white;
     font-size: var(--body-font-size-xl);
     line-height: 1.4;
     text-align:center;
@@ -663,7 +666,8 @@ main .hero a:any-link {
     }
   
     main .hero h1{
-      font-size: var(--body-font-size-xxl);
+      color: white;
+      font-size: var(--heading-font-size-xxl);
       line-height: 1.06;
       text-align:center;
       margin: 120px 0px 0px 0px; 
@@ -671,6 +675,7 @@ main .hero a:any-link {
   
     main .hero h2,
     main .hero p {
+      color: white;
       font-size: var(--body-font-size-xxl);
       line-height: 1.4;
       text-align:center;
