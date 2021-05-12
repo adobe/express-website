@@ -508,9 +508,11 @@ main .section-wrapper:last-of-type {
 
 /* hero */
 main .hero {
-  /* color: white; */
-  /* position: relative; */
-  /* padding: 120px 32px */
+  color: var(--color-white); 
+  width:100vw;
+  height: 563px;
+  position: relative;
+  padding: 120px 32px
 }
 
 main .hero.hero-noimage {
@@ -540,11 +542,6 @@ main .hero h1 {
   margin: 0;
 }
 
-main .hero h2 {
-  font-size: var(--heading-font-size-s);
-  margin: 32px 32px;
-}
-
 main .hero h5 {
   font-size: var(--body-font-size-l);
   font-weight: var(--body-font-weight);
@@ -555,11 +552,6 @@ main .hero h5 {
 
 main .hero.hero-noimage p {
   font-size: var(--body-font-size-s);
-}
-
-main .hero p {
-  margin: 16px 0;
-  font-size: var(--body-font-size-xl);
 }
 
 main .hero a.button:any-link {
@@ -590,6 +582,7 @@ main .hero .hero-bg {
 main .hero .hero-bg img {
     height: 100%;
     width: 100%;
+    object-fit: cover;
 }
 
 main .hero > div {
@@ -600,50 +593,33 @@ main .hero a:any-link {
   color: currentColor;
 }
 
-@media (min-width:375px){
-  main .hero {
-    width:100vw;
-    height: 563px;
-  }
-
-  main .hero h1{
-    color: white;
-    font-size: var(--heading-font-size-xl);
-    line-height: 1.09;
-    text-align:center;
-    margin: 120px 15px 0px 15px;
-  }
-
-  main .hero h2,
-  main .hero p {
-    color: white;
-    font-size: var(--body-font-size-xl);
-    line-height: 1.4;
-    text-align:center;
-    margin: 24px 15px 0px 15px;
-  }
+main .hero h1{
+  font-size: var(--heading-font-size-xl);
+  line-height: var(--heading-line-height);
+  text-align:center;
+  margin: 120px 15px 0px 15px;
 }
+
+main .hero h2,
+main .hero p {
+  font-size: var(--body-font-size-xl);
+  line-height: var(--body-line-height);
+  text-align:center;
+  margin: 24px 15px 0px 15px;
+}
+
 
 @media (min-width:900px) {
   main .hero {
-    width:100vw;
     height: 493px;
   }
 
   main .hero h1{
-    color: white;
-    font-size: var(--heading-font-size-xl);
-    line-height: 1.09;
-    text-align:center;
     margin: 120px 50px 0px 50px; 
   }
 
   main .hero h2,
   main .hero p {
-    color: white;
-    font-size: var(--body-font-size-xl);
-    line-height: 1.4;
-    text-align:center;
     margin: 24px 50px 0px 50px;
   }
 
@@ -654,19 +630,11 @@ main .hero a:any-link {
     }
   
     main .hero h1{
-      color: white;
-      font-size: var(--heading-font-size-xxl);
-      line-height: 1.06;
-      text-align:center;
       margin: 120px 0px 0px 0px; 
     }
   
     main .hero h2,
     main .hero p {
-      color: white;
-      font-size: var(--body-font-size-xxl);
-      line-height: 1.4;
-      text-align:center;
       margin: 24px 0px 0px 0px;
     }
   }
