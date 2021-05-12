@@ -1,7 +1,8 @@
 main .columns-container,
 main .columns-dark-container,
 main .columns-center-container,
-main .columns-top-container {
+main .columns-top-container,
+main .columns-highlight-container {
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 40px;
@@ -15,10 +16,18 @@ main .columns-top-container > div {
   max-width: 500px;
 }
 
+main .columns-highlight-container,
 main .columns-dark-container {
-  background-color: black;
   padding-bottom: 120px;
   color: white;
+}
+
+main .columns-dark-container {
+  background: black;
+}
+
+main .columns-highlight-container {
+  background: var(--gradient-pink-blue);
 }
 
 main .columns p {
@@ -134,8 +143,90 @@ main .columns .column .columns-iconlist .columns-iconlist-description {
   text-align: left;
 }
 
+main .columns .column,
+main .columns .column p.button-container,
+main .columns .column h1,
+main .columns .column h2,
+main .columns .column h3,
+main .columns .column h4,
+main .columns .column h5,
+main .columns .column h6 {
+  text-align: left;
+}
 
-@media (min-width:900px) {
+main .columns.center .column,
+main .columns.center .column p.button-container,
+main .columns.center .column h1,
+main .columns.center .column h2,
+main .columns.center .column h3,
+main .columns.center .column h4,
+main .columns.center .column h5,
+main .columns.center .column h6 {
+  text-align: center;
+}
+
+main .columns-highlight-container .columns > div {
+  background: white;
+  color: black;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+main .columns-highlight-container .columns > div:first-child {
+  margin-top: 50px;
+}
+
+main .columns-highlight-container .columns.width-2-columns .column-picture {
+  order: -1
+}
+
+main .columns-highlight-container .columns > div {
+  padding: 0;
+}
+
+main .columns-highlight-container .columns .column-picture {
+  margin: 0;
+}
+
+main .columns-highlight-container h4 {
+  margin: 16px 0;
+  font-size: var(--heading-font-size-m);
+}
+
+main .columns-highlight-container h2 {
+  font-size: var(--heading-font-size-xl);
+}
+
+main .columns-highlight-container .column:not(.column-picture) {
+  padding: 20px;
+}
+
+main .columns-highlight-container .column h5 {
+  color: var(--color-info-accent);
+  letter-spacing: 2px;
+}
+
+main .columns-highlight-container .column h2 {
+  margin-top: 8px;
+  font-size: var(--heading-font-size-l);
+  line-height: var(--heading-line-height);
+}
+
+main .columns-highlight-container .column .columns-iconlist {
+  margin-bottom: 0;
+}
+
+main .columns-highlight-container .column .columns-iconlist > div {
+  margin-top: 8px;
+}
+
+main .columns-highlight-container .column p {
+  font-size: var(--body-font-size-s);
+}
+
+
+@media (min-width: 900px) {
   main .columns.top > div {
     align-items: flex-start;
   }
@@ -156,11 +247,16 @@ main .columns .column .columns-iconlist .columns-iconlist-description {
   }
 
   main .columns .column:not(.column-picture) {
-    padding: 15px;
+    padding: 40px;
+  }
+
+  main .section-wrapper div.columns > div {
+    position: relative;
   }
 
   main .section-wrapper div.columns > div > div {
     width: 50%;
+    box-sizing: border-box;
   }
   
   main .columns > div span.num {
@@ -173,31 +269,18 @@ main .columns .column .columns-iconlist .columns-iconlist-description {
     order: 0;
   }
 
-  main .columns .column {
-    text-align: left;
+  main .columns-highlight-container .columns.width-2-columns .column-picture {
+    order: 0;
   }
 
-  main .columns .column p.button-container {
-    text-align: left;
-  }
-
-  main .columns .column h2 {
-    text-align: left;
-  }
-
-  main .columns.center .column {
-    text-align: center;
-  }
-
-  main .columns.center .column p.button-container {
-    text-align: center;
-  }
-
-  main .columns.center .column h2 {
-    text-align: center;
+  main .columns-highlight-container .columns.width-2-columns .column-picture img {
+    height: 100%;
+    width: 50%;
+    position: absolute;
+    top: 0;
+    object-fit: cover;
   }
 }
-
 
 @media (min-width: 1200px) {
 
