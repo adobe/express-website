@@ -1,0 +1,44 @@
+main .inline-banner {
+  box-sizing: border-box;
+  border-radius: 20px;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding: 32px;
+  margin: 32px auto;
+  width: 324px;
+}
+
+main .inline-banner.inverted {
+  background-color: var(--color-white);
+}
+
+main .inline-banner.inverted * {
+  color: var(--color-black);
+}
+
+main .inline-banner a:any-link {
+  color: var(--color-white);
+}
+
+main .inline-banner.inverted a:not(.button):any-link {
+  color: var(--color-black);
+}
+
+main .inline-banner .icon {
+  height: 72px;
+  width: 72px;
+}
+
+@media (min-width:900px) {
+  main .inline-banner {
+    width: 100%;
+    margin: 40px auto;
+  }
+}
+
+@media (min-width:1200px) {
+  main .inline-banner {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

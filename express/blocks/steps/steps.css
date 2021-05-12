@@ -11,6 +11,10 @@ main .steps {
   margin-right: auto;
 }
 
+main .steps h2 {
+  margin: 0;
+}
+
 main .steps h3 {
   font-size: var(--heading-font-size-s);
   text-align: left;
@@ -30,7 +34,8 @@ main .steps > div {
   display: flex;
   padding: 20px;
   border-radius: 12px;
-  background-color: white;
+  background-color: var(--color-gray-700);
+  color: var(--color-white);
 }
 
 main .steps .step-image {
@@ -47,34 +52,41 @@ main .steps .step-description {
 }
 
 main .section-wrapper.steps-dark-container,
+main .section-wrapper.steps-highlight-container,
 main .section-wrapper.steps-container {
-  padding: 120px 0;
   margin-top: 110px;
-  background: var(--gradient-pink-blue);
 }
 
-main .section-wrapper.steps-dark-container > div,
-main .section-wrapper.steps-container > div {
-  max-width: 600px;
-  padding: 0 20px;
+main .section-wrapper.steps-dark-container,
+main .section-wrapper.steps-highlight-container {
+  padding: 120px 0;
 }
 
-main .section-wrapper.steps-dark-container > div > h2,
-main .section-wrapper.steps-container > div > h2 {
-  margin: 0;
-  color: white;
+main .section-wrapper.steps-dark-container {
+  background-color: var(--color-black);
+}
+
+main .section-wrapper.steps-dark-container > *,
+main .section-wrapper.steps-highlight-container > * {
+    color: var(--color-white);
+}
+
+main .section-wrapper.steps-dark-container div > h2:first-of-type,
+main .section-wrapper.steps-highlight-container > div > h2:first-of-type {
+    margin-top: 0;
 }
 
 main .section-wrapper.steps-dark-container .steps > div {
   background-color: var(--color-gray-700);
 }
 
-main .section-wrapper.steps-dark-container {
-  background: black;
+main .section-wrapper.steps-highlight-container {
+  background: var(--gradient-pink-blue);
 }
 
-main .section-wrapper.steps-dark-container * {
-  color: white;
+main .section-wrapper.steps-highlight-container .steps > div {
+  background-color: var(--color-white);
+  color: var(--color-gray-800);
 }
 
 main .steps .icon {
@@ -85,11 +97,12 @@ main .steps .icon {
 
 @media (min-width: 900px) {
   main .section-wrapper.steps-dark-container,
-  main .section-wrapper.steps-container {
+  main .section-wrapper.steps-highlight-container {
     padding: 80px 0;
   }
+  main .section-wrapper.steps-container > div,
   main .section-wrapper.steps-dark-container > div,
-  main .section-wrapper.steps-container > div {
+  main .section-wrapper.steps-highlight-container > div {
     max-width: 830px;
   }
   main .steps {
@@ -101,5 +114,12 @@ main .steps .icon {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section-wrapper.steps-dark-container > div,
+  main .section-wrapper.steps-container > div {
+    max-width: 1024px;
   }
 }
