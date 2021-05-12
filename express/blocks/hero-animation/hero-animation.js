@@ -27,7 +27,7 @@ function timecodeToSeconds(timecode) {
   return seconds;
 }
 
-function adjustLayout($overlay, $attributions, $icon) {
+function adjustLayout($overlay, $attributions) {
   $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
   const scale = window.innerWidth / 1440;
   if (window.innerWidth > 375 * (1440 / 700)) {
@@ -39,12 +39,8 @@ function adjustLayout($overlay, $attributions, $icon) {
     $attributions.style.top = '300px';
     $attributions.style.left = '80px';
   }
-  if (window.innerWidth >= 900) {
-    $icon.src = '/express/icons/adobe-creative-cloud-express.svg';
-  } else {
-    $icon.src = '/express/icons/cc-express-logo.svg';
-  }
 }
+
 export default function decorate($block) {
   const $rows = [...$block.children];
   const attributions = [];
@@ -99,12 +95,10 @@ export default function decorate($block) {
           });
         });
 
-        const $icon = $block.querySelector('.icon');
-
         window.addEventListener('resize', () => {
-          adjustLayout($innerDiv, $attributions, $icon);
+          adjustLayout($innerDiv, $attributions);
         });
-        adjustLayout($innerDiv, $attributions, $icon);
+        adjustLayout($innerDiv, $attributions);
       }
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
     } else {
