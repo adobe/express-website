@@ -508,11 +508,10 @@ main .section-wrapper:last-of-type {
 
 /* hero */
 main .hero {
-  color: var(--color-white); 
-  width:100vw;
+  color: var(--color-white);
   height: 563px;
   position: relative;
-  padding: 120px 32px
+  padding: 120px 32px;
 }
 
 main .hero.hero-noimage {
@@ -597,7 +596,7 @@ main .hero h1{
   font-size: var(--heading-font-size-xl);
   line-height: var(--heading-line-height);
   text-align:center;
-  margin: 120px 15px 0px 15px;
+  margin: 120px 15px 0 15px;
 }
 
 main .hero h2,
@@ -605,7 +604,7 @@ main .hero p {
   font-size: var(--body-font-size-xl);
   line-height: var(--body-line-height);
   text-align:center;
-  margin: 24px 15px 0px 15px;
+  margin: 24px 15px 0 15px;
 }
 
 
@@ -615,27 +614,26 @@ main .hero p {
   }
 
   main .hero h1{
-    margin: 120px 50px 0px 50px; 
+    margin: 120px 50px 0 50px; 
   }
 
   main .hero h2,
   main .hero p {
-    margin: 24px 50px 0px 50px;
+    margin: 24px 50px 0 50px;
   }
 
   @media (min-width:1200px){
     main .hero {
-      width:100vw;
       height: 518px;
     }
   
     main .hero h1{
-      margin: 120px 0px 0px 0px; 
+      margin: 120px 0 0 0; 
     }
   
     main .hero h2,
     main .hero p {
-      margin: 24px 0px 0px 0px;
+      margin: 24px 0 0 0;
     }
   }
 }
