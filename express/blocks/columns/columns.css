@@ -21,7 +21,7 @@ main .columns-table-container > div {
 main .columns-highlight-container,
 main .columns-dark-container {
   padding-bottom: 120px;
-  color: white;
+  color: var(--color-white);
 }
 
 main .columns-dark-container {
@@ -169,7 +169,7 @@ main .columns.center .column h6 {
 
 main .columns-highlight-container .columns > div {
   background: var(--color-white);
-  color: black;
+  color: var(--color-black);
   border-radius: 20px;
   overflow: hidden;
   margin: 20px 0;
