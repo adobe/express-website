@@ -2,6 +2,7 @@ main .columns-container,
 main .columns-dark-container,
 main .columns-center-container,
 main .columns-top-container,
+main .columns-table-container,
 main .columns-highlight-container {
   padding-left: 15px;
   padding-right: 15px;
@@ -11,7 +12,8 @@ main .columns-highlight-container {
 main .columns-container > div,
 main .columns-dark-container > div,
 main .columns-center-container > div,
-main .columns-top-container > div {
+main .columns-top-container > div,
+main .columns-table-container > div {
   padding: 0;
   max-width: 500px;
 }
@@ -227,14 +229,16 @@ main .columns-highlight-container .column p {
 
 
 @media (min-width: 900px) {
-  main .columns.top > div {
+  main .columns.top > div,
+  main .columns.table > div {
     align-items: flex-start;
   }
 
   main .columns-container > div,
   main .columns-dark-container > div,
   main .columns-center-container > div,
-  main .columns-top-container > div {
+  main .columns-top-container > div,
+  main .columns-table-container > div {
     max-width: 836px;
     padding-left: 32px;
     padding-right: 32px;
@@ -287,7 +291,8 @@ main .columns-highlight-container .column p {
   main .columns-container > div,
   main .columns-dark-container > div,
   main .columns-center-container > div,
-  main .columns-top-container > div {
+  main .columns-top-container > div,
+  main .columns-table-container > div {
     max-width: 1024px;
   }
 
