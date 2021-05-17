@@ -25,7 +25,7 @@ main .columns-dark-container {
 }
 
 main .columns-dark-container {
-  background: black;
+  background: var(--color-black);
 }
 
 main .columns-highlight-container {
@@ -168,7 +168,7 @@ main .columns.center .column h6 {
 }
 
 main .columns-highlight-container .columns > div {
-  background: white;
+  background: var(--color-white);
   color: black;
   border-radius: 20px;
   overflow: hidden;
