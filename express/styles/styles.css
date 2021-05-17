@@ -17,10 +17,8 @@
   --color-info-accent-down: #3D3DB4;
   --color-info-accent-light: #DEDEF9;
   --color-premium: #EBCF2D;
-  --gradient-blue-pink: linear-gradient(15deg, #ff4dd2, #7c84fc);
   --gradient-pink-blue: linear-gradient(15deg, #7c84fc, #ff4dd2);
   --gradient-pink-blue-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
-  --gradient-blue-pink-horizontal: linear-gradient(90deg, #7c84f3, #ff4dd2);
 
   /* body */
   --body-background-color: var(--color-white);
