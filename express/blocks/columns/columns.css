@@ -23,7 +23,7 @@ main .columns-dark-container {
 }
 
 main .columns-dark-container {
-  background: black;
+  background: var(--color-black);
 }
 
 main .columns-highlight-container {
