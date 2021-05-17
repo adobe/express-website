@@ -1,3 +1,9 @@
+body.nobrand header {
+    background-image: url(/express/icons/cc-express-logo.svg);
+    height: 143px;
+}
+
+
 main .hero-animation.appear {
     opacity: 1;
     height: unset;
@@ -26,9 +32,6 @@ main .hero-animation video {
     object-position: 72%;
 }
 
-main .hero-animation .hero-animation-overlay {
-}
-
 main .hero-animation .hero-animation-overlay p {
     margin: 21px 0;
 }
@@ -37,13 +40,6 @@ main .hero-animation .icon {
     height: 40px;
     width: 40px;
     margin-bottom: 11px;
-}
-
-main .hero-animation .icon-adobe-creative-cloud-express {
-    margin-top: 13px;
-    height: 33px;
-    width: 294px;
-    margin-bottom: 380px;
 }
 
 main .hero-animation .hero-animation-attributions {
@@ -75,6 +71,10 @@ main .hero-animation .hero-animation-attribution img {
     border-radius: 50%;
 }
 
+main .hero-animation {
+    padding-top: max(57%, 400px);
+}
+
 
 main .hero-animation .hero-animation-attribution.appear {
     opacity: 1;
@@ -91,8 +91,28 @@ main .hero-animation h1 {
     line-height: 45px;
 }
 
+main .hero-animation .icon-adobe-creative-cloud-express {
+    margin-top: 13px;
+    height: 33px;
+    width: 294px;
+    margin-bottom: 380px;
+}
+
+main .hero-animation .icon-adobe-creative-cloud-express {
+    display: none;
+}
+
 
 @media (min-width: 900px) {
+    body.nobrand header {
+        height: 64px;
+        background-image: unset;
+    }
+
+    main .hero-animation {
+        padding-top: 0;
+    }    
+
     main .hero-animation .hero-animation-overlay {
         width: 35%;
         justify-content: center;
@@ -102,6 +122,8 @@ main .hero-animation h1 {
         height: 119px;
         width: 373px;
         margin: 0;
+        margin-bottom: 10px;
+        display: block;
     }
     
     main .hero-animation h1 {
