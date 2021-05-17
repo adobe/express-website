@@ -93,7 +93,7 @@
       text: 'Meta Data Inspector',
       action: () => {
         const { config } = sk;
-        window.open(`https://${config.host || config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
+        window.open(`https://${config.outerHost || config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
       },
     },
   });
