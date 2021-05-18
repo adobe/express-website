@@ -55,7 +55,7 @@ main .icon-list h3, main .icon-list h4 {
 
 main .section-wrapper.icon-list-highlight-container {
   border-top: 12px solid black;
-  background: var(--gradient-highlight-horizontal);
+  border-image: var(--gradient-highlight-horizontal) 1;
   padding-top: 0;
   margin-top: 120px;
   border-left: 0;
@@ -105,8 +105,8 @@ main .icon-list .icon-list-heading .icon-list-image img {
 }
 
 main .icon-list .icon-list-regular {
-  min-height: 72px;
-  margin-bottom: 80px;
+  min-height: 152px;
+  margin-bottom: 0;
 }
 
 main .icon-list .icon-list-regular .icon-list-description h4 {
@@ -128,7 +128,7 @@ main .icon-list .icon-list-regular .icon-list-image {
 main .icon-list .icon-list-regular .icon-list-description {
   flex: 1 1 245px;
   margin-left: 24px;
-  align-self: center;
+  align-self: top;
 }
 
 main .icon-list .icon-list-regular .icon-list-image img {
