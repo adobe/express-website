@@ -543,14 +543,16 @@ main .hero h1 {
 }
 
 main .hero h2 {
-  font-size: var(--heading-font-size-s);
+  font-size: var(--body-font-size-l);
+  font-weight: var(--body-font-weight);
+  font-family: var(--body-font-family);
   margin: 32px 32px;
 }
 
 main .hero h5 {
   font-size: var(--body-font-size-l);
   font-weight: var(--body-font-weight);
-  max-width: 672px;
+  font-family: var(--body-font-family);
   margin: auto;
   margin-top: 32px;
 }
