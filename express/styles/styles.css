@@ -606,6 +606,12 @@ main .hero a:any-link {
   color: currentColor;
 }
 
+main .hero a.button:any-link {
+  padding: 10px 1.5em 10px 1.5em;
+  border-radius: 22px;
+}
+
+
 @media (min-width:600px) {
   main .hero h5 {
     font-size: 22px;
@@ -634,7 +640,10 @@ main .hero a:any-link {
     margin: auto;
     justify-content: center;
   }
-
+  
+  main .hero .columns > div > div {
+    margin: 8px;
+  }
 }
 
 @media (min-width:900px) {
