@@ -89,7 +89,7 @@ export default function decorate($block) {
       }
 
       $cell.classList.add('column');
-      if ($cell.tagName === 'PICTURE') {
+      if ($cell.firstElementChild.tagName === 'PICTURE') {
         $cell.classList.add('column-picture');
       }
 
