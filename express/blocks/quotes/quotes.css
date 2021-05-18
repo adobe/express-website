@@ -68,12 +68,17 @@ main .quotes .quote .author .summary p {
 }
 
 main .section-wrapper.quotes-container,
+main .section-wrapper.quotes-highlight-container,
 main .section-wrapper.quotes-dark-container {
   margin-top: 40px;
   padding: 40px 0;
 }
 
 main .section-wrapper.quotes-container {
+  background: white;
+}
+
+main .section-wrapper.quotes-highlight-container {
   background: var(--gradient-highlight-vertical);
 }
 
@@ -86,20 +91,27 @@ main .section-wrapper.quotes-inverted-container .quote {
   color: #FFF;
 }
 
-main .section-wrapper.quotes-dark-container h2,
-main .section-wrapper.quotes-dark-container h3,
-main .section-wrapper.quotes-dark-container h4,
-main .section-wrapper.quotes-dark-container h5,
+
 main .section-wrapper.quotes-container h2,
 main .section-wrapper.quotes-container h3,
 main .section-wrapper.quotes-container h4,
-main .section-wrapper.quotes-container h5{
+main .section-wrapper.quotes-container h5,
+main .section-wrapper.quotes-highlight-container h2,
+main .section-wrapper.quotes-highlight-container h3,
+main .section-wrapper.quotes-highlight-container h4,
+main .section-wrapper.quotes-highlight-container h5,
+main .section-wrapper.quotes-dark-container h2,
+main .section-wrapper.quotes-dark-container h3,
+main .section-wrapper.quotes-dark-container h4,
+main .section-wrapper.quotes-dark-container h5 {
   color: #FFF;
 }
 
 
 @media (min-width: 900px) {
-  main .quotes-dark-container > div, main .quotes-container > div {
+  main .quotes-container > div,
+  main .quotes-highlight-container > div,
+  main .quotes-dark-container > div {
     max-width: 724px;
   }
 
@@ -114,11 +126,14 @@ main .section-wrapper.quotes-container h5{
 }
 
 @media (min-width: 1200px) {
-  main .quotes-dark-container > div, main .quotes-container > div {
+  main .quotes-container > div,
+  main .quotes-highlight-container > div,
+  main .quotes-dark-container > div {
     max-width: 1024px;
   }
 
   main .section-wrapper.quotes-container,
+  main .section-wrapper.quotes-highlight-container,
   main .section-wrapper.quotes-dark-container {
     padding: 80px 0;
   }
