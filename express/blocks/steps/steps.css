@@ -81,7 +81,7 @@ main .section-wrapper.steps-dark-container .steps > div {
 }
 
 main .section-wrapper.steps-highlight-container {
-  background: var(--gradient-pink-blue);
+  background: var(--gradient-highlight-vertical);
 }
 
 main .section-wrapper.steps-highlight-container .steps > div {
