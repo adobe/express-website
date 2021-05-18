@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Spark - Meta Data Inspector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <script src="inspector.js" type="module"></script>
+    <link rel="stylesheet" href="inspector.css">
+  </head>
+<body>
+  <header>
+    <h1>Metadata Inspector</h1>
+    <div>
+      <input id="filter" type="text" placeholder="type to filter">
+    </div>
+    <div>
+      <select id="prefix-selector"></select>
+      <button id="copy">Copy Current View</button>
+      <textarea id="copybuffer" class="offscreen"></textarea>
+    </div>
+  </header>
+  <main>
+    <div class="top-bar">
+    <div id="switcher" class="env">
+      <div><button class="pressed">metadata.xlsx</button></div>
+      <div><button>index</button></div>
+      <div><button>diff</button></div>
+    </div>
+    <div id="status" class="status"></div>
+    </div>
+    <div class="pages">
+
+    </div>  
+  </main>
+  <div id="loading" class="hlx-sk-overlay hidden">
+    <div class="modal level-4 wait">loading data ...
+    </div>
+  </div>
+</body>
+</html>
