@@ -543,14 +543,16 @@ main .hero h1 {
 }
 
 main .hero h2 {
-  font-size: var(--heading-font-size-s);
+  font-size: var(--body-font-size-xl);
+  font-weight: var(--body-font-weight);
+  font-family: var(--body-font-family);
   margin: 32px 32px;
 }
 
 main .hero h5 {
   font-size: var(--body-font-size-l);
   font-weight: var(--body-font-weight);
-  max-width: 672px;
+  font-family: var(--body-font-family);
   margin: auto;
   margin-top: 32px;
 }
@@ -604,11 +606,6 @@ main .hero a:any-link {
 }
 
 @media (min-width:600px) {
-  main .hero h2 {
-    font-size: var(--body-font-size-xxl);
-    margin-bottom: 40px;
-  }
-
   main .hero h5 {
     font-size: 22px;
     font-weight: 400;
@@ -646,6 +643,12 @@ main .hero a:any-link {
     main .hero>div {
       max-width: 950px;
     }
+}
+
+@media (min-width:1200px) {
+  main .hero h2 {
+    font-size: var(--body-font-size-xxl);
+  }
 }
 
 
