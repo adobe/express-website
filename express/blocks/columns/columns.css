@@ -29,7 +29,7 @@ main .columns-dark-container {
 }
 
 main .columns-highlight-container {
-  background: var(--gradient-pink-blue);
+  background: var(--gradient-highlight-vertical);
 }
 
 main .columns p {
