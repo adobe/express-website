@@ -18,6 +18,7 @@
 
   // HLX3 --------------------------------------------------------------------------
   if (sk.config.hlx3) {
+    // eslint-disable-next-line no-inner-declarations
     async function hlx3Publish(config, location, path) {
       if (!config.host
       || (config.byocdn && location.host === config.host)) {
