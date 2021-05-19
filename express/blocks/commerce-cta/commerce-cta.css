@@ -11,7 +11,6 @@
 }
 
 .commerce-cta .pricing-plan-price {
-  font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   font-size: var(--heading-font-size-l);
   margin: auto 0;

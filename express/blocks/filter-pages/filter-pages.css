@@ -69,7 +69,6 @@ main .filter-pages {
     border: none;
     width: 100%;
     border-bottom: 1px solid lightgray;
-    font-weight: 900;
-    font-family: adobe-clean;
+    font-weight: var(--heading-font-weight);
   }
   

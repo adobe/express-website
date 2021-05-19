@@ -111,7 +111,6 @@ main .icon-list .icon-list-regular {
 
 main .icon-list .icon-list-regular .icon-list-description h4 {
   font-size: var(--body-font-size-xxl);
-  font-family: var(--body-font-family);
   font-weight: 600;
 }
 
