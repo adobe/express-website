@@ -17,6 +17,7 @@ import {
   createTag,
   getHelixEnv,
   getOffer,
+  getIcon,
 } from '../../scripts/scripts.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
@@ -208,7 +209,8 @@ function decorateOtherPlans($block, otherPlans) {
   otherPlans.forEach((plan) => {
     const $plan = createTag('div', { class: 'other-plan' });
     const $planButton = createTag('div', { class: 'other-plan-button' });
-    $planButton.innerText = plan.title;
+    const planIcon = getIcon('chevron');
+    $planButton.innerHTML = `${plan.title} ${planIcon}`;
     $planButton.dataset.id = plan.id;
     $plan.append($planButton);
     const $popup = createTag('div', { class: 'other-plan' });
@@ -306,6 +308,7 @@ function decoratePricing($block) {
   $block.append($right);
   const $ctaButton = $block.querySelector('a.button.accent');
   $ctaButton.classList.add('cta');
+  $ctaButton.classList.add('large');
   selectPlan($block, plans[0]);
   selectPlanOption($block, plans[0], plans[0].options[0]);
   decorateOtherPlans($block, otherPlans);

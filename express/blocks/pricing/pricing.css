@@ -2,7 +2,7 @@
     text-align: left;
 }
 
-.hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
+.hero #get-the-easy-to-use-web-and-mobile-solution-powered-by-adobe-photoshop-premiere-and-acrobat {
     text-align: left;
     margin-left: 0;
 }
@@ -20,8 +20,8 @@ main .pricing .pricing-left img {
 main .pricing .pricing-plan .pricing-plan-title {
     margin: 70px 0 0 0;
     color: black!important;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: var(--body-font-size-xxl);
+    font-weight: 800;
     text-align: left;
 }
 
@@ -52,7 +52,6 @@ main .pricing .cta {
     background-color: #5c5ce0;
     width: 100%;
     margin: 40px 0 0 0;
-    padding: 15px 0;
     border-radius: 30px;
     max-width: none;
 }
@@ -79,6 +78,9 @@ main .pricing .pricing-right .other-plans .other-plan {
 }
 
 main .pricing .pricing-right .other-plans .other-plan-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border: 2px #d4d4d4 solid;
     max-width: 100%;
     padding: 15px 20px;
@@ -88,6 +90,10 @@ main .pricing .pricing-right .other-plans .other-plan-button {
     cursor: pointer;
     user-select: none;
     transition: .2s background-color ease-in;
+}
+
+main .pricing .pricing-right .other-plans .other-plan-button .icon {
+    transform: rotate(90deg);
 }
 
 main .pricing .pricing-right .other-plans .other-plan-button:hover {
@@ -103,10 +109,14 @@ main .pricing .pricing-right .other-plans .other-plan-popup {
     background-color: white;
     border: none;
     border-radius: 6px;
-    padding: 40px 20px;
+    padding: 32px 40px;
     z-index: 10;
     box-shadow: 0 0 10px -5px #000000;
-    font-size: 22px;
+}
+
+main .pricing .pricing-right .other-plans .other-plan-popup a:not(.button) {
+    color: #5c5ce0;
+    text-decoration: none;
 }
 
 main .pricing .pricing-right .other-plans .other-plan-popup.active {
@@ -134,7 +144,7 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
         margin: 32px 32px;
     }
 
-    .hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
+    .hero #get-the-easy-to-use-web-and-mobile-solution-powered-by-adobe-photoshop-premiere-and-acrobat {
         margin: 32px 32px;
     }
 }
@@ -156,7 +166,7 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
         text-align: center;
     }
 
-    .hero #get-the-easy-to-use-web-and-mobile-offering-powered-by-acrobat-premiere-and-photoshop {
+    .hero #get-the-easy-to-use-web-and-mobile-solution-powered-by-adobe-photoshop-premiere-and-acrobat {
         text-align: center;
         margin: 30px 30px;
     }
