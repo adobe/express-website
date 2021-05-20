@@ -39,7 +39,7 @@ main .page-list-browse-button {
   cursor: pointer;
   transition: background-color .4s;
   display: inline-block;
-  font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
+  font-family: var(--body-font-family);
 }
 
 main .page-list-container > div {
