@@ -172,7 +172,7 @@ function buildCarousel($block) {
   window.addEventListener('resize', () => toggleControls($block));
 }
 
-async function decorateTemplateList($block) {
+export async function decorateTemplateList($block) {
   let rows = $block.children.length;
   const locale = getLocale(window.location);
   if (rows === 0 && locale !== 'us') {
