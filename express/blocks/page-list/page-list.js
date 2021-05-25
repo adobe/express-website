@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document fetch */
+/* global window document fetch IntersectionObserver */
 /* eslint-disable import/named, import/extensions */
 
 import {
@@ -49,16 +49,49 @@ async function fetchTemplates(path) {
   });
   return $templates;
 }
+async function appendTemplates($row) {
+  const $pages = [...$row.querySelectorAll('.page-list-category a')];
+
+  const $templates = [];
+  let i = 0;
+  while (($templates.length < 20) && (i < $pages.length)) {
+    const path = new URL($pages[i].href).pathname;
+    // eslint-disable-next-line no-await-in-loop
+    const $pageTemplates = await fetchTemplates(path);
+    $templates.push(...$pageTemplates);
+    i += 1;
+  }
+
+  const $tlBlock = createTag('div', { class: 'template-list' });
+  $templates.forEach(($template, j) => {
+    if (j < 20) {
+      $tlBlock.appendChild($template);
+    }
+  });
+  $row.append($tlBlock);
+  decorateTemplateList($tlBlock);
+}
 
 async function outputBuckets(buckets, $block) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    console.log('intersection triggered', entries);
+    entries.forEach((entry) => {
+      if (entry.intersectionRatio > 0) {
+        console.log(entry.target);
+        appendTemplates(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  });
+
   const bucketNames = Object.keys(buckets);
   for (const name of bucketNames) {
     const bucket = buckets[name];
+    const $row = createTag('div', { class: 'page-list-row' });
     const $category = createTag('div', { class: 'page-list-category' });
     const $h3 = createTag('h3');
     $h3.innerHTML = bucket.title;
     $category.append($h3);
-    const $templates = [];
 
     for (const page of bucket.pages) {
       const path = page.path.split('.')[0];
@@ -66,22 +99,11 @@ async function outputBuckets(buckets, $block) {
       $page.innerHTML = page.shortTitle;
       $category.append($page);
       $category.append(document.createTextNode(' '));
-      if ($templates.length < 20) {
-        // eslint-disable-next-line no-await-in-loop
-        const $pageTemplates = await fetchTemplates(path);
-        $templates.push(...$pageTemplates);
-      }
     }
-    $block.append($category);
-
-    const $tlBlock = createTag('div', { class: 'template-list' });
-    $templates.forEach(($template, i) => {
-      if (i < 20) {
-        $tlBlock.appendChild($template);
-      }
-    });
-    $block.append($tlBlock);
-    decorateTemplateList($tlBlock);
+    $row.append($category);
+    $block.append($row);
+    observer.observe($row);
+    console.log('row added');
   }
 }
 
