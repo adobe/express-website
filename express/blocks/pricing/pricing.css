@@ -21,7 +21,7 @@ main .pricing .pricing-plan .pricing-plan-title {
     margin: 70px 0 0 0;
     color: black!important;
     font-size: var(--body-font-size-xxl);
-    font-weight: 800;
+    font-weight: var(--heading-font-weight);
     text-align: left;
 }
 
