@@ -1,8 +1,8 @@
-.hero #create-standout-content-in-no-time {
+main .hero h1 {
     text-align: left;
 }
 
-.hero #get-the-easy-to-use-web-and-mobile-solution-powered-by-adobe-photoshop-premiere-and-acrobat {
+main .hero h2 {
     text-align: left;
     margin-left: 0;
 }
@@ -140,11 +140,11 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
 }
 
 @media (min-width: 600px) {
-    .hero #create-standout-content-in-no-time {
+    main .hero h1 {
         margin: 32px 32px;
     }
 
-    .hero #get-the-easy-to-use-web-and-mobile-solution-powered-by-adobe-photoshop-premiere-and-acrobat {
+    main .hero h2 {
         margin: 32px 32px;
     }
 }
@@ -162,11 +162,11 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
 }
 
 @media (min-width: 1200px) {
-    .hero #create-standout-content-in-no-time {
+    main .hero h1 {
         text-align: center;
     }
 
-    .hero #get-the-easy-to-use-web-and-mobile-solution-powered-by-adobe-photoshop-premiere-and-acrobat {
+    main .hero h2 {
         text-align: center;
         margin: 30px 30px;
     }
