@@ -137,8 +137,6 @@ async function decoratePageList($block) {
   shortIndex.sort((e1, e2) => e1.shortTitle.localeCompare(e2.shortTitle));
 
   addPages(shortIndex, config, $block);
-  console.log ($block.previousElementSibling.textContent, shortIndex);
-
   $section.classList.add('appear');
   $block.classList.add('appear');
 }
