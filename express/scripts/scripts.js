@@ -585,6 +585,13 @@ export function readBlockConfig($block) {
           } else {
             value = $as.map(($a) => $a.href);
           }
+        } else if ($value.querySelector('p')) {
+          const $ps = [...$value.querySelectorAll('p')];
+          if ($ps.length === 1) {
+            value = $ps[0].textContent;
+          } else {
+            value = $ps.map(($p) => $p.textContent);
+          }
         } else value = $row.children[1].textContent;
         config[name] = value;
       }
