@@ -596,7 +596,7 @@ main .hero h1{
   font-size: var(--heading-font-size-xl);
   line-height: var(--heading-line-height);
   text-align:center;
-  margin: 120px 15px 0 15px;
+  margin: 0 15px 0 15px;
 }
 
 main .hero h2,
@@ -614,7 +614,7 @@ main .hero p {
   }
 
   main .hero h1{
-    margin: 120px 50px 0 50px; 
+    margin: 0 50px 0 50px; 
   }
 
   main .hero h2,
@@ -628,7 +628,7 @@ main .hero p {
     }
   
     main .hero h1{
-      margin: 120px 0 0 0; 
+      margin: 0 0 0 0; 
     }
   
     main .hero h2,
