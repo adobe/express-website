@@ -242,6 +242,10 @@ async function decorateTemplateList($block) {
       $link.parentNode.append($newLink);
       $link.remove();
     }
+    if (!$tmplt.querySelectorAll(':scope > div > *').length) {
+      // remove empty row
+      $tmplt.remove();
+    }
     $tmplt.classList.add('template');
 
     // wrap "linked images" with link

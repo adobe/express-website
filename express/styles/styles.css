@@ -17,7 +17,8 @@
   --color-info-accent-down: #3D3DB4;
   --color-info-accent-light: #DEDEF9;
   --color-premium: #EBCF2D;
-  --gradient-pink-blue: linear-gradient(15deg, #ff4dd2 0%, #7c84fc 100%);
+  --gradient-highlight-vertical: linear-gradient(15deg, #7c84fc, #ff4dd2);
+  --gradient-highlight-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
 
   /* body */
   --body-background-color: var(--color-white);
@@ -33,7 +34,6 @@
   --body-font-size-s: 0.875rem; /* 14px */
   --body-font-size-xs: 0.75rem; /* 12px */
   /* headings */
-  --heading-font-family: 'adobe-clean-black', 'Adobe Clean Black', 'adobe-clean', 'Adobe Clean', sans-serif;
   --heading-font-weight: 800;
   --heading-color: var(--color-gray-800);
   --heading-line-height: 1.25;
@@ -378,6 +378,7 @@ a.button.secondary.light:any-link {
 a.button.dark:any-link {
   color: var(--color-white);
   border: solid 2px var(--color-white);
+  background-color: transparent;
 }
 
 a.button > svg {
@@ -404,7 +405,6 @@ main {
 }
 
 main h1, h2, h3, h4, h5, h6 {
-  font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
 }
@@ -541,10 +541,15 @@ main .hero h1 {
   margin: 0;
 }
 
+main .hero h2 {
+  font-size: var(--body-font-size-xl);
+  font-weight: var(--body-font-weight);
+  margin: 32px 32px;
+}
+
 main .hero h5 {
   font-size: var(--body-font-size-l);
   font-weight: var(--body-font-weight);
-  max-width: 672px;
   margin: auto;
   margin-top: 32px;
 }
@@ -598,6 +603,14 @@ main .hero h1{
   text-align:center;
   margin: 0 15px 0 15px;
 }
+@media (min-width:600px) {
+  main .hero h5 {
+    font-size: 22px;
+    font-weight: 400;
+    max-width: 672px;
+    margin: auto;
+    margin-top: 32px;
+  }
 
 main .hero h2,
 main .hero p {
@@ -635,6 +648,12 @@ main .hero p {
     main .hero p {
       margin: 24px 0 0 0;
     }
+  }
+}
+
+@media (min-width:1200px) {
+  main .hero h2 {
+    font-size: var(--body-font-size-xxl);
   }
 }
 

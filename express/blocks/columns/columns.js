@@ -14,28 +14,26 @@
 import { linkImage, createTag } from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell) {
+  $columnCell.querySelectorAll('p:empty').forEach(($p) => $p.remove());
+
   const $iconList = createTag('div', { class: 'columns-iconlist' });
-  let $iconListRow;
-  let $iconListDescription;
-  [...$columnCell.childNodes].forEach(($e) => {
-    if ($e.tagName && ($e.tagName === 'IMG' || $e.tagName.toUpperCase() === 'SVG') && $e.classList.contains('icon')) {
-      if ($iconListRow) {
-        $iconList.appendChild($iconListRow);
-      }
-      $iconListRow = createTag('div');
-      const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
-      $iconDiv.appendChild($e);
-      $iconListRow.append($iconDiv);
-      $iconListDescription = createTag('div', { class: 'columns-iconlist-description' });
-      $iconListRow.append($iconListDescription);
-    } else if ($iconListDescription) {
-      $iconListDescription.appendChild($e);
-    }
-  });
-  if ($iconListRow) {
+  const $icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')];
+  let $before;
+  $icons.forEach(($icon, i) => {
+    if (!i) $before = $icon.previousSibling;
+    const $iconListRow = createTag('div');
+    const $iconListDescription = createTag('div', { class: 'columns-iconlist-description' });
+    $iconListDescription.appendChild($icon.nextSibling);
+    const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
+    $iconDiv.appendChild($icon);
+    $iconListRow.appendChild($iconDiv);
+    $iconListRow.appendChild($iconListDescription);
     $iconList.appendChild($iconListRow);
+  });
+
+  if ($icons.length > 0) {
+    $columnCell.insertBefore($iconList, $before.nextSibling);
   }
-  $columnCell.appendChild($iconList);
 }
 
 export default function decorate($block) {
@@ -91,7 +89,7 @@ export default function decorate($block) {
       }
 
       $cell.classList.add('column');
-      if ($cell.tagName === 'PICTURE') {
+      if ($cell.firstElementChild.tagName === 'PICTURE') {
         $cell.classList.add('column-picture');
       }
 
