@@ -773,6 +773,7 @@ function decorateHero() {
       $heroSection = $h1.closest('.section-wrapper');
       $heroSection.classList.add('hero');
       $heroSection.classList.remove('section-wrapper');
+      $heroSection.querySelectorAll(':scope a.button').forEach((b) => b.classList.add('large'));
     }
     if ($heroPicture) {
       if (!isBlog) {
@@ -785,7 +786,7 @@ function decorateHero() {
 }
 
 export function decorateButtons(block = document) {
-  const noButtonBlocks = ['template-list'];
+  const noButtonBlocks = ['template-list, icon-list'];
   block.querySelectorAll('main a').forEach(($a) => {
     $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
