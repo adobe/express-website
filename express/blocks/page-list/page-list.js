@@ -17,6 +17,7 @@ import {
   readBlockConfig,
   getLocale,
   addPublishDependencies,
+  loadCSS,
 } from '../../scripts/scripts.js';
 
 import {
@@ -51,7 +52,7 @@ async function fetchTemplates(path) {
 }
 async function appendTemplates($row) {
   const $pages = [...$row.querySelectorAll('.page-list-category a')];
-
+  loadCSS('/express/blocks/template-list/template-list.css');
   const $templates = [];
   let i = 0;
   while (($templates.length < 20) && (i < $pages.length)) {
@@ -72,69 +73,52 @@ async function appendTemplates($row) {
   decorateTemplateList($tlBlock);
 }
 
-async function outputBuckets(buckets, $block) {
+async function outputPages(pages, $block) {
   const observer = new IntersectionObserver((entries, obs) => {
-    console.log('intersection triggered', entries);
     entries.forEach((entry) => {
       if (entry.intersectionRatio > 0) {
-        console.log(entry.target);
         appendTemplates(entry.target);
         obs.unobserve(entry.target);
       }
     });
   });
 
-  const bucketNames = Object.keys(buckets);
-  for (const name of bucketNames) {
-    const bucket = buckets[name];
-    const $row = createTag('div', { class: 'page-list-row' });
-    const $category = createTag('div', { class: 'page-list-category' });
-    const $h3 = createTag('h3');
-    $h3.innerHTML = bucket.title;
-    $category.append($h3);
+  const $row = createTag('div', { class: 'page-list-row' });
+  const $category = createTag('div', { class: 'page-list-category' });
 
-    for (const page of bucket.pages) {
-      const path = page.path.split('.')[0];
-      const $page = createTag('a', { href: path });
-      $page.innerHTML = page.shortTitle;
-      $category.append($page);
-      $category.append(document.createTextNode(' '));
-    }
-    $row.append($category);
-    $block.append($row);
-    observer.observe($row);
-    console.log('row added');
+  for (const page of pages) {
+    const path = page.path.split('.')[0];
+    const $page = createTag('a', { href: path });
+    $page.innerHTML = page.shortTitle;
+    $category.append($page);
+    $category.append(document.createTextNode(' '));
   }
+
+  $row.append($category);
+  $block.append($row);
+  observer.observe($row);
 }
 
 function addPages(pages, config, $block) {
   $block.innerHTML = '';
-  const buckets = {};
-  if (config.buckets) {
-    config.buckets.forEach((bucketConfig) => {
-      const [filter, title] = bucketConfig.split(':');
-      buckets[filter] = { title, pages: [] };
-    });
-  }
+  $block.setAttribute('data-filter', config.filter);
 
-  if (Object.keys(buckets).length === 0) {
-    buckets['/'] = { title: '', pages: [] };
-  }
-
-  const bucketNames = Object.keys(buckets);
-
-  pages.forEach((page) => {
+  const filteredPages = pages.filter((page) => {
     const path = page.path.split('.')[0];
-    const name = `/${path.split('/express/')[1]}`;
-    for (const bucketName of bucketNames) {
-      if (name.includes(bucketName)) {
-        buckets[bucketName].pages.push(page);
-        break;
+    const $existing = document.querySelector(`a[href="${path}"]`);
+    if ($existing) {
+      const $pageList = $existing.closest('.page-list');
+      if ($pageList && $pageList.getAttribute('data-filter').length < config.filter.length) {
+        $existing.remove();
+        return true;
+      } else {
+        return false;
       }
     }
+    return true;
   });
 
-  outputBuckets(buckets, $block);
+  outputPages(filteredPages, $block);
 }
 
 async function decoratePageList($block) {
@@ -153,6 +137,7 @@ async function decoratePageList($block) {
   shortIndex.sort((e1, e2) => e1.shortTitle.localeCompare(e2.shortTitle));
 
   addPages(shortIndex, config, $block);
+  console.log ($block.previousElementSibling.textContent, shortIndex);
 
   $section.classList.add('appear');
   $block.classList.add('appear');
