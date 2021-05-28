@@ -773,7 +773,6 @@ function decorateHero() {
       $heroSection = $h1.closest('.section-wrapper');
       $heroSection.classList.add('hero');
       $heroSection.classList.remove('section-wrapper');
-      $heroSection.querySelectorAll(':scope a.button').forEach((b) => b.classList.add('large'));
     }
     if ($heroPicture) {
       if (!isBlog) {
