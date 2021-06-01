@@ -17,79 +17,76 @@
   if (typeof sk !== 'object') return;
 
   // HLX3 --------------------------------------------------------------------------
-  if (sk.config.hlx3) {
-    // eslint-disable-next-line no-inner-declarations
-    async function hlx3Publish(config, location, path) {
-      if (!config.host
-      || (config.byocdn && location.host === config.host)) {
-        return null;
-      }
-      // resolve relative path with location.href
-      const purgeURL = [
-        'https://admin.hlx3.page',
-        `/${config.owner}`,
-        `/${config.repo}`,
-        `/${config.ref}`,
-        new URL(path, location.href).pathname,
-        '?action=publish',
-      ].join('');
-      /* eslint-disable no-console */
-      console.log(`hlx3 publishing ${purgeURL}`);
-      const resp = await fetch(purgeURL, { method: 'POST' });
-      /* eslint-enable no-console */
-      return {
-        ok: resp.ok,
-        status: resp.status,
-        path,
-      };
+  async function hlx3Publish(config, location, path) {
+    if (!config.host
+    || (config.byocdn && location.host === config.host)) {
+      return null;
     }
-
-    // override publish button
-    sk.add({
-      override: true,
-      id: 'publish',
-      condition: (sidekick) => sidekick.isHelix() && sidekick.config.host
-        && !(sidekick.config.byocdn && sidekick.location.host === sidekick.config.host),
-      button: {
-        action: async (evt) => {
-          const { config, location } = sk;
-          const path = location.pathname;
-          sk.showModal(`Publishing ${path}`, true);
-          let urls = [path];
-          // dependencies
-          if (Array.isArray(window.hlx.dependencies)) {
-            urls = urls.concat(window.hlx.dependencies);
-          }
-          // hlx3 publishing
-          await Promise.all(urls.map((url) => hlx3Publish(config, location, url)));
-          try {
-            // hlx2 publishing
-            await Promise.all(urls.map((url) => sk.publish(url)));
-          } catch (e) {
-            // eslint-disable-next-line no-console
-            console.warn('hlx2 publish failed', e);
-          }
-
-          if (config.host) {
-            sk.showModal('Please wait …', true);
-            // fetch and redirect to production
-            const prodURL = `https://${config.outerHost}${path}`;
-            await fetch(prodURL, { cache: 'reload', mode: 'no-cors' });
-            // eslint-disable-next-line no-console
-            console.log(`redirecting to ${prodURL}`);
-            if (evt.metaKey || evt.which === 2) {
-              window.open(prodURL);
-              sk.hideModal();
-            } else {
-              window.location.href = prodURL;
-            }
-          } else {
-            sk.notify('Successfully published');
-          }
-        },
-      },
-    });
+    // resolve relative path with location.href
+    const purgeURL = [
+      'https://admin.hlx3.page',
+      `/${config.owner}`,
+      `/${config.repo}`,
+      `/${config.ref}`,
+      new URL(path, location.href).pathname,
+      '?action=publish',
+    ].join('');
+    /* eslint-disable no-console */
+    console.log(`hlx3 publishing ${purgeURL}`);
+    const resp = await fetch(purgeURL, { method: 'POST' });
+    /* eslint-enable no-console */
+    return {
+      ok: resp.ok,
+      status: resp.status,
+      path,
+    };
   }
+
+  // override publish button
+  sk.add({
+    override: true,
+    id: 'publish',
+    condition: (sidekick) => sidekick.isHelix() && sidekick.config.host
+      && !(sidekick.config.byocdn && sidekick.location.host === sidekick.config.host),
+    button: {
+      action: async (evt) => {
+        const { config, location } = sk;
+        const path = location.pathname;
+        sk.showModal(`Publishing ${path}`, true);
+        let urls = [path];
+        // dependencies
+        if (Array.isArray(window.hlx.dependencies)) {
+          urls = urls.concat(window.hlx.dependencies);
+        }
+        // hlx3 publishing
+        await Promise.all(urls.map((url) => hlx3Publish(config, location, url)));
+        try {
+          // hlx2 publishing
+          await Promise.all(urls.map((url) => sk.publish(url)));
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn('hlx2 publish failed', e);
+        }
+
+        if (config.host) {
+          sk.showModal('Please wait …', true);
+          // fetch and redirect to production
+          const prodURL = `https://${config.outerHost}${path}`;
+          await fetch(prodURL, { cache: 'reload', mode: 'no-cors' });
+          // eslint-disable-next-line no-console
+          console.log(`redirecting to ${prodURL}`);
+          if (evt.metaKey || evt.which === 2) {
+            window.open(prodURL);
+            sk.hideModal();
+          } else {
+            window.location.href = prodURL;
+          }
+        } else {
+          sk.notify('Successfully published');
+        }
+      },
+    },
+  });
 
   // METADATA --------------------------------------------------------------------
 
