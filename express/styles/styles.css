@@ -501,7 +501,6 @@ main .section-wrapper:last-of-type {
   }
 }
 
-
 .font-loaded main h1 {
   opacity: 1;
 }
@@ -511,9 +510,13 @@ main .hero {
   color: var(--color-white);
   height: 563px;
   position: relative;
-  padding: 120px 32px;
+  padding: 120px 32px 0 120px
 }
 
+main .hero, main .hero div + h1 {
+  width: 100vw;
+}
+ 
 main .hero.hero-noimage {
   color: var(--body-color);
   padding-top: 64px;
@@ -627,7 +630,7 @@ main .hero p {
   }
 
   main .hero h1{
-    margin: 0 50px 0 50px; 
+    margin: 0 50px 0 50px;
   }
 
   main .hero h2,
