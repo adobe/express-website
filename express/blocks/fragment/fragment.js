@@ -20,7 +20,6 @@ import {
 
 async function decorateFragment($block) {
   const ref = $block.textContent;
-  console.log(ref);
   const path = new URL(ref).pathname.split('.')[0];
   const resp = await fetch(`${path}.plain.html`);
   const html = await resp.text();
@@ -28,7 +27,8 @@ async function decorateFragment($block) {
   $main.innerHTML = html;
   decorateMain($main);
   loadBlocks($main);
-  $block.parentNode.replaceChild($main, $block);
+  const $section = $block.closest('.section-wrapper');
+  $section.parentNode.replaceChild($main, $section);
 }
 
 export default function decorate($block) {
