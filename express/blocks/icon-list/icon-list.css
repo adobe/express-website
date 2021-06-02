@@ -139,7 +139,13 @@ main .icon-list .icon-list-regular .icon-list-image img {
 main .section-wrapper.icon-list-two-column-container > div {
   max-width: unset;
   padding: 120px 16px;
-}  
+}
+
+main .icon-list a:any-link {
+  color: var(--color-info-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
 
 
 @media (min-width:900px) {

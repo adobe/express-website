@@ -3,116 +3,44 @@ main .page-list-container.appear {
   height: unset;
 }
 
+main .page-list-container > div {
+  max-width: 1500px;
+}
+
+
 main .page-list.appear {
   opacity: 1;
 }
 
-main .page-list {
-    text-align: left;
-    box-sizing: border-box;
-    padding-right: 20px;
-    font-size: 20px;
-    width: 100%;
-  }
-
-main .page-list.hidden {
-  display: none;
+main .page-list .page-list-category {
+  max-width: 800px;
+  margin: auto;
+  text-align: left;
 }
 
-main .page-template-list.hidden {
-  display: none;
+main .page-list .page-list-category h3 {
+  text-align: left;
 }
 
-main .page-list-browse-button {
-  margin-top: 20px;
+main .page-list .page-list-category a {
+  margin-right: 8px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+main .page-list .page-list-category a:any-link {
   text-decoration: none;
-  border-radius: 18px;
-  padding: 5px 1.2em 7px 1.2em;
-  text-align: center;
-  line-height: 20px;
-  font-size: 1rem;
-  border: 2px solid #333;
-  color: #333;
-  outline: none;
-  background-color: transparent;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color .4s;
-  display: inline-block;
-  font-family: var(--body-font-family);
-}
-
-main .page-list-container > div {
-    max-width: 100%;
-    display: flex;
-    margin: 0;
-    box-sizing: border-box;
-  }
-
-main .page-list-container  > div .template-list {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-main .page-list ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-main .page-list a:any-link {
-  text-decoration: none;
-  color: #333;
-}
-
-main .page-list ul li {
-  padding: 10px;
-}
-
-main .hero-short {
-  padding: 32px;
-}
-
-main .page-list-left {
-  flex: 0 0 auto;
-}
-main .page-list-right {
-  flex: 1 1 auto;
-}
-
-main div.section-wrapper.page-list-container > div {
-  padding-left: 6px;
 }
 
 
-@media (min-width: 600px) {
-  main .page-list-left {
-    overflow-y: scroll;
-  }
-  
-  main .page-list-browse-button {
-    display: none;
-  } 
-  main .page-list {
-    width: 260px;
-  } 
-
-  main .page-list-right {
-    padding-left: 20px;
-  }
-  
+@media (min-width: 1184px) {
+  main .page-list .page-list-category {
+    max-width: 1075px;
+  }    
 }
 
-
-
-
-main .page-template-list > .template-list.flex-masonry {
-  justify-content: flex-start;
-}
-
-
-@media (max-width:600px) {
-  .hero h1 + p {
-    display: none;
-  }
+@media (min-width: 1462px) {
+  main .page-list .page-list-category {
+    max-width: 1355px;
+  }    
 }

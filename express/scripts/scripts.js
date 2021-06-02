@@ -100,8 +100,8 @@ export function linkImage($elem) {
   }
 }
 
-function wrapSections(element) {
-  document.querySelectorAll(element).forEach(($div) => {
+function wrapSections($sections) {
+  $sections.forEach(($div) => {
     if (!$div.id) {
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
@@ -435,24 +435,6 @@ export function loadCSS(href) {
   }
 }
 
-function decorateDoMoreEmbed() {
-  document.querySelectorAll('div.embed-internal-domore > div').forEach(($domore) => {
-    const $ps = $domore.querySelectorAll(':scope>p');
-    const $h2 = $domore.querySelector(':scope>h2');
-    const $action = createTag('div', { class: 'actions' });
-    if ($h2) {
-      $h2.addEventListener('click', () => {
-        $action.classList.toggle('open');
-        $h2.classList.toggle('open');
-      });
-    }
-    $ps.forEach(($p) => {
-      $action.append($p);
-    });
-    $domore.append($action);
-  });
-}
-
 function resolveFragments() {
   Array.from(document.querySelectorAll('main > div div'))
     .filter(($cell) => $cell.childElementCount === 0)
@@ -491,8 +473,8 @@ function resolveFragments() {
     });
 }
 
-function decorateBlocks() {
-  document.querySelectorAll('main div.section-wrapper > div > div').forEach(($block) => {
+export function decorateBlocks($main) {
+  $main.querySelectorAll('div.section-wrapper > div > div').forEach(($block) => {
     const classes = Array.from($block.classList.values());
     let blockName = classes[0];
     if (!blockName) return;
@@ -501,7 +483,7 @@ function decorateBlocks() {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents'];
     blocksWithOptions.forEach((b) => {
       if (blockName.startsWith(`${b}-`)) {
         const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -515,8 +497,8 @@ function decorateBlocks() {
   });
 }
 
-function loadBlocks() {
-  document.querySelectorAll('main div.section-wrapper > div > .block').forEach(async ($block) => {
+export function loadBlocks($main) {
+  $main.querySelectorAll('div.section-wrapper > div > .block').forEach(async ($block) => {
     const blockName = $block.getAttribute('data-block-name');
     import(`/express/blocks/${blockName}/${blockName}.js`)
       .then((mod) => {
@@ -584,6 +566,13 @@ export function readBlockConfig($block) {
             value = $as[0].href;
           } else {
             value = $as.map(($a) => $a.href);
+          }
+        } else if ($value.querySelector('p')) {
+          const $ps = [...$value.querySelectorAll('p')];
+          if ($ps.length === 1) {
+            value = $ps[0].textContent;
+          } else {
+            value = $ps.map(($p) => $p.textContent);
           }
         } else value = $row.children[1].textContent;
         config[name] = value;
@@ -689,10 +678,11 @@ export function webpPolyfill(element) {
 }
 
 function postLCP() {
+  const $main = document.querySelector('main');
   loadFonts();
   const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
-  loadBlocks();
+  loadBlocks($main);
   resolveFragments();
 
   const usp = new URLSearchParams(window.location.search);
@@ -785,8 +775,8 @@ function decorateHero() {
 }
 
 export function decorateButtons(block = document) {
-  const noButtonBlocks = ['template-list'];
-  block.querySelectorAll('main a').forEach(($a) => {
+  const noButtonBlocks = ['template-list', 'icon-list'];
+  block.querySelectorAll(':scope a').forEach(($a) => {
     $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
     let blockName;
@@ -1020,9 +1010,9 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
-function splitSections() {
-  document.querySelectorAll('main > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq', 'promotion'];
+function splitSections($main) {
+  $main.querySelectorAll(':scope > div > div').forEach(($block) => {
+    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq', 'promotion', 'fragment'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
@@ -1039,17 +1029,17 @@ function setTheme() {
   }
 }
 
-function decorateLinkedPictures() {
+function decorateLinkedPictures($main) {
   /* thanks to word online */
-  document.querySelectorAll('main picture').forEach(($picture) => {
+  $main.querySelectorAll(':scope > picture').forEach(($picture) => {
     if (!$picture.closest('div.block')) {
       linkPicture($picture);
     }
   });
 }
 
-function decorateSocialIcons() {
-  document.querySelectorAll('main a').forEach(($a) => {
+function decorateSocialIcons($main) {
+  $main.querySelectorAll(':scope a').forEach(($a) => {
     if ($a.href === $a.textContent) {
       let icon = '';
       if ($a.href.startsWith('https://www.instagram.com')) {
@@ -1091,8 +1081,8 @@ function decorateSocialIcons() {
   });
 }
 
-function makeRelativeLinks() {
-  document.querySelectorAll('main a').forEach(($a) => {
+function makeRelativeLinks($main) {
+  $main.querySelectorAll(':scope > a').forEach(($a) => {
     if (!$a.href) return;
     try {
       const url = new URL($a.href);
@@ -1194,6 +1184,20 @@ function displayEnv() {
   }
 }
 
+export function decorateMain($main) {
+  splitSections($main);
+  wrapSections($main.querySelectorAll(':scope > div'));
+  decorateButtons($main);
+  fixIcons($main);
+  checkWebpFeature(() => {
+    webpPolyfill($main);
+  });
+  decorateBlocks($main);
+  decorateLinkedPictures($main);
+  decorateSocialIcons($main);
+  makeRelativeLinks($main);
+}
+
 async function decoratePage() {
   setTemplate();
   setTheme();
@@ -1201,20 +1205,11 @@ async function decoratePage() {
   if (sessionStorage.getItem('helix-font') === 'loaded') {
     loadFonts();
   }
-  splitSections();
-  wrapSections('main > div');
+
+  const $main = document.querySelector('main');
+  decorateMain($main);
   decorateHeaderAndFooter();
   decorateHero();
-  decorateButtons();
-  fixIcons();
-  checkWebpFeature(() => {
-    webpPolyfill(document);
-  });
-  decorateBlocks();
-  decorateDoMoreEmbed();
-  decorateLinkedPictures();
-  decorateSocialIcons();
-  makeRelativeLinks();
   setLCPTrigger();
   displayEnv();
   displayOldLinkWarning();

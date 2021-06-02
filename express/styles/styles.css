@@ -597,6 +597,12 @@ main .hero a:any-link {
   color: currentColor;
 }
 
+main .hero a.button:any-link {
+  padding: 10px 1.5em 10px 1.5em;
+  border-radius: 22px;
+}
+
+
 @media (min-width:600px) {
   main .hero h5 {
     font-size: 22px;
@@ -606,12 +612,13 @@ main .hero a:any-link {
     margin-top: 32px;
   }
 
-main .hero h2,
-main .hero p {
-  font-size: var(--body-font-size-xl);
-  line-height: var(--body-line-height);
-  text-align:center;
-  margin: 24px 15px 0 15px;
+  main .hero h2,
+  main .hero p {
+    font-size: var(--body-font-size-xl);
+    line-height: var(--body-line-height);
+    text-align:center;
+    margin: 24px 15px 0 15px;
+  }
 }
 
 
@@ -623,6 +630,7 @@ main .hero p {
 
   main .hero h2,
   main .hero p {
+    font-size: var(--body-font-size-xxl);
     margin: 24px 50px 0 50px;
   }
 }
@@ -632,14 +640,9 @@ main .hero p {
     font-size: var(--heading-font-size-xxl);
     margin: 0; 
   }
-
-  main .hero h2,
-  main .hero p {
-    margin: 24px 0 0 0;
-  }
-
-  main .hero h2 {
-    font-size: var(--body-font-size-xxl);
+  
+  main .hero .columns > div > div {
+    margin: 8px;
   }
 }
 

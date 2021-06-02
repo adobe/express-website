@@ -7,6 +7,10 @@ main .table-of-contents .toc {
     text-align: left;
 }
 
+main .table-of-contents.horizontal .toc > div {
+    display: inline-block;
+}
+
 main .table-of-contents .toc .toc-level-h2 {
     margin: 8px;
 }
