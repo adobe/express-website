@@ -690,7 +690,7 @@ function postLCP() {
 
   // loadLazyFooter();
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 2000;
+    let ms = 2500;
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
