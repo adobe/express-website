@@ -508,15 +508,10 @@ main .section-wrapper:last-of-type {
 /* hero */
 main .hero {
   color: var(--color-white);
-  height: 563px;
   position: relative;
-  padding: 120px 32px 0 120px
+  padding: 120px 15px;
 }
 
-main .hero, main .hero div + h1 {
-  width: 100vw;
-}
- 
 main .hero.hero-noimage {
   color: var(--body-color);
   padding-top: 64px;
@@ -604,7 +599,6 @@ main .hero h1{
   font-size: var(--heading-font-size-xl);
   line-height: var(--heading-line-height);
   text-align:center;
-  margin: 0 15px 0 15px;
 }
 @media (min-width:600px) {
   main .hero h5 {
@@ -626,40 +620,30 @@ main .hero p {
 
 @media (min-width:900px) {
   main .hero {
-    height: 493px;
-  }
-
-  main .hero h1{
-    margin: 0 50px 0 50px;
+    padding-left: 50px;
+    padding-right: 50px;
   }
 
   main .hero h2,
   main .hero p {
     margin: 24px 50px 0 50px;
   }
-
-  @media (min-width:1200px){
-    main .hero {
-      height: 518px;
-    }
-  
-    main .hero h1{
-      margin: 0 0 0 0; 
-    }
-  
-    main .hero h2,
-    main .hero p {
-      margin: 24px 0 0 0;
-    }
-  }
 }
 
-@media (min-width:1200px) {
+@media (min-width:1200px){
+  main .hero h1{
+    margin: 0 0 0 0; 
+  }
+
+  main .hero h2,
+  main .hero p {
+    margin: 24px 0 0 0;
+  }
+
   main .hero h2 {
     font-size: var(--body-font-size-xxl);
   }
 }
-
 
 /* make page : default content */
 
