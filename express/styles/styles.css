@@ -536,6 +536,8 @@ main .hero.hero-noimage a:any-link{
 
 main .hero h1 {
   font-size: var(--heading-font-size-xl);
+  line-height: var(--heading-line-height);
+  text-align: center;
   margin: 0;
 }
 
@@ -595,11 +597,6 @@ main .hero a:any-link {
   color: currentColor;
 }
 
-main .hero h1{
-  font-size: var(--heading-font-size-xl);
-  line-height: var(--heading-line-height);
-  text-align:center;
-}
 @media (min-width:600px) {
   main .hero h5 {
     font-size: 22px;
@@ -631,8 +628,9 @@ main .hero p {
 }
 
 @media (min-width:1200px){
-  main .hero h1{
-    margin: 0 0 0 0; 
+  main .hero h1 {
+    font-size: var(--heading-font-size-xxl);
+    margin: 0; 
   }
 
   main .hero h2,
