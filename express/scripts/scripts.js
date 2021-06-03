@@ -681,12 +681,17 @@ export function webpPolyfill(element) {
   }
 }
 
+export function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
+  return $meta && $meta.value;
+}
+
 function addPromotion() {
   // check for existing promotion
   if (!document.querySelector('main .promotion')) {
     // extract category from metadata
-    const $metaCategory = document.head.querySelector('meta[name="category"]');
-    const category = $metaCategory && $metaCategory.value;
+    const category = getMetadata('category');
     if (category) {
       const promos = {
         photo: 'photoshop',
