@@ -80,13 +80,23 @@ export default function decorate($block) {
         }
         $cell.innerHTML = `<span class="num">${num}</span>${$cell.innerHTML}`;
       }
-      /* this probably needs to be tighter and possibly earlier */
+
+      const $pics = $cell.querySelectorAll(':scope picture');
+      if ($pics.length === 1 && $pics[0].parentElement.tagName === 'P') {
+        // unwrap single picture if wrapped in p tag, see https://github.com/adobe/helix-word2md/issues/662
+        const $parent = $pics[0].closest('div');
+        $parent.append($pics[0]);
+      }
+
+      // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
-      if ($cell.querySelector('img') && $a) {
+      if ($pics[0] && $a) {
         if ($a.textContent.startsWith('https://')) {
           linkImage($cell);
         }
       }
+
+      $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
 
       $cell.classList.add('column');
       if ($cell.firstElementChild.tagName === 'PICTURE') {
