@@ -684,7 +684,7 @@ export function webpPolyfill(element) {
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
-  return $meta && $meta.value;
+  return $meta && $meta.content;
 }
 
 function addPromotion() {
