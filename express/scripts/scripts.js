@@ -701,7 +701,7 @@ function addPromotion() {
       // insert promotion at the bottom
       if (promos[category]) {
         const $promoSection = createTag('div', { class: 'section-wrapper' });
-        $promoSection.innerHTML = `<div class="promotion"><div><div>${promos[category]}</div></div></div>`;
+        $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));
       }
