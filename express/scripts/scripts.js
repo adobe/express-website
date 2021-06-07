@@ -497,19 +497,23 @@ export function decorateBlocks($main) {
   });
 }
 
-export function loadBlocks($main) {
-  $main.querySelectorAll('div.section-wrapper > div > .block').forEach(async ($block) => {
-    const blockName = $block.getAttribute('data-block-name');
-    import(`/express/blocks/${blockName}/${blockName}.js`)
-      .then((mod) => {
-        if (mod.default) {
-          mod.default($block, blockName, document);
-        }
-      })
-      .catch((err) => console.log(`failed to load module for ${blockName}`, err));
+export function loadBlock($block) {
+  const blockName = $block.getAttribute('data-block-name');
+  import(`/express/blocks/${blockName}/${blockName}.js`)
+    .then((mod) => {
+      if (mod.default) {
+        mod.default($block, blockName, document);
+      }
+    })
+    .catch((err) => console.log(`failed to load module for ${blockName}`, err));
 
-    loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
-  });
+  loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
+}
+
+export function loadBlocks($main) {
+  $main
+    .querySelectorAll('div.section-wrapper > div > .block')
+    .forEach(async ($block) => loadBlock($block));
 }
 
 export function loadScript(url, callback, type) {
@@ -677,6 +681,34 @@ export function webpPolyfill(element) {
   }
 }
 
+export function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
+  return $meta && $meta.content;
+}
+
+function addPromotion() {
+  // check for existing promotion
+  if (!document.querySelector('main .promotion')) {
+    // extract category from metadata
+    const category = getMetadata('category');
+    if (category) {
+      const promos = {
+        photo: 'photoshop',
+        design: 'illustrator',
+        video: 'premiere',
+      };
+      // insert promotion at the bottom
+      if (promos[category]) {
+        const $promoSection = createTag('div', { class: 'section-wrapper' });
+        $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
+        document.querySelector('main').append($promoSection);
+        loadBlock($promoSection.querySelector(':scope .promotion'));
+      }
+    }
+  }
+}
+
 function postLCP() {
   const $main = document.querySelector('main');
   loadFonts();
@@ -684,6 +716,7 @@ function postLCP() {
   loadCSS('/express/styles/lazy-styles.css');
   loadBlocks($main);
   resolveFragments();
+  addPromotion();
 
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');

@@ -17,6 +17,7 @@ import {
   createTag,
   getLanguage,
   getHelixEnv,
+  getMetadata,
 } from './scripts.js';
 
 // this saves on file size when this file gets minified...
@@ -86,11 +87,9 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
   document.documentElement.setAttribute('lang', htmlLang);
 
-  let category;
-  if (
-    pathname.includes('/create/')
-    || pathname.includes('/feature/')
-  ) {
+  let category = getMetadata('category');
+  if (!category && (pathname.includes('/create/')
+    || pathname.includes('/feature/'))) {
     category = 'design';
     if (pathname.includes('/image')) category = 'photo';
     if (pathname.includes('/video')) category = 'video';
