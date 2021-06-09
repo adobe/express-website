@@ -17,6 +17,7 @@
   if (typeof sk !== 'object') return;
 
   // HLX3 --------------------------------------------------------------------------
+
   async function hlx3Publish(config, location, path) {
     if (!config.host
     || (config.byocdn && location.host === config.host)) {
@@ -31,10 +32,9 @@
       new URL(path, location.href).pathname,
       '?action=publish',
     ].join('');
-    /* eslint-disable no-console */
+    // eslint-disable-next-line no-console
     console.log(`hlx3 publishing ${purgeURL}`);
     const resp = await fetch(purgeURL, { method: 'POST' });
-    /* eslint-enable no-console */
     return {
       ok: resp.ok,
       status: resp.status,
@@ -60,13 +60,6 @@
         }
         // hlx3 publishing
         await Promise.all(urls.map((url) => hlx3Publish(config, location, url)));
-        try {
-          // hlx2 publishing
-          await Promise.all(urls.map((url) => sk.publish(url)));
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.warn('hlx2 publish failed', e);
-        }
 
         if (config.host) {
           sk.showModal('Please wait …', true);
@@ -84,6 +77,26 @@
         } else {
           sk.notify('Successfully published');
         }
+      },
+    },
+  });
+
+  // extend reload button
+  sk.add({
+    id: 'reload',
+    button: {
+      action: async () => {
+        const reloadURL = [
+          'https://admin.hlx3.page',
+          `/${sk.config.owner}`,
+          `/${sk.config.repo}`,
+          `/${sk.config.ref}`,
+          sk.location.pathname,
+          '?action=preview',
+        ].join('');
+        // eslint-disable-next-line no-console
+        console.log(`hlx3 updating ${reloadURL}`);
+        await fetch(reloadURL, { method: 'POST' });
       },
     },
   });
