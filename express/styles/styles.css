@@ -591,6 +591,7 @@ main .hero .hero-bg img {
 
 main .hero > div {
     padding: 0;
+    margin: auto;
 }
 
 main .hero a:any-link {
@@ -620,7 +621,6 @@ main .hero a.button:any-link {
     margin: 24px 15px 0 15px;
   }
 }
-
 
 @media (min-width:900px) {
   main .hero {
