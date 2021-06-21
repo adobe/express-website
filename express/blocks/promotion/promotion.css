@@ -27,6 +27,10 @@ main .promotion .promotion-content {
   text-align: left;
 }
 
+main .section-wrapper .promotion {
+  margin-bottom: 120px;
+}
+
 main .promotion .promotion-content h2,
 main .promotion .promotion-content h3 {
   text-align: left;
@@ -38,6 +42,10 @@ main .section-wrapper .promotion .promotion-content p.button-container {
 
 main .section-wrapper .promotion .promotion-content p.button-container a {
   margin: 0;
+}
+
+main .section-wrapper .promotion h2 {
+  margin-top: 0;
 }
 
 @media (min-width: 900px) {
@@ -79,7 +87,7 @@ main .section-wrapper .promotion .promotion-content p.button-container a {
     height: 100%;
     object-fit: cover;
   }
-  
+
   main .promotion .promotion-content {
     margin: 32px;
     text-align: left;
