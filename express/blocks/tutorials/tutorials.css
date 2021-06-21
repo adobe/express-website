@@ -71,16 +71,11 @@ main .tutorials .tutorial-card .tutorial-card-top .tutorial-card-play {
   background-size: cover;
 }
 
-
-main .tutorials .tutorial-card .tutorial-card-top .tutorial-card-text {
-}
-
 main .tutorials h3 {
   margin-top: 16px;
   text-align: left;
   font-size: var(--body-font-size-l);
   font-weight: 700;
-  font-family: var(--body-font-family);
 }
 
 main .tutorials-overlay {

@@ -29,7 +29,7 @@ main .columns-dark-container {
 }
 
 main .columns-highlight-container {
-  background: var(--gradient-pink-blue);
+  background: var(--gradient-highlight-vertical);
 }
 
 main .columns p {
@@ -49,11 +49,21 @@ main .columns .column-picture {
   margin: 15px 0;
 }
 
-main .columns h1,
-main .columns h2 {
+main .columns h1 {
   font-size: var(--heading-font-size-xl);
   line-height: 1.05;
 }
+
+main .columns h2 {
+  font-size: var(--heading-font-size-l);
+  line-height: 1.05;
+}
+
+main .columns h3 {
+  font-size: var(--heading-font-size-m);
+  line-height: 1.05;
+}
+
 
 main .columns p {
   font-size: var(--body-font-size-xl);
@@ -296,9 +306,18 @@ main .columns-highlight-container .column p {
     max-width: 1024px;
   }
 
-  main .columns h1,
-  main .columns h2 {
+  main .columns h1 {
     font-size: var(--heading-font-size-xxl);
+    line-height: 1.08;
+  }
+
+  main .columns h2 {
+    font-size: var(--heading-font-size-xl);
+    line-height: 1.08;
+  }
+
+  main .columns h3 {
+    font-size: var(--heading-font-size-xl);
     line-height: 1.08;
   }
 }

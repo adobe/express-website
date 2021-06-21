@@ -34,7 +34,6 @@
   --body-font-size-s: 0.875rem; /* 14px */
   --body-font-size-xs: 0.75rem; /* 12px */
   /* headings */
-  --heading-font-family: 'adobe-clean-black', 'Adobe Clean Black', 'adobe-clean', 'Adobe Clean', sans-serif;
   --heading-font-weight: 800;
   --heading-color: var(--color-gray-800);
   --heading-line-height: 1.25;
@@ -379,6 +378,7 @@ a.button.secondary.light:any-link {
 a.button.dark:any-link {
   color: var(--color-white);
   border: solid 2px var(--color-white);
+  background-color: transparent;
 }
 
 a.button > svg {
@@ -405,7 +405,6 @@ main {
 }
 
 main h1, h2, h3, h4, h5, h6 {
-  font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
 }
@@ -545,14 +544,12 @@ main .hero h1 {
 main .hero h2 {
   font-size: var(--body-font-size-xl);
   font-weight: var(--body-font-weight);
-  font-family: var(--body-font-family);
   margin: 32px 32px;
 }
 
 main .hero h5 {
   font-size: var(--body-font-size-l);
   font-weight: var(--body-font-weight);
-  font-family: var(--body-font-family);
   margin: auto;
   margin-top: 32px;
 }
@@ -605,6 +602,12 @@ main .hero a:any-link {
   color: currentColor;
 }
 
+main .hero a.button:any-link {
+  padding: 10px 1.5em 10px 1.5em;
+  border-radius: 22px;
+}
+
+
 @media (min-width:600px) {
   main .hero h5 {
     font-size: 22px;
@@ -633,7 +636,10 @@ main .hero a:any-link {
     margin: auto;
     justify-content: center;
   }
-
+  
+  main .hero .columns > div > div {
+    margin: 8px;
+  }
 }
 
 @media (min-width:900px) {
