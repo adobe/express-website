@@ -119,6 +119,15 @@ body.nobrand header {
     display: none;
 }
 
+#header-placeholder .signin a:any-link {
+  color: #2c2c2c;
+  text-decoration: none;
+}
+
+#header-placeholder .signin a:hover {
+  color: var(--color-info-accent);
+}
+
 #header-placeholder .mobile {
     display: flex;
     justify-content: space-between;

@@ -325,7 +325,7 @@ function getGnavPlaceholder(nav) {
     <div class="mobile">
       <div class="hamburger"></div>
       <div class="logo"><img src="/express/gnav-placeholder/adobe-logo.svg"></div>
-      <div class="signin">${nav.signIn}</div>
+      <div class="signin"><a href="${nav.signInLink}">${nav.signIn}</a></div>
     </div>
     <div class="desktop">
       <div class="top">
@@ -350,7 +350,7 @@ function getGnavPlaceholder(nav) {
           <div class="search"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" focusable="false">
           <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
       </svg></div>
-          <div class="signing">${nav.signIn}</div>
+          <div class="signin"><a href="${nav.signInLink}">${nav.signIn}</a></div>
         </div>
       </div>
     </div>`;
@@ -373,6 +373,7 @@ function decorateHeaderAndFooter() {
   if (locale === 'us') {
     const nav = {
       signIn: 'Sign In',
+      signInLink: 'https://express.adobe.com/sp/',
       top: [
         {
           text: 'Adobe Creative Cloud Express',
@@ -408,6 +409,7 @@ function decorateHeaderAndFooter() {
   } else {
     $header.innerHTML = getGnavPlaceholder({
       signIn: 'Sign In',
+      signInLink: 'https://express.adobe.com/sp/',
       top: [],
     });
   }
