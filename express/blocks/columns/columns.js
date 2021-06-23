@@ -32,7 +32,9 @@ function decorateIconList($columnCell) {
   });
 
   if ($icons.length > 0) {
-    $columnCell.insertBefore($iconList, $before.nextSibling);
+    if ($before) {
+      $columnCell.insertBefore($iconList, $before.nextSibling);
+    }
   }
 }
 
