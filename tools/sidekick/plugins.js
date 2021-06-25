@@ -11,7 +11,7 @@
  */
 /* global window */
 
-// This file contains the spark-specific plugins for the sidekick.
+// This file contains the ccx-specific plugins for the sidekick.
 (() => {
   const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
   if (typeof sk !== 'object') return;
