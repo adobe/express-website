@@ -49,8 +49,7 @@ main .columns .column-picture {
   margin: 15px 0;
 }
 
-/* specificity high for first "hero" column block */
-main > div.section-wrapper.columns-container.steps-container > div > div.columns.block.width-2-columns > div > div:nth-child(1) > h1{
+main .columns h1{
   font-size: var(--heading-font-size-xxl);
   line-height: 1.06;
 }
