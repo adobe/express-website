@@ -25,7 +25,7 @@
       text: 'Meta Data Inspector',
       action: () => {
         const { config } = sk;
-        window.open(`https://${config.outerHost || config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
+        window.open(`https://${config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
       },
     },
   });
@@ -39,7 +39,7 @@
       text: 'Templates',
       action: () => {
         const { config } = sk;
-        window.open(`https://${config.outerHost || config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
+        window.open(`https://${config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
       },
     },
   });
