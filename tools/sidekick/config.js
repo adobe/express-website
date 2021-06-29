@@ -26,7 +26,7 @@ window.hlx.initSidekick({
         text: 'Meta Data Inspector',
         action: (_, sk) => {
           const { config } = sk;
-          window.open(`https://${config.host || config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
+          window.open(`https://${config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
         },
       },
     },
@@ -39,7 +39,7 @@ window.hlx.initSidekick({
         text: 'Templates',
         action: (_, sk) => {
           const { config } = sk;
-          window.open(`https://${config.host || config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
+          window.open(`https://${config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
         },
       },
     },
