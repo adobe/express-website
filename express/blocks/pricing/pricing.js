@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window */
+/* global window document */
 /* eslint-disable no-underscore-dangle */
 
 import {
@@ -203,6 +203,14 @@ function populateOtherPlans($contents) {
   return otherPlans;
 }
 
+function closeActivePopups($block, $except) {
+  $block.querySelectorAll(':scope .active').forEach(($activePopup) => {
+    if ($activePopup !== $except) {
+      $activePopup.classList.remove('active');
+    }
+  });
+}
+
 function decorateOtherPlans($block, otherPlans) {
   const $otherPlansContainer = $block.querySelector('.other-plans-container');
 
@@ -216,18 +224,15 @@ function decorateOtherPlans($block, otherPlans) {
     const $popup = createTag('div', { class: 'other-plan' });
     $popup.append(plan.contents);
     $popup.classList.add('other-plan-popup');
+    // don't close popup if user clicks inside
+    $popup.addEventListener('click', (e) => e.stopPropagation());
     $plan.append($popup);
     $otherPlansContainer.append($plan);
     $planButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      const activePopups = $block.querySelectorAll('.active');
-      if (activePopups) {
-        activePopups.forEach((activePopup) => {
-          if (activePopup !== $popup) {
-            activePopup.classList.remove('active');
-          }
-        });
-      }
+      e.stopPropagation();
+      // close all other popups
+      closeActivePopups($block, $popup);
+      // toggle this popup
       if ($popup.classList.contains('active')) {
         $popup.classList.remove('active');
       } else {
@@ -244,6 +249,8 @@ function decorateOtherPlans($block, otherPlans) {
       }
     });
   });
+  // close all popups if user clicks anywhere on the page
+  document.body.addEventListener('click', () => closeActivePopups($block));
 }
 
 function buildOtherPlan(otherPlans, $row) {
