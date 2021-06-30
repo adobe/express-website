@@ -204,7 +204,7 @@ function populateOtherPlans($contents) {
 }
 
 function closeActivePopups($block, $except) {
-  $block.querySelectorAll('.active').forEach(($activePopup) => {
+  $block.querySelectorAll(':scope .active').forEach(($activePopup) => {
     if ($activePopup !== $except) {
       $activePopup.classList.remove('active');
     }
