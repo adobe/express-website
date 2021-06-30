@@ -6,7 +6,7 @@ main .steps {
   -ms-grid-columns: 1fr;
   grid-template-columns: 1fr;
   grid-gap: 16px;
-  max-width: 400px;
+  max-width: 320px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -23,9 +23,9 @@ main .steps h3 {
 }
 
 main .steps p {
-  font-size: var(--body-font-size-l);
+  font-size: var(--body-font-size-s);
   text-align: left;
-  margin: 0;
+  margin: 4px 0;
 }
 
 main .steps > div {
@@ -45,6 +45,7 @@ main .steps .step-image {
 main .steps .step-image svg {
   width: 40px;
   height: 40px;
+  margin: 4px 0;
 }
 
 main .steps .step-description {
