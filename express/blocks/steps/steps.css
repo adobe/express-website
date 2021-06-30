@@ -6,7 +6,7 @@ main .steps {
   -ms-grid-columns: 1fr;
   grid-template-columns: 1fr;
   grid-gap: 16px;
-  max-width: 400px;
+  max-width: 320px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -23,9 +23,9 @@ main .steps h3 {
 }
 
 main .steps p {
-  font-size: var(--body-font-size-l);
+  font-size: var(--body-font-size-s);
   text-align: left;
-  margin: 0;
+  margin: 4px 0;
 }
 
 main .steps > div {
@@ -45,6 +45,7 @@ main .steps .step-image {
 main .steps .step-image svg {
   width: 40px;
   height: 40px;
+  margin: 4px 0;
 }
 
 main .steps .step-description {
@@ -103,7 +104,7 @@ main .steps .icon {
   main .section-wrapper.steps-container > div,
   main .section-wrapper.steps-dark-container > div,
   main .section-wrapper.steps-highlight-container > div {
-    max-width: 830px;
+    max-width: 950px;
   }
   main .steps {
     -ms-grid-columns: 1fr 1fr 1fr;
