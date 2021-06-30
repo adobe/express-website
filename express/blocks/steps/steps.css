@@ -104,7 +104,7 @@ main .steps .icon {
   main .section-wrapper.steps-container > div,
   main .section-wrapper.steps-dark-container > div,
   main .section-wrapper.steps-highlight-container > div {
-    max-width: 830px;
+    max-width: 950px;
   }
   main .steps {
     -ms-grid-columns: 1fr 1fr 1fr;
