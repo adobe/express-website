@@ -18,7 +18,7 @@ import {
   createTag,
   linkImage,
   webpPolyfill,
-  getMeta,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
@@ -229,7 +229,7 @@ export async function decorateTemplateList($block) {
   for (let $tmplt of Array.from($block.children)) {
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
-      const templateSearchTag = getMeta('short-title');
+      const templateSearchTag = getMetadata('short-title');
       const searchQueryParam = templateSearchTag && templateSearchTag.length > 0 ? `?search=${templateSearchTag}` : '';
 
       const $a = createTag('a', {

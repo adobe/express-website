@@ -42,7 +42,7 @@ export function createTag(name, attrs) {
   return el;
 }
 
-export function getMeta(name) {
+function getMeta(name) {
   let value = '';
   const nameLower = name.toLowerCase();
   const $metas = [...document.querySelectorAll('meta')].filter(($m) => {
