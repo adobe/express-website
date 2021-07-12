@@ -230,11 +230,13 @@ export async function decorateTemplateList($block) {
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
       const templateSearchTag = getMetadata('short-title');
-      const searchQueryParam = templateSearchTag && templateSearchTag.length > 0 ? `?search=${templateSearchTag}` : '';
+      const queryStartChar = $link.href && $link.href.includes('?') ? '&' : '?';
+      const searchQueryParam = templateSearchTag && templateSearchTag.length > 0 ? `${queryStartChar}search=${templateSearchTag}` : '';
 
       const $a = createTag('a', {
-        href: `${$link.href}${searchQueryParam}` || '#',
+        href: $link.href ? `${$link.href}${searchQueryParam}` : '#',
       });
+
       $a.append(...$tmplt.childNodes);
       $tmplt.remove();
       $tmplt = $a;
