@@ -235,7 +235,9 @@ export async function decorateTemplateList($block) {
       if ($link.href) {
         const url = new URL($link.href);
         const params = url.searchParams;
-        params.set('search', templateSearchTag);
+        if (templateSearchTag) {
+          params.set('search', templateSearchTag);
+        }
         url.search = params.toString();
 
         $a = createTag('a', {
