@@ -42,6 +42,22 @@ export function createTag(name, attrs) {
   return el;
 }
 
+function fitHeadings(maxLines = 3) {
+  const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
+  $headings.forEach((heading) => {
+    const style = window.getComputedStyle(heading);
+    const { height, lineHeight } = style;
+    do {
+      style.fontSize -= 1;
+      style.lineHeight -= 1;
+    } while (height > lineHeight * maxLines);
+  });
+}
+
+function hrefIsColumn(href) {
+  return href === '/express/blocks/columns/columns.css';
+}
+
 function getMeta(name) {
   let value = '';
   const nameLower = name.toLowerCase();
@@ -429,8 +445,15 @@ export function loadCSS(href) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
-    link.onload = () => {
-    };
+    if (hrefIsColumn) {
+      link.onload = (maxLines = 3) => {
+        fitHeadings(maxLines);
+      };
+    } else {
+      link.onload = () => {
+      };
+    }
+
     link.onerror = () => {
     };
     document.head.appendChild(link);
