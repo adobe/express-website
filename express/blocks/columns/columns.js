@@ -42,7 +42,7 @@ function fitHeadings(){
   const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
   $headings.forEach((heading) => {
     const current_heading = window.getComputedStyle(heading);
-    console.log('debug');
+    console.log('hlx debug');
   });
 }
 
