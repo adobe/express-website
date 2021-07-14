@@ -47,11 +47,6 @@
     ],
   });
 
-  // ensure outer host without branch
-  const hostParts = cfg.outerHost && cfg.outerHost.split('--');
-  if (hostParts && hostParts.length > 2) {
-    // remove branch and reassemble host
-    hostParts.shift();
-    cfg.outerHost = hostParts.join('--');
-  }
+  // ensure correct outer host
+  cfg.outerHost = 'stage-express-website--adobe.hlx.live';
 })();
