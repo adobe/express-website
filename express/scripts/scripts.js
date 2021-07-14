@@ -809,9 +809,28 @@ function decorateHero() {
   }
 }
 
+export function addSearchQueryToHref(href) {
+  const isCreateSeoPage = (window.location.pathname.includes('/express/create') && window.location.pathname !== '/express/create');
+  if (!isCreateSeoPage) {
+    return href;
+  }
+
+  const templateSearchTag = getMetadata('short-title');
+  const url = new URL(href);
+  const params = url.searchParams;
+
+  if (templateSearchTag) {
+    params.set('search', templateSearchTag);
+  }
+  url.search = params.toString();
+
+  return url.toString();
+}
+
 export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
+    $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
     let blockName;
