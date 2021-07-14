@@ -18,7 +18,7 @@ import {
   createTag,
   linkImage,
   webpPolyfill,
-  addSearchQueryToHref
+  addSearchQueryToHref,
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
