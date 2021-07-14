@@ -48,5 +48,5 @@
   });
 
   // ensure correct outer host
- cfg.outerHost = 'stage-express-website--adobe.hlx.live';
+  cfg.outerHost = 'stage-express-website--adobe.hlx.live';
 })();
