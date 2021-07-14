@@ -18,6 +18,7 @@ import {
   createTag,
   linkImage,
   webpPolyfill,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
@@ -228,9 +229,26 @@ export async function decorateTemplateList($block) {
   for (let $tmplt of Array.from($block.children)) {
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
-      const $a = createTag('a', {
-        href: $link.href || '#',
-      });
+      const templateSearchTag = getMetadata('short-title');
+      let $a;
+
+      if ($link.href) {
+        const url = new URL($link.href);
+        const params = url.searchParams;
+        if (templateSearchTag) {
+          params.set('search', templateSearchTag);
+        }
+        url.search = params.toString();
+
+        $a = createTag('a', {
+          href: url.toString(),
+        });
+      } else {
+        $a = createTag('a', {
+          href: '#',
+        });
+      }
+
       $a.append(...$tmplt.childNodes);
       $tmplt.remove();
       $tmplt = $a;
