@@ -13,8 +13,9 @@
 
 // This file contains the project-specific configuration for the sidekick.
 (() => {
-  const { config: cfg } = window.hlx.initSidekick({
+  window.hlx.initSidekick({
     project: 'CCX',
+    outerHost: 'stage-express-website--adobe.hlx.live',
     host: 'www.stage.adobe.com',
     byocdn: true,
     hlx3: true,
@@ -46,7 +47,4 @@
       },
     ],
   });
-
-  // ensure correct outer host
-  cfg.outerHost = 'stage-express-website--adobe.hlx.live';
 })();
