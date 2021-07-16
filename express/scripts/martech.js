@@ -189,6 +189,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
+  // image remove background quick action
+  if (pathname.includes('/feature/image/transparent-background')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  }
 
   //------------------------------------------------------------------------------------
   // Fire extra spark events
@@ -307,7 +312,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       }
 
     // quick actions clicks
-    } else if ($a.href.includes('spark.adobe.com/tools')) {
+    } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
 
