@@ -810,8 +810,10 @@ function decorateHero() {
 }
 
 export function addSearchQueryToHref(href) {
-  const isCreateSeoPage = (window.location.pathname.includes('/express/create') && window.location.pathname !== '/express/create');
-  if (!isCreateSeoPage) {
+  const isCreateSeoPage = window.location.pathname.includes('/express/create/');
+  const isDiscoverSeoPage = window.location.pathname.includes('/express/discover/');
+
+  if (!isCreateSeoPage && !isDiscoverSeoPage) {
     return href;
   }
 
