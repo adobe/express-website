@@ -18,6 +18,7 @@ import {
   createTag,
   linkImage,
   webpPolyfill,
+  addSearchQueryToHref,
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
@@ -229,8 +230,9 @@ export async function decorateTemplateList($block) {
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
       const $a = createTag('a', {
-        href: $link.href || '#',
+        href: $link.href ? addSearchQueryToHref($link.href) : '#',
       });
+
       $a.append(...$tmplt.childNodes);
       $tmplt.remove();
       $tmplt = $a;
