@@ -87,28 +87,28 @@ export function buildUrl(optionUrl, country, language) {
 }
 
 function decorateIconList($pricingRight) {
-  const $iconList = createTag('div', { class: 'pricing-iconlist' });
-  let $iconListRow;
+  let $iconList = createTag('div', { class: 'pricing-iconlist' });
   let $iconListDescription;
   [...$pricingRight.firstChild.childNodes].forEach(($e) => {
-    if ($e.tagName === 'IMG' && $e.classList.contains('icon')) {
-      if ($iconListRow) {
-        $iconList.appendChild($iconListRow);
-      }
-      $iconListRow = createTag('div');
+    const $img = $e.querySelector('img.icon');
+    if ($img) {
+      const $iconListRow = createTag('div');
       const $iconDiv = createTag('div', { class: 'pricing-iconlist-icon' });
-      $iconDiv.appendChild($e);
+      $iconDiv.appendChild($img);
       $iconListRow.append($iconDiv);
       $iconListDescription = createTag('div', { class: 'pricing-iconlist-description' });
       $iconListRow.append($iconListDescription);
-    } else if ($iconListDescription) {
       $iconListDescription.appendChild($e);
+      $iconList.appendChild($iconListRow);
+    } else {
+      if ($iconList.children.length > 0) {
+        $pricingRight.appendChild($iconList);
+        $iconList = createTag('div', { class: 'pricing-iconlist' });
+      }
+      $pricingRight.appendChild($e);
     }
   });
-  if ($iconListRow) {
-    $iconList.appendChild($iconListRow);
-  }
-  $pricingRight.appendChild($iconList);
+  if ($iconList.children.length > 0) $pricingRight.appendChild($iconList);
 }
 
 function selectPlan($block, plan) {
