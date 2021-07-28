@@ -131,6 +131,7 @@ main .pricing .pricing-right .pricing-iconlist > div {
 
 main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-icon {
     display: flex;
+    padding: 12px 0;
 }
 
 main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
@@ -138,6 +139,11 @@ main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description {
     flex: 1;
     align-items: center;
     margin-left: 10px;
+}
+
+main .pricing .pricing-right .pricing-iconlist .pricing-iconlist-description > p {
+    margin: 0;
+    font-size: var(--body-font-size-l);
 }
 
 @media (min-width: 600px) {
