@@ -13,7 +13,7 @@
           FontFace, sessionStorage, Image */
 /* eslint-disable no-console */
 
-const postEditorLinksAllowList = ['adobesparkpost.app.link', 'spark.adobe.com/sp/design'];
+const postEditorLinksAllowList = ['adobesparkpost.app.link', 'spark.adobe.com/sp/design', 'express.adobe.com/sp/design'];
 
 export function addPublishDependencies(url) {
   if (!Array.isArray(url)) {
