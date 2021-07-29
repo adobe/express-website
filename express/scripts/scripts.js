@@ -13,6 +13,9 @@
           FontFace, sessionStorage, Image */
 /* eslint-disable no-console */
 
+
+const postEditorLinksAllowList = ['adobesparkpost.app.link', 'spark.adobe.com'];
+
 export function addPublishDependencies(url) {
   if (!Array.isArray(url)) {
     // eslint-disable-next-line no-param-reassign
@@ -812,8 +815,9 @@ function decorateHero() {
 export function addSearchQueryToHref(href) {
   const isCreateSeoPage = window.location.pathname.includes('/express/create/');
   const isDiscoverSeoPage = window.location.pathname.includes('/express/discover/');
+  const isPostEditorLink = postEditorLinksAllowList.some((editorLink) => href.includes(editorLink));
 
-  if (!isCreateSeoPage && !isDiscoverSeoPage) {
+  if (!(isPostEditorLink && (isCreateSeoPage || isDiscoverSeoPage))) {
     return href;
   }
 
@@ -832,6 +836,7 @@ export function addSearchQueryToHref(href) {
 export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
+    const originalHref = $a.href;
     $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
@@ -839,7 +844,7 @@ export function decorateButtons(block = document) {
     if ($block) {
       blockName = $block.className;
     }
-    if (!noButtonBlocks.includes(blockName) && ($a.href !== $a.textContent)) {
+    if (!noButtonBlocks.includes(blockName) && (originalHref !== $a.textContent)) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
