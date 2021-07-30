@@ -42,22 +42,6 @@ export function createTag(name, attrs) {
   return el;
 }
 
-function fitHeadings(maxLines = 3) {
-  const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
-  $headings.forEach((heading) => {
-    const style = window.getComputedStyle(heading);
-    const { height, lineHeight } = style;
-    do {
-      style.fontSize -= 1;
-      style.lineHeight -= 1;
-    } while (height > lineHeight * maxLines);
-  });
-}
-
-function hrefIsColumn(href) {
-  return href === '/express/blocks/columns/columns.css';
-}
-
 function getMeta(name) {
   let value = '';
   const nameLower = name.toLowerCase();
@@ -445,14 +429,27 @@ export function loadCSS(href) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
-    if (hrefIsColumn) {
-      link.onload = (maxLines = 3) => {
-        fitHeadings(maxLines);
-      };
-    } else {
-      link.onload = () => {
-      };
-    }
+
+    link.onload = () => {
+    };
+
+    link.onerror = () => {
+    };
+    document.head.appendChild(link);
+  }
+}
+
+/**
+ * Loads a CSS file and sets callback for onload event.
+ * @param {string} href The path to the CSS file
+ */
+ export function loadCSS(href, cb) {
+  if (!document.querySelector(`head > link[href="${href}"]`)) {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', href);
+    
+    link.onload = cb;
 
     link.onerror = () => {
     };
@@ -524,15 +521,17 @@ export function decorateBlocks($main) {
 
 export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
-  import(`/express/blocks/${blockName}/${blockName}.js`)
-    .then((mod) => {
-      if (mod.default) {
-        mod.default($block, blockName, document);
-      }
-    })
-    .catch((err) => console.log(`failed to load module for ${blockName}`, err));
-
-  loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
+  import { decorate, onLoadCallback} from "/express/blocks/${blockName}/${blockName}.js";
+  if (decorate) {
+    decorate();
+  }
+  if (onLoadCallback) {
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, onLoadCallback);
+  }
+  else {
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`)
+  }
+  
 }
 
 export function loadBlocks($main) {

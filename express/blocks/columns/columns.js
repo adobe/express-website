@@ -38,6 +38,17 @@ function decorateIconList($columnCell) {
   }
 }
 
+export function onLoadCallback(maxLines = 3) {
+  const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
+  $headings.forEach((heading) => {
+    const style = window.getComputedStyle(heading);
+    const { height, lineHeight } = style;
+    do {
+      style.fontSize -= 1;
+    } while (height > lineHeight * maxLines);
+  });
+}
+
 export default function decorate($block) {
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
