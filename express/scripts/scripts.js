@@ -443,7 +443,7 @@ export function loadCSS(href) {
  * Loads a CSS file and sets callback for onload event.
  * @param {string} href The path to the CSS file
  */
- export function loadCSS(href, cb) {
+function loadCSS(href, cb) {
   if (!document.querySelector(`head > link[href="${href}"]`)) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
