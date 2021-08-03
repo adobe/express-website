@@ -46,12 +46,14 @@ export function onLoadCallback(maxLines = 3) {
     let heightInt = parseInt(height.match('\\d+')[0]);
     let fontSizeInt = parseInt(fontSize.match('\\d+')[0]);
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+\.\\d+'));
+    let limit = lineHeightFloat * maxLines;
     const ratio = lineHeightFloat / fontSizeInt;
     const unit = 'px';
-    do {
+    while (heightInt > limit){
       fontSizeInt = fontSizeInt - 1; 
       lineHeightFloat = lineHeightFloat - ratio;
-    } while (heightInt > lineHeightFloat * maxLines);
+      limit = lineHeightFloat * maxLines;
+    }
     heading.style.fontSize = fontSizeInt+unit;
     heading.style.lineHeight = lineHeightFloat+unit;
   });
