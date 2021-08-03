@@ -508,7 +508,7 @@ export function decorateBlocks($main) {
 
 export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
-  import(`/express/blocks/${blockName}/${blockName}.css`).then((mod) => {
+  import(`/express/blocks/${blockName}/${blockName}.js`).then((mod) => {
     if (mod.decorate) {
       mod.decorate(); 
     }
