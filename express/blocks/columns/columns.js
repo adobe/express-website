@@ -42,10 +42,13 @@ export function onLoadCallback(maxLines = 3) {
   const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
   $headings.forEach((heading) => {
     const style = window.getComputedStyle(heading);
-    const { height, lineHeight } = style;
+    const { height, lineHeight, fontSize } = style;
+    let fontSizeInt = fontSize.match('\\d+')[0];
+    const unit = 'px';
     do {
-      style.fontSize -= 1;
+      fontSizeInt = fontSizeInt - 1; 
     } while (height > lineHeight * maxLines);
+    heading.style.fontSize = fontSizeInt+unit;
   });
 }
 
