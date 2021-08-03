@@ -68,6 +68,10 @@ export default [
     input: 'input/columns.table.numbered.10.doc.html',
     expected: 'expected/columns.table.numbered.10.block.html',
   }, {
+    name: 'Columns - Animation',
+    input: 'input/columns.animation.doc.html',
+    expected: 'expected/columns.animation.block.html',
+  }, {
     name: 'Banner - h2',
     input: 'input/banner.h2.doc.html',
     expected: 'expected/banner.h2.block.html',

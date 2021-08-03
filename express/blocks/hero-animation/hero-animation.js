@@ -15,6 +15,7 @@
 import {
   createTag,
   toClassName,
+  transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
 function timecodeToSeconds(timecode) {
@@ -47,43 +48,10 @@ export default function decorate($block) {
   const $attributions = createTag('div', { class: 'hero-animation-attributions' });
   $rows.forEach(($div, i) => {
     if (i === 0) {
-      const $a = $div.querySelector('a');
-      const href = $a.getAttribute('href');
-      const url = new URL(href);
-      const helixId = url.pathname.split('/')[2];
-
-      if (href.endsWith('.mp4')) {
-        const isAnimation = true;
-
-        let attribs = { controls: '' };
-        if (isAnimation) {
-          attribs = {
-            playsinline: '', autoplay: '', loop: '', muted: '',
-          };
-        }
-        const $poster = $a.closest('div').querySelector('picture source');
-        if ($poster) {
-          attribs.poster = $poster.srcset;
-          $poster.parentNode.remove();
-        }
-        const videoHref = `./media_${helixId}.mp4`;
-        const $video = createTag('video', attribs);
-        /*
-        if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
-          href='/hlx_'+href.split('/')[4].replace('#image','');
-        }
-        */
-        $video.innerHTML = `<source src="${videoHref}" type="video/mp4">`;
-        const $innerDiv = $a.closest('div');
-        $innerDiv.prepend($video);
+      const $video = transformLinkToAnimation($div.querySelector('a'));
+      if ($video) {
+        const $innerDiv = $video.closest('div');
         $innerDiv.classList.add('hero-animation-overlay');
-        $a.remove();
-        if (isAnimation) {
-          $video.addEventListener('canplay', () => {
-            $video.muted = true;
-            $video.play();
-          });
-        }
 
         $video.addEventListener('timeupdate', () => {
           attributions.forEach((att) => {

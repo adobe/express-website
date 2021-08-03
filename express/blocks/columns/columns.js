@@ -11,7 +11,7 @@
  */
 /* global */
 
-import { linkImage, createTag } from '../../scripts/scripts.js';
+import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell) {
   $columnCell.querySelectorAll('p:empty').forEach(($p) => $p.remove());
@@ -95,7 +95,11 @@ export default function decorate($block) {
       const $a = $cell.querySelector('a');
       if ($pics[0] && $a) {
         if ($a.textContent.startsWith('https://')) {
-          linkImage($cell);
+          if ($a.href.endsWith('.mp4')) {
+            transformLinkToAnimation($a);
+          } else {
+            linkImage($cell);
+          }
         }
       }
 
