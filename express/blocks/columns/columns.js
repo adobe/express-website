@@ -44,7 +44,7 @@ export function onLoadCallback(maxLines = 3) {
     const style = window.getComputedStyle(heading);
     const { height, lineHeight, fontSize } = style;
     const fontSizeInt = parseInt(fontSize.match('\\d+')[0]);
-    const lineHeightFloat = parseFloat(lineHeight.match('\\d+\.\d+'));
+    const lineHeightFloat = parseFloat(lineHeight.match('\\d+\.\\d+'));
     const ratio = lineHeightFloat / fontSizeInt;
     const unit = 'px';
     do {
