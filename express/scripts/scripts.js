@@ -508,12 +508,19 @@ export function decorateBlocks($main) {
 
 export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
-  import { decorate, onLoadCallback} from "/express/blocks/${blockName}/${blockName}.js";
-  if (decorate) {
-    decorate(); 
-  }
-  loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: onLoadCallback });
-  
+  import(`/express/blocks/${blockName}/${blockName}.css`).then((mod) => {
+    if (mod.decorate) {
+      mod.decorate(); 
+    }
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.onLoadCallback });
+  })
+  .catch((err) => {
+     console.log(`failed to load module for ${blockName}`, err);
+     const check = new File(datafile).open('r');
+     if (check){
+       loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
+     }
+  });
 }
 
 export function loadBlocks($main) {
