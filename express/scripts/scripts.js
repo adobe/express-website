@@ -431,7 +431,9 @@ function loadCSS(href, opts) {
     link.setAttribute('href', href);
     
     if (opts && 'cb' in opts && opts['cb']) {
-      link.onload = opts.cb;
+      link.onload = () => {
+        opts.cb();
+      }
     }
     else {
       link.onload = () => {

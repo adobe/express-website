@@ -43,6 +43,7 @@ export function onLoadCallback(maxLines = 3) {
   $headings.forEach((heading) => {
     const style = window.getComputedStyle(heading);
     const { height, lineHeight, fontSize } = style;
+    const heightInt = parseInt(height.match('\\d+')[0]);
     const fontSizeInt = parseInt(fontSize.match('\\d+')[0]);
     const lineHeightFloat = parseFloat(lineHeight.match('\\d+\.\\d+'));
     const ratio = lineHeightFloat / fontSizeInt;
@@ -50,7 +51,7 @@ export function onLoadCallback(maxLines = 3) {
     do {
       fontSizeInt = fontSizeInt - 1; 
       lineHeightFloat = lineHeightFloat - ratio;
-    } while (height > lineHeight * maxLines);
+    } while (heightInt > lineHeightFloat * maxLines);
     heading.style.fontSize = fontSizeInt+unit;
     heading.style.lineHeight = lineHeightFloat+unit;
   });
