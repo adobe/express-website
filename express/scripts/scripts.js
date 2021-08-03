@@ -421,35 +421,22 @@ function decorateHeaderAndFooter() {
 }
 
 /**
- * Loads a CSS file.
- * @param {string} href The path to the CSS file
- */
-export function loadCSS(href) {
-  if (!document.querySelector(`head > link[href="${href}"]`)) {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('href', href);
-
-    link.onload = () => {
-    };
-
-    link.onerror = () => {
-    };
-    document.head.appendChild(link);
-  }
-}
-
-/**
  * Loads a CSS file and sets callback for onload event.
  * @param {string} href The path to the CSS file
  */
-function loadCSS(href, cb) {
+function loadCSS(href, opts) {
   if (!document.querySelector(`head > link[href="${href}"]`)) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
     
-    link.onload = cb;
+    if ('cb' in opts && opts['cb']) {
+      link.onload = opts.cb;
+    }
+    else {
+      link.onload = () => {
+      };
+    }
 
     link.onerror = () => {
     };
@@ -523,14 +510,9 @@ export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
   import { decorate, onLoadCallback} from "/express/blocks/${blockName}/${blockName}.js";
   if (decorate) {
-    decorate();
+    decorate(); 
   }
-  if (onLoadCallback) {
-    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, onLoadCallback);
-  }
-  else {
-    loadCSS(`/express/blocks/${blockName}/${blockName}.css`)
-  }
+  loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: onLoadCallback });
   
 }
 
