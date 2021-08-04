@@ -55,15 +55,15 @@ export function onLoadCallback(maxLines = 3) {
     let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
     //should be verifiable by looking at number of lines
-    let headerLines = heightInt / lineHeightFloat;
+    let headerLines = Math.ceil(heightInt / lineHeightFloat);
     //fontSize and lineHeight must be reduced by this much
     let scale = maxLines / headerLines;
     if (scale < 1) {
       fontSizeInt = fontSizeInt * scale;
       lineHeightFloat = lineHeightFloat * scale;
+      heading.style.fontSize = fontSizeInt + unit;
+      heading.style.lineHeight = lineHeightFloat + unit;
     }
-    heading.style.fontSize = fontSizeInt + unit;
-    heading.style.lineHeight = lineHeightFloat + unit;
   });
 }
 
