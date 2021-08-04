@@ -37,6 +37,7 @@ function decorateIconList($columnCell) {
     }
   }
 }
+
 /**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit! 
