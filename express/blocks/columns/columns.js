@@ -50,7 +50,7 @@ export function onLoadCallback(maxLines = 3) {
     const style = window.getComputedStyle(heading);
     const unit = 'px';
     const { height, lineHeight, fontSize } = style;
-    //dimensions of text
+    //dimensions of headings
     const heightInt = parseInt(height.match('\\d+')[0], 10);
     let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
