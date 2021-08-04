@@ -49,17 +49,20 @@ export function onLoadCallback(maxLines = 3) {
     // eslint-disable-next-line no-undef
     const style = window.getComputedStyle(heading);
     const { height, lineHeight, fontSize } = style;
+    //dimensions of text
     const heightInt = parseInt(height.match('\\d+')[0], 10);
     let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
-    let limit = lineHeightFloat * maxLines;
-    const ratio = lineHeightFloat / fontSizeInt;
+    //should be verifiable by looking at number of lines
+    let headerLines = heightInt / lineHeightFloat;
+    let correction = maxLines / headerLines;
+    /*
     const unit = 'px';
-    while (heightInt > limit) {
-      fontSizeInt -= 1;
-      lineHeightFloat -= ratio;
-      limit = lineHeightFloat * maxLines;
+    if (correction < 1) {
+      fontSizeInt = fontSizeInt * correction;
+      lineHeightFloat = lineHeightFloat * correction;
     }
+    */
     heading.style.fontSize = fontSizeInt + unit;
     heading.style.lineHeight = lineHeightFloat + unit;
   });
