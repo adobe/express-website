@@ -55,14 +55,12 @@ export function onLoadCallback(maxLines = 3) {
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
     //should be verifiable by looking at number of lines
     let headerLines = heightInt / lineHeightFloat;
-    const unit = 'px';
-    let correction = maxLines / headerLines;
-    /*
+    //fontSize and lineHeight must be reduced by this much
+    let scale = maxLines / headerLines;
     if (correction < 1) {
       fontSizeInt = fontSizeInt * correction;
       lineHeightFloat = lineHeightFloat * correction;
     }
-    */
     heading.style.fontSize = fontSizeInt + unit;
     heading.style.lineHeight = lineHeightFloat + unit;
   });
