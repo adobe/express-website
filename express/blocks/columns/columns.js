@@ -40,7 +40,7 @@ function decorateIconList($columnCell) {
 
 /**
  * This function ensures headers fit within a 3 line limit and will reduce
- * font size and line height until text falls within this limit! 
+ * font size and line height until text falls within this limit!
  * @param {Number} maxLines maximum number of lines of text in header.
  */
 export function onLoadCallback(maxLines = 3) {
@@ -51,17 +51,17 @@ export function onLoadCallback(maxLines = 3) {
     const style = window.getComputedStyle(heading);
     const unit = 'px';
     const { height, lineHeight, fontSize } = style;
-    //dimensions of headings
+    // dimensions of headings
     const heightInt = parseInt(height.match('\\d+')[0], 10);
     let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
-    //should be verifiable by looking at number of lines
-    let headerLines = Math.ceil(heightInt / lineHeightFloat);
-    //fontSize and lineHeight must be reduced by this much
-    let scale = maxLines / headerLines;
+    // should be verifiable by looking at number of lines
+    const headerLines = Math.ceil(heightInt / lineHeightFloat);
+    // fontSize and lineHeight must be reduced by this much
+    const scale = maxLines / headerLines;
     if (scale < 1) {
-      fontSizeInt = fontSizeInt * scale;
-      lineHeightFloat = lineHeightFloat * scale;
+      fontSizeInt *= scale;
+      lineHeightFloat *= scale;
       heading.style.fontSize = fontSizeInt + unit;
       heading.style.lineHeight = lineHeightFloat + unit;
     }
