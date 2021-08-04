@@ -42,7 +42,7 @@ function decorateIconList($columnCell) {
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit!
  */
-export function cssCallback(event) {
+export function cssCallback() {
   const maxLines = 3;
   // eslint-disable-next-line no-undef
   document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5')
@@ -66,15 +66,11 @@ export function cssCallback(event) {
         heading.style.lineHeight = lineHeightFloat + unit;
       }
     });
-  if (event.type === 'resize') {
-    // eslint-disable-next-line no-undef
-    window.removeEventListener('resize', cssCallback.bind(ev), false);
-  }
 }
 
 export default function decorate($block) {
   // eslint-disable-next-line no-undef
-  window.addEventListener('resize', cssCallback.bind(ev), false);
+  window.addEventListener('resize', cssCallback, true);
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
