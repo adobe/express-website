@@ -55,9 +55,9 @@ export function onLoadCallback(maxLines = 3) {
     let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
     //should be verifiable by looking at number of lines
     let headerLines = heightInt / lineHeightFloat;
+    const unit = 'px';
     //let correction = maxLines / headerLines;
     /*
-    const unit = 'px';
     if (correction < 1) {
       fontSizeInt = fontSizeInt * correction;
       lineHeightFloat = lineHeightFloat * correction;
