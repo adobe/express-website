@@ -56,7 +56,7 @@ export function onLoadCallback(maxLines = 3) {
     //should be verifiable by looking at number of lines
     let headerLines = heightInt / lineHeightFloat;
     const unit = 'px';
-    //let correction = maxLines / headerLines;
+    let correction = maxLines / headerLines;
     /*
     if (correction < 1) {
       fontSizeInt = fontSizeInt * correction;
