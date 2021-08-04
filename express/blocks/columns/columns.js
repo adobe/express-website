@@ -48,6 +48,7 @@ export function onLoadCallback(maxLines = 3) {
   $headings.forEach((heading) => {
     // eslint-disable-next-line no-undef
     const style = window.getComputedStyle(heading);
+    const unit = 'px';
     const { height, lineHeight, fontSize } = style;
     //dimensions of text
     const heightInt = parseInt(height.match('\\d+')[0], 10);
@@ -57,9 +58,9 @@ export function onLoadCallback(maxLines = 3) {
     let headerLines = heightInt / lineHeightFloat;
     //fontSize and lineHeight must be reduced by this much
     let scale = maxLines / headerLines;
-    if (correction < 1) {
-      fontSizeInt = fontSizeInt * correction;
-      lineHeightFloat = lineHeightFloat * correction;
+    if (scale < 1) {
+      fontSizeInt = fontSizeInt * scale;
+      lineHeightFloat = lineHeightFloat * scale;
     }
     heading.style.fontSize = fontSizeInt + unit;
     heading.style.lineHeight = lineHeightFloat + unit;
