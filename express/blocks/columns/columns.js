@@ -66,6 +66,9 @@ export function cssCallback(event) {
         heading.style.lineHeight = lineHeightFloat + unit;
       }
     });
+    if (event.type === 'resize') {
+      window.removeEventListener('resize', cssCallback, false);
+    }
 }
 
 export default function decorate($block) {
