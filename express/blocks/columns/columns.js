@@ -41,34 +41,36 @@ function decorateIconList($columnCell) {
 /**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit!
- * @param {Number} maxLines maximum number of lines of text in header.
  */
-export function onLoadCallback(maxLines = 3) {
+export function cssCallback() {
+  const maxLines = 3;
   // eslint-disable-next-line no-undef
-  const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
-  $headings.forEach((heading) => {
+  document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5')
+    .forEach((heading) => {
     // eslint-disable-next-line no-undef
-    const style = window.getComputedStyle(heading);
-    const unit = 'px';
-    const { height, lineHeight, fontSize } = style;
-    // dimensions of headings
-    const heightInt = parseInt(height.match('\\d+')[0], 10);
-    let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
-    let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
-    // should be verifiable by looking at number of lines
-    const headerLines = Math.ceil(heightInt / lineHeightFloat);
-    // fontSize and lineHeight must be reduced by this much
-    const scale = maxLines / headerLines;
-    if (scale < 1) {
-      fontSizeInt *= scale;
-      lineHeightFloat *= scale;
-      heading.style.fontSize = fontSizeInt + unit;
-      heading.style.lineHeight = lineHeightFloat + unit;
-    }
-  });
+      const style = window.getComputedStyle(heading);
+      const unit = 'px';
+      const { height, lineHeight, fontSize } = style;
+      // dimensions of headings
+      const heightInt = parseInt(height.match('\\d+')[0], 10);
+      let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
+      let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
+      // should be verifiable by looking at number of lines
+      const headerLines = Math.ceil(heightInt / lineHeightFloat);
+      // fontSize and lineHeight must be reduced by this much
+      const scale = maxLines / headerLines;
+      if (scale < 1) {
+        fontSizeInt *= scale;
+        lineHeightFloat *= scale;
+        heading.style.fontSize = fontSizeInt + unit;
+        heading.style.lineHeight = lineHeightFloat + unit;
+      }
+    });
 }
 
 export default function decorate($block) {
+  // eslint-disable-next-line no-undef
+  window.addEventListener('resize', cssCallback, true);
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');

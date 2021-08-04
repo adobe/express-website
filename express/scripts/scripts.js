@@ -430,10 +430,8 @@ function loadCSS(href, opts) {
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
 
-    if (opts && 'cb' in opts && opts.cb) {
-      link.onload = () => {
-        opts.cb();
-      };
+    if (opts && 'cb' in opts && typeof opts.cb === 'function') {
+      link.onload = opts.cb;
     } else {
       link.onload = () => {
       };
@@ -513,7 +511,7 @@ export function loadBlock($block) {
     if (mod.decorate) {
       mod.decorate();
     }
-    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.onLoadCallback });
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.cssCallback });
   })
     .catch((err) => {
       console.log(`failed to load module for ${blockName}`, err);
