@@ -37,25 +37,31 @@ function decorateIconList($columnCell) {
     }
   }
 }
-
+/**
+ * This function ensures headers fit within a 3 line limit and will reduce
+ * font size and line height until text falls within this limit! 
+ * @param {Number} maxLines maximum number of lines of text in header.
+ */
 export function onLoadCallback(maxLines = 3) {
+  // eslint-disable-next-line no-undef
   const $headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5');
   $headings.forEach((heading) => {
+    // eslint-disable-next-line no-undef
     const style = window.getComputedStyle(heading);
     const { height, lineHeight, fontSize } = style;
-    let heightInt = parseInt(height.match('\\d+')[0]);
-    let fontSizeInt = parseInt(fontSize.match('\\d+')[0]);
-    let lineHeightFloat = parseFloat(lineHeight.match('\\d+\.\\d+'));
+    const heightInt = parseInt(height.match('\\d+')[0], 10);
+    let fontSizeInt = parseInt(fontSize.match('\\d+')[0], 10);
+    let lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
     let limit = lineHeightFloat * maxLines;
     const ratio = lineHeightFloat / fontSizeInt;
     const unit = 'px';
-    while (heightInt > limit){
-      fontSizeInt = fontSizeInt - 1; 
-      lineHeightFloat = lineHeightFloat - ratio;
+    while (heightInt > limit) {
+      fontSizeInt -= 1;
+      lineHeightFloat -= ratio;
       limit = lineHeightFloat * maxLines;
     }
-    heading.style.fontSize = fontSizeInt+unit;
-    heading.style.lineHeight = lineHeightFloat+unit;
+    heading.style.fontSize = fontSizeInt + unit;
+    heading.style.lineHeight = lineHeightFloat + unit;
   });
 }
 

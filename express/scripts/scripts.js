@@ -429,13 +429,12 @@ function loadCSS(href, opts) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
-    
-    if (opts && 'cb' in opts && opts['cb']) {
+
+    if (opts && 'cb' in opts && opts.cb) {
       link.onload = () => {
         opts.cb();
-      }
-    }
-    else {
+      };
+    } else {
       link.onload = () => {
       };
     }
@@ -512,17 +511,14 @@ export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
   import(`/express/blocks/${blockName}/${blockName}.js`).then((mod) => {
     if (mod.decorate) {
-      mod.decorate(); 
+      mod.decorate();
     }
     loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.onLoadCallback });
   })
-  .catch((err) => {
-     console.log(`failed to load module for ${blockName}`, err);
-     const check = new File(datafile).open('r');
-     if (check){
-       loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
-     }
-  });
+    .catch((err) => {
+      console.log(`failed to load module for ${blockName}`, err);
+      loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
+    });
 }
 
 export function loadBlocks($main) {
