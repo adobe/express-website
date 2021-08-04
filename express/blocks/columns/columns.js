@@ -68,13 +68,13 @@ export function cssCallback(event) {
     });
   if (event.type === 'resize') {
     // eslint-disable-next-line no-undef
-    window.removeEventListener('resize', cssCallback, false);
+    window.removeEventListener('resize', cssCallback.bind(ev), false);
   }
 }
 
 export default function decorate($block) {
   // eslint-disable-next-line no-undef
-  window.addEventListener('resize', cssCallback, false);
+  window.addEventListener('resize', cssCallback.bind(ev), false);
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
