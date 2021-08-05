@@ -117,5 +117,18 @@ main .how-to-steps-carousel .tip-text h3 {
 }
 
 @media (min-width: 900px) {
-  
+  main .how-to-steps-carousel-container {
+    margin: 120px 0;
+    display: flex;
+  }
+
+  main .how-to-steps-carousel-container > div {
+    margin: 0 120px 0 20px;
+    padding: 80px 70px;
+    width: 50%;
+  }
+
+  main .how-to-steps-carousel-container > picture > img {
+    margin: 0;
+  }
 }
