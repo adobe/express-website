@@ -197,8 +197,43 @@ main .template-list.horizontal .template-link {
   display: none;
 }
 
+main .template-list .template.placeholder {
+  display: flex;
+  align-items: start;
+  border-radius: 10px;
+  border: 2px dashed #D9D9D9;
+  height: 242px;
+  width: 160px;
+  margin: 10px 10px 42px 10px;
+  padding: 0 20px 32px 20px;
+}
+
+main .template-list .template.placeholder .template-link {
+  font-size: var(--body-font-size-s);
+  color: currentColor;
+}
+
+main .template-list .template.placeholder > div:first-of-type {
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+main .template-list .template.placeholder > div:first-of-type > img {
+  margin: 0 auto 50px;
+  width: 36px;
+  height: 36px;
+}
+
+main .template-list .template.placeholder .template-link::after {
+  display: none;
+}
+
 @media (min-width: 900px) {
   main .template-list-container > div,
+  main .template-list-fourcols-container > div,
+  main .template-list-sixcols-container > div,
   main .template-list-horizontal-container > div {
     max-width: 900px;
   }
@@ -245,19 +280,26 @@ main .template-list.horizontal .template-link {
 }
 
 @media (min-width: 1200px) {
-  main .template-list-container > div,
+  main .template-list-fourcols-container > div,
+  main .template-list-sixcols-container > div,
   main .template-list-horizontal-container > div {
     max-width: 1200px;
   }
 
-  main .template-list.masonry {
-    display: block;
-    columns: 240px 4;
-    margin: auto;
-    column-gap: 40px;
-    max-width: 1080px;
-    position: relative;
-    left: -16px;
+  main .template-list.sixcols .template {
+    width: 168px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  main .template-list.sixcols .template.placeholder {
+    width: 104px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+  main .template-list.sixcols.flex-masonry .template:not(.placeholder) .template-link {
+    display: none;
   }
 
   /* template-list inside columns */

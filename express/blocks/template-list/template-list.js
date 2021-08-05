@@ -22,7 +22,7 @@ import {
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
-  const colWidth = 264;
+  const colWidth = $masonry.classList.contains('sixcols') ? 180 : 264;
 
   const width = $masonry.offsetWidth;
   // console.log($masonry.offsetWidth);
@@ -277,6 +277,9 @@ export async function decorateTemplateList($block) {
           });
         }
       }
+    }
+    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"')) {
+      $tmplt.classList.add('placeholder');
     }
   }
 
