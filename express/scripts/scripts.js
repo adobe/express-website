@@ -511,7 +511,7 @@ export function loadBlock($block) {
     if (mod.default) {
       mod.default($block, blockName, document);
     }
-    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.onLoadCallback });
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.cssCallback });
   })
     .catch((err) => {
       console.log(`failed to load module for ${blockName}`, err);
