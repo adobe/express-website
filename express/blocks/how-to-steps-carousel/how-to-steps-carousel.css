@@ -13,13 +13,13 @@ main .how-to-steps-carousel-container > div {
   border-radius: 40px;
 
   margin: 0 24px;
-  padding: 56px 20px;
+  padding: 56px 24px;
   width: 100%;
   max-width: fit-content;
 }
 
 main .how-to-steps-carousel-container > div p,
-main .how-to-steps-carousel-container > div p.button-container, 
+main .how-to-steps-carousel-container > div p.button-container,
 main .how-to-steps-carousel-container > div p.button-container a {
   text-align: left;
   margin: 0;
@@ -101,7 +101,19 @@ main .how-to-steps-carousel .tip-text h3 {
 }
 
 @media (min-width: 600px) {
-  
+  main .how-to-steps-carousel-container > div {
+    margin: 0 88px;
+    padding: 80px 88px;
+  }
+
+  main .how-to-steps-carousel-container > picture > img {
+    margin-bottom: 80px;
+  }
+
+  main .how-to-steps-carousel > div.tip {
+    margin-top: 64px;
+    margin-bottom: 80px;
+  }
 }
 
 @media (min-width: 900px) {
