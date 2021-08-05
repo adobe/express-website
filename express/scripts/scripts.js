@@ -508,12 +508,10 @@ export function decorateBlocks($main) {
 export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
   import(`/express/blocks/${blockName}/${blockName}.js`).then((mod) => {
-    if (mod.default()) {
-      mod.default();
+    if (mod.default) {
+      mod.default($block, blockName, document);
     }
-    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.cssCallback });
-    // eslint-disable-next-line no-undef
-    window.addEventListener('resize', mod.cssCallback, true);
+    loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.onLoadCallback });
   })
     .catch((err) => {
       console.log(`failed to load module for ${blockName}`, err);
