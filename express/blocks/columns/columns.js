@@ -69,8 +69,6 @@ export function cssCallback() {
 }
 
 export default function decorate($block) {
-  // eslint-disable-next-line no-undef
-  window.addEventListener('resize', cssCallback, true);
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');

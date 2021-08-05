@@ -512,6 +512,8 @@ export function loadBlock($block) {
       mod.default();
     }
     loadCSS(`/express/blocks/${blockName}/${blockName}.css`, { cb: mod.cssCallback });
+    // eslint-disable-next-line no-undef
+    window.addEventListener('resize', mod.cssCallback, true);
   })
     .catch((err) => {
       console.log(`failed to load module for ${blockName}`, err);
