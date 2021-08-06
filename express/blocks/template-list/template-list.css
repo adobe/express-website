@@ -80,7 +80,7 @@ main .template-list.large .template {
 }
 
 main .template-list.large .template > div {
-  margin: auto;
+  margin: 0;
 }
 
 main .template-list.large .template img {
@@ -198,6 +198,7 @@ main .template-list.horizontal .template-link {
 }
 
 main .template-list.sixcols .template {
+  display: inline-flex;
   width: 165px;
   margin: 5px;
 }
