@@ -16,6 +16,7 @@ main .template-list.sixcols {
 
 main .template-list-sixcols-container > div {
   max-width: 350px;
+  padding: 0;
 }
 
 main .template-list.sixcols > .masonry-col {
