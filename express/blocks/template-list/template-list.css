@@ -1,5 +1,4 @@
 main .template-list {
-  max-width: 375px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -7,6 +6,20 @@ main .template-list {
   font-size: var(--body-font-size-m);
   font-weight: var(--body-font-weight);
   text-align: left;
+}
+
+main .template-list.sixcols {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: start;
+}
+
+main .template-list-sixcols-container > div {
+  max-width: 350px;
+}
+
+main .template-list.sixcols > .masonry-col {
+  max-width: 175px;
 }
 
 main .template-list .template-link {
@@ -56,7 +69,7 @@ main .template-list .template > div:first-child > a:any-link {
 }
 
 main .template-list .template img, main .template-list .template video {
-  border-radius: 10px;
+  border-radius: 7px;
   width: 300px;
 }
 
@@ -76,19 +89,6 @@ main .template-list.large .template img {
 
 main .template-list + .button-container > a {
   margin: 0;
-}
-
-main .template-list.masonry {
-  columns: 240px 1;
-  max-width: 311px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-main .template-list.masonry .template {
-  margin-top: 0;
-  margin-bottom: 32px;
-  padding: 0;
 }
 
 /* horizontal template-list (carousel) */
@@ -197,15 +197,33 @@ main .template-list.horizontal .template-link {
   display: none;
 }
 
+main .template-list.sixcols .template {
+  width: 165px;
+  margin: 5px;
+}
+
+main .template-list.sixcols .template.placeholder {
+  width: 104px;
+}
+
+main .template-list.sixcols .template:not(.placeholder) .button-container {
+  display: none;
+}
+
 main .template-list .template.placeholder {
   display: flex;
   align-items: start;
-  border-radius: 10px;
-  border: 2px dashed #D9D9D9;
+  border-radius: 14px;
+  border: 2px dashed var(--color-gray-300);
   height: 242px;
-  width: 160px;
+  width: 148px;
   margin: 10px 10px 42px 10px;
   padding: 0 20px 32px 20px;
+}
+
+main .template-list .template.placeholder {
+  width: 145px;
+  margin: 15px;
 }
 
 main .template-list .template.placeholder .template-link {
@@ -233,15 +251,18 @@ main .template-list .template.placeholder .template-link::after {
 @media (min-width: 900px) {
   main .template-list-container > div,
   main .template-list-fourcols-container > div,
-  main .template-list-sixcols-container > div,
   main .template-list-horizontal-container > div {
     max-width: 900px;
   }
 
-  main .template-list {
-    max-width: unset;    
+  main .template-list-sixcols-container > div {
+    max-width: 748px;
   }
 
+  main .template-list.sixcols > .masonry-col {
+    max-width: 187px;
+  }
+  
   main .template-list .template {
     width: 240px;
     margin-left: 20px;
@@ -252,12 +273,12 @@ main .template-list .template.placeholder .template-link::after {
     width: 240px;
   }
 
-  main .template-list.masonry {
-    display: block;
-    columns: 240px 3;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 800px;
+  main .template-list.sixcols .template {
+    margin: 11px;
+  }
+
+  main .template-list.sixcols .template.placeholder {
+    margin: 21px;
   }
 
   /* template-list inside columns */
@@ -286,20 +307,8 @@ main .template-list .template.placeholder .template-link::after {
     max-width: 1200px;
   }
 
-  main .template-list.sixcols .template {
-    width: 168px;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-  main .template-list.sixcols .template.placeholder {
-    width: 104px;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-  
-  main .template-list.sixcols.flex-masonry .template:not(.placeholder) .template-link {
-    display: none;
+  main .template-list-sixcols-container > div {
+    max-width: 1122px;
   }
 
   /* template-list inside columns */

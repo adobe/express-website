@@ -22,7 +22,7 @@ import {
 } from '../../scripts/scripts.js';
 
 function masonrize($cells, $masonry, force) {
-  const colWidth = $masonry.classList.contains('sixcols') ? 180 : 264;
+  const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
 
   const width = $masonry.offsetWidth;
   // console.log($masonry.offsetWidth);
