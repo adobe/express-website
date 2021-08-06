@@ -231,6 +231,7 @@ main .template-list .template.placeholder {
 main .template-list .template.placeholder .template-link {
   font-size: var(--body-font-size-s);
   color: currentColor;
+  padding-left: 0;
 }
 
 main .template-list .template.placeholder > div:first-of-type {
