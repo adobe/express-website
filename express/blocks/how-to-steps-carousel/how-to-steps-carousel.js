@@ -85,5 +85,7 @@ export default function decorate(block, name, doc) {
   });
 
   script.innerHTML = JSON.stringify(schema);
-  doc.head.append(script);
+  if (doc.head) {
+    doc.head.append(script);
+  }
 }
