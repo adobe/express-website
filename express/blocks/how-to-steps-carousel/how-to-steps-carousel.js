@@ -63,7 +63,7 @@ export default function decorate(block, name, doc) {
     row.innerHTML = '';
     row.append(text);
 
-    const number = createTag('div', { class: 'tip-number' });
+    const number = createTag('div', { class: 'tip-number', tabindex: '0' });
     number.innerHTML = `<span>${i + 1}</span>`;
     number.addEventListener('click', (e) => {
       block.querySelectorAll('.tip, .tip-number').forEach((item) => {
@@ -75,6 +75,12 @@ export default function decorate(block, name, doc) {
       }
       target.classList.add('active');
       block.querySelector(`.tip-${i + 1}`).classList.add('active');
+    });
+    number.addEventListener('keyup', (e) => {
+      if (e.which === 13) {
+        e.preventDefault();
+        e.target.click();
+      }
     });
     numbers.append(number);
 
