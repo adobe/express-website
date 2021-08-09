@@ -208,7 +208,7 @@ export async function decorateTemplateList($block) {
   }
 
   const templates = Array.from($block.children);
-  // process single column row as title
+  // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
