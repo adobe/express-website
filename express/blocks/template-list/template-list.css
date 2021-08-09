@@ -9,7 +9,30 @@ main .template-list {
   text-align: left;
 }
 
-main .template-list .template-link {
+main .template-list .template-title {
+  margin: 0 12px;
+}
+
+main .template-list .template-title > div {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: left;
+}
+
+main .template-list .template-title > div > * {
+  text-align: left;
+  margin: 0;
+}
+
+main .template-list .template-title p {
+  margin-top: 8px;
+  width: fit-content;
+  font-size: var(--body-font-size-m);
+}
+
+main .template-list .template-link,
+main .template-list .template-title-link {
   text-decoration: none;
   color: #1473E6;
   padding-left: 16px;
@@ -17,7 +40,8 @@ main .template-list .template-link {
   display: flex;
 }
 
-main .template-list .template-link::after {
+main .template-list .template-link::after,
+main .template-list .template-title-link::after {
   display: flex;
   width: 6px;
   height: 6px;
@@ -33,6 +57,15 @@ main .template-list .template-link::after {
   margin-top: 5px;
   margin-left: 5px;
   margin-right: 2.25px;
+}
+
+main .template-list .template-title-link {
+  padding: 0;
+  white-space: nowrap;
+}
+
+main .template-list .template-title-link::after {
+  margin-top: 7px;
 }
 
 main .template-list .template p {
@@ -99,7 +132,7 @@ main .template-list.horizontal {
   max-width: 375px;
   margin-left: auto; 
   margin-right: auto;
-  height: 220px;
+  min-height: 220px;
 }
 
 main .template-list.horizontal .carousel-platform {
@@ -205,6 +238,15 @@ main .template-list.horizontal .template-link {
 
   main .template-list {
     max-width: unset;    
+  }
+
+  main .template-list .template-title > div {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  main .template-list .template-title > div > * {
+    text-align: left;
   }
 
   main .template-list .template {

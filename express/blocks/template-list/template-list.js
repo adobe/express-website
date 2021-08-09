@@ -136,10 +136,10 @@ function moveCarousel($block, increment) {
   toggleControls($block, newLeft);
 }
 
-function buildCarousel($block) {
+function buildCarousel($block, selector = ':scope > *') {
   // add templates to carousel
   const $platform = createTag('div', { class: 'carousel-platform' });
-  Array.from($block.children).forEach((t) => $platform.appendChild(t));
+  Array.from($block.querySelectorAll(selector)).forEach((t) => $platform.appendChild(t));
   $block.appendChild($platform);
   // faders
   const $faderLeft = createTag('div', { class: 'carousel-fader-left' });
@@ -207,7 +207,18 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  rows = $block.children.length;
+  const templates = Array.from($block.children);
+  // process single column row as title
+  if (templates[0] && templates[0].children.length === 1) {
+    const $titleRow = templates.shift();
+    $titleRow.classList.add('template-title');
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      $a.closest('p').classList.remove('button-container');
+    });
+  }
+
+  rows = templates.length;
 
   if (rows > 6 && !$block.classList.contains('horizontal')) {
     $block.classList.add('masonry');
@@ -226,7 +237,7 @@ export async function decorateTemplateList($block) {
   //       +- "Edit this template"
   //
   // make copy of children to avoid modifying list while looping
-  for (let $tmplt of Array.from($block.children)) {
+  for (let $tmplt of templates) {
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
       const $a = createTag('a', {
@@ -282,7 +293,7 @@ export async function decorateTemplateList($block) {
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel($block);
+    buildCarousel($block, ':scope > .template');
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
