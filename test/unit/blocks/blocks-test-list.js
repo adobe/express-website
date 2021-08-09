@@ -52,6 +52,10 @@ export default [
     input: 'input/template-list.horizontal.doc.html',
     expected: 'expected/template-list.horizontal.block.html',
   }, {
+    name: 'Template List - title',
+    input: 'input/template-list.title.doc.html',
+    expected: 'expected/template-list.title.block.html',
+  }, {
     name: 'Columns - single row',
     input: 'input/columns.singlerow.doc.html',
     expected: 'expected/columns.singlerow.block.html',
