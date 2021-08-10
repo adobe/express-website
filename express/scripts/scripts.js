@@ -1314,19 +1314,38 @@ async function decoratePage() {
 window.spark = {};
 decoratePage();
 
-/* performance instrumentation */
+/*
+ * lighthouse performance instrumentation helper
+ * (needs a refactor)
+ */
 
 function stamp(message) {
-  console.log(`${new Date() - performance.timing.navigationStart}ms: ${message}`);
+  if (window.name.includes('performance')) {
+    // eslint-disable-next-line no-console
+    console.log(`${new Date() - performance.timing.navigationStart}:${message}`);
+  }
 }
+
+stamp('start');
 
 function registerPerformanceLogger() {
   try {
     const polcp = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       stamp(JSON.stringify(entries));
+      // eslint-disable-next-line no-console
+      console.log(entries[0].element);
     });
     polcp.observe({ type: 'largest-contentful-paint', buffered: true });
+
+    const pols = new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      stamp(JSON.stringify(entries));
+      // eslint-disable-next-line no-console
+      console.log(entries[0].sources[0].node);
+    });
+    pols.observe({ type: 'layout-shift', buffered: true });
+
     const pores = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       entries.forEach((entry) => {
