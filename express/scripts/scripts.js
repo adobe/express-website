@@ -1116,7 +1116,9 @@ function splitSections($main) {
 function setTheme() {
   const theme = getMeta('theme');
   if (theme) {
-    const themeClass = toClassName(theme);
+    let themeClass = toClassName(theme);
+    /* backwards compatibility can be removed again */
+    if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
     const $body = document.body;
     $body.classList.add(themeClass);
   }
