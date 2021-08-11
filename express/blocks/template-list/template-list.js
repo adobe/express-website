@@ -26,7 +26,7 @@ import {
 } from '../shared/carousel.js';
 
 function masonrize($cells, $masonry, force) {
-  const colWidth = 264;
+  const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
 
   const width = $masonry.offsetWidth;
   // console.log($masonry.offsetWidth);
@@ -199,6 +199,9 @@ export async function decorateTemplateList($block) {
           });
         }
       }
+    }
+    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"')) {
+      $tmplt.classList.add('placeholder');
     }
   }
 
