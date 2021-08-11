@@ -200,7 +200,7 @@ export async function decorateTemplateList($block) {
         }
       }
     }
-    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"')) {
+    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
       $tmplt.classList.add('placeholder');
     }
   }
