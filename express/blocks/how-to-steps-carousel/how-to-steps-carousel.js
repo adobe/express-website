@@ -28,6 +28,8 @@ export default function decorate(block) {
 
   const numbers = createTag('div', { class: 'tip-numbers' });
   block.prepend(numbers);
+  const tips = createTag('div', { class: 'tips' });
+  block.append(tips);
 
   rows.forEach((row, i) => {
     row.classList.add('tip');
@@ -45,6 +47,8 @@ export default function decorate(block) {
 
     row.innerHTML = '';
     row.append(text);
+
+    tips.prepend(row);
 
     const number = createTag('div', { class: 'tip-number', tabindex: '0' });
     number.innerHTML = `<span>${i + 1}</span>`;
