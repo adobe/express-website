@@ -144,6 +144,12 @@ main .how-to-steps-carousel-container .icon {
 
   main .how-to-steps-carousel-container > picture > img {
     margin-bottom: 80px;
+    object-position: right;
+    object-fit: cover;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
   }
 
   main .how-to-steps-carousel > div.tip {
