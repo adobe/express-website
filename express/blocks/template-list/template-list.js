@@ -21,8 +21,12 @@ import {
   addSearchQueryToHref,
 } from '../../scripts/scripts.js';
 
+import {
+  buildCarousel,
+} from '../shared/carousel.js';
+
 function masonrize($cells, $masonry, force) {
-  const colWidth = 264;
+  const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
 
   const width = $masonry.offsetWidth;
   // console.log($masonry.offsetWidth);
@@ -89,88 +93,6 @@ async function fetchBlueprint(pathname) {
   webpPolyfill($main);
   window.spark.$blueprint = $main;
   return ($main);
-}
-
-function getCarouselState($block) {
-  const platform = $block.querySelector('.carousel-platform');
-  const blockStyle = window.getComputedStyle($block);
-  const platformStyle = window.getComputedStyle(platform);
-  const blockWidth = parseInt(blockStyle.getPropertyValue('width'), 10);
-  const platformWidth = parseInt(platformStyle.getPropertyValue('width'), 10);
-  const platformLeft = parseInt(platformStyle.getPropertyValue('left'), 10) || 0;
-  return {
-    platform,
-    platformLeft,
-    blockWidth,
-    platformWidth,
-    platformOffset: platformWidth - blockWidth - Math.abs(platformLeft),
-    faderLeft: $block.querySelector('.carousel-fader-left'),
-    faderRight: $block.querySelector('.carousel-fader-right'),
-  };
-}
-
-function toggleControls($block, newLeft = 0) {
-  const state = getCarouselState($block);
-  state.faderLeft.style.display = newLeft < 0 ? 'block' : 'none';
-  state.faderRight.style.display = state.blockWidth < state.platformWidth - Math.abs(newLeft) ? 'block' : 'none';
-}
-
-function moveCarousel($block, increment) {
-  const state = getCarouselState($block);
-  let newLeft = state.platformLeft;
-  if (increment < 0
-      && state.platformWidth > state.blockWidth
-      && state.platformOffset - Math.abs(increment) <= 0) {
-    // near right end
-    // eslint-disable-next-line no-param-reassign
-    newLeft += -(state.platformOffset);
-  } else if (increment > 0 && Math.abs(state.platformLeft) < increment) {
-    // near left end
-    // eslint-disable-next-line no-param-reassign
-    newLeft += Math.abs(state.platformLeft);
-  } else {
-    newLeft += increment;
-  }
-  state.platform.style.left = `${newLeft}px`;
-  // update carousel controls
-  toggleControls($block, newLeft);
-}
-
-function buildCarousel($block, selector = ':scope > *') {
-  // add templates to carousel
-  const $platform = createTag('div', { class: 'carousel-platform' });
-  Array.from($block.querySelectorAll(selector)).forEach((t) => $platform.appendChild(t));
-  $block.appendChild($platform);
-  // faders
-  const $faderLeft = createTag('div', { class: 'carousel-fader-left' });
-  // $faderLeft.style.display = 'none';
-  const $faderRight = createTag('div', { class: 'carousel-fader-right' });
-  $block.appendChild($faderLeft);
-  $block.appendChild($faderRight);
-  // controls
-  const $arrowLeft = createTag('a', { class: 'button carousel-arrow carousel-arrow-left' });
-  const $arrowRight = createTag('a', { class: 'button carousel-arrow carousel-arrow-right' });
-  $arrowLeft.addEventListener('click', () => moveCarousel($block, 240));
-  $arrowRight.addEventListener('click', () => moveCarousel($block, -240));
-  $faderLeft.appendChild($arrowLeft);
-  $faderRight.appendChild($arrowRight);
-  const media = Array.from($block.querySelectorAll('img, video'));
-  const mediaLoaded = [];
-  const mediaCheck = window.setInterval(() => {
-    if (media.length > 0) {
-      // all media loaded
-      window.clearInterval(mediaCheck);
-      toggleControls($block);
-    }
-    media.forEach(($m, i) => {
-      if (parseInt(window.getComputedStyle($m).getPropertyValue('width'), 10)) {
-        // non-zwero width, media loaded
-        mediaLoaded.push(i);
-        media.splice(i, 1);
-      }
-    });
-  }, 50);
-  window.addEventListener('resize', () => toggleControls($block));
 }
 
 export async function decorateTemplateList($block) {
@@ -289,11 +211,14 @@ export async function decorateTemplateList($block) {
         }
       }
     }
+    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"')) {
+      $tmplt.classList.add('placeholder');
+    }
   }
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel($block, ':scope > .template');
+    buildCarousel(':scope > .template', $block, '');
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);

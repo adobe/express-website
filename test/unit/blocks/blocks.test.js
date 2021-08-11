@@ -60,9 +60,11 @@ describe('Block tests', () => {
       const expected = getFragment(html);
 
       let block = doc.querySelector('main > div');
+      let sectionMode = false;
       if (block.classList.contains('section-wrapper')) {
         // input file contains section, look for block inside it
         block = block.querySelector(':scope > div > div');
+        sectionMode = true;
       }
 
       const classes = Array.from(block.classList.values());
@@ -73,7 +75,11 @@ describe('Block tests', () => {
         await mod.default(block, blockName, doc);
       }
 
-      expect(fragmentToString(block)).to.be.equal(fragmentToString(expected));
+      let current = block;
+      if (sectionMode) {
+        current = block.parentElement.parentElement;
+      }
+      expect(fragmentToString(current)).to.be.equal(fragmentToString(expected));
     });
   });
 });
