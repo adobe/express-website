@@ -241,10 +241,11 @@ main .template-list .template.placeholder > div:first-of-type {
   align-items: flex-end;
 }
 
-main .template-list .template.placeholder > div:first-of-type > img {
+main .template-list .template.placeholder > div:first-of-type > img,
+main .template-list .template.placeholder > div:first-of-type > svg {
   margin: 0 auto 50px;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
 }
 
 main .template-list .template.placeholder .template-link::after {
