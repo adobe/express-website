@@ -100,6 +100,11 @@ main .how-to-steps-carousel .tip-text h3 {
   text-align: left;
 }
 
+main .how-to-steps-carousel-container .icon {
+  width: 56px;
+  height: 56px;
+}
+
 @media (min-width: 600px) {
   main .how-to-steps-carousel-container > div {
     margin: 0 88px;
