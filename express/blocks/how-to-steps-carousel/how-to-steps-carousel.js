@@ -16,7 +16,7 @@ import {
   createTag,
 } from '../../scripts/scripts.js';
 
-export default function decorate(block, name, doc) {
+export default function decorate(block) {
   // move first image of container outside of div for styling
   const picture = block.parentElement.querySelector('picture');
   const parent = picture.parentElement;
@@ -24,15 +24,7 @@ export default function decorate(block, name, doc) {
   parent.remove();
 
   const howto = block;
-  const heading = howto.previousElementSibling;
   const rows = Array.from(howto.children);
-  const script = createTag('script', { type: 'application/ld+json' });
-  const schema = {
-    '@context': 'http://schema.org',
-    '@type': 'HowTo',
-    name: heading.textContent,
-    step: [],
-  };
 
   const numbers = createTag('div', { class: 'tip-numbers' });
   block.prepend(numbers);
@@ -42,15 +34,6 @@ export default function decorate(block, name, doc) {
     row.classList.add(`tip-${i + 1}`);
 
     const cells = Array.from(row.children);
-    schema.step.push({
-      '@type': 'HowToStep',
-      position: i + 1,
-      name: cells[0].textContent,
-      itemListElement: {
-        '@type': 'HowToDirection',
-        text: cells[1].textContent,
-      },
-    });
 
     const h3 = createTag('h3');
     h3.innerHTML = cells[0].textContent;
@@ -89,9 +72,4 @@ export default function decorate(block, name, doc) {
       number.classList.add('active');
     }
   });
-
-  script.innerHTML = JSON.stringify(schema);
-  if (doc.head) {
-    doc.head.append(script);
-  }
 }
