@@ -49,37 +49,28 @@ main .columns .column-picture {
   margin: 15px 0;
 }
 
-main .columns h1{
-  font-size: var(--heading-font-size-xxl);
-  line-height: 1.06;
+main .columns h1 {
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.05;
 }
 
 main .columns h2 {
-  font-size: var(--heading-font-size-xl);
-  line-height: 1.08;
+  font-size: var(--heading-font-size-l);
+  line-height: 1.05;
 }
 
 main .columns h3 {
-  font-size: var(--heading-font-size-l);
-  line-height: 1.11;
-}
-
-main .columns h4,
-main .columns h5,
-main .columns h6 {
   font-size: var(--heading-font-size-m);
-  line-height: 1.14; 
+  line-height: 1.05;
 }
 
 
 main .columns p {
   font-size: var(--body-font-size-xl);
-  line-height: 1.16;
 }
 
 main .columns p.powered-by {
   font-size: var(--body-font-size-m);
-  line-height: 1.2;
 }
 
 main .columns.width-2-columns .column-picture {
@@ -108,23 +99,6 @@ main .columns.center .column p.button-container {
 
 main .columns a > p:empty {
   display: none;
-}
-
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h2 {
-  font-size: var(--heading-font-size-l);
-  line-height: 1.11;
-}
-
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h3,
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h4,
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h6 {
-  font-size: var(--heading-font-size-s);
-  line-height: 1.18;
-}
-
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description p {
-  font-size: var(--body-font-size-s);
-  line-height: 1.28;
 }
 
 main .columns > div span.num {
@@ -331,5 +305,19 @@ main .columns-highlight-container .column p {
   main .columns-table-container > div {
     max-width: 1024px;
   }
+
+  main .columns h1 {
+    font-size: var(--heading-font-size-xxl);
+    line-height: 1.08;
+  }
+
+  main .columns h2 {
+    font-size: var(--heading-font-size-xl);
+    line-height: 1.08;
+  }
+
+  main .columns h3 {
+    font-size: var(--heading-font-size-xl);
+    line-height: 1.08;
+  }
 }
-  
