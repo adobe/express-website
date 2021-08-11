@@ -102,11 +102,11 @@ export default [
   }, {
     name: 'Inline Banner - inverted if dark container',
     input: 'input/inline-banner.dark.doc.html',
-    expected: 'expected/inline-banner.inverted.block.html',
+    expected: 'expected/inline-banner.dark.section.html',
   }, {
     name: 'Inline Banner - inverted if highlighted container',
     input: 'input/inline-banner.highlight.doc.html',
-    expected: 'expected/inline-banner.inverted.block.html',
+    expected: 'expected/inline-banner.inverted.section.html',
   }, {
     name: 'Commerce CTA',
     input: 'input/commerce-cta.doc.html',
@@ -119,5 +119,9 @@ export default [
     name: 'FAQ - basic',
     input: 'input/faq.doc.html',
     expected: 'expected/faq.block.html',
+  }, {
+    name: 'How To Steps Carousel',
+    input: 'input/how-to-steps-carousel.doc.html',
+    expected: 'expected/how-to-steps-carousel.section.html',
   },
 ];
