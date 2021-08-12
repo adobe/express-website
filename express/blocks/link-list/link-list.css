@@ -21,7 +21,7 @@ main .link-list p.button-container {
 }
 
 main .link-list a.button.small.secondary {
-  margin: 6px 5px 6px 0;
+  margin: 6px 20px 6px 0;
 }
 
 main .link-list a.button.small.secondary:hover {
