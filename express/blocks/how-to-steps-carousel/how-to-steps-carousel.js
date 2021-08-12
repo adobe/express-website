@@ -23,6 +23,26 @@ export default function decorate(block) {
   block.parentElement.before(picture);
   parent.remove();
 
+  // get viewport width
+  const vw = Math.max(
+    block.ownerDocument.documentElement.clientWidth || 0,
+    block.ownerDocument.defaultView.innerWidth || 0,
+  );
+  if (vw >= 900) {
+    // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
+    const img = picture.querySelector('img');
+    const onImgLoaded = () => {
+      img.style.height = `${img.naturalHeight}px`;
+      picture.style.height = `${img.naturalHeight}px`;
+    };
+
+    if (img.complete) {
+      onImgLoaded();
+    } else {
+      img.addEventListener('load', onImgLoaded);
+    }
+  }
+
   const howto = block;
   const rows = Array.from(howto.children);
 
