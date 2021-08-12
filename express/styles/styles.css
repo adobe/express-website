@@ -85,7 +85,7 @@ header {
     background-color: #FFF;
 }
 
-body.nobrand header {
+body.no-brand-header header, body.no-desktop-brand-header header {
   height: 64px;
   background-image: unset;
 }

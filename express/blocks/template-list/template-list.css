@@ -308,6 +308,10 @@ main .template-list .template.placeholder .template-link::after {
     text-align: left;
   }
 
+  main .template-list.sixcols > .masonry-col {
+    max-width: 187px;
+  }
+  
   main .template-list .template {
     width: 240px;
     margin-left: 20px;
