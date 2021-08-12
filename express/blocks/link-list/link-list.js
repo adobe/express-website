@@ -26,7 +26,7 @@ export default function decorate(block) {
     const div = links[0].closest('div');
     const platformEl = document.createElement('div');
     platformEl.classList.add('link-list-platform');
-    buildCarousel(links, div, 'link-list-');
+    buildCarousel('p.button-container', div, 'link-list-');
     div.append(platformEl);
   }
 }
