@@ -243,7 +243,7 @@ main .template-list .template.placeholder > div:first-of-type {
 
 main .template-list .template.placeholder > div:first-of-type > img,
 main .template-list .template.placeholder > div:first-of-type > svg {
-  margin: 0 auto 50px;
+  margin: 0 auto 42px;
   width: 44px;
   height: 44px;
 }
