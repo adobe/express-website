@@ -16,7 +16,40 @@ import {
   createTag,
 } from '../../scripts/scripts.js';
 
+let rotationInterval;
+
+function activate(block, target) {
+  // de-activate all
+  block.querySelectorAll('.tip, .tip-number').forEach((item) => {
+    item.classList.remove('active');
+  });
+
+  // get index of the target
+  const i = parseInt(target.getAttribute('data-tip-index'), 10);
+  // activate corresponding number and tip
+  block.querySelectorAll(`.tip-${i}`).forEach((elem) => elem.classList.add('active'));
+}
+
+function initRotation(window, document) {
+  if (window && !rotationInterval) {
+    rotationInterval = window.setInterval(() => {
+      document.querySelectorAll('.tip-numbers').forEach((numbers) => {
+        // find next adjacent sibling of the currently activated tip
+        let activeAdjacentSibling = numbers.querySelector('.tip-number.active+.tip-number');
+        if (!activeAdjacentSibling) {
+          // if no next adjacent, back to first
+          activeAdjacentSibling = numbers.firstElementChild;
+        }
+        activate(numbers.parentElement, activeAdjacentSibling);
+      });
+    }, 5000);
+  }
+}
+
 export default function decorate(block) {
+  const window = block.ownerDocument.defaultView;
+  const document = block.ownerDocument;
+
   // move first image of container outside of div for styling
   const picture = block.parentElement.querySelector('picture');
   const parent = picture.parentElement;
@@ -24,9 +57,10 @@ export default function decorate(block) {
   parent.remove();
 
   // get viewport width
+  const { documentElement } = document;
   const vw = Math.max(
-    block.ownerDocument.documentElement.clientWidth || 0,
-    block.ownerDocument.defaultView.innerWidth || 0,
+    documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
+    window && window.innerWidth ? window.innerWidth : 0,
   );
   if (vw >= 900) {
     // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
@@ -54,6 +88,7 @@ export default function decorate(block) {
   rows.forEach((row, i) => {
     row.classList.add('tip');
     row.classList.add(`tip-${i + 1}`);
+    row.setAttribute('data-tip-index', i + 1);
 
     const cells = Array.from(row.children);
 
@@ -70,25 +105,29 @@ export default function decorate(block) {
 
     tips.prepend(row);
 
-    const number = createTag('div', { class: 'tip-number', tabindex: '0' });
+    const number = createTag('div', { class: `tip-number tip-${i + 1}`, tabindex: '0' });
     number.innerHTML = `<span>${i + 1}</span>`;
+    number.setAttribute('data-tip-index', i + 1);
+
     number.addEventListener('click', (e) => {
-      block.querySelectorAll('.tip, .tip-number').forEach((item) => {
-        item.classList.remove('active');
-      });
+      if (rotationInterval) {
+        window.clearTimeout(rotationInterval);
+      }
+
       let { target } = e;
       if (e.target.nodeName.toLowerCase() === 'span') {
         target = e.target.parentElement;
       }
-      target.classList.add('active');
-      block.querySelector(`.tip-${i + 1}`).classList.add('active');
+      activate(block, target);
     });
+
     number.addEventListener('keyup', (e) => {
       if (e.which === 13) {
         e.preventDefault();
         e.target.click();
       }
     });
+
     numbers.append(number);
 
     if (i === 0) {
@@ -96,4 +135,6 @@ export default function decorate(block) {
       number.classList.add('active');
     }
   });
+
+  initRotation(window, document);
 }
