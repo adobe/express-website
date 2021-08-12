@@ -107,7 +107,7 @@ main .how-to-steps-carousel .tip-number {
   min-height: 34px;
   display: block;
   position: relative;
-  background-color: var(--color-gray-300);
+  background-color: var(--color-gray-200);
   border-radius: 50%;
   margin-right: 12px;
   color: var(--color-black);
