@@ -199,6 +199,7 @@ main .template-list.horizontal .template-link {
 }
 
 main .template-list.sixcols .template {
+  position: relative;
   display: inline-flex;
   width: 165px;
   margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
@@ -209,6 +210,43 @@ main .template-list.sixcols .template.placeholder {
 }
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
+  display: none;
+}
+
+main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 4px);
+  border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+}
+
+main .template-list.sixcols .template:not(.placeholder) .template-link {
+  text-decoration: none;
+  border-radius: 18px;
+  padding: 5px 1.2em 6px 1.2em;
+  text-align: center;
+  font-size: var(--body-font-size-s);
+  font-style: normal; 
+  font-weight: 600;
+  line-height: var(--body-line-height);
+  cursor: pointer;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  transition: background-color .4s;
+  margin: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  height: fit-content;
+}
+
+main .template-list.sixcols .template:not(.placeholder) .template-link::after {
   display: none;
 }
 
