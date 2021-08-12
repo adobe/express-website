@@ -115,13 +115,22 @@
 
       #selectionPanel {
         position: fixed;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-items: center;
         bottom: 0;
         background-color: lightsalmon;
-        padding-bottom: 20px;
+        /* padding-bottom: 20px; */
         width: 100%;
         box-sizing: border-box;
         left: 0;
         user-select: none;
+      }
+
+      #selectionPanel.hidden {
+        display: none;
       }
 
       #selectionPanel button:disabled {
@@ -132,17 +141,27 @@
       #selectionPanel button {
         background-color: #F25749;
         color: white;
-        position: absolute;
-        right: 10px;
-        bottom: 50px;
+        white-space: nowrap;
+        align-self: flex-end;
         border: 1px solid white;
-        font-size: 13px;
       }
 
+      #selectionPanel input {
+        width: 150px;
+        padding: 2px 4px;
+      }
+
+      #selectionPanel input,
+      #selectionPanel button {
+        align-self: flex-end;
+        margin: auto 20px auto 0;
+        font-size: 13px;
+      }
 
       #selectionPanel #selectedList {
         display: flex;
         flex-wrap: wrap;
+        flex-grow: 1;
       }
 
       #selectionPanel .selectedTemplate {
@@ -423,7 +442,7 @@
         row.append(linkCell);
         const link = document.createElement('a');
         link.href = template.branchURL;
-        link.innerHTML = 'Edit this template';
+        link.textContent = document.querySelector('#edittext').value || 'Edit this template';
         linkCell.append(link);
 
         img.height = (IMG_EXPORT_WIDTH / img.naturalWidth) * img.naturalHeight;
@@ -476,6 +495,7 @@
       <div id="results"></div>
       <div id="selectionPanel" class="hidden">
         <div id="selectedList"></div>
+        <input type="text" id="edittext" placeholder="Optional edit text">
         <button type="button" onclick="copy()" id="copyselection" disabled="true">Copy Selection</button>
       </div>
     </main>
