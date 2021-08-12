@@ -160,6 +160,7 @@ export async function decorateTemplateList($block) {
   //
   // make copy of children to avoid modifying list while looping
   for (let $tmplt of templates) {
+    const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
       const $a = createTag('a', {
@@ -211,7 +212,7 @@ export async function decorateTemplateList($block) {
         }
       }
     }
-    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"')) {
+    if (isPlaceholder) {
       $tmplt.classList.add('placeholder');
     }
   }
