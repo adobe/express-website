@@ -129,7 +129,18 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  rows = $block.children.length;
+  const templates = Array.from($block.children);
+  // process single column first row as title
+  if (templates[0] && templates[0].children.length === 1) {
+    const $titleRow = templates.shift();
+    $titleRow.classList.add('template-title');
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      $a.closest('p').classList.remove('button-container');
+    });
+  }
+
+  rows = templates.length;
 
   if (rows > 6 && !$block.classList.contains('horizontal')) {
     $block.classList.add('masonry');
@@ -148,7 +159,7 @@ export async function decorateTemplateList($block) {
   //       +- "Edit this template"
   //
   // make copy of children to avoid modifying list while looping
-  for (let $tmplt of Array.from($block.children)) {
+  for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
     if ($link) {
@@ -208,7 +219,7 @@ export async function decorateTemplateList($block) {
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel($block.children, $block, '');
+    buildCarousel(':scope > .template', $block, '');
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);

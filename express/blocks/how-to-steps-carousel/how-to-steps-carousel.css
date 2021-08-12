@@ -3,6 +3,10 @@ main .how-to-steps-carousel-container {
   padding: 0;
 }
 
+main .how-to-steps-carousel-container > picture {
+  width: 100%;
+}
+
 main .how-to-steps-carousel-container > picture > img {
   width: 100%;
   margin-bottom: 56px;
@@ -37,15 +41,8 @@ main .how-to-steps-carousel-container > div > div {
   box-sizing: border-box;
 }
 
-main .how-to-steps-carousel .tips {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
 main .how-to-steps-carousel .tips .tip {
-  display: block;
-
-  visibility: hidden;
+  display: none;
 
   grid-row-start: 1;
   grid-column-start: 1;
@@ -57,8 +54,6 @@ main .how-to-steps-carousel .tips .tip {
 
 main .how-to-steps-carousel .tips .tip.active {
   display: block;
-
-  visibility: visible;
 
   animation: fadeIn ease 2s;
   -webkit-animation: fadeIn ease 2s;
@@ -107,7 +102,7 @@ main .how-to-steps-carousel .tip-number {
   min-height: 34px;
   display: block;
   position: relative;
-  background-color: var(--color-gray-300);
+  background-color: var(--color-gray-200);
   border-radius: 50%;
   margin-right: 12px;
   color: var(--color-black);
@@ -116,6 +111,10 @@ main .how-to-steps-carousel .tip-number {
   -ms-flex-item-align: start;
   align-self: flex-start;
   cursor: pointer;
+
+  outline-color: unset;
+  outline-style: unset;
+  outline-width: unset;
 }
 
 main .how-to-steps-carousel .tip-number.active {
@@ -180,6 +179,7 @@ main .how-to-steps-carousel-container .icon {
     margin: 0 120px 0 20px;
     padding: 80px 70px;
     width: 50%;
+    height: 100%;
   }
 
   main .how-to-steps-carousel-container > picture > img {
