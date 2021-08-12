@@ -62,7 +62,8 @@ function moveCarousel($parent, increment, classPrefix) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function buildCarousel($carouselContent, $parent, classPrefix) {
+export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
+  const $carouselContent = selector ? $parent.querySelectorAll(selector) : $parent.children;
   // add templates to carousel
   const $platform = createTag('div', { class: `${classPrefix}carousel-platform` });
   $platform.append(...$carouselContent);
