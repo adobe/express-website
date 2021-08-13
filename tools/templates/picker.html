@@ -1,8 +1,8 @@
 <html>
   <head>
-    <title>Spark - Template picker</title>
+    <title>CC Express - Template Picker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/express/icons/cc-express.svg">
     <style>
       body {
         font-family: 'Adobe Clean';
@@ -162,6 +162,9 @@
         display: flex;
         flex-wrap: wrap;
         flex-grow: 1;
+        min-height: 120px;
+        max-height: 240px;
+        overflow-y: scroll;
       }
 
       #selectionPanel .selectedTemplate {
@@ -200,11 +203,14 @@
     </style>
     <script>
       let nbSelected = 0;
-      const templateSelection = {};
+      const templateSelection = [];
 
       const unselect = (id) => {
-        delete templateSelection[id];
-        nbSelected--;
+        const i = templateSelection.findIndex((t) => t.branchURL === id);
+        if (i >= 0) {
+          templateSelection.splice(i, 1);
+          nbSelected--;
+        }
 
         const elem = document.querySelector(`#results [data-id="${id}"]`);
         if (elem) {
@@ -214,7 +220,7 @@
       }
 
       const select = (id, template) => {
-        templateSelection[id] = template;
+        templateSelection.push(template);
         nbSelected++;
 
         const elem = document.querySelector(`#results [data-id="${id}"]`);
@@ -224,25 +230,34 @@
         drawSelection();
       }
 
+      let selectedList;
+
+      const scrollList = () => {
+        selectedList.scrollBy({
+          left:0,
+          top: 120,
+          behavior: 'smooth',
+        });
+      }
+
       const drawSelection = () => {
-        const selectedList = document.getElementById('selectedList');
+        if (!selectedList) selectedList = document.getElementById('selectedList');
         let html = '';
-        for(let p in templateSelection) {
-          const t = templateSelection[p];
+        templateSelection.forEach((t, i) => {
           if (t.animated) {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
-                <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${t.thumbnail}">
+                <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${t.thumbnail}" onload="scrollList()">
                   <source src="${t.asset}" type="video/mp4">
                 </video>`;
           } else {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
-                <img src="${t.thumbnail}">`;
+                <img src="${t.thumbnail}" onload="scrollList()">`;
           }
           if (t.premium) {
             html += `<div class="premium" title="Premium"></div>`;
           }
           html += `</div>`;
-        };
+        });
 
         const selectionPanel = document.getElementById('selectionPanel');
         if (html === '') {
@@ -469,9 +484,7 @@
 
         clear();
 
-        for(let p in templateSelection) {
-          insert(templateSelection[p]);
-        }
+        templateSelection.forEach((t) => insert(t));
 
         const div = document.getElementById('copybuffer');
         copyHTMLToClipboard(div.innerHTML);
