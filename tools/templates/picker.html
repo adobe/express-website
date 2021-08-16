@@ -337,11 +337,7 @@
         }
 
         const copySelectionButton = document.getElementById('copyselection');
-        if (templateSelection.length > 0) {
-          copySelectionButton.disabled = false;
-        } else {
-          copySelectionButton.disabled = true;
-        }
+        copySelectionButton.disabled = templateSelection.length <= 0;
       }
 
       const API_ROOT = 'https://spark-search.adobe.io';
