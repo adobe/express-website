@@ -82,12 +82,13 @@ export function transformLinkToAnimation($a) {
   if (!$a || !$a.href.endsWith('.mp4')) {
     return null;
   }
-  const attribs = {
-    playsinline: '',
-    autoplay: '',
-    // loop: '',
-    muted: '',
-  };
+  console.log($a.href);
+  const params = new URL($a.href).searchParams;
+  const attribs = {};
+  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
+    if (params.get(p) !== 'false') attribs[p] = '';
+    console.log(p, attribs);
+  });
   // use closest picture as poster
   const $poster = $a.closest('div').querySelector('picture source');
   if ($poster) {
