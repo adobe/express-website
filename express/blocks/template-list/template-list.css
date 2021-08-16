@@ -96,6 +96,7 @@ main .template-list .template {
   page-break-inside: avoid;
   break-inside: avoid;
   text-decoration: unset;
+  position: relative;
 }
 
 main .template-list .template > div:first-child > a:any-link {
@@ -123,6 +124,14 @@ main .template-list.large .template img {
 
 main .template-list + .button-container > a {
   margin: 0;
+}
+
+main .template-list .template:not(.placeholder) .icon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  bottom: 12px;
+  right: 8px;
 }
 
 /* horizontal template-list (carousel) */

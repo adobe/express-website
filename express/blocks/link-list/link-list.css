@@ -14,6 +14,7 @@ main .link-list {
 main .link-list h3 {
   text-align: left;
   font-size: var(--heading-font-size-m);
+  margin-bottom: 20px;
 }
 
 main .link-list p.button-container {
