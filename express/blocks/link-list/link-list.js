@@ -20,7 +20,7 @@ export default function decorate(block) {
   if (links.length) {
     links.forEach((p) => {
       const link = p.querySelector('a');
-      link.classList.add('small', 'secondary');
+      link.classList.add('medium', 'secondary');
       link.classList.remove('accent');
     });
     const div = links[0].closest('div');

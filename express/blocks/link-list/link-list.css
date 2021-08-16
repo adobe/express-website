@@ -33,7 +33,7 @@ main .link-list a.button.small.secondary:hover {
 main .link-list .link-list-carousel-platform {
   position: relative;
   width: fit-content;
-  height: 40px;
+  height: 42px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
