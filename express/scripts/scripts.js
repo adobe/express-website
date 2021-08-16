@@ -85,7 +85,7 @@ export function transformLinkToAnimation($a) {
   const attribs = {
     playsinline: '',
     autoplay: '',
-    loop: '',
+    // loop: '',
     muted: '',
   };
   // use closest picture as poster
