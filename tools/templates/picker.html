@@ -21,12 +21,30 @@
         padding-top: 5px;
       }
     
-      main input {
+      #search {
         width: 50%;
+        font-family: 'Adobe Clean';
         font-size: 2rem;
         border: none;
         border-bottom: solid 1px grey;
         padding-top: 5px;
+      }
+
+      #search.mandatory {
+        border-bottom: solid 2px #F25749;
+      }
+
+      #search.mandatory::placeholder {
+        color: red;
+      }
+
+      #select-all input {
+        margin-top: 10px;
+      }
+
+      #select-all input,
+      #select-all label {
+        padding: 10px 0;
       }
 
       main .filter {
@@ -38,7 +56,6 @@
         padding: 5px 20px;
         font-size: 1.5rem;
       }
-
 
       #results {
         display: flex;
@@ -127,6 +144,8 @@
         box-sizing: border-box;
         left: 0;
         user-select: none;
+        padding: 10px;
+        box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.2);
       }
 
       #selectionPanel.hidden {
@@ -146,25 +165,36 @@
         border: 1px solid white;
       }
 
-      #selectionPanel input {
+      #selectionPanel input[type="text"] {
         width: 150px;
         padding: 2px 4px;
       }
 
-      #selectionPanel input,
+      #copyOptions,
       #selectionPanel button {
         align-self: flex-end;
         margin: auto 20px auto 0;
         font-size: 13px;
       }
 
-      #selectionPanel #selectedList {
+      #copyOptions {
+        max-width: 152px;
+      }
+
+      #selectedList {
         display: flex;
         flex-wrap: wrap;
         flex-grow: 1;
         min-height: 120px;
-        max-height: 240px;
+        max-height: 30vh;
         overflow-y: scroll;
+      }
+
+      #selectedList .more {
+        margin: auto 20px;
+        font-size: 1rem; 
+        font-style: italic;
+        opacity: 0.5;
       }
 
       #selectionPanel .selectedTemplate {
@@ -202,16 +232,18 @@
 
     </style>
     <script>
-      let nbSelected = 0;
+      const maxSelectedDrawn = 99;
       const templateSelection = [];
+      const allResults = [];
+      let selectedList;
 
       const unselect = (id) => {
         const i = templateSelection.findIndex((t) => t.branchURL === id);
-        if (i >= 0) {
-          templateSelection.splice(i, 1);
-          nbSelected--;
+        if (i < 0) {
+          // not selected
+          return;
         }
-
+        templateSelection.splice(i, 1);
         const elem = document.querySelector(`#results [data-id="${id}"]`);
         if (elem) {
           elem.classList.remove('selected');
@@ -219,31 +251,64 @@
         drawSelection();
       }
 
-      const select = (id, template) => {
+      const select = (template) => {
+        if (templateSelection.findIndex((t) => t.branchURL === template.branchURL) >= 0) {
+          // already selected
+          return;
+        }
         templateSelection.push(template);
-        nbSelected++;
-
-        const elem = document.querySelector(`#results [data-id="${id}"]`);
+        const elem = document.querySelector(`#results [data-id="${template.branchURL}"]`);
         if (elem) {
           elem.classList.add('selected');
         }
         drawSelection();
       }
 
-      let selectedList;
-
-      const scrollList = () => {
-        selectedList.scrollBy({
-          left:0,
-          top: 120,
-          behavior: 'smooth',
-        });
+      const selectAll = () => {
+        document.querySelector('#select-all-checkbox').checked = true;
+        asyncForEach(
+          allResults,
+          (template) => {
+            if (templateSelection.findIndex((t) => t.branchURL === template.branchURL) >= 0) {
+              // already selected
+              return;
+            }
+            templateSelection.push(template);
+            const elem = document.querySelector(`#results [data-id="${template.branchURL}"]`);
+            if (elem) {
+              elem.classList.add('selected');
+            }
+          },
+          () => drawSelection(),
+        );
       }
+
+      const unselectAll = () => {
+        document.querySelector('#select-all-checkbox').checked = false;
+        templateSelection.splice(0);
+        asyncForEach(
+          document.querySelectorAll('#results .template.selected'),
+          (elem) => elem.classList.remove('selected'),
+          drawSelection(),
+        );
+      }
+
+      const toggleSelectAll = () => {
+        const cb = document.querySelector('#select-all-checkbox');
+        if (cb.checked) {
+          selectAll();
+        } else {
+          unselectAll();
+        }
+      };
+
+      const scrollList = () => selectedList.scrollBy(0, 120);
 
       const drawSelection = () => {
         if (!selectedList) selectedList = document.getElementById('selectedList');
         let html = '';
         templateSelection.forEach((t, i) => {
+          if (i >= maxSelectedDrawn) return;
           if (t.animated) {
             html += `<div class="selectedTemplate" onclick="unselect('${t.branchURL}')">
                 <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${t.thumbnail}" onload="scrollList()">
@@ -258,6 +323,9 @@
           }
           html += `</div>`;
         });
+        if (templateSelection.length > maxSelectedDrawn) {
+          html += `<span class="more">and ${templateSelection.length - maxSelectedDrawn} more ...<br><a href="#" onclick="unselectAll()">clear all</a></span>`;
+        }
 
         const selectionPanel = document.getElementById('selectionPanel');
         if (html === '') {
@@ -267,15 +335,48 @@
           selectedList.innerHTML = html;
           selectionPanel.classList.remove('hidden');
         }
+
+        const copySelectionButton = document.getElementById('copyselection');
+        if (templateSelection.length > 0) {
+          copySelectionButton.disabled = false;
+        } else {
+          copySelectionButton.disabled = true;
+        }
       }
 
       const API_ROOT = 'https://spark-search.adobe.io';
 
-      async function asyncForEach(array, callback) {
+      async function asyncForEach(array, forEach, callback) {
         for (let index = 0; index < array.length; index++) {
-          await callback(array[index], index, array);
+          await forEach(array[index], index, array);
         }
+        if (callback) callback();
       }
+
+      const resultToTemplate = (t) => {
+        let asset = t.rendition.href
+          .replace('\{format\}', 'jpg')
+          .replace('\{dimension\}', 'width')
+          .replace('\{size\}', t.rendition.maxWidth || 1200);
+        if (t.animated) {
+          const animationRoot = t.rendition.href.split('rendition')[0];
+          const version = t.rendition.href.split('/version/')[1].split('/')[0];
+          asset = animationRoot + "dcx/" + t.id + "/content/videoRendition.mp4/version/" + version;
+        }
+        const thumbnail = t.rendition.href
+          .replace('\{format\}', 'jpg')
+          .replace('\{dimension\}', 'width')
+          .replace('\{size\}', 240);
+
+        return {
+          asset,
+          thumbnail,
+          title: t.title,
+          branchURL: t.branchURL,
+          animated: t.animated,
+          premium: t.premium
+        };
+      };
 
       const search = async () => {
         const resultContainer = document.querySelector('#results');
@@ -306,6 +407,11 @@
           }
         });
 
+        if (!q.trim()) {
+          search.classList.add('mandatory');
+          return;
+        }
+
         const params = {
           q,
           filters: `branchURL:${branchURL || '*'}`,
@@ -325,83 +431,65 @@
         let json = await res.json();
         let results = json && json._embedded && json._embedded.results ? json._embedded.results : [];
 
-        const allResults = [];
+        allResults.splice(0); // reset all results
         let duplicates = 0;
         const searchTotal = json._embedded.total;
         let total = 0;
+
+        const selectAll = document.querySelector('#select-all');
+        if (results.length > 0) {
+          selectAll.classList.remove('hidden');
+        } else {
+          selectAll.classList.add('hidden');
+        }
+
         while (results.length > 0) {
           await asyncForEach(results, async t => {
-            // API seems to return duplicates
+            const tobj = resultToTemplate(t);
 
-            if (allResults.indexOf(t.id) !== -1) {
+            // API seems to return duplicates
+            if (allResults.find((tmplt) => tmplt.branchURL ===  tobj.branchURL)) {
               return;
             } else {
-              allResults.push(t.id);
+              allResults.push(tobj);
             }
 
             total++;
 
-            let asset = t.rendition.href
-              .replace('\{format\}', 'jpg')
-              .replace('\{dimension\}', 'width')
-              .replace('\{size\}', t.rendition.maxWidth || 1200);
-
-            const thumbnail = t.rendition.href
-              .replace('\{format\}', 'jpg')
-              .replace('\{dimension\}', 'width')
-              .replace('\{size\}', 240);
 
             const template = document.createElement('div');
             template.classList.add('template');
-            template.setAttribute('data-id', t.branchURL);
+            template.setAttribute('data-id', tobj.branchURL);
 
-            if (t.animated) {
-              const animationRoot = t.rendition.href.split('rendition')[0];
-              const version = t.rendition.href.split('/version/')[1].split('/')[0];
-              asset = animationRoot + "dcx/" + t.id + "/content/videoRendition.mp4/version/" + version;
-
+            if (tobj.animated) {
               template.innerHTML += `
                 <div class="thumbnail-container">
-                    <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${thumbnail}">
-                  <source src="${asset}" type="video/mp4">
+                    <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${tobj.thumbnail}">
+                  <source src="${tobj.asset}" type="video/mp4">
                 </video>
                 </div>
-                <a href="${t.branchURL}" target="_blank">
-                  <div class="title">${t.title}</div>
+                <a href="${tobj.branchURL}" target="_blank">
+                  <div class="title">${tobj.title}</div>
                 </a>`;
             } else {
               template.innerHTML += `
                 <div class="thumbnail-container">
-                  <img loading="lazy" src="${thumbnail}">
+                  <img loading="lazy" src="${tobj.thumbnail}">
                 </div>
-                <a href="${t.branchURL}" target="_blank">
-                  <div class="title">${t.title}</div>
+                <a href="${tobj.branchURL}" target="_blank">
+                  <div class="title">${tobj.title}</div>
                 </a>`;
             }
 
-            if (t.premium) {
+            if (tobj.premium) {
               template.innerHTML += `<div class="premium" title="Premium"></div>`;
             }
 
             template.addEventListener('click', () => {
               if (template.classList.contains('selected')) {
-                unselect(t.branchURL);
+                unselect(tobj.branchURL);
               } else {
-                select(t.branchURL, {
-                  asset,
-                  thumbnail,
-                  title: t.title,
-                  branchURL: t.branchURL,
-                  animated: t.animated,
-                  premium: t.premium
-                });
-              }
-
-              const copySelectionButton = document.getElementById('copyselection');
-              if (nbSelected > 0) {
-                copySelectionButton.disabled = false;
-              } else {
-                copySelectionButton.disabled = true;
+                select(tobj);
               }
             });
 
@@ -423,7 +511,13 @@
 
       const IMG_EXPORT_WIDTH = 180;
 
-      const insert = (template) => {
+      const togglePremium = () => {
+        const cb = document.getElementById('copy-premium');
+        const th = document.querySelector('#copybuffer thead th');
+        th.colSpan += cb.checked ? 1 : -1;
+      };
+
+      const insert = (template, premium) => {
         const tbody = document.querySelector('#copybuffer tbody');
         
         const row = document.createElement('tr');
@@ -460,6 +554,15 @@
         link.textContent = document.querySelector('#edittext').value || 'Edit this template';
         linkCell.append(link);
 
+        if (premium) {
+          const premiumCell = document.createElement('td');
+          premiumCell.style.border = '1px solid black';
+          premiumCell.style.textAlign = 'left';
+          premiumCell.style.verticalAlign = 'middle';
+          premiumCell.textContent = template.premium ? 'premium' : '';
+          row.append(premiumCell);
+        }
+
         img.height = (IMG_EXPORT_WIDTH / img.naturalWidth) * img.naturalHeight;
       }
 
@@ -484,13 +587,17 @@
 
         clear();
 
-        templateSelection.forEach((t) => insert(t));
+        const premium = document.getElementById('copy-premium').checked;
+        templateSelection.forEach((t) => insert(t, premium));
 
         const div = document.getElementById('copybuffer');
         copyHTMLToClipboard(div.innerHTML);
       }
 
       const searchOnReturn = (event) => {
+        if (event.target.classList.contains('mandatory')) {
+          event.target.classList.remove('mandatory');
+        }
         if (event.keyCode === 13) {
           event.preventDefault();
           search();
@@ -502,13 +609,23 @@
     <main>
       <h1>Pick your templates</h1>
       <div class="filter">
-        <input autocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
-        <button type="button" onclick="search()">Search</button>
+        <div>
+          <input type="text" typeautocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
+          <button onclick="search()">Search</button>
+        </div>
+        <div id="select-all" class="hidden">
+          <input id="select-all-checkbox" type="checkbox" onclick="toggleSelectAll()">
+          <label for="select-all-checkbox" onclick="toggleSelectAll()">select all</label>
+        </div>
       </div>
       <div id="results"></div>
       <div id="selectionPanel" class="hidden">
         <div id="selectedList"></div>
-        <input type="text" id="edittext" placeholder="Optional edit text">
+        <div id="copyOptions">
+          <input type="text" id="edittext" placeholder="Optional edit text">
+          <input id="copy-premium" type="checkbox" checked="true" onclick="togglePremium()">
+          <label for="copy-premium" onclick="togglePremium()">copy premium info</label>
+        </div>
         <button type="button" onclick="copy()" id="copyselection" disabled="true">Copy Selection</button>
       </div>
     </main>
@@ -516,7 +633,7 @@
       <table cellpadding="0" cellspacing="0" style="border: 1px solid black; border-spacing: 0; width: 100%">
         <thead>
             <tr>
-              <th style="border: 1px solid black; background-color: rgb(211, 211, 211);" colspan="2">Template List</th>
+              <th style="border: 1px solid black; background-color: rgb(211, 211, 211);" colspan="3">Template List</th>
             </tr>
         </thead>
         <tbody></tbody>
