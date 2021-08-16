@@ -357,12 +357,12 @@ a.button.small:any-link {
 }
 
 a.button.primary:any-link {
-  background-color: var(--color-gray-800);
+  background-color: var(--color-black);
 }
 
 a.button.secondary:any-link {
-  background-color: var(--color-gray-300);
-  color: var(--color-gray-800);
+  background-color: var(--color-gray-200);
+  color: var(--color-black);
 }
 
 a.button.light:any-link {
@@ -373,15 +373,15 @@ a.button.light:any-link {
 
 a.button.primary.light:any-link,
 a.button.secondary.light:any-link {
-  color: var(--color---color-gray-800);
+  color: var(--color-black);
 }
 
 a.button.primary.light:any-link {
-  border-color: var(--color-gray-800);
+  border-color: var(--color-black);
 }
 
 a.button.secondary.light:any-link {
-  border-color: var(--color-gray-300);
+  border-color: var(--color-gray-200);
 }
 
 a.button.dark:any-link {
