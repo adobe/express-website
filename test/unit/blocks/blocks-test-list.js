@@ -80,6 +80,10 @@ export default [
     input: 'input/columns.animation.doc.html',
     expected: 'expected/columns.animation.block.html',
   }, {
+    name: 'Columns - Animation with params',
+    input: 'input/columns.animation.params.doc.html',
+    expected: 'expected/columns.animation.params.block.html',
+  }, {
     name: 'Banner - h2',
     input: 'input/banner.h2.doc.html',
     expected: 'expected/banner.h2.block.html',
