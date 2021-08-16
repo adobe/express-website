@@ -72,6 +72,10 @@ main .columns h6 {
   margin-top: 32px;
 }
 
+main .columns:first-of-type {
+  visibility: unset;
+  min-height: unset;
+}
 
 main .columns p {
   font-size: var(--body-font-size-xl);
