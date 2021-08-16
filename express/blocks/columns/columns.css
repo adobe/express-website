@@ -69,6 +69,7 @@ main .columns h5,
 main .columns h6 {
   font-size: var(--heading-font-size-m);
   line-height: 1.14; 
+  margin-top: 32px;
 }
 
 
