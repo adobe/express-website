@@ -57,13 +57,20 @@ function getMeta(name) {
   return value;
 }
 
-export function getIcon(icon, alt = icon, size = 22) {
-  const symbols = ['remove-background'];
+export function getIcon(icon, alt = icon, size = 44) {
+  /*
+  const symbols = ['remove-background', 'mobile-round', 'desktop-round', 'premium-templates',
+  'adobe-stock', 'premium-remove-background', 'brand', 'branded-templates', 'convert',
+  'update-cloud-storage'];
+  */
+  const symbols = ['remove-background', 'mobile-round', 'desktop-round',
+    'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video'];
   if (symbols.includes(icon)) {
-    let iconName = icon;
-    if (iconName === 'remove-background') iconName = 'remove-bg';
+    const iconName = icon;
+    let sheetSize = size;
+    if (icon === 'chevron') sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
-      <use href="/express/icons/ccx-sheet-${size}.svg#${iconName}${size}"></use>
+      <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
   } else {
     return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt}">`);
