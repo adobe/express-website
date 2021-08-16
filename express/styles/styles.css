@@ -462,6 +462,11 @@ main .section-wrapper:last-of-type {
   margin-bottom: 0;
 }
 
+main .columns:first-of-type {
+  visibility: hidden;
+  min-height: 1024px;
+}
+
 @media (min-width:600px) {
 
   main h2 {

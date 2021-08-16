@@ -18,6 +18,11 @@ function decorateIconList($columnCell) {
 
   const $iconList = createTag('div', { class: 'columns-iconlist' });
   const $icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')];
+  if ($icons.length === 1) {
+    // treat single icon as brand icon
+    $icons[0].classList.add('brand');
+    return;
+  }
   let $before;
   $icons.forEach(($icon, i) => {
     if (!i) $before = $icon.previousSibling;
@@ -102,8 +107,12 @@ export default function decorate($block) {
           }
         }
       }
-      if ($a && $a.classList.contains('button') && $a.classList.contains('light')) {
-        $a.classList.replace('accent', 'primary');
+      if ($a && $a.classList.contains('button')) {
+        if ($block.classList.contains('fullsize')) {
+          $a.classList.add('xlarge');
+        } else if ($a.classList.contains('light')) {
+          $a.classList.replace('accent', 'primary');
+        }
       }
 
       $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
