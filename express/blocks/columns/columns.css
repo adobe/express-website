@@ -114,6 +114,10 @@ main .columns > div span.num + * {
   display:inline;
 }
 
+main .columns .brand.icon {
+  display: none;
+}
+
 main .columns .social.icon {
   width: 32px;
   height: 32px;
@@ -260,6 +264,12 @@ main .columns-highlight-container .column p {
     align-items: center;
   }
 
+  body.no-brand-header main .columns .brand.icon {
+    display: unset;
+    height: 32px;
+    width: max-content;
+  }
+  
   main .section-wrapper div.columns > div {
     position: relative;
   }

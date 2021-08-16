@@ -18,6 +18,11 @@ function decorateIconList($columnCell) {
 
   const $iconList = createTag('div', { class: 'columns-iconlist' });
   const $icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')];
+  if ($icons.length === 1) {
+    // treat single icon as brand icon
+    $icons[0].classList.add('brand');
+    return;
+  }
   let $before;
   $icons.forEach(($icon, i) => {
     if (!i) $before = $icon.previousSibling;
