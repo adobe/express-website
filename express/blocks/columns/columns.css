@@ -260,8 +260,21 @@ main .columns-highlight-container .column p {
     align-items: center;
   }
 
-  main .columns .column:not(.column-picture) {
+  main .columns:not(.fullsize) .column:not(.column-picture) {
     padding: 40px;
+  }
+
+  main .columns.fullsize .column.hero-animation-overlay {
+    width: unset;
+  }
+
+  main .columns.fullsize .column.columns-picture > p,
+  main .columns.fullsize .column.hero-animation-overlay > p {
+    margin: 0;
+  }
+
+  main .columns.fullsize .column video {
+    max-width: max-content;
   }
 
   main .section-wrapper div.columns > div {

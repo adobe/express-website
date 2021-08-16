@@ -102,8 +102,12 @@ export default function decorate($block) {
           }
         }
       }
-      if ($a && $a.classList.contains('button') && $a.classList.contains('light')) {
-        $a.classList.replace('accent', 'primary');
+      if ($a && $a.classList.contains('button')) {
+        if ($block.classList.contains('fullsize')) {
+          $a.classList.add('xlarge');
+        } else if ($a.classList.contains('light')) {
+          $a.classList.replace('accent', 'primary');
+        }
       }
 
       $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
