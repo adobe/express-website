@@ -19,6 +19,7 @@ import {
   linkImage,
   webpPolyfill,
   addSearchQueryToHref,
+  getIconElement,
 } from '../../scripts/scripts.js';
 
 import {
@@ -161,7 +162,7 @@ export async function decorateTemplateList($block) {
   // make copy of children to avoid modifying list while looping
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
-    const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
+    const $link = $tmplt.querySelector(':scope > div:nth-of-type(2) > a');
     if ($link) {
       const $a = createTag('a', {
         href: $link.href ? addSearchQueryToHref($link.href) : '#',
@@ -178,6 +179,20 @@ export async function decorateTemplateList($block) {
       $link.parentNode.append($newLink);
       $link.remove();
     }
+
+    if ($tmplt.children.length === 3) {
+      // look for for overlay icon in last cell
+      const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
+      const iconName = $overlayCell.textContent.trim();
+      if (iconName) {
+        // add icon to 1st cell
+        const $icon = getIconElement(iconName);
+        $icon.setAttribute('title', iconName);
+        $tmplt.children[0].append($icon);
+      }
+      $overlayCell.remove();
+    }
+
     if (!$tmplt.querySelectorAll(':scope > div > *').length) {
       // remove empty row
       $tmplt.remove();
