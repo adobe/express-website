@@ -126,7 +126,7 @@ main .template-list + .button-container > a {
   margin: 0;
 }
 
-main .template-list .template .icon {
+main .template-list .template:not(.placeholder) .icon {
   position: absolute;
   width: 30px;
   height: 30px;
