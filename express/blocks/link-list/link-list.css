@@ -21,13 +21,8 @@ main .link-list p.button-container {
   margin: 0;
 }
 
-main .link-list a.button.small.secondary {
+main .link-list a.button.secondary {
   margin: 6px 20px 6px 0;
-}
-
-main .link-list a.button.small.secondary:hover {
-  background-color: var(--color-black);
-  color: var(--color-white);
 }
 
 main .link-list .link-list-carousel-platform {
