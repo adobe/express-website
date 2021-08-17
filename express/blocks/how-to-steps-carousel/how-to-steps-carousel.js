@@ -56,27 +56,6 @@ export default function decorate(block) {
   block.parentElement.before(picture);
   parent.remove();
 
-  // get viewport width
-  const { documentElement } = document;
-  const vw = Math.max(
-    documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
-    window && window.innerWidth ? window.innerWidth : 0,
-  );
-  if (vw >= 900) {
-    // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
-    const img = picture.querySelector('img');
-    const onImgLoaded = () => {
-      img.style.height = `${img.naturalHeight}px`;
-      picture.style.height = `${img.naturalHeight}px`;
-    };
-
-    if (img.complete) {
-      onImgLoaded();
-    } else {
-      img.addEventListener('load', onImgLoaded);
-    }
-  }
-
   const howto = block;
   const rows = Array.from(howto.children);
 
@@ -131,10 +110,43 @@ export default function decorate(block) {
     numbers.append(number);
 
     if (i === 0) {
-      row.classList.add('active');
+      // row.classList.add('active');
       number.classList.add('active');
     }
   });
 
-  initRotation(window, document);
+  // get viewport width
+  const { documentElement } = document;
+  const vw = Math.max(
+    documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
+    window && window.innerWidth ? window.innerWidth : 0,
+  );
+  if (vw >= 900) {
+    window.setTimeout(() => {
+      // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
+      // use the left panel max height
+      let maxHeight = 0;
+      const array = Array.from(block.querySelectorAll('.tip'));
+      array
+        .forEach((elem, index) => {
+          elem.classList.add('active');
+
+          const container = elem.closest('.how-to-steps-carousel-container');
+          maxHeight = Math.max(maxHeight, container.offsetHeight);
+
+          if (index < array.length - 1) {
+            elem.classList.remove('active');
+          }
+        });
+
+      const img = picture.querySelector('img');
+      img.style.height = `${maxHeight}px`;
+      picture.style.height = `${maxHeight}px`;
+
+      initRotation(window, document);
+    }, 500);
+  } else {
+    block.querySelector('.tip.tip-1').classList.add('active');
+    initRotation(window, document);
+  }
 }

@@ -1,5 +1,5 @@
 main .how-to-steps-carousel-container {
-  margin: 120px 0;
+  margin: 120px 0 0 0;
   padding: 0;
 }
 
@@ -171,7 +171,6 @@ main .how-to-steps-carousel-container .icon {
 
 @media (min-width: 900px) {
   main .how-to-steps-carousel-container {
-    margin: 120px 0;
     display: flex;
   }
 
