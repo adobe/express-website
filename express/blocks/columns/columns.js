@@ -52,44 +52,39 @@ function scaleHeader() {
   since stylesheet is static and rem is standardized, we can use constants
   here for calculating what's needed for dynamic resizes
   */
-  const convTag2LineHeight = {
-    H1: 63.6,
-    H2: 48.6,
-    H3: 39.96,
-    H4: 31.92,
-    H5: 31.92,
-    H6: 31.92,
-  };
-  const convTag2FontSize = {
-    H1: 60,
-    H2: 45,
-    H3: 36,
-    H4: 28,
-    H5: 28,
-    H6: 28,
+  const headerNumber2Font = {
+    1: ['xxl', 1.06],
+    2: ['xl', 1.08],
+    3: ['l', 1.11],
+    4: ['m', 1.14],
+    5: ['m', 1.14],
+    6: ['m', 1.14],
+    7: ['s', 1.17],
   };
   const maxLines = 3;
   // eslint-disable-next-line no-undef
   document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5')
     .forEach((heading) => {
       const { tagName } = heading;
-      // eslint-disable-next-line no-undef
-      const style = window.getComputedStyle(heading);
-      const unit = 'px';
-      const { height, lineHeight } = style;
-      // dimensions of headings
-      const heightInt = parseInt(height.match('\\d+')[0], 10);
-      const lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
-      // should be verifiable by looking at number of lines
-      const headerLines = Math.ceil(heightInt / lineHeightFloat);
-      // fontSize and lineHeight must be reduced by this much
-      const scale = maxLines / headerLines;
-      if (scale < 1) {
-        const scaledFs = convTag2FontSize[tagName] * scale;
-        const scaledLh = convTag2LineHeight[tagName] * scale;
-        heading.style.fontSize = scaledFs + unit;
-        heading.style.lineHeight = scaledLh + unit;
-      }
+      let headerNumber = parseInt(tagName.charAt(1), 10);
+      let headerLines;
+      do {
+        // eslint-disable-next-line no-undef
+        const style = window.getComputedStyle(heading);
+        const { height, lineHeight } = style;
+        // dimensions of headings
+        const heightInt = parseInt(height.match('\\d+')[0], 10);
+        const lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
+        // should be verifiable by looking at number of lines
+        headerLines = Math.ceil(heightInt / lineHeightFloat);
+        if (headerLines > maxLines) {
+          headerNumber += 1;
+        }
+        // eslint-disable-next-line prefer-destructuring
+        heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]}`;
+        // eslint-disable-next-line prefer-destructuring
+        heading.style.lineHeight = headerNumber2Font[headerNumber][1];
+      } while (headerLines > maxLines && headerNumber <= 7);
     });
 }
 
