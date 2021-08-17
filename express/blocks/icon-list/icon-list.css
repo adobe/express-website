@@ -98,7 +98,7 @@ main .icon-list .icon-list-heading .icon-list-description {
   align-self: center;
 }
 
-main .icon-list .icon-list-heading .icon-list-image img {
+main .icon-list .icon-list-heading .icon-list-image img, main .icon-list .icon-list-heading .icon-list-image svg {
   fill: currentColor;
   width: 100px;
   height: 100px;
@@ -130,7 +130,7 @@ main .icon-list .icon-list-regular .icon-list-description {
   align-self: top;
 }
 
-main .icon-list .icon-list-regular .icon-list-image img {
+main .icon-list .icon-list-regular .icon-list-image img, main .icon-list .icon-list-regular .icon-list-image svg {
   fill: currentColor;
   width: 73px;
   height: 72px;
