@@ -1,0 +1,116 @@
+.pricing-modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0!important;
+}
+
+.pricing-modal-container>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pricing-modal.block {
+    background-color: white;
+    padding: 24px 24px 32px 24px;
+    width: 450px;
+}
+
+.pricing-modal .modal__banner {
+    display: flex;
+    background-color: var(--color-gray-200);
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.pricing-modal .modal__banner div {
+
+}
+
+.pricing-modal .modal__banner-text {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    text-align: left;
+}
+
+.pricing-modal .modal__banner-text h1 {
+    font-size: var(--heading-font-size-xl);
+    color: #5c5ce0;
+}
+
+.pricing-modal .modal__banner-text p {
+    margin: 0;
+    font-size: var(--body-font-size-xl);
+    font-weight: var(--heading-font-weight);
+    line-height: 1.1;
+}
+
+.pricing-modal .modal__banner-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    margin-top: -20px;
+}
+
+.pricing-modal .modal__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pricing-modal .modal__content h1 {
+    margin: 16px;
+}
+
+.pricing-modal .modal__content .content-1 {
+    margin-top: 24px;
+    margin-bottom: 0;
+    color: #242424;
+}
+
+.pricing-modal .modal__content .content-2 {
+    font-size: var(--heading-font-size-xl);
+    color: #242424;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+.pricing-modal .modal__content .content-3 {
+    font-size: var(--heading-font-size-m);
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: #444444;
+}
+
+.pricing-modal .modal__content .content-4 {
+    font-size: var(--body-font-size-l);
+    color: #242424;
+    margin-top: 0;
+    margin-bottom: 24px;
+    width: 320px;
+    text-align: center;
+}
+
+.pricing-modal .modal__content .content-5 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    line-height: 1;
+}
+
+.pricing-modal .modal__content .content-6 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1;
+}
