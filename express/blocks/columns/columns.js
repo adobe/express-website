@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global */
+/* global document, window */
 
 import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
@@ -50,7 +50,6 @@ function decorateIconList($columnCell) {
  * @returns {boolean} - whether a heading is over 3 lines long
  */
 function isHeadingOversized(heading, maxLines) {
-  // eslint-disable-next-line no-undef
   const style = window.getComputedStyle(heading);
   const { height, lineHeight } = style;
   // dimensions of headings
@@ -80,7 +79,6 @@ function scaleHeader() {
     7: ['s', 1.17],
   };
   const maxLines = 3;
-  // eslint-disable-next-line no-undef
   document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5')
     .forEach((heading) => {
       const { tagName } = heading;
@@ -101,6 +99,7 @@ function scaleHeader() {
 }
 
 export default function decorate($block) {
+  window.addEventListener('resize', scaleHeader);
   scaleHeader();
   // eslint-disable-next-line no-undef
   const $rows = Array.from($block.children);
