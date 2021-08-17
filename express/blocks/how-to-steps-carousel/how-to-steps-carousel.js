@@ -17,8 +17,33 @@ import {
 } from '../../scripts/scripts.js';
 
 let rotationInterval;
+let fixedImageSize = false;
 
 function activate(block, target) {
+  if (!fixedImageSize) {
+    // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
+
+    // get viewport width
+    const window = block.ownerDocument.defaultView;
+    const document = block.ownerDocument;
+
+    const { documentElement } = document;
+    const vw = Math.max(
+      documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
+      window && window.innerWidth ? window.innerWidth : 0,
+    );
+
+    if (vw >= 900) {
+      const picture = block.parentElement.parentElement.querySelector('picture');
+      const img = picture.querySelector('img');
+
+      img.style.height = `${img.offsetHeight}px`;
+      picture.style.height = `${img.offsetHeight}px`;
+    }
+
+    fixedImageSize = true;
+  }
+
   // de-activate all
   block.querySelectorAll('.tip, .tip-number').forEach((item) => {
     item.classList.remove('active');
@@ -55,27 +80,6 @@ export default function decorate(block) {
   const parent = picture.parentElement;
   block.parentElement.before(picture);
   parent.remove();
-
-  // get viewport width
-  const { documentElement } = document;
-  const vw = Math.max(
-    documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
-    window && window.innerWidth ? window.innerWidth : 0,
-  );
-  if (vw >= 900) {
-    // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
-    const img = picture.querySelector('img');
-    const onImgLoaded = () => {
-      img.style.height = `${img.naturalHeight}px`;
-      picture.style.height = `${img.naturalHeight}px`;
-    };
-
-    if (img.complete) {
-      onImgLoaded();
-    } else {
-      img.addEventListener('load', onImgLoaded);
-    }
-  }
 
   const howto = block;
   const rows = Array.from(howto.children);
