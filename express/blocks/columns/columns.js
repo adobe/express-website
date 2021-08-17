@@ -90,7 +90,7 @@ function scaleHeader() {
           headerNumber += 1;
         }
         // eslint-disable-next-line prefer-destructuring
-        heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]}`;
+        heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]})`;
         // eslint-disable-next-line prefer-destructuring
         heading.style.lineHeight = headerNumber2Font[headerNumber][1];
       } while (isHeadingOversized(heading, maxLines) && headerNumber <= 7);
