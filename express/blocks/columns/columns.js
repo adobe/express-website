@@ -44,6 +44,24 @@ function decorateIconList($columnCell) {
 }
 
 /**
+ *
+ * @param {Element} heading - a H1 - H6 element.
+ * @param {Number} maxLines - maximum number of lines a heading can span
+ * @returns {boolean} - whether a heading is over 3 lines long
+ */
+function isHeadingOversized(heading, maxLines) {
+  // eslint-disable-next-line no-undef
+  const style = window.getComputedStyle(heading);
+  const { height, lineHeight } = style;
+  // dimensions of headings
+  const heightInt = parseInt(height.match('\\d+')[0], 10);
+  const lineHeightFloat = parseFloat(lineHeight.match('\\d+'));
+  // should be verifiable by looking at number of lines
+  const headingLines = Math.ceil(heightInt / lineHeightFloat);
+  return headingLines > maxLines;
+}
+
+/**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit!
  */
@@ -67,24 +85,15 @@ function scaleHeader() {
     .forEach((heading) => {
       const { tagName } = heading;
       let headerNumber = parseInt(tagName.charAt(1), 10);
-      let headerLines;
       do {
-        // eslint-disable-next-line no-undef
-        const style = window.getComputedStyle(heading);
-        const { height, lineHeight } = style;
-        // dimensions of headings
-        const heightInt = parseInt(height.match('\\d+')[0], 10);
-        const lineHeightFloat = parseFloat(lineHeight.match('\\d+'));
-        // should be verifiable by looking at number of lines
-        headerLines = Math.ceil(heightInt / lineHeightFloat);
-        if (headerLines > maxLines) {
+        if (isHeadingOversized(heading, maxLines)) {
           headerNumber += 1;
         }
         // eslint-disable-next-line prefer-destructuring
         heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]}`;
         // eslint-disable-next-line prefer-destructuring
         heading.style.lineHeight = headerNumber2Font[headerNumber][1];
-      } while (headerLines > maxLines && headerNumber <= 7);
+      } while (isHeadingOversized(heading, maxLines) && headerNumber <= 7);
     });
 }
 
