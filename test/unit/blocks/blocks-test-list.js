@@ -52,6 +52,14 @@ export default [
     input: 'input/template-list.horizontal.doc.html',
     expected: 'expected/template-list.horizontal.block.html',
   }, {
+    name: 'Template List - title',
+    input: 'input/template-list.title.doc.html',
+    expected: 'expected/template-list.title.block.html',
+  }, {
+    name: 'Template List - sixcols',
+    input: 'input/template-list.sixcols.doc.html',
+    expected: 'expected/template-list.sixcols.block.html',
+  }, {
     name: 'Columns - single row',
     input: 'input/columns.singlerow.doc.html',
     expected: 'expected/columns.singlerow.block.html',
@@ -67,6 +75,14 @@ export default [
     name: 'Columns - 10 numbered rows',
     input: 'input/columns.table.numbered.10.doc.html',
     expected: 'expected/columns.table.numbered.10.block.html',
+  }, {
+    name: 'Columns - Animation',
+    input: 'input/columns.animation.doc.html',
+    expected: 'expected/columns.animation.block.html',
+  }, {
+    name: 'Columns - Animation with params',
+    input: 'input/columns.animation.params.doc.html',
+    expected: 'expected/columns.animation.params.block.html',
   }, {
     name: 'Banner - h2',
     input: 'input/banner.h2.doc.html',
@@ -94,11 +110,11 @@ export default [
   }, {
     name: 'Inline Banner - inverted if dark container',
     input: 'input/inline-banner.dark.doc.html',
-    expected: 'expected/inline-banner.inverted.block.html',
+    expected: 'expected/inline-banner.dark.section.html',
   }, {
     name: 'Inline Banner - inverted if highlighted container',
     input: 'input/inline-banner.highlight.doc.html',
-    expected: 'expected/inline-banner.inverted.block.html',
+    expected: 'expected/inline-banner.inverted.section.html',
   }, {
     name: 'Commerce CTA',
     input: 'input/commerce-cta.doc.html',
@@ -111,5 +127,9 @@ export default [
     name: 'FAQ - basic',
     input: 'input/faq.doc.html',
     expected: 'expected/faq.block.html',
+  }, {
+    name: 'How To Steps Carousel',
+    input: 'input/how-to-steps-carousel.doc.html',
+    expected: 'expected/how-to-steps-carousel.section.html',
   },
 ];

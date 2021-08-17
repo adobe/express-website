@@ -49,28 +49,42 @@ main .columns .column-picture {
   margin: 15px 0;
 }
 
-main .columns h1 {
-  font-size: var(--heading-font-size-xl);
-  line-height: 1.05;
+main .columns h1{
+  font-size: var(--heading-font-size-xxl);
+  line-height: 1.06;
 }
 
 main .columns h2 {
-  font-size: var(--heading-font-size-l);
-  line-height: 1.05;
+  font-size: var(--heading-font-size-xl);
+  line-height: 1.08;
 }
 
 main .columns h3 {
-  font-size: var(--heading-font-size-m);
-  line-height: 1.05;
+  font-size: var(--heading-font-size-l);
+  line-height: 1.11;
 }
 
+main .columns h4,
+main .columns h5,
+main .columns h6 {
+  font-size: var(--heading-font-size-m);
+  line-height: 1.14; 
+  margin-top: 32px;
+}
+
+main .columns:first-of-type {
+  visibility: unset;
+  min-height: unset;
+}
 
 main .columns p {
   font-size: var(--body-font-size-xl);
+  line-height: 1.16;
 }
 
 main .columns p.powered-by {
   font-size: var(--body-font-size-m);
+  line-height: 1.2;
 }
 
 main .columns.width-2-columns .column-picture {
@@ -101,6 +115,23 @@ main .columns a > p:empty {
   display: none;
 }
 
+main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h2 {
+  font-size: var(--heading-font-size-l);
+  line-height: 1.11;
+}
+
+main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h3,
+main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h4,
+main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h6 {
+  font-size: var(--heading-font-size-s);
+  line-height: 1.18;
+}
+
+main .section-wrapper.columns-container.steps-container div .steps.block div.step-description p {
+  font-size: var(--body-font-size-s);
+  line-height: 1.28;
+}
+
 main .columns > div span.num {
   position: relative;
   font-weight: 900;
@@ -112,6 +143,10 @@ main .columns > div span.num {
 
 main .columns > div span.num + * {
   display:inline;
+}
+
+main .columns .brand.icon {
+  display: none;
 }
 
 main .columns .social.icon {
@@ -260,10 +295,12 @@ main .columns-highlight-container .column p {
     align-items: center;
   }
 
-  main .columns .column:not(.column-picture) {
-    padding: 40px;
+  body.no-brand-header main .columns .brand.icon {
+    display: unset;
+    height: 32px;
+    width: max-content;
   }
-
+  
   main .section-wrapper div.columns > div {
     position: relative;
   }
@@ -320,4 +357,21 @@ main .columns-highlight-container .column p {
     font-size: var(--heading-font-size-xl);
     line-height: 1.08;
   }
-}
+
+  main .columns:not(.fullsize) .column:not(.column-picture) {
+    padding: 40px;
+  }
+
+  main .columns.fullsize .column.hero-animation-overlay {
+    width: unset;
+  }
+
+  main .columns.fullsize .column.columns-picture > p,
+  main .columns.fullsize .column.hero-animation-overlay > p {
+    margin: 0;
+  }
+
+  main .columns.fullsize .column video {
+    max-width: max-content;
+  }
+}  

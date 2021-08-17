@@ -12,36 +12,39 @@
 /* global window */
 
 // This file contains the project-specific configuration for the sidekick.
-window.hlx.initSidekick({
-  project: 'CCX',
-  host: 'www.stage.adobe.com',
-  byocdn: true,
-  hlx3: true,
-  plugins: [
-    // METADATA ---------------------------------------------------------------------
-    {
-      id: 'metadata',
-      condition: (s) => s.isEditor() && s.location.href.includes('metadata.xlsx'),
-      button: {
-        text: 'Meta Data Inspector',
-        action: (_, sk) => {
-          const { config } = sk;
-          window.open(`https://${config.host || config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
+(() => {
+  window.hlx.initSidekick({
+    project: 'CCX',
+    outerHost: 'stage-express-website--adobe.hlx.live',
+    host: 'www.stage.adobe.com',
+    byocdn: true,
+    hlx3: true,
+    plugins: [
+      // METADATA ---------------------------------------------------------------------
+      {
+        id: 'metadata',
+        condition: (s) => s.isEditor() && s.location.href.includes('metadata.xlsx'),
+        button: {
+          text: 'Meta Data Inspector',
+          action: (_, s) => {
+            const { config } = s;
+            window.open(`https://${config.innerHost}/tools/metadata/inspector.html`, 'hlx-sidekick-spark-metadata-inspector');
+          },
         },
       },
-    },
-    // TEMPLATES --------------------------------------------------------------------
-    {
-      id: 'templates',
-      condition: (s) => s.isEditor()
-        && (s.location.pathname.includes('/:w:/') || s.location.href.includes('doc.aspx?')),
-      button: {
-        text: 'Templates',
-        action: (_, sk) => {
-          const { config } = sk;
-          window.open(`https://${config.host || config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
+      // TEMPLATES --------------------------------------------------------------------
+      {
+        id: 'templates',
+        condition: (s) => s.isEditor()
+          && (s.location.pathname.includes('/:w:/') || s.location.href.includes('doc.aspx?')),
+        button: {
+          text: 'Templates',
+          action: (_, s) => {
+            const { config } = s;
+            window.open(`https://${config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
+          },
         },
       },
-    },
-  ],
-});
+    ],
+  });
+})();

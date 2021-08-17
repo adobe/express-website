@@ -11,13 +11,18 @@
  */
 /* global */
 
-import { linkImage, createTag } from '../../scripts/scripts.js';
+import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell) {
   $columnCell.querySelectorAll('p:empty').forEach(($p) => $p.remove());
 
   const $iconList = createTag('div', { class: 'columns-iconlist' });
   const $icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')];
+  if ($icons.length === 1) {
+    // treat single icon as brand icon
+    $icons[0].classList.add('brand');
+    return;
+  }
   let $before;
   $icons.forEach(($icon, i) => {
     if (!i) $before = $icon.previousSibling;
@@ -138,15 +143,27 @@ export default function decorate($block) {
       const $pics = $cell.querySelectorAll(':scope picture');
       if ($pics.length === 1 && $pics[0].parentElement.tagName === 'P') {
         // unwrap single picture if wrapped in p tag, see https://github.com/adobe/helix-word2md/issues/662
-        const $parent = $pics[0].closest('div');
-        $parent.append($pics[0]);
+        const $parentDiv = $pics[0].closest('div');
+        const $parentParagraph = $pics[0].parentNode;
+        $parentDiv.insertBefore($pics[0], $parentParagraph);
       }
 
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
       if ($pics[0] && $a) {
         if ($a.textContent.startsWith('https://')) {
-          linkImage($cell);
+          if ($a.href.endsWith('.mp4')) {
+            transformLinkToAnimation($a);
+          } else {
+            linkImage($cell);
+          }
+        }
+      }
+      if ($a && $a.classList.contains('button')) {
+        if ($block.classList.contains('fullsize')) {
+          $a.classList.add('xlarge');
+        } else if ($a.classList.contains('light')) {
+          $a.classList.replace('accent', 'primary');
         }
       }
 

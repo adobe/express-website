@@ -18,10 +18,16 @@ import {
   createTag,
   linkImage,
   webpPolyfill,
+  addSearchQueryToHref,
+  getIconElement,
 } from '../../scripts/scripts.js';
 
+import {
+  buildCarousel,
+} from '../shared/carousel.js';
+
 function masonrize($cells, $masonry, force) {
-  const colWidth = 264;
+  const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
 
   const width = $masonry.offsetWidth;
   // console.log($masonry.offsetWidth);
@@ -90,88 +96,6 @@ async function fetchBlueprint(pathname) {
   return ($main);
 }
 
-function getCarouselState($block) {
-  const platform = $block.querySelector('.carousel-platform');
-  const blockStyle = window.getComputedStyle($block);
-  const platformStyle = window.getComputedStyle(platform);
-  const blockWidth = parseInt(blockStyle.getPropertyValue('width'), 10);
-  const platformWidth = parseInt(platformStyle.getPropertyValue('width'), 10);
-  const platformLeft = parseInt(platformStyle.getPropertyValue('left'), 10) || 0;
-  return {
-    platform,
-    platformLeft,
-    blockWidth,
-    platformWidth,
-    platformOffset: platformWidth - blockWidth - Math.abs(platformLeft),
-    faderLeft: $block.querySelector('.carousel-fader-left'),
-    faderRight: $block.querySelector('.carousel-fader-right'),
-  };
-}
-
-function toggleControls($block, newLeft = 0) {
-  const state = getCarouselState($block);
-  state.faderLeft.style.display = newLeft < 0 ? 'block' : 'none';
-  state.faderRight.style.display = state.blockWidth < state.platformWidth - Math.abs(newLeft) ? 'block' : 'none';
-}
-
-function moveCarousel($block, increment) {
-  const state = getCarouselState($block);
-  let newLeft = state.platformLeft;
-  if (increment < 0
-      && state.platformWidth > state.blockWidth
-      && state.platformOffset - Math.abs(increment) <= 0) {
-    // near right end
-    // eslint-disable-next-line no-param-reassign
-    newLeft += -(state.platformOffset);
-  } else if (increment > 0 && Math.abs(state.platformLeft) < increment) {
-    // near left end
-    // eslint-disable-next-line no-param-reassign
-    newLeft += Math.abs(state.platformLeft);
-  } else {
-    newLeft += increment;
-  }
-  state.platform.style.left = `${newLeft}px`;
-  // update carousel controls
-  toggleControls($block, newLeft);
-}
-
-function buildCarousel($block) {
-  // add templates to carousel
-  const $platform = createTag('div', { class: 'carousel-platform' });
-  Array.from($block.children).forEach((t) => $platform.appendChild(t));
-  $block.appendChild($platform);
-  // faders
-  const $faderLeft = createTag('div', { class: 'carousel-fader-left' });
-  // $faderLeft.style.display = 'none';
-  const $faderRight = createTag('div', { class: 'carousel-fader-right' });
-  $block.appendChild($faderLeft);
-  $block.appendChild($faderRight);
-  // controls
-  const $arrowLeft = createTag('a', { class: 'button carousel-arrow carousel-arrow-left' });
-  const $arrowRight = createTag('a', { class: 'button carousel-arrow carousel-arrow-right' });
-  $arrowLeft.addEventListener('click', () => moveCarousel($block, 240));
-  $arrowRight.addEventListener('click', () => moveCarousel($block, -240));
-  $faderLeft.appendChild($arrowLeft);
-  $faderRight.appendChild($arrowRight);
-  const media = Array.from($block.querySelectorAll('img, video'));
-  const mediaLoaded = [];
-  const mediaCheck = window.setInterval(() => {
-    if (media.length > 0) {
-      // all media loaded
-      window.clearInterval(mediaCheck);
-      toggleControls($block);
-    }
-    media.forEach(($m, i) => {
-      if (parseInt(window.getComputedStyle($m).getPropertyValue('width'), 10)) {
-        // non-zwero width, media loaded
-        mediaLoaded.push(i);
-        media.splice(i, 1);
-      }
-    });
-  }, 50);
-  window.addEventListener('resize', () => toggleControls($block));
-}
-
 export async function decorateTemplateList($block) {
   let rows = $block.children.length;
   const locale = getLocale(window.location);
@@ -206,7 +130,18 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  rows = $block.children.length;
+  const templates = Array.from($block.children);
+  // process single column first row as title
+  if (templates[0] && templates[0].children.length === 1) {
+    const $titleRow = templates.shift();
+    $titleRow.classList.add('template-title');
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      $a.closest('p').classList.remove('button-container');
+    });
+  }
+
+  rows = templates.length;
 
   if (rows > 6 && !$block.classList.contains('horizontal')) {
     $block.classList.add('masonry');
@@ -225,12 +160,14 @@ export async function decorateTemplateList($block) {
   //       +- "Edit this template"
   //
   // make copy of children to avoid modifying list while looping
-  for (let $tmplt of Array.from($block.children)) {
-    const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
+  for (let $tmplt of templates) {
+    const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
+    const $link = $tmplt.querySelector(':scope > div:nth-of-type(2) > a');
     if ($link) {
       const $a = createTag('a', {
-        href: $link.href || '#',
+        href: $link.href ? addSearchQueryToHref($link.href) : '#',
       });
+
       $a.append(...$tmplt.childNodes);
       $tmplt.remove();
       $tmplt = $a;
@@ -242,6 +179,20 @@ export async function decorateTemplateList($block) {
       $link.parentNode.append($newLink);
       $link.remove();
     }
+
+    if ($tmplt.children.length === 3) {
+      // look for for overlay icon in last cell
+      const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
+      const iconName = $overlayCell.textContent.trim();
+      if (iconName) {
+        // add icon to 1st cell
+        const $icon = getIconElement(iconName);
+        $icon.setAttribute('title', iconName);
+        $tmplt.children[0].append($icon);
+      }
+      $overlayCell.remove();
+    }
+
     if (!$tmplt.querySelectorAll(':scope > div > *').length) {
       // remove empty row
       $tmplt.remove();
@@ -276,11 +227,14 @@ export async function decorateTemplateList($block) {
         }
       }
     }
+    if (isPlaceholder) {
+      $tmplt.classList.add('placeholder');
+    }
   }
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel($block);
+    buildCarousel(':scope > .template', $block, '');
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);

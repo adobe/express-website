@@ -188,6 +188,33 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/image/transparent-background')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/change-speed')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:changeVideoSpeed');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/merge')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:mergeVideo');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/mp4-to-gif')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/mp4')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/gif-to-mp4')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/mov-to-mp4')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/wmv-to-mp4')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/reverse')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:reverseVideo');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
 
   //------------------------------------------------------------------------------------
@@ -307,7 +334,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       }
 
     // quick actions clicks
-    } else if ($a.href.includes('spark.adobe.com/tools')) {
+    } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
 
