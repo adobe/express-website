@@ -262,7 +262,7 @@ main .template-list.sixcols .template:not(.placeholder) .button-container {
   background-color: rgba(0, 0, 0, 0.5);
   top: 0;
   opacity: 0;
-  transition: opacity .3s ease-in-out;
+  transition: opacity .2s ease-in-out;
 }
 
 main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
