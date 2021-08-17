@@ -74,7 +74,7 @@ function scaleHeader() {
         const { height, lineHeight } = style;
         // dimensions of headings
         const heightInt = parseInt(height.match('\\d+')[0], 10);
-        const lineHeightFloat = parseFloat(lineHeight.match('\\d+.\\d+'));
+        const lineHeightFloat = parseFloat(lineHeight.match('\\d+'));
         // should be verifiable by looking at number of lines
         headerLines = Math.ceil(heightInt / lineHeightFloat);
         if (headerLines > maxLines) {
