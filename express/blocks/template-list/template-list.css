@@ -252,10 +252,6 @@ main .template-list.sixcols .template.placeholder {
 }
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
-  display: none;
-}
-
-main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -265,6 +261,12 @@ main .template-list.sixcols .template:hover:not(.placeholder) .button-container 
   border-radius: 7px;
   background-color: rgba(0, 0, 0, 0.5);
   top: 0;
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+}
+
+main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
+  opacity: 1;
 }
 
 main .template-list.sixcols .template:not(.placeholder) .template-link {
