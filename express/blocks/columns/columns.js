@@ -58,7 +58,7 @@ function isHeadingOversized(heading, maxLines) {
   const lineHeightFloat = parseFloat(lineHeight.match('\\d+'));
   // should be verifiable by looking at number of lines
   const headingLines = Math.ceil(heightInt / lineHeightFloat);
-  return headingLines > maxLines;
+  return headingLines >= maxLines;
 }
 
 /**
@@ -85,15 +85,18 @@ function scaleHeader() {
     .forEach((heading) => {
       const { tagName } = heading;
       let headerNumber = parseInt(tagName.charAt(1), 10);
+      let downsizedFlag = false;
       do {
         if (isHeadingOversized(heading, maxLines)) {
+          // short circuit logic!
+          downsizedFlag = true;
           headerNumber += 1;
+          // eslint-disable-next-line prefer-destructuring
+          heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]})`;
+          // eslint-disable-next-line prefer-destructuring
+          heading.style.lineHeight = headerNumber2Font[headerNumber][1];
         }
-        // eslint-disable-next-line prefer-destructuring
-        heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]})`;
-        // eslint-disable-next-line prefer-destructuring
-        heading.style.lineHeight = headerNumber2Font[headerNumber][1];
-      } while (isHeadingOversized(heading, maxLines) && headerNumber <= 7);
+      } while (downsizedFlag && isHeadingOversized(heading, maxLines) && headerNumber <= 7);
     });
 }
 
