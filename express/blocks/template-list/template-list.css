@@ -306,21 +306,22 @@ main .template-list .template.placeholder div:nth-of-type(2) {
   padding: 0;
   margin: 0;
   position: absolute;
-  padding: 20px;
-  bottom: 0;
+  padding: 0 20px;
+  bottom: 10%;
 }
 
 main .template-list .template.placeholder .template-link {
   font-size: var(--body-font-size-s);
   color: currentColor;
   text-align: center;
+  line-height: 1;
   padding: 0;
   width: fit-content;
 }
 
 main .template-list .template.placeholder > div:first-of-type {
   width: 100%;
-  height: 90%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -376,7 +377,7 @@ main .template-list .template.placeholder .template-link::after {
 
   main .template-list.sixcols .template.placeholder {
     width: 145px;
-    margin: 21px auto 19px auto;
+    margin: 21px auto 23px auto;
   }
 
   /* template-list inside columns */
