@@ -36,8 +36,6 @@ function activate(block, target) {
     if (vw >= 900) {
       const picture = block.parentElement.parentElement.querySelector('picture');
       const img = picture.querySelector('img');
-
-      img.style.height = `${img.offsetHeight}px`;
       picture.style.height = `${img.offsetHeight}px`;
     }
 
