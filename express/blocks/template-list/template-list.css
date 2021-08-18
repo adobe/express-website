@@ -105,7 +105,6 @@ main .template-list .template > div:first-child > a:any-link {
 
 main .template-list .template img, main .template-list .template video {
   border-radius: 7px;
-  width: 300px;
 }
 
 main .template-list.large .template {
@@ -223,7 +222,6 @@ main .template-list.horizontal a.button.carousel-arrow-right::before {
 }
 
 main .template-list.horizontal .template {
-  min-height: 220px;
   max-height: 220px;
   width: max-content;
   margin-left: 12px;
@@ -236,7 +234,7 @@ main .template-list.horizontal .template video {
   width: auto;
 }
 
-main .template-list.horizontal .template-link {
+main .template-list.horizontal .template:not(.placeholder) .template-link {
   display: none;
 }
 
@@ -245,10 +243,6 @@ main .template-list.sixcols .template {
   display: inline-flex;
   width: 165px;
   margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
-}
-
-main .template-list.sixcols .template.placeholder {
-  width: 104px;
 }
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
@@ -295,37 +289,45 @@ main .template-list.sixcols .template:not(.placeholder) .template-link::after {
 }
 
 main .template-list .template.placeholder {
+  box-sizing: border-box;
   display: flex;
-  align-items: start;
+  position: relative;
+  justify-content: flex-start;
+  align-items: center;
   border-radius: 14px;
   border: 2px dashed var(--color-gray-300);
   height: 242px;
-  width: 148px;
-  margin: 10px 10px 42px 10px;
-  padding: 0 20px 32px 20px;
+  width: 200px;
+  margin: 21px 11px 53px 11px;
+  padding: 0;
 }
 
-main .template-list .template.placeholder {
-  width: 145px;
-  margin: 15px;
+main .template-list .template.placeholder div:nth-of-type(2) {
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  padding: 20px;
+  bottom: 0;
 }
 
 main .template-list .template.placeholder .template-link {
   font-size: var(--body-font-size-s);
   color: currentColor;
-  padding-left: 0;
+  text-align: center;
+  padding: 0;
+  width: fit-content;
 }
 
 main .template-list .template.placeholder > div:first-of-type {
-  flex-grow: 1;
   width: 100%;
+  height: 90%;
   display: flex;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 }
 
 main .template-list .template.placeholder > div:first-of-type > img,
 main .template-list .template.placeholder > div:first-of-type > svg {
-  margin: 0 auto 42px;
   width: 44px;
   height: 44px;
 }
@@ -368,16 +370,13 @@ main .template-list .template.placeholder .template-link::after {
     margin-right: 20px;
   }
 
-  main .template-list .template img {
-    width: 240px;
-  }
-
-  main .template-list.sixcols .template {
+  main .template-list.sixcols .template:not(.placeholder) {
     margin: 11px 11px 9px 11px; /* make up for 4px height overlap in first child div */
   }
 
   main .template-list.sixcols .template.placeholder {
-    margin: 21px;
+    width: 145px;
+    margin: 21px auto 19px auto;
   }
 
   /* template-list inside columns */
