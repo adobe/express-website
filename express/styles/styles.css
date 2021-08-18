@@ -462,8 +462,11 @@ main .section-wrapper:last-of-type {
   margin-bottom: 0;
 }
 
-main .columns:first-of-type {
+main .columns {
   visibility: hidden;
+}
+
+main .columns:first-of-type {
   min-height: 1024px;
 }
 

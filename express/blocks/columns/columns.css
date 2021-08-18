@@ -72,8 +72,11 @@ main .columns h6 {
   margin-top: 32px;
 }
 
-main .columns:first-of-type {
+main .columns.appear {
   visibility: unset;
+}
+
+main .columns.appear:first-of-type {
   min-height: unset;
 }
 
@@ -364,7 +367,7 @@ main .columns-highlight-container .column p {
 
   main .columns.fullsize .column.hero-animation-overlay {
     min-width: 600px;
-    min-height: 610px;
+    min-height: 614px;
     width: unset;
   }
 
