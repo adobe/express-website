@@ -20,6 +20,7 @@ import {
   webpPolyfill,
   addSearchQueryToHref,
   getIconElement,
+  toClassName,
 } from '../../scripts/scripts.js';
 
 import {
@@ -181,14 +182,22 @@ export async function decorateTemplateList($block) {
     }
 
     if ($tmplt.children.length === 3) {
-      // look for for overlay icon in last cell
+      // look for for options in last cell
       const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
-      const iconName = $overlayCell.textContent.trim();
-      if (iconName) {
-        // add icon to 1st cell
-        const $icon = getIconElement(iconName);
-        $icon.setAttribute('title', iconName);
-        $tmplt.children[0].append($icon);
+      const option = $overlayCell.textContent.trim();
+      if (option) {
+        if (isPlaceholder) {
+          // add aspect ratio to template
+          const sep = option.includes(':') ? ':' : 'x';
+          const ratios = option.split(sep).map((e) => +e);
+          const width = $block.classList.contains('sixcols') ? 145 : 200;
+          if (ratios[1]) $tmplt.style = `height: ${(ratios[1] / ratios[0]) * width}px`;
+        } else {
+          // add icon to 1st cell
+          const $icon = getIconElement(toClassName(option));
+          $icon.setAttribute('title', option);
+          $tmplt.children[0].append($icon);
+        }
       }
       $overlayCell.remove();
     }
