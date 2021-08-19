@@ -191,7 +191,13 @@ export async function decorateTemplateList($block) {
           const sep = option.includes(':') ? ':' : 'x';
           const ratios = option.split(sep).map((e) => +e);
           const width = $block.classList.contains('sixcols') ? 145 : 200;
-          if (ratios[1]) $tmplt.style = `height: ${(ratios[1] / ratios[0]) * width}px`;
+          if (ratios[1]) {
+            const height = (ratios[1] / ratios[0]) * width;
+            $tmplt.style = `height: ${height}px`;
+            if (width / height > 1.3) {
+              $tmplt.classList.add('wide');
+            }
+          }
         } else {
           // add icon to 1st cell
           const $icon = getIconElement(toClassName(option));

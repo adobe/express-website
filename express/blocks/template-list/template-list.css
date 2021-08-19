@@ -348,6 +348,20 @@ main .template-list .template.placeholder .template-link::after {
   display: none;
 }
 
+main .template-list .template.placeholder.wide > div:first-of-type {
+  height: 65%;
+}
+
+main .template-list .template.placeholder.wide > div:first-of-type > img,
+main .template-list .template.placeholder.wide > div:first-of-type > svg {
+  width: 24px;
+  height: 24px;
+}
+
+main .template-list .template.placeholder div:nth-of-type(2) {
+  min-height: 28px;
+}
+
 @media (min-width: 900px) {
   main .template-list-container > div,
   main .template-list-fourcols-container > div,
