@@ -29,7 +29,7 @@ main .hero-animation video {
     object-fit: cover;
     width: 100vw;
     min-height: 375px;
-    object-position: 72%;
+    object-position: 100% 100%;
 }
 
 main .hero-animation .hero-animation-overlay p {
