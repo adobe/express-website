@@ -244,6 +244,17 @@ main .template-list.sixcols .template {
   width: 165px;
   margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
 }
+main .template-list.sixcols .template:not(.placeholder) picture > img,
+main .template-list.sixcols .template:not(.placeholder) video {
+  clip-path: inset(0 0 0 0 round 7px);
+  transition: clip-path .75s, transform .75s;
+}
+
+main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
+main .template-list.sixcols .template:hover:not(.placeholder) video {
+  transform: scale(1.1);
+  clip-path: inset(4.5% 4.5% 4.5% 4.5% round 7px);
+}
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
   display: flex;
@@ -351,7 +362,7 @@ main .template-list .template.placeholder .template-link::after {
   main .template-list.sixcols > .masonry-col {
     max-width: 187px;
   }
-  
+
   main .template-list .template-title > div {
     flex-direction: row;
     justify-content: space-between;
