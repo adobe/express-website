@@ -244,6 +244,17 @@ main .template-list.sixcols .template {
   width: 165px;
   margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
 }
+main .template-list.sixcols .template:not(.placeholder) picture > img,
+main .template-list.sixcols .template:not(.placeholder) video {
+  clip-path: inset(0 0 0 0 round 7px);
+  transition: clip-path .75s, transform .75s;
+}
+
+main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
+main .template-list.sixcols .template:hover:not(.placeholder) video {
+  transform: scale(1.1);
+  clip-path: inset(4.5% 4.5% 4.5% 4.5% round 7px);
+}
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
   display: flex;
@@ -306,21 +317,22 @@ main .template-list .template.placeholder div:nth-of-type(2) {
   padding: 0;
   margin: 0;
   position: absolute;
-  padding: 20px;
-  bottom: 0;
+  padding: 0 20px;
+  bottom: 10%;
 }
 
 main .template-list .template.placeholder .template-link {
   font-size: var(--body-font-size-s);
   color: currentColor;
   text-align: center;
+  line-height: 1;
   padding: 0;
   width: fit-content;
 }
 
 main .template-list .template.placeholder > div:first-of-type {
   width: 100%;
-  height: 90%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -334,6 +346,20 @@ main .template-list .template.placeholder > div:first-of-type > svg {
 
 main .template-list .template.placeholder .template-link::after {
   display: none;
+}
+
+main .template-list .template.placeholder.wide > div:first-of-type {
+  height: 65%;
+}
+
+main .template-list .template.placeholder.wide > div:first-of-type > img,
+main .template-list .template.placeholder.wide > div:first-of-type > svg {
+  width: 24px;
+  height: 24px;
+}
+
+main .template-list .template.placeholder div:nth-of-type(2) {
+  min-height: 28px;
 }
 
 @media (min-width: 900px) {
@@ -350,7 +376,7 @@ main .template-list .template.placeholder .template-link::after {
   main .template-list.sixcols > .masonry-col {
     max-width: 187px;
   }
-  
+
   main .template-list .template-title > div {
     flex-direction: row;
     justify-content: space-between;
@@ -376,7 +402,7 @@ main .template-list .template.placeholder .template-link::after {
 
   main .template-list.sixcols .template.placeholder {
     width: 145px;
-    margin: 21px auto 19px auto;
+    margin: 21px auto 23px auto;
   }
 
   /* template-list inside columns */
