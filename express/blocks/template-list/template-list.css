@@ -253,7 +253,8 @@ main .template-list.sixcols .template:not(.placeholder) > div:first-of-type {
 
 main .template-list.sixcols .template:not(.placeholder) picture > img,
 main .template-list.sixcols .template:not(.placeholder) video {
-  transition: all .3s ease-in-out;
+  transition: transform .3s ease-in-out;
+  will-change: transform;
 }
 
 main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
@@ -273,9 +274,18 @@ main .template-list.sixcols .template:not(.placeholder) .button-container {
   top: 0;
   opacity: 0;
   transition: opacity .3s ease-in-out;
+  will-change: opacity;
 }
 
-main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
+main .template-list.sixcols .template:not(.placeholder) .template-link {
+  opacity: 0;
+  transition: opacity .4s ease-in-out .2s;
+  will-change: opacity;
+}
+
+
+main .template-list.sixcols .template:hover:not(.placeholder) .button-container,
+main .template-list.sixcols .template:hover:not(.placeholder) .template-link {
   opacity: 1;
 }
 
@@ -291,7 +301,6 @@ main .template-list.sixcols .template:not(.placeholder) .template-link {
   cursor: pointer;
   color: var(--color-black);
   background-color: var(--color-white);
-  transition: background-color .4s;
   margin: 10px;
   white-space: nowrap;
   overflow: hidden;
