@@ -247,8 +247,8 @@ main .template-list.sixcols .template {
 
 main .template-list.sixcols .template:not(.placeholder) > div:first-of-type {
   overflow: hidden;
-  background-color: red;
   border-radius: 7px;
+  line-height: 0;
 }
 
 main .template-list.sixcols .template:not(.placeholder) picture > img,
