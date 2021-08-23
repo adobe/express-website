@@ -242,19 +242,23 @@ main .template-list.sixcols .template {
   position: relative;
   display: inline-flex;
   width: 165px;
-  margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
+  margin: 5px;
+}
+
+main .template-list.sixcols .template:not(.placeholder) > div:first-of-type {
+  overflow: hidden;
+  background-color: red;
+  border-radius: 7px;
 }
 
 main .template-list.sixcols .template:not(.placeholder) picture > img,
 main .template-list.sixcols .template:not(.placeholder) video {
-  clip-path: inset(0 0 0 0 round 7px);
-  transition: all .75s ease-in-out;
+  transition: all .3s ease-in-out;
 }
 
 main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
 main .template-list.sixcols .template:hover:not(.placeholder) video {
   transform: scale(1.1);
-  clip-path: inset(4.5% 4.5% 4.5% 4.5% round 7px);
 }
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
@@ -263,12 +267,12 @@ main .template-list.sixcols .template:not(.placeholder) .button-container {
   align-items: center;
   position: absolute;
   width: 100%;
-  height: calc(100% - 4px);
+  height: 100%;
   border-radius: 7px;
   background-color: rgba(0, 0, 0, 0.5);
   top: 0;
   opacity: 0;
-  transition: opacity .2s ease-in-out;
+  transition: opacity .3s ease-in-out;
 }
 
 main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
