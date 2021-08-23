@@ -244,10 +244,11 @@ main .template-list.sixcols .template {
   width: 165px;
   margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
 }
+
 main .template-list.sixcols .template:not(.placeholder) picture > img,
 main .template-list.sixcols .template:not(.placeholder) video {
   clip-path: inset(0 0 0 0 round 7px);
-  transition: clip-path .75s, transform .75s;
+  transition: all .75s ease-in-out;
 }
 
 main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
