@@ -53,8 +53,8 @@ function isHeadingOversized(heading, maxLines) {
   const style = window.getComputedStyle(heading);
   const { height, lineHeight } = style;
   // dimensions of headings
-  const heightInt = parseInt(height.match('\\d+')[0], 10);
-  const lineHeightFloat = parseFloat(lineHeight.match('\\d+'));
+  const heightInt = parseInt(height, 10);
+  const lineHeightFloat = parseFloat(lineHeight);
   // should be verifiable by looking at number of lines
   const headingLines = Math.ceil(heightInt / lineHeightFloat);
   return headingLines >= maxLines;
@@ -70,13 +70,13 @@ function scaleHeader() {
   here for calculating what's needed for dynamic resizes
   */
   const headerNumber2Font = {
-    1: ['xxl', 1.06],
-    2: ['xl', 1.08],
-    3: ['l', 1.11],
-    4: ['m', 1.14],
-    5: ['m', 1.14],
-    6: ['m', 1.14],
-    7: ['s', 1.17],
+    1: 'xxl',
+    2: 'xl',
+    3: 'l',
+    4: 'm',
+    5: 'm',
+    6: 'm',
+    7: 's',
   };
   const maxLines = 3;
   document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5')
@@ -92,7 +92,7 @@ function scaleHeader() {
           // eslint-disable-next-line prefer-destructuring
           heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]})`;
           // eslint-disable-next-line prefer-destructuring
-          heading.style.lineHeight = headerNumber2Font[headerNumber][1];
+          heading.style.lineHeight = 1.25;
         }
       } while (downsizedFlag && isHeadingOversized(heading, maxLines) && headerNumber <= 7);
     });
@@ -101,7 +101,6 @@ function scaleHeader() {
 export default function decorate($block) {
   window.addEventListener('resize', scaleHeader);
   scaleHeader();
-  // eslint-disable-next-line no-undef
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
