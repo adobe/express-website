@@ -90,9 +90,7 @@ function scaleHeader() {
           downsizedFlag = true;
           headerNumber += 1;
           // eslint-disable-next-line prefer-destructuring
-          heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber][0]})`;
-          // eslint-disable-next-line prefer-destructuring
-          heading.style.lineHeight = 1.25;
+          heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber]})`;
         }
       } while (downsizedFlag && isHeadingOversized(heading, maxLines) && headerNumber <= 7);
     });
