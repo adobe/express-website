@@ -57,7 +57,7 @@ function isHeadingOversized(heading, maxLines) {
   const lineHeightFloat = parseFloat(lineHeight);
   // should be verifiable by looking at number of lines
   const headingLines = Math.ceil(heightInt / lineHeightFloat);
-  return headingLines >= maxLines;
+  return headingLines > maxLines;
 }
 
 /**
