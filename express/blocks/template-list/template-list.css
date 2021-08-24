@@ -242,18 +242,24 @@ main .template-list.sixcols .template {
   position: relative;
   display: inline-flex;
   width: 165px;
-  margin: 5px 5px 3px 5px; /* make up for 4px height overlap in first child div */
+  margin: 5px;
 }
+
+main .template-list.sixcols .template:not(.placeholder) > div:first-of-type {
+  overflow: hidden;
+  border-radius: 7px;
+  line-height: 0;
+}
+
 main .template-list.sixcols .template:not(.placeholder) picture > img,
 main .template-list.sixcols .template:not(.placeholder) video {
-  clip-path: inset(0 0 0 0 round 7px);
-  transition: clip-path .75s, transform .75s;
+  transition: transform .3s ease-in-out;
+  will-change: transform;
 }
 
 main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
 main .template-list.sixcols .template:hover:not(.placeholder) video {
   transform: scale(1.1);
-  clip-path: inset(4.5% 4.5% 4.5% 4.5% round 7px);
 }
 
 main .template-list.sixcols .template:not(.placeholder) .button-container {
@@ -262,15 +268,24 @@ main .template-list.sixcols .template:not(.placeholder) .button-container {
   align-items: center;
   position: absolute;
   width: 100%;
-  height: calc(100% - 4px);
+  height: 100%;
   border-radius: 7px;
   background-color: rgba(0, 0, 0, 0.5);
   top: 0;
   opacity: 0;
-  transition: opacity .2s ease-in-out;
+  transition: opacity .3s ease-in-out;
+  will-change: opacity;
 }
 
-main .template-list.sixcols .template:hover:not(.placeholder) .button-container {
+main .template-list.sixcols .template:not(.placeholder) .template-link {
+  opacity: 0;
+  transition: opacity .4s ease-in-out .2s;
+  will-change: opacity;
+}
+
+
+main .template-list.sixcols .template:hover:not(.placeholder) .button-container,
+main .template-list.sixcols .template:hover:not(.placeholder) .template-link {
   opacity: 1;
 }
 
@@ -286,7 +301,6 @@ main .template-list.sixcols .template:not(.placeholder) .template-link {
   cursor: pointer;
   color: var(--color-black);
   background-color: var(--color-white);
-  transition: background-color .4s;
   margin: 10px;
   white-space: nowrap;
   overflow: hidden;
