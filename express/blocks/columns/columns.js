@@ -85,10 +85,9 @@ function scaleHeader() {
       // length at which a string is probably oversized.
       const TEXT_OVERSIZED_CONSTANT = 44;
       let headerNumber = parseInt(tagName.charAt(1), 10);
-      let downsizedFlag = false;
+      const downsizedFlag = !!heading.style.fontSize;
       const downSize = () => {
         // short circuit logic!
-        downsizedFlag = true;
         headerNumber += 1;
         heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber]})`;
       };
