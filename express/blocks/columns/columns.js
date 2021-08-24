@@ -85,21 +85,20 @@ function scaleHeader() {
       // length at which a string is probably oversized.
       const TEXT_OVERSIZED_CONSTANT = 44;
       let headerNumber = parseInt(tagName.charAt(1), 10);
-      let downsizedFlag = false;
+      //check upon execution
       const downSize = () => {
         // short circuit logic!
         headerNumber += 1;
-        downsizedFlag = !!heading.style.fontSize;
         heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber]})`;
       };
       do {
         if (isHeadingOversized(heading, maxLines)) {
           downSize();
         } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
-          && downsizedFlag === false) {
+          && !!heading.style.fontSize === false) {
           downSize();
         }
-      } while (downsizedFlag && isHeadingOversized(heading, maxLines) && headerNumber <= 7);
+      } while (!!heading.style.fontSize && isHeadingOversized(heading, maxLines) && headerNumber <= 7);
     });
 }
 
