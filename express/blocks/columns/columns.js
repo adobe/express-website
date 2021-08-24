@@ -79,18 +79,25 @@ function scaleHeader() {
     7: 's',
   };
   const maxLines = 3;
-  document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5')
+  document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6')
     .forEach((heading) => {
       const { tagName } = heading;
+      // length at which a string is probably oversized.
+      const TEXT_OVERSIZED_CONSTANT = 44;
       let headerNumber = parseInt(tagName.charAt(1), 10);
       let downsizedFlag = false;
+      const downSize = () => {
+        // short circuit logic!
+        downsizedFlag = true;
+        headerNumber += 1;
+        heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber]})`;
+      };
       do {
         if (isHeadingOversized(heading, maxLines)) {
-          // short circuit logic!
-          downsizedFlag = true;
-          headerNumber += 1;
-          // eslint-disable-next-line prefer-destructuring
-          heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber]})`;
+          downSize();
+        } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
+          && downsizedFlag === false) {
+          downSize();
         }
       } while (downsizedFlag && isHeadingOversized(heading, maxLines) && headerNumber <= 7);
     });
