@@ -172,6 +172,7 @@ main .how-to-steps-carousel-container .icon {
 @media (min-width: 900px) {
   main .how-to-steps-carousel-container {
     display: flex;
+    justify-content: center;
   }
 
   main .how-to-steps-carousel-container > div {
@@ -183,5 +184,17 @@ main .how-to-steps-carousel-container .icon {
 
   main .how-to-steps-carousel-container > picture > img {
     margin: 0;
+  }
+
+  main .how-to-steps-carousel-container.no-cover > div {
+    margin: 0 0 0 20px;
+  }
+
+  main .how-to-steps-carousel-container.no-cover > picture {
+    width: unset;
+  }
+
+  main .how-to-steps-carousel-container.no-cover > picture > img {
+    object-fit: contain;
   }
 }

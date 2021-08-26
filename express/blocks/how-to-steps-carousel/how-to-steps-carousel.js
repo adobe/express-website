@@ -34,9 +34,17 @@ function activate(block, target) {
     );
 
     if (vw >= 900) {
-      const picture = block.parentElement.parentElement.querySelector('picture');
+      const container = block.parentElement.parentElement;
+      const picture = container.querySelector('picture');
       const img = picture.querySelector('img');
-      picture.style.height = `${img.offsetHeight}px`;
+      const panelHeight = block.parentElement.offsetHeight;
+      const imgHeight = img.offsetHeight;
+      if (imgHeight > panelHeight) {
+        picture.style.height = `${panelHeight}px`;
+        container.classList.add('no-cover');
+      } else {
+        picture.style.height = `${imgHeight}px`;
+      }
     }
 
     fixedImageSize = true;
