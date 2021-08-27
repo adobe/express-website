@@ -9,11 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+/* global document */
+
 import {
-  createTag,
+  createTag, getIconElement,
 } from '../../scripts/scripts.js';
 
+function displayPopup(e) {
+  e.preventDefault();
+  e.target.removeEventListener('click', displayPopup);
+  document.querySelector('.pricing-modal-container').style.display = 'flex';
+}
+
 function decoratePricingModal($block) {
+  const $container = $block.closest('.pricing-modal-container');
   const $rows = Array.from($block.children);
   $rows.forEach(($row, index) => {
     if (index === 0) {
@@ -31,13 +41,20 @@ function decoratePricingModal($block) {
       const $contents = Array.from($row.firstChild.children);
       $contents.forEach(($content, contentIndex) => {
         $content.classList.add(`content-${contentIndex + 1}`);
-
-        if (contentIndex === 4) {
-          $content.classList.add('button');
-        }
       });
     }
   });
+  const $header = createTag('div', { class: 'modal__header' });
+  const $headerClose = createTag('div', { class: 'close' });
+  $headerClose.classList.add('modal__header-close');
+  $headerClose.addEventListener('click', (e) => {
+    e.preventDefault();
+    $container.style.display = 'none';
+  });
+  const $cta = document.querySelector('.cta.large');
+  $cta.addEventListener('click', displayPopup);
+  $header.append($headerClose);
+  $block.prepend($header);
 }
 
 export default function decorate($block) {
