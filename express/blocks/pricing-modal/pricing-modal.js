@@ -13,7 +13,7 @@
 /* global document */
 
 import {
-  createTag, getIconElement,
+  createTag,
 } from '../../scripts/scripts.js';
 
 function displayPopup(e) {

@@ -132,3 +132,31 @@
     transform: rotate(45deg);
     left: 0;
 }
+
+@media (max-width: 600px) {
+    .pricing-modal.block {
+        width: 325px;
+        max-width: none;
+    }
+
+    .pricing-modal .modal__content {
+        width: 325px;
+    }
+
+    .pricing-modal .modal__banner {
+        padding: 10px 20px 20px 20px;
+    }
+
+    .pricing-modal .modal__banner-text h1 {
+        font-size: var(--heading-font-size-l);
+    }
+
+    .pricing-modal .modal__banner-text p {
+        font-size: var(--body-font-size-l);
+    }
+
+    .pricing-modal .modal__banner-image {
+        width: 160px;
+        margin-top: 0;
+    }
+}
