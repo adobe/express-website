@@ -64,7 +64,7 @@ export function getIcon(icon, alt = icon, size = 44) {
   'update-cloud-storage'];
   */
   const symbols = ['remove-background', 'mobile-round', 'desktop-round',
-    'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video', 
+    'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
     'templates', 'blank'];
   if (symbols.includes(icon)) {
     const iconName = icon;
