@@ -14,25 +14,21 @@ main .link-list {
 main .link-list h3 {
   text-align: left;
   font-size: var(--heading-font-size-m);
+  margin-bottom: 20px;
 }
 
 main .link-list p.button-container {
   margin: 0;
 }
 
-main .link-list a.button.small.secondary {
-  margin: 6px 5px 6px 0;
-}
-
-main .link-list a.button.small.secondary:hover {
-  background-color: var(--color-black);
-  color: var(--color-white);
+main .link-list a.button.secondary {
+  margin: 6px 20px 6px 0;
 }
 
 main .link-list .link-list-carousel-platform {
   position: relative;
   width: fit-content;
-  height: 40px;
+  height: 42px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;

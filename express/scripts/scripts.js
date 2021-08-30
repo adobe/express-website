@@ -64,7 +64,8 @@ export function getIcon(icon, alt = icon, size = 44) {
   'update-cloud-storage'];
   */
   const symbols = ['remove-background', 'mobile-round', 'desktop-round',
-    'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video'];
+    'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video', 
+    'templates', 'blank'];
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
@@ -87,12 +88,11 @@ export function transformLinkToAnimation($a) {
   if (!$a || !$a.href.endsWith('.mp4')) {
     return null;
   }
-  const attribs = {
-    playsinline: '',
-    autoplay: '',
-    loop: '',
-    muted: '',
-  };
+  const params = new URL($a.href).searchParams;
+  const attribs = {};
+  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
+    if (params.get(p) !== 'false') attribs[p] = '';
+  });
   // use closest picture as poster
   const $poster = $a.closest('div').querySelector('picture source');
   if ($poster) {
@@ -1121,7 +1121,9 @@ function splitSections($main) {
 function setTheme() {
   const theme = getMeta('theme');
   if (theme) {
-    const themeClass = toClassName(theme);
+    let themeClass = toClassName(theme);
+    /* backwards compatibility can be removed again */
+    if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
     const $body = document.body;
     $body.classList.add(themeClass);
   }
@@ -1317,19 +1319,38 @@ async function decoratePage() {
 window.spark = {};
 decoratePage();
 
-/* performance instrumentation */
+/*
+ * lighthouse performance instrumentation helper
+ * (needs a refactor)
+ */
 
 function stamp(message) {
-  console.log(`${new Date() - performance.timing.navigationStart}ms: ${message}`);
+  if (window.name.includes('performance')) {
+    // eslint-disable-next-line no-console
+    console.log(`${new Date() - performance.timing.navigationStart}:${message}`);
+  }
 }
+
+stamp('start');
 
 function registerPerformanceLogger() {
   try {
     const polcp = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       stamp(JSON.stringify(entries));
+      // eslint-disable-next-line no-console
+      console.log(entries[0].element);
     });
     polcp.observe({ type: 'largest-contentful-paint', buffered: true });
+
+    const pols = new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      stamp(JSON.stringify(entries));
+      // eslint-disable-next-line no-console
+      console.log(entries[0].sources[0].node);
+    });
+    pols.observe({ type: 'layout-shift', buffered: true });
+
     const pores = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       entries.forEach((entry) => {

@@ -52,6 +52,10 @@ export default [
     input: 'input/template-list.horizontal.doc.html',
     expected: 'expected/template-list.horizontal.block.html',
   }, {
+    name: 'Template List - title',
+    input: 'input/template-list.title.doc.html',
+    expected: 'expected/template-list.title.block.html',
+  }, {
     name: 'Template List - sixcols',
     input: 'input/template-list.sixcols.doc.html',
     expected: 'expected/template-list.sixcols.block.html',
@@ -75,6 +79,10 @@ export default [
     name: 'Columns - Animation',
     input: 'input/columns.animation.doc.html',
     expected: 'expected/columns.animation.block.html',
+  }, {
+    name: 'Columns - Animation with params',
+    input: 'input/columns.animation.params.doc.html',
+    expected: 'expected/columns.animation.params.block.html',
   }, {
     name: 'Banner - h2',
     input: 'input/banner.h2.doc.html',

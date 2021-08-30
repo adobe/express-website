@@ -19,6 +19,8 @@ import {
   linkImage,
   webpPolyfill,
   addSearchQueryToHref,
+  getIconElement,
+  toClassName,
 } from '../../scripts/scripts.js';
 
 import {
@@ -129,7 +131,18 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  rows = $block.children.length;
+  const templates = Array.from($block.children);
+  // process single column first row as title
+  if (templates[0] && templates[0].children.length === 1) {
+    const $titleRow = templates.shift();
+    $titleRow.classList.add('template-title');
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      $a.closest('p').classList.remove('button-container');
+    });
+  }
+
+  rows = templates.length;
 
   if (rows > 6 && !$block.classList.contains('horizontal')) {
     $block.classList.add('masonry');
@@ -148,8 +161,9 @@ export async function decorateTemplateList($block) {
   //       +- "Edit this template"
   //
   // make copy of children to avoid modifying list while looping
-  for (let $tmplt of Array.from($block.children)) {
-    const $link = $tmplt.querySelector(':scope > div:last-of-type > a');
+  for (let $tmplt of templates) {
+    const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
+    const $link = $tmplt.querySelector(':scope > div:nth-of-type(2) > a');
     if ($link) {
       const $a = createTag('a', {
         href: $link.href ? addSearchQueryToHref($link.href) : '#',
@@ -166,6 +180,34 @@ export async function decorateTemplateList($block) {
       $link.parentNode.append($newLink);
       $link.remove();
     }
+
+    if ($tmplt.children.length === 3) {
+      // look for for options in last cell
+      const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
+      const option = $overlayCell.textContent.trim();
+      if (option) {
+        if (isPlaceholder) {
+          // add aspect ratio to template
+          const sep = option.includes(':') ? ':' : 'x';
+          const ratios = option.split(sep).map((e) => +e);
+          const width = $block.classList.contains('sixcols') ? 145 : 200;
+          if (ratios[1]) {
+            const height = (ratios[1] / ratios[0]) * width;
+            $tmplt.style = `height: ${height}px`;
+            if (width / height > 1.3) {
+              $tmplt.classList.add('wide');
+            }
+          }
+        } else {
+          // add icon to 1st cell
+          const $icon = getIconElement(toClassName(option));
+          $icon.setAttribute('title', option);
+          $tmplt.children[0].append($icon);
+        }
+      }
+      $overlayCell.remove();
+    }
+
     if (!$tmplt.querySelectorAll(':scope > div > *').length) {
       // remove empty row
       $tmplt.remove();
@@ -200,14 +242,14 @@ export async function decorateTemplateList($block) {
         }
       }
     }
-    if ($tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"')) {
+    if (isPlaceholder) {
       $tmplt.classList.add('placeholder');
     }
   }
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel($block.children, $block, '');
+    buildCarousel(':scope > .template', $block, '');
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);

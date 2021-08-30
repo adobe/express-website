@@ -1,4 +1,4 @@
-body.nobrand header {
+body.no-desktop-brand-header header {
     background-image: url(/express/icons/cc-express-logo.svg);
     height: 143px;
 }
@@ -104,7 +104,7 @@ main .hero-animation .icon-adobe-creative-cloud-express {
 
 
 @media (min-width: 900px) {
-    body.nobrand header {
+    body.no-desktop-brand-header header, body.no-brand-header header {
         height: 64px;
         background-image: unset;
     }

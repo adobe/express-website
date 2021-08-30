@@ -20,13 +20,13 @@ export default function decorate(block) {
   if (links.length) {
     links.forEach((p) => {
       const link = p.querySelector('a');
-      link.classList.add('small', 'secondary');
+      link.classList.add('medium', 'secondary');
       link.classList.remove('accent');
     });
     const div = links[0].closest('div');
     const platformEl = document.createElement('div');
     platformEl.classList.add('link-list-platform');
-    buildCarousel(links, div, 'link-list-');
+    buildCarousel('p.button-container', div, 'link-list-');
     div.append(platformEl);
   }
 }
