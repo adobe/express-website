@@ -17,16 +17,19 @@ import {
 } from '../../scripts/scripts.js';
 
 function displayPopup(e) {
-  const url = document.querySelector('.cta.large').href;
   e.preventDefault();
-  document.querySelector('a.close').href = url;
+  e.target.removeEventListener('click', displayPopup);
   document.querySelector('.pricing-modal-container').style.display = 'flex';
+}
+
+function closePopup(e) {
+  e.preventDefault();
+  document.querySelector('.pricing-modal-container').style.display = 'none';
 }
 
 function decoratePricingModal($block) {
   const $container = $block.closest('.pricing-modal-container');
   const $rows = Array.from($block.children);
-  const $cta = document.querySelector('.cta.large');
   $rows.forEach(($row, index) => {
     if (index === 0) {
       $row.classList.add('modal__banner');
@@ -49,10 +52,21 @@ function decoratePricingModal($block) {
   const $header = createTag('div', { class: 'modal__header' });
   const $headerClose = createTag('a', { class: 'close' });
   $headerClose.classList.add('modal__header-close');
-  $headerClose.href = $cta.href;
+  $headerClose.addEventListener('click', closePopup);
+  const $cta = document.querySelector('.cta.large');
   $cta.addEventListener('click', displayPopup);
   $header.append($headerClose);
   $block.prepend($header);
+  $block.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+  $container.addEventListener('click', closePopup);
+  document.onkeydown = (evt) => {
+    evt = evt || window.event;
+    if (evt.keyCode === 27) {
+      $container.style.display = 'none';
+    }
+  };
 }
 
 export default function decorate($block) {

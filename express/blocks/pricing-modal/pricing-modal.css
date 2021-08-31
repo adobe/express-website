@@ -9,6 +9,7 @@
     justify-content: center;
     align-items: center;
     padding-top: 0!important;
+    z-index: 20;
 }
 
 .pricing-modal-container>div {
@@ -61,6 +62,7 @@
     justify-content: center;
     align-items: center;
     width: 200px;
+    height: 230px;
     margin-top: -20px;
 }
 
