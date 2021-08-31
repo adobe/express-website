@@ -17,14 +17,16 @@ import {
 } from '../../scripts/scripts.js';
 
 function displayPopup(e) {
+  const url = document.querySelector('.cta.large').href;
   e.preventDefault();
-  e.target.removeEventListener('click', displayPopup);
+  document.querySelector('a.close').href = url;
   document.querySelector('.pricing-modal-container').style.display = 'flex';
 }
 
 function decoratePricingModal($block) {
   const $container = $block.closest('.pricing-modal-container');
   const $rows = Array.from($block.children);
+  const $cta = document.querySelector('.cta.large');
   $rows.forEach(($row, index) => {
     if (index === 0) {
       $row.classList.add('modal__banner');
@@ -45,13 +47,9 @@ function decoratePricingModal($block) {
     }
   });
   const $header = createTag('div', { class: 'modal__header' });
-  const $headerClose = createTag('div', { class: 'close' });
+  const $headerClose = createTag('a', { class: 'close' });
   $headerClose.classList.add('modal__header-close');
-  $headerClose.addEventListener('click', (e) => {
-    e.preventDefault();
-    $container.style.display = 'none';
-  });
-  const $cta = document.querySelector('.cta.large');
+  $headerClose.href = $cta.href;
   $cta.addEventListener('click', displayPopup);
   $header.append($headerClose);
   $block.prepend($header);

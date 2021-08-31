@@ -24,6 +24,7 @@
     padding: 24px 24px 32px 24px;
     width: 450px;
     max-width: 80%;
+    border-radius: 8px;
 }
 
 .pricing-modal .modal__banner {
@@ -35,7 +36,7 @@
 }
 
 .pricing-modal .modal__banner-text {
-    width: 200px;
+    width: 190px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -43,14 +44,14 @@
     text-align: left;
 }
 
-.pricing-modal .modal__banner-text h1 {
+.pricing-modal .modal__banner-text h2 {
     font-size: var(--heading-font-size-xl);
     color: #5c5ce0;
 }
 
 .pricing-modal .modal__banner-text p {
     margin: 0;
-    font-size: var(--body-font-size-xl);
+    font-size: var(--body-font-size-m);
     font-weight: var(--heading-font-weight);
     line-height: 1.1;
 }
@@ -71,7 +72,7 @@
     margin: 0 auto;
 }
 
-.pricing-modal .modal__content h1 {
+.pricing-modal .modal__content h2 {
     margin: 16px;
     font-size: var(--heading-font-size-xl);
 }
@@ -80,7 +81,7 @@
     margin: 12px 0;
 }
 
-.pricing-modal .modal__content h2 {
+.pricing-modal .modal__content h3 {
     margin: 12px 0;
     font-size: var(--heading-font-size-s);
     font-weight: var(--body-font-weight);
@@ -89,6 +90,12 @@
 
 .pricing-modal .modal__content del {
     text-decoration-color: red;
+}
+
+.pricing-modal .modal__content h5 {
+    margin-top: 10px;
+    font-size: var(--body-font-size-l);
+    font-weight: normal;
 }
 
 .pricing-modal .modal__content .button {
@@ -102,7 +109,7 @@
 
 .pricing-modal .modal__header .close {
     position: relative;
-    color: black;
+    color: #6d6d6d;
     width: 21px;
     height: 21px;
     cursor: pointer;
@@ -147,12 +154,12 @@
         padding: 10px 20px 20px 20px;
     }
 
-    .pricing-modal .modal__banner-text h1 {
-        font-size: var(--heading-font-size-l);
+    .pricing-modal .modal__banner-text h2 {
+        font-size: var(--heading-font-size-m);
     }
 
     .pricing-modal .modal__banner-text p {
-        font-size: var(--body-font-size-l);
+        font-size: var(--body-font-size-m);
     }
 
     .pricing-modal .modal__banner-image {
