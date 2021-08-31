@@ -28,7 +28,6 @@ function closePopup(e) {
 }
 
 function decoratePricingModal($block) {
-  const $container = $block.closest('.pricing-modal-container');
   const $rows = Array.from($block.children);
   $rows.forEach(($row, index) => {
     if (index === 0) {
@@ -60,10 +59,10 @@ function decoratePricingModal($block) {
   $block.addEventListener('click', (e) => {
     e.stopPropagation();
   });
+  const $container = $block.closest('.pricing-modal-container');
   $container.addEventListener('click', closePopup);
-  document.onkeydown = (evt) => {
-    evt = evt || window.event;
-    if (evt.keyCode === 27) {
+  document.onkeydown = (event) => {
+    if (event.code === 'Escape') {
       $container.style.display = 'none';
     }
   };
