@@ -57,15 +57,21 @@ function getMeta(name) {
   return value;
 }
 
-export function getIcon(icon, alt = icon) {
-  const symbols = ['adobe', 'adobe-red', 'facebook', 'instagram', 'pinterest',
-    'linkedin', 'twitter', 'youtube', 'discord', 'behance',
-    'hamburger', 'adchoices', 'play', 'not-found', 'snapchat', 'learn', 'magicwand',
-    'upload', 'resize', 'download', 'creativecloud', 'shapes', 'users', 'color', 'stickers', 'landscape',
-    'globe', 'chevron', 'templates44', 'blank44'];
+export function getIcon(icon, alt = icon, size = 44) {
+  /*
+  const symbols = ['remove-background', 'mobile-round', 'desktop-round', 'premium-templates',
+  'adobe-stock', 'premium-remove-background', 'brand', 'branded-templates', 'convert',
+  'update-cloud-storage'];
+  */
+  const symbols = ['remove-background', 'mobile-round', 'desktop-round',
+    'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
+    'templates', 'blank'];
   if (symbols.includes(icon)) {
+    const iconName = icon;
+    let sheetSize = size;
+    if (icon === 'chevron') sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
-      <use href="/express/icons.svg#${icon}"></use>
+      <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
   } else {
     return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt}">`);

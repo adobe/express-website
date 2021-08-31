@@ -90,7 +90,7 @@ function decorateIconList($pricingRight) {
   let $iconList = createTag('div', { class: 'pricing-iconlist' });
   let $iconListDescription;
   [...$pricingRight.firstChild.childNodes].forEach(($e) => {
-    const $img = $e.querySelector('img.icon');
+    const $img = $e.querySelector('img.icon, svg.icon');
     if ($img) {
       const $iconListRow = createTag('div');
       const $iconDiv = createTag('div', { class: 'pricing-iconlist-icon' });
