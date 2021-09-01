@@ -48,7 +48,7 @@ function decorateIconList($columnCell) {
  * and determines if it is greater or less than @maxLines
  * @param {Element} heading - a H1 - H6 element.
  * @param {Number} maxLines - maximum number of lines a heading can span
- * @param {Boolean} greaterThan - determines if we are checking for oversize or undersize
+ * @param {Boolean} greaterThan - bool test for if we are evaluating >
  * @returns {boolean} - whether a heading is over/under 3 lines long
  */
 function headingComparison(heading, maxLines, greaterThan = true) {
@@ -66,6 +66,67 @@ function headingComparison(heading, maxLines, greaterThan = true) {
 /**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit!
+ * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
+ * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
+ * @param {Number} maxLines - maximal amount of lines a heading can take up.
+ */
+function shrinkHeadings(headings, sizes, maxLines = 3) {
+  headings.forEach((heading) => {
+    const { tagName } = heading;
+    // length at which a string is probably oversized.
+    const TEXT_OVERSIZED_CONSTANT = 44;
+    const headingNum = parseInt(tagName.charAt(1), 10);
+    let currH = headingNum;
+    // check upon execution
+    const downSize = () => {
+      // short circuit logic!
+      currH += 1;
+      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+    };
+    do {
+      if (headingComparison(heading, maxLines)) {
+        downSize();
+      } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
+          && !heading.style.fontSize) {
+        downSize();
+      }
+    } while (!!heading.style.fontSize
+        && headingComparison(heading, maxLines)
+        && currH <= 7);
+  });
+}
+
+/**
+ * This function ensures headings take up as much space as possible within
+ * a 3 line limit and will grow font size and, correspondingly line height until text maximizes
+ * itself within this limit!
+ * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
+ * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
+ * @param {Number} maxLines - maximal amount of lines a heading can take up.
+ */
+function growHeadings(headings, sizes, maxLines = 3) {
+  headings.forEach((heading) => {
+    const { tagName } = heading;
+    const headingNum = parseInt(tagName.charAt(1), 10);
+    let currH = headingNum;
+    // check upon execution
+    const upSize = () => {
+      // short circuit logic!
+      currH -= 1;
+      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+    };
+    do {
+      if (headingComparison(heading, maxLines, false)) {
+        upSize();
+      }
+    } while (!!heading.style.fontSize
+        && headingComparison(heading, maxLines, false)
+        && currH >= 0);
+  });
+}
+
+/**
+ * scales headings and determines whether to shrink or grow a heading.
  */
 function scaleHeadings() {
   const headingNum2Font = {
@@ -78,38 +139,24 @@ function scaleHeadings() {
     7: 's',
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  const maxLines = 3;
-  headings.forEach((heading) => {
-    const { tagName } = heading;
-    // length at which a string is probably oversized.
-    const TEXT_OVERSIZED_CONSTANT = 44;
-    const headingNum = parseInt(tagName.charAt(1), 10);
-    let currH = headingNum;
-    // check upon execution
-    const changeFontSize = (add) => {
-      // short circuit logic!
-      currH += add;
-      heading.style.fontSize = `var(--heading-font-size-${headingNum2Font[currH]})`;
-    };
-    const upSize = changeFontSize.bind(null, -1);
-    const downSize = changeFontSize.bind(null, 1);
-    do {
-      if (headingComparison(heading, maxLines)) {
-        downSize();
-      } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
-          && !heading.style.fontSize) {
-        downSize();
-      } else if (!!heading.style.fontSize && headingComparison(heading, maxLines, false)) {
-        upSize();
-      }
-    } while (!!heading.style.fontSize
-        && headingComparison(heading, maxLines)
-        && currH >= 0 && currH <= 7);
+  let oldWidth = window.innerWidth;
+  let oldHeight = window.innerHeight;
+  window.addEventListener('resize', () => {
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+
+    if (newWidth > oldWidth || newHeight > oldHeight) {
+      growHeadings(headings, headingNum2Font);
+      // update old
+      oldWidth = newWidth;
+      oldHeight = newHeight;
+    } else {
+      shrinkHeadings(headings, headingNum2Font);
+    }
   });
 }
 
 export default function decorate($block) {
-  window.addEventListener('resize', scaleHeadings);
   scaleHeadings();
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
