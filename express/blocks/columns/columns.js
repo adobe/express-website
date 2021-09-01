@@ -44,6 +44,26 @@ function decorateIconList($columnCell) {
 }
 
 /**
+ * utility function that calculates how big the heading presently is
+ * @param {Element} heading - a heading element from H1 - H6
+ * @param {Map} sizes - a mapping from heading number to spec tshirt size
+ * @returns {Number} - returns the current size of a heading
+ */
+function getHeadingNumber(heading, sizes) {
+  const invSizes = new Map([...sizes].map((e) => e.reverse()));
+  const headingFont = heading.style.fontSize;
+  const { tagName } = heading;
+  let headingNum = parseInt(tagName.charAt(1), 10);
+  if (headingFont) {
+    const tSize = headingFont.match(/[a-zA-Z]+\)/g)[0].replace(')', '');
+    headingNum = invSizes[tSize];
+  } else {
+    headingNum = parseInt(tagName.charAt(1), 10);
+  }
+  return headingNum;
+}
+
+/**
  * calculates the number of lines taken up by a heading's text
  * and determines if it is greater or less than @maxLines
  * @param {Element} heading - a H1 - H6 element.
@@ -72,11 +92,9 @@ function headingComparison(heading, maxLines, greaterThan = true) {
  */
 function shrinkHeadings(headings, sizes, maxLines = 3) {
   headings.forEach((heading) => {
-    const { tagName } = heading;
     // length at which a string is probably oversized.
     const TEXT_OVERSIZED_CONSTANT = 44;
-    const headingNum = parseInt(tagName.charAt(1), 10);
-    let currH = headingNum;
+    let currH = getHeadingNumber(heading, sizes);
     // check upon execution
     const downSize = () => {
       // short circuit logic!
@@ -106,22 +124,19 @@ function shrinkHeadings(headings, sizes, maxLines = 3) {
  */
 function growHeadings(headings, sizes, maxLines = 3) {
   headings.forEach((heading) => {
-    const { tagName } = heading;
-    const headingNum = parseInt(tagName.charAt(1), 10);
-    let currH = headingNum;
-    // check upon execution
+    let currH = getHeadingNumber(heading, sizes);
     const upSize = () => {
       // short circuit logic!
       currH -= 1;
       heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
     };
-    do {
+    while (!!heading.style.fontSize
+      && headingComparison(heading, maxLines, false)
+      && currH >= 1) {
       if (headingComparison(heading, maxLines, false)) {
         upSize();
       }
-    } while (!!heading.style.fontSize
-        && headingComparison(heading, maxLines, false)
-        && currH >= 0);
+    }
   });
 }
 
