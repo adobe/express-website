@@ -165,7 +165,7 @@ function scaleHeadings() {
       // update old
       oldWidth = newWidth;
       oldHeight = newHeight;
-    } else {
+    } else if (newWidth < oldWidth || newHeight < oldHeight) {
       shrinkHeadings(headings, headingNum2Font);
     }
   });
