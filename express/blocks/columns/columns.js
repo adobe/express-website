@@ -44,12 +44,14 @@ function decorateIconList($columnCell) {
 }
 
 /**
- *
+ * calculates the number of lines taken up by a heading's text
+ * and determines if it is greater or less than @maxLines
  * @param {Element} heading - a H1 - H6 element.
  * @param {Number} maxLines - maximum number of lines a heading can span
- * @returns {boolean} - whether a heading is over 3 lines long
+ * @param {Boolean} greaterThan - determines if we are checking for oversize or undersize
+ * @returns {boolean} - whether a heading is over/under 3 lines long
  */
-function isHeadingOversized(heading, maxLines) {
+function headingComparison(heading, maxLines, greaterThan = true) {
   const style = window.getComputedStyle(heading);
   const { height, lineHeight } = style;
   // dimensions of headings
@@ -57,19 +59,16 @@ function isHeadingOversized(heading, maxLines) {
   const lineHeightFloat = parseFloat(lineHeight);
   // should be verifiable by looking at number of lines
   const headingLines = Math.ceil(heightInt / lineHeightFloat);
-  return headingLines > maxLines;
+
+  return greaterThan ? headingLines > maxLines : headingLines < maxLines;
 }
 
 /**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit!
  */
-function scaleHeader() {
-  /*
-  since stylesheet is static and rem is standardized, we can use constants
-  here for calculating what's needed for dynamic resizes
-  */
-  const headerNumber2Font = {
+function scaleHeadings() {
+  const headingNum2Font = {
     1: 'xxl',
     2: 'xl',
     3: 'l',
@@ -78,35 +77,40 @@ function scaleHeader() {
     6: 'm',
     7: 's',
   };
+  const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   const maxLines = 3;
-  document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6')
-    .forEach((heading) => {
-      const { tagName } = heading;
-      // length at which a string is probably oversized.
-      const TEXT_OVERSIZED_CONSTANT = 44;
-      let headerNumber = parseInt(tagName.charAt(1), 10);
-      // check upon execution
-      const downSize = () => {
-        // short circuit logic!
-        headerNumber += 1;
-        heading.style.fontSize = `var(--heading-font-size-${headerNumber2Font[headerNumber]})`;
-      };
-      do {
-        if (isHeadingOversized(heading, maxLines)) {
-          downSize();
-        } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
+  headings.forEach((heading) => {
+    const { tagName } = heading;
+    // length at which a string is probably oversized.
+    const TEXT_OVERSIZED_CONSTANT = 44;
+    const headingNum = parseInt(tagName.charAt(1), 10);
+    let currH = headingNum;
+    // check upon execution
+    const changeFontSize = (add) => {
+      // short circuit logic!
+      currH += add;
+      heading.style.fontSize = `var(--heading-font-size-${headingNum2Font[currH]})`;
+    };
+    const upSize = changeFontSize.bind(null, -1);
+    const downSize = changeFontSize.bind(null, 1);
+    do {
+      if (headingComparison(heading, maxLines)) {
+        downSize();
+      } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
           && !heading.style.fontSize) {
-          downSize();
-        }
-      } while (!!heading.style.fontSize
-        && isHeadingOversized(heading, maxLines)
-        && headerNumber <= 7);
-    });
+        downSize();
+      } else if (!!heading.style.fontSize && headingComparison(heading, maxLines, false)) {
+        upSize();
+      }
+    } while (!!heading.style.fontSize
+        && headingComparison(heading, maxLines)
+        && currH >= 0 && currH <= 7);
+  });
 }
 
 export default function decorate($block) {
-  window.addEventListener('resize', scaleHeader);
-  scaleHeader();
+  window.addEventListener('resize', scaleHeadings);
+  scaleHeadings();
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
