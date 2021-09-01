@@ -50,7 +50,7 @@ function decorateIconList($columnCell) {
  * @returns {Number} - returns the current size of a heading
  */
 function getHeadingNumber(heading, sizes) {
-  const invSizes = new Map([...sizes].map((e) => e.reverse()));
+  const invSizes = new Map(Array.from(sizes, (a) => a.reverse()));
   const headingFont = heading.style.fontSize;
   const { tagName } = heading;
   let headingNum = parseInt(tagName.charAt(1), 10);
