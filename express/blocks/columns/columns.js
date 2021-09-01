@@ -160,7 +160,6 @@ function scaleHeadings() {
   window.addEventListener('resize', () => {
     const newWidth = window.innerWidth;
     const newHeight = window.innerHeight;
-
     if (newWidth > oldWidth || newHeight > oldHeight) {
       growHeadings(headings, headingNum2Font);
       // update old
