@@ -141,6 +141,7 @@ function scaleHeadings() {
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   let oldWidth = window.innerWidth;
   let oldHeight = window.innerHeight;
+  shrinkHeadings(headings, headingNum2Font);
   window.addEventListener('resize', () => {
     const newWidth = window.innerWidth;
     const newHeight = window.innerHeight;
