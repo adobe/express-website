@@ -91,8 +91,8 @@ function scaleHeadings() {
       currH += add;
       heading.style.fontSize = `var(--heading-font-size-${headingNum2Font[currH]})`;
     };
-    const upSize = changeFontSize.bind(null, currH, -1);
-    const downSize = changeFontSize.bind(null, currH, 1);
+    const upSize = changeFontSize.bind(null, -1);
+    const downSize = changeFontSize.bind(null, 1);
     do {
       if (headingComparison(heading, maxLines)) {
         downSize();
