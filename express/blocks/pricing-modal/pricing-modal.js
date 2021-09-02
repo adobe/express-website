@@ -31,26 +31,26 @@ function decoratePricingModal($block) {
   const $rows = Array.from($block.children);
   $rows.forEach(($row, index) => {
     if (index === 0) {
-      $row.classList.add('modal__banner');
+      $row.classList.add('modal-banner');
       const $columns = Array.from($row.children);
       $columns.forEach(($column, columnIndex) => {
         if (columnIndex === 0) {
-          $column.classList.add('modal__banner-text');
+          $column.classList.add('modal-banner-text');
         } else if (columnIndex === 1) {
-          $column.classList.add('modal__banner-image');
+          $column.classList.add('modal-banner-image');
         }
       });
     } else if (index === 1) {
-      $row.classList.add('modal__content');
+      $row.classList.add('modal-content');
       const $contents = Array.from($row.firstChild.children);
       $contents.forEach(($content, contentIndex) => {
         $content.classList.add(`content-${contentIndex + 1}`);
       });
     }
   });
-  const $header = createTag('div', { class: 'modal__header' });
+  const $header = createTag('div', { class: 'modal-header' });
   const $headerClose = createTag('a', { class: 'close' });
-  $headerClose.classList.add('modal__header-close');
+  $headerClose.classList.add('modal-header-close');
   $headerClose.addEventListener('click', closePopup);
   const $cta = document.querySelector('.cta.large');
   $cta.addEventListener('click', displayPopup);

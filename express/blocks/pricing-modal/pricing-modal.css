@@ -28,7 +28,7 @@
     border-radius: 8px;
 }
 
-.pricing-modal .modal__banner {
+.pricing-modal .modal-banner {
     display: flex;
     background-color: var(--color-gray-200);
     padding: 20px;
@@ -36,7 +36,7 @@
     margin-bottom: 10px;
 }
 
-.pricing-modal .modal__banner-text {
+.pricing-modal .modal-banner-text {
     width: 190px;
     display: flex;
     flex-direction: column;
@@ -45,19 +45,19 @@
     text-align: left;
 }
 
-.pricing-modal .modal__banner-text h2 {
+.pricing-modal .modal-banner-text h2 {
     font-size: var(--heading-font-size-xl);
     color: #5c5ce0;
 }
 
-.pricing-modal .modal__banner-text p {
+.pricing-modal .modal-banner-text p {
     margin: 0;
     font-size: var(--body-font-size-m);
     font-weight: var(--heading-font-weight);
     line-height: 1.1;
 }
 
-.pricing-modal .modal__banner-image {
+.pricing-modal .modal-banner-image {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,7 +66,7 @@
     margin-top: -20px;
 }
 
-.pricing-modal .modal__content {
+.pricing-modal .modal-content {
     width: 360px;
     display: flex;
     flex-direction: column;
@@ -74,42 +74,42 @@
     margin: 0 auto;
 }
 
-.pricing-modal .modal__content h2 {
+.pricing-modal .modal-content h2 {
     margin: 16px;
     font-size: var(--heading-font-size-xl);
 }
 
-.pricing-modal .modal__content p {
+.pricing-modal .modal-content p {
     margin: 12px 0;
 }
 
-.pricing-modal .modal__content h3 {
+.pricing-modal .modal-content h3 {
     margin: 12px 0;
     font-size: var(--heading-font-size-s);
     font-weight: var(--body-font-weight);
     color: #444444;
 }
 
-.pricing-modal .modal__content del {
+.pricing-modal .modal-content del {
     text-decoration-color: red;
 }
 
-.pricing-modal .modal__content h5 {
+.pricing-modal .modal-content h5 {
     margin-top: 10px;
     font-size: var(--body-font-size-l);
     font-weight: normal;
 }
 
-.pricing-modal .modal__content .button {
+.pricing-modal .modal-content .button {
     margin: 0;
 }
 
-.pricing-modal .modal__header {
+.pricing-modal .modal-header {
     display: flex;
     justify-content: flex-end;
 }
 
-.pricing-modal .modal__header .close {
+.pricing-modal .modal-header .close {
     position: relative;
     color: #6d6d6d;
     width: 21px;
@@ -120,7 +120,7 @@
     margin-bottom: 5px;
 }
 
-.pricing-modal .modal__header .close:before {
+.pricing-modal .modal-header .close:before {
     content: '';
     position: absolute;
     top: 0;
@@ -131,7 +131,7 @@
     left: 0;
 }
 
-.pricing-modal .modal__header .close:after {
+.pricing-modal .modal-header .close:after {
     content: '';
     position: absolute;
     top: 0;
@@ -148,23 +148,23 @@
         max-width: none;
     }
 
-    .pricing-modal .modal__content {
+    .pricing-modal .modal-content {
         width: 325px;
     }
 
-    .pricing-modal .modal__banner {
+    .pricing-modal .modal-banner {
         padding: 10px 20px 20px 20px;
     }
 
-    .pricing-modal .modal__banner-text h2 {
+    .pricing-modal .modal-banner-text h2 {
         font-size: var(--heading-font-size-m);
     }
 
-    .pricing-modal .modal__banner-text p {
+    .pricing-modal .modal-banner-text p {
         font-size: var(--body-font-size-m);
     }
 
-    .pricing-modal .modal__banner-image {
+    .pricing-modal .modal-banner-image {
         width: 160px;
         margin-top: 0;
     }
