@@ -28,7 +28,6 @@ import {
 } from '../shared/carousel.js';
 
 function masonrize($cells, $masonry, force) {
-  console.log('masonrize', force);
   const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
 
   const width = $masonry.offsetWidth;
@@ -75,7 +74,7 @@ function masonrize($cells, $masonry, force) {
       // console.log ('incomplete retrying in 500ms');
 
       setTimeout(() => {
-        // masonrize($cells, $masonry, true);
+        masonrize($cells, $masonry, true);
       }, 500);
     }
   }
