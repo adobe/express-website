@@ -126,11 +126,13 @@ function scaleHeadings() {
     const upSize = () => {
       currH -= 1;
       heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+      console.log("debug");
     };
     const downSize = () => {
       // short circuit logic!
       currH += 1;
       heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+      console.log("debug");
     };
     if (headingComparison(heading, maxLines)) {
       while (!!heading.style.fontSize
