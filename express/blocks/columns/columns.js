@@ -126,7 +126,7 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
     const sizeLimit = parseInt(tagName.charAt(1), 10);
     // current heading size depends on if fontSize is set, if not, it's
     // whatever the tag number is mapped to in Map
-    let currH = getHeadingNumber(heading, sizes);
+    let currH = parseInt(getHeadingNumber(heading, sizes), 10);
     // check upon execution
     const upSize = () => {
       currH -= 1;
