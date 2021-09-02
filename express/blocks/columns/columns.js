@@ -130,16 +130,12 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
     // check upon execution
     const upSize = () => {
       currH -= 1;
-      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
-      // eslint-disable-next-line no-console
-      console.log('debug');
+      heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
     };
     const downSize = () => {
       // short circuit logic!
       currH += 1;
-      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
-      // eslint-disable-next-line no-console
-      console.log('debug');
+      heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
     };
     // if heading length is > maxLines this will execute
     if (headingComparison(heading, maxLines)) {
