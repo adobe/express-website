@@ -55,6 +55,9 @@ function masonrize($cells, $masonry, force) {
       const $image = $cell.querySelector('img');
       if ($image) {
         if (!$image.complete) {
+          // preload image
+          window.spark[$image.src] = new window.Image();
+          window.spark[$image.src].src = $image.src;
           incomplete = true;
         }
       }
@@ -75,7 +78,7 @@ function masonrize($cells, $masonry, force) {
 
       setTimeout(() => {
         masonrize($cells, $masonry, true);
-      }, 2000);
+      }, 500);
     }
   }
 }
