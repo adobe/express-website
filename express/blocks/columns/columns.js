@@ -144,12 +144,12 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
     // if heading length is > maxLines this will execute
     if (headingComparison(heading, maxLines)) {
       while (headingComparison(heading, maxLines)
-        && currH <= 7) {
+        && currH < 7) {
         downSize();
       }
     } else if (headingComparison(heading, maxLines, false)) {
       while (headingComparison(heading, maxLines, false)
-        && (currH >= sizeLimit && currH <= 7)) {
+        && (currH > sizeLimit && currH < 7)) {
         upSize();
       }
     }
