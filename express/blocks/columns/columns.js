@@ -90,61 +90,8 @@ function headingComparison(heading, maxLines, greaterThan = true) {
  * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
  * @param {Number} maxLines - maximal amount of lines a heading can take up.
  */
-function shrinkHeadings(headings, sizes, maxLines = 3) {
-  headings.forEach((heading) => {
-    // length at which a string is probably oversized.
-    const TEXT_OVERSIZED_CONSTANT = 44;
-    let currH = getHeadingNumber(heading, sizes);
-    // check upon execution
-    const downSize = () => {
-      // short circuit logic!
-      currH += 1;
-      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
-    };
-    do {
-      if (headingComparison(heading, maxLines)) {
-        downSize();
-      } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
-          && !heading.style.fontSize) {
-        downSize();
-      }
-    } while (!!heading.style.fontSize
-        && headingComparison(heading, maxLines)
-        && currH <= 7);
-  });
-}
-
-/**
- * This function ensures headings take up as much space as possible within
- * a 3 line limit and will grow font size and, correspondingly line height until text maximizes
- * itself within this limit!
- * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
- * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
- * @param {Number} maxLines - maximal amount of lines a heading can take up.
- */
-function growHeadings(headings, sizes, maxLines = 3) {
-  headings.forEach((heading) => {
-    let currH = getHeadingNumber(heading, sizes);
-    const upSize = () => {
-      // short circuit logic!
-      currH -= 1;
-      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
-    };
-    while (!!heading.style.fontSize
-      && headingComparison(heading, maxLines, false)
-      && currH >= 1) {
-      if (headingComparison(heading, maxLines, false)) {
-        upSize();
-      }
-    }
-  });
-}
-
-/**
- * scales headings and determines whether to shrink or grow a heading.
- */
 function scaleHeadings() {
-  const headingNum2Font = {
+  const sizes = {
     1: 'xxl',
     2: 'xl',
     3: 'l',
@@ -154,6 +101,55 @@ function scaleHeadings() {
     7: 's',
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
+  const maxLines = 3;
+  headings.forEach((heading) => {
+    const { tagName } = heading;
+    const sizeLimit = parseInt(tagName.charAt(1), 10);
+    // length at which a string is probably oversized.
+    const TEXT_OVERSIZED_CONSTANT = 44;
+    let currH = getHeadingNumber(heading, sizes);
+    // check upon execution
+    const upSize = () => {
+      currH -= 1;
+      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+    };
+    const downSize = () => {
+      // short circuit logic!
+      currH += 1;
+      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+    };
+    if (headingComparison(heading, maxLines)) {
+      while (!!heading.style.fontSize
+        && headingComparison(heading, maxLines)
+        && currH <= 7) {
+        downSize();
+      }
+    } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
+        && !heading.style.fontSize) {
+      downSize();
+    } else if (headingComparison(heading, maxLines, false)) {
+      while (!!heading.style.fontSize
+        && headingComparison(heading, maxLines)
+        && (currH >= 1 && currH <= sizeLimit)) {
+        upSize();
+      }
+    }
+  });
+}
+
+/*
+function scaleHeadingsCallback() {
+  const headingNum2Font = {
+    1: 'xxl',
+    2: 'xl',
+    3: 'l',
+    4: 'm',
+    5: 'm',
+    6: 'm',
+    7: 's',
+  };
+  const headings = document.querySelectorAll('main .columns h1, main .columns h2,
+  main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   let oldWidth = window.innerWidth;
   let oldHeight = window.innerHeight;
   shrinkHeadings(headings, headingNum2Font);
@@ -170,9 +166,11 @@ function scaleHeadings() {
     }
   });
 }
+  */
 
 export default function decorate($block) {
   scaleHeadings();
+  window.addEventListener('resize', scaleHeadings);
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
