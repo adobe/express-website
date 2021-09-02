@@ -152,7 +152,10 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
   });
 }
 
-export default function decorate($block) {
+/**
+ * runs scaleHeading
+ */
+function runScaleHeadings() {
   const sizes = {
     1: 'xxl',
     2: 'xl',
@@ -169,6 +172,11 @@ export default function decorate($block) {
   };
   scaleCB();
   window.addEventListener('resize', scaleCB);
+}
+
+runScaleHeadings();
+
+export default function decorate($block) {
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
