@@ -168,7 +168,9 @@ export default function decorate($block) {
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   applySizing(headings, sizes);
-  const scaleCB = scaleHeadings.bind(headings, sizes);
+  const scaleCB = () => {
+    scaleHeadings(headings, sizes);
+  };
   scaleCB();
   window.addEventListener('resize', scaleCB);
   const $rows = Array.from($block.children);
