@@ -50,7 +50,7 @@ function decorateIconList($columnCell) {
  * @returns {Number} - returns the current size of a heading
  */
 function getHeadingNumber(heading, sizes) {
-  const invSizes = new Map(Array.from(sizes, (a) => a.reverse()));
+  const invSizes = reverseMap(sizes);
   const headingFont = heading.style.fontSize;
   const { tagName } = heading;
   let headingNum = parseInt(tagName.charAt(1), 10);
@@ -62,6 +62,20 @@ function getHeadingNumber(heading, sizes) {
   }
   return headingNum;
 }
+
+/**
+ * 
+ * @param {Map} obj - any Map object
+ * @returns {Map} - an inverted mapping from value to keys
+ */
+ function reverseMap(obj = {}){
+  const res = {};
+  Object.keys(obj).forEach(key => {
+     const val = obj[key];
+     res[val] = key;
+  });
+  return res;
+};
 
 /**
  * calculates the number of lines taken up by a heading's text
