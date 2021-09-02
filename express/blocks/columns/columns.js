@@ -149,7 +149,7 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
       }
     } else if (headingComparison(heading, maxLines, false)) {
       while (headingComparison(heading, maxLines, false)
-        && (currH > sizeLimit && currH < 7)) {
+        && (currH > sizeLimit && currH <= 7)) {
         upSize();
       }
     }
