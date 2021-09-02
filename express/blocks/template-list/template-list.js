@@ -58,8 +58,8 @@ function masonrize($cells, $masonry, force) {
       if ($image) {
         if (!$image.complete) {
           // preload image
-          window.spark[$image.src] = new window.Image();
-          window.spark[$image.src].src = $image.src;
+          window.spark.preloadImages[$image.src] = new window.Image();
+          window.spark.preloadImages[$image.src].src = $image.src;
           incomplete = true;
         }
       }
