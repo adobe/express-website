@@ -75,7 +75,7 @@ function masonrize($cells, $masonry, force) {
 
       setTimeout(() => {
         masonrize($cells, $masonry, true);
-      }, 500);
+      }, 1000);
     }
   }
 }
