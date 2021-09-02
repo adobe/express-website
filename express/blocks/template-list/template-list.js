@@ -28,6 +28,7 @@ import {
 } from '../shared/carousel.js';
 
 function masonrize($cells, $masonry, force) {
+  console.log('masonrize', force);
   const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
 
   const width = $masonry.offsetWidth;
