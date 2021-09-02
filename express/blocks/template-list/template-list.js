@@ -75,7 +75,7 @@ function masonrize($cells, $masonry, force) {
 
       setTimeout(() => {
         masonrize($cells, $masonry, true);
-      }, 1000);
+      }, 500);
     }
   }
 }
@@ -256,7 +256,9 @@ export async function decorateTemplateList($block) {
     const $masonryCells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
-    masonrize($masonryCells, $block);
+    setTimeout(() => {
+      masonrize($masonryCells, $block);
+    }, 500);
     window.addEventListener('resize', () => {
       masonrize($masonryCells, $block);
     });
