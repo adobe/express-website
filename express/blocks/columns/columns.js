@@ -135,17 +135,13 @@ function scaleHeadings() {
       console.log("debug");
     };
     if (headingComparison(heading, maxLines)) {
-      while (!!heading.style.fontSize
-        && headingComparison(heading, maxLines)
+      while (headingComparison(heading, maxLines)
         && currH <= 7) {
         downSize();
       }
-    } else if (heading.textContent.length >= TEXT_OVERSIZED_CONSTANT
-        && !heading.style.fontSize) {
-      downSize();
     } else if (headingComparison(heading, maxLines, false)) {
       while (!!heading.style.fontSize
-        && headingComparison(heading, maxLines)
+        && headingComparison(heading, maxLines, false)
         && (currH >= 1 && currH <= sizeLimit)) {
         upSize();
       }
