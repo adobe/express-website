@@ -222,7 +222,7 @@ main .template-list.horizontal a.button.carousel-arrow-right::before {
 }
 
 main .template-list.horizontal .template {
-  max-height: 220px;
+  min-height: 220px;
   width: max-content;
   margin-left: 12px;
   margin-right: 12px;
