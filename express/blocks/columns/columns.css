@@ -377,4 +377,8 @@ main .columns-highlight-container .column p {
     left: 0;
     max-width: max-content;
   }
+
+  main .columns.fullsize + h2 {
+    margin-top: 0;
+  }
 }  
