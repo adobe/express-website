@@ -47,6 +47,8 @@ function masonrize($cells, $masonry, force) {
     }
 
     let incomplete = false;
+    window.spark = window.spark || {};
+    window.spark.preloadImages = window.spark.preloadImages || {};
     $cells.forEach(($cell) => {
       const minOuterHeight = Math.min(...columns.map((column) => column.outerHeight));
       const column = columns.find((col) => col.outerHeight === minOuterHeight);
