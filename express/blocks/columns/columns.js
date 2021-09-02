@@ -44,6 +44,20 @@ function decorateIconList($columnCell) {
 }
 
 /**
+ *
+ * @param {Map} obj - any Map object
+ * @returns {Map} - an inverted mapping from value to keys
+ */
+function reverseMap(obj = {}) {
+  const res = {};
+  Object.keys(obj).forEach((key) => {
+    const val = obj[key];
+    res[val] = key;
+  });
+  return res;
+}
+
+/**
  * utility function that calculates how big the heading presently is
  * @param {Element} heading - a heading element from H1 - H6
  * @param {Map} sizes - a mapping from heading number to spec tshirt size
@@ -62,20 +76,6 @@ function getHeadingNumber(heading, sizes) {
   }
   return headingNum;
 }
-
-/**
- * 
- * @param {Map} obj - any Map object
- * @returns {Map} - an inverted mapping from value to keys
- */
- function reverseMap(obj = {}){
-  const res = {};
-  Object.keys(obj).forEach(key => {
-     const val = obj[key];
-     res[val] = key;
-  });
-  return res;
-};
 
 /**
  * calculates the number of lines taken up by a heading's text
@@ -98,13 +98,65 @@ function headingComparison(heading, maxLines, greaterThan = true) {
 }
 
 /**
+ * this function applies corresponding spec sizes to headings
+ * allowing us to determine if a heading will be oversized
+ * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
+ */
+function applySizing(headings, sizes) {
+  headings.forEach((heading) => {
+    const { tagName } = heading;
+    // this is the maximum size a tag can be upgraded to; there's no minimum
+    const headingNumber = parseInt(tagName.charAt(1), 10);
+    heading.style.fontSize = `var(--heading-font-size-${sizes[headingNumber]})`;
+  });
+}
+
+/**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit!
  * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
  * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
  * @param {Number} maxLines - maximal amount of lines a heading can take up.
  */
-function scaleHeadings() {
+function scaleHeadings(headings, sizes, maxLines = 3) {
+  // Iterate through Headings
+  headings.forEach((heading) => {
+    const { tagName } = heading;
+    // this is the maximum size a tag can be upgraded to; there's no minimum
+    const sizeLimit = parseInt(tagName.charAt(1), 10);
+    // current heading size depends on if fontSize is set, if not, it's
+    // whatever the tag number is mapped to in Map
+    let currH = getHeadingNumber(heading, sizes);
+    // check upon execution
+    const upSize = () => {
+      currH -= 1;
+      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+      // eslint-disable-next-line no-console
+      console.log('debug');
+    };
+    const downSize = () => {
+      // short circuit logic!
+      currH += 1;
+      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
+      // eslint-disable-next-line no-console
+      console.log('debug');
+    };
+    // if heading length is > maxLines this will execute
+    if (headingComparison(heading, maxLines)) {
+      while (headingComparison(heading, maxLines)
+        && currH <= 7) {
+        downSize();
+      }
+    } else if (headingComparison(heading, maxLines, false)) {
+      while (headingComparison(heading, maxLines, false)
+        && (currH >= 1 && currH <= sizeLimit)) {
+        upSize();
+      }
+    }
+  });
+}
+
+export default function decorate($block) {
   const sizes = {
     1: 'xxl',
     2: 'xl',
@@ -115,74 +167,10 @@ function scaleHeadings() {
     7: 's',
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  const maxLines = 3;
-  headings.forEach((heading) => {
-    const { tagName } = heading;
-    const sizeLimit = parseInt(tagName.charAt(1), 10);
-    // length at which a string is probably oversized.
-    const TEXT_OVERSIZED_CONSTANT = 44;
-    let currH = getHeadingNumber(heading, sizes);
-    // check upon execution
-    const upSize = () => {
-      currH -= 1;
-      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
-      console.log("debug");
-    };
-    const downSize = () => {
-      // short circuit logic!
-      currH += 1;
-      heading.style.fontSize = `var(--heading-font-size-${sizes[currH]})`;
-      console.log("debug");
-    };
-    if (headingComparison(heading, maxLines)) {
-      while (headingComparison(heading, maxLines)
-        && currH <= 7) {
-        downSize();
-      }
-    } else if (headingComparison(heading, maxLines, false)) {
-      while (!!heading.style.fontSize
-        && headingComparison(heading, maxLines, false)
-        && (currH >= 1 && currH <= sizeLimit)) {
-        upSize();
-      }
-    }
-  });
-}
-
-/*
-function scaleHeadingsCallback() {
-  const headingNum2Font = {
-    1: 'xxl',
-    2: 'xl',
-    3: 'l',
-    4: 'm',
-    5: 'm',
-    6: 'm',
-    7: 's',
-  };
-  const headings = document.querySelectorAll('main .columns h1, main .columns h2,
-  main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  let oldWidth = window.innerWidth;
-  let oldHeight = window.innerHeight;
-  shrinkHeadings(headings, headingNum2Font);
-  window.addEventListener('resize', () => {
-    const newWidth = window.innerWidth;
-    const newHeight = window.innerHeight;
-    if (newWidth > oldWidth || newHeight > oldHeight) {
-      growHeadings(headings, headingNum2Font);
-      // update old
-      oldWidth = newWidth;
-      oldHeight = newHeight;
-    } else if (newWidth < oldWidth || newHeight < oldHeight) {
-      shrinkHeadings(headings, headingNum2Font);
-    }
-  });
-}
-  */
-
-export default function decorate($block) {
-  scaleHeadings();
-  window.addEventListener('resize', scaleHeadings);
+  applySizing(headings);
+  const scaleCB = scaleHeadings.bind(headings, sizes);
+  scaleCB();
+  window.addEventListener('resize', scaleCB);
   const $rows = Array.from($block.children);
   if ($rows.length > 1) {
     $block.classList.add('table');
