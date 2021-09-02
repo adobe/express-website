@@ -113,7 +113,7 @@ function applySizing(headings, sizes) {
 
 /**
  * This function ensures headers fit within a 3 line limit and will reduce
- * font size and line height until text falls within this limit!
+ * font size and line height until text falls within this limit
  * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
  * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
  * @param {Number} maxLines - maximal amount of lines a heading can take up.
