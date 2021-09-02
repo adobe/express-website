@@ -48,8 +48,6 @@ function masonrize($cells, $masonry, force) {
     }
 
     let incomplete = false;
-    window.spark = window.spark || {};
-    window.spark.preloadImages = window.spark.preloadImages || {};
     $cells.forEach(($cell) => {
       const minOuterHeight = Math.min(...columns.map((column) => column.outerHeight));
       const column = columns.find((col) => col.outerHeight === minOuterHeight);
@@ -58,9 +56,6 @@ function masonrize($cells, $masonry, force) {
       const $image = $cell.querySelector('img');
       if ($image) {
         if (!$image.complete) {
-          // preload image
-          window.spark.preloadImages[$image.src] = new window.Image();
-          window.spark.preloadImages[$image.src].src = $image.src;
           incomplete = true;
         }
       }
@@ -80,7 +75,7 @@ function masonrize($cells, $masonry, force) {
       // console.log ('incomplete retrying in 500ms');
 
       setTimeout(() => {
-        masonrize($cells, $masonry, true);
+        // masonrize($cells, $masonry, true);
       }, 500);
     }
   }
