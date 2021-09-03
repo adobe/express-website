@@ -167,9 +167,8 @@ function runScaleHeadings() {
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   applySizing(headings, sizes);
-  const updatedHeadings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   const scaleCB = () => {
-    scaleHeadings(updatedHeadings, sizes);
+    scaleHeadings(headings, sizes);
   };
   scaleCB();
   window.addEventListener('resize', scaleCB);
