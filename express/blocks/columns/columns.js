@@ -107,7 +107,7 @@ function applySizing(headings, sizes) {
     const { tagName } = heading;
     // this is the maximum size a tag can be upgraded to; there's no minimum
     const headingNumber = parseInt(tagName.charAt(1), 10);
-    heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
+    heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[headingNumber]})`);
   });
 }
 
