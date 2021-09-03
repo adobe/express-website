@@ -171,7 +171,7 @@ function runScaleHeadings() {
   const scaleCB = () => {
     scaleHeadings(headings, sizes);
   };
-  document.addEventListener('resize', scaleCB);
+  window.addEventListener('resize', scaleCB);
   //hacky way to trigger the scaleCB function
   window.resizeBy(0, 0);
 }
