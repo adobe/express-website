@@ -67,8 +67,19 @@ function masonrize($cells, $masonry, retry) {
     // console.log('new min height', minOuterHeight, columns.indexOf(column));
 
     const $image = $cell.querySelector(':scope picture > img');
+    if ($image && !$image.complete) {
+      // continue when image is loaded
+      $image.addEventListener('load', () => {
+        masonrize($cells, $masonry, true);
+      });
+      break;
+    }
     const $video = $cell.querySelector('video');
-    if (($image && !$image.complete) || ($video && $video.readyState === 0)) {
+    if ($video && $video.readyState === 0) {
+      // continue when video is loaded
+      $image.addEventListener('loadeddata', () => {
+        masonrize($cells, $masonry, true);
+      });
       break;
     }
 
@@ -77,13 +88,6 @@ function masonrize($cells, $masonry, retry) {
     // console.log('added cell', i, 'to column', columns.indexOf(column));
     $cells.splice(i, 1);
     column.outerHeight += $cell.offsetHeight;
-  }
-
-  if ($cells.length > 0) {
-    console.log('incomplete retrying in 500ms', $cells.length);
-    setTimeout(() => {
-      masonrize($cells, $masonry, true);
-    }, 500);
   }
 }
 
