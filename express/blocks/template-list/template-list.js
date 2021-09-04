@@ -27,67 +27,106 @@ import {
   buildCarousel,
 } from '../shared/carousel.js';
 
-function masonrize($cells, $masonry, retry) {
-  const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
-  const columns = [];
-  if (!retry) {
-    // first run, set up fresh grid
-    const width = $masonry.offsetWidth;
+class Masonry {
+  constructor($block, cells) {
+    this.$block = $block;
+    this.cells = cells;
+    this.columns = [];
+    this.nextColumn = null;
+    this.startResizing = 0;
+  }
+
+  // set up fresh grid if necessary
+  setupColumns() {
+    let redraw = false;
+    const colWidth = this.$block.classList.contains('sixcols') ? 175 : 264;
+    const width = this.$block.offsetWidth;
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
-    if (numCols !== $masonry.children.length) {
-      $masonry.innerHTML = '';
+    if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
+      this.$block.innerHTML = '';
+      this.columns = [];
       for (let i = 0; i < numCols; i += 1) {
         const $column = createTag('div', { class: 'masonry-col' });
-        columns.push({
+        this.columns.push({
           outerHeight: 0,
           $column,
         });
-        $masonry.appendChild($column);
+        this.$block.appendChild($column);
       }
+      redraw = true;
     }
-  } else {
-    // retry, use existing grid
-    $masonry.querySelectorAll('.masonry-col').forEach(($column) => {
-      let outerHeight = 0;
-      $column.querySelectorAll('.template').forEach(($cell) => {
-        outerHeight += $cell.offsetHeight;
-      });
-      columns.push({
-        outerHeight,
-        $column,
-      });
-    });
+    [this.nextColumn] = this.columns;
+    return redraw;
   }
 
-  for (let i = 0; i < $cells.length; i += 1) {
-    const $cell = $cells[i];
-    const minOuterHeight = Math.min(...columns.map((col) => col.outerHeight));
-    const column = columns.find((col) => col.outerHeight === minOuterHeight);
-    // console.log('new min height', minOuterHeight, columns.indexOf(column));
-
-    const $image = $cell.querySelector(':scope picture > img');
-    if ($image && !$image.complete) {
-      // continue when image is loaded
-      $image.addEventListener('load', () => {
-        masonrize($cells, $masonry, true);
-      });
-      break;
+  // calculate least tallest column to add next cell to
+  getNextColumn() {
+    if (this.nextColumn) {
+      return this.nextColumn;
+    } else {
+      const minOuterHeight = Math.min(...this.columns.map((col) => col.outerHeight));
+      this.nextColumn = this.columns.find((col) => col.outerHeight === minOuterHeight);
+      return this.nextColumn;
     }
-    const $video = $cell.querySelector('video');
-    if ($video && $video.readyState === 0) {
-      // continue when video is loaded
-      $video.addEventListener('loadeddata', () => {
-        masonrize($cells, $masonry, true);
-      });
-      break;
-    }
+  }
 
+  // add cell to next column
+  addCell($cell) {
+    const column = this.getNextColumn();
     column.$column.append($cell);
-    // remove already processed cell
-    // console.log('added cell', i, 'to column', columns.indexOf(column));
-    $cells.splice(i, 1);
+    $cell.classList.add('appear');
     column.outerHeight += $cell.offsetHeight;
+    this.nextColumn = null;
+  }
+
+  // distribute cells to columns
+  draw(cells) {
+    if (!cells) {
+      if (!this.setupColumns()) {
+        // no redrawing needed
+        return;
+      }
+    }
+    const workList = [...(cells || this.cells)];
+    for (let i = 0; i < workList.length; i += 1) {
+      const $cell = workList[i];
+
+      const $image = $cell.querySelector(':scope picture > img');
+      if ($image && !$image.complete) {
+        // continue when image is loaded
+        $image.addEventListener('load', () => {
+          this.draw(workList);
+        });
+        return;
+      }
+      const $video = $cell.querySelector('video');
+      if ($video && $video.readyState === 0) {
+        // continue when video is loaded
+        $video.addEventListener('loadeddata', () => {
+          this.draw(workList);
+        });
+        return;
+      }
+      this.addCell($cell);
+      // remove already processed cell
+      workList.splice(i, 1);
+    }
+    if (workList.length > 0) {
+      // draw rest
+      this.draw(workList);
+    }
+  }
+
+  resize(delay = 200) {
+    this.startResizing = Date.now();
+    setTimeout(() => {
+      // wait with drawing until resizing has stopped
+      if (!this.startResizing || Date.now() - this.startResizing >= delay) {
+        this.startResizing = 0;
+        this.draw();
+      }
+    }, delay);
   }
 }
 
@@ -270,12 +309,13 @@ export async function decorateTemplateList($block) {
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
-    const $masonryCells = Array.from($block.children);
+    const cells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
-    masonrize($masonryCells, $block);
+    const masonry = new Masonry($block, cells);
+    masonry.draw();
     window.addEventListener('resize', () => {
-      masonrize($masonryCells, $block);
+      masonry.resize();
     });
   }
 }
