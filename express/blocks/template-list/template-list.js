@@ -27,56 +27,63 @@ import {
   buildCarousel,
 } from '../shared/carousel.js';
 
-function masonrize($cells, $masonry, force) {
+function masonrize($cells, $masonry, retry) {
   const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
-
-  const width = $masonry.offsetWidth;
-  // console.log($masonry.offsetWidth);
-  let numCols = Math.floor(width / colWidth);
-  if (numCols < 1) numCols = 1;
-  if ((numCols !== $masonry.children.length) || force) {
-    $masonry.innerHTML = '';
-    const columns = [];
-    for (let i = 0; i < numCols; i += 1) {
-      const $column = createTag('div', { class: 'masonry-col' });
+  const columns = [];
+  if (!retry) {
+    // first run, set up fresh grid
+    const width = $masonry.offsetWidth;
+    let numCols = Math.floor(width / colWidth);
+    if (numCols < 1) numCols = 1;
+    if (numCols !== $masonry.children.length) {
+      $masonry.innerHTML = '';
+      for (let i = 0; i < numCols; i += 1) {
+        const $column = createTag('div', { class: 'masonry-col' });
+        columns.push({
+          outerHeight: 0,
+          $column,
+        });
+        $masonry.appendChild($column);
+      }
+    }
+  } else {
+    // retry, use existing grid
+    $masonry.querySelectorAll('.masonry-col').forEach(($column) => {
+      let outerHeight = 0;
+      $column.querySelectorAll('.template').forEach(($cell) => {
+        outerHeight += $cell.offsetHeight;
+      });
       columns.push({
-        outerHeight: 0,
+        outerHeight,
         $column,
       });
-      $masonry.appendChild($column);
-    }
-
-    let incomplete = false;
-    $cells.forEach(($cell) => {
-      const minOuterHeight = Math.min(...columns.map((column) => column.outerHeight));
-      const column = columns.find((col) => col.outerHeight === minOuterHeight);
-      column.$column.append($cell);
-
-      const $image = $cell.querySelector('img');
-      if ($image) {
-        if (!$image.complete) {
-          incomplete = true;
-        }
-      }
-      const $video = $cell.querySelector('video');
-      if ($video) {
-        // console.log(`video ready state ${$video.readyState}`);
-        if ($video.readyState === 0) {
-          incomplete = true;
-        }
-      }
-
-      // console.log(`cell offset height: ${$cell.offsetHeight}`);
-      column.outerHeight += $cell.offsetHeight;
     });
+  }
 
-    if (incomplete) {
-      // console.log ('incomplete retrying in 500ms');
+  for (let i = 0; i < $cells.length; i += 1) {
+    const $cell = $cells[i];
+    const minOuterHeight = Math.min(...columns.map((col) => col.outerHeight));
+    const column = columns.find((col) => col.outerHeight === minOuterHeight);
+    // console.log('new min height', minOuterHeight, columns.indexOf(column));
 
-      setTimeout(() => {
-        masonrize($cells, $masonry, true);
-      }, 500);
+    const $image = $cell.querySelector(':scope picture > img');
+    const $video = $cell.querySelector('video');
+    if (($image && !$image.complete) || ($video && $video.readyState === 0)) {
+      break;
     }
+
+    column.$column.append($cell);
+    // remove already processed cell
+    // console.log('added cell', i, 'to column', columns.indexOf(column));
+    $cells.splice(i, 1);
+    column.outerHeight += $cell.offsetHeight;
+  }
+
+  if ($cells.length > 0) {
+    console.log('incomplete retrying in 500ms', $cells.length);
+    setTimeout(() => {
+      masonrize($cells, $masonry, true);
+    }, 500);
   }
 }
 
@@ -98,6 +105,11 @@ async function fetchBlueprint(pathname) {
 }
 
 export async function decorateTemplateList($block) {
+  // use lower resolution image and preload
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
+    $img.setAttribute('loading', 'eager');
+  });
   let rows = $block.children.length;
   const locale = getLocale(window.location);
   if (rows === 0 && locale !== 'us') {
@@ -221,6 +233,7 @@ export async function decorateTemplateList($block) {
       if (!$imgLink.href.includes('.mp4')) {
         linkImage($parent);
       } else {
+        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
           const $video = createTag('video', {
@@ -256,9 +269,7 @@ export async function decorateTemplateList($block) {
     const $masonryCells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
-    setTimeout(() => {
-      masonrize($masonryCells, $block);
-    }, 500);
+    masonrize($masonryCells, $block);
     window.addEventListener('resize', () => {
       masonrize($masonryCells, $block);
     });
