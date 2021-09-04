@@ -77,7 +77,7 @@ function masonrize($cells, $masonry, retry) {
     const $video = $cell.querySelector('video');
     if ($video && $video.readyState === 0) {
       // continue when video is loaded
-      $image.addEventListener('loadeddata', () => {
+      $video.addEventListener('loadeddata', () => {
         masonrize($cells, $masonry, true);
       });
       break;
