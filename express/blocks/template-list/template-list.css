@@ -329,7 +329,7 @@ main .template-list .template.placeholder {
 
 main .template-list.sixcols .template.placeholder {
   width: 145px;
-  margin: 21px auto;
+  margin: 15px auto;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
