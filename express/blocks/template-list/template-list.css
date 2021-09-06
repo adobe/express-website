@@ -24,7 +24,7 @@ main .template-list.sixcols > .masonry-col {
 }
 
 main .template-list .template-title {
-  margin: 0 12px;
+  margin: 0 12px 20px 12px;
 }
 
 main .template-list .template-title > div {
@@ -191,7 +191,7 @@ main .template-list.horizontal a.button.carousel-arrow {
   float: left;
   width: 32px;
   height: 32px;
-  margin: 100px 20px;
+  margin: 84px 10px;
   background: var(--color-white);
   box-shadow: 0 4px 8px 2px rgba(102, 102, 102, 0.1);
   border-radius: 50%;
@@ -222,7 +222,7 @@ main .template-list.horizontal a.button.carousel-arrow-right::before {
 }
 
 main .template-list.horizontal .template {
-  min-height: 220px;
+  min-height: 200px;
   width: max-content;
   margin-left: 12px;
   margin-right: 12px;
@@ -245,23 +245,28 @@ main .template-list.sixcols .template {
   margin: 5px;
 }
 
-main .template-list.sixcols .template:not(.placeholder) > div:first-of-type {
+main .template-list .template:not(.placeholder) > div:first-of-type {
   overflow: hidden;
   border-radius: 7px;
   line-height: 0;
 }
 
+main .template-list.horizontal .template:not(.placeholder) picture > img,
+main .template-list.horizontal .template:not(.placeholder) video,
 main .template-list.sixcols .template:not(.placeholder) picture > img,
 main .template-list.sixcols .template:not(.placeholder) video {
   transition: transform .3s ease-in-out;
   will-change: transform;
 }
 
+main .template-list.horizontal .template:hover:not(.placeholder) picture > img,
+main .template-list.horizontal .template:hover:not(.placeholder) video,
 main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
 main .template-list.sixcols .template:hover:not(.placeholder) video {
   transform: scale(1.1);
 }
 
+main .template-list.horizontal .template:not(.placeholder) .button-container,
 main .template-list.sixcols .template:not(.placeholder) .button-container {
   display: flex;
   justify-content: center;
@@ -277,6 +282,7 @@ main .template-list.sixcols .template:not(.placeholder) .button-container {
   will-change: opacity;
 }
 
+main .template-list.horizontal .template:not(.placeholder) .template-link,
 main .template-list.sixcols .template:not(.placeholder) .template-link {
   opacity: 0;
   transition: opacity .4s ease-in-out .2s;
@@ -284,11 +290,14 @@ main .template-list.sixcols .template:not(.placeholder) .template-link {
 }
 
 
+main .template-list.horizontal .template:hover:not(.placeholder) .button-container,
+main .template-list.horizontal .template:hover:not(.placeholder) .template-link,
 main .template-list.sixcols .template:hover:not(.placeholder) .button-container,
 main .template-list.sixcols .template:hover:not(.placeholder) .template-link {
   opacity: 1;
 }
 
+main .template-list.horizontal .template:not(.placeholder) .template-link,
 main .template-list.sixcols .template:not(.placeholder) .template-link {
   text-decoration: none;
   border-radius: 18px;
@@ -309,6 +318,7 @@ main .template-list.sixcols .template:not(.placeholder) .template-link {
   height: fit-content;
 }
 
+main .template-list.horizontal .template:not(.placeholder) .template-link::after,
 main .template-list.sixcols .template:not(.placeholder) .template-link::after {
   display: none;
 }
@@ -430,11 +440,6 @@ main .template-list .template.placeholder div:nth-of-type(2) {
 
   main .template-list.horizontal {
     max-width: 800px;
-  }
-
-  main .template-list.horizontal .carousel-fader-left,
-  main .template-list.horizontal .carousel-fader-right {
-    width: 150px;
   }
 }
 
