@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-/* global document */
+/* global window, document */
 
 import {
   createTag,
@@ -52,8 +52,18 @@ function decoratePricingModal($block) {
   const $headerClose = createTag('a', { class: 'close' });
   $headerClose.classList.add('modal-header-close');
   $headerClose.addEventListener('click', closePopup);
-  const $cta = document.querySelector('.cta.large');
-  $cta.addEventListener('click', displayPopup);
+  const $cta = document.querySelector('a.cta.large');
+  if ($cta) {
+    $cta.addEventListener('click', displayPopup);
+    const $continue = $block.querySelector(':scope .button-container:last-of-type a.button');
+    $continue.className = '';
+    $continue.href = '#';
+    $continue.addEventListener('click', (e) => {
+      // continue with originally clicked offer
+      e.preventDefault();
+      window.location.href = $cta.href;
+    });
+  }
   $header.append($headerClose);
   $block.prepend($header);
   $block.addEventListener('click', (e) => {
