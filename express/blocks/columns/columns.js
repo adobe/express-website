@@ -86,8 +86,7 @@ function getHeadingNumber(heading, sizes) {
  * @returns {boolean} - whether a heading is over/under 3 lines long
  */
 function headingComparison(heading, maxLines, greaterThan = true) {
-  const style = document.getC
-  .getComputedStyle(heading);
+  const style = document.getComputedStyle(heading);
   const { height, lineHeight } = style;
   // dimensions of headings
   const heightInt = parseInt(height, 10);
@@ -172,8 +171,7 @@ function runScaleHeadings() {
     scaleHeadings(headings, sizes);
   };
   window.addEventListener('resize', scaleCB);
-  //hacky way to trigger the scaleCB function
-  window.resizeBy(0, 0);
+  scaleCB();
 }
 
 runScaleHeadings();
