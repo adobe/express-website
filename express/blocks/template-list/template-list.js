@@ -117,17 +117,6 @@ class Masonry {
       this.draw(workList);
     }
   }
-
-  resize(delay = 200) {
-    this.startResizing = Date.now();
-    setTimeout(() => {
-      // wait with drawing until resizing has stopped
-      if (!this.startResizing || Date.now() - this.startResizing >= delay) {
-        this.startResizing = 0;
-        this.draw();
-      }
-    }, delay);
-  }
 }
 
 async function fetchBlueprint(pathname) {
@@ -315,7 +304,7 @@ export async function decorateTemplateList($block) {
     const masonry = new Masonry($block, cells);
     masonry.draw();
     window.addEventListener('resize', () => {
-      masonry.resize();
+      masonry.draw();
     });
   }
 }
