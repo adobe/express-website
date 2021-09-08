@@ -86,7 +86,7 @@ function getHeadingNumber(heading, sizes) {
  * @returns {boolean} - whether a heading is over/under 3 lines long
  */
 function headingComparison(heading, maxLines, greaterThan = true) {
-  const style = document.getComputedStyle(heading);
+  const style = window.getComputedStyle(heading);
   const { height, lineHeight } = style;
   // dimensions of headings
   const heightInt = parseInt(height, 10);
