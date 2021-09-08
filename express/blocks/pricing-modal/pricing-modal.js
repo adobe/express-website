@@ -16,10 +16,25 @@ import {
   createTag,
 } from '../../scripts/scripts.js';
 
+import Context from '../../scripts/context.js';
+
+const RETURNING_VISITOR_AUDIENCE_ID = 'ReturningVisitorAudienceID';
+
+function isReturningVisitor() {
+  const audiences = Context.get('audiences');
+  if (audiences && audiences.includes(RETURNING_VISITOR_AUDIENCE_ID)) {
+    return true;
+  }
+  return false;
+}
+
 function displayPopup(e) {
-  e.preventDefault();
-  e.target.removeEventListener('click', displayPopup);
-  document.querySelector('.pricing-modal-container').style.display = 'flex';
+  if (isReturningVisitor()) {
+    e.preventDefault();
+    e.target.removeEventListener('click', displayPopup);
+    document.querySelector('.pricing-modal-container').style.display = 'flex';
+  }
+  // else do nothing
 }
 
 function closePopup(e) {
