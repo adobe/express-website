@@ -108,6 +108,7 @@ function applySizing(headings, sizes) {
     // this is the maximum size a tag can be upgraded to; there's no minimum
     const headingNumber = parseInt(tagName.charAt(1), 10);
     heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[headingNumber]})`);
+    heading.style.opacity = 0;
   });
 }
 
@@ -149,6 +150,7 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
         upSize();
       }
     }
+    heading.style.opacity = 1;
   });
 }
 
