@@ -129,8 +129,8 @@ main .template-list .template:not(.placeholder) .icon {
   position: absolute;
   width: 30px;
   height: 30px;
-  bottom: 12px;
-  right: 8px;
+  bottom: 6px;
+  right: 6px;
 }
 
 /* horizontal template-list (carousel) */
@@ -337,6 +337,11 @@ main .template-list .template.placeholder {
   padding: 0;
 }
 
+main .template-list.sixcols .template.placeholder {
+  width: 145px;
+  margin: 15px auto;
+}
+
 main .template-list .template.placeholder div:nth-of-type(2) {
   padding: 0;
   margin: 0;
@@ -386,6 +391,15 @@ main .template-list .template.placeholder div:nth-of-type(2) {
   min-height: 28px;
 }
 
+main .template-list.flex-masonry .template {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+main .template-list.flex-masonry .template.appear {
+  opacity: 1;
+}
+
 @media (min-width: 900px) {
   main .template-list-container > div,
   main .template-list-fourcols-container > div,
@@ -426,7 +440,7 @@ main .template-list .template.placeholder div:nth-of-type(2) {
 
   main .template-list.sixcols .template.placeholder {
     width: 145px;
-    margin: 21px auto 23px auto;
+    margin: 21px auto;
   }
 
   /* template-list inside columns */
