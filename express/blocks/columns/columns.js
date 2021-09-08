@@ -173,7 +173,7 @@ function runScaleHeadings() {
   setTimeout(() => {
     window.addEventListener('resize', scaleCB);
     scaleCB();
-  }, 200)
+  }, 100)
 }
 
 runScaleHeadings();
