@@ -170,8 +170,10 @@ function runScaleHeadings() {
   const scaleCB = () => {
     scaleHeadings(headings, sizes);
   };
-  window.addEventListener('resize', scaleCB);
-  scaleCB();
+  setTimeout(() => {
+    window.addEventListener('resize', scaleCB);
+    scaleCB();
+  }, 200)
 }
 
 runScaleHeadings();
