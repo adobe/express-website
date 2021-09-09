@@ -20,6 +20,8 @@ import {
   getMetadata,
 } from './scripts.js';
 
+import Context from './context.js';
+
 // this saves on file size when this file gets minified...
 const w = window;
 const d = document;
@@ -385,7 +387,20 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
   decorateAnalyticsEvents();
 
-  /* eslint-enable no-underscore-dangle */
+  function getAudiences() {
+    const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
+    const ecid = visitorId ? visitorId.getMarketingCloudVisitorID() : null;
+
+    if (ecid) {
+      w.setAudienceManagerSegments = (json) => {
+        Context.set('audiences', json?.segments || []);
+      };
+
+      loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
+    }
+  }
+
+  getAudiences();
 });
 
 async function showRegionPicker() {
