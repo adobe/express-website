@@ -145,6 +145,11 @@ main .columns > div span.num + * {
   display:inline;
 }
 
+main .columns .icon {
+  width: unset;
+  height: unset;
+}
+
 main .columns .brand.icon {
   display: none;
 }
