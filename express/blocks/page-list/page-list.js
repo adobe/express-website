@@ -70,7 +70,7 @@ async function appendTemplates($row) {
     }
   });
   $row.append($tlBlock);
-  decorateTemplateList($tlBlock);
+  return decorateTemplateList($tlBlock);
 }
 
 async function outputPages(pages, $block) {
@@ -141,6 +141,6 @@ async function decoratePageList($block) {
   $block.classList.add('appear');
 }
 
-export default function decorate($block) {
-  decoratePageList($block);
+export default async function decorate($block) {
+  return decoratePageList($block);
 }

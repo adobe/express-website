@@ -309,6 +309,6 @@ export async function decorateTemplateList($block) {
   }
 }
 
-export default function decorate($block) {
-  decorateTemplateList($block);
+export default async function decorate($block) {
+  return decorateTemplateList($block);
 }
