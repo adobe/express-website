@@ -104,7 +104,6 @@ function headingComparison(heading, maxLines, greaterThan = true) {
  */
 function applySizing(headings, sizes) {
   headings.forEach((heading) => {
-    heading.style.opacity = 0;
     const { tagName } = heading;
     // this is the maximum size a tag can be upgraded to; there's no minimum
     const headingNumber = parseInt(tagName.charAt(1), 10);
@@ -122,6 +121,7 @@ function applySizing(headings, sizes) {
 function scaleHeadings(headings, sizes, maxLines = 3) {
   // Iterate through Headings
   headings.forEach((heading) => {
+    heading.style.opacity = 0;
     const { tagName } = heading;
     // this is the maximum size a tag can be upgraded to; there's no minimum
     const sizeLimit = parseInt(tagName.charAt(1), 10);
@@ -175,7 +175,7 @@ function runScaleHeadings() {
   setTimeout(() => {
     window.addEventListener('resize', scaleCB);
     scaleCB();
-  }, 50)
+  }, 10)
 }
 
 runScaleHeadings();
