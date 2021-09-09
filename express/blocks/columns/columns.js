@@ -16,9 +16,10 @@ import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/sc
 function decorateIconList($columnCell) {
   let $iconList = createTag('div', { class: 'columns-iconlist' });
   let $iconListDescription;
-  [...$columnCell.children].forEach(($e, i) => {
+  [...$columnCell.children].forEach(($e) => {
     const $img = $e.querySelector('img.icon, svg.icon');
-    if ($img && i) {
+    const hasText = $img ? $img.closest('p').innerText !== '' : false; 
+    if ($img && hasText) {
       const $iconListRow = createTag('div');
       const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
       $iconDiv.appendChild($img);
