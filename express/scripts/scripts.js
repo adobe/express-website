@@ -65,7 +65,8 @@ export function getIcon(icon, alt = icon, size = 44) {
   */
   const symbols = ['remove-background', 'mobile-round', 'desktop-round',
     'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
-    'templates', 'blank'];
+    'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize',
+    'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified'];
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
@@ -74,13 +75,13 @@ export function getIcon(icon, alt = icon, size = 44) {
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
   } else {
-    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt}">`);
+    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt || icon}">`);
   }
 }
 
-export function getIconElement(icon) {
+export function getIconElement(icon, size) {
   const $div = createTag('div');
-  $div.innerHTML = getIcon(icon);
+  $div.innerHTML = getIcon(icon, null, size);
   return ($div.firstChild);
 }
 
@@ -1056,7 +1057,15 @@ export function fixIcons(block = document) {
       if (lowerAlt.includes('icon:')) {
         const icon = lowerAlt.split('icon:')[1].trim().replace(/\s/gm, '-');
         const $picture = $img.closest('picture');
-        $picture.parentElement.replaceChild(getIconElement(icon), $picture);
+        const $block = $picture.closest('.block');
+        let size = 44;
+        if ($block) {
+          const smallIconBlocks = ['columns'];
+          const blockName = $block.getAttribute('data-block-name');
+          console.log(blockName);
+          if (smallIconBlocks.includes(blockName)) size = 22;
+        }
+        $picture.parentElement.replaceChild(getIconElement(icon, size), $picture);
       }
     }
   });
@@ -1288,11 +1297,11 @@ export function decorateMain($main) {
   splitSections($main);
   wrapSections($main.querySelectorAll(':scope > div'));
   decorateButtons($main);
+  decorateBlocks($main);
   fixIcons($main);
   checkWebpFeature(() => {
     webpPolyfill($main);
   });
-  decorateBlocks($main);
   decorateLinkedPictures($main);
   decorateSocialIcons($main);
   makeRelativeLinks($main);

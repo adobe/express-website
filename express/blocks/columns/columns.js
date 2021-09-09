@@ -14,33 +14,28 @@
 import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell) {
-  $columnCell.querySelectorAll('p:empty').forEach(($p) => $p.remove());
-
-  const $iconList = createTag('div', { class: 'columns-iconlist' });
-  const $icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')];
-  if ($icons.length === 1) {
-    // treat single icon as brand icon
-    $icons[0].classList.add('brand');
-    return;
-  }
-  let $before;
-  $icons.forEach(($icon, i) => {
-    if (!i) $before = $icon.previousSibling;
-    const $iconListRow = createTag('div');
-    const $iconListDescription = createTag('div', { class: 'columns-iconlist-description' });
-    $iconListDescription.appendChild($icon.nextSibling);
-    const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
-    $iconDiv.appendChild($icon);
-    $iconListRow.appendChild($iconDiv);
-    $iconListRow.appendChild($iconListDescription);
-    $iconList.appendChild($iconListRow);
-  });
-
-  if ($icons.length > 0) {
-    if ($before) {
-      $columnCell.insertBefore($iconList, $before.nextSibling);
+  let $iconList = createTag('div', { class: 'columns-iconlist' });
+  let $iconListDescription;
+  [...$columnCell.children].forEach(($e) => {
+    const $img = $e.querySelector('img.icon, svg.icon');
+    if ($img) {
+      const $iconListRow = createTag('div');
+      const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
+      $iconDiv.appendChild($img);
+      $iconListRow.append($iconDiv);
+      $iconListDescription = createTag('div', { class: 'columns-iconlist-description' });
+      $iconListRow.append($iconListDescription);
+      $iconListDescription.appendChild($e);
+      $iconList.appendChild($iconListRow);
+    } else {
+      if ($iconList.children.length > 0) {
+        $columnCell.appendChild($iconList);
+        $iconList = createTag('div', { class: 'columns-iconlist' });
+      }
+      $columnCell.appendChild($e);
     }
-  }
+  });
+  if ($iconList.children.length > 0) $columnCell.appendChild($iconList);
 }
 
 export default function decorate($block) {
