@@ -14,11 +14,17 @@
 import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell) {
+  const icons = $columnCell.querySelectorAll('img.icon, svg.icon');
+  if (icons.length === 1 && icons[0].closest('p').innerText === '') {
+    // treat single icon without text as brand icon
+    icons[0].classList.add('brand');
+    return;
+  }
   let $iconList = createTag('div', { class: 'columns-iconlist' });
   let $iconListDescription;
   [...$columnCell.children].forEach(($e) => {
     const $img = $e.querySelector('img.icon, svg.icon');
-    const hasText = $img ? $img.closest('p').innerText !== '' : false; 
+    const hasText = $img ? $img.closest('p').innerText !== '' : false;
     if ($img && hasText) {
       const $iconListRow = createTag('div');
       const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
