@@ -89,15 +89,15 @@ class Masonry {
       }
     }
     const workList = [...(cells || this.cells)];
-    for (let i = 0; i < workList.length; i += 1) {
-      const $cell = workList[i];
-
+    while (workList.length > 0) {
+      const $cell = workList[0];
       const $image = $cell.querySelector(':scope picture > img');
       if ($image && !$image.complete) {
         // continue when image is loaded
         $image.addEventListener('load', () => {
           this.draw(workList);
         });
+
         return;
       }
       const $video = $cell.querySelector('video');
@@ -110,7 +110,7 @@ class Masonry {
       }
       this.addCell($cell);
       // remove already processed cell
-      workList.splice(i, 1);
+      workList.shift();
     }
     if (workList.length > 0) {
       // draw rest
