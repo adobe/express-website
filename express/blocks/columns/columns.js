@@ -94,7 +94,7 @@ function headingComparison(heading, maxLines, greaterThan = true) {
   // should be verifiable by looking at number of lines
   const headingLines = Math.ceil(heightInt / lineHeightFloat);
 
-  return greaterThan ? headingLines > maxLines : headingLines <= maxLines;
+  return greaterThan ? headingLines > maxLines : headingLines < maxLines;
 }
 
 /**
@@ -146,9 +146,6 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
       while (headingComparison(heading, maxLines, false)
         && (currH > sizeLimit && currH <= 7)) {
         upSize();
-      }
-      if (headingComparison(heading, maxLines)) {
-        downSize();
       }
     }
   });
