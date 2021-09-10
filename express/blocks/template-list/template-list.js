@@ -126,29 +126,22 @@ async function fetchBlueprint(pathname) {
 
   const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
   const resp = await fetch(`${bpPath}.plain.html`);
-  // eslint-disable-next-line no-console
-  // console.log(`fetching...${bpPath}`);
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
   webpPolyfill($main);
+
   window.spark.$blueprint = $main;
   return ($main);
 }
 
 export async function decorateTemplateList($block) {
-  // use lower resolution image and preload
-  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
-    $img.setAttribute('loading', 'eager');
-  });
   let rows = $block.children.length;
   const locale = getLocale(window.location);
   if (rows === 0 && locale !== 'us') {
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 
-    // eslint-disable-next-line no-await-in-loop
     const $blueprint = await fetchBlueprint(window.location.pathname);
 
     const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
@@ -174,6 +167,12 @@ export async function decorateTemplateList($block) {
       }
     }
   }
+
+  // use lower resolution image and preload
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
+    $img.setAttribute('loading', 'eager');
+  });
 
   const templates = Array.from($block.children);
   // process single column first row as title
