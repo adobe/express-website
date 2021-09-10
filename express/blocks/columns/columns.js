@@ -94,7 +94,7 @@ function headingComparison(heading, maxLines, greaterThan = true) {
   // should be verifiable by looking at number of lines
   const headingLines = Math.ceil(heightInt / lineHeightFloat);
 
-  return greaterThan ? headingLines > maxLines : headingLines < maxLines;
+  return greaterThan ? headingLines > maxLines : headingLines <= maxLines;
 }
 
 /**
@@ -133,7 +133,6 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
       heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
     };
     const downSize = () => {
-      // short circuit logic!
       currH += 1;
       heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
     };
@@ -147,6 +146,9 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
       while (headingComparison(heading, maxLines, false)
         && (currH > sizeLimit && currH <= 7)) {
         upSize();
+      }
+      if (headingComparison(heading, maxLines)) {
+        downSize();
       }
     }
   });
@@ -173,7 +175,7 @@ function runScaleHeadings() {
   setTimeout(() => {
     window.addEventListener('resize', scaleCB);
     scaleCB();
-  }, 10)
+  }, 10);
 }
 
 runScaleHeadings();
