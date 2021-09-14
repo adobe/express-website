@@ -137,15 +137,20 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
       heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
     };
     // if heading length is > maxLines this will execute
-    if (headingComparison(heading, maxLines)) {
-      while (headingComparison(heading, maxLines)
+    // for debug purposes let's store the values
+    let downSizeCondition = headingComparison(heading, maxLines);
+    let upSizeCondition = headingComparison(heading, maxLines, false);
+    if (downSizeCondition) {
+      while (downSizeCondition
         && currH < 7) {
         downSize();
+        downSizeCondition = headingComparison(heading, maxLines);
       }
-    } else if (headingComparison(heading, maxLines, false)) {
-      while (headingComparison(heading, maxLines, false)
+    } else if (upSizeCondition) {
+      while (upSizeCondition
         && (currH > sizeLimit && currH <= 7)) {
         upSize();
+        upSizeCondition = headingComparison(heading, maxLines, false);
       }
     }
   });
@@ -172,7 +177,7 @@ function runScaleHeadings() {
   setTimeout(() => {
     window.addEventListener('resize', scaleCB);
     scaleCB();
-  }, 10);
+  }, 20);
 }
 
 runScaleHeadings();
