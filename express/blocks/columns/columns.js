@@ -87,7 +87,12 @@ function getHeadingNumber(heading, sizes) {
  */
 function headingComparison(heading, maxLines, greaterThan = true) {
   const style = window.getComputedStyle(heading);
+  const defaultStyle = window.getDefaultComputedStyle(heading);
   const { height, lineHeight } = style;
+  const height2 = defaultStyle.height;
+  const lineHeight2 = defaultStyle.lineHeight;
+  console.log(height2);
+  console.log(lineHeight2);
   // dimensions of headings
   const heightInt = parseInt(height, 10);
   const lineHeightFloat = parseFloat(lineHeight);
