@@ -152,15 +152,14 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
           upSize();
           upSizeCondition = headingComparison(heading, maxLines, false);
         }
-    } else {
-      while (!upSizeCondition && !downSizeCondition && currH > sizeLimit && currH <= 7) {
-        upSize();
-        upSizeCondition = headingComparison(heading, maxLines, false);
-        downSizeCondition = headingComparison(heading, maxLines);
-      }
-      if(downSizeCondition) {
-        downSize();
-      }
+    }
+    while (!upSizeCondition && !downSizeCondition && currH > sizeLimit && currH <= 7) {
+      upSize();
+      upSizeCondition = headingComparison(heading, maxLines, false);
+      downSizeCondition = headingComparison(heading, maxLines);
+    }
+    if(downSizeCondition) {
+      downSize();
     }
   });
 }
