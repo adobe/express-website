@@ -147,10 +147,19 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
         downSizeCondition = headingComparison(heading, maxLines);
       }
     } else if (upSizeCondition) {
-      while (upSizeCondition
-        && (currH > sizeLimit && currH <= 7)) {
+        while (upSizeCondition
+          && (currH > sizeLimit && currH <= 7)) {
+          upSize();
+          upSizeCondition = headingComparison(heading, maxLines, false);
+        }
+    } else {
+      while (!upSizeCondition && !downSizeCondition && currH > sizeLimit && currH <= 7) {
         upSize();
         upSizeCondition = headingComparison(heading, maxLines, false);
+        downSizeCondition = headingComparison(heading, maxLines);
+      }
+      if(downSizeCondition) {
+        downSize();
       }
     }
   });
