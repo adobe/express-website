@@ -153,12 +153,12 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
         upSizeCondition = headingComparison(heading, maxLines, false);
       }
       // try final upsize
-      if (currH > sizeLimit) {
+      while (currH > sizeLimit && !downSizeCondition) {
         upSize();
         downSizeCondition = headingComparison(heading, maxLines);
-        if (downSizeCondition) {
-          downSize();
-        }
+      }
+      if (downSizeCondition) {
+        downSize();
       }
     }
   });
