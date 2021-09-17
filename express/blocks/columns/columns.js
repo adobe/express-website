@@ -183,10 +183,8 @@ function runScaleHeadings() {
   const scaleCB = () => {
     scaleHeadings(headings, sizes);
   };
-  setTimeout(() => {
-    window.addEventListener('resize', scaleCB);
-    scaleCB();
-  }, 50);
+  window.addEventListener('resize', scaleCB);
+  scaleCB();
 }
 
 export default function decorate($block) {
