@@ -186,7 +186,7 @@ function runScaleHeadings() {
   setTimeout(() => {
     window.addEventListener('resize', scaleCB);
     scaleCB();
-  }, 15);
+  }, 25);
 }
 
 export default function decorate($block) {
