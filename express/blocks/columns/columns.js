@@ -178,7 +178,8 @@ function runScaleHeadings() {
     7: 's',
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  applySizing(headings, sizes);
+  // applySizing(headings, sizes); debugging because it seems there's a race condition still; 
+  // present on the page between when we apply styling and when that styling is actually
   const scaleCB = () => {
     scaleHeadings(headings, sizes);
   };
