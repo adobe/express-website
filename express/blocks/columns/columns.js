@@ -178,7 +178,7 @@ function runScaleHeadings() {
     7: 's',
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  // applySizing(headings, sizes); debugging because it seems there's a race condition still; 
+  // applySizing(headings, sizes); debugging because it seems there's a race condition still;
   // present on the page between when we apply styling and when that styling is actually
   const scaleCB = () => {
     scaleHeadings(headings, sizes);
@@ -188,8 +188,6 @@ function runScaleHeadings() {
     scaleCB();
   }, 50);
 }
-
-runScaleHeadings();
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
@@ -278,4 +276,5 @@ export default function decorate($block) {
       }
     });
   });
+  runScaleHeadings();
 }
