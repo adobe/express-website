@@ -98,27 +98,13 @@ function headingComparison(heading, maxLines, greaterThan = true) {
 }
 
 /**
- * this function applies corresponding spec sizes to headings
- * allowing us to determine if a heading will be oversized
- * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
- */
-function applySizing(headings, sizes) {
-  headings.forEach((heading) => {
-    const { tagName } = heading;
-    // this is the maximum size a tag can be upgraded to; there's no minimum
-    const headingNumber = parseInt(tagName.charAt(1), 10);
-    heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[headingNumber]})`);
-  });
-}
-
-/**
  * This function ensures headers fit within a 3 line limit and will reduce
  * font size and line height until text falls within this limit
  * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
  * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
  * @param {Number} maxLines - maximal amount of lines a heading can take up.
  */
-function scaleHeadings(headings, sizes, maxLines = 3) {
+function dynamicScale(headings, sizes, maxLines = 3) {
   // Iterate through Headings
   headings.forEach((heading) => {
     const { tagName } = heading;
@@ -165,7 +151,45 @@ function scaleHeadings(headings, sizes, maxLines = 3) {
 }
 
 /**
- * runs scaleHeading
+ * This function uses basic analysis and a standard for what is considered too long,
+ * and applies this on heading to try to prevent oversizing.
+ * @param {Element} heading - a H1 - H6 element.
+ * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
+ * @returns
+ */
+function estimateSize(heading, sizes) {
+  const invSizes = reverseMap(sizes);
+  const headingNum = getHeadingNumber(heading);
+  const text = heading.textContent;
+
+  const SMALL = 100;
+  const MEDIUM = 75;
+  const LARGE = 65;
+  const XLARGE = 45;
+
+  let estimatedSize;
+
+  if (text.length >= SMALL
+    && headingNum <= invSizes.s) {
+    estimatedSize = 's';
+  } else if (text.length >= MEDIUM && text.length < SMALL
+    && headingNum <= invSizes.m) {
+    estimatedSize = 'm';
+  } else if (text.length >= LARGE && text.length < MEDIUM
+    && headingNum <= invSizes.l) {
+    estimatedSize = 'l';
+  } else if (text.length >= XLARGE && text.length < LARGE
+    && headingNum <= invSizes.xl) {
+    estimatedSize = 'xl';
+  } else if (text.length < XLARGE && headingNum === invSizes.xxl) {
+    estimatedSize = 'xxl';
+  }
+  return estimatedSize;
+}
+
+/**
+ * runs dynamicScale function and collects necessary data, for it
+ * to properly execute.
  */
 function runScaleHeadings() {
   const sizes = {
@@ -178,15 +202,15 @@ function runScaleHeadings() {
     7: 's',
   };
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  // applySizing(headings, sizes); debugging because it seems there's a race condition still;
-  // present on the page between when we apply styling and when that styling is actually
+  headings.forEach((heading) => {
+    const correctSize = estimateSize(heading, sizes);
+    heading.setAttribute('style', `font-size: var(--heading-font-size-${correctSize})`);
+  });
   const scaleCB = () => {
-    scaleHeadings(headings, sizes);
+    dynamicScale(headings, sizes);
   };
-  setTimeout(() => {
-    window.addEventListener('resize', scaleCB);
-    scaleCB();
-  }, 35);
+  // dynamic resizing can only occur when window is resized, by then css is loaded
+  window.addEventListener('resize', scaleCB);
 }
 
 export default function decorate($block) {

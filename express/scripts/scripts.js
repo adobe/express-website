@@ -535,7 +535,6 @@ export function decorateBlocks($main) {
 
 export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
-  loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
   import(`/express/blocks/${blockName}/${blockName}.js`)
     .then((mod) => {
       if (mod.default) {
@@ -543,6 +542,7 @@ export function loadBlock($block) {
       }
     })
     .catch((err) => console.log(`failed to load module for ${blockName}`, err));
+  loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
 }
 
 export function loadBlocks($main) {
