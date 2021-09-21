@@ -44,33 +44,19 @@ function decorateIconList($columnCell) {
 }
 
 /**
- *
- * @param {Map} obj - any Map object
- * @returns {Map} - an inverted mapping from value to keys
- */
-function reverseMap(obj = {}) {
-  const res = {};
-  Object.keys(obj).forEach((key) => {
-    const val = obj[key];
-    res[val] = key;
-  });
-  return res;
-}
-
-/**
  * utility function that calculates how big the heading presently is
+ * and returns the heading number - 1 as the storage is zero indexed.
  * @param {Element} heading - a heading element from H1 - H6
- * @param {Map} sizes - a mapping from heading number to spec tshirt size
+ * @param {Array} sizes - a mapping from heading number (index) to spec tshirt size
  * @returns {Number} - returns the current size of a heading
  */
 function getHeadingNumber(heading, sizes) {
-  const invSizes = reverseMap(sizes);
   const headingFont = heading.style.fontSize;
   const { tagName } = heading;
   let headingNum = parseInt(tagName.charAt(1), 10);
   if (headingFont) {
     const tSize = headingFont.match(/[a-zA-Z]+\)/g)[0].replace(')', '');
-    headingNum = invSizes[tSize];
+    headingNum = sizes.indexOf(tSize);
   } else {
     headingNum = parseInt(tagName.charAt(1), 10);
   }
@@ -138,7 +124,9 @@ function dynamicScale(headings, sizes, maxLines = 3) {
         upSize();
         upSizeCondition = headingComparison(heading, maxLines, false);
       }
-      // try final upsize
+    }
+    // try final upsize
+    if (currH > sizeLimit && !downSizeCondition) {
       while (currH > sizeLimit && !downSizeCondition) {
         upSize();
         downSizeCondition = headingComparison(heading, maxLines);
@@ -154,34 +142,33 @@ function dynamicScale(headings, sizes, maxLines = 3) {
  * This function uses basic analysis and a standard for what is considered too long,
  * and applies this on heading to try to prevent oversizing.
  * @param {Element} heading - a H1 - H6 element.
- * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
+ * @param {Array} sizes - a mapping between heading size number - 1 and specification t-shirt size.
  * @returns
  */
 function estimateSize(heading, sizes) {
-  const invSizes = reverseMap(sizes);
   const headingNum = getHeadingNumber(heading);
   const text = heading.textContent;
 
-  const SMALL = 100;
-  const MEDIUM = 75;
-  const LARGE = 65;
-  const XLARGE = 45;
+  const SMALL = 80;
+  const MEDIUM = 70;
+  const LARGE = 57;
+  const XLARGE = 30;
 
   let estimatedSize;
 
   if (text.length >= SMALL
-    && headingNum <= invSizes.s) {
+    && headingNum <= sizes.indexOf('s')) {
     estimatedSize = 's';
   } else if (text.length >= MEDIUM && text.length < SMALL
-    && headingNum <= invSizes.m) {
+    && headingNum <= sizes.lastIndexOf('m')) {
     estimatedSize = 'm';
   } else if (text.length >= LARGE && text.length < MEDIUM
-    && headingNum <= invSizes.l) {
+    && headingNum <= sizes.indexOf('l')) {
     estimatedSize = 'l';
   } else if (text.length >= XLARGE && text.length < LARGE
-    && headingNum <= invSizes.xl) {
+    && headingNum <= sizes.indexOf('xl')) {
     estimatedSize = 'xl';
-  } else if (text.length < XLARGE && headingNum === invSizes.xxl) {
+  } else if (text.length < XLARGE && headingNum === sizes.indexOf('xxl')) {
     estimatedSize = 'xxl';
   }
   return estimatedSize;
@@ -192,15 +179,7 @@ function estimateSize(heading, sizes) {
  * to properly execute.
  */
 function runScaleHeadings() {
-  const sizes = {
-    1: 'xxl',
-    2: 'xl',
-    3: 'l',
-    4: 'm',
-    5: 'm',
-    6: 'm',
-    7: 's',
-  };
+  const sizes = ['nil', 'xxl', 'xl', 'l', 'm', 'm', 'm', 's'];
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   headings.forEach((heading) => {
     const correctSize = estimateSize(heading, sizes);
