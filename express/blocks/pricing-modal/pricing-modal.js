@@ -18,14 +18,11 @@ import {
 
 import Context from '../../scripts/context.js';
 
-const RETURNING_VISITOR_AUDIENCE_ID = 'ReturningVisitorAudienceID';
+const RETURNING_VISITOR_AUDIENCE_ID = '23153796';
 
 function isReturningVisitor() {
   const audiences = Context.get('audiences');
-  if (audiences && audiences.includes(RETURNING_VISITOR_AUDIENCE_ID)) {
-    return true;
-  }
-  return false;
+  return audiences && audiences.includes(RETURNING_VISITOR_AUDIENCE_ID);
 }
 
 function displayPopup(e) {
