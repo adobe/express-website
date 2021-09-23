@@ -155,7 +155,7 @@ export async function decorateTemplateList($block) {
       $block.remove();
     }
 
-    if (i18nTexts) {
+    if (i18nTexts && i18nTexts.length > 0) {
       const [placeholderText] = i18nTexts;
       let [, templateText] = i18nTexts;
       if (!templateText) {
