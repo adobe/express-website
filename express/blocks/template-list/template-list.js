@@ -141,7 +141,7 @@ export async function decorateTemplateList($block) {
   if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstChild
-      && Array.from($block.firstChild.querySelectorAll('p')).map(($p) => $p.textContent);
+      && Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent);
     $block.innerHTML = '';
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
