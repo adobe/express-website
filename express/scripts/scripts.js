@@ -550,7 +550,6 @@ export function loadBlock($block) {
       }
     })
     .catch((err) => console.log(`failed to load module for ${blockName}`, err));
-
   loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
 }
 
