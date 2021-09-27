@@ -17,10 +17,10 @@ import {
   getLocale,
   createTag,
   linkImage,
-  webpPolyfill,
   addSearchQueryToHref,
   getIconElement,
   toClassName,
+  decorateMain,
 } from '../../scripts/scripts.js';
 
 import {
@@ -129,7 +129,7 @@ async function fetchBlueprint(pathname) {
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
-  webpPolyfill($main);
+  decorateMain($main);
 
   window.spark.$blueprint = $main;
   return ($main);
@@ -138,16 +138,34 @@ async function fetchBlueprint(pathname) {
 export async function decorateTemplateList($block) {
   let rows = $block.children.length;
   const locale = getLocale(window.location);
-  if (rows === 0 && locale !== 'us') {
+  if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
+    && locale !== 'us') {
+    const i18nTexts = $block.firstChild
+      && Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent);
+    $block.innerHTML = '';
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 
     const $blueprint = await fetchBlueprint(window.location.pathname);
 
-    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
+    const $bpBlock = $blueprint.querySelectorAll('div[class^="template-list"]')[i];
     if ($bpBlock) {
       $block.innerHTML = $bpBlock.innerHTML;
+    } else {
+      $block.remove();
     }
+
+    if (i18nTexts && i18nTexts.length > 0) {
+      const [placeholderText] = i18nTexts;
+      let [, templateText] = i18nTexts;
+      if (!templateText) {
+        templateText = placeholderText;
+      }
+      $block.querySelectorAll('a').forEach(($a, index) => {
+        $a.textContent = index === 0 ? placeholderText : templateText;
+      });
+    }
+
     const $heroPicture = document.querySelector('.hero-bg');
 
     if (!$heroPicture && $blueprint) {
