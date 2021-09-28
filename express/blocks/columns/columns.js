@@ -148,7 +148,7 @@ function dynamicScale(headings, sizes, maxLines = 3) {
  * @returns
  */
 function estimateSize(heading, sizes) {
-  const headingNum = getHeadingNumber(heading);
+  const headingNum = getHeadingNumber(heading, sizes);
   const text = heading.textContent;
 
   const SMALL = 80;
@@ -185,7 +185,9 @@ function runScaleHeadings() {
   const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
   headings.forEach((heading) => {
     const correctSize = estimateSize(heading, sizes);
-    heading.setAttribute('style', `font-size: var(--heading-font-size-${correctSize})`);
+    if (correctSize) {
+      heading.setAttribute('style', `font-size: var(--heading-font-size-${correctSize})`);
+    }
   });
   const scaleCB = () => {
     dynamicScale(headings, sizes);
