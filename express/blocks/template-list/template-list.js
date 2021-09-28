@@ -17,65 +17,104 @@ import {
   getLocale,
   createTag,
   linkImage,
-  webpPolyfill,
   addSearchQueryToHref,
   getIconElement,
   toClassName,
+  decorateMain,
 } from '../../scripts/scripts.js';
 
 import {
   buildCarousel,
 } from '../shared/carousel.js';
 
-function masonrize($cells, $masonry, force) {
-  const colWidth = $masonry.classList.contains('sixcols') ? 175 : 264;
+class Masonry {
+  constructor($block, cells) {
+    this.$block = $block;
+    this.cells = cells;
+    this.columns = [];
+    this.nextColumn = null;
+    this.startResizing = 0;
+  }
 
-  const width = $masonry.offsetWidth;
-  // console.log($masonry.offsetWidth);
-  let numCols = Math.floor(width / colWidth);
-  if (numCols < 1) numCols = 1;
-  if ((numCols !== $masonry.children.length) || force) {
-    $masonry.innerHTML = '';
-    const columns = [];
-    for (let i = 0; i < numCols; i += 1) {
-      const $column = createTag('div', { class: 'masonry-col' });
-      columns.push({
-        outerHeight: 0,
-        $column,
-      });
-      $masonry.appendChild($column);
+  // set up fresh grid if necessary
+  setupColumns() {
+    let redraw = false;
+    const colWidth = this.$block.classList.contains('sixcols') ? 175 : 264;
+    const width = this.$block.offsetWidth;
+    let numCols = Math.floor(width / colWidth);
+    if (numCols < 1) numCols = 1;
+    if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
+      this.$block.innerHTML = '';
+      this.columns = [];
+      for (let i = 0; i < numCols; i += 1) {
+        const $column = createTag('div', { class: 'masonry-col' });
+        this.columns.push({
+          outerHeight: 0,
+          $column,
+        });
+        this.$block.appendChild($column);
+      }
+      redraw = true;
     }
+    [this.nextColumn] = this.columns;
+    return redraw;
+  }
 
-    let incomplete = false;
-    $cells.forEach(($cell) => {
-      const minOuterHeight = Math.min(...columns.map((column) => column.outerHeight));
-      const column = columns.find((col) => col.outerHeight === minOuterHeight);
-      column.$column.append($cell);
+  // calculate least tallest column to add next cell to
+  getNextColumn() {
+    if (this.nextColumn) {
+      return this.nextColumn;
+    } else {
+      const minOuterHeight = Math.min(...this.columns.map((col) => col.outerHeight));
+      this.nextColumn = this.columns.find((col) => col.outerHeight === minOuterHeight);
+      return this.nextColumn;
+    }
+  }
 
-      const $image = $cell.querySelector('img');
-      if ($image) {
-        if (!$image.complete) {
-          incomplete = true;
-        }
+  // add cell to next column
+  addCell($cell) {
+    const column = this.getNextColumn();
+    column.$column.append($cell);
+    $cell.classList.add('appear');
+    column.outerHeight += $cell.offsetHeight;
+    this.nextColumn = null;
+  }
+
+  // distribute cells to columns
+  draw(cells) {
+    if (!cells) {
+      if (!this.setupColumns()) {
+        // no redrawing needed
+        return;
+      }
+    }
+    const workList = [...(cells || this.cells)];
+    while (workList.length > 0) {
+      const $cell = workList[0];
+      const $image = $cell.querySelector(':scope picture > img');
+      if ($image && !$image.complete) {
+        // continue when image is loaded
+        $image.addEventListener('load', () => {
+          this.draw(workList);
+        });
+
+        return;
       }
       const $video = $cell.querySelector('video');
-      if ($video) {
-        // console.log(`video ready state ${$video.readyState}`);
-        if ($video.readyState === 0) {
-          incomplete = true;
-        }
+      if ($video && $video.readyState === 0) {
+        // continue when video is loaded
+        $video.addEventListener('loadeddata', () => {
+          this.draw(workList);
+        });
+        return;
       }
-
-      // console.log(`cell offset height: ${$cell.offsetHeight}`);
-      column.outerHeight += $cell.offsetHeight;
-    });
-
-    if (incomplete) {
-      // console.log ('incomplete retrying in 500ms');
-
-      setTimeout(() => {
-        masonrize($cells, $masonry, true);
-      }, 500);
+      this.addCell($cell);
+      // remove already processed cell
+      workList.shift();
+    }
+    if (workList.length > 0) {
+      // draw rest
+      this.draw(workList);
     }
   }
 }
@@ -87,12 +126,11 @@ async function fetchBlueprint(pathname) {
 
   const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
   const resp = await fetch(`${bpPath}.plain.html`);
-  // eslint-disable-next-line no-console
-  // console.log(`fetching...${bpPath}`);
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
-  webpPolyfill($main);
+  decorateMain($main);
+
   window.spark.$blueprint = $main;
   return ($main);
 }
@@ -100,17 +138,34 @@ async function fetchBlueprint(pathname) {
 export async function decorateTemplateList($block) {
   let rows = $block.children.length;
   const locale = getLocale(window.location);
-  if (rows === 0 && locale !== 'us') {
+  if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
+    && locale !== 'us') {
+    const i18nTexts = $block.firstChild
+      && Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent);
+    $block.innerHTML = '';
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 
-    // eslint-disable-next-line no-await-in-loop
     const $blueprint = await fetchBlueprint(window.location.pathname);
 
-    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
+    const $bpBlock = $blueprint.querySelectorAll('div[class^="template-list"]')[i];
     if ($bpBlock) {
       $block.innerHTML = $bpBlock.innerHTML;
+    } else {
+      $block.remove();
     }
+
+    if (i18nTexts && i18nTexts.length > 0) {
+      const [placeholderText] = i18nTexts;
+      let [, templateText] = i18nTexts;
+      if (!templateText) {
+        templateText = placeholderText;
+      }
+      $block.querySelectorAll('a').forEach(($a, index) => {
+        $a.textContent = index === 0 ? placeholderText : templateText;
+      });
+    }
+
     const $heroPicture = document.querySelector('.hero-bg');
 
     if (!$heroPicture && $blueprint) {
@@ -130,6 +185,12 @@ export async function decorateTemplateList($block) {
       }
     }
   }
+
+  // use lower resolution image and preload
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
+    $img.setAttribute('loading', 'eager');
+  });
 
   const templates = Array.from($block.children);
   // process single column first row as title
@@ -221,6 +282,7 @@ export async function decorateTemplateList($block) {
       if (!$imgLink.href.includes('.mp4')) {
         linkImage($parent);
       } else {
+        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
           const $video = createTag('video', {
@@ -253,16 +315,17 @@ export async function decorateTemplateList($block) {
   } else if (rows > 6) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
-    const $masonryCells = Array.from($block.children);
+    const cells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
-    masonrize($masonryCells, $block);
+    const masonry = new Masonry($block, cells);
+    masonry.draw();
     window.addEventListener('resize', () => {
-      masonrize($masonryCells, $block);
+      masonry.draw();
     });
   }
 }
 
-export default function decorate($block) {
-  decorateTemplateList($block);
+export default async function decorate($block) {
+  return decorateTemplateList($block);
 }
