@@ -161,11 +161,13 @@ export default function decorate(block) {
     }
   });
 
-  window.addEventListener('resize', () => {
-    reset(block);
-    activate(block, block.querySelector('.tip-number.tip-1'));
-    initRotation(window, document);
-  });
+  if (window) {
+    window.addEventListener('resize', () => {
+      reset(block);
+      activate(block, block.querySelector('.tip-number.tip-1'));
+      initRotation(window, document);
+    });
+  }
 
   initRotation(window, document);
 }
