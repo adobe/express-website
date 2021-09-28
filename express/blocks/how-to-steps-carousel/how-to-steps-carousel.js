@@ -19,6 +19,21 @@ import {
 let rotationInterval;
 let fixedImageSize = false;
 
+function reset(block) {
+  const window = block.ownerDocument.defaultView;
+
+  window.clearInterval(rotationInterval);
+  rotationInterval = null;
+
+  const container = block.parentElement.parentElement;
+  const picture = container.querySelector('picture');
+
+  delete picture.style.height;
+  container.classList.remove('no-cover');
+
+  fixedImageSize = false;
+}
+
 function activate(block, target) {
   if (!fixedImageSize) {
     // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
@@ -145,6 +160,14 @@ export default function decorate(block) {
       number.classList.add('active');
     }
   });
+
+  if (window) {
+    window.addEventListener('resize', () => {
+      reset(block);
+      activate(block, block.querySelector('.tip-number.tip-1'));
+      initRotation(window, document);
+    });
+  }
 
   initRotation(window, document);
 }
