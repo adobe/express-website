@@ -20,7 +20,9 @@ export default function decorate($block, name, doc) {
   const $howto = $block;
   const $heading = $howto.previousElementSibling;
   const $rows = Array.from($howto.children);
-  const $schema = createTag('script', { type: 'application/ld+json' });
+
+  const includeSchema = !$block.classList.contains('noschema');
+
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
@@ -54,7 +56,11 @@ export default function decorate($block, name, doc) {
     $cells[1].append($number);
     $cells[1].append($text);
   });
-  $schema.innerHTML = JSON.stringify(schema);
-  const $head = doc.head;
-  $head.append($schema);
+
+  if (includeSchema) {
+    const $schema = createTag('script', { type: 'application/ld+json' });
+    $schema.innerHTML = JSON.stringify(schema);
+    const $head = doc.head;
+    $head.append($schema);
+  }
 }
