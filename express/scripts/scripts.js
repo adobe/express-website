@@ -67,7 +67,8 @@ export function getIcon(icon, alt = icon, size = 44) {
     'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
     'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize',
     'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified',
-    'brand-libraries', 'cloud-storage'];
+    'brand-libraries', 'cloud-storage', 'facebook', 'twitter', 'youtube', 'tiktok', 'globe', 
+    'pinterest', 'instagram', 'linkedin'];
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
@@ -1169,6 +1170,9 @@ function decorateSocialIcons($main) {
       if ($a.href.startsWith('https://www.youtube.com')) {
         icon = 'youtube';
       }
+      if ($a.href.startsWith('https://www.tiktok.com')) {
+        icon = 'tiktok';
+      }
       const $parent = $a.parentElement;
       if (!icon && $parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
         icon = 'globe';
@@ -1176,7 +1180,7 @@ function decorateSocialIcons($main) {
 
       if (icon) {
         $a.innerHTML = '';
-        const $icon = getIconElement(icon);
+        const $icon = getIconElement(icon, 22);
         $icon.classList.add('social');
         $a.appendChild($icon);
         if ($parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
