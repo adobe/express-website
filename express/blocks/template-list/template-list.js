@@ -140,8 +140,13 @@ export async function decorateTemplateList($block) {
   const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
     && locale !== 'us') {
-    const i18nTexts = $block.firstChild
-      && Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent);
+    const i18nTexts = $block.firstElementChild
+      // author defined localized edit text(s)
+      && ($block.firstElementChild.querySelector('p')
+        // multiple lines in separate p tags
+        ? Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent.trim())
+        // single text directly in div
+        : [$block.firstElementChild.textContent.trim()]);
     $block.innerHTML = '';
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
