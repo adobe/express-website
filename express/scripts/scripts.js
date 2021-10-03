@@ -67,7 +67,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
     'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize',
     'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified',
-    'brand-libraries', 'cloud-storage', 'facebook', 'twitter', 'youtube', 'tiktok', 'globe', 
+    'brand-libraries', 'cloud-storage', 'facebook', 'twitter', 'youtube', 'tiktok', 'globe',
     'pinterest', 'instagram', 'linkedin'];
   if (symbols.includes(icon)) {
     const iconName = icon;
