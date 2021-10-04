@@ -145,7 +145,10 @@ export function linkImage($elem) {
 
 function wrapSections($sections) {
   $sections.forEach(($div) => {
-    if (!$div.id) {
+    if ($div.textContent.trim() === '' && !$div.firstElementChild) {
+      // remove empty sections (neither text nor child elements)
+      $div.remove();
+    } else if (!$div.id) {
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
