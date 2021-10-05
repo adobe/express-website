@@ -532,14 +532,17 @@ export function decorateBlocks($main) {
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
       'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps'];
-    blocksWithOptions.forEach((b) => {
-      if (blockName.startsWith(`${b}-`)) {
-        const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-        blockName = b;
-        $block.classList.add(b);
-        $block.classList.add(...options);
-      }
-    });
+
+    if (blockName !== 'how-to-steps-carousel') {
+      blocksWithOptions.forEach((b) => {
+        if (blockName.startsWith(`${b}-`)) {
+          const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+          blockName = b;
+          $block.classList.add(b);
+          $block.classList.add(...options);
+        }
+      });
+    }
     $block.classList.add('block');
     $block.setAttribute('data-block-name', blockName);
   });
