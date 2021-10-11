@@ -55,10 +55,10 @@ export default [
     name: 'Template List - title',
     input: 'input/template-list.title.doc.html',
     expected: 'expected/template-list.title.block.html',
-  }, {
-    name: 'Template List - sixcols',
-    input: 'input/template-list.sixcols.doc.html',
-    expected: 'expected/template-list.sixcols.block.html',
+  // }, {
+  //   name: 'Template List - sixcols',
+  //   input: 'input/template-list.sixcols.doc.html',
+  //   expected: 'expected/template-list.sixcols.block.html',
   }, {
     name: 'Columns - single row',
     input: 'input/columns.singlerow.doc.html',
