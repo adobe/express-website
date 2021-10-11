@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window, document, fetch */
+/* global window */
 
 // This file contains the project-specific configuration for the sidekick.
 (() => {
@@ -42,41 +42,6 @@
           action: (_, s) => {
             const { config } = s;
             window.open(`https://${config.innerHost}/tools/templates/picker.html`, 'hlx-sidekick-spark-templates');
-          },
-        },
-      },
-      // CONTEXT --------------------------------------------------------------------
-      {
-        id: 'context',
-        condition: (s) => s.isEditor() || s.isHelix(),
-        button: {
-          text: 'Context',
-          action: async () => {
-            let context = document.querySelector('.hlx-context');
-            if (!context) {
-              const link = document.createElement('link');
-              link.rel = 'stylesheet';
-              link.href = '/tools/context/styles.css';
-              document.head.appendChild(link);
-
-              const res = await fetch('/tools/context/');
-              const html = await res.text();
-              context = document.createElement('div');
-              context.innerHTML = html;
-              context.classList.add('hlx-context');
-
-              document.body.appendChild(context);
-
-              const script = document.createElement('script');
-              script.type = 'module';
-              script.src = '/tools/context/scripts.js';
-              document.head.appendChild(script);
-            } else // toggle
-            if (context.classList.contains('hlx-context-hidden')) {
-              context.classList.remove('hlx-context-hidden');
-            } else {
-              context.classList.add('hlx-context-hidden');
-            }
           },
         },
       },
