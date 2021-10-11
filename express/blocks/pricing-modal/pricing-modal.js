@@ -25,7 +25,10 @@ function enablePricingModal() {
   // dev mode: check pricing-modal query parameter
   const u = new URL(window.location.href);
   const param = u.searchParams.get('pricing-modal');
-  if (param) return true;
+  if (param) {
+    if (param === 'on') return true;
+    if (param === 'off') return false;
+  }
 
   // "production" mode: check for audience
   const audiences = Context.get('audiences');
