@@ -38,9 +38,12 @@ class Masonry {
 
   // set up fresh grid if necessary
   setupColumns() {
-    let redraw = false;
+    let result = 1;
     const colWidth = this.$block.classList.contains('sixcols') ? 175 : 264;
     const width = this.$block.offsetWidth;
+    if (!width) {
+      return 0;
+    }
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
@@ -54,10 +57,10 @@ class Masonry {
         });
         this.$block.appendChild($column);
       }
-      redraw = true;
+      result = 2;
     }
     [this.nextColumn] = this.columns;
-    return redraw;
+    return result;
   }
 
   // calculate least tallest column to add next cell to
@@ -67,7 +70,7 @@ class Masonry {
     } else {
       const minOuterHeight = Math.min(...this.columns.map((col) => col.outerHeight));
       this.nextColumn = this.columns.find((col) => col.outerHeight === minOuterHeight);
-      return this.nextColumn;
+      return this.nextColumn || this.columns[0];
     }
   }
 
@@ -83,8 +86,15 @@ class Masonry {
   // distribute cells to columns
   draw(cells) {
     if (!cells) {
-      if (!this.setupColumns()) {
+      const setup = this.setupColumns();
+      if (setup === 1) {
         // no redrawing needed
+        return;
+      } else if (setup === 0) {
+        // setup incomplete, try again
+        window.setTimeout(() => {
+          this.draw(cells);
+        }, 200);
         return;
       }
     }
@@ -140,8 +150,13 @@ export async function decorateTemplateList($block) {
   const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
     && locale !== 'us') {
-    const i18nTexts = $block.firstChild
-      && Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent);
+    const i18nTexts = $block.firstElementChild
+      // author defined localized edit text(s)
+      && ($block.firstElementChild.querySelector('p')
+        // multiple lines in separate p tags
+        ? Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent.trim())
+        // single text directly in div
+        : [$block.firstElementChild.textContent.trim()]);
     $block.innerHTML = '';
     const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
     const i = tls.indexOf($block);

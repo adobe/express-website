@@ -198,3 +198,9 @@ main .how-to-steps-carousel-container .icon {
     object-fit: contain;
   }
 }
+
+@media (min-width: 1200px) {
+  main .how-to-steps-carousel-container.no-cover > div {
+    margin: 0 120px 0 20px;
+  }
+}

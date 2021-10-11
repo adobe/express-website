@@ -67,7 +67,8 @@ export function getIcon(icon, alt = icon, size = 44) {
     'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
     'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize',
     'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified',
-    'brand-libraries', 'cloud-storage'];
+    'brand-libraries', 'cloud-storage', 'facebook', 'twitter', 'youtube', 'tiktok', 'globe',
+    'pinterest', 'instagram', 'linkedin'];
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
@@ -144,7 +145,10 @@ export function linkImage($elem) {
 
 function wrapSections($sections) {
   $sections.forEach(($div) => {
-    if (!$div.id) {
+    if ($div.textContent.trim() === '' && !$div.firstElementChild) {
+      // remove empty sections (neither text nor child elements)
+      $div.remove();
+    } else if (!$div.id) {
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
@@ -527,15 +531,18 @@ export function decorateBlocks($main) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents'];
-    blocksWithOptions.forEach((b) => {
-      if (blockName.startsWith(`${b}-`)) {
-        const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-        blockName = b;
-        $block.classList.add(b);
-        $block.classList.add(...options);
-      }
-    });
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps'];
+
+    if (blockName !== 'how-to-steps-carousel') {
+      blocksWithOptions.forEach((b) => {
+        if (blockName.startsWith(`${b}-`)) {
+          const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+          blockName = b;
+          $block.classList.add(b);
+          $block.classList.add(...options);
+        }
+      });
+    }
     $block.classList.add('block');
     $block.setAttribute('data-block-name', blockName);
   });
@@ -1169,6 +1176,9 @@ function decorateSocialIcons($main) {
       if ($a.href.startsWith('https://www.youtube.com')) {
         icon = 'youtube';
       }
+      if ($a.href.startsWith('https://www.tiktok.com')) {
+        icon = 'tiktok';
+      }
       const $parent = $a.parentElement;
       if (!icon && $parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
         icon = 'globe';
@@ -1176,7 +1186,7 @@ function decorateSocialIcons($main) {
 
       if (icon) {
         $a.innerHTML = '';
-        const $icon = getIconElement(icon);
+        const $icon = getIconElement(icon, 22);
         $icon.classList.add('social');
         $a.appendChild($icon);
         if ($parent.previousElementSibling && $parent.previousElementSibling.classList.contains('social-links')) {
