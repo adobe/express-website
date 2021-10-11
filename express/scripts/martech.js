@@ -398,7 +398,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
     if (ecid) {
       w.setAudienceManagerSegments = (json) => {
-        if (json?.segments && json.segments.includes(RETURNING_VISITOR_SEGMENT_ID)) {
+        if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
           const audiences = Context.get('audiences');
           audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
 
