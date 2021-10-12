@@ -141,7 +141,7 @@ main .section-wrapper.icon-list-two-column-container > div {
   padding: 120px 16px;
 }
 
-main .icon-list a:any-link {
+main .icon-list a:not(.button):any-link {
   color: var(--color-info-accent);
   text-decoration: none;
   font-weight: 600;
