@@ -18,6 +18,7 @@ function decorateIconList($columnCell) {
   if (icons.length === 1 && icons[0].closest('p').innerText === '') {
     // treat single icon without text as brand icon
     icons[0].classList.add('brand');
+    $columnCell.parentElement.classList.add('has-brand');
     return;
   }
   let $iconList = createTag('div', { class: 'columns-iconlist' });
@@ -263,6 +264,33 @@ export default function decorate($block) {
       if ($a && $a.classList.contains('button')) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
+
+          const $primaryCTA = $a;
+          const $floatButton = $primaryCTA.parentElement.cloneNode(true);
+          $floatButton.classList.add('fixed-button')
+          document.body.classList.add("has-fixed-button");
+          $cell.appendChild($floatButton);
+          $primaryCTA.classList.add('primaryCTA');
+          $floatButton.style.display = 'none';
+          
+          setTimeout(function(){
+            $floatButton.classList.remove('shown');
+            $floatButton.style.display = '';
+          }, 1000);
+
+          const hideButtonWhenInView = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+              if (entry.intersectionRatio > 0) {
+                $floatButton.classList.remove('shown');
+              } else {
+                $floatButton.classList.add('shown');
+              }
+            });
+          }, {threshold: 0});
+
+          hideButtonWhenInView.observe($primaryCTA);
+          hideButtonWhenInView.observe(document.querySelector('.new-banner-container'));
+
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
