@@ -59,6 +59,7 @@ export default [
     name: 'Template List - sixcols',
     input: 'input/template-list.sixcols.doc.html',
     expected: 'expected/template-list.sixcols.block.html',
+    timeout: 9000,
   }, {
     name: 'Columns - single row',
     input: 'input/columns.singlerow.doc.html',
