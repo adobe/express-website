@@ -18,16 +18,16 @@ import TESTS from './blocks-test-list.js';
 const ROOT_PATH = '/blocks';
 
 const getFragment = (html) => {
-  const template = document.createElement('template');
-  template.innerHTML = html;
-  return template.content;
+  document.body.innerHTML = html;
+  return document;
 };
 
 const trim = (html) => html
+  .replace(/\s\s+/gm, ' ')
   .replace(/^\s*/gm, '')
   .replace(/\s*$/gm, '')
   .replace(/\n/gm, '')
-  .replace(/\/>\s*</gm, '/><');
+  .replace(/>\s*</gm, '><');
 
 const fragmentToString = (fragment) => {
   if (fragment.outerHTML) {
@@ -42,7 +42,11 @@ const fragmentToString = (fragment) => {
 };
 
 describe('Block tests', () => {
-  TESTS.forEach((test) => {
+  // check if there are tests with only: true
+  let tests = TESTS.filter((t) => t.only);
+  // if not, run all
+  if (tests.length === 0) tests = TESTS;
+  tests.forEach((test) => {
     it(test.name, async () => {
       expect(test.input, 'Missing test "input" definition').to.exist;
       expect(test.expected, 'Missing test "expected" definition').to.exist;
@@ -50,14 +54,13 @@ describe('Block tests', () => {
       let res = await fetch(`${ROOT_PATH}/${test.input}`);
       expect(res.ok, `Missing test "input" file: ${test.input}`).to.be.true;
 
-      let html = await res.text();
-      const doc = getFragment(html);
+      const htmlInput = await res.text();
+      const doc = getFragment(htmlInput);
 
       res = await fetch(`${ROOT_PATH}/${test.expected}`);
       expect(res.ok, `Missing test "expected" file: ${test.expected}`).to.be.true;
 
-      html = await res.text();
-      const expected = getFragment(html);
+      const htmlExpected = await res.text();
 
       let block = doc.querySelector('main > div');
       let sectionMode = false;
@@ -79,7 +82,24 @@ describe('Block tests', () => {
       if (sectionMode) {
         current = block.parentElement.parentElement;
       }
-      expect(fragmentToString(current)).to.be.equal(fragmentToString(expected));
-    });
+
+      const finalise = () => {
+        const expected = getFragment(htmlExpected);
+        expect(fragmentToString(current)).to.be.equal(trim(expected.body.innerHTML));
+      };
+
+      if (test.timeout) {
+        // some blocks might use setTimeout for which we need to wait
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            finalise();
+            resolve();
+          }, test.timeout);
+        });
+      } else {
+        finalise();
+        return true;
+      }
+    }).timeout(10000);
   });
 });

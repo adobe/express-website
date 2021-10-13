@@ -20,6 +20,9 @@ module.exports = (config) => {
       { pattern: './test/unit/blocks/**/*.html' },
       { pattern: './test/unit/mocks/**/*.json', served: true, included: false },
       { pattern: './test/unit/blocks/blocks-test-list.js', type: 'module' },
+      {
+        pattern: './test/unit/mocks/express/media/*.*', watched: false, included: false, served: true, nocache: false,
+      },
     ],
     reporters: ['mocha'],
     port: 9876,
@@ -28,6 +31,8 @@ module.exports = (config) => {
       '/blocks': '/base/test/unit/blocks',
       '/express/testing.json': '/base/test/unit/mocks/express/testing.json',
       '/express/system/offers.json': '/base/test/unit/mocks/express/system/offers.json',
+      '/media/': '/base/test/unit/mocks/express/media/',
+      '/media_a496779a307c49d99dad2eb20205607d59ea5b17a.mp4': '/base/test/unit/mocks/express/media/video.mp4',
     },
     colors: true,
     logLevel: config.LOG_INFO,

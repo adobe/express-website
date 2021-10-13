@@ -1326,12 +1326,14 @@ async function decoratePage() {
   }
 
   const $main = document.querySelector('main');
-  decorateMain($main);
-  decorateHeaderAndFooter();
-  decorateHero();
-  setLCPTrigger();
-  displayEnv();
-  displayOldLinkWarning();
+  if ($main) {
+    decorateMain($main);
+    decorateHeaderAndFooter();
+    decorateHero();
+    setLCPTrigger();
+    displayEnv();
+    displayOldLinkWarning();
+  }
   document.body.classList.add('appear');
 }
 
