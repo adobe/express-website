@@ -68,7 +68,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize',
     'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified',
     'brand-libraries', 'cloud-storage', 'facebook', 'twitter', 'youtube', 'tiktok', 'globe',
-    'pinterest', 'instagram', 'linkedin'];
+    'pinterest', 'instagram', 'linkedin', 'sparkpage', 'sparkvideo', 'image', 'rush'];
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
@@ -1326,12 +1326,14 @@ async function decoratePage() {
   }
 
   const $main = document.querySelector('main');
-  decorateMain($main);
-  decorateHeaderAndFooter();
-  decorateHero();
-  setLCPTrigger();
-  displayEnv();
-  displayOldLinkWarning();
+  if ($main) {
+    decorateMain($main);
+    decorateHeaderAndFooter();
+    decorateHero();
+    setLCPTrigger();
+    displayEnv();
+    displayOldLinkWarning();
+  }
   document.body.classList.add('appear');
 }
 

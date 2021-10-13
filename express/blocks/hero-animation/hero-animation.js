@@ -15,7 +15,6 @@
 import {
   createTag,
   toClassName,
-  transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
 function timecodeToSeconds(timecode) {
@@ -28,7 +27,29 @@ function timecodeToSeconds(timecode) {
   return seconds;
 }
 
-function adjustLayout($overlay, $attributions) {
+function createAnimation(animations) {
+  const attribs = {};
+  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
+    attribs[p] = '';
+  });
+
+  Object.keys(animations).forEach((k) => {
+    animations[k].active = false;
+  });
+
+  const breakpoint = window.innerWidth <= 400 ? 'mobile' : 'desktop';
+  attribs.poster = animations[breakpoint].poster;
+  const { source } = animations[breakpoint];
+  animations[breakpoint].active = true;
+
+  // replace anchor with video element
+  const $video = createTag('video', attribs);
+  $video.innerHTML = `
+  <source src="${source}" type="video/mp4">`;
+  return $video;
+}
+
+function adjustLayout($overlay, $attributions, animations, $parent) {
   $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
   const scale = window.innerWidth / 1440;
   if (window.innerWidth > 375 * (1440 / 700)) {
@@ -40,15 +61,49 @@ function adjustLayout($overlay, $attributions) {
     $attributions.style.top = '300px';
     $attributions.style.left = '80px';
   }
+
+  const breakpoint = window.innerWidth <= 400 ? 'mobile' : 'desktop';
+  if (!animations[breakpoint].active) {
+    const $newVideo = createAnimation(animations);
+    $parent.replaceChild($newVideo, $parent.querySelector('video'));
+    $newVideo.addEventListener('canplay', () => {
+      $newVideo.muted = true;
+      $newVideo.play();
+    });
+  }
 }
 
 export default function decorate($block) {
   const $rows = [...$block.children];
   const attributions = [];
   const $attributions = createTag('div', { class: 'hero-animation-attributions' });
-  $rows.forEach(($div, i) => {
-    if (i === 0) {
-      const $video = transformLinkToAnimation($div.querySelector('a'));
+  const animations = {};
+  $rows.forEach(($div) => {
+    const typeHint = $div.children[0].textContent.trim().toLowerCase();
+    let rowType = 'content';
+    if (typeHint === 'mobile' || typeHint === 'desktop') rowType = 'animation';
+    if (typeHint.startsWith('00:')) rowType = 'timecode';
+
+    // content row
+    if (rowType === 'animation') {
+      const $a = $div.querySelector('a');
+      const $poster = $div.querySelector('img');
+      const id = new URL($a.href).pathname.split('/')[2];
+      const source = `./media_${id}.mp4`;
+
+      animations[typeHint] = { source, poster: $poster.currentSrc };
+      $div.remove();
+    }
+
+    // content row
+    if (rowType === 'content') {
+      const $video = createAnimation(animations);
+      $div.children[0].prepend($video);
+      $video.addEventListener('canplay', () => {
+        $video.muted = true;
+        $video.play();
+      });
+
       if ($video) {
         const $innerDiv = $video.closest('div');
         $innerDiv.classList.add('hero-animation-overlay');
@@ -62,14 +117,17 @@ export default function decorate($block) {
             }
           });
         });
-
+        const $videoParent = $video.parentNode;
         window.addEventListener('resize', () => {
-          adjustLayout($innerDiv, $attributions);
+          adjustLayout($innerDiv, $attributions, animations, $videoParent);
         });
-        adjustLayout($innerDiv, $attributions);
+        adjustLayout($innerDiv, $attributions, animations, $videoParent);
       }
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
-    } else {
+    }
+
+    // timecode animations
+    if (rowType === 'timecode') {
       const $cols = [...$div.children];
       const attribution = { $elem: $div };
       $div.classList.add('hero-animation-attribution');
