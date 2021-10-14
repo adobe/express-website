@@ -68,7 +68,8 @@ export function getIcon(icon, alt = icon, size = 44) {
     'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize', 'stickers',
     'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified',
     'brand-libraries', 'cloud-storage', 'facebook', 'twitter', 'youtube', 'tiktok', 'globe',
-    'pinterest', 'instagram', 'linkedin', 'sparkpage', 'sparkvideo', 'image', 'rush', 'exchange'];
+    'pinterest', 'instagram', 'linkedin', 'sparkpage', 'sparkvideo', 'image', 'rush', 'exchange',
+    'users', 'brandswitch', 'library', 'magicwand', 'animation'];
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
