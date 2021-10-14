@@ -63,7 +63,7 @@ export function getIcon(icon, alt = icon, size = 44) {
   'adobe-stock', 'premium-remove-background', 'brand', 'branded-templates', 'convert',
   'update-cloud-storage'];
   */
-  const symbols = ['remove-background', 'mobile-round', 'desktop-round',
+  const symbols = ['remove-background', 'mobile-round', 'desktop-round', 'elements', 'text',
     'adobe-stock', 'brand', 'convert', 'chevron', 'trim-video', 'crop-video', 'resize-video',
     'templates', 'blank', 'premium-templates', 'premium-remove-background', 'resize',
     'up-download', 'convert-png-jpg', 'cursor-browser', 'incredibly-easy', 'privacy', 'certified',
