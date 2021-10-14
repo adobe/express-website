@@ -209,6 +209,9 @@ function closeActivePopups($block, $except) {
       $activePopup.classList.remove('active');
     }
   });
+  $block.querySelectorAll(':scope .other-plan-button').forEach(($planButton) => {
+    $planButton.classList.remove('pressed');
+  });
 }
 
 function decorateOtherPlans($block, otherPlans) {
@@ -232,6 +235,8 @@ function decorateOtherPlans($block, otherPlans) {
       e.stopPropagation();
       // close all other popups
       closeActivePopups($block, $popup);
+      // toggle pressed button state
+      $planButton.classList.toggle('pressed');
       // toggle this popup
       if ($popup.classList.contains('active')) {
         $popup.classList.remove('active');
