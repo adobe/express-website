@@ -93,10 +93,12 @@ main .pricing .pricing-right .other-plans .other-plan-button {
     transition: .2s background-color ease-in;
 }
 
-main .pricing .pricing-right .other-plans .other-plan-button .icon {
-    transform: rotate(90deg);
+main .pricing .pricing-right .other-plans .other-plan-button .icon-chevron {
+  width: 16px;
+  height: 16px;
 }
 
+main .pricing .pricing-right .other-plans .other-plan-button.pressed,
 main .pricing .pricing-right .other-plans .other-plan-button:hover {
     background-color: #d4d4d4;
 }
