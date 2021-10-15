@@ -147,7 +147,7 @@ main .columns > div span.num + * {
 
 main .columns .icon {
   width: unset;
-  height: unset;
+  height: 22px;
 }
 
 main .columns .brand.icon {
