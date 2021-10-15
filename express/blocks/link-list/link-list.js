@@ -21,7 +21,7 @@ export default function decorate(block) {
     links.forEach((p) => {
       const link = p.querySelector('a');
       link.classList.add('medium', 'secondary');
-      link.classList.remove('primary');
+      link.classList.remove('accent');
     });
     const div = links[0].closest('div');
     const platformEl = document.createElement('div');
