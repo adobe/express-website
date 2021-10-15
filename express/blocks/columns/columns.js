@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global document, window */
+/* global document, window, IntersectionObserver */
 
 import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
@@ -269,30 +269,29 @@ export default function decorate($block) {
 
           const $primaryCTA = $a;
           const $floatButton = $primaryCTA.parentElement.cloneNode(true);
-          $floatButton.classList.add('fixed-button')
-          document.body.classList.add("has-fixed-button");
+          $floatButton.classList.add('fixed-button');
+          document.body.classList.add('has-fixed-button');
           $cell.appendChild($floatButton);
           $primaryCTA.classList.add('primaryCTA');
           $floatButton.style.display = 'none';
-          
-          setTimeout(function(){
+
+          setTimeout(() => {
             $floatButton.classList.remove('shown');
             $floatButton.style.display = '';
           }, 1000);
 
-          const hideButtonWhenInView = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
+          const hideButtonWhenInView = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
               if (entry.intersectionRatio > 0) {
                 $floatButton.classList.remove('shown');
               } else {
                 $floatButton.classList.add('shown');
               }
             });
-          }, {threshold: 0});
+          }, { threshold: 0 });
 
           hideButtonWhenInView.observe($primaryCTA);
           hideButtonWhenInView.observe(document.querySelector('.new-banner-container'));
-
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
