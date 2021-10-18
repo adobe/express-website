@@ -58,11 +58,6 @@ function getMeta(name) {
 }
 
 export function getIcon(icon, alt = icon, size = 44) {
-  /*
-  const symbols = ['remove-background', 'mobile-round', 'desktop-round', 'premium-templates',
-  'adobe-stock', 'premium-remove-background', 'brand', 'branded-templates', 'convert',
-  'update-cloud-storage'];
-  */
   const symbols = [
     'adobe-stock',
     'animation',
