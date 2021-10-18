@@ -64,16 +64,18 @@ function moveCarousel($parent, increment, classPrefix) {
 // eslint-disable-next-line import/prefer-default-export
 export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
   const $carouselContent = selector ? $parent.querySelectorAll(selector) : $parent.children;
-  // add templates to carousel
+  const $container = createTag('div', { class: `${classPrefix}carousel-container` });
+  // add content to carousel
   const $platform = createTag('div', { class: `${classPrefix}carousel-platform` });
   $platform.append(...$carouselContent);
-  $parent.appendChild($platform);
+  $container.appendChild($platform);
+  $parent.appendChild($container);
   // faders
   const $faderLeft = createTag('div', { class: `${classPrefix}carousel-fader-left` });
   // $faderLeft.style.display = 'none';
   const $faderRight = createTag('div', { class: `${classPrefix}carousel-fader-right` });
-  $parent.appendChild($faderLeft);
-  $parent.appendChild($faderRight);
+  $container.appendChild($faderLeft);
+  $container.appendChild($faderRight);
   // controls
   const $arrowLeft = createTag('a', { class: `button ${classPrefix}carousel-arrow ${classPrefix}carousel-arrow-left` });
   const $arrowRight = createTag('a', { class: `button ${classPrefix}carousel-arrow ${classPrefix}carousel-arrow-right` });

@@ -144,8 +144,16 @@ main .template-list.horizontal {
   min-height: 220px;
 }
 
-main .template-list.horizontal .carousel-platform {
+main .template-list.horizontal .carousel-container {
+  display: inline-block;
   position: relative;
+  height: 220px;
+  width: 100%;
+  align-items: center;
+}
+
+main .template-list.horizontal .carousel-platform {
+  position: absolute;
   width: fit-content;
   height: 220px;
   display: flex;
@@ -157,11 +165,10 @@ main .template-list.horizontal .carousel-platform {
 
 main .template-list.horizontal .carousel-fader-left {
   display: none;
-  position: relative;
+  position: absolute;
   height: 220px;
   width: 60px;
-  top: -220px;
-  float: left;
+  left: 0;
   background: linear-gradient(
     to left,
     rgba(255, 255, 255, 0),
@@ -172,10 +179,10 @@ main .template-list.horizontal .carousel-fader-left {
 
 main .template-list.horizontal .carousel-fader-right {
   display: none;
-  position: relative;
+  position: absolute;
   height: 220px;
   width: 68px;
-  top: -220px;
+  right: 0;
   float: right;
   background: linear-gradient(
     to right,
