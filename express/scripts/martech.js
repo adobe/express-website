@@ -171,6 +171,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // spark specific global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
+  function urlPathToName(text) {
+    const splits = text.toLowerCase().split('-');
+    const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
+    const pathName = camelCase.replace('Jpg', 'JPG').replace('Png', 'PNG').replace('Gif', 'GIF').replace('Mp4', 'MP4');
+    return (pathName);
+  }
+
   digitalData._set('page.pageInfo.pageurl', loc.href);
   digitalData._set('page.pageInfo.namespace', 'express');
 
@@ -188,6 +195,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   digitalData._set('spark.eventData.platformName', 'web');
   if (category) {
     digitalData._set('spark.eventData.contextualData3', `category:${category}`);
+  }
+
+  // image resize quick action
+  if (pathname.includes('/tools/')) {
+    const sparkContextualData = urlPathToName(pathname.split('/').pop());
+    digitalData._set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
   // image resize quick action
   if (pathname.includes('/feature/image/resize')) {
