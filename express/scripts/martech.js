@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document navigator digitalData _satellite fetch */
+/* global window document navigator digitalData _satellite fetch __satelliteLoadedCallback */
 
 import {
   loadScript,
@@ -19,6 +19,8 @@ import {
   getHelixEnv,
   getMetadata,
 } from './scripts.js';
+
+import Context from './context.js';
 
 // this saves on file size when this file gets minified...
 const w = window;
@@ -385,7 +387,35 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
   decorateAnalyticsEvents();
 
-  /* eslint-enable no-underscore-dangle */
+  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
+  const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
+
+  Context.set('audiences', []);
+
+  function getAudiences() {
+    const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
+    const ecid = visitorId ? visitorId.getMarketingCloudVisitorID() : null;
+
+    if (ecid) {
+      w.setAudienceManagerSegments = (json) => {
+        if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
+          const audiences = Context.get('audiences');
+          audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
+
+          digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
+          digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
+
+          _satellite.track('event', {
+            digitalData: digitalData._snapshot(),
+          });
+        }
+      };
+
+      loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
+    }
+  }
+
+  __satelliteLoadedCallback(getAudiences);
 });
 
 async function showRegionPicker() {

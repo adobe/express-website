@@ -10,16 +10,48 @@
  * governing permissions and limitations under the License.
  */
 
+/* eslint-disable no-underscore-dangle */
 /* global window, document */
 
 import {
   createTag,
 } from '../../scripts/scripts.js';
 
+import Context from '../../scripts/context.js';
+
+const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
+
+function enablePricingModal() {
+  // dev mode: check pricing-modal query parameter
+  const u = new URL(window.location.href);
+  const param = u.searchParams.get('pricing-modal');
+  if (param) {
+    if (param === 'on') return true;
+    if (param === 'off') return false;
+  }
+
+  // "production" mode: check for audience
+  const audiences = Context.get('audiences');
+  return audiences && audiences.includes(ENABLE_PRICING_MODAL_AUDIENCE);
+}
+
 function displayPopup(e) {
-  e.preventDefault();
-  e.target.removeEventListener('click', displayPopup);
-  document.querySelector('.pricing-modal-container').style.display = 'flex';
+  if (enablePricingModal()) {
+    e.preventDefault();
+    e.target.removeEventListener('click', displayPopup);
+    document.querySelector('.pricing-modal-container').style.display = 'flex';
+
+    if (window.digitalData && window._satellite) {
+      const { digitalData, _satellite } = window;
+      digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalDisplayed');
+      digitalData._set('spark.eventData.eventName', 'pricingModalDisplayed');
+
+      _satellite.track('event', {
+        digitalData: digitalData._snapshot(),
+      });
+    }
+  }
+  // else do nothing
 }
 
 function closePopup(e) {
