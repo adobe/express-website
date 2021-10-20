@@ -74,6 +74,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     'cloud-storage',
     'check',
     'desktop-round',
+    'download',
     'elements',
     'facebook',
     'globe',
@@ -100,6 +101,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     'twitter',
     'tiktok',
     'up-download',
+    'upload',
     'users',
     'youtube',
   ];
