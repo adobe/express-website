@@ -203,7 +203,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     digitalData._set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
-  // image resize quick action
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
