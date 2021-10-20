@@ -197,7 +197,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     digitalData._set('spark.eventData.contextualData3', `category:${category}`);
   }
 
-  // image resize quick action
   if (pathname.includes('/tools/')) {
     const sparkContextualData = urlPathToName(pathname.split('/').pop());
     digitalData._set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
