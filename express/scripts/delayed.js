@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document navigator digitalData _satellite fetch __satelliteLoadedCallback */
+/* global window document fetch */
 
 import {
   loadScript,
@@ -17,14 +17,10 @@ import {
   createTag,
   getLanguage,
   getHelixEnv,
-  getMetadata,
 } from './scripts.js';
 
 // this saves on file size when this file gets minified...
 const w = window;
-const d = document;
-const loc = w.location;
-const { pathname } = loc;
 
 function handleConsentSettings() {
   try {
