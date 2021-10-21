@@ -803,7 +803,6 @@ function addPromotion() {
 function postLCP() {
   const $main = document.querySelector('main');
   loadFonts();
-  const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   loadBlocks($main);
   resolveFragments();
@@ -812,9 +811,15 @@ function postLCP() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
 
+  const analyticsUrl = '/express/scripts/instrument.js';
+  if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
+    loadScript(analyticsUrl, null, 'module');
+  }
+
+  const martechUrl = '/express/scripts/delayed.js';
   // loadLazyFooter();
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 2500;
+    let ms = 3000;
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
@@ -995,7 +1000,7 @@ async function decorateTesting() {
   if ((await checkTesting(window.location.href) && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
-    loadScript('/express/scripts/martech.js', null, 'module');
+    loadScript('/express/scripts/instument.js', null, 'module');
   }
 
   if (!window.location.host.includes('adobe.com')) {
