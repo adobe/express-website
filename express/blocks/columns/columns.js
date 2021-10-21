@@ -291,7 +291,10 @@ export default function decorate($block) {
           }, { threshold: 0 });
 
           hideButtonWhenInView.observe($primaryCTA);
-          hideButtonWhenInView.observe(document.querySelector('.new-banner-container'));
+          const banner = document.querySelector('.banner-container');
+          if (banner) {
+            hideButtonWhenInView.observe(banner);
+          }
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
