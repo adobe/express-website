@@ -17,6 +17,7 @@ import {
   createTag,
   getLanguage,
   getHelixEnv,
+  sampleRUM,
 } from './scripts.js';
 
 // this saves on file size when this file gets minified...
@@ -163,3 +164,7 @@ loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`, () => {
 }).id = 'feds-script';
 
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
+
+/* Core Web Vitals RUM collection */
+
+sampleRUM('cwv');
