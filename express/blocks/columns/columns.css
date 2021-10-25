@@ -376,21 +376,6 @@ main .columns-highlight-container .column p {
     max-width: 1024px;
   }
 
-  main .columns h1 {
-    font-size: var(--heading-font-size-xxl);
-    line-height: 1.08;
-  }
-
-  main .columns h2 {
-    font-size: var(--heading-font-size-xl);
-    line-height: 1.08;
-  }
-
-  main .columns h3 {
-    font-size: var(--heading-font-size-xl);
-    line-height: 1.08;
-  }
-
   main .columns:not(.fullsize) .column:not(.column-picture) {
     padding: 40px;
   }
