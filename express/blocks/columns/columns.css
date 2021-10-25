@@ -196,6 +196,10 @@ main .columns .column .columns-iconlist > div {
   margin-top: 32px;
 }
 
+main .columns .column .columns-iconlist p {
+  margin: 0;
+}
+
 main .columns .column .columns-iconlist .columns-iconlist-icon {
   display: flex;
 }
