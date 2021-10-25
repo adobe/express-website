@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document navigator digitalData _satellite fetch __satelliteLoadedCallback */
+/* global digitalData _satellite __satelliteLoadedCallback */
 
 import {
   loadScript,

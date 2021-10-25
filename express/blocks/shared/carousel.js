@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-/* global window */
-
 import {
   createTag,
 } from '../../scripts/scripts.js';
