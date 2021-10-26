@@ -58,7 +58,7 @@ export function sampleRUM(checkpoint, data = {}) {
       }
     }
   } catch (e) {
-    // somethign went wrong
+    // something went wrong
   }
 }
 
