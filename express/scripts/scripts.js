@@ -546,7 +546,7 @@ function decorateHeaderAndFooter() {
     $header.innerHTML = html;
   } else {
     $header.innerHTML = getGnavPlaceholder({
-      signIn: 'Sign In',
+      signIn: '',
       signInLink: 'https://express.adobe.com/sp/',
       top: [],
     });
