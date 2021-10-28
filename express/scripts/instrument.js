@@ -90,6 +90,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     sparkLandingPageType = 'seo';
     // learn
   } else if (
+    pathname === '/express/tools'
+    || pathname.includes('/tools/')
+  ) {
+    sparkLandingPageType = 'quickAction';
+  } else if (
     pathname === '/express/learn'
       || (
         pathname.includes('/learn/')
@@ -140,6 +145,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // spark specific global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
+  function urlPathToName(text) {
+    const splits = text.toLowerCase().split('-');
+    const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
+    const pathName = camelCase.replace('Jpg', 'JPG').replace('Png', 'PNG').replace('Gif', 'GIF').replace('Mp4', 'MP4');
+    return (pathName);
+  }
+
   digitalData._set('page.pageInfo.pageurl', loc.href);
   digitalData._set('page.pageInfo.namespace', 'express');
 
@@ -158,7 +170,12 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   if (category) {
     digitalData._set('spark.eventData.contextualData3', `category:${category}`);
   }
-  // image resize quick action
+
+  if (pathname.includes('/tools/')) {
+    const sparkContextualData = urlPathToName(pathname.split('/').pop());
+    digitalData._set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  }
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
@@ -306,13 +323,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
         adobeEventName = 'adobe.com:express:CTA:pricing:viewPlans:Click';
         sparkEventName = 'landing:viewPlansPressed';
       }
-
-      // quick actions clicks
-    } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
+    // quick actions clicks
+    } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
-
-      // Default clicks
+    // Default clicks
     } else {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'landing:ctaPressed';
