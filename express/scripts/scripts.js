@@ -11,6 +11,59 @@
  */
 /* eslint-disable no-console */
 
+/**
+ * log RUM if part of the sample.
+ * @param {string} checkpoint identifies the checkpoint in funnel
+ * @param {Object} data additional data for RUM sample
+ */
+
+export function sampleRUM(checkpoint, data = {}) {
+  try {
+    window.hlx = window.hlx || {};
+    if (!window.hlx.rum) {
+      const usp = new URLSearchParams(window.location.search);
+      const weight = (usp.get('rum') === 'on') ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
+      // eslint-disable-next-line no-bitwise
+      const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
+      const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
+      const random = Math.random();
+      const isSelected = (random * weight < 1);
+      // eslint-disable-next-line object-curly-newline
+      window.hlx.rum = { weight, id, random, isSelected };
+    }
+    const { random, weight, id } = window.hlx.rum;
+    if (random && (random * weight < 1)) {
+      const sendPing = () => {
+        // eslint-disable-next-line object-curly-newline
+        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: 'ccx-gen1', checkpoint, ...data });
+        const url = `https://rum.hlx3.page/.rum/${weight}`;
+        // eslint-disable-next-line no-unused-expressions
+        navigator.sendBeacon(url, body);
+      };
+      sendPing();
+      // special case CWV
+      if (checkpoint === 'cwv') {
+        import('https://unpkg.com/web-vitals?module').then((mod) => {
+          const storeCWV = (measurement) => {
+            data.cwv = {};
+            data.cwv[measurement.name] = measurement.value;
+            sendPing();
+          };
+          mod.getCLS(storeCWV);
+          mod.getFID(storeCWV);
+          mod.getLCP(storeCWV);
+        });
+      }
+    }
+  } catch (e) {
+    // something went wrong
+  }
+}
+
+sampleRUM('top');
+window.addEventListener('load', () => sampleRUM('load'));
+document.addEventListener('click', () => sampleRUM('click'));
+
 const postEditorLinksAllowList = ['adobesparkpost.app.link', 'spark.adobe.com/sp/design', 'express.adobe.com/sp/design'];
 
 export function addPublishDependencies(url) {
@@ -801,7 +854,6 @@ function addPromotion() {
 function postLCP() {
   const $main = document.querySelector('main');
   loadFonts();
-  const martechUrl = '/express/scripts/martech.js';
   loadCSS('/express/styles/lazy-styles.css');
   loadBlocks($main);
   resolveFragments();
@@ -810,9 +862,15 @@ function postLCP() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
 
+  const analyticsUrl = '/express/scripts/instrument.js';
+  if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
+    loadScript(analyticsUrl, null, 'module');
+  }
+
+  const martechUrl = '/express/scripts/delayed.js';
   // loadLazyFooter();
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 2500;
+    let ms = 3000;
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
@@ -993,7 +1051,7 @@ async function decorateTesting() {
   if ((await checkTesting(window.location.href) && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
-    loadScript('/express/scripts/martech.js', null, 'module');
+    loadScript('/express/scripts/instument.js', null, 'module');
   }
 
   if (!window.location.host.includes('adobe.com')) {
