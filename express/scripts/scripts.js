@@ -1300,7 +1300,7 @@ function decorateSocialIcons($main) {
 }
 
 function makeRelativeLinks($main) {
-  $main.querySelectorAll(':scope > a').forEach(($a) => {
+  $main.querySelectorAll('a').forEach(($a) => {
     if (!$a.href) return;
     try {
       const url = new URL($a.href);
