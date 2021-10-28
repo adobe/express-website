@@ -443,7 +443,9 @@ main p {
 }
 
 main a:any-link {
-  color: var(--body-color);
+  color: var(--color-info-accent);
+  text-decoration: none;
+  font-weight: 600;
 }
 
 main img {
