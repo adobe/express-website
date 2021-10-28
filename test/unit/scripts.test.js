@@ -16,6 +16,7 @@
 import {
   createTag,
   normalizeHeadings,
+  decorateButtons,
 } from '../../express/scripts/scripts.js';
 
 describe('scripts#normalizeHeadings', () => {
@@ -65,6 +66,43 @@ describe('scripts#normalizeHeadings', () => {
       '<h1>Heading 1</h1><h2>Heading 2</h2><p>Some text</p><h3>Heading 3</h3><p>Some more text</p><h4>Heading 4</h4><p>Some text again</p>',
       ['h6'],
       '<h6>Heading 1</h6><h6>Heading 2</h6><p>Some text</p><h6>Heading 3</h6><p>Some more text</p><h6>Heading 4</h6><p>Some text again</p>',
+    );
+  });
+});
+
+describe('scripts#decorateButtons', () => {
+  const runTest = (blockContent, expected) => {
+    const block = createTag('div');
+    block.innerHTML = blockContent;
+    decorateButtons(block);
+    expect(block.innerHTML).to.equal(expected);
+  };
+
+  it('decorateButtons - default button (CTA)', () => {
+    runTest(
+      '<p><a href="https://www.adobe.com/">A button</a></p>',
+      '<p class="button-container"><a href="https://www.adobe.com/" title="A button" class="button accent">A button</a></p>',
+    );
+  });
+
+  it('decorateButtons - alternative button', () => {
+    runTest(
+      '<p><em><a href="https://www.adobe.com/">A button</a></em></p>',
+      '<p class="button-container"><em><a href="https://www.adobe.com/" title="A button" class="button accent light">A button</a></em></p>',
+    );
+  });
+
+  it('decorateButtons - no button if href and link text match', () => {
+    runTest(
+      '<p><a href="https://www.adobe.com/">https://www.adobe.com/</a></p>',
+      '<p><a href="https://www.adobe.com/" title="https://www.adobe.com/">https://www.adobe.com/</a></p>',
+    );
+  });
+
+  it('decorateButtons - no button if link text ends with >', () => {
+    runTest(
+      '<p><a href="https://www.adobe.com/">Check this out &gt;</a></p>',
+      '<p><a href="https://www.adobe.com/" title="Check this out >">Check this out &gt;</a></p>',
     );
   });
 });
