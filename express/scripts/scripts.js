@@ -928,7 +928,9 @@ export function decorateButtons(block = document) {
     if ($block) {
       blockName = $block.className;
     }
-    if (!noButtonBlocks.includes(blockName) && (originalHref !== $a.textContent)) {
+    if (!noButtonBlocks.includes(blockName)
+      && originalHref !== $a.textContent
+      && !$a.textContent.endsWith(' >')) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
