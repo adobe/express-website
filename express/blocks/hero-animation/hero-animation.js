@@ -152,6 +152,8 @@ export default function decorate($block) {
       $attributions.append($div);
     }
   });
+  const button = $block.querySelector('.button');
+  if (button) button.classList.add('large');
   $block.append($attributions);
   $block.classList.add('appear');
 }

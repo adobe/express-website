@@ -33,13 +33,12 @@ main .hero-animation video {
 }
 
 main .hero-animation .hero-animation-overlay p {
-    margin: 21px 0;
+    margin: 16px 0;
 }
 
 main .hero-animation .icon {
     height: 40px;
     width: 40px;
-    margin-bottom: 11px;
 }
 
 main .hero-animation .hero-animation-attributions {
@@ -88,7 +87,7 @@ main .hero-animation .hero-animation-overlay {
 
 main .hero-animation h1 {
     font-size: var(--heading-font-size-xl);
-    line-height: 45px;
+    margin: 16px 0;
 }
 
 main .hero-animation .icon-adobe-creative-cloud-express {
@@ -104,6 +103,7 @@ main .hero-animation .icon-adobe-creative-cloud-express {
 
 
 @media (min-width: 900px) {
+    
     body.no-desktop-brand-header header, body.no-brand-header header {
         height: 64px;
         background-image: unset;
@@ -113,27 +113,27 @@ main .hero-animation .icon-adobe-creative-cloud-express {
         padding-top: 0;
     }    
 
+    main .hero-animation-container > div {
+        padding: 0 56px;
+    }
+
     main .hero-animation .hero-animation-overlay {
-        width: 35%;
+        width: 290px;
         justify-content: center;
     }
 
-    main .hero-animation .icon-adobe-creative-cloud-express {
-        height: 119px;
-        width: 373px;
-        margin: 0;
-        margin-bottom: 10px;
-        display: block;
+    main .hero-animation .icon {
+        height: 65px;
+        width: 65px;
     }
     
     main .hero-animation h1 {
-        font-size: var(--heading-font-size-l);
-        line-height: 40px;
+        font-size: var(--heading-font-size-xxl);
     }
 
     main .hero-animation .hero-animation-overlay p.button-container {
         text-align: left;
-        margin: 0;
+        margin: 16px 0;
     }
 
     main .hero-animation .hero-animation-overlay p.button-container a.button:any-link {
