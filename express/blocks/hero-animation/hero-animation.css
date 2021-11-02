@@ -102,7 +102,7 @@ main .hero-animation .icon-adobe-creative-cloud-express {
 }
 
 
-@media (min-width: 900px) {
+@media (min-width: 950px) {
     
     body.no-desktop-brand-header header, body.no-brand-header header {
         height: 64px;
@@ -146,4 +146,10 @@ main .hero-animation .icon-adobe-creative-cloud-express {
         bottom: unset;
         right: 50px;
     }
+}
+
+@media (min-width: 1800px) {
+    main .hero-animation-container > div {
+        max-width: 65%;
+    }    
 }
