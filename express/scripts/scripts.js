@@ -407,9 +407,19 @@ export function getLanguage(locale) {
   return language;
 }
 
-export function formatPrice(price, currency) {
-  return new Intl.NumberFormat(navigator.lang, { style: 'currency', currency })
-    .format(price);
+function getCurrencyDisplay(currency) {
+  if (currency === 'JPY') {
+    return 'name';
+  }
+  return 'symbol';
+}
+
+export function formatPrice(price, currency, currencyDisplay) {
+  return new Intl.NumberFormat(navigator.language, {
+    style: 'currency',
+    currency,
+    currencyDisplay,
+  }).format(price);
 }
 
 export async function getOffer(offerId, countryOverride) {
@@ -422,6 +432,7 @@ export async function getOffer(offerId, countryOverride) {
     country = 'us';
     currency = 'USD';
   }
+  const currencyDisplay = getCurrencyDisplay(currency);
   const resp = await fetch('/express/system/offers.json');
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
@@ -431,7 +442,7 @@ export async function getOffer(offerId, countryOverride) {
   if (offer) {
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
-    const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
+    const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency, currencyDisplay);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
     return {
       country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang,
