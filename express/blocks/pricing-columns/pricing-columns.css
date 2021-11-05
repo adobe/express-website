@@ -46,6 +46,7 @@ main .pricing-columns-price {
 main .pricing-columns-price strong {
     margin-top: -10px;
     font-size: var(--heading-font-size-xxl);
+    font-weight: var(--heading-font-weight);
 }
 
 main .pricing-columns-dropdown {
@@ -62,6 +63,56 @@ main .pricing-columns-cta.button {
     margin: 40px 0 0 0;
 }
 
-main .pricing-columns-dropdown {
+main .pricing-columns-content {
+    text-align: left;
+}
 
+main .pricing-columns-content h3 {
+    font-size: var(--body-font-size-xl);
+    line-height: var(--body-line-height);
+    margin-bottom: 40px;
+}
+
+main .pricing-columns-content h6 {
+    font-weight: var(--body-font-weight);
+    font-size: var(--body-font-size-s);
+    line-height: var(--body-line-height);
+    margin: 40px 0;
+}
+
+main .pricing-columns-content .pricing-iconList {
+    padding: 0 0 40px 0;
+}
+
+main .pricing-columns-content .pricing-iconlist > div {
+    display: flex;
+}
+
+main .pricing-columns-content .pricing-iconlist .pricing-iconlist-icon {
+    display: flex;
+    padding: 2px 0 20px 0;
+}
+
+main .pricing-columns-content .pricing-iconlist .pricing-iconlist-icon svg,
+main .pricing-columns-content .pricing-iconlist .pricing-iconlist-icon img {
+    width: 44px;
+    height: 44px;
+}
+
+main .pricing-columns-content .pricing-iconlist .pricing-iconlist-description {
+    display: flex;
+    flex: 1;
+    text-align: left;
+    margin-left: 10px;
+    padding: 0 0 20px 0;
+}
+
+main .pricing-columns-content .pricing-iconlist .pricing-iconlist-description p {
+    font-size: var(--body-font-size-m);
+    margin: 0;
+}
+
+main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconlist-description > p {
+    margin: 0;
+    font-size: var(--body-font-size-l);
 }

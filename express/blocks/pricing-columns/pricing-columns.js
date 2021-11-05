@@ -16,7 +16,6 @@ import {
   createTag,
   getHelixEnv,
   getOffer,
-  getIcon,
 } from '../../scripts/scripts.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
@@ -85,10 +84,10 @@ export function buildUrl(optionUrl, country, language) {
   return planUrl.href;
 }
 
-function decorateIconList($pricingRight) {
+function decorateIconList($column) {
   let $iconList = createTag('div', { class: 'pricing-iconlist' });
   let $iconListDescription;
-  [...$pricingRight.firstChild.childNodes].forEach(($e) => {
+  Array.from($column.children).forEach(($e) => {
     const $img = $e.querySelector('img.icon, svg.icon');
     if ($img) {
       const $iconListRow = createTag('div');
@@ -101,13 +100,13 @@ function decorateIconList($pricingRight) {
       $iconList.appendChild($iconListRow);
     } else {
       if ($iconList.children.length > 0) {
-        $pricingRight.appendChild($iconList);
+        $column.appendChild($iconList);
         $iconList = createTag('div', { class: 'pricing-iconlist' });
       }
-      $pricingRight.appendChild($e);
+      $column.appendChild($e);
     }
   });
-  if ($iconList.children.length > 0) $pricingRight.appendChild($iconList);
+  if ($iconList.children.length > 0) $column.appendChild($iconList);
 }
 
 async function selectPlan($pricingHeader, planUrl) {
@@ -210,9 +209,12 @@ function decoratePricingColumns($block) {
     if ($column.innerHTML.length) {
       const $pricingColumnsContent = createTag('div', { class: 'pricing-columns-content' });
       $pricingColumnsContent.innerHTML = $column.innerHTML;
+      decorateIconList($pricingColumnsContent);
       $block.append($pricingColumnsContent);
     }
   });
+
+  addPublishDependencies('/express/system/offers.json');
 }
 
 export default function decorate($block) {
