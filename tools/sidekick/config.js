@@ -18,7 +18,6 @@
     host: 'www.stage.adobe.com',
     byocdn: true,
     hlx3: true,
-    pushDownSelector: 'header',
     plugins: [
       // METADATA ---------------------------------------------------------------------
       {
