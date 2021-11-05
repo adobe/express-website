@@ -160,8 +160,10 @@ function decoratePlan($column) {
   $pricingHeader.append($pricingTitle);
 
   if (plans) {
+    const $pricingPlan = createTag('div', { class: 'pricing-columns-plan' });
     const $pricingPrice = createTag('span', { class: 'pricing-columns-price' });
-    $pricingHeader.append($pricingPrice);
+
+    $pricingPlan.append($pricingPrice);
 
     if (plans.length > 1) {
       const $pricingDropdown = createTag('select', { class: 'pricing-columns-dropdown' });
@@ -173,11 +175,13 @@ function decoratePlan($column) {
       plans.forEach((plan) => {
         const $option = createTag('option', { value: plan.url });
         $option.innerHTML = plan.name;
-        $pricingDropdown.prepend($option);
+        $pricingDropdown.append($option);
       });
 
-      $pricingHeader.append($pricingDropdown);
+      $pricingPlan.append($pricingDropdown);
     }
+
+    $pricingHeader.append($pricingPlan);
 
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
     $pricingCta.innerHTML = $elements[1].innerHTML;
@@ -188,6 +192,7 @@ function decoratePlan($column) {
   }
 
   if (!$elements[$elements.length - 1].classList.contains('button-container')) {
+    $elements[$elements.length - 1].classList.add('pricing-columns-cta-text');
     $pricingHeader.append($elements[$elements.length - 1]);
   }
 
