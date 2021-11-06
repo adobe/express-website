@@ -18,6 +18,11 @@ main .hero-animation-container {
     position: relative;
 }
 
+main .hero-animation-container > div {
+    padding: 0;
+}
+
+
 main .hero-animation video {
     position: absolute;
     top: 0;
@@ -71,7 +76,7 @@ main .hero-animation .hero-animation-attribution img {
 }
 
 main .hero-animation {
-    padding-top: max(57%, 400px);
+    padding-top: 134%;
 }
 
 
@@ -83,6 +88,10 @@ main .hero-animation .hero-animation-overlay {
     text-align: left;
     display: flex;
     flex-direction: column;
+    padding: 16px 15px;
+    margin: auto;
+    max-width: 500px;
+    box-sizing: border-box;
 }
 
 main .hero-animation h1 {
@@ -101,6 +110,21 @@ main .hero-animation .icon-adobe-creative-cloud-express {
     display: none;
 }
 
+main .hero-animation .hero-animation-overlay p.button-container {
+    text-align: left;
+    margin: 16px 0;
+}
+
+main .hero-animation .hero-animation-overlay p.button-container a.button:any-link {
+    margin: 0;
+}
+
+
+@media (min-width: 400px) {
+    main .hero-animation {
+        padding-top: max( 49%, 375px);
+    }
+}
 
 @media (min-width: 950px) {
     
@@ -120,6 +144,8 @@ main .hero-animation .icon-adobe-creative-cloud-express {
     main .hero-animation .hero-animation-overlay {
         width: 290px;
         justify-content: center;
+        margin: unset;
+        padding: 0;
     }
 
     main .hero-animation .icon {
@@ -129,15 +155,6 @@ main .hero-animation .icon-adobe-creative-cloud-express {
     
     main .hero-animation h1 {
         font-size: var(--heading-font-size-xxl);
-    }
-
-    main .hero-animation .hero-animation-overlay p.button-container {
-        text-align: left;
-        margin: 16px 0;
-    }
-
-    main .hero-animation .hero-animation-overlay p.button-container a.button:any-link {
-        margin: 0;
     }
 
     main .hero-animation .hero-animation-attribution.hero-animation-top-right {
