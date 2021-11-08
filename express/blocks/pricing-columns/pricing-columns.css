@@ -36,6 +36,12 @@ main .pricing-columns-title {
     line-height: var(--heading-line-height);
 }
 
+main .pricing-columns-title-icon svg {
+    width: 26px;
+    height: 26px;
+    fill: black;
+}
+
 main .pricing-columns-plan {
     display: flex;
     flex-wrap: wrap;

@@ -145,6 +145,8 @@ export function getIcon(icon, alt = icon, size = 44) {
     'photoeffects',
     'pinterest',
     'premium-templates',
+    'pricingfree',
+    'pricingpremium',
     'privacy',
     'remove-background',
     'resize',
@@ -169,7 +171,7 @@ export function getIcon(icon, alt = icon, size = 44) {
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
-    if (icon === 'chevron') sheetSize = 22;
+    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
