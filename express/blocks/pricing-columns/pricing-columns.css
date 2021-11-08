@@ -188,6 +188,20 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
 }
 
 @media (min-width: 1200px) {
+    main .pricing-columns {
+        position: relative;
+    }
+
+    main .pricing-columns::after {
+        position: absolute;
+        content: '';
+        width: 1px;
+        height: 80%;
+        background-color: #EAEAEA;
+        left: 50%;
+        top: 15%;
+    }
+
     main .pricing-columns-container > div {
         max-width: 1100px;
     }
