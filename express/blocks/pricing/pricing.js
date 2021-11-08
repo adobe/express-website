@@ -38,16 +38,16 @@ export function buildUrl(optionUrl, country, language) {
   let rUrl = planUrl.searchParams.get('rUrl');
   if (currentUrl.searchParams.has('host')) {
     const hostParam = currentUrl.searchParams.get('host');
-    if (hostParam === 'spark.adobe.com') {
+    if (hostParam === 'express.adobe.com') {
       planUrl.hostname = 'commerce.adobe.com';
-      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
     } else if (hostParam.includes('qa.adobeprojectm.com')) {
       planUrl.hostname = 'commerce.adobe.com';
-      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
     } else if (hostParam.includes('.adobeprojectm.com')) {
       planUrl.hostname = 'commerce-stg.adobe.com';
       if (rUrl) rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
-      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
     }
   }
 
