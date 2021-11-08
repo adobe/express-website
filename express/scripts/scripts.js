@@ -110,6 +110,7 @@ function getMeta(name) {
 
 export function getIcon(icon, alt = icon, size = 44) {
   const symbols = [
+    'adobefonts',
     'adobe-stock',
     'animation',
     'blank',
@@ -133,12 +134,15 @@ export function getIcon(icon, alt = icon, size = 44) {
     'incredibly-easy',
     'instagram',
     'image',
-    'linkedin',
+    'libraries',
     'library',
+    'linkedin',
     'magicwand',
     'mergevideo',
     'mobile-round',
     'muteaudio',
+    'photos',
+    'photoeffects',
     'pinterest',
     'premium-templates',
     'privacy',
@@ -159,6 +163,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     'up-download',
     'upload',
     'users',
+    'webmobile',
     'youtube',
   ];
   if (symbols.includes(icon)) {
