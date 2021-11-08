@@ -37,16 +37,16 @@ export function buildUrl(optionUrl, country, language) {
   let rUrl = planUrl.searchParams.get('rUrl');
   if (currentUrl.searchParams.has('host')) {
     const hostParam = currentUrl.searchParams.get('host');
-    if (hostParam === 'spark.adobe.com') {
+    if (hostParam === 'express.adobe.com') {
       planUrl.hostname = 'commerce.adobe.com';
-      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
     } else if (hostParam.includes('qa.adobeprojectm.com')) {
       planUrl.hostname = 'commerce.adobe.com';
-      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
     } else if (hostParam.includes('.adobeprojectm.com')) {
       planUrl.hostname = 'commerce-stg.adobe.com';
       if (rUrl) rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
-      if (rUrl) rUrl = rUrl.replace('spark.adobe.com', hostParam);
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
     }
   }
 
@@ -112,12 +112,19 @@ function decorateIconList($column) {
 async function selectPlan($pricingHeader, planUrl) {
   const link = new URL(planUrl);
   const params = link.searchParams;
+  let offerId = null;
+
+  if (planUrl.includes('/sp/')) {
+    offerId = 'FREE0';
+  } else {
+    offerId = params.get('items[0][id]');
+  }
 
   const plan = {
+    offerId,
     url: planUrl,
     country: 'us',
     language: 'en',
-    offerId: params.get('items[0][id]'),
     price: '9.99',
     currency: 'US',
     symbol: '$',
