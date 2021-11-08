@@ -126,11 +126,10 @@ function selectPlan($block, plan) {
 async function selectPlanOption($block, plan, planOption) {
   const $priceLine = $block.querySelector('.pricing-plan-price');
   const $cta = $block.querySelector('.cta');
-
   const countryOverride = new URLSearchParams(window.location.search).get('country');
   const offer = await getOffer(planOption.offerId, countryOverride);
 
-  if (offer) {
+  if (offer && offer.commerceURL) {
     plan.currency = offer.currency;
     plan.price = offer.unitPrice;
     plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
