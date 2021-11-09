@@ -150,7 +150,7 @@ main .columns .icon {
   height: 22px;
 }
 
-main .columns .brand.icon {
+main .columns:first-of-type .brand.icon {
   display: none;
 }
 
@@ -158,7 +158,7 @@ main .fixed-button.button-container {
   display: none;
 }
 
-body.no-brand-header main .columns .brand.icon {
+body.no-brand-header main .columns:first-of-type .brand.icon {
   display: unset;
   height: 32px;
   width: max-content;
@@ -302,7 +302,7 @@ main .columns-highlight-container .column p {
 
 
 @media (min-width: 900px) {
-  body.no-brand-header main .columns .brand.icon {
+  body.no-brand-header main .columns:first-of-type .brand.icon {
     position: unset;
     top: unset;
     left: unset;
@@ -342,7 +342,11 @@ main .columns-highlight-container .column p {
     width: 50%;
     box-sizing: border-box;
   }
-  
+
+  main .section-wrapper div.columns > div > div:only-child {
+    width: 100%;
+  }
+
   main .columns > div span.num {
     font-size: 22px;
     line-height: 29px;

@@ -15,8 +15,7 @@ import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/sc
 function decorateIconList($columnCell) {
   const icons = $columnCell.querySelectorAll('img.icon, svg.icon');
   if (icons.length === 1
-    && icons[0].closest('p').innerText === ''
-    && $columnCell.closest('.columns.fullsize')) {
+    && icons[0].closest('p').innerText === '') {
     // treat single icon without text in a fullsize column cell as brand icon
     icons[0].classList.add('brand');
     $columnCell.parentElement.classList.add('has-brand');

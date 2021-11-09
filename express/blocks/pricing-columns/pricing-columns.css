@@ -28,7 +28,7 @@ main .pricing-columns-header {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 40px 0;
+    margin-bottom: 40px;
 }
 
 main .pricing-columns-title {
@@ -139,7 +139,7 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
 @media (min-width: 900px) {
     main .pricing-columns {
         max-width: 600px;
-        margin: 80px auto;
+        margin: 0 auto 80px auto;
     }
 
     main .pricing-columns-cta.button {
