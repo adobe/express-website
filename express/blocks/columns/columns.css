@@ -105,6 +105,7 @@ main .columns > div {
 
 main .columns.center .column {
   text-align: center;
+  margin: 0 24px;
 }
 
 main .columns.center .column p.button-container {
@@ -351,7 +352,11 @@ main .columns-highlight-container .column p {
     font-size: 22px;
     line-height: 29px;
     display: block;
-  }  
+  }
+  
+main .columns .column {
+  margin: 0;
+}
 
   main .columns.width-2-columns .column-picture {
     order: 0;
