@@ -33,9 +33,10 @@ w.marketingtech = {
       environment: 'production',
     },
     analytics: {
-      additionalAccounts: 'adbemmarvelweb.prod',
+      additionalAccounts: 'adbemmarvelweb.prod, adbadobesparkprod',
     },
     target: true,
+    audienceManager: true,
   },
 };
 w.targetGlobalSettings = w.targetGlobalSettings || {};
