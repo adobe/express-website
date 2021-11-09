@@ -87,6 +87,7 @@ main .pricing-columns-content {
 }
 
 main .pricing-columns-content h3 {
+    font-family: var(--heading-font-family);
     font-size: var(--body-font-size-xl);
     font-weight: 600;
     line-height: var(--body-line-height);
