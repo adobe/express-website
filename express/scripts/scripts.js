@@ -1043,7 +1043,10 @@ export function decorateButtons(block = document) {
 
 async function checkTesting(url) {
   const pathname = new URL(url).pathname.split('.')[0];
-  const resp = await fetch('/express/testing.json');
+  const resp = await fetch('/express/testing.json', {
+    credentials: 'include',
+    mode: 'no-cors',
+  });
   if (resp.ok) {
     const json = await resp.json();
     const matches = json.data.filter((test) => {
