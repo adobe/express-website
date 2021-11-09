@@ -88,6 +88,7 @@ main .pricing-columns-content {
 
 main .pricing-columns-content h3 {
     font-size: var(--body-font-size-xl);
+    font-weight: 600;
     line-height: var(--body-line-height);
     margin-bottom: 40px;
     text-align: left;
