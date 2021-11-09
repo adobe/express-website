@@ -151,6 +151,7 @@ function decoratePlan($column) {
   const $elements = Array.from($column.children);
   const $pricingHeader = createTag('div', { class: 'pricing-columns-header' });
   const $pricingTitle = createTag('h3', { class: 'pricing-columns-title' });
+  const $pricingTitleIcon = createTag('span', { class: 'pricing-columns-title-icon' });
   const plans = [];
 
   $elements.forEach(($element) => {
@@ -164,6 +165,8 @@ function decoratePlan($column) {
   });
 
   $pricingTitle.innerHTML = $elements[0].innerHTML;
+  $pricingTitleIcon.innerHTML = $elements[1].innerHTML;
+  $pricingTitle.prepend($pricingTitleIcon);
   $pricingHeader.append($pricingTitle);
 
   if (plans) {
@@ -191,7 +194,7 @@ function decoratePlan($column) {
     $pricingHeader.append($pricingPlan);
 
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
-    $pricingCta.innerHTML = $elements[1].innerHTML;
+    $pricingCta.innerHTML = $elements[2].innerHTML;
     $pricingCta.href = plans[0].url;
     $pricingHeader.append($pricingCta);
 
