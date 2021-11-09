@@ -1150,17 +1150,18 @@ function setTemplate() {
 }
 
 function setLCPTrigger() {
+  const lcpListener = ({ target }) => {
+    postLCP();
+    target.removeEventListener('load', lcpListener);
+    target.removeEventListener('error', lcpListener);
+  };
   const $lcpCandidate = document.querySelector('main > div:first-of-type img');
   if ($lcpCandidate) {
     if ($lcpCandidate.complete) {
       postLCP();
     } else {
-      $lcpCandidate.addEventListener('load', () => {
-        postLCP();
-      });
-      $lcpCandidate.addEventListener('error', () => {
-        postLCP();
-      });
+      $lcpCandidate.addEventListener('load', lcpListener);
+      $lcpCandidate.addEventListener('error', lcpListener);
     }
   } else {
     postLCP();
