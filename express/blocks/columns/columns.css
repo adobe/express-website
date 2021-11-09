@@ -34,6 +34,18 @@ main .columns-highlight-container {
 
 main .columns p {
   margin: 16px 0;
+  font-size: var(--body-font-size-l);
+  line-height: 1.33;
+}
+
+main .columns p.powered-by {
+  font-size: var(--body-font-size-m);
+  line-height: 1.2;
+}
+
+main .columns p.legal-copy {
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
 }
 
 main .columns p.button-container {
@@ -75,16 +87,6 @@ main .columns h6 {
 main .columns:first-of-type {
   visibility: unset;
   min-height: unset;
-}
-
-main .columns p {
-  font-size: var(--body-font-size-xl);
-  line-height: 1.16;
-}
-
-main .columns p.powered-by {
-  font-size: var(--body-font-size-m);
-  line-height: 1.2;
 }
 
 main .columns.width-2-columns .column-picture {
