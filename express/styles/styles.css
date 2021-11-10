@@ -231,11 +231,23 @@ body.no-brand-header header, body.no-desktop-brand-header header {
     }
 
     #header-placeholder .desktop .top .button {
-        font-size: 14px;
-        margin-left: 0px;
-        font-weight: 700;
-        padding: 6px 16px 5px 16px;
-        background-color: var(--color-info-accent);
+      font-size: 14px;
+      margin-left: 0px;
+      font-weight: 700;
+      padding: 6px 16px 5px 16px;
+      background-color: var(--color-info-accent);
+      border-color: var(--color-info-accent);
+      color: var(--color-white);
+    }
+
+    #header-placeholder .desktop .top .button:hover {
+      background-color: var(--color-info-accent-hover);
+      border-color: var(--color-info-accent-hover);
+    }
+
+    #header-placeholder .desktop .top .button:active {
+      background-color: var(--color-info-accent-down);
+      border-color: var(--color-info-accent-down);
     }
 
     #header-placeholder .desktop .top .selected {
@@ -364,19 +376,38 @@ a.button.small:any-link {
 }
 
 a.button:any-link,
+a.button.accent:any-link, 
+a.button.primaryCTA:any-link {
+  color: var(--color-white);
+  background-color: var(--color-info-accent);
+  border-color: var(--color-info-accent);
+}
+
+a.button:any-link:hover,
+a.button.accent:any-link:hover,
+a.button.primaryCTA:any-link:hover {
+  background-color: var(--color-info-accent-hover);
+  border-color: var(--color-info-accent-hover);
+}
+
+a.button:any-link:active,
+a.button.accent:any-link:active,
+a.button.primaryCTA:any-link:active {
+  background-color: var(--color-info-accent-down);
+  border-color: var(--color-info-accent-down);
+}
+
 a.button.primary:any-link {
   color: var(--color-white);
   background-color: var(--color-info-primary);
   border-color: var(--color-info-primary);
 }
 
-a.button:any-link:hover,
 a.button.primary:any-link:hover {
   background-color: var(--color-info-primary-hover);
   border-color: var(--color-info-primary-hover);
 }
 
-a.button:any-link:active,
 a.button.primary:any-link:active {
   background-color: var(--color-info-primary-down);
   border-color: var(--color-info-primary-down);
@@ -396,25 +427,6 @@ a.button.secondary:any-link:hover {
 a.button.secondary:any-link:active {
   background-color: var(--color-info-secondary-down);
   border-color: var(--color-info-secondary-down);
-}
-
-a.button.accent:any-link, 
-a.button.primaryCTA:any-link {
-  color: var(--color-white);
-  background-color: var(--color-info-accent);
-  border-color: var(--color-info-accent);
-}
-
-a.button.accent:any-link:hover,
-a.button.primaryCTA:any-link:hover {
-  background-color: var(--color-info-accent-hover);
-  border-color: var(--color-info-accent-hover);
-}
-
-a.button.accent:any-link:active,
-a.button.primaryCTA:any-link:active {
-  background-color: var(--color-info-accent-down);
-  border-color: var(--color-info-accent-down);
 }
 
 a.button.reverse:any-link {
