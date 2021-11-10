@@ -199,9 +199,6 @@ function runScaleHeadings() {
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  if ($rows.length > 1) {
-    $block.classList.add('table');
-  }
 
   let numCols = 0;
   if ($rows[0]) numCols = $rows[0].children.length;
