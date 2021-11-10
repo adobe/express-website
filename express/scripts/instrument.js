@@ -325,7 +325,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
         // View plans
       } else {
         adobeEventName = 'adobe.com:express:CTA:pricing:viewPlans:Click';
-        sparkEventName = 'landing:viewPlansPressed';
+        sparkEventName = 'landing:ctaPressed';
       }
     // quick actions clicks
     } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
@@ -369,6 +369,25 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       $button.addEventListener('click', () => {
         const adobeEventName = 'adobe.com:express:cta:startYourFreeTrial:close';
         const sparkEventName = adobeEventName;
+
+        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+        digitalData._set('spark.eventData.eventName', sparkEventName);
+
+        _satellite.track('event', {
+          digitalData: digitalData._snapshot(),
+        });
+
+        digitalData._delete('primaryEvent.eventInfo.eventName');
+        digitalData._delete('spark.eventData.eventName');
+      });
+    }
+
+    // for tracking just the commitment type dropdown on pricing page
+    const $dropdown = d.querySelector('.pricing-plan-dropdown');
+    if ($dropdown) {
+      $dropdown.addEventListener('change', () => {
+        const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
+        const sparkEventName = 'pricing:commitmentTypeSelected';
 
         digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
         digitalData._set('spark.eventData.eventName', sparkEventName);
