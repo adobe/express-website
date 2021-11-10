@@ -382,18 +382,6 @@ a.button.primary:any-link:active {
   border-color: var(--color-info-primary-down);
 }
 
-a.button:any-link:hover,
-a.button.primary:any-link:hover {
-  background-color: var(--color-info-primary-hover);
-  border-color: var(--color-info-primary-hover);
-}
-
-a.button:any-link:active,
-a.button.primary:any-link:active {
-  background-color: var(--color-info-primary-down);
-  border-color: var(--color-info-primary-down);
-}
-
 a.button.secondary:any-link {
   color: var(--color-black);
   background-color: var(--color-info-secondary);
