@@ -910,7 +910,7 @@ async function fetchAuthorImage($image, author) {
 }
 
 function decorateHero() {
-  const isBlog = document.documentElement.classList.contains('blog');
+  const isBlog = document.body.classList.contains('blog');
   const $h1 = document.querySelector('main h1');
   // check if h1 is inside a block
 
@@ -1140,17 +1140,6 @@ async function decorateTesting() {
     // console.log(`Test is not run => ${reason}`);
   }
 }
-function setTemplate() {
-  const path = window.location.pathname;
-  let template = 'default';
-  if (path.includes('/make/')) {
-    template = 'make';
-  } else if (path.includes('/blog/')) {
-    template = 'blog';
-  }
-  // todo: read template from page metadata
-  document.documentElement.classList.add(template);
-}
 
 function setLCPTrigger() {
   const lcpListener = ({ target }) => {
@@ -1257,12 +1246,18 @@ function splitSections($main) {
 
 function setTheme() {
   const theme = getMeta('theme');
+  const $body = document.body;
   if (theme) {
     let themeClass = toClassName(theme);
     /* backwards compatibility can be removed again */
     if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
-    const $body = document.body;
     $body.classList.add(themeClass);
+  } else {
+    const path = window.location.pathname;
+    if (path.includes('/blog/')) {
+      $body.classList.add('blog', 'no-brand-header');
+    }
+    // todo: read template from page metadata
   }
 }
 
@@ -1439,7 +1434,6 @@ export function decorateMain($main) {
 }
 
 async function decoratePage() {
-  setTemplate();
   setTheme();
   await decorateTesting();
   if (sessionStorage.getItem('helix-font') === 'loaded') {
