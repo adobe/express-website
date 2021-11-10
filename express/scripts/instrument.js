@@ -299,7 +299,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       }
 
       sparkEventName = 'landing:templatePressed';
-
+      // Button in the FAQ
+    } else if ($a.closest('.faq')) {
+      adobeEventName = appendLinkText(`${adobeEventName}faq:`, $a);
+      sparkEventName = 'landing:faqPressed';
       // CTA in the hero
     } else if ($a.closest('.hero')) {
       adobeEventName = appendLinkText(`${adobeEventName}hero:`, $a);
@@ -348,6 +351,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   function decorateAnalyticsEvents() {
     // for tracking all of the links
     d.querySelectorAll('main a').forEach(($a) => {
+      $a.addEventListener('click', () => {
+        trackButtonClick($a);
+      });
+    });
+
+    // for tracking the faq
+    d.querySelectorAll('main .faq-accordion').forEach(($a) => {
       $a.addEventListener('click', () => {
         trackButtonClick($a);
       });
