@@ -10,13 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag,
-} from '../../scripts/scripts.js';
-
 export default function decorate($block) {
   $block.querySelectorAll('a').forEach(($cta) => {
-    console.log($cta);
-    $cta.classList.add('large');
+    $cta.classList.add('large', 'primary', 'reverse');
+    $cta.classList.remove('accent');
   });
 }

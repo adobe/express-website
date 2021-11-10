@@ -16,9 +16,3 @@ main .light-banner p {
   margin: 24px 0;
   font-size: var(--body-font-size-xl);
 }
-
-main .light-banner .button.large {
-  background-color: white;
-  color: var(--body-color);
-  border: 2px var(--body-color) solid;
-}
