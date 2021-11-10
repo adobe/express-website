@@ -172,11 +172,10 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
     }
 
     main .pricing-columns-price {
-        margin-right: 20px;
     }
 
     main .pricing-columns-dropdown {
-        margin: 0;
+        margin: 0 0 0 20px;
     }
 
     main .pricing-columns-cta-text {
@@ -229,5 +228,13 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
 
     main .pricing-columns-cta.button {
         flex: initial;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    main .pricing-columns-cta-text {
+        width: 100%;
+        max-width: 100%;
     }
 }
