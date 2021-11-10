@@ -15,7 +15,14 @@
   --color-info-accent: #5C5CE0;
   --color-info-accent-hover: #4646C6;
   --color-info-accent-down: #3D3DB4;
-  --color-info-accent-light: #DEDEF9;
+  --color-info-accent-reverse: #eeeefc;
+  --color-info-accent-reverse-down: #e6e6f4;
+  --color-info-primary: #242424;
+  --color-info-primary-hover: #090909;
+  --color-info-primary-down: #000;
+  --color-info-secondary: #E8E8E8;
+  --color-info-secondary-hover: #d4d4d4;
+  --color-info-secondary-down: #cdcdcd;
   --color-premium: #EBCF2D;
   --gradient-highlight-vertical: linear-gradient(15deg, #7c84fc, #ff4dd2);
   --gradient-highlight-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
@@ -329,9 +336,9 @@ a.button:any-link {
   font-weight: 600;
   line-height: var(--body-line-height);
   cursor: pointer;
-  color: var(--color-white);
-  background-color: var(--color-info-accent);
-  transition: background-color .4s;
+  transition: background-color .3s, color .3s, border .3s;
+  border-width: 2px;
+  border-style: solid;
   margin: 10px;
   white-space: nowrap;
   overflow: hidden;
@@ -356,38 +363,122 @@ a.button.small:any-link {
   font-size: var(--body-font-size-xs);
 }
 
+a.button:any-link,
 a.button.primary:any-link {
-  background-color: var(--color-black);
+  color: var(--color-white);
+  background-color: var(--color-info-primary);
+  border-color: var(--color-info-primary);
+}
+
+a.button:any-link:hover,
+a.button.primary:any-link:hover {
+  background-color: var(--color-info-primary-hover);
+  border-color: var(--color-info-primary-hover);
+}
+
+a.button:any-link:active,
+a.button.primary:any-link:active {
+  background-color: var(--color-info-primary-down);
+  border-color: var(--color-info-primary-down);
 }
 
 a.button.secondary:any-link {
-  background-color: var(--color-gray-200);
   color: var(--color-black);
+  background-color: var(--color-info-secondary);
+  border-color: var(--color-info-secondary);
 }
 
-a.button.light:any-link {
+a.button.secondary:any-link:hover {
+  background-color: var(--color-info-secondary-hover);
+  border-color: var(--color-info-secondary-hover);
+}
+
+a.button.secondary:any-link:active {
+  background-color: var(--color-info-secondary-down);
+  border-color: var(--color-info-secondary-down);
+}
+
+a.button.accent:any-link, 
+a.button.primaryCTA:any-link {
+  color: var(--color-white);
+  background-color: var(--color-info-accent);
+  border-color: var(--color-info-accent);
+}
+
+a.button.accent:any-link:hover,
+a.button.primaryCTA:any-link:hover {
+  background-color: var(--color-info-accent-hover);
+  border-color: var(--color-info-accent-hover);
+}
+
+a.button.accent:any-link:active,
+a.button.primaryCTA:any-link:active {
+  background-color: var(--color-info-accent-down);
+  border-color: var(--color-info-accent-down);
+}
+
+a.button.reverse:any-link {
+  color: var(--color-black);
   background-color: var(--color-white);
-  color: var(--color-info-accent);
-  border: solid 2px var(--color-info-accent);
 }
 
-a.button.primary.light:any-link,
-a.button.secondary.light:any-link {
-  color: var(--color-black);
+a.button.reverse:any-link:hover {
+  background-color: var(--color-info-secondary-hover)
 }
 
-a.button.primary.light:any-link {
-  border-color: var(--color-black);
+a.button.reverse:any-link:active {
+  background-color: var(--color-info-secondary-down)
 }
 
-a.button.secondary.light:any-link {
-  border-color: var(--color-gray-200);
+a.button.reverse.accent:any-link,
+a.button.reverse.primaryCTA:any-link {
+  color: var(--color-info-accent)
+}
+
+a.button.reverse.accent:any-link:hover,
+a.button.reverse.primaryCTA:any-link:hover {
+  background-color: var(--color-info-accent-reverse);
+}
+
+a.button.reverse.accent:any-link:active,
+a.button.reverse.primaryCTA:any-link:active {
+  background-color: var(--color-info-accent-reverse-down);
 }
 
 a.button.dark:any-link {
+  color: var(--color-black);
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+}
+
+a.button.dark:any-link:hover {
+  color: var(--color-black);
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-100);
+}
+
+a.button.dark:any-link:active {
+  color: var(--color-black);
+  background-color: var(--color-gray-200);
+  border-color: var(--color-gray-200);
+}
+
+a.button.dark.reverse:any-link {
   color: var(--color-white);
-  border: solid 2px var(--color-white);
   background-color: transparent;
+  border-color: var(--color-white);
+}
+
+a.button.dark.reverse:any-link:hover {
+  color: var(--color-white);
+  background-color: rgba(0,0,0,0.1);
+  border-color: var(--color-gray-100);
+}
+
+a.button.dark.reverse:any-link:active {
+  color: var(--color-white);
+  background-color: rgba(0,0,0,0.2);
+  border-color: var(--color-gray-200);
 }
 
 a.button > svg {
