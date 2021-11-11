@@ -58,7 +58,7 @@ main .pricing-columns-price {
 }
 
 main .pricing-columns-price strong {
-    margin-top: -10px;
+    margin: -10px 10px 0 10px;
     font-size: var(--heading-font-size-xxl);
     font-weight: var(--heading-font-weight);
 }

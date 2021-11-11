@@ -140,7 +140,9 @@ async function selectPlan($pricingHeader, planUrl) {
     plan.country = offer.country;
     plan.language = offer.lang;
     plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|+]+/g);
-    plan.formatted = plan.formatted.replace(plan.rawPrice, `<strong>${plan.rawPrice}<strong>`);
+    console.log(plan.rawPrice);
+    console.log(plan.formatted);
+    plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.rawPrice[0]}</strong>`);
   }
 
   $pricingHeader.querySelector('.pricing-columns-price').innerHTML = plan.formatted;
