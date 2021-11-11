@@ -172,6 +172,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     const iconName = icon;
     let sheetSize = size;
     if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
+    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
@@ -641,7 +642,7 @@ export function decorateBlocks($main) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner'];
 
     if (blockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
