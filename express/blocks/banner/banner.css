@@ -3,6 +3,10 @@ main .section-wrapper.banner-container {
   padding: 120px 15px;
 }
 
+main .section-wrapper.banner-light-container {
+  padding: 120px 15px;
+}
+
 main .section-wrapper.banner-container > div {
   padding: 0;
 }
