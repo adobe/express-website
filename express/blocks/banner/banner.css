@@ -3,6 +3,10 @@ main .section-wrapper.banner-container {
   padding: 120px 15px;
 }
 
+main .section-wrapper.banner-light-container {
+  padding: 120px 15px;
+}
+
 main .section-wrapper.banner-container > div {
   padding: 0;
 }
@@ -13,8 +17,16 @@ main .banner {
   color: var(--color-white);
 }
 
+main .banner.light {
+  color: var(--color-black);
+}
+
 main .banner h2, main .banner h3 {
   color: var(--color-white);
+}
+
+main .banner.light h2, main .banner.light h3 {
+  color: var(--color-black);
 }
 
 main .banner p.button-container {
@@ -23,6 +35,10 @@ main .banner p.button-container {
 
 main .banner a:any-link {
   color: var(--color-white);
+}
+
+main .banner.light a:any-link {
+  color: var(--color-black);
 }
 
 main .banner .icon {
