@@ -58,9 +58,13 @@ main .pricing-columns-price {
 }
 
 main .pricing-columns-price strong {
-    margin: -10px 10px 0 10px;
+    margin-top: -10px;
     font-size: var(--heading-font-size-xxl);
     font-weight: var(--heading-font-weight);
+}
+
+main .pricing-columns-price strong.jpy {
+    margin-right: 10px;
 }
 
 main .pricing-columns-dropdown {
