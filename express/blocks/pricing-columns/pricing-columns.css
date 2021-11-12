@@ -63,7 +63,7 @@ main .pricing-columns-price strong {
     font-weight: var(--heading-font-weight);
 }
 
-main .pricing-columns-price strong.jpy {
+main .pricing-columns-price.jpy strong {
     margin-right: 10px;
 }
 
