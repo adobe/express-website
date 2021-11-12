@@ -91,11 +91,16 @@ main .icon-list .icon-list-heading {
 main .icon-list .icon-list-heading .icon-list-image {
   flex: 0 0 100px;
   line-height: 0;
+  margin-right: 24px;
+}
+
+main .icon-list .icon-list-heading .icon-list-image:empty {
+  flex: 0;
+  margin-right: 0;
 }
 
 main .icon-list .icon-list-heading .icon-list-description {
   flex: 1 1 218px;
-  margin-left: 24px;
   align-self: center;
 }
 
