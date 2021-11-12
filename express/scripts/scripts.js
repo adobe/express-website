@@ -909,7 +909,7 @@ async function fetchAuthorImage($image, author) {
   }
 }
 
-function decorateHero() {
+function decoratePageStyle() {
   const isBlog = document.body.classList.contains('blog');
   const $h1 = document.querySelector('main h1');
   // check if h1 is inside a block
@@ -969,6 +969,14 @@ function decorateHero() {
     } else {
       $heroSection.classList.add('hero-noimage');
     }
+  }
+
+  if (isBlog) {
+    const pictures = document.querySelectorAll('main div.section-wrapper > div > picture');
+    pictures.forEach((picture) => {
+      const section = picture.closest('.section-wrapper');
+      section.classList.add('fullwidth');
+    });
   }
 }
 
@@ -1444,7 +1452,7 @@ async function decoratePage() {
   if ($main) {
     decorateMain($main);
     decorateHeaderAndFooter();
-    decorateHero();
+    decoratePageStyle();
     setLCPTrigger();
     displayEnv();
     displayOldLinkWarning();

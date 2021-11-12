@@ -31,6 +31,7 @@
   --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-200);
   --body-font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
+  --body-serif-font-family: 'adobe-clean-serif', 'Adobe Clean Serif', serif;
   --body-font-weight: normal;
   --body-color: var(--color-gray-800);
   --body-line-height: 1.5;
@@ -521,6 +522,10 @@ main h1, h2, h3, h4, h5, h6 {
   line-height: var(--heading-line-height);
 }
 
+main .section-wrapper > div > p {
+  font-family: var(--body-serif-font-family);
+}
+
 main h1 {
   font-size: var(--heading-font-size-xxl);
   opacity: 0;
@@ -909,14 +914,34 @@ main .section-wrapper .hero {
   margin-right: 20px;
 }
 
+.blog main .hero .blog-header h1 {
+  text-align: left;
+}
+
 .blog main .hero .blog-header {
   text-align: left;
   margin: 32px;
+  background-image: url(/express/icons/cc-express-logo.svg);
+  padding-top: 80px;
+  background-repeat: no-repeat;
+  background-size: 311px;
 }
 
 .blog div.section-wrapper {
   text-align: left;
 }
+
+.blog div.section-wrapper > div {
+  max-width: 530px;
+}
+
+
+.blog div.section-wrapper.fullwidth > div {
+  margin: 0;
+  max-width: unset;
+  padding: 0;
+}
+
 
 .blog main div.section-wrapper h2, .blog main div.section-wrapper h3  {
   text-align: left;
