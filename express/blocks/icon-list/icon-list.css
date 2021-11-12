@@ -28,10 +28,11 @@ main .icon-list .icon-list-image {
   flex: 0 0 48px;
 }
 
-main .icon-list .icon, main .icon-list .icon-list-image img {
+main .icon-list .icon,
+main .icon-list .icon-list-image img {
   fill: currentColor;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
 }
 
 main .icon-list h3, main .icon-list h4 {
@@ -90,11 +91,16 @@ main .icon-list .icon-list-heading {
 main .icon-list .icon-list-heading .icon-list-image {
   flex: 0 0 100px;
   line-height: 0;
+  margin-right: 24px;
+}
+
+main .icon-list .icon-list-heading .icon-list-image:empty {
+  flex: 0;
+  margin-right: 0;
 }
 
 main .icon-list .icon-list-heading .icon-list-description {
   flex: 1 1 218px;
-  margin-left: 24px;
   align-self: center;
 }
 
@@ -119,7 +125,7 @@ main .icon-list .icon-list-regular .icon-list-description p {
   margin: 0;
 }
 
-main .icon-list .icon-list-regular .icon-list-image {
+main .icon-list.highlight .icon-list-regular .icon-list-image {
   flex: 0 0 73px;
   line-height: 0;
 }
@@ -130,7 +136,8 @@ main .icon-list .icon-list-regular .icon-list-description {
   align-self: top;
 }
 
-main .icon-list .icon-list-regular .icon-list-image img, main .icon-list .icon-list-regular .icon-list-image svg {
+main .icon-list.highlight .icon-list-regular .icon-list-image img,
+main .icon-list.highlight .icon-list-regular .icon-list-image svg {
   fill: currentColor;
   width: 73px;
   height: 72px;
