@@ -941,6 +941,23 @@ function decoratePageStyle() {
           <div>
             <div class="name">${author}</div>
             <div class="date">${date}</div>
+          </div>
+          <div class="author-social">
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter">
+                <use href="/express/icons/ccx-sheet_22.svg#twitter22"></use>
+              </svg>
+            </span>
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-linkedin">
+                <use href="/express/icons/ccx-sheet_22.svg#linkedin22"></use>
+              </svg>
+            </span>
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook">
+                <use href="/express/icons/ccx-sheet_22.svg#facebook22"></use>
+              </svg>
+            </span>
           </div>`;
           fetchAuthorImage($author.querySelector('img'), author);
           $blogHeader.append($author);
@@ -977,6 +994,10 @@ function decoratePageStyle() {
       const section = picture.closest('.section-wrapper');
       section.classList.add('fullwidth');
     });
+    const introText = document.querySelector('main div.section-wrapper p');
+    if (introText) {
+      introText.classList.add('intro-text');
+    }
   }
 }
 
