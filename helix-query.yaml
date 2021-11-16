@@ -2,11 +2,9 @@ version: 1
 
 indices:
   blog:
-    source: html
-    fetch: https://{repo}-{owner}.hlx.page/{path}
     include:
       - '/express/learn/blog/*'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/express/learn/blog/query-index.xlsx
+    target: /express/learn/blog/query-index.xlsx
     properties:
       author:
         select: head > meta[name="author"]
@@ -52,7 +50,7 @@ indices:
       - '/express/**'
     exclude:
       - '/express/learn/blog/*'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/express/query-index.xlsx
+    target: /express/query-index.xlsx
     properties:
       title:
         select: head > meta[property="og:title"]
@@ -62,10 +60,6 @@ indices:
         select: head > meta[property="og:image"]
         value: |
           match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
-      sourceHash:
-        select: head > meta[name=x-source-hash
-        value: |
-          attribute(el, 'content')
       lastModified:
         select: none
         value: |
@@ -79,82 +73,82 @@ indices:
     <<: *default
     include:
       - '/de/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/de/express/query-index.xlsx
+    target: /de/express/query-index.xlsx
 
   spain:
     <<: *default
     include:
       - '/es/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/es/express/query-index.xlsx
+    target: /es/express/query-index.xlsx
 
   france:
     <<: *default
     include:
       - '/fr/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/fr/express/query-index.xlsx
+    target: /fr/express/query-index.xlsx
 
   italy:
     <<: *default
     include:
       - '/it/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/it/express/query-index.xlsx
+    target: /it/express/query-index.xlsx
 
   japan:
     <<: *default
     include:
       - '/jp/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/jp/express/query-index.xlsx
+    target: /jp/express/query-index.xlsx
 
   korea:
     <<: *default
     include:
       - '/kr/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/kr/express/query-index.xlsx
+    target: /kr/express/query-index.xlsx
 
   netherlands:
     <<: *default
     include:
       - '/nl/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/nl/express/query-index.xlsx
+    target: /nl/express/query-index.xlsx
 
   brasil:
     <<: *default
     include:
       - '/br/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/br/express/query-index.xlsx
+    target: /br/express/query-index.xlsx
 
   taiwan:
     <<: *default
     include:
       - '/tw/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/tw/express/query-index.xlsx
+    target: /tw/express/query-index.xlsx
 
   china:
     <<: *default
     include:
       - '/cn/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/cn/express/query-index.xlsx
+    target: /cn/express/query-index.xlsx
 
   denmark:
     <<: *default
     include:
       - '/dk/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/dk/express/query-index.xlsx
+    target: /dk/express/query-index.xlsx
 
   finland:
     <<: *default
     include:
       - '/fi/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/fi/express/query-index.xlsx
+    target: /fi/express/query-index.xlsx
 
   norway:
     <<: *default
     include:
       - '/no/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/no/express/query-index.xlsx
+    target: /no/express/query-index.xlsx
 
   sweden:
     <<: *default
     include:
       - '/se/express/**'
-    target: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website/se/express/query-index.xlsx
+    target: /se/express/query-index.xlsx
