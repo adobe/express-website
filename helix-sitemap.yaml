@@ -1,0 +1,81 @@
+version: 1
+
+sitemaps:
+  website:
+    origin: https://www.adobe.com
+    languages:
+      default:
+        source: /express/query-index.json
+        destination: /express/sitemap-en.xml
+        hreflang: en
+        alternate: /{path}
+      germany:
+        source: /de/express/query-index.json
+        destination: /de/express/sitemap.xml
+        hreflang: de
+        alternate: /de/{path}
+      spain:
+        source: /es/express/query-index.json
+        destination: /es/express/sitemap.xml
+        hreflang: es
+        alternate: /es/{path}
+      france:
+        source: /fr/express/query-index.json
+        destination: /fr/express/sitemap.xml
+        hreflang: fr
+        alternate: /fr/{path}
+      italy:
+        source: /it/express/query-index.json
+        destination: /it/express/sitemap.xml
+        hreflang: it
+        alternate: /it/{path}
+      japan:
+        source: /jp/express/query-index.json
+        destination: /jp/express/sitemap.xml
+        hreflang: ja
+        alternate: /jp/{path}
+      korea:
+        source: /kr/express/query-index.json
+        destination: /kr/express/sitemap.xml
+        hreflang: ko
+        alternate: /kr/{path}
+      netherlands:
+        source: /nl/express/query-index.json
+        destination: /nl/express/sitemap.xml
+        hreflang: nl
+        alternate: /nl/{path}
+      brasil:
+        source: /br/express/query-index.json
+        destination: /br/express/sitemap.xml
+        hreflang: pt
+        alternate: /br/{path}
+      taiwan:
+        source: /tw/express/query-index.json
+        destination: /tw/express/sitemap.xml
+        hreflang: zh-Hant
+        alternate: /tw/{path}
+      china:
+        source: /cn/express/query-index.json
+        destination: /express/sitemap-other.xml
+        hreflang: zh-Hans
+        alternate: /cn/{path}
+      denmark:
+        source: /dk/express/query-index.json
+        destination: /express/sitemap-other.xml
+        hreflang: da
+        alternate: /dk/{path}
+      finland:
+        source: /fi/express/query-index.json
+        destination: /express/sitemap-other.xml
+        hreflang: fi
+        alternate: /fi/{path}
+      norway:
+        source: /no/express/query-index.json
+        destination: /express/sitemap-other.xml
+        hreflang: nb
+        alternate: /no/{path}
+      sweden:
+        source: /se/express/query-index.json
+        destination: /express/sitemap-other.xml
+        hreflang: sv
+        alternate: /se/{path}
