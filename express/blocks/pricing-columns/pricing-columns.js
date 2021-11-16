@@ -139,7 +139,7 @@ async function selectPlan($pricingHeader, planUrl) {
     plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
     plan.language = offer.lang;
-    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|+]+/g);
+    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|+]+/g);
     plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.rawPrice[0]}</strong>`);
   }
 
@@ -195,7 +195,7 @@ function decoratePlan($column) {
     $pricingHeader.append($pricingPlan);
 
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
-    $pricingCta.innerHTML = $elements[2].innerHTML;
+    $pricingCta.innerText = $elements[2].innerText;
     $pricingCta.href = plans[0].url;
     $pricingHeader.append($pricingCta);
 
