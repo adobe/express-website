@@ -159,7 +159,7 @@ function decoratePlan($column) {
     if ($element.classList.contains('button-container')) {
       const $link = $element.querySelector('a');
       plans.push({
-        name: $link.innerText,
+        name: $link.textContent,
         url: $link.href,
       });
     }
@@ -195,7 +195,7 @@ function decoratePlan($column) {
     $pricingHeader.append($pricingPlan);
 
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
-    $pricingCta.innerText = $elements[2].innerText;
+    $pricingCta.innerHTML = $elements[2].textContent;
     $pricingCta.href = plans[0].url;
     $pricingHeader.append($pricingCta);
 
