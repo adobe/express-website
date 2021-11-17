@@ -1,46 +1,28 @@
-main .page-list-container.appear {
-  opacity: 1;
-  height: unset;
-}
-
 main .page-list-container > div {
-  max-width: 1500px;
+  max-width: 1000px;
 }
 
+main .page-list-container h2 {
+  text-align: left;
+}
 
 main .page-list.appear {
   opacity: 1;
 }
 
-main .page-list .page-list-category {
-  max-width: 800px;
+main .page-list {
+  text-align: left;
+  columns: 235px;
   margin: auto;
-  text-align: left;
+  margin-top: 64px;
 }
 
-main .page-list .page-list-category h3 {
-  text-align: left;
+main .page-list p {
+  margin: 0;
 }
 
-main .page-list .page-list-category a {
-  margin-right: 8px;
-  line-height: 24px;
-  white-space: nowrap;
+main .page-list p a:any-link {
+  font-weight: var(--body-font-weight);
+  color: var(--body-color);
 }
 
-main .page-list .page-list-category a:any-link {
-  text-decoration: none;
-}
-
-
-@media (min-width: 1184px) {
-  main .page-list .page-list-category {
-    max-width: 1075px;
-  }    
-}
-
-@media (min-width: 1462px) {
-  main .page-list .page-list-category {
-    max-width: 1355px;
-  }    
-}
