@@ -936,7 +936,7 @@ main .section-wrapper .hero {
 
 /* jank protection for async sections */
 
-main .pricing, main .hero-animation {
+main .pricing, main .hero-animation, main .fragment {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;
