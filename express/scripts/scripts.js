@@ -937,6 +937,7 @@ function decoratePageStyle() {
         const date = getMeta('publication-date');
         if (author) {
           const $author = createTag('div', { class: 'author' });
+          const url = encodeURIComponent(window.location.href);
           $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
           <div>
             <div class="name">${author}</div>
@@ -944,19 +945,25 @@ function decoratePageStyle() {
           </div>
           <div class="author-social">
             <span>
+              <a target="_blank" href="http://twitter.com/share?&url=${url}">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter">
                 <use href="/express/icons/ccx-sheet_22.svg#twitter22"></use>
               </svg>
+              </a>
             </span>
             <span>
+              <a target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=${url}">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-linkedin">
                 <use href="/express/icons/ccx-sheet_22.svg#linkedin22"></use>
               </svg>
+              </a>
             </span>
             <span>
+            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${url}">
               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook">
                 <use href="/express/icons/ccx-sheet_22.svg#facebook22"></use>
               </svg>
+              </a>
             </span>
           </div>`;
           fetchAuthorImage($author.querySelector('img'), author);
