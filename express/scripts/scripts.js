@@ -95,7 +95,7 @@ export function createTag(name, attrs) {
   return el;
 }
 
-function getMeta(name) {
+export function getMeta(name) {
   let value = '';
   const nameLower = name.toLowerCase();
   const $metas = [...document.querySelectorAll('meta')].filter(($m) => {
@@ -897,18 +897,6 @@ function postLCP() {
   }
 }
 
-async function fetchAuthorImage($image, author) {
-  const resp = await fetch(`/express/learn/blog/authors/${toClassName(author)}.plain.html`);
-  const main = await resp.text();
-  if (resp.status === 200) {
-    const $div = createTag('div');
-    $div.innerHTML = main;
-    const $img = $div.querySelector('img');
-    const src = $img.src.replace('width=2000', 'width=200');
-    $image.src = getOptimizedImageURL(src);
-  }
-}
-
 function decoratePageStyle() {
   const isBlog = document.body.classList.contains('blog');
   const $h1 = document.querySelector('main h1');
@@ -922,57 +910,14 @@ function decoratePageStyle() {
       $heroSection = createTag('div', { class: 'hero' });
       const $div = createTag('div');
       if (isBlog) {
-        $heroSection.append($div);
-        const $blogHeader = createTag('div', { class: 'blog-header' });
-        $div.append($blogHeader);
-        const $eyebrow = createTag('div', { class: 'eyebrow' });
-        const tagString = getMeta('article:tag');
-        // eslint-disable-next-line no-unused-vars
-        const tags = tagString.split(',');
-        $eyebrow.innerHTML = getMeta('category');
-        // $eyebrow.innerHTML = tags[0];
-        $blogHeader.append($eyebrow);
-        $blogHeader.append($h1);
-        const author = getMeta('author');
-        const date = getMeta('publication-date');
-        if (author) {
-          const $author = createTag('div', { class: 'author' });
-          const url = encodeURIComponent(window.location.href);
-          $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
-          <div>
-            <div class="name">${author}</div>
-            <div class="date">${date}</div>
-          </div>
-          <div class="author-social">
-            <span>
-              <a target="_blank" href="http://twitter.com/share?&url=${url}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter">
-                <use href="/express/icons/ccx-sheet_22.svg#twitter22"></use>
-              </svg>
-              </a>
-            </span>
-            <span>
-              <a target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=${url}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-linkedin">
-                <use href="/express/icons/ccx-sheet_22.svg#linkedin22"></use>
-              </svg>
-              </a>
-            </span>
-            <span>
-            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${url}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook">
-                <use href="/express/icons/ccx-sheet_22.svg#facebook22"></use>
-              </svg>
-              </a>
-            </span>
-          </div>`;
-          fetchAuthorImage($author.querySelector('img'), author);
-          $blogHeader.append($author);
-        }
-        $div.append($blogHeader);
-        if ($heroPicture) {
-          $div.append($heroPicture);
-        }
+        import('/express/scripts/blog.js')
+          .then((mod) => {
+            if (mod.default) {
+              mod.default($heroSection, $heroPicture, $h1);
+            }
+          })
+          .catch((err) => console.log('failed to load blog', err));
+        loadCSS('/express/styles/blog.css');
       } else {
         $heroSection.append($div);
         if ($heroPicture) {

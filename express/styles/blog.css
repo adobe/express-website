@@ -1,0 +1,138 @@
+/* blog styling */
+
+.blog main .hero {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .blog main .section-wrapper > div > p {
+    font-family: var(--body-serif-font-family);
+  }
+  
+  .blog main .section-wrapper > div > p .button {
+    font-family: var(--body-font-family);
+  }
+  
+  
+  .blog main .hero > div {
+    margin: auto;
+    max-width: 1000px;
+    width: 100%;
+  }
+  
+  .blog main .hero {
+    color: black;
+  }
+  
+  .blog main .hero .blog-header .eyebrow {
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #696969;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: .1em;
+  }
+  
+  .blog main .hero .blog-header .author {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .blog main .hero .blog-header .author .name {
+    margin-top: 10px;
+    font-weight: 700;
+  }
+  
+  .blog main .hero .blog-header .author div.author-social {
+    flex-grow: 1;
+    text-align: right;
+  }
+  
+  .blog main .hero .blog-header .author div.author-social svg {
+    margin: 0 8px;
+  }
+  
+  .blog main .hero .blog-header img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .blog main .hero .blog-header h1 {
+    text-align: left;
+  }
+  
+  .blog main .hero .blog-header {
+    font-family: var(--body-serif-font-family);
+  }
+  
+  .blog main .hero .blog-header h1 {
+    font-family: var(--body-font-family);
+  }
+  
+  .blog main .hero .blog-header p.subheading {
+    text-align: left;
+  }
+  
+  .blog main .hero .blog-header {
+    text-align: left;
+    margin: 32px;
+    background-image: url(/express/icons/cc-express-logo.svg);
+    padding-top: 80px;
+    background-repeat: no-repeat;
+    background-size: 311px;
+  }
+  
+  .blog div.section-wrapper {
+    text-align: left;
+  }
+  
+  .blog div.section-wrapper > div > p, .blog div.section-wrapper > div > h2,
+  .blog div.section-wrapper > div > h3, .blog div.section-wrapper > div > h4,
+  .blog div.section-wrapper > div > h5, .blog div.section-wrapper > div > ul, 
+  .blog div.section-wrapper > div > ol {
+    max-width: 530px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .blog div.section-wrapper.fullwidth > div {
+    margin: auto;
+    max-width: 1200px;
+    padding: 0;
+  }
+  
+  
+  .blog main div.section-wrapper h2, .blog main div.section-wrapper h3  {
+    text-align: left;
+  }
+  
+  .blog main .section-wrapper h3 {
+    font-size: 36px;
+    line-height: 40px;
+    margin-top: 64px;
+    text-align: left;
+  }
+  
+  .blog main .section-wrapper h4 {
+    text-align: left;
+  }
+  
+  @media (min-width: 900px) {
+  .blog div.section-wrapper > div > p.intro-text {
+    max-width: unset;
+    margin-top: 0;
+    }
+  }
+  
+  @media (min-width: 900px) {
+    .blog main .hero .blog-header h1 {
+      font-size: var(--heading-font-size-xl);
+    }
+  }
+  
