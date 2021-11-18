@@ -15,6 +15,7 @@ main .page-list {
   columns: 235px;
   margin: auto;
   margin-top: 64px;
+  margin-bottom: 64px;
 }
 
 main .page-list p {
