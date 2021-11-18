@@ -15,7 +15,6 @@ import {
   createTag,
   readBlockConfig,
   getOptimizedImageURL,
-  addPublishDependencies,
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
@@ -95,8 +94,6 @@ async function filterBlogPosts(locale, config) {
 }
 
 async function decorateBlogPosts($blogPosts, config, offset = 0) {
-  addPublishDependencies('/express/learn/blog/query-index.json');
-
   let posts = [];
 
   posts = await filterBlogPosts('en-US', config);
@@ -116,12 +113,17 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
   for (let i = offset; i < max; i += 1) {
     const post = posts[i];
     const {
-      title, teaser, image, category,
+      title, teaser, image,
     } = post;
-
+    const publicationDate = new Date(post.date * 1000);
+    const dateString = publicationDate.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
     const path = post.path.split('.')[0];
 
-    const eyebrow = category;
     const isHero = hasHero && !i;
     const imagePath = image.split('?')[0].split('_')[1];
     const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
@@ -140,11 +142,9 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     $card.innerHTML = `<div class="blog-card-image">
           ${pictureTag}
         </div>
-        <div class="blog-card-body">
-        <p class="eyebrow">${eyebrow}</p>
-        <h3>${title}</h3>
-          <p>${teaser}</p>
-        </div>`;
+        <h3 class="blog-card-title">${title}</h3>
+        <p class="blog-card-teaser">${teaser}</p>
+        <p class="blog-card-date">${dateString}</p>`;
     if (isHero) $blogPosts.prepend($card);
     else $cards.append($card);
   }

@@ -24,11 +24,6 @@ main .blog-posts .blog-hero-card {
   color: unset;
 }
 
-main .blog-posts .blog-hero-card .blog-card-image {
-  width: 100%;
-  padding-bottom: 66.67%;
-  position: relative;
-}
 
 main .blog-posts .blog-hero-card .blog-card-image img {
   object-fit: cover;
@@ -50,66 +45,67 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
 }
 
 main .blog-posts .blog-card {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     width: 350px;
-    margin: 10px;
-    text-align: left;
     text-decoration: unset;
     color: unset;
+    grid-template-areas: 'title title' 'teaser image' 'date image';
+    text-align: left;
+    margin: 28px;
   }
 
   main .blog-posts .blog-card .blog-card-image {
     line-height: 0;
+    grid-area: image;
+    margin-left: 16px;
+  }
+
+  main .blog-posts .blog-card > p {
+    margin: 0;
   }
 
   main .blog-posts .blog-card .blog-card-image img {
-    height: 200px;
+    height: 92px;
     object-fit: cover;
-    width: 100%;
-    border-radius: 10px 10px 0 0;
+    width: 126px;
+    border-radius: 6px;
   }
 
-  main .blog-posts .blog-hero-card .blog-card-body {
-    max-width: 700px;
-    margin: auto;
-    text-align: center;
-    margin: 16px;
-  }
-
-  main .blog-posts .blog-hero-card .blog-card-body p {
-    margin: 12px 0;
-
-  }
-
-  main .blog-posts .blog-hero-card .blog-card-body h3 {
-    text-align: center;
-    font-size: 28px;
-    line-height: 32px;
-  }
-
-  main .blog-posts .blog-card-body h3 {
-    font-size: 18px;
-    line-height: 22px;
-    margin-top: 0;
+  main .blog-posts h3.blog-card-title {
+    font-size: var(--heading-font-size-s);
+    line-height: var(--heading-line-height);
     text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    grid-area: title;
+    margin-bottom: 16px;
+    margin-top: 0;
   }
 
+  main .blog-posts p.blog-card-teaser {
+    font-size: var(--body-font-size-m);
+    line-height: var(--body-line-height);
+    font-weight: normal;
+    font-family: var(--body-serif-font-family);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    grid-area: teaser;
+    }
 
+  main .blog-posts p.blog-card-date {
+    font-size: var(--body-font-size-s);
+    line-height: var(--body-line-height);
+    font-family: var(--body-serif-font-family);
+    grid-area: date;
+  }
+  
   main .blog-posts .blog-card .blog-card-body p {
     font-size: 1rem;
     margin: 12px 0;
-  }
-
-  main .blog-posts .blog-card-body p.eyebrow {
-    text-transform: uppercase;
-    margin: 0;
-    margin-bottom: 12px;
-    font-weight: 700;
-    color: #696969;
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: .1em;
   }
 
   main .blog-posts .blog-card .blog-card-body {
