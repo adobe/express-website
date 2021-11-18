@@ -42,8 +42,8 @@ main .hero-animation .hero-animation-overlay p {
 }
 
 main .hero-animation .icon {
-    height: 65px;
-    width: 65px;
+    height: 32px;
+    width: unset;
 }
 
 main .hero-animation .hero-animation-attributions {
@@ -128,6 +128,12 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
     main .hero-animation {
         padding-top: max( 49%, 375px);
     }
+}
+
+@media (min-width: 600px) {
+  main .hero-animation .icon {
+    height: 65px;
+  }
 }
 
 @media (min-width: 950px) {
