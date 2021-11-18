@@ -48,7 +48,6 @@ main .template-list .template-title p {
 main .template-list .template-link,
 main .template-list .template-title-link {
   text-decoration: none;
-  color: #1473E6;
   padding-left: 16px;
   padding-top: 6px;
   display: flex;

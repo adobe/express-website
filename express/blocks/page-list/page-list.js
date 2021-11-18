@@ -15,17 +15,10 @@ import {
   createTag,
   readBlockConfig,
   getLocale,
-  addPublishDependencies,
-  loadCSS,
 } from '../../scripts/scripts.js';
-
-import {
-  decorateTemplateList,
-} from '../template-list/template-list.js';
 
 async function fetchIndex(indexURL) {
   try {
-    addPublishDependencies(indexURL);
     const resp = await fetch(indexURL);
     const json = await resp.json();
     // eslint-disable-next-line no-console
@@ -37,65 +30,12 @@ async function fetchIndex(indexURL) {
   }
 }
 
-async function fetchTemplates(path) {
-  const resp = await fetch(`${path}.plain.html`);
-  const html = await resp.text();
-  const $div = createTag('div');
-  $div.innerHTML = html;
-  const $templateLists = $div.querySelectorAll('.template-list');
-  const $templates = [];
-  $templateLists.forEach(($tl) => {
-    $templates.push(...$tl.children);
+function outputPages(filteredPages, $block) {
+  filteredPages.forEach((page) => {
+    const p = createTag('p');
+    p.innerHTML = `<a href="${page.path}">${page.shortTitle}</a>`;
+    $block.appendChild(p);
   });
-  return $templates;
-}
-async function appendTemplates($row) {
-  const $pages = [...$row.querySelectorAll('.page-list-category a')];
-  loadCSS('/express/blocks/template-list/template-list.css');
-  const $templates = [];
-  let i = 0;
-  while (($templates.length < 20) && (i < $pages.length)) {
-    const path = new URL($pages[i].href).pathname;
-    // eslint-disable-next-line no-await-in-loop
-    const $pageTemplates = await fetchTemplates(path);
-    $templates.push(...$pageTemplates);
-    i += 1;
-  }
-
-  const $tlBlock = createTag('div', { class: 'template-list' });
-  $templates.forEach(($template, j) => {
-    if (j < 20) {
-      $tlBlock.appendChild($template);
-    }
-  });
-  $row.append($tlBlock);
-  return decorateTemplateList($tlBlock);
-}
-
-async function outputPages(pages, $block) {
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach((entry) => {
-      if (entry.intersectionRatio > 0) {
-        appendTemplates(entry.target);
-        obs.unobserve(entry.target);
-      }
-    });
-  });
-
-  const $row = createTag('div', { class: 'page-list-row' });
-  const $category = createTag('div', { class: 'page-list-category' });
-
-  for (const page of pages) {
-    const path = page.path.split('.')[0];
-    const $page = createTag('a', { href: path });
-    $page.innerHTML = page.shortTitle;
-    $category.append($page);
-    $category.append(document.createTextNode(' '));
-  }
-
-  $row.append($category);
-  $block.append($row);
-  observer.observe($row);
 }
 
 function addPages(pages, config, $block) {
@@ -121,12 +61,7 @@ function addPages(pages, config, $block) {
 }
 
 async function decoratePageList($block) {
-  const $section = $block.closest('div.section-wrapper');
   const config = readBlockConfig($block);
-
-  // shorten hero
-  const $hero = document.querySelector('.hero');
-  $hero.classList.add('hero-short');
 
   const locale = getLocale(window.location);
   const indexURL = locale === 'us' ? '/express/query-index.json' : `/${locale}/express/query-index.json`;
@@ -136,7 +71,6 @@ async function decoratePageList($block) {
   shortIndex.sort((e1, e2) => e1.shortTitle.localeCompare(e2.shortTitle));
 
   addPages(shortIndex, config, $block);
-  $section.classList.add('appear');
   $block.classList.add('appear');
 }
 

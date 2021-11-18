@@ -139,11 +139,12 @@ async function selectPlan($pricingHeader, planUrl) {
     plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
     plan.language = offer.lang;
-    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|e|E|+]+/g);
-    plan.formatted = plan.formatted.replace(plan.rawPrice, `<strong>${plan.rawPrice}<strong>`);
+    plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|+]+/g);
+    plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.rawPrice[0]}</strong>`);
   }
 
   $pricingHeader.querySelector('.pricing-columns-price').innerHTML = plan.formatted;
+  $pricingHeader.querySelector('.pricing-columns-price').classList.add(plan.currency.toLowerCase());
   $pricingHeader.querySelector('.pricing-columns-cta').href = buildUrl(plan.url, plan.country, plan.language);
 }
 
@@ -158,7 +159,7 @@ function decoratePlan($column) {
     if ($element.classList.contains('button-container')) {
       const $link = $element.querySelector('a');
       plans.push({
-        name: $link.innerText,
+        name: $link.textContent,
         url: $link.href,
       });
     }
@@ -194,7 +195,7 @@ function decoratePlan($column) {
     $pricingHeader.append($pricingPlan);
 
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
-    $pricingCta.innerHTML = $elements[2].innerHTML;
+    $pricingCta.innerHTML = $elements[2].textContent;
     $pricingCta.href = plans[0].url;
     $pricingHeader.append($pricingCta);
 

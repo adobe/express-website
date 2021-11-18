@@ -63,6 +63,10 @@ main .pricing-columns-price strong {
     font-weight: var(--heading-font-weight);
 }
 
+main .pricing-columns-price.jpy strong {
+    margin-right: 10px;
+}
+
 main .pricing-columns-dropdown {
     width: 176px;
     height: 32px;

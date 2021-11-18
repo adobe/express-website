@@ -17,6 +17,7 @@
   --color-info-accent-down: #3D3DB4;
   --color-info-accent-reverse: #eeeefc;
   --color-info-accent-reverse-down: #e6e6f4;
+  --color-info-accent-light: #DEDEF9;
   --color-info-primary: #242424;
   --color-info-primary-hover: #090909;
   --color-info-primary-down: #000;
@@ -866,7 +867,7 @@ main .section-wrapper .hero {
 
 /* jank protection for async sections */
 
-main .page-list-container, main .pricing, main .hero-animation {
+main .pricing, main .hero-animation, main .fragment {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;

@@ -172,6 +172,7 @@ export function getIcon(icon, alt = icon, size = 44) {
     const iconName = icon;
     let sheetSize = size;
     if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
+    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
@@ -524,51 +525,11 @@ function decorateHeaderAndFooter() {
   });
 
   /* init header */
-  const locale = getLocale(window.location);
-
-  if (locale === 'us') {
-    const nav = {
-      signIn: 'Sign In',
-      signInLink: 'https://express.adobe.com/sp/',
-      top: [
-        {
-          text: 'Adobe Creative Cloud Express',
-          type: 'nodrop',
-        },
-        {
-          text: 'Features',
-        },
-        {
-          text: 'Create',
-        },
-        {
-          text: 'Learn',
-        },
-        {
-          text: 'Compare plans',
-          type: 'nodrop',
-        },
-        {
-          text: 'Start now',
-          type: 'button',
-        },
-      ],
-    };
-    if (window.location.pathname === '/express/') nav.top[0].selected = true;
-    if (window.location.pathname.startsWith('/express/feature')) nav.top[1].selected = true;
-    if (window.location.pathname.startsWith('/express/create')) nav.top[2].selected = true;
-    // if (window.location.pathname.startsWith('/express/discover')) nav.top[3].selected = true;
-    if (window.location.pathname.startsWith('/express/learn')) nav.top[3].selected = true;
-    if (window.location.pathname.startsWith('/express/pricing')) nav.top[4].selected = true;
-    const html = getGnavPlaceholder(nav);
-    $header.innerHTML = html;
-  } else {
-    $header.innerHTML = getGnavPlaceholder({
-      signIn: '',
-      signInLink: 'https://express.adobe.com/sp/',
-      top: [],
-    });
-  }
+  $header.innerHTML = getGnavPlaceholder({
+    signIn: '',
+    signInLink: 'https://express.adobe.com/sp/',
+    top: [],
+  });
 
   document.querySelector('footer').innerHTML = `
     <div id="feds-footer"></div>
@@ -641,7 +602,7 @@ export function decorateBlocks($main) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner'];
 
     if (blockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
@@ -888,7 +849,7 @@ function postLCP() {
   const martechUrl = '/express/scripts/delayed.js';
   // loadLazyFooter();
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 3000;
+    let ms = 0;
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
