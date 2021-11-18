@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
-    <loc>https://www.adobe.com/express/sitemap-en.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-us.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/de/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-de.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/es/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-es.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/fr/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-fr.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/it/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-it.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/jp/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-jp.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/kr/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-kr.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/nl/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-nl.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>https://www.adobe.com/tw/express/sitemap.xml</loc>
+    <loc>https://www.adobe.com/express/sitemap-br.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.adobe.com/express/sitemap-tw.xml</loc>
   </sitemap>
   <sitemap>
     <loc>https://www.adobe.com/express/sitemap-other.xml</loc>

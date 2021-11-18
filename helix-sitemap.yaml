@@ -6,52 +6,52 @@ sitemaps:
     languages:
       default:
         source: /express/query-index.json
-        destination: /express/sitemap-en.xml
+        destination: /express/sitemap-us.xml
         hreflang: en
         alternate: /{path}
       germany:
         source: /de/express/query-index.json
-        destination: /de/express/sitemap.xml
+        destination: /express/sitemap-de.xml
         hreflang: de
         alternate: /de/{path}
       spain:
         source: /es/express/query-index.json
-        destination: /es/express/sitemap.xml
+        destination: /express/sitemap-es.xml
         hreflang: es
         alternate: /es/{path}
       france:
         source: /fr/express/query-index.json
-        destination: /fr/express/sitemap.xml
+        destination: /express/sitemap-fr.xml
         hreflang: fr
         alternate: /fr/{path}
       italy:
         source: /it/express/query-index.json
-        destination: /it/express/sitemap.xml
+        destination: /express/sitemap-it.xml
         hreflang: it
         alternate: /it/{path}
       japan:
         source: /jp/express/query-index.json
-        destination: /jp/express/sitemap.xml
+        destination: /express/sitemap-jp.xml
         hreflang: ja
         alternate: /jp/{path}
       korea:
         source: /kr/express/query-index.json
-        destination: /kr/express/sitemap.xml
+        destination: /express/sitemap-kr.xml
         hreflang: ko
         alternate: /kr/{path}
       netherlands:
         source: /nl/express/query-index.json
-        destination: /nl/express/sitemap.xml
+        destination: /express/sitemap-nl.xml
         hreflang: nl
         alternate: /nl/{path}
       brasil:
         source: /br/express/query-index.json
-        destination: /br/express/sitemap.xml
+        destination: /express/sitemap-br.xml
         hreflang: pt
         alternate: /br/{path}
       taiwan:
         source: /tw/express/query-index.json
-        destination: /tw/express/sitemap.xml
+        destination: /express/sitemap-tw.xml
         hreflang: zh-Hant
         alternate: /tw/{path}
       china:
