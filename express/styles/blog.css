@@ -25,34 +25,31 @@
   }
   
   .blog main .hero .blog-header .eyebrow {
-    text-transform: uppercase;
     margin: 0;
     margin-bottom: 12px;
     font-weight: 700;
     color: #696969;
     font-size: 16px;
     line-height: 20px;
-    letter-spacing: .1em;
+    font-size: var(--body-font-size-s);
   }
   
   .blog main .hero .blog-header .author {
-    margin-top: 32px;
+    margin-top: 24px;
     display: flex;
     align-items: center;
+    font-size: var(--body-font-size-s);
   }
-  
-  .blog main .hero .blog-header .author .name {
-    margin-top: 10px;
-    font-weight: 700;
-  }
-  
+    
   .blog main .hero .blog-header .author div.author-social {
     flex-grow: 1;
     text-align: right;
   }
   
   .blog main .hero .blog-header .author div.author-social svg {
-    margin: 0 8px;
+    margin: 0 0 6px 6px;
+    height: 18px;
+    width: 18px;
   }
   
   .blog main .hero .blog-header img {
@@ -65,6 +62,7 @@
   
   .blog main .hero .blog-header h1 {
     text-align: left;
+    font-size: var(--heading-font-size-l);
   }
   
   .blog main .hero .blog-header {
@@ -77,19 +75,22 @@
   
   .blog main .hero .blog-header p.subheading {
     text-align: left;
+    font-size: var(--body-font-size-l);
+    margin-left: 0;
   }
   
   .blog main .hero .blog-header {
     text-align: left;
     margin: 32px;
     background-image: url(/express/icons/cc-express-logo.svg);
-    padding-top: 80px;
+    padding-top: 58px;
     background-repeat: no-repeat;
     background-size: 311px;
   }
   
   .blog div.section-wrapper {
     text-align: left;
+    margin: 0;
   }
   
   .blog div.section-wrapper > div > p, .blog div.section-wrapper > div > h2,
@@ -123,16 +124,31 @@
     text-align: left;
   }
   
-  @media (min-width: 900px) {
+@media (min-width: 600px) {
+  .blog main .hero .blog-header p.subheading {
+    font-size: var(--body-font-size-xl);
+  }
+
+  .blog main .hero .blog-header h1 {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  .blog main .hero .blog-header {
+    padding-top: 66px;
+  }
+
+  .blog main .hero .blog-header .eyebrow {
+    margin-bottom: 24px;
+  }
+  .blog main .hero .blog-header .author {
+    margin-top: 32px;
+  }
+}
+  
+@media (min-width: 900px) {
   .blog div.section-wrapper > div > p.intro-text {
     max-width: unset;
     margin-top: 0;
     }
-  }
-  
-  @media (min-width: 900px) {
-    .blog main .hero .blog-header h1 {
-      font-size: var(--heading-font-size-xl);
-    }
-  }
+}
   

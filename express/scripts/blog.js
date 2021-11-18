@@ -45,6 +45,12 @@ export default function decorateBlogPage($heroSection, $heroPicture, $h1) {
   $blogHeader.append($h1);
   const author = getMeta('author');
   const date = getMeta('publication-date');
+  const description = getMeta('description');
+  if (description) {
+    const $description = createTag('p', { class: 'subheading' });
+    $description.innerHTML = description;
+    $blogHeader.append($description);
+  }
   if (author) {
     const $author = createTag('div', { class: 'author' });
     const url = encodeURIComponent(window.location.href);
