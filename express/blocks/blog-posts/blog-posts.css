@@ -15,36 +15,12 @@ main .blog-posts .blog-cards {
   width: unset;
 }
 
-main .blog-posts .blog-hero-card {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0;
-  border: 0;
-  text-decoration: unset;
-  color: unset;
-}
-
-
-main .blog-posts .blog-hero-card .blog-card-image img {
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-}
-
 main .blog-posts {
   text-align: center;
 }
-main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
-  cursor: pointer;
-}
 
 main .blog-posts .blog-card {
+    cursor: pointer;
     display: grid;
     width: 350px;
     text-decoration: unset;
@@ -65,8 +41,8 @@ main .blog-posts .blog-card {
   }
 
   main .blog-posts .blog-card .blog-card-image img {
-    height: 92px;
     object-fit: cover;
+    height: 92px;
     width: 126px;
     border-radius: 6px;
   }
@@ -100,39 +76,30 @@ main .blog-posts .blog-card {
     font-size: var(--body-font-size-s);
     line-height: var(--body-line-height);
     font-family: var(--body-serif-font-family);
+    font-weight: var(--heading-font-weight);
     grid-area: date;
   }
   
-  main .blog-posts .blog-card .blog-card-body p {
-    font-size: 1rem;
-    margin: 12px 0;
+@media (min-width: 900px) {
+  main .blog-posts .blog-card .blog-card-image img {
+    height: 235px;
+    width: 325px;
   }
 
-  main .blog-posts .blog-card .blog-card-body {
-    padding: 16px;
-    border: 1px solid lightgrey;
-    border-radius: 0 0 10px 10px;
-    border-top: none;
-    height: 200px;
+  main .blog-posts .blog-card {
+    grid-template-areas: 'image' 'title'  'teaser' 'date';
+    width: 325px;
   }
 
-@media (min-width: 600px) {
-  main .blog-posts .blog-hero-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  main .blog-posts .blog-hero-card .blog-card-image {
-    height: 320px;
-    padding-bottom: 0;
+  main .blog-posts h3.blog-card-title {
+    font-size: var(--heading-font-size-m);
+    margin: 0;
   }
 
-  main .blog-posts .blog-hero-card .blog-card-body {
-    text-align: left;
+  main .blog-posts .blog-card .blog-card-image {
+    margin: 24px 0;
+    border-radius: 10px;
   }
 
-  main .blog-posts .blog-hero-card .blog-card-body h3 {
-    text-align: left;
-  }
 
 }
