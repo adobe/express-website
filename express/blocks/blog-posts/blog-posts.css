@@ -93,11 +93,11 @@ main .blog-posts .blog-card {
 
   main .blog-posts h3.blog-card-title {
     font-size: var(--heading-font-size-m);
-    margin: 0;
+    margin: 0 0 24px 0;
   }
 
   main .blog-posts .blog-card .blog-card-image {
-    margin: 24px 0;
+    margin: 0 0 24px 0;
     border-radius: 10px;
   }
 
