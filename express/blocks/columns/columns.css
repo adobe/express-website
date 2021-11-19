@@ -473,4 +473,20 @@ main .columns .column {
   body.has-fixed-button .new-banner-container .button-container a {
     display: inline-block;
   }
+
+  main .columns .column {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  main .columns .column.column-picture {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  body.no-brand-header main .columns:first-of-type:not(.center) .brand.icon {
+    transform: none;
+    left: 0;
+    padding-left: 2rem
+  }
 }
