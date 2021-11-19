@@ -108,7 +108,11 @@ function getMeta(name) {
   return value;
 }
 
-export function getIcon(icon, alt = icon, size = 44) {
+export function getIcon(icons, alt, size = 44) {
+  // eslint-disable-next-line no-param-reassign
+  icons = Array.isArray(icons) ? icons : [icons];
+  const [defaultIcon, mobileIcon] = icons;
+  const icon = (mobileIcon && window.innerWidth < 600) ? mobileIcon : defaultIcon;
   const symbols = [
     'adobefonts',
     'adobe-stock',
@@ -181,9 +185,9 @@ export function getIcon(icon, alt = icon, size = 44) {
   }
 }
 
-export function getIconElement(icon, size) {
+export function getIconElement(icons, size) {
   const $div = createTag('div');
-  $div.innerHTML = getIcon(icon, null, size);
+  $div.innerHTML = getIcon(icons, null, size);
   return ($div.firstChild);
 }
 
@@ -1101,7 +1105,14 @@ export function fixIcons(block = document) {
     if (alt) {
       const lowerAlt = alt.toLowerCase();
       if (lowerAlt.includes('icon:')) {
-        const icon = lowerAlt.split('icon:')[1].trim().replace(/\s/gm, '-');
+        const [icon, mobileIcon] = lowerAlt
+          .split(';')
+          .map((i) => {
+            if (i) {
+              return toClassName(i.split(':')[1].trim());
+            }
+            return null;
+          });
         const $picture = $img.closest('picture');
         const $block = $picture.closest('.block');
         let size = 44;
@@ -1111,7 +1122,7 @@ export function fixIcons(block = document) {
           // console.log(blockName);
           if (smallIconBlocks.includes(blockName)) size = 22;
         }
-        $picture.parentElement.replaceChild(getIconElement(icon, size), $picture);
+        $picture.parentElement.replaceChild(getIconElement([icon, mobileIcon], size), $picture);
       }
     }
   });
