@@ -203,7 +203,8 @@ export function transformLinkToAnimation($a) {
     $poster.parentNode.remove();
   }
   // replace anchor with video element
-  const helixId = new URL($a.href).pathname.split('/')[2];
+  const videoUrl = new URL($a.href);
+  const helixId = videoUrl.hostname.includes('hlx.blob.core') ? videoUrl.pathname.split('/')[2] : videoUrl.pathname.split('media_')[1].split('.')[0];
   const videoHref = `./media_${helixId}.mp4`;
   const $video = createTag('video', attribs);
   $video.innerHTML = `<source src="${videoHref}" type="video/mp4">`;
