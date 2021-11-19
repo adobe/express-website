@@ -131,12 +131,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   // set some global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
-  w.adobeid = {
-    client_id: 'MarvelWeb3',
-    scope: 'AdobeID,openid',
-    locale: language,
-  };
-
   digitalData._set('page.pageInfo.pageName', pageName);
   digitalData._set('page.pageInfo.language', language);
   digitalData._set('page.pageInfo.siteSection', 'adobe.com:express');
