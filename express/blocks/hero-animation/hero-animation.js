@@ -27,7 +27,7 @@ function timecodeToSeconds(timecode) {
 
 function createAnimation(animations) {
   const attribs = {};
-  ['playsinline', 'autoplay', 'muted'].forEach((p) => {
+  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
     attribs[p] = '';
   });
 

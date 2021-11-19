@@ -62,74 +62,99 @@ async function fetchAuthorImage($image, author) {
   }
 }
 
-export default function decorateBlogPage($heroSection, $heroPicture, $h1) {
-  const $div = createTag('div');
-  $heroSection.append($div);
-  const $blogHeader = createTag('div', { class: 'blog-header' });
-  $div.append($blogHeader);
-  const $eyebrow = createTag('div', { class: 'eyebrow' });
-  const tagString = getMeta('article:tag');
-  // eslint-disable-next-line no-unused-vars
-  const tags = tagString.split(',');
-  $eyebrow.innerHTML = getMeta('category');
-  // $eyebrow.innerHTML = tags[0];
-  $blogHeader.append($eyebrow);
-  $blogHeader.append($h1);
-  const author = getMeta('author');
-  const date = getMeta('publication-date');
-  const description = getMeta('description');
-  if (description) {
-    const $description = createTag('p', { class: 'subheading' });
-    $description.innerHTML = description;
-    $blogHeader.append($description);
-  }
-  if (author) {
-    const $author = createTag('div', { class: 'author' });
-    const url = encodeURIComponent(window.location.href);
-    $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
-    <div>
-      <div class="name">${author}</div>
-      <div class="date">${date}</div>
-    </div>
-    <div class="author-social">
-      <span>
-        <a target="_blank" href="http://twitter.com/share?&url=${url}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter">
-          <use href="/express/icons/ccx-sheet_22.svg#twitter22"></use>
-        </svg>
-        </a>
-      </span>
-      <span>
-        <a target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=${url}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-linkedin">
-          <use href="/express/icons/ccx-sheet_22.svg#linkedin22"></use>
-        </svg>
-        </a>
-      </span>
-      <span>
-      <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${url}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook">
-          <use href="/express/icons/ccx-sheet_22.svg#facebook22"></use>
-        </svg>
-        </a>
-      </span>
-      <span>
-      <a onclick="copyToClipboard()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-globe">
-          <use href="/express/icons/ccx-sheet_22.svg#globe22"></use>
-        </svg>
-        </a>
-      </span>
-    </div>`;
-    fetchAuthorImage($author.querySelector('img'), author);
-    $blogHeader.append($author);
-  }
-  $div.append($blogHeader);
-  if ($heroPicture) {
-    $div.append($heroPicture);
+export default function decorateBlogPage() {
+  const $main = document.querySelector('main');
+  const $h1 = document.querySelector('main h1');
+  if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+    const $heroPicture = $h1.parentElement.querySelector('picture');
+    let $heroSection;
+    if ($main.children.length === 1) {
+      $heroSection = createTag('div', { class: 'hero' });
+    } else {
+      $heroSection = $h1.closest('.section-wrapper');
+      $heroSection.classList.add('hero');
+      $heroSection.classList.remove('section-wrapper');
+    }
+    const $div = createTag('div');
+    $heroSection.append($div);
+    $div.append($h1);
+    $main.prepend($heroSection);
+
+    const $blogHeader = createTag('div', { class: 'blog-header' });
+    $div.append($blogHeader);
+    const $eyebrow = createTag('div', { class: 'eyebrow' });
+    const tagString = getMeta('article:tag');
+    // eslint-disable-next-line no-unused-vars
+    const tags = tagString.split(',');
+    $eyebrow.innerHTML = getMeta('category');
+    // $eyebrow.innerHTML = tags[0];
+    $blogHeader.append($eyebrow);
+    $blogHeader.append($h1);
+    const author = getMeta('author');
+    const date = getMeta('publication-date');
+    const description = getMeta('description');
+    if (description) {
+      const $description = createTag('p', { class: 'subheading' });
+      $description.innerHTML = description;
+      $blogHeader.append($description);
+    }
+    if (author) {
+      const $author = createTag('div', { class: 'author' });
+      const url = encodeURIComponent(window.location.href);
+      $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
+      <div>
+        <div class="name">${author}</div>
+        <div class="date">${date}</div>
+      </div>
+      <div class="author-social">
+        <span>
+          <a target="_blank" href="http://twitter.com/share?&url=${url}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-twitter">
+            <use href="/express/icons/ccx-sheet_22.svg#twitter22"></use>
+          </svg>
+          </a>
+        </span>
+        <span>
+          <a target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url=${url}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-linkedin">
+            <use href="/express/icons/ccx-sheet_22.svg#linkedin22"></use>
+          </svg>
+          </a>
+        </span>
+        <span>
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${url}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-facebook">
+            <use href="/express/icons/ccx-sheet_22.svg#facebook22"></use>
+          </svg>
+          </a>
+        </span>
+        <span>
+        <a onclick="copyToClipboard()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-globe">
+            <use href="/express/icons/ccx-sheet_22.svg#globe22"></use>
+          </svg>
+          </a>
+        </span>
+      </div>`;
+      fetchAuthorImage($author.querySelector('img'), author);
+      $blogHeader.append($author);
+    }
+    $div.append($blogHeader);
+    if ($heroPicture) {
+      $div.append($heroPicture);
+    }
   }
 
-  const $main = document.querySelector('main');
+  const pictures = document.querySelectorAll('main div.section-wrapper > div > picture');
+  pictures.forEach((picture) => {
+    const section = picture.closest('.section-wrapper');
+    section.classList.add('fullwidth');
+  });
+  const introText = document.querySelector('main div.section-wrapper p');
+  if (introText) {
+    introText.classList.add('intro-text');
+  }
+
   const section = createTag('div', { class: 'section-wrapper' });
   const block = buildBlock('tags', '');
   block.classList.add('block');

@@ -863,53 +863,42 @@ function decoratePageStyle() {
   const $h1 = document.querySelector('main h1');
   // check if h1 is inside a block
 
-  if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
-    const $heroPicture = $h1.parentElement.querySelector('picture');
-    let $heroSection;
-    const $main = document.querySelector('main');
-    if ($main.children.length === 1 || isBlog) {
-      $heroSection = createTag('div', { class: 'hero' });
-      const $div = createTag('div');
-      if (isBlog) {
-        import('/express/scripts/blog.js')
-          .then((mod) => {
-            if (mod.default) {
-              mod.default($heroSection, $heroPicture, $h1);
-            }
-          })
-          .catch((err) => console.log('failed to load blog', err));
-        loadCSS('/express/styles/blog.css');
-      } else {
+  if (isBlog) {
+    import('/express/scripts/blog.js')
+      .then((mod) => {
+        if (mod.default) {
+          mod.default();
+        }
+      })
+      .catch((err) => console.log('failed to load blog', err));
+    loadCSS('/express/styles/blog.css');
+  } else {
+    // eslint-disable-next-line no-lonely-if
+    if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+      const $heroPicture = $h1.parentElement.querySelector('picture');
+      let $heroSection;
+      const $main = document.querySelector('main');
+      if ($main.children.length === 1) {
+        $heroSection = createTag('div', { class: 'hero' });
+        const $div = createTag('div');
         $heroSection.append($div);
         if ($heroPicture) {
           $div.append($heroPicture);
         }
         $div.append($h1);
+        $main.prepend($heroSection);
+      } else {
+        $heroSection = $h1.closest('.section-wrapper');
+        $heroSection.classList.add('hero');
+        $heroSection.classList.remove('section-wrapper');
       }
-      $main.prepend($heroSection);
-    } else {
-      $heroSection = $h1.closest('.section-wrapper');
-      $heroSection.classList.add('hero');
-      $heroSection.classList.remove('section-wrapper');
-    }
-    if ($heroPicture) {
-      if (!isBlog) {
-        $heroPicture.classList.add('hero-bg');
+      if ($heroPicture) {
+        if (!isBlog) {
+          $heroPicture.classList.add('hero-bg');
+        }
+      } else {
+        $heroSection.classList.add('hero-noimage');
       }
-    } else {
-      $heroSection.classList.add('hero-noimage');
-    }
-  }
-
-  if (isBlog) {
-    const pictures = document.querySelectorAll('main div.section-wrapper > div > picture');
-    pictures.forEach((picture) => {
-      const section = picture.closest('.section-wrapper');
-      section.classList.add('fullwidth');
-    });
-    const introText = document.querySelector('main div.section-wrapper p');
-    if (introText) {
-      introText.classList.add('intro-text');
     }
   }
 }
@@ -1196,7 +1185,7 @@ function setTheme() {
     $body.classList.add(themeClass);
   } else {
     const path = window.location.pathname;
-    if (path.includes('/blog/')) {
+    if (path.includes('/blog/') || path.endsWith('/blog')) {
       $body.classList.add('blog', 'no-brand-header');
     }
     // todo: read template from page metadata
