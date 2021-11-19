@@ -43,10 +43,6 @@ function handleConsentSettings() {
 w.addEventListener('adobePrivacy:PrivacyConsent', handleConsentSettings);
 w.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
 w.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
-w.fedsConfig = w.fedsConfig || {};
-w.fedsConfig.privacy = w.fedsConfig.privacy || {};
-w.fedsConfig.privacy.otDomainId = '7a5eb705-95ed-4cc4-a11d-0cc5760e93db';
-w.fedsConfig.privacy.footerLinkSelector = '#openCookieModal';
 
 async function showRegionPicker() {
   const $body = document.body;
@@ -90,12 +86,10 @@ async function showRegionPicker() {
   });
 }
 
-loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
-
 const locale = getLocale(window.location);
 
-window.fedsConfig = {
-  ...window.fedsConfig,
+w.fedsConfig = {
+  ...(w.fedsConfig || {}),
 
   footer: {
     regionModal: () => {
@@ -108,7 +102,7 @@ window.fedsConfig = {
   },
   profile: {
     customSignIn: () => {
-      const sparkLang = getLanguage(getLocale(window.location));
+      const sparkLang = getLanguage(locale);
       const sparkPrefix = sparkLang === 'en-US' ? '' : `/${sparkLang}`;
       let sparkLoginUrl = `https://express.adobe.com${sparkPrefix}/sp/`;
       const env = getHelixEnv();
@@ -120,13 +114,26 @@ window.fedsConfig = {
   },
 };
 
-let prefix = '';
-if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
-  prefix = 'https://www.adobe.com';
+function loadIMS() {
+  w.adobeid = {
+    client_id: 'MarvelWeb3',
+    scope: 'AdobeID,openid',
+    locale,
+  };
+  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
 }
 
-loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`, () => {
-  setTimeout(() => {
+function loadPrivacy() {
+  window.fedsConfig.privacy = {
+    otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
+    footerLinkSelector: '#openCookieModal',
+  };
+  loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
+}
+
+function loadFEDS() {
+  w.addEventListener('feds.events.experience.loaded', () => {
+    document.querySelector('body').classList.add('feds-loaded');
     /* attempt to switch link */
     if (window.location.pathname.includes('/create/')
       || window.location.pathname.includes('/discover/')
@@ -137,11 +144,6 @@ loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`, () => {
         $aNav.href = $aHero.href;
       }
     }
-
-    const gnav = document.getElementById('feds-header');
-    const placeholder = document.getElementById('header-placeholder');
-    gnav.classList.add('appear');
-    placeholder.classList.add('disappear');
 
     /* switch all links if lower envs */
     const env = getHelixEnv();
@@ -159,10 +161,17 @@ loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`, () => {
         $a.setAttribute('href', hrefURL.toString());
       });
     }
-  }, 500);
-}).id = 'feds-script';
+    setTimeout(loadPrivacy, 3000);
+  });
+  let prefix = '';
+  if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
+    prefix = 'https://www.adobe.com';
+  }
+  loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`).id = 'feds-script';
+}
 
-loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
+loadIMS();
+loadFEDS();
 
 /* Core Web Vitals RUM collection */
 
