@@ -82,6 +82,7 @@
   .blog main .hero .blog-header {
     text-align: left;
     margin: 32px;
+    margin-top: 80px;
     background-image: url(/express/icons/cc-express-logo.svg);
     padding-top: 58px;
     background-repeat: no-repeat;
@@ -93,10 +94,10 @@
     margin: 0;
   }
   
-  .blog div.section-wrapper > div > p, .blog div.section-wrapper > div > h2,
-  .blog div.section-wrapper > div > h3, .blog div.section-wrapper > div > h4,
-  .blog div.section-wrapper > div > h5, .blog div.section-wrapper > div > ul, 
-  .blog div.section-wrapper > div > ol {
+  .blog-article div.section-wrapper > div > p, .blog-article div.section-wrapper > div > h2,
+  .blog-article div.section-wrapper > div > h3, .blog-article div.section-wrapper > div > h4,
+  .blog-article div.section-wrapper > div > h5, .blog-article div.section-wrapper > div > ul, 
+  .blog-article div.section-wrapper > div > ol {
     max-width: 530px;
     margin-left: auto;
     margin-right: auto;

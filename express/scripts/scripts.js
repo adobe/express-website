@@ -1124,7 +1124,7 @@ export function normalizeHeadings(block, allowedHeadings) {
 
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq', 'promotion', 'fragment'];
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);

@@ -100,7 +100,7 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
 
   const isHero = config.featured && config.featured.length === 1;
 
-  const limit = 12;
+  const limit = config['page-size'] || 12;
 
   let $cards = $blogPosts.querySelector('.blog-cards');
   if (!$cards) {
@@ -160,7 +160,7 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       $cards.append($card);
     }
   }
-  if (posts.length > pageEnd) {
+  if (posts.length > pageEnd && config['load-more']) {
     const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
     $loadMore.innerHTML = 'Load more articles';
     $blogPosts.append($loadMore);
@@ -192,6 +192,16 @@ export default function decorate($block) {
     config = readBlockConfig($block);
   }
   $block.innerHTML = '';
+
+  // wrap p in parent section
+  if (window.location.href.endsWith('/blog')) {
+    const wrapper = createTag('div', { class: 'blog-posts-decoration' });
+    $block.parentNode.insertBefore(wrapper, $block);
+    const allP = $block.parentNode.querySelectorAll('p');
+    allP.forEach((p) => {
+      wrapper.appendChild(p);
+    });
+  }
 
   decorateBlogPosts($block, config);
 }

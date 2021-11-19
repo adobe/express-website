@@ -73,6 +73,7 @@ export default function decorateBlogPage() {
     $div.append($h1);
     $main.prepend($heroSection);
 
+    document.body.classList.add('blog-article');
     const $blogHeader = createTag('div', { class: 'blog-header' });
     $div.append($blogHeader);
     const $eyebrow = createTag('div', { class: 'eyebrow' });
