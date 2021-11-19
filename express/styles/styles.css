@@ -89,14 +89,6 @@ body.feds-loaded > header {
   height: auto;
 }
 
-/* #feds-header {
-  opacity: 0;
-}
-
-#feds-header.appear {
-  opacity: 1;
-} */
-
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
   background-color: var(--color-info-accent);
   border-color: var(--color-info-accent);
