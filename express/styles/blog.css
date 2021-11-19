@@ -127,6 +127,14 @@
   .blog main .hero-animation p {
     font-family: var(--body-serif-font-family);
   }
+
+  .blog main .banner-container {
+    margin-top: 64px;
+  }
+
+  .blog main .banner > div > div > h2 {
+    text-align: center;
+  }
   
 @media (min-width: 600px) {
   .blog main .hero .blog-header p.subheading {
