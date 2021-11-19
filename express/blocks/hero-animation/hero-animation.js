@@ -86,7 +86,8 @@ export default function decorate($block) {
     if (rowType === 'animation') {
       const $a = $div.querySelector('a');
       const $poster = $div.querySelector('img');
-      const id = new URL($a.href).pathname.split('/')[2];
+      const url = new URL($a.href);
+      const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
       const source = `./media_${id}.mp4`;
 
       animations[typeHint] = { source, poster: $poster.currentSrc };
