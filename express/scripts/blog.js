@@ -67,14 +67,7 @@ export default function decorateBlogPage() {
   const $h1 = document.querySelector('main h1');
   if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
     const $heroPicture = $h1.parentElement.querySelector('picture');
-    let $heroSection;
-    if ($main.children.length === 1) {
-      $heroSection = createTag('div', { class: 'hero' });
-    } else {
-      $heroSection = $h1.closest('.section-wrapper');
-      $heroSection.classList.add('hero');
-      $heroSection.classList.remove('section-wrapper');
-    }
+    const $heroSection = createTag('div', { class: 'hero' });
     const $div = createTag('div');
     $heroSection.append($div);
     $div.append($h1);
