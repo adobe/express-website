@@ -1286,10 +1286,14 @@ function makeRelativeLinks($main) {
   $main.querySelectorAll('a').forEach(($a) => {
     if (!$a.href) return;
     try {
-      const url = new URL($a.href);
-      if (['www.adobe.com', 'www.stage.adobe.com'].includes(url.hostname)) {
+      const {
+        hostname, pathname, search, hash,
+      } = new URL($a.href);
+      if (hostname.endsWith('.page')
+        || hostname.endsWith('.live')
+        || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
-        $a.href = `${url.pathname}${url.search}${url.hash}`;
+        $a.href = `${pathname}${search}${hash}`;
       }
     } catch (e) {
       // invalid url
