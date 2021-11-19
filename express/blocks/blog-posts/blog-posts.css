@@ -3,9 +3,10 @@ main .blog-posts-container {
 }
 
 main .blog-posts-container > div {
-  max-width: 100%;
+  max-width: 1200px;
   padding: 0;
 }
+
 
 main .blog-posts .blog-cards {
   display: flex;
@@ -19,24 +20,42 @@ main .blog-posts {
   text-align: center;
 }
 
-main .blog-posts .blog-card {
+main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
     cursor: pointer;
-    display: grid;
-    width: 350px;
     text-decoration: unset;
     color: unset;
-    grid-template-areas: 'title title' 'teaser image' 'date image';
     text-align: left;
+  }
+
+  main .blog-posts .blog-card {
+    display: grid;
+    grid-template-areas: 'title title' 'teaser image' 'date image';
+    width: 350px;
     margin: 28px;
+  }
+
+  main .blog-posts .blog-hero-card {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    max-width: 530px;
+    margin: 80px auto;
+  }
+
+  main .blog-posts .blog-card > p, main .blog-posts .blog-hero-card > p {
+    margin: 0;
   }
 
   main .blog-posts .blog-card .blog-card-image {
     line-height: 0;
     grid-area: image;
     margin-left: 16px;
+    margin: 0;
   }
 
-  main .blog-posts .blog-card > p {
+  main .blog-posts .blog-hero-card .blog-card-image {
+    line-height: 0;
+    grid-area: image;
     margin: 0;
   }
 
@@ -47,7 +66,13 @@ main .blog-posts .blog-card {
     border-radius: 6px;
   }
 
-  main .blog-posts h3.blog-card-title {
+  main .blog-posts .blog-hero-card .blog-card-image img {
+    height: 276px;
+    margin: auto;
+    display: block;
+  }
+
+  main .blog-posts .blog-card h3.blog-card-title {
     font-size: var(--heading-font-size-s);
     line-height: var(--heading-line-height);
     text-align: left;
@@ -60,7 +85,15 @@ main .blog-posts .blog-card {
     margin-top: 0;
   }
 
-  main .blog-posts p.blog-card-teaser {
+  main .blog-posts .blog-hero-card h3.blog-card-title {
+    font-size: var(--heading-font-size-xl);
+    line-height: var(--heading-line-height);
+    text-align: left;
+    grid-area: title;
+    margin: 0 24px;
+  }
+
+  main .blog-posts .blog-card p.blog-card-teaser {
     font-size: var(--body-font-size-m);
     line-height: var(--body-line-height);
     font-weight: normal;
@@ -70,7 +103,17 @@ main .blog-posts .blog-card {
     -webkit-box-orient: vertical;  
     overflow: hidden;
     grid-area: teaser;
-    }
+  }
+
+  
+  main .blog-posts .blog-hero-card p.blog-card-teaser {
+    font-family: var(--body-serif-font-family);
+    font-size: var(--body-font-size-l);
+    text-align: left;
+    grid-area: teaser;
+    font-weight: normal;
+    margin: 24px;
+  }
 
   main .blog-posts p.blog-card-date {
     font-size: var(--body-font-size-s);
@@ -79,11 +122,45 @@ main .blog-posts .blog-card {
     font-weight: var(--heading-font-weight);
     grid-area: date;
   }
-  
+  main .blog-posts .blog-hero-card p.blog-card-date {
+    margin-left: 24px;
+  }
+
+  main .blog-posts .blog-hero-card p.blog-card-cta {
+    grid-area: cta;
+    text-align: left;
+    margin-top: 14px;
+    margin-bottom: 30px;
+    margin-left: 24px;
+  }
+
+  main .blog-posts .blog-hero-card p.blog-card-cta a {
+    margin-left: 0;
+  }
+
 @media (min-width: 900px) {
+
+  main .blog-posts .blog-card .blog-card-image {
+    margin: 0 0 24px 0;
+    border-radius: 10px;
+  }
+
   main .blog-posts .blog-card .blog-card-image img {
     height: 235px;
     width: 325px;
+  }
+
+  main .blog-posts .blog-hero-card .blog-card-image {
+    height: unset;
+    width: unset;
+  }
+
+  main .blog-posts .blog-hero-card .blog-card-image img {
+    height: unset;
+    width: unset;
+    min-width: 488px;
+    max-width: 600px;
+    object-fit: fit;
   }
 
   main .blog-posts .blog-card {
@@ -91,15 +168,23 @@ main .blog-posts .blog-card {
     width: 325px;
   }
 
-  main .blog-posts h3.blog-card-title {
+  main .blog-posts .blog-hero-card {
+    flex-direction: unset;
+    max-width: 1200px;
+    align-items: center;
+    margin: 56px auto;
+  }
+
+  main .blog-posts .blog-card h3.blog-card-title {
     font-size: var(--heading-font-size-m);
     margin: 0 0 24px 0;
   }
 
-  main .blog-posts .blog-card .blog-card-image {
-    margin: 0 0 24px 0;
-    border-radius: 10px;
+  main .blog-posts .blog-hero-card p.blog-card-cta {
+    margin-bottom: 0px;
   }
 
-
+  main .blog-posts .blog-hero-card p.blog-card-cta a {
+    margin-bottom: 0px;
+  }
 }

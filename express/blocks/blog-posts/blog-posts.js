@@ -98,9 +98,9 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
 
   posts = await filterBlogPosts('en-US', config);
 
-  const hasHero = config.featured && !config.featuredOnly && !offset;
+  const isHero = config.featured && config.featured.length === 1;
 
-  const limit = hasHero ? 13 : 12;
+  const limit = 12;
 
   let $cards = $blogPosts.querySelector('.blog-cards');
   if (!$cards) {
@@ -124,7 +124,6 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     });
     const path = post.path.split('.')[0];
 
-    const isHero = hasHero && !i;
     const imagePath = image.split('?')[0].split('_')[1];
     const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
     const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
@@ -139,14 +138,27 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,
       href: path,
     });
-    $card.innerHTML = `<div class="blog-card-image">
-          ${pictureTag}
+
+    if (isHero) {
+      $card.innerHTML = `<div class="blog-card-image">
+      ${pictureTag}
+      </div>
+      <div class="blog-hero-card-body">
+        <h3 class="blog-card-title">${title}</h3>
+        <p class="blog-card-teaser">${teaser}</p>
+        <p class="blog-card-date">${dateString}</p>
+        <p class="blog-card-cta button-container"><a href="${path}" title="Read more" class="button accent">Read More</a></p>
+      </div>`;
+      $blogPosts.prepend($card);
+    } else {
+      $card.innerHTML = `<div class="blog-card-image">
+        ${pictureTag}
         </div>
         <h3 class="blog-card-title">${title}</h3>
         <p class="blog-card-teaser">${teaser}</p>
         <p class="blog-card-date">${dateString}</p>`;
-    if (isHero) $blogPosts.prepend($card);
-    else $cards.append($card);
+      $cards.append($card);
+    }
   }
   if (posts.length > pageEnd) {
     const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });

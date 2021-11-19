@@ -27,10 +27,12 @@ export default function decorate(block) {
   normalizeHeadings(block, ['h3']);
   const tags = getMetadata('article:tag');
   tags.split(',').forEach((tag) => {
-    const link = document.createElement('a');
-    link.innerHTML = tag.trim();
-    link.href = '#';
-    link.classList.add('medium', 'secondary', 'button');
-    block.appendChild(link);
+    if (tag) {
+      const link = document.createElement('a');
+      link.innerHTML = tag.trim();
+      link.href = '#';
+      link.classList.add('medium', 'secondary', 'button');
+      block.appendChild(link);
+    }
   });
 }
