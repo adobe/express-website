@@ -12,11 +12,13 @@
 
 import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
-function decorateIconList($columnCell) {
+function decorateIconList($columnCell, rowNum) {
   const icons = $columnCell.querySelectorAll('img.icon, svg.icon');
-  if (icons.length === 1
-    && icons[0].closest('p').innerText === '') {
-    // treat single icon without text in a fullsize column cell as brand icon
+  if (rowNum === 0
+    && icons.length === 1
+    && icons[0].closest('p').innerText === ''
+    && !icons[0].closest('p').previousSibling) {
+    // treat icon as brand icon if first element in first row cell and no text next to it
     icons[0].classList.add('brand');
     $columnCell.parentElement.classList.add('has-brand');
     return;
@@ -219,7 +221,7 @@ export default function decorate($block) {
     const $cells = Array.from($row.children);
     $cells.forEach(($cell, cellNum) => {
       if ($cell.querySelector('img.icon, svg.icon')) {
-        decorateIconList($cell);
+        decorateIconList($cell, rowNum);
       }
 
       if (cellNum === 0 && isNumberedList) {
