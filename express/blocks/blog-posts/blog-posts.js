@@ -77,6 +77,8 @@ async function filterBlogPosts(locale, config) {
       }
     }
 
+    let numMatched = 0;
+
     /* filter and ignore if already in result */
     const feed = index.data.filter((post) => {
       let matchedAll = true;
@@ -92,7 +94,11 @@ async function filterBlogPosts(locale, config) {
           break;
         }
       }
-      return (matchedAll && !isDuplicate(post.path));
+      if (matchedAll && numMatched < 12) {
+        matchedAll = !isDuplicate(post.path);
+      }
+      if (matchedAll) numMatched += 1;
+      return (matchedAll);
     });
 
     result.push(...feed);
@@ -254,7 +260,7 @@ export default function decorate($block) {
   if (checkStructure($block.parentNode, ['h2 + p + p + div.blog-posts', 'h2 + p + div.blog-posts', 'h2 + div.blog-posts'])) {
     const wrapper = createTag('div', { class: 'blog-posts-decoration' });
     $block.parentNode.insertBefore(wrapper, $block);
-    const allP = $block.parentNode.querySelectorAll('p');
+    const allP = $block.parentNode.querySelectorAll(':scope > p');
     allP.forEach((p) => {
       wrapper.appendChild(p);
     });

@@ -229,7 +229,7 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
   }
 
   
-  main .blog-posts-container > div > h2, main .blog-posts-container div.blog-posts-decoration {
+  .blog main .blog-posts-container > div > h2, main .blog-posts-container div.blog-posts-decoration {
     max-width: 1088px;
   }
   
