@@ -57,15 +57,13 @@ async function filterBlogPosts(locale, config) {
     /* filter posts by tag and author */
     const f = {};
     for (const name of Object.keys(config)) {
-      const filterNames = ['tag', 'author'];
+      const filterNames = ['tags', 'author'];
       if (filterNames.includes(name)) {
         const vals = config[name];
         let v = vals;
         if (!Array.isArray(vals)) {
           v = [vals];
         }
-        // eslint-disable-next-line no-console
-        console.log(v);
         f[name] = v.map((e) => e.toLowerCase().trim());
       }
     }
@@ -76,7 +74,7 @@ async function filterBlogPosts(locale, config) {
       for (const name of Object.keys(f)) {
         let matched = false;
         f[name].forEach((val) => {
-          if (post[name].toLowerCase().includes(val)) {
+          if (post[name] && post[name].toLowerCase().includes(val)) {
             matched = true;
           }
         });
@@ -91,6 +89,14 @@ async function filterBlogPosts(locale, config) {
     result.push(...feed);
   }
   return (result);
+}
+
+function duplicateCheck(path) {
+  const displayed = window.blogPosts || [];
+  const alreadyDisplayed = displayed.includes(path);
+  displayed.push(path);
+  window.blogPosts = displayed;
+  return (alreadyDisplayed);
 }
 
 async function decorateBlogPosts($blogPosts, config, offset = 0) {
@@ -109,60 +115,62 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
   }
 
   const pageEnd = offset + limit;
-  const max = pageEnd > posts.length ? posts.length : pageEnd;
-  for (let i = offset; i < max; i += 1) {
+  let count = 0;
+  for (let i = offset; i < posts.length && count < limit; i += 1) {
     const post = posts[i];
-    const {
-      title, teaser, image,
-    } = post;
-    const publicationDate = new Date(post.date * 1000);
-    const dateString = publicationDate.toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      timeZone: 'UTC',
-    });
     const path = post.path.split('.')[0];
+    if (!duplicateCheck(path)) {
+      const {
+        title, teaser, image,
+      } = post;
+      const publicationDate = new Date(post.date * 1000);
+      const dateString = publicationDate.toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        timeZone: 'UTC',
+      });
 
-    const imagePath = image.split('?')[0].split('_')[1];
-    const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
-    const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
-    let pictureTag = `<picture><img src="${imageSrc}"></picture>`;
-    if (isHero) {
-      pictureTag = `<picture>
-        <source media="(max-width: 400px)" srcset="${imageSrc}">
-        <img src="${heroSrc}">
-      </picture>`;
-    }
-    const $card = createTag('a', {
-      class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,
-      href: path,
-    });
-
-    if (isHero) {
-      $card.innerHTML = `<div class="blog-card-image">
-      ${pictureTag}
-      </div>
-      <div class="blog-hero-card-body">
-        <h3 class="blog-card-title">${title}</h3>
-        <p class="blog-card-teaser">${teaser}</p>
-        <p class="blog-card-date">${dateString}</p>
-        <p class="blog-card-cta button-container"><a href="${path}" title="Read more" class="button accent">Read More</a></p>
-      </div>`;
-      $blogPosts.prepend($card);
-    } else {
-      $card.innerHTML = `<div class="blog-card-image">
+      const imagePath = image.split('?')[0].split('_')[1];
+      const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
+      const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
+      let pictureTag = `<picture><img src="${imageSrc}"></picture>`;
+      if (isHero) {
+        pictureTag = `<picture>
+          <source media="(max-width: 400px)" srcset="${imageSrc}">
+          <img src="${heroSrc}">
+        </picture>`;
+      }
+      const $card = createTag('a', {
+        class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,
+        href: path,
+      });
+      if (isHero) {
+        $card.innerHTML = `<div class="blog-card-image">
         ${pictureTag}
         </div>
-        <h3 class="blog-card-title">${title}</h3>
-        <p class="blog-card-teaser">${teaser}</p>
-        <p class="blog-card-date">${dateString}</p>`;
-      $cards.append($card);
+        <div class="blog-hero-card-body">
+          <h3 class="blog-card-title">${title}</h3>
+          <p class="blog-card-teaser">${teaser}</p>
+          <p class="blog-card-date">${dateString}</p>
+          <p class="blog-card-cta button-container"><a href="${path}" title="Read more" class="button accent">Read More</a></p>
+        </div>`;
+        $blogPosts.prepend($card);
+      } else {
+        $card.innerHTML = `<div class="blog-card-image">
+          ${pictureTag}
+          </div>
+          <h3 class="blog-card-title">${title}</h3>
+          <p class="blog-card-teaser">${teaser}</p>
+          <p class="blog-card-date">${dateString}</p>`;
+        $cards.append($card);
+      }
+      count += 1;
     }
   }
   if (posts.length > pageEnd && config['load-more']) {
     const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
-    $loadMore.innerHTML = 'Load more articles';
+    $loadMore.innerHTML = config['load-more'];
     $blogPosts.append($loadMore);
     $loadMore.addEventListener('click', (event) => {
       event.preventDefault();
@@ -170,6 +178,10 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       decorateBlogPosts($blogPosts, config, pageEnd);
     });
   }
+}
+
+function checkStructure(element, querySelector) {
+  return !!element.querySelector(`:scope > ${querySelector}`);
 }
 
 export default function decorate($block) {
@@ -194,7 +206,7 @@ export default function decorate($block) {
   $block.innerHTML = '';
 
   // wrap p in parent section
-  if (window.location.href.endsWith('/blog')) {
+  if (checkStructure($block.parentNode, 'h2 + p + p + div.blog-posts')) {
     const wrapper = createTag('div', { class: 'blog-posts-decoration' });
     $block.parentNode.insertBefore(wrapper, $block);
     const allP = $block.parentNode.querySelectorAll('p');

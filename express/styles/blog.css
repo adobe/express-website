@@ -97,11 +97,12 @@
   .blog-article div.section-wrapper > div > p, .blog-article div.section-wrapper > div > h2,
   .blog-article div.section-wrapper > div > h3, .blog-article div.section-wrapper > div > h4,
   .blog-article div.section-wrapper > div > h5, .blog-article div.section-wrapper > div > ul, 
-  .blog-article div.section-wrapper > div > ol {
+  .blog-article div.section-wrapper > div > ol, .blog-article div.section-wrapper > div > .table-of-contents {
     max-width: 530px;
     margin-left: auto;
     margin-right: auto;
   }
+
   
   .blog div.section-wrapper.fullwidth > div {
     margin: auto;
