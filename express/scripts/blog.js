@@ -62,6 +62,15 @@ async function fetchAuthorImage($image, author) {
   }
 }
 
+function copyToClipboard(copyButton) {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    copyButton.classList.add('copy-success');
+  }, (err) => {
+    copyButton.classList.add('copy-failure');
+    console.error('Async: Could not copy text: ', err);
+  });
+}
+
 export default async function decorateBlogPage() {
   const $main = document.querySelector('main');
   const $h1 = document.querySelector('main h1');
@@ -124,8 +133,8 @@ export default async function decorateBlogPage() {
           </a>
         </span>
         <span>
-        <a onclick="copyToClipboard()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-globe">
+        <a>
+          <svg id="copy-to-clipboard" xmlns="http://www.w3.org/2000/svg" class="icon icon-globe">
             <use href="/express/icons/ccx-sheet_22.svg#globe22"></use>
           </svg>
           </a>
@@ -133,6 +142,10 @@ export default async function decorateBlogPage() {
       </div>`;
       fetchAuthorImage($author.querySelector('img'), author);
       $blogHeader.append($author);
+      const copyButton = document.getElementById('copy-to-clipboard');
+      copyButton.addEventListener('click', () => {
+        copyToClipboard(copyButton);
+      });
     }
     $div.append($blogHeader);
     if ($heroPicture) {

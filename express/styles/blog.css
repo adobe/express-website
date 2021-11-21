@@ -137,6 +137,14 @@
   .blog main .banner > div > div > h2 {
     text-align: center;
   }
+
+  .blog main svg.copy-success {
+    fill: var(--color-info-accent);
+  }
+
+  .blog main svg.copy-failure {
+    fill: var(--color-gray-400);
+  }
   
 @media (min-width: 600px) {
   .blog main .hero .blog-header p.subheading {

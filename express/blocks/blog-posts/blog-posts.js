@@ -145,7 +145,6 @@ async function filterAllBlogPostsOnPage() {
       results.push({ config, posts });
     }
     window.blogResults = results;
-    console.log(results);
     resolve();
   } else {
     await window.blogResultsLoaded;
