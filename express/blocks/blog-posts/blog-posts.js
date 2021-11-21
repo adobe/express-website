@@ -41,6 +41,14 @@ function getFeatured(index, urls) {
   return (results);
 }
 
+function isDuplicate(path) {
+  const displayed = window.blogPosts || [];
+  const alreadyDisplayed = displayed.includes(path);
+  displayed.push(path);
+  window.blogPosts = displayed;
+  return (alreadyDisplayed);
+}
+
 async function filterBlogPosts(locale, config) {
   if (!window.blogIndex) {
     window.blogIndex = await fetchBlogIndex();
@@ -51,6 +59,7 @@ async function filterBlogPosts(locale, config) {
     if (!Array.isArray(config.featured)) config.featured = [config.featured];
     const featured = getFeatured(index, config.featured);
     result.push(...featured);
+    featured.forEach((post) => isDuplicate(post.path));
   }
 
   if (!config.featuredOnly) {
@@ -83,7 +92,7 @@ async function filterBlogPosts(locale, config) {
           break;
         }
       }
-      return (matchedAll && !result.includes(post));
+      return (matchedAll && !isDuplicate(post.path));
     });
 
     result.push(...feed);
@@ -91,100 +100,7 @@ async function filterBlogPosts(locale, config) {
   return (result);
 }
 
-function duplicateCheck(path) {
-  const displayed = window.blogPosts || [];
-  const alreadyDisplayed = displayed.includes(path);
-  displayed.push(path);
-  window.blogPosts = displayed;
-  return (alreadyDisplayed);
-}
-
-async function decorateBlogPosts($blogPosts, config, offset = 0) {
-  let posts = [];
-
-  posts = await filterBlogPosts('en-US', config);
-
-  const isHero = config.featured && config.featured.length === 1;
-
-  const limit = config['page-size'] || 12;
-
-  let $cards = $blogPosts.querySelector('.blog-cards');
-  if (!$cards) {
-    $cards = createTag('div', { class: 'blog-cards' });
-    $blogPosts.appendChild($cards);
-  }
-
-  const pageEnd = offset + limit;
-  let count = 0;
-  for (let i = offset; i < posts.length && count < limit; i += 1) {
-    const post = posts[i];
-    const path = post.path.split('.')[0];
-    if (!duplicateCheck(path)) {
-      const {
-        title, teaser, image,
-      } = post;
-      const publicationDate = new Date(post.date * 1000);
-      const dateString = publicationDate.toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        timeZone: 'UTC',
-      });
-
-      const imagePath = image.split('?')[0].split('_')[1];
-      const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
-      const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
-      let pictureTag = `<picture><img src="${imageSrc}"></picture>`;
-      if (isHero) {
-        pictureTag = `<picture>
-          <source media="(max-width: 400px)" srcset="${imageSrc}">
-          <img src="${heroSrc}">
-        </picture>`;
-      }
-      const $card = createTag('a', {
-        class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,
-        href: path,
-      });
-      if (isHero) {
-        $card.innerHTML = `<div class="blog-card-image">
-        ${pictureTag}
-        </div>
-        <div class="blog-hero-card-body">
-          <h3 class="blog-card-title">${title}</h3>
-          <p class="blog-card-teaser">${teaser}</p>
-          <p class="blog-card-date">${dateString}</p>
-          <p class="blog-card-cta button-container"><a href="${path}" title="Read more" class="button accent">Read More</a></p>
-        </div>`;
-        $blogPosts.prepend($card);
-      } else {
-        $card.innerHTML = `<div class="blog-card-image">
-          ${pictureTag}
-          </div>
-          <h3 class="blog-card-title">${title}</h3>
-          <p class="blog-card-teaser">${teaser}</p>
-          <p class="blog-card-date">${dateString}</p>`;
-        $cards.append($card);
-      }
-      count += 1;
-    }
-  }
-  if (posts.length > pageEnd && config['load-more']) {
-    const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
-    $loadMore.innerHTML = config['load-more'];
-    $blogPosts.append($loadMore);
-    $loadMore.addEventListener('click', (event) => {
-      event.preventDefault();
-      $loadMore.remove();
-      decorateBlogPosts($blogPosts, config, pageEnd);
-    });
-  }
-}
-
-function checkStructure(element, querySelector) {
-  return !!element.querySelector(`:scope > ${querySelector}`);
-}
-
-export default function decorate($block) {
+function getBlogPostsConfig($block) {
   let config = {};
 
   const $rows = [...$block.children];
@@ -203,10 +119,139 @@ export default function decorate($block) {
   } else {
     config = readBlockConfig($block);
   }
-  $block.innerHTML = '';
+  return config;
+}
+
+async function filterAllBlogPostsOnPage() {
+  if (!window.blogResultsLoaded) {
+    let resolve;
+    window.blogResultsLoaded = new Promise((r) => {
+      resolve = r;
+    });
+    const results = [];
+    window.blogPosts = [];
+    const blocks = [...document.querySelectorAll('.blog-posts')];
+    for (let i = 0; i < blocks.length; i += 1) {
+      const block = blocks[i];
+      const config = getBlogPostsConfig(block);
+      // eslint-disable-next-line no-await-in-loop
+      const posts = await filterBlogPosts('en-US', config);
+      results.push({ config, posts });
+    }
+    window.blogResults = results;
+    console.log(results);
+    resolve();
+  } else {
+    await window.blogResultsLoaded;
+  }
+  return (window.blogResults);
+}
+
+async function getFilteredResults(locale, config) {
+  const results = await filterAllBlogPostsOnPage();
+
+  const configStr = JSON.stringify(config);
+  let matchingResult = {};
+  results.forEach((res) => {
+    if (JSON.stringify(res.config) === configStr) {
+      matchingResult = res.posts;
+    }
+  });
+  return (matchingResult);
+}
+
+async function decorateBlogPosts($blogPosts, config, offset = 0) {
+  const posts = await getFilteredResults('en-US', config);
+
+  const isHero = config.featured && config.featured.length === 1;
+
+  const limit = config['page-size'] || 12;
+
+  $blogPosts.innerHTML = '';
+
+  let $cards = $blogPosts.querySelector('.blog-cards');
+  if (!$cards) {
+    $cards = createTag('div', { class: 'blog-cards' });
+    $blogPosts.appendChild($cards);
+  }
+
+  const pageEnd = offset + limit;
+  let count = 0;
+  for (let i = offset; i < posts.length && count < limit; i += 1) {
+    const post = posts[i];
+    const path = post.path.split('.')[0];
+    const {
+      title, teaser, image,
+    } = post;
+    const publicationDate = new Date(post.date * 1000);
+    const dateString = publicationDate.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
+
+    const imagePath = image.split('?')[0].split('_')[1];
+    const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
+    const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
+    let pictureTag = `<picture><img src="${imageSrc}"></picture>`;
+    if (isHero) {
+      pictureTag = `<picture>
+        <source media="(max-width: 400px)" srcset="${imageSrc}">
+        <img src="${heroSrc}">
+      </picture>`;
+    }
+    const $card = createTag('a', {
+      class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,
+      href: path,
+    });
+    if (isHero) {
+      $card.innerHTML = `<div class="blog-card-image">
+      ${pictureTag}
+      </div>
+      <div class="blog-hero-card-body">
+        <h3 class="blog-card-title">${title}</h3>
+        <p class="blog-card-teaser">${teaser}</p>
+        <p class="blog-card-date">${dateString}</p>
+        <p class="blog-card-cta button-container"><a href="${path}" title="Read more" class="button accent">Read More</a></p>
+      </div>`;
+      $blogPosts.prepend($card);
+    } else {
+      $card.innerHTML = `<div class="blog-card-image">
+        ${pictureTag}
+        </div>
+        <h3 class="blog-card-title">${title}</h3>
+        <p class="blog-card-teaser">${teaser}</p>
+        <p class="blog-card-date">${dateString}</p>`;
+      $cards.append($card);
+    }
+    count += 1;
+  }
+  if (posts.length > pageEnd && config['load-more']) {
+    const $loadMore = createTag('a', { class: 'load-more button secondary', href: '#' });
+    $loadMore.innerHTML = config['load-more'];
+    $blogPosts.append($loadMore);
+    $loadMore.addEventListener('click', (event) => {
+      event.preventDefault();
+      $loadMore.remove();
+      decorateBlogPosts($blogPosts, config, pageEnd);
+    });
+  }
+}
+
+function checkStructure(element, querySelectors) {
+  let matched = false;
+  querySelectors.forEach((querySelector) => {
+    if (element.querySelector(`:scope > ${querySelector}`)) matched = true;
+  });
+  return matched;
+}
+
+export default function decorate($block) {
+  const config = getBlogPostsConfig($block);
 
   // wrap p in parent section
-  if (checkStructure($block.parentNode, 'h2 + p + p + div.blog-posts')) {
+  if (checkStructure($block.parentNode, ['h2 + p + p + div.blog-posts', 'h2 + p + div.blog-posts', 'h2 + div.blog-posts'])) {
     const wrapper = createTag('div', { class: 'blog-posts-decoration' });
     $block.parentNode.insertBefore(wrapper, $block);
     const allP = $block.parentNode.querySelectorAll('p');

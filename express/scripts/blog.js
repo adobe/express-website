@@ -62,10 +62,13 @@ async function fetchAuthorImage($image, author) {
   }
 }
 
-export default function decorateBlogPage() {
+export default async function decorateBlogPage() {
   const $main = document.querySelector('main');
   const $h1 = document.querySelector('main h1');
-  if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+  const author = getMeta('author');
+  const date = getMeta('publication-date');
+
+  if ($h1 && author && date) {
     const $heroPicture = $h1.parentElement.querySelector('picture');
     const $heroSection = createTag('div', { class: 'hero' });
     const $div = createTag('div');
@@ -84,8 +87,6 @@ export default function decorateBlogPage() {
     // $eyebrow.innerHTML = tags[0];
     $blogHeader.append($eyebrow);
     $blogHeader.append($h1);
-    const author = getMeta('author');
-    const date = getMeta('publication-date');
     const description = getMeta('description');
     if (description) {
       const $description = createTag('p', { class: 'subheading' });
