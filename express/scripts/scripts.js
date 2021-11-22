@@ -940,22 +940,8 @@ export function decorateButtons(block = document) {
 //   });
 // }
 
-async function checkTesting(url) {
-  const pathname = new URL(url).pathname.split('.')[0];
-  const resp = await fetch('/express/testing.json', {
-    credentials: 'include',
-    mode: 'no-cors',
-  });
-  if (resp.ok) {
-    const json = await resp.json();
-    const matches = json.data.filter((test) => {
-      const testPath = new URL(test['Test URLs']).pathname.split('.')[0];
-      return testPath === pathname;
-    });
-    return (!!matches.length);
-  }
-
-  return false;
+export function checkTesting() {
+  return (getMeta('testing').toLowerCase() === 'on');
 }
 
 async function decorateTesting() {
@@ -963,7 +949,7 @@ async function decorateTesting() {
   // let reason = '';
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
-  if ((await checkTesting(window.location.href) && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+  if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
     loadScript('/express/scripts/instument.js', null, 'module');
