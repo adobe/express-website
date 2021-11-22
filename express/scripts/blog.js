@@ -65,9 +65,8 @@ async function fetchAuthorImage($image, author) {
 function copyToClipboard(copyButton) {
   navigator.clipboard.writeText(window.location.href).then(() => {
     copyButton.classList.add('copy-success');
-  }, (err) => {
+  }, () => {
     copyButton.classList.add('copy-failure');
-    console.error('Async: Could not copy text: ', err);
   });
 }
 

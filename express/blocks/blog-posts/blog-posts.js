@@ -172,10 +172,9 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
 
   const limit = config['page-size'] || 12;
 
-  $blogPosts.innerHTML = '';
-
   let $cards = $blogPosts.querySelector('.blog-cards');
   if (!$cards) {
+    $blogPosts.innerHTML = '';
     $cards = createTag('div', { class: 'blog-cards' });
     $blogPosts.appendChild($cards);
   }
