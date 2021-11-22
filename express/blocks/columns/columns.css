@@ -407,6 +407,28 @@ main .columns .column {
   }
 }
 
+main .columns .column:first-child {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .columns .column:first-child:not(.column-picture) {
+  padding-right: 16px;
+}
+
+main .columns .column:nth-child(2):not(.column-picture) {
+  padding-left: 16px;
+}
+
+main .columns .column.column-picture {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.no-brand-header main .columns:first-of-type:not(.center) .brand.icon {
+  padding-left: 0;
+}
+
 @media (max-width: 899px) {
   main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
     order: -1;
@@ -475,18 +497,18 @@ main .columns .column {
   }
 
   main .columns .column {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 
   main .columns .column.column-picture {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   body.no-brand-header main .columns:first-of-type:not(.center) .brand.icon {
     transform: none;
     left: 0;
-    padding-left: 2rem
+    padding-left: 32px;
   }
 }
