@@ -162,7 +162,8 @@ main .fixed-button.button-container {
 body.no-brand-header main .columns:first-of-type .brand.icon {
   display: unset;
   height: 32px;
-  width: max-content;
+  width: auto;
+  margin: 0 auto;
   position: absolute;
   top: 40px;
   left: 50%;
