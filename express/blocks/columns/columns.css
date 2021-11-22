@@ -22,6 +22,16 @@ main .columns-dark-container {
   color: var(--color-white);
 }
 
+main .columns-highlight-container .legal {
+  color: var(--color-black);
+  font-size: var(--body-font-size-m);
+}
+
+main .columns-highlight-container .legal a:any-link {
+  color: var(--color-black);
+  text-decoration: underline;
+}
+
 main .columns-dark-container {
   background: var(--color-black);
 }
