@@ -1,0 +1,176 @@
+/* blog styling */
+
+.blog main .hero {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .blog main .section-wrapper > div > p {
+    font-family: var(--body-serif-font-family);
+  }
+  
+  .blog main .section-wrapper > div > p .button {
+    font-family: var(--body-font-family);
+  }
+  
+  
+  .blog main .hero > div {
+    margin: auto;
+    max-width: 1000px;
+    width: 100%;
+  }
+  
+  .blog main .hero {
+    color: black;
+  }
+  
+  .blog main .hero .blog-header .eyebrow {
+    margin: 0;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: #696969;
+    font-size: 16px;
+    line-height: 20px;
+    font-size: var(--body-font-size-s);
+  }
+  
+  .blog main .hero .blog-header .author {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    font-size: var(--body-font-size-s);
+  }
+    
+  .blog main .hero .blog-header .author div.author-social {
+    flex-grow: 1;
+    text-align: right;
+  }
+  
+  .blog main .hero .blog-header .author div.author-social svg {
+    margin: 0 0 6px 6px;
+    height: 18px;
+    width: 18px;
+  }
+  
+  .blog main .hero .blog-header img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .blog main .hero .blog-header h1 {
+    text-align: left;
+    font-size: var(--heading-font-size-l);
+  }
+  
+  .blog main .hero .blog-header {
+    font-family: var(--body-serif-font-family);
+  }
+  
+  .blog main .hero .blog-header h1 {
+    font-family: var(--body-font-family);
+  }
+  
+  .blog main .hero .blog-header p.subheading {
+    text-align: left;
+    font-size: var(--body-font-size-l);
+    margin-left: 0;
+  }
+  
+  .blog main .hero .blog-header {
+    text-align: left;
+    margin: 32px;
+    margin-top: 80px;
+    background-image: url(/express/icons/cc-express-logo.svg);
+    padding-top: 58px;
+    background-repeat: no-repeat;
+    background-size: 311px;
+  }
+  
+  .blog div.section-wrapper {
+    text-align: left;
+    margin: 0;
+  }
+  
+  .blog-article div.section-wrapper > div > p, .blog-article div.section-wrapper > div > h2,
+  .blog-article div.section-wrapper > div > h3, .blog-article div.section-wrapper > div > h4,
+  .blog-article div.section-wrapper > div > h5, .blog-article div.section-wrapper > div > ul, 
+  .blog-article div.section-wrapper > div > ol, .blog-article div.section-wrapper > div > .table-of-contents {
+    max-width: 530px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  
+  .blog div.section-wrapper.fullwidth > div {
+    margin: auto;
+    max-width: 1200px;
+    padding: 0;
+  }
+  
+  
+  .blog main div.section-wrapper h2, .blog main div.section-wrapper h3  {
+    text-align: left;
+  }
+  
+  .blog main .section-wrapper h3 {
+    font-size: 36px;
+    line-height: 40px;
+    margin-top: 64px;
+    text-align: left;
+  }
+  
+  .blog main .section-wrapper h4 {
+    text-align: left;
+  }
+
+  .blog main .hero-animation p {
+    font-family: var(--body-serif-font-family);
+  }
+
+  .blog main .banner-container {
+    margin-top: 64px;
+  }
+
+  .blog main .banner > div > div > h2 {
+    text-align: center;
+  }
+
+  .blog main svg.copy-success {
+    fill: var(--color-info-accent);
+  }
+
+  .blog main svg.copy-failure {
+    fill: var(--color-gray-400);
+  }
+  
+@media (min-width: 600px) {
+  .blog main .hero .blog-header p.subheading {
+    font-size: var(--body-font-size-xl);
+  }
+
+  .blog main .hero .blog-header h1 {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  .blog main .hero .blog-header {
+    padding-top: 66px;
+  }
+
+  .blog main .hero .blog-header .eyebrow {
+    margin-bottom: 24px;
+  }
+  .blog main .hero .blog-header .author {
+    margin-top: 32px;
+  }
+}
+  
+@media (min-width: 900px) {
+  .blog div.section-wrapper > div > p.intro-text {
+    max-width: unset;
+    margin-top: 0;
+    }
+}
+  

@@ -95,7 +95,7 @@ export function createTag(name, attrs) {
   return el;
 }
 
-function getMeta(name) {
+export function getMeta(name) {
   let value = '';
   const nameLower = name.toLowerCase();
   const $metas = [...document.querySelectorAll('meta')].filter(($m) => {
@@ -819,77 +819,47 @@ function postLCP() {
   }
 }
 
-async function fetchAuthorImage($image, author) {
-  const resp = await fetch(`/express/learn/blog/authors/${toClassName(author)}.plain.html`);
-  const main = await resp.text();
-  if (resp.status === 200) {
-    const $div = createTag('div');
-    $div.innerHTML = main;
-    const $img = $div.querySelector('img');
-    const src = $img.src.replace('width=2000', 'width=200');
-    $image.src = getOptimizedImageURL(src);
-  }
-}
-
-function decorateHero() {
-  const isBlog = document.documentElement.classList.contains('blog');
+function decoratePageStyle() {
+  const isBlog = document.body.classList.contains('blog');
   const $h1 = document.querySelector('main h1');
   // check if h1 is inside a block
 
-  if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
-    const $heroPicture = $h1.parentElement.querySelector('picture');
-    let $heroSection;
-    const $main = document.querySelector('main');
-    if ($main.children.length === 1 || isBlog) {
-      $heroSection = createTag('div', { class: 'hero' });
-      const $div = createTag('div');
-      if (isBlog) {
-        $heroSection.append($div);
-        const $blogHeader = createTag('div', { class: 'blog-header' });
-        $div.append($blogHeader);
-        const $eyebrow = createTag('div', { class: 'eyebrow' });
-        const tagString = getMeta('article:tag');
-        // eslint-disable-next-line no-unused-vars
-        const tags = tagString.split(',');
-        $eyebrow.innerHTML = getMeta('category');
-        // $eyebrow.innerHTML = tags[0];
-        $blogHeader.append($eyebrow);
-        $blogHeader.append($h1);
-        const author = getMeta('author');
-        const date = getMeta('publication-date');
-        if (author) {
-          const $author = createTag('div', { class: 'author' });
-          $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
-          <div>
-            <div class="name">${author}</div>
-            <div class="date">${date}</div>
-          </div>`;
-          fetchAuthorImage($author.querySelector('img'), author);
-          $blogHeader.append($author);
+  if (isBlog) {
+    import('/express/scripts/blog.js')
+      .then((mod) => {
+        if (mod.default) {
+          mod.default();
         }
-        $div.append($blogHeader);
-        if ($heroPicture) {
-          $div.append($heroPicture);
-        }
-      } else {
+      })
+      .catch((err) => console.log('failed to load blog', err));
+    loadCSS('/express/styles/blog.css');
+  } else {
+    // eslint-disable-next-line no-lonely-if
+    if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+      const $heroPicture = $h1.parentElement.querySelector('picture');
+      let $heroSection;
+      const $main = document.querySelector('main');
+      if ($main.children.length === 1) {
+        $heroSection = createTag('div', { class: 'hero' });
+        const $div = createTag('div');
         $heroSection.append($div);
         if ($heroPicture) {
           $div.append($heroPicture);
         }
         $div.append($h1);
+        $main.prepend($heroSection);
+      } else {
+        $heroSection = $h1.closest('.section-wrapper');
+        $heroSection.classList.add('hero');
+        $heroSection.classList.remove('section-wrapper');
       }
-      $main.prepend($heroSection);
-    } else {
-      $heroSection = $h1.closest('.section-wrapper');
-      $heroSection.classList.add('hero');
-      $heroSection.classList.remove('section-wrapper');
-    }
-    if ($heroPicture) {
-      if (!isBlog) {
-        $heroPicture.classList.add('hero-bg');
+      if ($heroPicture) {
+        if (!isBlog) {
+          $heroPicture.classList.add('hero-bg');
+        }
+      } else {
+        $heroSection.classList.add('hero-noimage');
       }
-    } else {
-      $heroSection.classList.add('hero-noimage');
     }
   }
 }
@@ -1062,17 +1032,6 @@ async function decorateTesting() {
     // console.log(`Test is not run => ${reason}`);
   }
 }
-function setTemplate() {
-  const path = window.location.pathname;
-  let template = 'default';
-  if (path.includes('/make/')) {
-    template = 'make';
-  } else if (path.includes('/blog/')) {
-    template = 'blog';
-  }
-  // todo: read template from page metadata
-  document.documentElement.classList.add(template);
-}
 
 function setLCPTrigger() {
   const lcpListener = ({ target }) => {
@@ -1176,7 +1135,7 @@ export function normalizeHeadings(block, allowedHeadings) {
 
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'blog-posts', 'banner', 'faq', 'promotion', 'fragment'];
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
@@ -1186,12 +1145,18 @@ function splitSections($main) {
 
 function setTheme() {
   const theme = getMeta('theme');
+  const $body = document.body;
   if (theme) {
     let themeClass = toClassName(theme);
     /* backwards compatibility can be removed again */
     if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
-    const $body = document.body;
     $body.classList.add(themeClass);
+  } else {
+    const path = window.location.pathname;
+    if (path.includes('/blog/') || path.endsWith('/blog')) {
+      $body.classList.add('blog', 'no-brand-header');
+    }
+    // todo: read template from page metadata
   }
 }
 
@@ -1372,7 +1337,6 @@ export function decorateMain($main) {
 }
 
 async function decoratePage() {
-  setTemplate();
   setTheme();
   await decorateTesting();
   if (sessionStorage.getItem('helix-font') === 'loaded') {
@@ -1383,7 +1347,7 @@ async function decoratePage() {
   if ($main) {
     decorateMain($main);
     decorateHeaderAndFooter();
-    decorateHero();
+    decoratePageStyle();
     setLCPTrigger();
     displayEnv();
     displayOldLinkWarning();
