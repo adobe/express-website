@@ -62,6 +62,23 @@ async function fetchAuthorImage($image, author) {
   }
 }
 
+function decorateBlogLinkedImages() {
+  document.querySelectorAll('main div.section-wrapper > div > p > a').forEach((a) => {
+    if (a.textContent.startsWith('https://')) {
+      const prevSib = a.parentElement.previousElementSibling;
+      if (prevSib) {
+        const picture = prevSib.lastElementChild;
+        if (picture && (picture.tagName === 'PICTURE')) {
+          prevSib.appendChild(a);
+          a.innerHTML = '';
+          a.className = '';
+          a.appendChild(picture);
+        }
+      }
+    }
+  });
+}
+
 function copyToClipboard(copyButton) {
   navigator.clipboard.writeText(window.location.href).then(() => {
     copyButton.classList.add('copy-success');
@@ -150,6 +167,7 @@ export default async function decorateBlogPage() {
     if ($heroPicture) {
       $div.append($heroPicture);
     }
+    decorateBlogLinkedImages();
   }
 
   const pictures = document.querySelectorAll('main div.section-wrapper > div > picture');
