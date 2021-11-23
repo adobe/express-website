@@ -580,6 +580,14 @@ export function decorateBlocks($main) {
   });
 }
 
+function decorateMarqueeColumns($main) {
+  // flag first columns block in first section block as marquee
+  const $firstColumnsBlock = $main.querySelector('.section-wrapper:first-of-type .columns:first-of-type');
+  if ($firstColumnsBlock) {
+    $firstColumnsBlock.classList.add('columns-marquee');
+  }
+}
+
 export function loadBlock($block) {
   const blockName = $block.getAttribute('data-block-name');
   import(`/express/blocks/${blockName}/${blockName}.js`)
@@ -1327,6 +1335,7 @@ export function decorateMain($main) {
   wrapSections($main.querySelectorAll(':scope > div'));
   decorateButtons($main);
   decorateBlocks($main);
+  decorateMarqueeColumns($main);
   fixIcons($main);
   checkWebpFeature(() => {
     webpPolyfill($main);

@@ -92,7 +92,7 @@ main .columns h6 {
   margin-top: 32px;
 }
 
-main .columns:first-of-type {
+main .columns.columns-marquee {
   visibility: unset;
   min-height: unset;
 }
@@ -161,7 +161,7 @@ main .columns .icon {
   height: 22px;
 }
 
-main .columns:first-of-type .brand.icon {
+main .columns.columns-marquee .brand.icon {
   display: none;
 }
 
@@ -169,7 +169,7 @@ main .fixed-button.button-container {
   display: none;
 }
 
-body.no-brand-header main .columns:first-of-type .brand.icon {
+body.no-brand-header main .columns.columns-marquee .brand.icon {
   display: unset;
   height: 32px;
   width: auto;
@@ -314,7 +314,7 @@ main .columns-highlight-container .column p {
 
 
 @media (min-width: 900px) {
-  body.no-brand-header main .columns:first-of-type .brand.icon {
+  body.no-brand-header main .columns.columns-marquee .brand.icon {
     position: unset;
     top: unset;
     left: unset;
@@ -431,7 +431,7 @@ main .columns .column:nth-child(2):not(.column-picture) {
   padding-left: 16px;
 }
 
-body.no-brand-header main .columns:first-of-type:not(.center) .brand.icon {
+body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
   padding-left: 0;
 }
 
@@ -516,7 +516,7 @@ body.no-brand-header main .columns:first-of-type:not(.center) .brand.icon {
     padding-left: 16px;
   }
 
-  body.no-brand-header main .columns:first-of-type:not(.center) .brand.icon {
+  body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
     transform: none;
     left: 0;
     padding-left: 32px;
