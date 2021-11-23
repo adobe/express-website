@@ -952,7 +952,7 @@ async function decorateTesting() {
   if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
-    loadScript('/express/scripts/instument.js', null, 'module');
+    loadScript('/express/scripts/instrument.js', null, 'module');
   }
 
   if (!window.location.host.includes('adobe.com')) {
