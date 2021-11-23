@@ -340,7 +340,7 @@ main .section-wrapper:last-of-type {
   margin-bottom: 0;
 }
 
-main .columns:first-of-type {
+main .columns.columns-marquee {
   visibility: hidden;
   min-height: 1024px;
 }
