@@ -16,6 +16,7 @@ import {
   getLocale,
   getLanguage,
   getMetadata,
+  checkTesting,
 } from './scripts.js';
 
 import Context from './context.js';
@@ -35,12 +36,12 @@ w.marketingtech = {
     analytics: {
       additionalAccounts: 'adbemmarvelweb.prod, adbadobesparkprod',
     },
-    target: true,
+    target: checkTesting(),
     audienceManager: true,
   },
 };
 w.targetGlobalSettings = w.targetGlobalSettings || {};
-w.targetGlobalSettings.bodyHidingEnabled = (w.spark.martech === 'rush');
+w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   /* eslint-disable no-underscore-dangle */
