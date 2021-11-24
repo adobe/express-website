@@ -428,7 +428,8 @@ function getCurrencyDisplay(currency) {
 }
 
 export function formatPrice(price, currency, currencyDisplay) {
-  return new Intl.NumberFormat(navigator.language, {
+  const locale = getLanguage(getLocale(window.location));
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     currencyDisplay,
