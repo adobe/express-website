@@ -82,23 +82,19 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
   $faderLeft.appendChild($arrowLeft);
   $faderRight.appendChild($arrowRight);
   const media = [...$parent.querySelectorAll('img, video')];
-  const mediaLoaded = [];
   if (media.length) {
-    const mediaCheck = window.setInterval(() => {
-      if (media.length > 0) {
-        // all media loaded
-        window.clearInterval(mediaCheck);
-        toggleControls($parent, 0, classPrefix);
-      }
-      media.forEach(($m, i) => {
-        if (parseInt(window.getComputedStyle($m).getPropertyValue('width'), 10)) {
-          // non-zero width, media loaded
-          mediaLoaded.push(i);
-          media.splice(i, 1);
+    // carousel with media, wait for media to load before toggling controls
+    let mediaLoaded = 0;
+    media.forEach(($media) => {
+      $media.addEventListener('load', () => {
+        mediaLoaded += 1;
+        if (media.length === mediaLoaded) {
+          toggleControls($parent, 0, classPrefix);
         }
       });
-    }, 50);
+    });
   } else {
+    // carousel without media, toggle controls right away
     toggleControls($parent, 0, classPrefix);
   }
   window.addEventListener('resize', () => toggleControls($parent, 0, classPrefix));
