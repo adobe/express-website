@@ -1428,7 +1428,7 @@ async function loadLazy() {
   addPromotion();
 
   loadCSS('/express/styles/lazy-styles.css');
-  addFavIcon('/express/styles/favicon.svg');
+  addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
 }
 
