@@ -15,30 +15,36 @@ import {
   toClassName,
 } from '../../scripts/scripts.js';
 
-function playYouTubeVideo(vid, $element) {
-  $element.innerHTML = `<iframe width="720" height="405" src="https://www.youtube.com/embed/${vid}?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+function playInlineVideo(vid, $element, title) {
+  $element.innerHTML = `<iframe width="100%" height="405" src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
 }
 
 function displayTutorial(url, title) {
-  if (url.includes('youtu')) {
+  const canPlayInline = url.includes('youtu') || url.includes('vimeo');
+  if (canPlayInline) {
     const $overlay = createTag('div', { class: 'tutorials-overlay' });
     const $video = createTag('div', { class: 'tutorials-overlay-video', id: 'tutorials-overlay-video' });
     $overlay.appendChild($video);
-    window.location.hash = toClassName(title);
-    const $main = document.querySelector('main');
-    $main.append($overlay);
-    const yturl = new URL(url);
-    let vid = yturl.searchParams.get('v');
-    if (!vid) {
-      vid = yturl.pathname.substr(1);
-    }
     $overlay.addEventListener('click', () => {
       window.location.hash = '';
       $overlay.remove();
     });
     window.location.hash = toClassName(title);
-
-    playYouTubeVideo(vid, $video);
+    const $main = document.querySelector('main');
+    $main.append($overlay);
+    let vidUrl = '';
+    if (url.includes('youtu')) {
+      const yturl = new URL(url);
+      let vid = yturl.searchParams.get('v');
+      if (!vid) {
+        vid = yturl.pathname.substr(1);
+      }
+      vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed`;
+    } else if (url.includes('vimeo')) {
+      const vid = new URL(url).pathname.split('/')[1];
+      vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963`;
+    }
+    playInlineVideo(vidUrl, $video, title);
   } else {
     window.location.href = url;
   }

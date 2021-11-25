@@ -91,5 +91,6 @@ main .tutorials-overlay {
 }
 
 main .tutorials-overlay .tutorials-overlay-video {
-  margin: 50px;
+  width: 720px;
+  max-width: 100vw;
 }
