@@ -124,7 +124,6 @@ class Masonry {
 
   // distribute cells to columns
   draw(cells) {
-    console.log('draw');
     if (!cells) {
       const setup = this.setupColumns();
       if (setup === 1) {
