@@ -170,7 +170,7 @@ function loadFEDS() {
   loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`).id = 'feds-script';
 }
 
-if (!window.hlx.lighthouse) {
+if (!window.hlx || !window.hlx.lighthouse) {
   loadIMS();
   loadFEDS();
 }

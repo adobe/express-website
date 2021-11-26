@@ -604,14 +604,13 @@ export async function loadBlock(block, eager = false) {
         loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
-        const runBlock = async () => {
+        (async () => {
           const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
           if (mod.default) {
             await mod.default(block, blockName, document, eager);
           }
           resolve();
-        };
-        runBlock();
+        })();
       });
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (err) {
@@ -1169,7 +1168,7 @@ export function addFavIcon(href) {
   link.href = href;
   const existingLink = document.querySelector('head link[rel="icon"]');
   if (existingLink) {
-    existingLink.parentElement.replaceChild(link, existingLink);
+    existingLink.replaceWith(link);
   } else {
     document.getElementsByTagName('head')[0].appendChild(link);
   }
@@ -1356,7 +1355,7 @@ function unhideBody(id) {
 function hideBody(id) {
   const style = document.createElement('style');
   style.id = id;
-  style.innerHTML = 'body{visibility: hidden !important}';
+  style.textContent = 'body{visibility: hidden !important}';
 
   try {
     document.head.appendChild(style);
@@ -1398,17 +1397,14 @@ async function loadEager() {
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
     const lcpCandidate = document.querySelector('main img');
-    const loaded = {
-      then: (resolve) => {
-        if (lcpCandidate && !lcpCandidate.complete) {
-          lcpCandidate.addEventListener('load', () => resolve());
-          lcpCandidate.addEventListener('error', () => resolve());
-        } else {
-          resolve();
-        }
-      },
-    };
-    await loaded;
+    await new Promise((resolve) => {
+      if (lcpCandidate && !lcpCandidate.complete) {
+        lcpCandidate.addEventListener('load', () => resolve());
+        lcpCandidate.addEventListener('error', () => resolve());
+      } else {
+        resolve();
+      }
+    });
   }
 }
 

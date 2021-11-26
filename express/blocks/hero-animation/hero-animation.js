@@ -71,7 +71,7 @@ function adjustLayout($overlay, $attributions, animations, $parent) {
   }
 }
 
-export default function decorate($block) {
+export default async function decorate($block) {
   const $rows = [...$block.children];
   const attributions = [];
   const $attributions = createTag('div', { class: 'hero-animation-attributions' });
