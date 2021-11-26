@@ -138,6 +138,7 @@ async function selectPlan($pricingHeader, planUrl) {
     plan.price = offer.unitPrice;
     plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
     plan.country = offer.country;
+    plan.vatInfo = offer.vatInfo;
     plan.language = offer.lang;
     plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d|,|.|+]+/g);
     plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.rawPrice[0]}</strong>`);
@@ -146,6 +147,7 @@ async function selectPlan($pricingHeader, planUrl) {
   $pricingHeader.querySelector('.pricing-columns-price').innerHTML = plan.formatted;
   $pricingHeader.querySelector('.pricing-columns-price').classList.add(plan.currency.toLowerCase());
   $pricingHeader.querySelector('.pricing-columns-cta').href = buildUrl(plan.url, plan.country, plan.language);
+  $pricingHeader.querySelector('.pricing-columns-vat-info').innerHTML = plan.vatInfo;
 }
 
 function decoratePlan($column) {
@@ -173,6 +175,7 @@ function decoratePlan($column) {
   if (plans) {
     const $pricingPlan = createTag('div', { class: 'pricing-columns-plan' });
     const $pricingPrice = createTag('span', { class: 'pricing-columns-price' });
+    const $pricingVatInfo = createTag('span', { class: 'pricing-columns-vat-info' });
 
     $pricingPlan.append($pricingPrice);
 
@@ -193,6 +196,7 @@ function decoratePlan($column) {
     }
 
     $pricingHeader.append($pricingPlan);
+    $pricingHeader.append($pricingVatInfo);
 
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
     $pricingCta.innerHTML = $elements[2].textContent;

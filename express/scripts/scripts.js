@@ -461,8 +461,9 @@ export async function getOffer(offerId, countryOverride) {
     const unitPrice = offer.p;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency, currencyDisplay);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
+    const vatInfo = offer.vat;
     return {
-      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang,
+      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo,
     };
   }
   return {};
