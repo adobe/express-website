@@ -11,7 +11,7 @@ main .pricing-columns {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    margin: 80px auto;
+    margin: 80px auto 0 auto;
     padding: 0 24px;
 }
 
@@ -146,7 +146,7 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
 @media (min-width: 900px) {
     main .pricing-columns {
         max-width: 600px;
-        margin: 0 auto 80px auto;
+        margin: 0 auto;
         padding: 0;
     }
 
