@@ -424,11 +424,14 @@ function getCurrencyDisplay(currency) {
   if (currency === 'JPY') {
     return 'name';
   }
+  if (['SEK', 'DKK', 'NOK'].includes(currency)) {
+    return 'code';
+  }
   return 'symbol';
 }
 
 export function formatPrice(price, currency, currencyDisplay) {
-  const locale = getLanguage(getLocale(window.location));
+  const locale = getLanguage(currency === 'TWD' ? 'us' : getLocale(window.location));
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
