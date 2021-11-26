@@ -513,7 +513,9 @@ export function loadCSS(href, callback) {
       link.onerror = (e) => callback(e.type);
     }
     document.head.appendChild(link);
-  } else if (callback) callback();
+  } else if (typeof callback === 'function') {
+    callback('noop');
+  }
 }
 
 function resolveFragments() {
