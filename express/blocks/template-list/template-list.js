@@ -124,6 +124,7 @@ class Masonry {
 
   // distribute cells to columns
   draw(cells) {
+    console.log('draw');
     if (!cells) {
       const setup = this.setupColumns();
       if (setup === 1) {
@@ -157,7 +158,7 @@ class Masonry {
       const $video = $cell.querySelector('video');
       if ($video && $video.readyState === 0) {
         // continue when video is loaded
-        $video.addEventListener('loadeddata', () => {
+        $video.addEventListener('loadedmetadata', () => {
           this.draw(workList);
         });
         return;
@@ -354,11 +355,13 @@ export async function decorateTemplateList($block) {
         $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
+          const $img = $tmplt.querySelector('img');
           const $video = createTag('video', {
             playsinline: '',
             autoplay: '',
             loop: '',
             muted: '',
+            poster: $img.currentSrc,
           });
           $video.append(createTag('source', {
             src: $imgLink.href,
