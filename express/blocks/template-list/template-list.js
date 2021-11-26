@@ -25,6 +25,47 @@ import {
   buildCarousel,
 } from '../shared/carousel.js';
 
+/**
+ * Returns a picture element with webp and fallbacks
+ * @param {string} src The image URL
+ * @param {boolean} eager load image eager
+ * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
+ */
+
+export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+  const url = new URL(src, window.location.href);
+  const picture = document.createElement('picture');
+  const { pathname } = url;
+  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
+
+  // webp
+  breakpoints.forEach((br) => {
+    const source = document.createElement('source');
+    if (br.media) source.setAttribute('media', br.media);
+    source.setAttribute('type', 'image/webp');
+    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+    picture.appendChild(source);
+  });
+
+  // fallback
+  breakpoints.forEach((br, i) => {
+    if (i < breakpoints.length - 1) {
+      const source = document.createElement('source');
+      if (br.media) source.setAttribute('media', br.media);
+      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      picture.appendChild(source);
+    } else {
+      const img = document.createElement('img');
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      img.setAttribute('loading', eager ? 'eager' : 'lazy');
+      img.setAttribute('alt', alt);
+      picture.appendChild(img);
+    }
+  });
+
+  return picture;
+}
+
 class Masonry {
   constructor($block, cells) {
     this.$block = $block;
@@ -98,6 +139,11 @@ class Masonry {
     }
     const workList = [...(cells || this.cells)];
     while (workList.length > 0) {
+      for (let i = 0; i < 5 && i < workList.length; i += 1) {
+        const $cell = workList[i];
+        const $image = $cell.querySelector(':scope picture > img');
+        if ($image) $image.setAttribute('loading', 'eager');
+      }
       const $cell = workList[0];
       const $image = $cell.querySelector(':scope picture > img');
       if ($image && !$image.complete) {
@@ -200,10 +246,12 @@ export async function decorateTemplateList($block) {
   }
 
   // use lower resolution image and preload
+  /*
   $block.querySelectorAll(':scope picture > img').forEach(($img) => {
     $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
     $img.setAttribute('loading', 'eager');
   });
+  */
 
   const templates = Array.from($block.children);
   // process single column first row as title
@@ -217,6 +265,7 @@ export async function decorateTemplateList($block) {
   }
 
   rows = templates.length;
+  let breakpoints = [{ width: '400' }];
 
   if (rows > 6 && !$block.classList.contains('horizontal')) {
     $block.classList.add('masonry');
@@ -224,7 +273,14 @@ export async function decorateTemplateList($block) {
 
   if (rows === 1) {
     $block.classList.add('large');
+    breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }];
   }
+
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    const { src, alt } = $img;
+    const eager = $block.classList.contains('horizontal');
+    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, eager, breakpoints));
+  });
 
   // find the edit link and turn the template DIV into the A
   // A
