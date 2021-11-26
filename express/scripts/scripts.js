@@ -1458,6 +1458,7 @@ async function decoratePage() {
   loadLazy();
   loadDelayed();
 }
+
 window.hlx = window.hlx || {};
 window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
