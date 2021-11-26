@@ -508,12 +508,10 @@ export function loadCSS(href, callback) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
-    link.onload = () => {
-      if (callback) callback();
-    };
-    link.onerror = () => {
-      if (callback) callback();
-    };
+    if (typeof callback === 'function') {
+      link.onload = (e) => callback(e.type);
+      link.onerror = (e) => callback(e.type);
+    }
     document.head.appendChild(link);
   } else if (callback) callback();
 }
