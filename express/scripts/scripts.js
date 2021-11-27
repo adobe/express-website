@@ -1383,7 +1383,7 @@ async function loadEager() {
     displayOldLinkWarning();
 
     document.querySelector('body').classList.add('appear');
-    const target = getMeta('target').toLowerCase() === 'on';
+    const target = checkTesting();
     if (target) {
       const bodyHideStyleId = 'at-body-style';
       hideBody(bodyHideStyleId);
