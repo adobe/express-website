@@ -170,8 +170,10 @@ function loadFEDS() {
   loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`).id = 'feds-script';
 }
 
-loadIMS();
-loadFEDS();
+if (!window.hlx || !window.hlx.lighthouse) {
+  loadIMS();
+  loadFEDS();
+}
 
 /* Core Web Vitals RUM collection */
 

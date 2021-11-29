@@ -636,10 +636,19 @@ main .section-wrapper .hero {
 }
 
 
-/* jank protection for async sections */
+/* jank protection for async blocks/sections */
 
 main .pricing, main .hero-animation, main .fragment {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;
 }
+
+main .block {
+  visibility: hidden;
+}
+
+main .block.block-visible {
+  visibility: unset;
+}
+
