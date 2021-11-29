@@ -621,9 +621,9 @@ export async function loadBlock(block, eager = false) {
   }
 }
 export function loadBlocks($main) {
-  $main
-    .querySelectorAll('div.section-wrapper > div > .block')
-    .forEach(async ($block) => loadBlock($block));
+  const blockPromises = [...$main.querySelectorAll('div.section-wrapper > div > .block')]
+    .map(($block) => loadBlock($block));
+  return blockPromises;
 }
 
 export function loadScript(url, callback, type) {
