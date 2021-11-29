@@ -431,7 +431,7 @@ function getCurrencyDisplay(currency) {
 }
 
 export function formatPrice(price, currency, currencyDisplay) {
-  const locale = getLanguage(currency === 'TWD' ? 'us' : getLocale(window.location));
+  const locale = ['USD', 'TWD'].includes(currency) ? getCountry() : getLanguage(getLocale(window.location));
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
