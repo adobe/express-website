@@ -1382,6 +1382,11 @@ async function loadEager() {
     displayEnv();
     displayOldLinkWarning();
 
+    const lcpBlocks = ['columns', 'hero-animation'];
+    const block = document.querySelector('.block');
+    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(block, true);
+
     document.querySelector('body').classList.add('appear');
     const target = checkTesting();
     if (target) {
@@ -1392,10 +1397,6 @@ async function loadEager() {
       }, 3000);
     }
 
-    const lcpBlocks = ['columns', 'hero-animation'];
-    const block = document.querySelector('.block');
-    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(block, true);
     const lcpCandidate = document.querySelector('main img');
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
