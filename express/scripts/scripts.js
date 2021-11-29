@@ -1143,12 +1143,7 @@ function setTheme() {
     /* backwards compatibility can be removed again */
     if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
     $body.classList.add(themeClass);
-  } else {
-    const path = window.location.pathname;
-    if (path.includes('/blog/') || path.endsWith('/blog')) {
-      $body.classList.add('blog', 'no-brand-header');
-    }
-    // todo: read template from page metadata
+    if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
 }
 
