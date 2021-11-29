@@ -398,5 +398,5 @@ export async function decorateTemplateList($block) {
 }
 
 export default async function decorate($block) {
-  return decorateTemplateList($block);
+  await decorateTemplateList($block);
 }

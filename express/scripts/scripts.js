@@ -580,6 +580,7 @@ export function decorateBlocks($main) {
     }
     $block.classList.add('block');
     $block.setAttribute('data-block-name', blockName);
+    $block.setAttribute('data-block-status', 'initialized');
   });
 }
 
@@ -596,7 +597,7 @@ function decorateMarqueeColumns($main) {
  * @param {Element} block The block element
  */
 export async function loadBlock(block, eager = false) {
-  if (!block.getAttribute('data-block-status')) {
+  if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
     try {
@@ -617,7 +618,6 @@ export async function loadBlock(block, eager = false) {
       console.log(`failed to load module for ${blockName}`, err);
     }
     block.setAttribute('data-block-status', 'loaded');
-    block.classList.add('block-visible');
   }
 }
 export function loadBlocks($main) {
