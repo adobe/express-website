@@ -648,4 +648,8 @@ main .block[data-block-status='loading'], main .block[data-block-status='initial
   display: none;
 }
 
+main .template-list-sixcols-container {
+  min-height: 500px;
+}
+
 
