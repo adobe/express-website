@@ -39,10 +39,10 @@ function displayTutorial(url, title) {
       if (!vid) {
         vid = yturl.pathname.substr(1);
       }
-      vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed`;
+      vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed&autoplay=1`;
     } else if (url.includes('vimeo')) {
       const vid = new URL(url).pathname.split('/')[1];
-      vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963`;
+      vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
     }
     playInlineVideo(vidUrl, $video, title);
   } else {
