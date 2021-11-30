@@ -61,6 +61,7 @@ async function showRegionPicker() {
   const $regionPicker = createTag('div', { id: 'region-picker' });
   $body.appendChild($regionPicker);
   $regionPicker.appendChild($regionNav);
+  $regionNav.appendChild(createTag('div', { class: 'close' }));
   $regionPicker.addEventListener('click', (event) => {
     if (event.target === $regionPicker || event.target === $regionNav) {
       $regionPicker.remove();

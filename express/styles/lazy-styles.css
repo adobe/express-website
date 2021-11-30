@@ -159,8 +159,6 @@ main .blog-posts .card .card-body p {
   left: 0;
   right: 0;
   bottom: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -179,6 +177,7 @@ main .blog-posts .card .card-body p {
   width: 100%;
   height: auto;
   padding: 2rem;
+  position: relative;
 }
 
 #region-picker nav .language-Navigation_heading {
@@ -228,6 +227,38 @@ main .blog-posts .card .card-body p {
 #region-picker nav .language-Navigation_region-List li a:hover {
   text-decoration: underline;
   outline-width: 0;
+}
+
+#region-picker .close {
+  top: 12px;
+  right: 12px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  position: absolute;
+  background-color: #444;
+  pointer-events: none;
+}
+
+#region-picker .close::after,
+#region-picker .close::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  transform: rotate(45deg);
+  border-radius: 5px;
+  top: 9px;
+  left: 4px;
+  color: white;
+}
+#region-picker .close::after {
+  transform: rotate(-45deg);
 }
 
 @media screen and (min-width: 37.5rem) {
