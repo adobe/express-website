@@ -119,6 +119,9 @@ class Masonry {
     column.$column.append($cell);
     $cell.classList.add('appear');
     column.outerHeight += $cell.offsetHeight;
+    if (!$cell.offsetHeight && $cell.classList.contains('placeholder') && $cell.style.height) {
+      column.outerHeight += +$cell.style.height.split('px')[0] + 20;
+    }
     this.nextColumn = null;
   }
 
