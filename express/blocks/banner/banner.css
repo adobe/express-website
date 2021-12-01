@@ -1,10 +1,10 @@
 main .section-wrapper.banner-container {
   background-color: var(--color-info-accent);
-  padding: 120px 15px;
+  padding: 80px 15px;
 }
 
 main .section-wrapper.banner-light-container {
-  padding: 120px 15px;
+  padding: 80px 15px;
 }
 
 main .section-wrapper:first-of-type {
@@ -29,12 +29,12 @@ main .banner h2, main .banner h3 {
   color: var(--color-white);
 }
 
-main .banner.light h2, main .banner.light h3 {
-  color: var(--color-black);
+main .banner h2 {
+  margin-top: 0;
 }
 
-main .banner p.button-container {
-  margin-top: 56px;
+main .banner.light h2, main .banner.light h3 {
+  color: var(--color-black);
 }
 
 main .banner a:any-link {

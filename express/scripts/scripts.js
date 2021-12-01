@@ -424,11 +424,14 @@ function getCurrencyDisplay(currency) {
   if (currency === 'JPY') {
     return 'name';
   }
+  if (['SEK', 'DKK', 'NOK'].includes(currency)) {
+    return 'code';
+  }
   return 'symbol';
 }
 
 export function formatPrice(price, currency, currencyDisplay) {
-  const locale = getLanguage(getLocale(window.location));
+  const locale = ['USD', 'TWD'].includes(currency) ? getCountry() : getLanguage(getLocale(window.location));
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
@@ -458,8 +461,9 @@ export async function getOffer(offerId, countryOverride) {
     const unitPrice = offer.p;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency, currencyDisplay);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
+    const vatInfo = offer.vat;
     return {
-      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang,
+      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo,
     };
   }
   return {};
@@ -1139,12 +1143,7 @@ function setTheme() {
     /* backwards compatibility can be removed again */
     if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
     $body.classList.add(themeClass);
-  } else {
-    const path = window.location.pathname;
-    if (path.includes('/blog/') || path.endsWith('/blog')) {
-      $body.classList.add('blog', 'no-brand-header');
-    }
-    // todo: read template from page metadata
+    if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
 }
 
