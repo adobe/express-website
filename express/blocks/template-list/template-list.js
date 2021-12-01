@@ -248,14 +248,6 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  // use lower resolution image and preload
-  /*
-  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
-    $img.setAttribute('loading', 'eager');
-  });
-  */
-
   const templates = Array.from($block.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
