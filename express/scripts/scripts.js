@@ -610,16 +610,20 @@ export async function loadBlock(block, eager = false) {
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
-          const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
-          if (mod.default) {
-            await mod.default(block, blockName, document, eager);
+          try {
+            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            if (mod.default) {
+              await mod.default(block, blockName, document, eager);
+            }
+          } catch (err) {
+            console.log(`failed to load module for ${blockName}`, err);
           }
           resolve();
         })();
       });
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (err) {
-      console.log(`failed to load module for ${blockName}`, err);
+      console.log(`failed to load block ${blockName}`, err);
     }
     block.setAttribute('data-block-status', 'loaded');
   }
