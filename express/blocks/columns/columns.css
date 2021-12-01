@@ -92,11 +92,6 @@ main .columns h6 {
   margin-top: 32px;
 }
 
-main .columns.columns-marquee {
-  visibility: unset;
-  min-height: unset;
-}
-
 main .columns.width-2-columns .column-picture {
   order: 2;
 }

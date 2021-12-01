@@ -584,6 +584,7 @@ export function decorateBlocks($main) {
     }
     $block.classList.add('block');
     $block.setAttribute('data-block-name', blockName);
+    $block.setAttribute('data-block-status', 'initialized');
   });
 }
 
@@ -600,7 +601,7 @@ function decorateMarqueeColumns($main) {
  * @param {Element} block The block element
  */
 export async function loadBlock(block, eager = false) {
-  if (!block.getAttribute('data-block-status')) {
+  if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
     try {
@@ -609,25 +610,28 @@ export async function loadBlock(block, eager = false) {
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
-          const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
-          if (mod.default) {
-            await mod.default(block, blockName, document, eager);
+          try {
+            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            if (mod.default) {
+              await mod.default(block, blockName, document, eager);
+            }
+          } catch (err) {
+            console.log(`failed to load module for ${blockName}`, err);
           }
           resolve();
         })();
       });
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (err) {
-      console.log(`failed to load module for ${blockName}`, err);
+      console.log(`failed to load block ${blockName}`, err);
     }
     block.setAttribute('data-block-status', 'loaded');
-    block.classList.add('block-visible');
   }
 }
 export function loadBlocks($main) {
-  $main
-    .querySelectorAll('div.section-wrapper > div > .block')
-    .forEach(async ($block) => loadBlock($block));
+  const blockPromises = [...$main.querySelectorAll('div.section-wrapper > div > .block')]
+    .map(($block) => loadBlock($block));
+  return blockPromises;
 }
 
 export function loadScript(url, callback, type) {
@@ -1381,6 +1385,11 @@ async function loadEager() {
     displayEnv();
     displayOldLinkWarning();
 
+    const lcpBlocks = ['columns', 'hero-animation'];
+    const block = document.querySelector('.block');
+    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(block, true);
+
     document.querySelector('body').classList.add('appear');
     const target = checkTesting();
     if (target) {
@@ -1391,10 +1400,6 @@ async function loadEager() {
       }, 3000);
     }
 
-    const lcpBlocks = ['columns', 'hero-animation'];
-    const block = document.querySelector('.block');
-    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(block, true);
     const lcpCandidate = document.querySelector('main img');
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {

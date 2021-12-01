@@ -340,11 +340,6 @@ main .section-wrapper:last-of-type {
   margin-bottom: 0;
 }
 
-main .columns.columns-marquee {
-  visibility: hidden;
-  min-height: 1024px;
-}
-
 @media (min-width:600px) {
 
   main h2 {
@@ -644,11 +639,35 @@ main .pricing, main .hero-animation, main .fragment {
   transition: opacity 100ms;
 }
 
-main .block {
+main .block[data-block-status='loading'], main .block[data-block-status='initialized'] {
   visibility: hidden;
 }
 
-main .block.block-visible {
-  visibility: unset;
+main .block.template-list[data-block-status='loading'] > div , main .block.template-list[data-block-status='initialized'] > div {
+  display: none;
 }
+
+main .template-list.sixcols {
+  min-height: 700px;
+}
+
+main .columns.columns-marquee {
+  min-height: 650px;
+}
+
+@media (min-width: 1200px) {
+  main .template-list-fourcols-container > div,
+  main .template-list-horizontal-container > div {
+    max-width: 1200px;
+  }
+
+  main .template-list-sixcols-container > div {
+    max-width: 1122px;
+  }
+}
+
+main .template-list-sixcols-container > div {
+  padding: 0;
+}
+
 
