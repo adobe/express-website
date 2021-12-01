@@ -1,7 +1,7 @@
 version: 1
 
 indices:
-  blog:
+  blog: &blog
     include:
       - '/express/learn/blog/*'
     target: /express/learn/blog/query-index.xlsx
@@ -43,7 +43,25 @@ indices:
         value: |
           parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
 
-  website: &default
+  blog-jp:
+    <<: *blog
+    include:
+      - '/jp/express/learn/blog/*'
+    target: /jp/express/learn/blog/query-index.xlsx
+
+  blog-de:
+    <<: *blog
+    include:
+      - '/de/express/learn/blog/*'
+    target: /de/express/learn/blog/query-index.xlsx
+
+  blog-fr:
+    <<: *blog
+    include:
+      - '/fr/express/learn/blog/*'
+    target: /fr/express/learn/blog/query-index.xlsx
+
+  website: &website
     include:
       - '/express/**'
     exclude:
@@ -72,85 +90,91 @@ indices:
           attribute(el, 'content')
 
   germany:
-    <<: *default
+    <<: *website
     include:
       - '/de/express/**'
+    exclude:
+      - '/de/express/learn/blog/*'
     target: /de/express/query-index.xlsx
 
   spain:
-    <<: *default
+    <<: *website
     include:
       - '/es/express/**'
     target: /es/express/query-index.xlsx
 
   france:
-    <<: *default
+    <<: *website
     include:
       - '/fr/express/**'
+    exclude:
+      - '/fr/express/learn/blog/*'
     target: /fr/express/query-index.xlsx
 
   italy:
-    <<: *default
+    <<: *website
     include:
       - '/it/express/**'
     target: /it/express/query-index.xlsx
 
   japan:
-    <<: *default
+    <<: *website
     include:
       - '/jp/express/**'
+    exclude:
+      - '/jp/express/learn/blog/*'
     target: /jp/express/query-index.xlsx
 
   korea:
-    <<: *default
+    <<: *website
     include:
       - '/kr/express/**'
     target: /kr/express/query-index.xlsx
 
   netherlands:
-    <<: *default
+    <<: *website
     include:
       - '/nl/express/**'
     target: /nl/express/query-index.xlsx
 
   brasil:
-    <<: *default
+    <<: *website
     include:
       - '/br/express/**'
     target: /br/express/query-index.xlsx
 
   taiwan:
-    <<: *default
+    <<: *website
     include:
       - '/tw/express/**'
     target: /tw/express/query-index.xlsx
 
   china:
-    <<: *default
+    <<: *website
     include:
       - '/cn/express/**'
     target: /cn/express/query-index.xlsx
 
   denmark:
-    <<: *default
+    <<: *website
     include:
       - '/dk/express/**'
     target: /dk/express/query-index.xlsx
 
   finland:
-    <<: *default
+    <<: *website
     include:
       - '/fi/express/**'
     target: /fi/express/query-index.xlsx
 
   norway:
-    <<: *default
+    <<: *website
     include:
       - '/no/express/**'
     target: /no/express/query-index.xlsx
 
   sweden:
-    <<: *default
+    <<: *website
     include:
       - '/se/express/**'
     target: /se/express/query-index.xlsx
