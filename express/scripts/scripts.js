@@ -1418,6 +1418,7 @@ async function loadEager() {
 async function loadLazy() {
   const main = document.querySelector('main');
 
+  // post LCP actions go here
   sampleRUM('lcp');
 
   loadBlocks(main);
