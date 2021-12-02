@@ -1418,20 +1418,17 @@ async function loadEager() {
 async function loadLazy() {
   const main = document.querySelector('main');
 
-  if (main) {
-    // post LCP actions go here
-    sampleRUM('lcp');
+  sampleRUM('lcp');
 
-    loadBlocks(main);
-    loadFonts();
-    loadCSS('/express/styles/lazy-styles.css');
-    resolveFragments();
-    addPromotion();
+  loadBlocks(main);
+  loadFonts();
+  loadCSS('/express/styles/lazy-styles.css');
+  resolveFragments();
+  addPromotion();
 
-    loadCSS('/express/styles/lazy-styles.css');
-    addFavIcon('/express/icons/cc-express.svg');
-    if (!window.hlx.lighthouse) loadMartech();
-  }
+  loadCSS('/express/styles/lazy-styles.css');
+  addFavIcon('/express/icons/cc-express.svg');
+  if (!window.hlx.lighthouse) loadMartech();
 }
 
 /**
