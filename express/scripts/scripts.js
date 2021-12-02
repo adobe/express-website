@@ -43,6 +43,7 @@ export function sampleRUM(checkpoint, data = {}) {
       sendPing();
       // special case CWV
       if (checkpoint === 'cwv') {
+        // eslint-disable-next-line import/no-unresolved
         import('https://unpkg.com/web-vitals?module').then((mod) => {
           const storeCWV = (measurement) => {
             data.cwv = {};
@@ -854,6 +855,7 @@ function decoratePageStyle() {
   // check if h1 is inside a block
 
   if (isBlog) {
+    // eslint-disable-next-line import/no-unresolved,import/no-absolute-path
     import('/express/scripts/blog.js')
       .then((mod) => {
         if (mod.default) {
