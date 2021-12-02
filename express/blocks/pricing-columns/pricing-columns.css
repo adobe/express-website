@@ -75,9 +75,13 @@ main .pricing-columns-dropdown {
     border-radius: 5px;
 }
 
+main .pricing-columns-vat-info {
+  height: 24px;
+}
+
 main .pricing-columns-cta.button {
     flex: 1;
-    margin: 40px 0 0 0;
+    margin: 16px 0 0 0;
     max-width: 375px;
 }
 
