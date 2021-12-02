@@ -74,7 +74,6 @@ async function showRegionPicker() {
       const destLocale = pathSplits[1] ? `${pathSplits[1]}` : 'us';
       const off = locale !== 'us' ? locale.length + 1 : 0;
       const gPath = window.location.pathname.substr(off);
-
       let domain = '';
       if (window.location.hostname.endsWith('.adobe.com')) domain = ' domain=adobe.com;';
       const cookieValue = `international=${destLocale};${domain} path=/`;
@@ -85,6 +84,12 @@ async function showRegionPicker() {
       window.location.href = prefix + gPath;
     });
   });
+  // focus link of current region
+  const lang = getLanguage(getLocale(new URL(window.location.href))).toLowerCase();
+  const currentRegion = $regionPicker.querySelector(`li a[lang="${lang}"]`);
+  if (currentRegion) {
+    currentRegion.focus();
+  }
 }
 
 const locale = getLocale(window.location);

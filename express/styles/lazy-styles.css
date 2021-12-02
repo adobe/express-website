@@ -226,7 +226,10 @@ main .blog-posts .card .card-body p {
 
 #region-picker nav .language-Navigation_region-List li a:hover {
   text-decoration: underline;
-  outline-width: 0;
+}
+
+#region-picker nav .language-Navigation_region-List li a:focus {
+  outline: auto;    
 }
 
 #region-picker .close {
@@ -240,6 +243,7 @@ main .blog-posts .card .card-body p {
   position: absolute;
   background-color: #444;
   pointer-events: none;
+  cursor: pointer;
 }
 
 #region-picker .close::after,
