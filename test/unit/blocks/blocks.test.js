@@ -42,6 +42,7 @@ const fragmentToString = (fragment) => {
 };
 
 describe('Block tests', () => {
+  window.isTestEnv = true;
   // check if there are tests with only: true
   let tests = TESTS.filter((t) => t.only);
   // if not, run all

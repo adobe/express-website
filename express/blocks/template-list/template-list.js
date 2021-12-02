@@ -73,6 +73,8 @@ class Masonry {
     this.columns = [];
     this.nextColumn = null;
     this.startResizing = 0;
+    this.columnWidth = 0;
+    this.debug = false;
   }
 
   // set up fresh grid if necessary
@@ -83,6 +85,11 @@ class Masonry {
     if (!width) {
       return 0;
     }
+    const usp = new URLSearchParams(window.location.search);
+    if (usp.has('debug-template-list')) {
+      this.debug = true;
+    }
+    this.columnWidth = colWidth - (colWidth === 175 ? 10 : 4); // padding/margin adjustment
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
@@ -118,8 +125,31 @@ class Masonry {
     const column = this.getNextColumn();
     column.$column.append($cell);
     $cell.classList.add('appear');
-    column.outerHeight += $cell.offsetHeight;
-    if (!$cell.offsetHeight && $cell.classList.contains('placeholder') && $cell.style.height) {
+
+    let mediaHeight = 0;
+    let mediaWidth = 0;
+    let calculatedHeight = 0;
+
+    const img = $cell.querySelector('picture > img');
+    if (img) {
+      mediaHeight = img.naturalHeight;
+      mediaWidth = img.naturalWidth;
+      calculatedHeight = ((this.columnWidth) / mediaWidth) * mediaHeight;
+    }
+    const video = $cell.querySelector('video');
+    if (video) {
+      mediaHeight = video.videoHeight;
+      mediaWidth = video.videoWidth;
+      calculatedHeight = ((this.columnWidth) / mediaWidth) * mediaHeight;
+    }
+    if (this.debug) {
+      // eslint-disable-next-line no-console
+      console.log($cell.offsetHeight, calculatedHeight, $cell);
+    }
+
+    column.outerHeight += calculatedHeight;
+
+    if (!calculatedHeight && $cell.classList.contains('placeholder') && $cell.style.height) {
       column.outerHeight += +$cell.style.height.split('px')[0] + 20;
     }
     this.nextColumn = null;
@@ -355,7 +385,7 @@ export async function decorateTemplateList($block) {
             autoplay: '',
             loop: '',
             muted: '',
-            poster: $img.currentSrc,
+            poster: $img.src,
           });
           $video.append(createTag('source', {
             src: $imgLink.href,
