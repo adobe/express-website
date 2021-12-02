@@ -1,3 +1,7 @@
+main .columns.columns-marquee {
+  min-height: unset;
+}
+
 main .columns-container,
 main .columns-dark-container,
 main .columns-center-container,
