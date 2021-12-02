@@ -1418,18 +1418,20 @@ async function loadEager() {
 async function loadLazy() {
   const main = document.querySelector('main');
 
-  // post LCP actions go here
-  sampleRUM('lcp');
+  if (main) {
+    // post LCP actions go here
+    sampleRUM('lcp');
 
-  loadBlocks(main);
-  loadFonts();
-  loadCSS('/express/styles/lazy-styles.css');
-  resolveFragments();
-  addPromotion();
+    loadBlocks(main);
+    loadFonts();
+    loadCSS('/express/styles/lazy-styles.css');
+    resolveFragments();
+    addPromotion();
 
-  loadCSS('/express/styles/lazy-styles.css');
-  addFavIcon('/express/icons/cc-express.svg');
-  if (!window.hlx.lighthouse) loadMartech();
+    loadCSS('/express/styles/lazy-styles.css');
+    addFavIcon('/express/icons/cc-express.svg');
+    if (!window.hlx.lighthouse) loadMartech();
+  }
 }
 
 /**
@@ -1464,7 +1466,9 @@ async function decoratePage() {
 window.hlx = window.hlx || {};
 window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
-decoratePage();
+if (!window.isTestEnv) {
+  decoratePage();
+}
 
 /*
  * lighthouse performance instrumentation helper

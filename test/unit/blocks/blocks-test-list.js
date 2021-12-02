@@ -35,26 +35,32 @@ export default [
     name: 'Template List - video',
     input: 'input/template-list.video.doc.html',
     expected: 'expected/template-list.video.block.html',
+    timeout: 1000,
   }, {
     name: 'Template List - linked image',
     input: 'input/template-list.linkedimage.doc.html',
     expected: 'expected/template-list.linkedimage.block.html',
+    timeout: 1000,
   }, {
     name: 'Template List - link without text',
     input: 'input/template-list.linknotext.doc.html',
     expected: 'expected/template-list.linknotext.block.html',
+    timeout: 1000,
   }, {
     name: 'Template List - linked with text',
     input: 'input/template-list.linkwithtext.doc.html',
     expected: 'expected/template-list.linkwithtext.block.html',
+    timeout: 1000,
   }, {
     name: 'Template List - horizontal',
     input: 'input/template-list.horizontal.doc.html',
     expected: 'expected/template-list.horizontal.block.html',
+    timeout: 1000,
   }, {
     name: 'Template List - title',
     input: 'input/template-list.title.doc.html',
     expected: 'expected/template-list.title.block.html',
+    timeout: 1000,
   }, {
     name: 'Template List - sixcols',
     input: 'input/template-list.sixcols.doc.html',
