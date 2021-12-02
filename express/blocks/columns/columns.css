@@ -160,6 +160,11 @@ main .columns .icon {
   height: 22px;
 }
 
+main .columns .icon.icon-check {
+  width: 22px;
+  margin-right: 6px;
+}
+
 main .columns.columns-marquee .brand.icon {
   display: none;
 }
@@ -295,7 +300,7 @@ main .columns-highlight-container .column h5 {
 
 main .columns-highlight-container .column h2 {
   margin-top: 8px;
-  font-size: var(--heading-font-size-l);
+  font-size: var(--heading-font-size-l) !important;
   line-height: var(--heading-line-height);
 }
 
