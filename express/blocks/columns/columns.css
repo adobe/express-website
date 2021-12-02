@@ -305,6 +305,21 @@ main .columns.highlight .column h5 + h4 {
   margin-top: 0;
 }
 
+main .columns.highlight h1,
+main .columns.highlight h2,
+main .columns.highlight h3 {
+  font-size: var(--heading-font-size-l) !important;
+}
+
+main .columns.highlight h4 {
+  font-size: var(--heading-font-size-m) !important;
+}
+
+main .columns.highlight h5,
+main .columns.highlight h6 {
+  font-size: var(--heading-font-size-s) !important;
+}
+
 main .columns.highlight .column .columns-iconlist {
   margin-bottom: 0;
 }

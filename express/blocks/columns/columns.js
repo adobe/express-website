@@ -320,17 +320,4 @@ export default function decorate($block) {
     });
   });
   runScaleHeadings();
-  
-  // Fixed smaller heading sizes for columns.highlight block only
-  const highlightHeadings = $block.querySelectorAll('main .columns.highlight h1, main .columns.highlight h2, main .columns.highlight h3, main .columns.highlight h4, main .columns.highlight h5, main .columns.highlight h6');
-  highlightHeadings.forEach((heading) => {
-    const tag = heading.tagName;
-    if (tag == "H5" || tag == "H6") {
-      heading.style.fontSize = "var(--heading-font-size-s)";
-    } else if (tag == "H4") {
-      heading.style.fontSize = "var(--heading-font-size-m)";
-    } else {
-      heading.style.fontSize = "var(--heading-font-size-l)";
-    }
-  });
 }
