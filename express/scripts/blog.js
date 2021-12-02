@@ -112,11 +112,11 @@ export default async function decorateBlogPage() {
     // $eyebrow.innerHTML = tags[0];
     $blogHeader.append($eyebrow);
     $blogHeader.append($h1);
-    const description = getMeta('description');
-    if (description) {
-      const $description = createTag('p', { class: 'subheading' });
-      $description.innerHTML = description;
-      $blogHeader.append($description);
+    const subheading = getMeta('subheading');
+    if (subheading) {
+      const $subheading = createTag('p', { class: 'subheading' });
+      $subheading.innerHTML = subheading;
+      $blogHeader.append($subheading);
     }
     if (author) {
       const $author = createTag('div', { class: 'author' });
@@ -175,10 +175,12 @@ export default async function decorateBlogPage() {
     const section = picture.closest('.section-wrapper');
     section.classList.add('fullwidth');
   });
+  /*
   const introText = document.querySelector('main div.section-wrapper p');
   if (introText) {
     introText.classList.add('intro-text');
   }
+  */
 
   const section = createTag('div', { class: 'section-wrapper' });
   const block = buildBlock('tags', '');
