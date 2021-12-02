@@ -256,7 +256,7 @@ main .columns.center .column h6 {
   text-align: center;
 }
 
-main .columns-highlight-container .columns > div {
+main .columns.highlight > div {
   background: var(--color-white);
   color: var(--color-black);
   border-radius: 20px;
@@ -264,19 +264,19 @@ main .columns-highlight-container .columns > div {
   margin: 20px 0;
 }
 
-main .columns-highlight-container .columns > div:first-child {
+main .columns.highlight > div:first-child {
   margin-top: 50px;
 }
 
-main .columns-highlight-container .columns.width-2-columns .column-picture {
+main .columns.highlight.width-2-columns .column-picture {
   order: -1
 }
 
-main .columns-highlight-container .columns > div {
+main .columns.highlight > div {
   padding: 0;
 }
 
-main .columns-highlight-container .columns .column-picture {
+main .columns.highlight .column-picture {
   margin: 0;
 }
 
@@ -289,30 +289,31 @@ main .columns-highlight-container h2 {
   font-size: var(--heading-font-size-xl);
 }
 
-main .columns-highlight-container .column:not(.column-picture) {
+main .columns.highlight .column:not(.column-picture) {
   padding: 20px;
 }
 
-main .columns-highlight-container .column h5 {
+main .columns.highlight .column h5 {
   color: var(--color-info-accent);
   letter-spacing: 2px;
+  margin-bottom: 8px;
 }
 
-main .columns-highlight-container .column h2 {
-  margin-top: 8px;
-  font-size: var(--heading-font-size-l) !important;
-  line-height: var(--heading-line-height);
+main .columns.highlight .column h5 + h2,
+main .columns.highlight .column h5 + h3,
+main .columns.highlight .column h5 + h4 {
+  margin-top: 0;
 }
 
-main .columns-highlight-container .column .columns-iconlist {
+main .columns.highlight .column .columns-iconlist {
   margin-bottom: 0;
 }
 
-main .columns-highlight-container .column .columns-iconlist > div {
+main .columns.highlight .column .columns-iconlist > div {
   margin-top: 8px;
 }
 
-main .columns-highlight-container .column p {
+main .columns.highlight .column p {
   font-size: var(--body-font-size-s);
 }
 
@@ -375,11 +376,11 @@ main .columns .column {
     order: 0;
   }
 
-  main .columns-highlight-container .columns.width-2-columns .column-picture {
+  main .columns.highlight.width-2-columns .column-picture {
     order: 0;
   }
 
-  main .columns-highlight-container .columns.width-2-columns .column-picture img {
+  main .columns.highlight.width-2-columns .column-picture img {
     height: 100%;
     width: 50%;
     position: absolute;
