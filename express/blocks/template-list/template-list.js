@@ -388,7 +388,7 @@ export async function decorateTemplateList($block) {
             autoplay: '',
             loop: '',
             muted: '',
-            poster: $img.src,
+            poster: $img.getAttribute('src'),
           });
           $video.append(createTag('source', {
             src: $imgLink.href,
