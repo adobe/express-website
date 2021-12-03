@@ -170,6 +170,16 @@ a.button.primaryCTA:any-link:active {
   border-color: var(--color-info-accent-down);
 }
 
+a.button:focus,
+a.button.accent:focus, 
+a.button.primaryCTA:focus {
+  background-color: var(--color-info-accent-hover);
+  border-color: var(--color-info-accent-hover);
+  color: var(--color-white);
+  outline: var(--color-info-accent) solid 2px;
+  outline-offset: 2px;
+}
+
 a.button.primary:any-link {
   color: var(--color-white);
   background-color: var(--color-info-primary);
@@ -184,6 +194,13 @@ a.button.primary:any-link:hover {
 a.button.primary:any-link:active {
   background-color: var(--color-info-primary-down);
   border-color: var(--color-info-primary-down);
+}
+
+a.button.primary:focus,
+a.button.primary.reverse:focus {
+  background-color: var(--color-info-primary-hover);
+  border-color: var(--color-info-primary-hover);
+  color: var(--color-white);
 }
 
 a.button.secondary:any-link {
@@ -202,6 +219,12 @@ a.button.secondary:any-link:active {
   border-color: var(--color-info-secondary-down);
 }
 
+a.button.secondary:focus {
+  background-color: var(--color-gray-500);
+  border-color: var(--color-gray-500);
+  color: var(--color-white);
+}
+
 a.button.reverse:any-link {
   color: var(--color-black);
   background-color: var(--color-white);
@@ -213,6 +236,14 @@ a.button.reverse:any-link:hover {
 
 a.button.reverse:any-link:active {
   background-color: var(--color-info-secondary-down)
+}
+
+a.button.reverse:focus,
+a.button.reverse.accent:any-link:focus,
+a.button.reverse.primaryCTA:any-link:focus {
+  background-color: var(--color-info-accent-hover);
+  border-color: var(--color-info-accent-hover);
+  color: var(--color-white);
 }
 
 a.button.reverse.accent:any-link,
@@ -248,6 +279,10 @@ a.button.dark:any-link:active {
   border-color: var(--color-gray-200);
 }
 
+a.button.dark:any-link:focus {
+  outline-color: var(--color-white);
+}
+
 a.button.dark.reverse:any-link {
   color: var(--color-white);
   background-color: transparent;
@@ -264,6 +299,12 @@ a.button.dark.reverse:any-link:active {
   color: var(--color-white);
   background-color: rgba(0,0,0,0.2);
   border-color: var(--color-gray-200);
+}
+
+a.button.dark.reverse:any-link:focus {
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+  color: var(--color-info-accent-hover);
 }
 
 a.button > svg {
