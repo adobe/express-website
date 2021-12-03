@@ -34,6 +34,7 @@ main .tutorials .tutorial-card-overlay {
   justify-content: space-between;
   align-items: flex-end;
   padding: 8px;
+  cursor: pointer;
 }
 
 main .tutorials .tutorial-card-overlay:hover {
@@ -50,6 +51,7 @@ main .tutorials .tutorial-card-overlay:hover::before {
   top: 50%;
   left: 50%;
   font-size: var(--body-font-size-s);
+  font-weight: var(--heading-font-weight);
   transform: translate(-50%, -50%);
 }
 
@@ -91,6 +93,27 @@ main .tutorials-overlay {
 }
 
 main .tutorials-overlay .tutorials-overlay-video {
-  width: 720px;
-  max-width: 100vw;
+  width: 90vw;
+  height: calc(90vw * 9 / 16);
+  max-height: 100vh;
+}
+
+main .tutorials-overlay .tutorials-overlay-video.vimeo {
+  width: 90vh;
+  max-width: 90vw;
+  height: 90vw;
+  max-height: 90vh;
+}
+
+main .tutorials-overlay .tutorials-overlay-video iframe {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 900px) {
+  main .tutorials-overlay .tutorials-overlay-video.vimeo > iframe,
+  main .tutorials-overlay .tutorials-overlay-video.vimeo {
+    width: 90vh;
+    height: 90vh;
+  }
 }

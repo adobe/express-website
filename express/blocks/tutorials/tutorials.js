@@ -15,8 +15,9 @@ import {
   toClassName,
 } from '../../scripts/scripts.js';
 
-function playInlineVideo(vid, $element, title) {
-  $element.innerHTML = `<iframe width="100%" height="405" src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
+function playInlineVideo($element, vid, type, title) {
+  $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
+  $element.classList.add(type);
 }
 
 function displayTutorial(url, title) {
@@ -25,15 +26,20 @@ function displayTutorial(url, title) {
     const $overlay = createTag('div', { class: 'tutorials-overlay' });
     const $video = createTag('div', { class: 'tutorials-overlay-video', id: 'tutorials-overlay-video' });
     $overlay.appendChild($video);
-    $overlay.addEventListener('click', () => {
+    const close = () => {
+      console.log('close');
       window.location.hash = '';
       $overlay.remove();
-    });
+    };
+    $overlay.addEventListener('click', close);
+    $video.addEventListener('click', close);
     window.location.hash = toClassName(title);
     const $main = document.querySelector('main');
     $main.append($overlay);
     let vidUrl = '';
+    let vidType = 'default';
     if (url.includes('youtu')) {
+      vidType = 'youtube';
       const yturl = new URL(url);
       let vid = yturl.searchParams.get('v');
       if (!vid) {
@@ -41,10 +47,11 @@ function displayTutorial(url, title) {
       }
       vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed&autoplay=1`;
     } else if (url.includes('vimeo')) {
+      vidType = 'vimeo';
       const vid = new URL(url).pathname.split('/')[1];
       vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
     }
-    playInlineVideo(vidUrl, $video, title);
+    playInlineVideo($video, vidUrl, vidType, title);
   } else {
     window.location.href = url;
   }
