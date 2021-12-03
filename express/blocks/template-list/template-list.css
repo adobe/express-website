@@ -1,3 +1,7 @@
+main .template-list.template-list-complete {
+  min-height: unset;
+}
+
 main .template-list {
   display: flex;
   flex-wrap: wrap;
