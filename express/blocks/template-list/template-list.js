@@ -171,6 +171,7 @@ class Masonry {
       }
     }
     const workList = [...(cells || this.cells)];
+
     while (workList.length > 0) {
       for (let i = 0; i < 5 && i < workList.length; i += 1) {
         const $cell = workList[i];
@@ -202,6 +203,8 @@ class Masonry {
     if (workList.length > 0) {
       // draw rest
       this.draw(workList);
+    } else {
+      this.$block.classList.add('template-list-complete');
     }
   }
 }
@@ -419,6 +422,8 @@ export async function decorateTemplateList($block) {
     window.addEventListener('resize', () => {
       masonry.draw();
     });
+  } else {
+    $block.classList.add('template-list-complete');
   }
 }
 
