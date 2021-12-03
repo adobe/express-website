@@ -26,13 +26,10 @@ function displayTutorial(url, title) {
     const $overlay = createTag('div', { class: 'tutorials-overlay' });
     const $video = createTag('div', { class: 'tutorials-overlay-video', id: 'tutorials-overlay-video' });
     $overlay.appendChild($video);
-    const close = () => {
-      console.log('close');
+    $overlay.addEventListener('click', () => {
       window.location.hash = '';
       $overlay.remove();
-    };
-    $overlay.addEventListener('click', close);
-    $video.addEventListener('click', close);
+    });
     window.location.hash = toClassName(title);
     const $main = document.querySelector('main');
     $main.append($overlay);
