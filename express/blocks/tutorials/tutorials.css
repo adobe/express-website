@@ -66,13 +66,6 @@ main .tutorials .tutorial-card .tutorial-card-top .tutorial-card-duration {
   font-size: var(--body-font-size-s);
 }
 
-main .tutorials .tutorial-card .tutorial-card-top .tutorial-card-play {
-  height: 32px;
-  width: 32px;
-  background-image: url(/express/icons/play-video.svg);
-  background-size: cover;
-}
-
 main .tutorials h3 {
   margin-top: 16px;
   text-align: left;
