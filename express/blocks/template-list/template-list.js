@@ -25,6 +25,47 @@ import {
   buildCarousel,
 } from '../shared/carousel.js';
 
+/**
+ * Returns a picture element with webp and fallbacks
+ * @param {string} src The image URL
+ * @param {boolean} eager load image eager
+ * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
+ */
+
+export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+  const url = new URL(src, window.location.href);
+  const picture = document.createElement('picture');
+  const { pathname } = url;
+  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
+
+  // webp
+  breakpoints.forEach((br) => {
+    const source = document.createElement('source');
+    if (br.media) source.setAttribute('media', br.media);
+    source.setAttribute('type', 'image/webp');
+    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+    picture.appendChild(source);
+  });
+
+  // fallback
+  breakpoints.forEach((br, i) => {
+    if (i < breakpoints.length - 1) {
+      const source = document.createElement('source');
+      if (br.media) source.setAttribute('media', br.media);
+      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      picture.appendChild(source);
+    } else {
+      const img = document.createElement('img');
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      img.setAttribute('loading', eager ? 'eager' : 'lazy');
+      img.setAttribute('alt', alt);
+      picture.appendChild(img);
+    }
+  });
+
+  return picture;
+}
+
 class Masonry {
   constructor($block, cells) {
     this.$block = $block;
@@ -32,6 +73,8 @@ class Masonry {
     this.columns = [];
     this.nextColumn = null;
     this.startResizing = 0;
+    this.columnWidth = 0;
+    this.debug = false;
   }
 
   // set up fresh grid if necessary
@@ -42,6 +85,11 @@ class Masonry {
     if (!width) {
       return 0;
     }
+    const usp = new URLSearchParams(window.location.search);
+    if (usp.has('debug-template-list')) {
+      this.debug = true;
+    }
+    this.columnWidth = colWidth - (colWidth === 175 ? 10 : 4); // padding/margin adjustment
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
@@ -77,7 +125,33 @@ class Masonry {
     const column = this.getNextColumn();
     column.$column.append($cell);
     $cell.classList.add('appear');
-    column.outerHeight += $cell.offsetHeight;
+
+    let mediaHeight = 0;
+    let mediaWidth = 0;
+    let calculatedHeight = 0;
+
+    const img = $cell.querySelector('picture > img');
+    if (img) {
+      mediaHeight = img.naturalHeight;
+      mediaWidth = img.naturalWidth;
+      calculatedHeight = ((this.columnWidth) / mediaWidth) * mediaHeight;
+    }
+    const video = $cell.querySelector('video');
+    if (video) {
+      mediaHeight = video.videoHeight;
+      mediaWidth = video.videoWidth;
+      calculatedHeight = ((this.columnWidth) / mediaWidth) * mediaHeight;
+    }
+    if (this.debug) {
+      // eslint-disable-next-line no-console
+      console.log($cell.offsetHeight, calculatedHeight, $cell);
+    }
+
+    column.outerHeight += calculatedHeight;
+
+    if (!calculatedHeight && $cell.classList.contains('placeholder') && $cell.style.height) {
+      column.outerHeight += +$cell.style.height.split('px')[0] + 20;
+    }
     this.nextColumn = null;
   }
 
@@ -97,7 +171,13 @@ class Masonry {
       }
     }
     const workList = [...(cells || this.cells)];
+
     while (workList.length > 0) {
+      for (let i = 0; i < 5 && i < workList.length; i += 1) {
+        const $cell = workList[i];
+        const $image = $cell.querySelector(':scope picture > img');
+        if ($image) $image.setAttribute('loading', 'eager');
+      }
       const $cell = workList[0];
       const $image = $cell.querySelector(':scope picture > img');
       if ($image && !$image.complete) {
@@ -111,7 +191,7 @@ class Masonry {
       const $video = $cell.querySelector('video');
       if ($video && $video.readyState === 0) {
         // continue when video is loaded
-        $video.addEventListener('loadeddata', () => {
+        $video.addEventListener('loadedmetadata', () => {
           this.draw(workList);
         });
         return;
@@ -123,6 +203,8 @@ class Masonry {
     if (workList.length > 0) {
       // draw rest
       this.draw(workList);
+    } else {
+      this.$block.classList.add('template-list-complete');
     }
   }
 }
@@ -199,12 +281,6 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  // use lower resolution image and preload
-  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    $img.setAttribute('src', $img.getAttribute('src').replace('width=2000&', 'width=750&'));
-    $img.setAttribute('loading', 'eager');
-  });
-
   const templates = Array.from($block.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
@@ -217,6 +293,7 @@ export async function decorateTemplateList($block) {
   }
 
   rows = templates.length;
+  let breakpoints = [{ width: '400' }];
 
   if (rows > 6 && !$block.classList.contains('horizontal')) {
     $block.classList.add('masonry');
@@ -224,7 +301,14 @@ export async function decorateTemplateList($block) {
 
   if (rows === 1) {
     $block.classList.add('large');
+    breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }];
   }
+
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    const { src, alt } = $img;
+    const eager = $block.classList.contains('horizontal');
+    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, eager, breakpoints));
+  });
 
   // find the edit link and turn the template DIV into the A
   // A
@@ -298,11 +382,13 @@ export async function decorateTemplateList($block) {
         $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
+          const $img = $tmplt.querySelector('img');
           const $video = createTag('video', {
             playsinline: '',
             autoplay: '',
             loop: '',
             muted: '',
+            poster: $img.src,
           });
           $video.append(createTag('source', {
             src: $imgLink.href,
@@ -336,9 +422,11 @@ export async function decorateTemplateList($block) {
     window.addEventListener('resize', () => {
       masonry.draw();
     });
+  } else {
+    $block.classList.add('template-list-complete');
   }
 }
 
 export default async function decorate($block) {
-  return decorateTemplateList($block);
+  await decorateTemplateList($block);
 }

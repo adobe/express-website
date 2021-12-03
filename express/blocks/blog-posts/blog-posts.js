@@ -18,7 +18,10 @@ import {
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
-  const resp = await fetch('/express/learn/blog/query-index.json');
+  let prefix = `/${window.location.pathname.split('/')[1]}`;
+  if (prefix === '/express' || prefix === '/drafts') prefix = '';
+
+  const resp = await fetch(`${prefix}/express/learn/blog/query-index.json`);
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {
@@ -49,7 +52,7 @@ function isDuplicate(path) {
   return (alreadyDisplayed);
 }
 
-async function filterBlogPosts(locale, config) {
+async function filterBlogPosts(config) {
   if (!window.blogIndex) {
     window.blogIndex = await fetchBlogIndex();
   }
@@ -141,7 +144,7 @@ async function filterAllBlogPostsOnPage() {
       const block = blocks[i];
       const config = getBlogPostsConfig(block);
       // eslint-disable-next-line no-await-in-loop
-      const posts = await filterBlogPosts('en-US', config);
+      const posts = await filterBlogPosts(config);
       results.push({ config, posts });
     }
     window.blogResults = results;
@@ -152,7 +155,7 @@ async function filterAllBlogPostsOnPage() {
   return (window.blogResults);
 }
 
-async function getFilteredResults(locale, config) {
+async function getFilteredResults(config) {
   const results = await filterAllBlogPostsOnPage();
 
   const configStr = JSON.stringify(config);
@@ -166,7 +169,7 @@ async function getFilteredResults(locale, config) {
 }
 
 async function decorateBlogPosts($blogPosts, config, offset = 0) {
-  const posts = await getFilteredResults('en-US', config);
+  const posts = await getFilteredResults(config);
 
   const isHero = config.featured && config.featured.length === 1;
 

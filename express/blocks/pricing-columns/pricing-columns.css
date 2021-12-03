@@ -11,7 +11,7 @@ main .pricing-columns {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    margin: 80px auto;
+    margin: 80px auto 0 auto;
     padding: 0 24px;
 }
 
@@ -75,9 +75,13 @@ main .pricing-columns-dropdown {
     border-radius: 5px;
 }
 
+main .pricing-columns-vat-info {
+  height: 24px;
+}
+
 main .pricing-columns-cta.button {
     flex: 1;
-    margin: 40px 0 0 0;
+    margin: 16px 0 0 0;
     max-width: 375px;
 }
 
@@ -146,7 +150,7 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
 @media (min-width: 900px) {
     main .pricing-columns {
         max-width: 600px;
-        margin: 0 auto 80px auto;
+        margin: 0 auto;
         padding: 0;
     }
 

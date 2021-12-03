@@ -1,3 +1,7 @@
+main .template-list.template-list-complete {
+  min-height: unset;
+}
+
 main .template-list {
   display: flex;
   flex-wrap: wrap;
@@ -16,7 +20,6 @@ main .template-list.sixcols {
 
 main .template-list-sixcols-container > div {
   max-width: 350px;
-  padding: 0;
 }
 
 main .template-list.sixcols > .masonry-col {
@@ -446,7 +449,7 @@ main .template-list.flex-masonry .template.appear {
 
   main .template-list.sixcols .template.placeholder {
     width: 145px;
-    margin: 21px auto;
+    margin: 21px;
   }
 
   /* template-list inside columns */
@@ -465,7 +468,6 @@ main .template-list.flex-masonry .template.appear {
 
 @media (min-width: 1200px) {
   main .template-list-fourcols-container > div,
-  main .template-list-sixcols-container > div,
   main .template-list-horizontal-container > div {
     max-width: 1200px;
   }

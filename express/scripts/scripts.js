@@ -43,6 +43,7 @@ export function sampleRUM(checkpoint, data = {}) {
       sendPing();
       // special case CWV
       if (checkpoint === 'cwv') {
+        // eslint-disable-next-line import/no-unresolved
         import('https://unpkg.com/web-vitals?module').then((mod) => {
           const storeCWV = (measurement) => {
             data.cwv = {};
@@ -424,11 +425,14 @@ function getCurrencyDisplay(currency) {
   if (currency === 'JPY') {
     return 'name';
   }
+  if (['SEK', 'DKK', 'NOK'].includes(currency)) {
+    return 'code';
+  }
   return 'symbol';
 }
 
 export function formatPrice(price, currency, currencyDisplay) {
-  const locale = getLanguage(getLocale(window.location));
+  const locale = ['USD', 'TWD'].includes(currency) ? getCountry() : getLanguage(getLocale(window.location));
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
@@ -504,16 +508,18 @@ function decorateHeaderAndFooter() {
  * Loads a CSS file.
  * @param {string} href The path to the CSS file
  */
-export function loadCSS(href) {
+export function loadCSS(href, callback) {
   if (!document.querySelector(`head > link[href="${href}"]`)) {
     const link = document.createElement('link');
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('href', href);
-    link.onload = () => {
-    };
-    link.onerror = () => {
-    };
+    if (typeof callback === 'function') {
+      link.onload = (e) => callback(e.type);
+      link.onerror = (e) => callback(e.type);
+    }
     document.head.appendChild(link);
+  } else if (typeof callback === 'function') {
+    callback('noop');
   }
 }
 
@@ -579,6 +585,7 @@ export function decorateBlocks($main) {
     }
     $block.classList.add('block');
     $block.setAttribute('data-block-name', blockName);
+    $block.setAttribute('data-block-status', 'initialized');
   });
 }
 
@@ -590,22 +597,42 @@ function decorateMarqueeColumns($main) {
   }
 }
 
-export function loadBlock($block) {
-  const blockName = $block.getAttribute('data-block-name');
-  import(`/express/blocks/${blockName}/${blockName}.js`)
-    .then((mod) => {
-      if (mod.default) {
-        mod.default($block, blockName, document);
-      }
-    })
-    .catch((err) => console.log(`failed to load module for ${blockName}`, err));
-  loadCSS(`/express/blocks/${blockName}/${blockName}.css`);
+/**
+ * Loads JS and CSS for a block.
+ * @param {Element} block The block element
+ */
+export async function loadBlock(block, eager = false) {
+  if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
+    block.setAttribute('data-block-status', 'loading');
+    const blockName = block.getAttribute('data-block-name');
+    try {
+      const cssLoaded = new Promise((resolve) => {
+        loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
+      });
+      const decorationComplete = new Promise((resolve) => {
+        (async () => {
+          try {
+            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            if (mod.default) {
+              await mod.default(block, blockName, document, eager);
+            }
+          } catch (err) {
+            console.log(`failed to load module for ${blockName}`, err);
+          }
+          resolve();
+        })();
+      });
+      await Promise.all([cssLoaded, decorationComplete]);
+    } catch (err) {
+      console.log(`failed to load block ${blockName}`, err);
+    }
+    block.setAttribute('data-block-status', 'loaded');
+  }
 }
-
 export function loadBlocks($main) {
-  $main
-    .querySelectorAll('div.section-wrapper > div > .block')
-    .forEach(async ($block) => loadBlock($block));
+  const blockPromises = [...$main.querySelectorAll('div.section-wrapper > div > .block')]
+    .map(($block) => loadBlock($block));
+  return blockPromises;
 }
 
 export function loadScript(url, callback, type) {
@@ -801,14 +828,7 @@ function addPromotion() {
   }
 }
 
-function postLCP() {
-  const $main = document.querySelector('main');
-  loadFonts();
-  loadCSS('/express/styles/lazy-styles.css');
-  loadBlocks($main);
-  resolveFragments();
-  addPromotion();
-
+function loadMartech() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
 
@@ -835,6 +855,7 @@ function decoratePageStyle() {
   // check if h1 is inside a block
 
   if (isBlog) {
+    // eslint-disable-next-line import/no-unresolved,import/no-absolute-path
     import('/express/scripts/blog.js')
       .then((mod) => {
         if (mod.default) {
@@ -1029,25 +1050,6 @@ async function decorateTesting() {
   }
 }
 
-function setLCPTrigger() {
-  const lcpListener = ({ target }) => {
-    postLCP();
-    target.removeEventListener('load', lcpListener);
-    target.removeEventListener('error', lcpListener);
-  };
-  const $lcpCandidate = document.querySelector('main > div:first-of-type img');
-  if ($lcpCandidate) {
-    if ($lcpCandidate.complete) {
-      postLCP();
-    } else {
-      $lcpCandidate.addEventListener('load', lcpListener);
-      $lcpCandidate.addEventListener('error', lcpListener);
-    }
-  } else {
-    postLCP();
-  }
-}
-
 export function fixIcons(block = document) {
   /* backwards compatible icon handling, deprecated */
   block.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
@@ -1147,12 +1149,7 @@ function setTheme() {
     /* backwards compatibility can be removed again */
     if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
     $body.classList.add(themeClass);
-  } else {
-    const path = window.location.pathname;
-    if (path.includes('/blog/') || path.endsWith('/blog')) {
-      $body.classList.add('blog', 'no-brand-header');
-    }
-    // todo: read template from page metadata
+    if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
 }
 
@@ -1163,6 +1160,23 @@ function decorateLinkedPictures($main) {
       linkPicture($picture);
     }
   });
+}
+
+/**
+ * Adds the favicon.
+ * @param {string} href The favicon URL
+ */
+export function addFavIcon(href) {
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.type = 'image/svg+xml';
+  link.href = href;
+  const existingLink = document.querySelector('head link[rel="icon"]');
+  if (existingLink) {
+    existingLink.replaceWith(link);
+  } else {
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
 }
 
 function decorateSocialIcons($main) {
@@ -1333,27 +1347,128 @@ export function decorateMain($main) {
   makeRelativeLinks($main);
 }
 
-async function decoratePage() {
+window.spark = {};
+
+function unhideBody(id) {
+  try {
+    document.head.removeChild(document.getElementById(id));
+  } catch (e) {
+    // nothing
+  }
+}
+
+function hideBody(id) {
+  const style = document.createElement('style');
+  style.id = id;
+  style.textContent = 'body{visibility: hidden !important}';
+
+  try {
+    document.head.appendChild(style);
+  } catch (e) {
+    // nothing
+  }
+}
+
+/**
+ * loads everything needed to get to LCP.
+ */
+async function loadEager() {
   setTheme();
   await decorateTesting();
   if (sessionStorage.getItem('helix-font') === 'loaded') {
     loadFonts();
   }
 
-  const $main = document.querySelector('main');
-  if ($main) {
-    decorateMain($main);
+  const main = document.querySelector('main');
+  if (main) {
+    decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
-    setLCPTrigger();
     displayEnv();
     displayOldLinkWarning();
+
+    const lcpBlocks = ['columns', 'hero-animation'];
+    const block = document.querySelector('.block');
+    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(block, true);
+
+    document.querySelector('body').classList.add('appear');
+    const target = checkTesting();
+    if (target) {
+      const bodyHideStyleId = 'at-body-style';
+      hideBody(bodyHideStyleId);
+      setTimeout(() => {
+        unhideBody(bodyHideStyleId);
+      }, 3000);
+    }
+
+    const lcpCandidate = document.querySelector('main img');
+    await new Promise((resolve) => {
+      if (lcpCandidate && !lcpCandidate.complete) {
+        lcpCandidate.addEventListener('load', () => resolve());
+        lcpCandidate.addEventListener('error', () => resolve());
+      } else {
+        resolve();
+      }
+    });
   }
-  document.body.classList.add('appear');
 }
 
-window.spark = {};
-decoratePage();
+/**
+ * loads everything that doesn't need to be delayed.
+ */
+async function loadLazy() {
+  const main = document.querySelector('main');
+
+  // post LCP actions go here
+  sampleRUM('lcp');
+
+  loadBlocks(main);
+  loadFonts();
+  loadCSS('/express/styles/lazy-styles.css');
+  resolveFragments();
+  addPromotion();
+
+  loadCSS('/express/styles/lazy-styles.css');
+  addFavIcon('/express/icons/cc-express.svg');
+  if (!window.hlx.lighthouse) loadMartech();
+}
+
+/**
+ * loads everything that happens a lot later, without impacting
+ * the user experience.
+ */
+function loadDelayed() {
+  /* trigger delayed.js load */
+  const delayedScript = '/express/scripts/delayed.js';
+  const usp = new URLSearchParams(window.location.search);
+  const delayed = usp.get('delayed');
+
+  if (!(delayed === 'off' || document.querySelector(`head script[src="${delayedScript}"]`))) {
+    let ms = 0;
+    const delay = usp.get('delay');
+    if (delay) ms = +delay;
+    setTimeout(() => {
+      loadScript(delayedScript, null, 'module');
+    }, ms);
+  }
+}
+
+/**
+ * Decorates the page.
+ */
+async function decoratePage() {
+  await loadEager();
+  loadLazy();
+  loadDelayed();
+}
+
+window.hlx = window.hlx || {};
+window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+
+if (!window.isTestEnv) {
+  decoratePage();
+}
 
 /*
  * lighthouse performance instrumentation helper

@@ -24,12 +24,15 @@ async function decorateFragment($block) {
   const html = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = html;
+  const img = $main.querySelector('img');
+  img.setAttribute('loading', 'lazy');
   decorateMain($main);
-  loadBlocks($main);
+  const loadedBlocks = loadBlocks($main);
+  await Promise.all(loadedBlocks);
   const $section = $block.closest('.section-wrapper');
   $section.parentNode.replaceChild($main, $section);
 }
 
-export default function decorate($block) {
-  decorateFragment($block);
+export default async function decorate($block) {
+  await decorateFragment($block);
 }
