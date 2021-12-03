@@ -15,22 +15,43 @@ import {
   toClassName,
 } from '../../scripts/scripts.js';
 
+const docTitle = document.title;
+
 function playInlineVideo($element, vid, type, title) {
   $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
   $element.classList.add(type);
 }
 
-function displayTutorial(url, title) {
+function hideTutorial(push) {
+  const $overlay = document.querySelector('main .tutorials-overlay');
+  if ($overlay) {
+    $overlay.remove();
+    window.onkeyup = null;
+  }
+  if (push) {
+    // create new history entry
+    window.history.pushState({}, docTitle, window.location.href.split('#')[0]);
+  }
+}
+
+function displayTutorial(url, title, push) {
   const canPlayInline = url.includes('youtu') || url.includes('vimeo');
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'tutorials-overlay' });
     const $video = createTag('div', { class: 'tutorials-overlay-video', id: 'tutorials-overlay-video' });
     $overlay.appendChild($video);
     $overlay.addEventListener('click', () => {
-      window.location.hash = '';
-      $overlay.remove();
+      hideTutorial(true);
     });
-    window.location.hash = toClassName(title);
+    window.onkeyup = ({ key }) => {
+      if (key === 'Escape') {
+        hideTutorial(true);
+      }
+    };
+    if (push) {
+      // create new history entry
+      window.history.pushState({ url, title }, `${docTitle} | ${title}`, `#${toClassName(title)}`);
+    }
     const $main = document.querySelector('main');
     $main.append($overlay);
     let vidUrl = '';
@@ -52,13 +73,10 @@ function displayTutorial(url, title) {
   } else {
     window.location.href = url;
   }
-
-  // eslint-disable-next-line no-console
-  console.log(url);
 }
 
 function createTutorialCard(title, url, time, $picture) {
-  const $card = createTag('div', { class: 'tutorial-card', tabstop: '0' });
+  const $card = createTag('a', { class: 'tutorial-card', title, tabindex: 0 });
   const $cardTop = createTag('div', { class: 'tutorial-card-top' });
   $cardTop.innerHTML = `<div class="tutorial-card-overlay"><div class="tutorial-card-play"></div>
   <div class="tutorial-card-duration">${time}</div></div>`;
@@ -66,7 +84,12 @@ function createTutorialCard(title, url, time, $picture) {
   const $cardBottom = createTag('div', { class: 'tutorial-card-text' });
   $cardBottom.innerHTML = `<h3>${title}</h3>`;
   $card.addEventListener('click', () => {
-    displayTutorial(url, title);
+    displayTutorial(url, title, true);
+  });
+  $card.addEventListener('keyup', ({ key }) => {
+    if (key === 'Enter') {
+      displayTutorial(url, title);
+    }
   });
   $card.appendChild($cardTop);
   $card.appendChild($cardBottom);
@@ -84,6 +107,14 @@ function decorateTutorials($block) {
     $block.appendChild($card);
     $tutorial.remove();
     if (toClassName(title) === window.location.hash.substr(1)) {
+      displayTutorial(url, title);
+    }
+  });
+  // handle history events
+  window.addEventListener('popstate', ({ state }) => {
+    hideTutorial();
+    const { url, title } = state;
+    if (url) {
       displayTutorial(url, title);
     }
   });
