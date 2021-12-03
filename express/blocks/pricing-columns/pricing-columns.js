@@ -147,7 +147,7 @@ async function selectPlan($pricingHeader, planUrl) {
   $pricingHeader.querySelector('.pricing-columns-price').innerHTML = plan.formatted;
   $pricingHeader.querySelector('.pricing-columns-price').classList.add(plan.currency.toLowerCase());
   $pricingHeader.querySelector('.pricing-columns-cta').href = buildUrl(plan.url, plan.country, plan.language);
-  $pricingHeader.querySelector('.pricing-columns-vat-info').innerHTML = plan.vatInfo;
+  $pricingHeader.querySelector('.pricing-columns-vat-info').innerHTML = plan.vatInfo || '';
 }
 
 function decoratePlan($column) {
