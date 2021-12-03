@@ -411,7 +411,7 @@ export async function decorateTemplateList($block) {
   if ($block.classList.contains('horizontal')) {
     /* carousel */
     buildCarousel(':scope > .template', $block, '');
-  } else if (rows > 6) {
+  } else if (rows > 6 || $block.classList.contains('sixcols')) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
     const cells = Array.from($block.children);
