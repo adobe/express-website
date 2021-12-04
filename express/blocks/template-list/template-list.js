@@ -348,10 +348,10 @@ export async function decorateTemplateList($block) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
           const ratios = option.split(sep).map((e) => +e);
-          const width = $block.classList.contains('sixcols') ? 145 : 200;
+          const width = $block.classList.contains('sixcols') ? 165 : 200;
           if (ratios[1]) {
             const height = (ratios[1] / ratios[0]) * width;
-            $tmplt.style = `height: ${height}px`;
+            $tmplt.style = `height: ${height - 21}px`;
             if (width / height > 1.3) {
               $tmplt.classList.add('wide');
             }
