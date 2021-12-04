@@ -66,6 +66,13 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
   return picture;
 }
 
+function nodeIsBefore(node, otherNode) {
+  // eslint-disable-next-line no-bitwise
+  const forward = node.compareDocumentPosition(otherNode)
+    & Node.DOCUMENT_POSITION_FOLLOWING;
+  return (!!forward);
+}
+
 class Masonry {
   constructor($block, cells) {
     this.$block = $block;
@@ -153,6 +160,48 @@ class Masonry {
       column.outerHeight += +$cell.style.height.split('px')[0] + 20;
     }
     this.nextColumn = null;
+
+    /* set tab index and event listeners */
+    if (this.cells[0] === $cell) {
+      /* first cell focus handler */
+      $cell.addEventListener('focus', (event) => {
+        if (event.relatedTarget) {
+          const backward = nodeIsBefore(event.target, event.relatedTarget);
+          if (backward) this.cells[this.cells.length - 1].focus();
+        }
+      });
+      /* first cell blur handler */
+      $cell.addEventListener('blur', (event) => {
+        if (!event.relatedTarget.classList.contains('template')) {
+          const forward = nodeIsBefore(event.target, event.relatedTarget);
+          if (forward) {
+            if (this.cells.length > 1) {
+              this.cells[1].focus();
+            }
+          }
+        }
+      });
+    } else {
+      /* all other cells get custom blur handler and no tabindex */
+      $cell.setAttribute('tabindex', '-1');
+      $cell.addEventListener('blur', (event) => {
+        if (event.relatedTarget) {
+          const forward = nodeIsBefore(event.target, event.relatedTarget);
+          const backward = !forward;
+          const index = this.cells.indexOf($cell);
+          if (forward) {
+            if (index < this.cells.length - 1) {
+              this.cells[index + 1].focus();
+            }
+          }
+          if (backward) {
+            if (index > 0) {
+              this.cells[index - 1].focus();
+            }
+          }
+        }
+      });
+    }
   }
 
   // distribute cells to columns
