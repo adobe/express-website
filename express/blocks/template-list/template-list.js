@@ -82,6 +82,7 @@ class Masonry {
     this.startResizing = 0;
     this.columnWidth = 0;
     this.debug = false;
+    this.fillToHeight = 0;
   }
 
   // set up fresh grid if necessary
@@ -112,27 +113,42 @@ class Masonry {
       }
       result = 2;
     }
-    [this.nextColumn] = this.columns;
+    this.nextColumn = null;
     return result;
   }
 
   // calculate least tallest column to add next cell to
-  getNextColumn() {
-    if (this.nextColumn) {
-      return this.nextColumn;
-    } else {
-      const minOuterHeight = Math.min(...this.columns.map((col) => col.outerHeight));
-      this.nextColumn = this.columns.find((col) => col.outerHeight === minOuterHeight);
-      return this.nextColumn || this.columns[0];
+  getNextColumn(height) {
+    const columnIndex = this.columns.indexOf(this.nextColumn);
+    const nextColumnIndex = (columnIndex + 1) % this.columns.length;
+    const minOuterHeight = Math.min(...this.columns.map((col) => col.outerHeight));
+    this.nextColumn = this.columns[nextColumnIndex];
+    if (!nextColumnIndex) {
+      const maxOuterHeight = Math.max(...this.columns.map((col) => col.outerHeight));
+      if (!this.fillToHeight) {
+        if (maxOuterHeight - minOuterHeight >= height - 50) {
+          this.fillToHeight = maxOuterHeight;
+          // console.log('entering fill mode');
+        }
+      }
     }
+
+    if (this.fillToHeight) {
+      if (this.fillToHeight - minOuterHeight >= height - 50) {
+        // console.log(this.fillToHeight, minOuterHeight, height, $cell);
+        this.nextColumn = this.columns.find((col) => col.outerHeight === minOuterHeight);
+      } else {
+        // console.log(this.fillToHeight, minOuterHeight, height, $cell);
+        this.fillToHeight = 0;
+        [this.nextColumn] = this.columns;
+        // console.log('no more fill mode');
+      }
+    }
+    return this.nextColumn || this.columns[0];
   }
 
   // add cell to next column
   addCell($cell) {
-    const column = this.getNextColumn();
-    column.$column.append($cell);
-    $cell.classList.add('appear');
-
     let mediaHeight = 0;
     let mediaWidth = 0;
     let calculatedHeight = 0;
@@ -154,12 +170,15 @@ class Masonry {
       console.log($cell.offsetHeight, calculatedHeight, $cell);
     }
 
+    const column = this.getNextColumn(calculatedHeight);
+    column.$column.append($cell);
+    $cell.classList.add('appear');
+
     column.outerHeight += calculatedHeight;
 
     if (!calculatedHeight && $cell.classList.contains('placeholder') && $cell.style.height) {
       column.outerHeight += +$cell.style.height.split('px')[0] + 20;
     }
-    this.nextColumn = null;
 
     /* set tab index and event listeners */
     if (this.cells[0] === $cell) {
