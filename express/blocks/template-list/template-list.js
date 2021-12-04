@@ -19,6 +19,7 @@ import {
   getIconElement,
   toClassName,
   decorateMain,
+  addAnimationToggle,
 } from '../../scripts/scripts.js';
 
 import {
@@ -429,4 +430,5 @@ export async function decorateTemplateList($block) {
 
 export default async function decorate($block) {
   await decorateTemplateList($block);
+  addAnimationToggle($block);
 }

@@ -10,7 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { linkImage, createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
+import {
+  linkImage,
+  createTag,
+  transformLinkToAnimation,
+  addAnimationToggle,
+} from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell, rowNum) {
   const icons = $columnCell.querySelectorAll('img.icon, svg.icon');
@@ -319,5 +324,6 @@ export default function decorate($block) {
       }
     });
   });
+  addAnimationToggle($block);
   runScaleHeadings();
 }
