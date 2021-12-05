@@ -127,8 +127,15 @@ export async function run() {
   fgrepFiles(sitemap, pattern, 10, resultDisplay);
 }
 
-document.getElementById('run').addEventListener('click', () => {
+const runButton = document.getElementById('run');
+runButton.addEventListener('click', () => {
   run();
 });
 
-document.getElementById('input').focus();
+const input = document.getElementById('input')
+input.focus();
+input.addEventListener('keyup', (event) => {
+  if (event.keyCode === 13) {
+    runButton.click();
+  }
+});
