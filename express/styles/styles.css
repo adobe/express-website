@@ -101,7 +101,9 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
 }
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:focus {
-  outline: var(--color-info-accent) solid 2px;
+  background-color: var(--color-info-accent-hover) !important;
+  border-color: var(--color-info-accent-hover) !important;
+  outline: var(--color-info-accent-hover) solid 2px;
   outline-offset: 2px;
 }
 
@@ -119,7 +121,6 @@ a.button:any-link {
   text-decoration: none;
   border-radius: 18px;
   padding: 5px 1.2em 6px 1.2em;
-  /*outline: none; (keep outline for a11n) */
   text-align: center;
   font-size: var(--body-font-size-s);
   font-style: normal; 
