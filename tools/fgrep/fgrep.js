@@ -59,7 +59,7 @@ async function loadSitemap(sitemapURL) {
 function updateStatus() {
   const status = document.getElementById('status');
   const seconds = Math.floor((endTime - startTime) / 100) / 10;
-  status.innerHTML = `Matched Files: ${totalFilesMatched} / ${totalFiles} (${humanFileSize(totalSize)}) ${seconds}s`;
+  status.innerHTML = `Matched Files: ${totalFilesMatched} / ${totalFiles} (${humanFileSize(totalSize, true)}) ${seconds}s`;
 }
 
 async function fgrep(pathname, pattern) {
@@ -70,7 +70,7 @@ async function fgrep(pathname, pattern) {
     found = true;
   }
   const { status } = resp;
-  const size = text.length;
+  const size = +resp.headers.get('content-length');
   return ({
     found,
     size,
@@ -85,7 +85,7 @@ function displayResult(result) {
   totalFilesMatched += result.found ? 1 : 0;
   if (result.found) {
     const p = document.createElement('p');
-    p.innerHTML = `<a href="${result.pathname}">${result.pathname}</a> : ${result.found} ${humanFileSize(result.size, true)} (${result.status})`;
+    p.innerHTML = `${humanFileSize(result.size, true).padStart(9, ' ')} <a href="${result.pathname}">${result.pathname}</a> (${result.status})`;
     resultDisplay.appendChild(p);
   }
 }
@@ -130,3 +130,5 @@ export async function run() {
 document.getElementById('run').addEventListener('click', () => {
   run();
 });
+
+document.getElementById('input').focus();
