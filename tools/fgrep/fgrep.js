@@ -123,8 +123,12 @@ export async function run() {
   await loadSitemap('/express/sitemap.xml');
   const resultDisplay = document.body;
   const sitemap = sitemapURLs;
-  const pattern = document.getElementById('input').value;
-  fgrepFiles(sitemap, pattern, 10, resultDisplay);
+  let pattern = document.getElementById('input').value;
+  let connections = 10;
+  if (pattern.includes(' -c ')) {
+    [pattern, connections] = pattern.split(' -c ');
+  }
+  fgrepFiles(sitemap, pattern, +connections, resultDisplay);
 }
 
 const runButton = document.getElementById('run');
@@ -132,7 +136,7 @@ runButton.addEventListener('click', () => {
   run();
 });
 
-const input = document.getElementById('input')
+const input = document.getElementById('input');
 input.focus();
 input.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
