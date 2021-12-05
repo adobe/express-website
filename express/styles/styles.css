@@ -100,6 +100,11 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
   border-color: var(--color-info-accent-hover)!important;
 }
 
+header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:focus {
+  outline: var(--color-info-accent) solid 2px;
+  outline-offset: 2px;
+}
+
 header #feds-header a.feds-navLink:hover .feds-navLink-text {
   color: var(--color-info-accent-hover);
 }
