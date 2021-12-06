@@ -103,8 +103,10 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:focus {
   background-color: var(--color-info-accent-hover) !important;
   border-color: var(--color-info-accent-hover) !important;
-  outline: var(--color-info-accent-hover) solid 2px;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-info-accent-hover);
 }
 
 header #feds-header a.feds-navLink:hover .feds-navLink-text {
@@ -182,8 +184,10 @@ a.button.primaryCTA:focus {
   background-color: var(--color-info-accent-hover);
   border-color: var(--color-info-accent-hover);
   color: var(--color-white);
-  outline: var(--color-info-accent) solid 2px;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-info-accent-hover);
 }
 
 a.button.primary:any-link {
@@ -286,7 +290,9 @@ a.button.dark:any-link:active {
 }
 
 a.button.dark:any-link:focus {
-  outline-color: var(--color-white);
+  box-shadow:
+    0 0 0 2px var(--color-info-accent),
+    0 0 0 4px var(--color-white);
 }
 
 a.button.dark.reverse:any-link {
