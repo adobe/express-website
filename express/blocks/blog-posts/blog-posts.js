@@ -12,9 +12,9 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
+  createOptimizedPicture,
   createTag,
   readBlockConfig,
-  getOptimizedImageURL,
 } from '../../scripts/scripts.js';
 
 async function fetchBlogIndex() {
@@ -199,14 +199,11 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     });
 
     const imagePath = image.split('?')[0].split('_')[1];
-    const imageSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=750`);
-    const heroSrc = getOptimizedImageURL(`./media_${imagePath}?format=webply&optimize=medium&width=2000`);
-    let pictureTag = `<picture><img src="${imageSrc}"></picture>`;
+    const cardPicture = createOptimizedPicture(`./media_${imagePath}?format=webply&optimize=medium&width=750`, title, false, [{ width: '750' }]);
+    const heroPicture = createOptimizedPicture(`./media_${imagePath}?format=webply&optimize=medium&width=750`, title, false);
+    let pictureTag = cardPicture.outerHTML;
     if (isHero) {
-      pictureTag = `<picture>
-        <source media="(max-width: 400px)" srcset="${imageSrc}">
-        <img src="${heroSrc}">
-      </picture>`;
+      pictureTag = heroPicture.outerHTML;
     }
     const $card = createTag('a', {
       class: `${isHero ? 'blog-hero-card' : 'blog-card'}`,

@@ -14,9 +14,9 @@
 import {
   createTag,
   toClassName,
-  getOptimizedImageURL,
   getMeta,
   loadBlock,
+  createOptimizedPicture,
 } from './scripts.js';
 
 /**
@@ -57,8 +57,9 @@ async function fetchAuthorImage($image, author) {
     const $div = createTag('div');
     $div.innerHTML = main;
     const $img = $div.querySelector('img');
-    const src = $img.src.replace('width=2000', 'width=200');
-    $image.src = getOptimizedImageURL(src);
+    const newPicture = createOptimizedPicture($img.src, $img.alt, false, [{ width: '200' }]);
+    const picture = $img.closest('picture');
+    if (picture) picture.parentElement.replaceChild(newPicture, picture);
   }
 }
 
