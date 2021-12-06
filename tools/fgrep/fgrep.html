@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>fgrep</title>
+        <script type="module" src="fgrep.js"></script>
+        <style>
+body, input {
+  background-color: black;
+  margin: 0;
+  padding: 2rem;
+  color: white;
+  font: 1.3rem Inconsolata, monospace;
+}
+
+::selection {
+  background: #0080FF;
+  text-shadow: none;
+}
+
+pre {
+  margin: 0;
+}
+
+a:any-link {
+    color: white;
+    text-decoration: none;
+}
+
+#results p {
+    margin: 0;
+}
+
+input {
+    padding: 5px 10px;
+    border: #222 2px solid;
+    width: 100%;
+    border-radius: 4px;
+}
+
+button {
+    vertical-align: top;
+    margin-left: -58px;
+    margin-top: 4px;
+    width: 55px;
+    height: 30px;
+    display: inline-block;
+    background-color: #222;
+    color: white;
+    border: 0;
+    font: 1.3rem Inconsolata, monospace;
+}
+
+</style>
+    </head>
+    <body>
+        <input id="input" type="text" placeholder="class=&quot;card"><button id="run">run</button>
+        <pre>
+        <div id="status"></div>
+        <div id="results">
+
+        </div>
+        </pre>
+    </body>
+</html>

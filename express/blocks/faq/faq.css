@@ -36,7 +36,6 @@ main .faq .faq-question {
     -webkit-transition: all .25s ease-in-out;
     transition: all .25s ease-in-out;
     overflow-anchor: none;
-    cursor: pointer;
 }
 
 main .faq .faq-answer {

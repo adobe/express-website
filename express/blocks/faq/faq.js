@@ -34,7 +34,7 @@ function decorateFAQBlocks($block) {
     const $accordion = createTag('div', { class: 'faq-accordion' });
     $block.append($accordion);
 
-    const $questionDiv = createTag('div', { class: 'faq-question', tabindex: '0' });
+    const $questionDiv = createTag('div', { class: 'faq-question' });
     $accordion.append($questionDiv);
     $questionDiv.innerHTML = question;
 

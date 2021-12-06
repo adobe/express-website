@@ -11,6 +11,7 @@
  */
 
 import {
+  addAnimationToggle,
   createTag,
   toClassName,
 } from '../../scripts/scripts.js';
@@ -103,6 +104,7 @@ export default async function decorate($block) {
     if (rowType === 'content') {
       const $video = createAnimation(animations);
       $div.children[0].prepend($video);
+
       $video.addEventListener('canplay', () => {
         $video.muted = true;
         $video.play();
@@ -161,5 +163,6 @@ export default async function decorate($block) {
   const button = $block.querySelector('.button');
   if (button) button.classList.add('large');
   $block.append($attributions);
+  addAnimationToggle($block);
   $block.classList.add('appear');
 }
