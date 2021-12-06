@@ -105,7 +105,7 @@ export default function decorate(block) {
   const howto = block;
   const rows = Array.from(howto.children);
 
-  const numbers = createTag('div', { class: 'tip-numbers' });
+  const numbers = createTag('div', { class: 'tip-numbers', 'aria-role': 'tablist' });
   block.prepend(numbers);
   const tips = createTag('div', { class: 'tips' });
   block.append(tips);
@@ -130,7 +130,12 @@ export default function decorate(block) {
 
     tips.prepend(row);
 
-    const number = createTag('div', { class: `tip-number tip-${i + 1}`, tabindex: '0' });
+    const number = createTag('div', {
+      class: `tip-number tip-${i + 1}`,
+      tabindex: '0',
+      title: `${i + 1}`,
+      'aria-role': 'tab',
+    });
     number.innerHTML = `<span>${i + 1}</span>`;
     number.setAttribute('data-tip-index', i + 1);
 

@@ -111,10 +111,13 @@ main .how-to-steps-carousel .tip-number {
   -ms-flex-item-align: start;
   align-self: flex-start;
   cursor: pointer;
+}
 
-  outline-color: unset;
-  outline-style: unset;
-  outline-width: unset;
+main .how-to-steps-carousel .tip-number:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-info-accent );
 }
 
 main .how-to-steps-carousel .tip-number.active {

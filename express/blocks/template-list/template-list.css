@@ -99,7 +99,16 @@ main .template-list .template {
   break-inside: avoid;
   text-decoration: unset;
   position: relative;
+  border-radius: 7px;
 }
+
+main .template-list .template:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-info-accent);
+}
+
 
 main .template-list .template > div:first-child > a:any-link {
   padding-left: 0;
