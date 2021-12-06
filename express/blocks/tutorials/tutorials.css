@@ -51,7 +51,7 @@ main .tutorials .tutorial-card-overlay:hover::before {
   top: 50%;
   left: 50%;
   font-size: var(--body-font-size-s);
-  font-weight: var(--heading-font-weight);
+  font-weight: 700;
   transform: translate(-50%, -50%);
 }
 
