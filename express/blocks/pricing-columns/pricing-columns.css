@@ -53,6 +53,7 @@ main .pricing-columns-plan {
 
 main .pricing-columns-price {
     display: flex;
+    flex-wrap: nowrap;
     font-size: var(--heading-font-size-l);
     font-weight: var(--heading-font-weight);
 }
@@ -176,6 +177,7 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
     main .pricing-columns-plan {
         display: flex;
         flex-direction: row;
+        flex-wrap: nowrap;
         align-items: center;
     }
 
