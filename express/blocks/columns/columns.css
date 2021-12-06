@@ -96,6 +96,14 @@ main .columns h6 {
   margin-top: 32px;
 }
 
+main .columns h2 + h2,
+main .columns h3 + h3,
+main .columns h4 + h4,
+main .columns h5 + h5,
+main .columns h6 + h6 {
+  margin-top: 0;
+}
+
 main .columns.width-2-columns .column-picture {
   order: 2;
 }
