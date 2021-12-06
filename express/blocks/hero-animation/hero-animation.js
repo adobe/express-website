@@ -38,6 +38,7 @@ function createAnimation(animations) {
 
   const breakpoint = window.innerWidth <= 400 ? 'mobile' : 'desktop';
   attribs.poster = animations[breakpoint].poster;
+  attribs.title = animations[breakpoint].title;
   const { source } = animations[breakpoint];
   animations[breakpoint].active = true;
 
@@ -91,7 +92,11 @@ export default async function decorate($block) {
       const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
       const source = `./media_${id}.mp4`;
 
-      animations[typeHint] = { source, poster: $poster.currentSrc };
+      animations[typeHint] = {
+        source,
+        poster: $poster.getAttribute('src'),
+        title: $poster.getAttribute('alt') || '',
+      };
       $div.remove();
     }
 

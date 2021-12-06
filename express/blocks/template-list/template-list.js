@@ -458,6 +458,7 @@ export async function decorateTemplateList($block) {
             loop: '',
             muted: '',
             poster: $img.getAttribute('src'),
+            title: $img.getAttribute('alt'),
           });
           $video.append(createTag('source', {
             src: $imgLink.href,

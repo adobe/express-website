@@ -1370,7 +1370,6 @@ function hideBody(id) {
 }
 
 export function addAnimationToggle(target) {
-  console.log('adding animation toggle');
   target.addEventListener('click', () => {
     const videos = target.querySelectorAll('video');
     const paused = videos[0] ? videos[0].paused : false;
