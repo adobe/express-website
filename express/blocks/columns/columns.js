@@ -18,7 +18,8 @@ import {
 } from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell, rowNum) {
-  const icons = $columnCell.querySelectorAll('img.icon, svg.icon');
+  const icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')]
+    .filter(($icon) => !$icon.closest('p').classList.contains('social-links'));
   if (rowNum === 0
     && icons.length === 1
     && icons[0].closest('p').innerText === ''
@@ -28,29 +29,31 @@ function decorateIconList($columnCell, rowNum) {
     $columnCell.parentElement.classList.add('has-brand');
     return;
   }
-  let $iconList = createTag('div', { class: 'columns-iconlist' });
-  let $iconListDescription;
-  [...$columnCell.children].forEach(($e) => {
-    const $img = $e.querySelector('img.icon, svg.icon');
-    const hasText = $img ? $img.closest('p').innerText !== '' : false;
-    if ($img && hasText) {
-      const $iconListRow = createTag('div');
-      const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
-      $iconDiv.appendChild($img);
-      $iconListRow.append($iconDiv);
-      $iconListDescription = createTag('div', { class: 'columns-iconlist-description' });
-      $iconListRow.append($iconListDescription);
-      $iconListDescription.appendChild($e);
-      $iconList.appendChild($iconListRow);
-    } else {
-      if ($iconList.children.length > 0) {
-        $columnCell.appendChild($iconList);
-        $iconList = createTag('div', { class: 'columns-iconlist' });
+  if (icons.length) {
+    let $iconList = createTag('div', { class: 'columns-iconlist' });
+    let $iconListDescription;
+    [...$columnCell.children].forEach(($e) => {
+      const $img = $e.querySelector('img.icon, svg.icon');
+      const hasText = $img ? $img.closest('p').innerText !== '' : false;
+      if ($img && hasText) {
+        const $iconListRow = createTag('div');
+        const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
+        $iconDiv.appendChild($img);
+        $iconListRow.append($iconDiv);
+        $iconListDescription = createTag('div', { class: 'columns-iconlist-description' });
+        $iconListRow.append($iconListDescription);
+        $iconListDescription.appendChild($e);
+        $iconList.appendChild($iconListRow);
+      } else {
+        if ($iconList.children.length > 0) {
+          $columnCell.appendChild($iconList);
+          $iconList = createTag('div', { class: 'columns-iconlist' });
+        }
+        $columnCell.appendChild($e);
       }
-      $columnCell.appendChild($e);
-    }
-  });
-  if ($iconList.children.length > 0) $columnCell.appendChild($iconList);
+    });
+    if ($iconList.children.length > 0) $columnCell.appendChild($iconList);
+  }
 }
 
 /**
