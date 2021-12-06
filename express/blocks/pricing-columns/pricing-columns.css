@@ -68,6 +68,7 @@ main .pricing-columns-price.jpy strong {
 }
 
 main .pricing-columns-dropdown {
+    align-self: center;
     width: 176px;
     height: 32px;
     margin-top: 24px;
@@ -82,7 +83,6 @@ main .pricing-columns-vat-info {
 main .pricing-columns-cta.button {
     flex: 1;
     margin: 16px 0 0 0;
-    max-width: 375px;
 }
 
 main .pricing-columns-cta-text {
@@ -155,7 +155,7 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
     }
 
     main .pricing-columns-cta.button {
-        width: 450px;
+        width: 400px;
         align-self: center;
     }
 

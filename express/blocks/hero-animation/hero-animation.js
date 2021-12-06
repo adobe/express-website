@@ -11,6 +11,7 @@
  */
 
 import {
+  addAnimationToggle,
   createTag,
   toClassName,
 } from '../../scripts/scripts.js';
@@ -37,6 +38,7 @@ function createAnimation(animations) {
 
   const breakpoint = window.innerWidth <= 400 ? 'mobile' : 'desktop';
   attribs.poster = animations[breakpoint].poster;
+  attribs.title = animations[breakpoint].title;
   const { source } = animations[breakpoint];
   animations[breakpoint].active = true;
 
@@ -90,7 +92,11 @@ export default async function decorate($block) {
       const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
       const source = `./media_${id}.mp4`;
 
-      animations[typeHint] = { source, poster: $poster.currentSrc };
+      animations[typeHint] = {
+        source,
+        poster: $poster.getAttribute('src'),
+        title: $poster.getAttribute('alt') || '',
+      };
       $div.remove();
     }
 
@@ -98,6 +104,7 @@ export default async function decorate($block) {
     if (rowType === 'content') {
       const $video = createAnimation(animations);
       $div.children[0].prepend($video);
+
       $video.addEventListener('canplay', () => {
         $video.muted = true;
         $video.play();
@@ -156,5 +163,6 @@ export default async function decorate($block) {
   const button = $block.querySelector('.button');
   if (button) button.classList.add('large');
   $block.append($attributions);
+  addAnimationToggle($block);
   $block.classList.add('appear');
 }
