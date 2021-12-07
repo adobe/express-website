@@ -1336,7 +1336,7 @@ export function decorateMain($main) {
 
 window.spark = {};
 
-const hostparam = new URLSearchParams(window.location.href).get('hostname');
+const hostparam = new URLSearchParams(window.location.search).get('hostname');
 window.spark.hostname = hostparam || window.location.hostname;
 
 function unhideBody(id) {
