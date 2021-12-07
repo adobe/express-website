@@ -1176,7 +1176,10 @@ function makeRelativeLinks($main) {
 
 export function getHelixEnv() {
   let envName = sessionStorage.getItem('helix-env');
-  if (!envName) envName = 'prod';
+  if (!envName) {
+    envName = 'stage';
+    if (window.spark.hostname === 'www.adobe.com') envName = 'prod';
+  }
   const envs = {
     stage: {
       commerce: 'commerce-stg.adobe.com',
@@ -1184,7 +1187,9 @@ export function getHelixEnv() {
       spark: 'express-stage.adobeprojectm.com',
     },
     prod: {
-
+      commerce: 'commerce.adobe.com',
+      spark: 'express.adobe.com',
+      adminconsole: 'adminconsole.adobe.com',
     },
   };
   const env = envs[envName];
@@ -1330,6 +1335,9 @@ export function decorateMain($main) {
 }
 
 window.spark = {};
+
+const hostparam = new URLSearchParams(window.location.href).get('hostname');
+window.spark.hostname = hostparam || window.location.hostname;
 
 function unhideBody(id) {
   try {
