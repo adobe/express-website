@@ -75,6 +75,7 @@ main .pricing-columns-dropdown {
     margin-top: 24px;
     padding: 5px;
     border-radius: 5px;
+    text-overflow: ellipsis;
 }
 
 main .pricing-columns-vat-info {
