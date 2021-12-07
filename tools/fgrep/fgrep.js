@@ -79,6 +79,28 @@ async function fgrep(pathname, pattern) {
   });
 }
 
+async function edit(path, y) {
+  try {
+    const statusRes = await fetch(`https://admin.hlx.page/status/adobe/express-website/main${path}?editUrl=auto`);
+    const status = await statusRes.json();
+    const editUrl = status.edit && status.edit.url;
+    if (y) {
+      // scroll back to original position
+      window.scrollTo(0, y);
+    }
+    if (editUrl) {
+      window.open(editUrl);
+    } else {
+      throw new Error('admin did not return an edit url');
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(`failed to get edit url for ${path}`, e);
+    // eslint-disable-next-line no-alert
+    alert(`failed to get edit url for ${path}`);
+  }
+}
+
 function displayResult(result) {
   const resultDisplay = document.getElementById('results');
   totalSize += result.size;
@@ -86,6 +108,11 @@ function displayResult(result) {
   if (result.found) {
     const p = document.createElement('p');
     p.innerHTML = `${humanFileSize(result.size, true).padStart(9, ' ')} <a href="${result.pathname}">${result.pathname}</a> (${result.status})`;
+    const editLink = document.createElement('a');
+    editLink.className = 'edit';
+    editLink.href = `#${result.pathname}`;
+    editLink.onclick = () => edit(result.pathname, window.scrollY);
+    p.append(' ', editLink);
     resultDisplay.appendChild(p);
   }
 }
