@@ -448,6 +448,10 @@ export async function decorateTemplateList($block) {
       if (!$imgLink.href.includes('.mp4')) {
         linkImage($parent);
       } else {
+        let videoLink = $imgLink.href;
+        if (videoLink.includes('/media_')) {
+          videoLink = `./media_${videoLink.split('/media_')[1]}`;
+        }
         $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
@@ -461,7 +465,7 @@ export async function decorateTemplateList($block) {
             title: $img.getAttribute('alt'),
           });
           $video.append(createTag('source', {
-            src: $imgLink.href,
+            src: videoLink,
             type: 'video/mp4',
           }));
           $parent.replaceChild($video, $picture);
