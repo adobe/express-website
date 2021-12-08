@@ -151,8 +151,8 @@ export default async function decorateBlogPage() {
         </span>
         <span>
         <a>
-          <svg id="copy-to-clipboard" xmlns="http://www.w3.org/2000/svg" class="icon icon-globe">
-            <use href="/express/icons/ccx-sheet_22.svg#globe22"></use>
+          <svg id="copy-to-clipboard" xmlns="http://www.w3.org/2000/svg" class="icon icon-link">
+            <use href="/express/icons/ccx-sheet_22.svg#link22"></use>
           </svg>
           </a>
         </span>
