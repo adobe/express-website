@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+/* global feds */
+
 import {
   loadScript,
   getLocale,
@@ -17,10 +19,22 @@ import {
   getLanguage,
   getHelixEnv,
   sampleRUM,
+  getCountry,
 } from './scripts.js';
 
 // this saves on file size when this file gets minified...
 const w = window;
+
+async function checkForLocationMismatch() {
+  const resp = await fetch('https://www.adobe.com/etc/dexter.homepage/public/localeContent.model.json');
+  const json = await resp.json();
+  if (feds.data.location.country !== getCountry()) {
+    const geoCountry = feds.data.location.country.toLowerCase();
+    console.log(json.locales[geoCountry]);
+    console.log(json.locales[getCountry()]);
+  }
+  console.log(feds.data.location.country);
+}
 
 function handleConsentSettings() {
   try {
@@ -168,6 +182,7 @@ function loadFEDS() {
       });
     }
     setTimeout(loadPrivacy, 3000);
+    checkForLocationMismatch();
   });
   let prefix = '';
   if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {

@@ -286,7 +286,7 @@ function getCookie(cname) {
   return '';
 }
 
-function getCountry() {
+export function getCountry() {
   let country = getCookie('international');
   if (!country) {
     country = getLocale(window.location);
