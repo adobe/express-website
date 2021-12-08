@@ -95,7 +95,7 @@ header {
 }
 
 body.no-brand-header header, body.no-desktop-brand-header header {
-  height: 65px;
+  height: 64px;
   background-image: unset;
 }
 
