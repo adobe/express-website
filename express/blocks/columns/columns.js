@@ -57,22 +57,12 @@ function decorateIconList($columnCell, rowNum) {
 }
 
 function addHeaderSizing($block) {
-  const headings = $block.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  const headings = $block.querySelectorAll('h1, h2');
   headings.forEach((h) => {
-    const sizes = [
-      { name: 's', lineLength: 80 },
-      { name: 'm', lineLength: 70 },
-      { name: 'l', lineLength: 57 },
-      { name: 'xl', lineLength: 13 },
-      { name: 'xxl', lineLength: 10 },
-    ];
     const { length } = h.textContent;
+    const sizes = [{ name: 'long', threshold: 30 }, { name: 'very-long', threshold: 40 }];
     sizes.forEach((size) => {
-      let lines = Math.ceil(length / size.lineLength);
-      if (lines > 3) {
-        if (lines > 5) lines = 5;
-        h.classList.add(`columns-heading-${size.name}-${lines}-lines`);
-      }
+      if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
     });
   });
 }
