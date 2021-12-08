@@ -17,6 +17,7 @@ import {
   decorateButtons,
   fixIcons,
   toClassName,
+  createOptimizedPicture,
 } from '../../scripts/scripts.js';
 
 const PROMOTION_FOLDER = 'express/promotions';
@@ -49,9 +50,13 @@ export default async function decorate($block) {
 
     const heroPicture = div.querySelector('picture');
     if (heroPicture) {
+      const img = heroPicture.querySelector('img');
+      const newPicture = createOptimizedPicture(img.src, img.alt, false);
       const p = heroPicture.parentNode;
+      p.replaceChild(newPicture, heroPicture);
+
       const heroDiv = createTag('div', { class: 'promotion-hero' });
-      heroDiv.append(heroPicture);
+      heroDiv.append(newPicture);
 
       containerDiv.append(heroDiv);
       p.remove();
