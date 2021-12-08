@@ -33,4 +33,7 @@
   <sitemap>
     <loc>https://www.adobe.com/express/sitemap-other.xml</loc>
   </sitemap>
+  <sitemap>
+    <loc>https://www.adobe.com/express/sitemap-blog.xml</loc>
+  </sitemap>
 </sitemapindex>
