@@ -167,7 +167,7 @@ function loadFEDS() {
         $a.setAttribute('href', hrefURL.toString());
       });
     }
-    setTimeout(loadPrivacy, 3000);
+    setTimeout(loadPrivacy, 0);
   });
   let prefix = '';
   if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
