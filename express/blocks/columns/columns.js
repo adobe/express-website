@@ -60,7 +60,11 @@ function addHeaderSizing($block) {
   const headings = $block.querySelectorAll('h1, h2');
   headings.forEach((h) => {
     const { length } = h.textContent;
-    const sizes = [{ name: 'long', threshold: 30 }, { name: 'very-long', threshold: 40 }];
+    const sizes = [
+      { name: 'long', threshold: 30 },
+      { name: 'very-long', threshold: 40 },
+      { name: 'x-long', threshold: 50 },
+    ];
     sizes.forEach((size) => {
       if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
     });

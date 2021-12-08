@@ -86,12 +86,21 @@ main .columns h1.columns-heading-very-long {
   font-size: var(--heading-font-size-l);
 }
 
+main .columns h1.columns-heading-x-long {
+  font-size: var(--heading-font-size-m);
+}  
+
+
 @media (min-width: 1200px) {
   main .columns h1.columns-heading-long {
     font-size: var(--heading-font-size-xxl);
   }  
   main .columns h1.columns-heading-very-long {
     font-size: var(--heading-font-size-xl);
+  }  
+
+  main .columns h1.columns-heading-x-long {
+    font-size: var(--heading-font-size-l);
   }  
 }
 
