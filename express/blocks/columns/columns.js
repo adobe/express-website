@@ -56,155 +56,25 @@ function decorateIconList($columnCell, rowNum) {
   }
 }
 
-/**
- * utility function that calculates how big the heading presently is
- * and returns the heading number - 1 as the storage is zero indexed.
- * @param {Element} heading - a heading element from H1 - H6
- * @param {Array} sizes - a mapping from heading number (index) to spec tshirt size
- * @returns {Number} - returns the current size of a heading
- */
-function getHeadingNumber(heading, sizes) {
-  const headingFont = heading.style.fontSize;
-  const { tagName } = heading;
-  let headingNum = parseInt(tagName.charAt(1), 10);
-  if (headingFont) {
-    const tSize = headingFont.match(/[a-zA-Z]+\)/g)[0].replace(')', '');
-    headingNum = sizes.indexOf(tSize);
-  } else {
-    headingNum = parseInt(tagName.charAt(1), 10);
-  }
-  return headingNum;
-}
-
-/**
- * calculates the number of lines taken up by a heading's text
- * and determines if it is greater or less than @maxLines
- * @param {Element} heading - a H1 - H6 element.
- * @param {Number} maxLines - maximum number of lines a heading can span
- * @param {Boolean} greaterThan - bool test for if we are evaluating >
- * @returns {boolean} - whether a heading is over/under 3 lines long
- */
-function headingComparison(heading, maxLines, greaterThan = true) {
-  const style = window.getComputedStyle(heading);
-  const { height, lineHeight } = style;
-  // dimensions of headings
-  const heightInt = parseInt(height, 10);
-  const lineHeightFloat = parseFloat(lineHeight);
-  // should be verifiable by looking at number of lines
-  const headingLines = Math.ceil(heightInt / lineHeightFloat);
-
-  return greaterThan ? headingLines > maxLines : headingLines < maxLines;
-}
-
-/**
- * This function ensures headers fit within a 3 line limit and will reduce
- * font size and line height until text falls within this limit
- * @param {NodeListOf<Element>} headings - a list of heading nodes that are H1-H6
- * @param {Map} sizes - a mapping between heading size number and specification t-shirt size.
- * @param {Number} maxLines - maximal amount of lines a heading can take up.
- */
-function dynamicScale(headings, sizes, maxLines = 3) {
-  // Iterate through Headings
-  headings.forEach((heading) => {
-    const { tagName } = heading;
-    // this is the maximum size a tag can be upgraded to; there's no minimum
-    const sizeLimit = parseInt(tagName.charAt(1), 10);
-    // current heading size depends on if fontSize is set, if not, it's
-    // whatever the tag number is mapped to in Map
-    let currH = parseInt(getHeadingNumber(heading, sizes), 10);
-    // check upon execution
-    const upSize = () => {
-      currH -= 1;
-      heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
-    };
-    const downSize = () => {
-      currH += 1;
-      heading.setAttribute('style', `font-size: var(--heading-font-size-${sizes[currH]})`);
-    };
-    // if heading length is > maxLines this will execute
-    // for debug purposes let's store the values
-    let downSizeCondition = headingComparison(heading, maxLines);
-    let upSizeCondition = headingComparison(heading, maxLines, false);
-    if (downSizeCondition) {
-      while (downSizeCondition
-        && currH < 7) {
-        downSize();
-        downSizeCondition = headingComparison(heading, maxLines);
+function addHeaderSizing($block) {
+  const headings = $block.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  headings.forEach((h) => {
+    const sizes = [
+      { name: 's', lineLength: 80 },
+      { name: 'm', lineLength: 70 },
+      { name: 'l', lineLength: 57 },
+      { name: 'xl', lineLength: 13 },
+      { name: 'xxl', lineLength: 10 },
+    ];
+    const { length } = h.textContent;
+    sizes.forEach((size) => {
+      let lines = Math.ceil(length / size.lineLength);
+      if (lines > 3) {
+        if (lines > 5) lines = 5;
+        h.classList.add(`columns-heading-${size.name}-${lines}-lines`);
       }
-    } else if (upSizeCondition) {
-      while (upSizeCondition
-          && (currH > sizeLimit && currH <= 7)) {
-        upSize();
-        upSizeCondition = headingComparison(heading, maxLines, false);
-      }
-    }
-    // try final upsize
-    if (currH > sizeLimit && !downSizeCondition) {
-      while (currH > sizeLimit && !downSizeCondition) {
-        upSize();
-        downSizeCondition = headingComparison(heading, maxLines);
-      }
-      if (downSizeCondition) {
-        downSize();
-      }
-    }
+    });
   });
-}
-
-/**
- * This function uses basic analysis and a standard for what is considered too long,
- * and applies this on heading to try to prevent oversizing.
- * @param {Element} heading - a H1 - H6 element.
- * @param {Array} sizes - a mapping between heading size number - 1 and specification t-shirt size.
- * @returns
- */
-function estimateSize(heading, sizes) {
-  const headingNum = getHeadingNumber(heading, sizes);
-  const text = heading.textContent;
-
-  const SMALL = 80;
-  const MEDIUM = 70;
-  const LARGE = 57;
-  const XLARGE = 30;
-
-  let estimatedSize;
-
-  if (text.length >= SMALL
-    && headingNum <= sizes.indexOf('s')) {
-    estimatedSize = 's';
-  } else if (text.length >= MEDIUM && text.length < SMALL
-    && headingNum <= sizes.lastIndexOf('m')) {
-    estimatedSize = 'm';
-  } else if (text.length >= LARGE && text.length < MEDIUM
-    && headingNum <= sizes.indexOf('l')) {
-    estimatedSize = 'l';
-  } else if (text.length >= XLARGE && text.length < LARGE
-    && headingNum <= sizes.indexOf('xl')) {
-    estimatedSize = 'xl';
-  } else if (text.length < XLARGE && headingNum === sizes.indexOf('xxl')) {
-    estimatedSize = 'xxl';
-  }
-  return estimatedSize;
-}
-
-/**
- * runs dynamicScale function and collects necessary data, for it
- * to properly execute.
- */
-function runScaleHeadings() {
-  const sizes = ['nil', 'xxl', 'xl', 'l', 'm', 'm', 'm', 's'];
-  const headings = document.querySelectorAll('main .columns h1, main .columns h2, main .columns h3, main .columns h4, main .columns h5, main .columns h6');
-  headings.forEach((heading) => {
-    const correctSize = estimateSize(heading, sizes);
-    if (correctSize) {
-      heading.setAttribute('style', `font-size: var(--heading-font-size-${correctSize})`);
-    }
-  });
-  const scaleCB = () => {
-    dynamicScale(headings, sizes);
-  };
-  // dynamic resizing can only occur when window is resized, by then css is loaded
-  window.addEventListener('resize', scaleCB);
 }
 
 export default function decorate($block) {
@@ -328,5 +198,5 @@ export default function decorate($block) {
     });
   });
   addAnimationToggle($block);
-  runScaleHeadings();
+  addHeaderSizing($block);
 }
