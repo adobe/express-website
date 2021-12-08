@@ -83,7 +83,20 @@ body.appear {
 /* gnav */
 
 header {
-  height: 65px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #EAEAEA;
+  height: 143px;
+  background-image: url(/express/icons/cc-express-logo.svg);
+  background-repeat: no-repeat;
+  background-size: auto 32px;
+  background-position: bottom 24px center;
+  position: relative;
+  background-color: #FFF;
+}
+
+body.no-brand-header header, body.no-desktop-brand-header header {
+  height: 64px;
+  background-image: unset;
 }
 
 body.feds-loaded > header {
