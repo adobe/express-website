@@ -1467,6 +1467,16 @@ async function decoratePage() {
 window.hlx = window.hlx || {};
 window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
+const scriptEls = document.getElementsByTagName('script');
+if (scriptEls && scriptEls.length > 0) {
+  try {
+    window.hlx.codeSearch = new URL(scriptEls[scriptEls.length - 1].src).search;
+    console.log(JSON.stringify(window.hlx.codeSearch));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 if (!window.isTestEnv) {
   decoratePage();
 }
