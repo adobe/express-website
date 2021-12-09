@@ -78,10 +78,48 @@ main .columns h1{
   line-height: 1.06;
 }
 
+main .columns h1.columns-heading-long {
+  font-size: var(--heading-font-size-xl);
+}
+
+main .columns h1.columns-heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+main .columns h1.columns-heading-x-long {
+  font-size: var(--heading-font-size-m);
+}  
+
+
+@media (min-width: 1200px) {
+  main .columns h1.columns-heading-long {
+    font-size: var(--heading-font-size-xxl);
+  }  
+  main .columns h1.columns-heading-very-long {
+    font-size: var(--heading-font-size-xl);
+  }  
+
+  main .columns h1.columns-heading-x-long {
+    font-size: var(--heading-font-size-l);
+  }  
+}
+
+
 main .columns h2 {
   font-size: var(--heading-font-size-xl);
   line-height: 1.08;
 }
+
+main .columns h2.columns-heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+@media (min-width: 1200px) {
+  main .columns h2.columns-heading-very-long {
+    font-size: var(--heading-font-size-xl);
+  }  
+}
+
 
 main .columns h3 {
   font-size: var(--heading-font-size-l);
@@ -316,16 +354,16 @@ main .columns.highlight .column h5 + h4 {
 main .columns.highlight h1,
 main .columns.highlight h2,
 main .columns.highlight h3 {
-  font-size: var(--heading-font-size-l) !important;
+  font-size: var(--heading-font-size-l);
 }
 
 main .columns.highlight h4 {
-  font-size: var(--heading-font-size-m) !important;
+  font-size: var(--heading-font-size-m);
 }
 
 main .columns.highlight h5,
 main .columns.highlight h6 {
-  font-size: var(--heading-font-size-s) !important;
+  font-size: var(--heading-font-size-s);
 }
 
 main .columns.highlight .column .columns-iconlist {
@@ -339,7 +377,6 @@ main .columns.highlight .column .columns-iconlist > div {
 main .columns.highlight .column p {
   font-size: var(--body-font-size-s);
 }
-
 
 @media (min-width: 900px) {
   body.no-brand-header main .columns.columns-marquee .brand.icon {
