@@ -113,11 +113,14 @@ async function selectPlan($pricingHeader, planUrl) {
   const link = new URL(planUrl);
   const params = link.searchParams;
   let offerId = null;
+  let buttonId = null;
 
   if (planUrl.includes('/sp/')) {
     offerId = 'FREE0';
+    buttonId = 'free-trial';
   } else {
     offerId = params.get('items[0][id]');
+    buttonId = '3-month-trial';
   }
 
   const plan = {
@@ -147,6 +150,7 @@ async function selectPlan($pricingHeader, planUrl) {
   $pricingHeader.querySelector('.pricing-columns-price').innerHTML = plan.formatted;
   $pricingHeader.querySelector('.pricing-columns-price').classList.add(plan.currency.toLowerCase());
   $pricingHeader.querySelector('.pricing-columns-cta').href = buildUrl(plan.url, plan.country, plan.language);
+  $pricingHeader.querySelector('.pricing-columns-cta').id = buttonId;
   $pricingHeader.querySelector('.pricing-columns-vat-info').innerHTML = plan.vatInfo || '';
 }
 
