@@ -32,11 +32,8 @@ const TIMEOUT = 10000;
     .then(() => $browser.sleep(TIMEOUT))
     // check document integrity
     .then(() => $browser.findElement($driver.By.css('html')))
-    .then((html) => Promise.all([html.getAttribute('class'), html.getAttribute('lang')]))
-    .then(([template, lang]) => {
-      assert.ok(template === 'default', `Expected template to be "default", got "${template}" instead`);
-      assert.ok(lang === 'en', `Expected language to be "en", got "${lang}" instead`);
-    })
+    .then((html) => html.getAttribute('lang'))
+    .then((lang) => assert.ok(lang === 'en', `Expected language to be "en", got "${lang}" instead`))
     // check CTA button
     .then(() => $browser.findElement($driver.By.css('main a.button.accent')))
     .then(() => console.log(`${url} successfully verified.`))
@@ -55,8 +52,12 @@ async function checkPricingPage(baseUrl) {
   $browser.get(url)
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
+    // check free button
+    .then(() => $browser.findElement($driver.By.css('.pricing-columns-cta.button:first-of-type')))
+    .then((button) => button.getAttribute('href'))
+    .then((freeUrl) => assert.ok(freeUrl.startsWith('https://express.adobe.com')))
     // check buy button
-    .then(() => $browser.findElement($driver.By.linkText('Buy Now')))
+    .then(() => $browser.findElement($driver.By.css('.pricing-columns-cta.button:last-of-type')))
     .then((button) => button.getAttribute('href'))
     .then((buyUrl) => assert.ok(buyUrl.startsWith('https://commerce.adobe.com')))
     .then(() => console.log(`${url} successfully verified.`))
