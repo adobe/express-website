@@ -1471,7 +1471,7 @@ if (scriptEls && scriptEls.length > 0) {
   try {
     const { src } = scriptEls[scriptEls.length - 1];
     window.hlx.codeSearch = new URL(src).search;
-    console.log(window.hlx.codeSearch);
+    // console.log(window.hlx.codeSearch);
   } catch (e) {
     // console.log(e);
   }
