@@ -272,6 +272,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   function trackButtonClick($a) {
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
+    let sparkButtonId;
     const $templateContainer = $a.closest('.template-list');
     let $cardContainer;
     let $img;
@@ -317,6 +318,14 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       } else if ($a.parentElement.id === 'adobe-spark-is-a-part-of-most-creative-cloud-paid-plans-learn-more') {
         adobeEventName += 'pricing:creativeCloud:learnMore';
         sparkEventName = 'landing:creativeCloudLearnMorePressed';
+      } else if ($a.id === 'free-trial') {
+        adobeEventName = 'pricing:cta:StartForFree';
+        sparkEventName = 'landing:ctaPressed';
+        sparkButtonId = 'puf:startFreeTrial';
+      } else if ($a.id === '3-month-trial') {
+        adobeEventName = 'pricing:cta:StartYour3MonthTrial';
+        sparkEventName = 'landing:ctaPressed';
+        sparkButtonId = 'puf:start3MonthTrial';
         // View plans
       } else {
         adobeEventName = 'adobe.com:express:CTA:pricing:viewPlans:Click';
@@ -334,6 +343,10 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
     digitalData._set('spark.eventData.eventName', sparkEventName);
+
+    if (sparkButtonId) {
+      digitalData._set('spark.eventData.buttonId', sparkButtonId);
+    }
 
     _satellite.track('event', {
       digitalData: digitalData._snapshot(),
