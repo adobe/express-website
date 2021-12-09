@@ -609,12 +609,12 @@ export async function loadBlock(block, eager = false) {
     const blockName = block.getAttribute('data-block-name');
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(`/express/blocks/${blockName}/${blockName}.css${window.hlx.codeSearch}`, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(`/express/blocks/${blockName}/${blockName}.js${window.hlx.codeSearch}`);
             if (mod.default) {
               await mod.default(block, blockName, document, eager);
             }
@@ -762,12 +762,12 @@ function loadMartech() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
 
-  const analyticsUrl = '/express/scripts/instrument.js';
+  const analyticsUrl = `/express/scripts/instrument.js${window.hlx.codeSearch}`;
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
 
-  const martechUrl = '/express/scripts/delayed.js';
+  const martechUrl = `/express/scripts/delayed.js${window.hlx.codeSearch}`;
   // loadLazyFooter();
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
     let ms = 0;
@@ -793,7 +793,7 @@ function decoratePageStyle() {
         }
       })
       .catch((err) => console.log('failed to load blog', err));
-    loadCSS('/express/styles/blog.css');
+    loadCSS(`/express/styles/blog.css${window.hlx.codeSearch}`);
   } else {
     // eslint-disable-next-line no-lonely-if
     if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
@@ -913,7 +913,7 @@ async function decorateTesting() {
   if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
-    loadScript('/express/scripts/instrument.js', null, 'module');
+    loadScript(`/express/scripts/instrument.js${window.hlx.codeSearch}`, null, 'module');
   }
 
   if (!window.location.host.includes('adobe.com')) {
@@ -1426,11 +1426,9 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadFonts();
-  loadCSS('/express/styles/lazy-styles.css');
+  loadCSS(`/express/styles/lazy-styles.css${window.hlx.codeSearch}`);
   resolveFragments();
   addPromotion();
-
-  loadCSS('/express/styles/lazy-styles.css');
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
 }
@@ -1441,7 +1439,7 @@ async function loadLazy() {
  */
 function loadDelayed() {
   /* trigger delayed.js load */
-  const delayedScript = '/express/scripts/delayed.js';
+  const delayedScript = `/express/scripts/delayed.js${window.hlx.codeSearch}`;
   const usp = new URLSearchParams(window.location.search);
   const delayed = usp.get('delayed');
 
@@ -1466,14 +1464,16 @@ async function decoratePage() {
 
 window.hlx = window.hlx || {};
 window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+window.hlx.codeSearch = '';
 
 const scriptEls = document.getElementsByTagName('script');
 if (scriptEls && scriptEls.length > 0) {
   try {
-    window.hlx.codeSearch = new URL(scriptEls[scriptEls.length - 1].src).search;
-    console.log(JSON.stringify(window.hlx.codeSearch));
+    const { src } = scriptEls[scriptEls.length - 1];
+    window.hlx.codeSearch = new URL(src).search;
+    console.log(window.hlx.codeSearch);
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 }
 

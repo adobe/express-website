@@ -13,7 +13,8 @@
 import {
   createTag,
   getIcon,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 function masonrize(masonry, $masonry) {
   const width = window.innerWidth > 1400 ? 1400 : window.innerWidth;

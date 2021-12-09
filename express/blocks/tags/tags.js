@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { normalizeHeadings } from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+import { normalizeHeadings } from '../../scripts/scripts.js?ccx';
 
 /**
  * Retrieves the content of a metadata tag.

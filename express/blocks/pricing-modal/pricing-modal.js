@@ -13,7 +13,8 @@
 
 import {
   createTag,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 import Context from '../../scripts/context.js';
 

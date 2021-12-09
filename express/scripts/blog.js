@@ -17,7 +17,8 @@ import {
   getMeta,
   loadBlock,
   createOptimizedPicture,
-} from './scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from './scripts.js?ccx';
 
 /**
  * Builds a block DOM Element from a two dimensional array

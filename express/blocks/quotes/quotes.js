@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag } from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+import { createTag } from '../../scripts/?ccx';
 
 export default function decorate($block) {
   $block.querySelectorAll(':scope>div').forEach(($card) => {
