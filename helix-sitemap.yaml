@@ -79,3 +79,27 @@ sitemaps:
         destination: /express/sitemap-other.xml
         hreflang: sv
         alternate: /se/{path}
+
+  blogs:
+    origin: https://www.adobe.com
+    languages:
+      default:
+        source: /express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: en
+        alternate: /{path}
+      japan:
+        source: /jp/express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: ja
+        alternate: /jp/{path}
+      germany:
+        source: /de/express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: de
+        alternate: /de/{path}
+      france:
+        source: /fr/express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: fr
+        alternate: /fr/{path}
