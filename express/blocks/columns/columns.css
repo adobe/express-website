@@ -115,7 +115,7 @@ main .columns h2.columns-heading-very-long {
 }
 
 @media (min-width: 1200px) {
-  main .columns h2.columns-heading-very-long, main .columns h2.columns-heading-very-long {
+  main .columns h2.columns-heading-very-long {
     font-size: var(--heading-font-size-xl);
   }  
 }
