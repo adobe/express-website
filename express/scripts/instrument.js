@@ -377,10 +377,29 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       });
     }
 
-    // for tracking just the commitment type dropdown on pricing page
-    const $dropdown = d.querySelector('.pricing-plan-dropdown');
-    if ($dropdown) {
-      $dropdown.addEventListener('change', () => {
+    // for tracking just the commitment type dropdown on the pricing block
+    const $pricingDropdown = d.querySelector('.pricing-plan-dropdown');
+    if ($pricingDropdown) {
+      $pricingDropdown.addEventListener('change', () => {
+        const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
+        const sparkEventName = 'pricing:commitmentTypeSelected';
+
+        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+        digitalData._set('spark.eventData.eventName', sparkEventName);
+
+        _satellite.track('event', {
+          digitalData: digitalData._snapshot(),
+        });
+
+        digitalData._delete('primaryEvent.eventInfo.eventName');
+        digitalData._delete('spark.eventData.eventName');
+      });
+    }
+
+    // for tracking just the commitment type dropdown on the pricing columns block
+    const $pricingColumnsDropdown = d.querySelector('.pricing-columns-dropdown');
+    if ($pricingColumnsDropdown) {
+      $pricingColumnsDropdown.addEventListener('change', () => {
         const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
         const sparkEventName = 'pricing:commitmentTypeSelected';
 
