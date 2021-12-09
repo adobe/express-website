@@ -69,8 +69,8 @@ async function checkPricingPage(baseUrl) {
 // Check homepage and pricing page
 (async () => {
   await Promise.all([
-    '$$$URL$$$',
-    // 'https://spark-website--adobe.hlx.live/express',
-    // 'https://spark-website--adobe.hlx.page/express',
+    'https://www.adobe.com/express',
+    // 'https://stage-express-website--adobe.hlx.live/express',
+    // 'https://main--express-website--adobe.hlx3.page/express',
   ].map((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
 })();
