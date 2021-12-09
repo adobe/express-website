@@ -1371,6 +1371,21 @@ export function addAnimationToggle(target) {
 }
 
 /**
+ * Searches for Japanese text in headings and applies a smart word-breaking algorithm by surrounding
+ * semantic blocks with spans. This allows browsers to break japanese sentences correctly.
+ */
+async function wordBreakJapanese() {
+  if (getLocale(window.location) !== 'jp') {
+    return;
+  }
+  const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
+  const parser = loadDefaultJapaneseParser();
+  document.querySelectorAll('h1, h2, h3, h3, h4, h5, p').forEach((el) => {
+    parser.applyElement(el);
+  });
+}
+
+/**
  * loads everything needed to get to LCP.
  */
 async function loadEager() {
@@ -1387,6 +1402,7 @@ async function loadEager() {
     decoratePageStyle();
     displayEnv();
     displayOldLinkWarning();
+    wordBreakJapanese();
 
     const lcpBlocks = ['columns', 'hero-animation'];
     const block = document.querySelector('.block');
