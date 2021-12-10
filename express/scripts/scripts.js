@@ -1466,18 +1466,17 @@ window.hlx = window.hlx || {};
 window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 window.hlx.codeSearch = '';
 
-const scriptEls = document.getElementsByTagName('script');
-if (scriptEls && scriptEls.length > 0) {
+const scriptEl = document.querySelector('script[src*="/express/scripts/scripts.js"]');
+if (scriptEl) {
   try {
-    const { src } = scriptEls[scriptEls.length - 1];
-    window.hlx.codeSearch = new URL(src).search;
+    window.hlx.codeSearch = new URL(scriptEl.src).search;
     // console.log(window.hlx.codeSearch);
   } catch (e) {
     // console.log(e);
   }
 }
 
-if (!window.isTestEnv) {
+if (!window.hlx && !window.isTestEnv) {
   decoratePage();
 }
 
