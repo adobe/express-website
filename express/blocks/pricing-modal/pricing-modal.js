@@ -16,6 +16,7 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js?ccx';
 
+// eslint-disable-next-line import/no-unresolved
 import Context from '../../scripts/context.js?ccx';
 
 const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
