@@ -290,7 +290,9 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       alt = $img && $img.getAttribute('alt');
 
       // try to get the image alternate text
-      if (alt) {
+      if ($a.classList.contains('placeholder')) {
+        adobeEventName += 'createFromScratch';
+      } else if (alt) {
         adobeEventName += textToName(alt);
       } else {
         adobeEventName += 'Click';
