@@ -786,7 +786,7 @@ function decoratePageStyle() {
 
   if (isBlog) {
     // eslint-disable-next-line import/no-unresolved,import/no-absolute-path
-    import('/express/scripts/blog.js')
+    import(`/express/scripts/blog.js${window.hlx.codeSearch}`)
       .then((mod) => {
         if (mod.default) {
           mod.default();
