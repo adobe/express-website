@@ -321,11 +321,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
         adobeEventName += 'pricing:creativeCloud:learnMore';
         sparkEventName = 'landing:creativeCloudLearnMorePressed';
       } else if ($a.id === 'free-trial') {
-        adobeEventName = 'pricing:cta:StartForFree';
+        adobeEventName += 'pricing:cta:StartForFree';
         sparkEventName = 'landing:ctaPressed';
         sparkButtonId = 'puf:startFreeTrial';
       } else if ($a.id === '3-month-trial') {
-        adobeEventName = 'pricing:cta:StartYour3MonthTrial';
+        adobeEventName += 'pricing:cta:StartYour3MonthTrial';
         sparkEventName = 'landing:ctaPressed';
         sparkButtonId = 'puf:start3MonthTrial';
         // View plans
