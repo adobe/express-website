@@ -18,7 +18,8 @@ import {
   fixIcons,
   toClassName,
   createOptimizedPicture,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 const PROMOTION_FOLDER = 'express/promotions';
 

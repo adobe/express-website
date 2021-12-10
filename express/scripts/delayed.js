@@ -17,7 +17,8 @@ import {
   getLanguage,
   getHelixEnv,
   sampleRUM,
-} from './scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from './scripts.js?ccx';
 
 // this saves on file size when this file gets minified...
 const w = window;

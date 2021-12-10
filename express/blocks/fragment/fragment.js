@@ -15,7 +15,8 @@ import {
   createTag,
   decorateMain,
   loadBlocks,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 async function decorateFragment($block) {
   const ref = $block.textContent;

@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { linkImage } from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+import { linkImage } from '../../scripts/scripts.js?ccx';
 
 export default function decorate($block) {
   linkImage($block);

@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { normalizeHeadings } from '../../scripts/scripts.js';
-import { buildCarousel } from '../shared/carousel.js';
+// eslint-disable-next-line import/no-unresolved
+import { normalizeHeadings } from '../../scripts/scripts.js?ccx';
+// eslint-disable-next-line import/no-unresolved
+import { buildCarousel } from '../shared/carousel.js?ccx';
 
 export default function decorate(block) {
   normalizeHeadings(block, ['h3']);

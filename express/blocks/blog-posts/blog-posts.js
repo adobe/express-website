@@ -15,7 +15,8 @@ import {
   createOptimizedPicture,
   createTag,
   readBlockConfig,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 async function fetchBlogIndex() {
   let prefix = `/${window.location.pathname.split('/')[1]}`;

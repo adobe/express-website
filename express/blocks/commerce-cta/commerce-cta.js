@@ -16,11 +16,13 @@ import {
   getCurrency,
   formatPrice,
   addPublishDependencies,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 import {
   buildUrl,
   buildPlans,
-} from '../pricing/pricing.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../pricing/pricing.js?ccx';
 
 async function decorateCommerceCTA($block) {
   const $rows = Array.from($block.children);

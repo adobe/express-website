@@ -17,9 +17,11 @@ import {
   getLanguage,
   getMetadata,
   checkTesting,
-} from './scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from './scripts.js?ccx';
 
-import Context from './context.js';
+// eslint-disable-next-line import/no-unresolved
+import Context from './context.js?ccx';
 
 // this saves on file size when this file gets minified...
 const w = window;

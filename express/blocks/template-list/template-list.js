@@ -20,11 +20,13 @@ import {
   toClassName,
   decorateMain,
   addAnimationToggle,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 import {
   buildCarousel,
-} from '../shared/carousel.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/carousel.js?ccx';
 
 /**
  * Returns a picture element with webp and fallbacks

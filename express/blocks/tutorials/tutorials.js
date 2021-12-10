@@ -13,7 +13,8 @@
 import {
   createTag,
   toClassName,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 const docTitle = document.title;
 

@@ -12,7 +12,8 @@
 
 import {
   createTag,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 export default function decorate($block) {
   const $close = createTag('button', {

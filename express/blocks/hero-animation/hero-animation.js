@@ -14,7 +14,8 @@ import {
   addAnimationToggle,
   createTag,
   toClassName,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 function timecodeToSeconds(timecode) {
   const splits = timecode.split(':');

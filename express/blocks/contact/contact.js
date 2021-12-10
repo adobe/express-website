@@ -11,7 +11,8 @@
  */
 import {
   createTag,
-} from '../../scripts/scripts.js';
+// eslint-disable-next-line import/no-unresolved
+} from '../../scripts/scripts.js?ccx';
 
 function decorateContactBlocks($block) {
   const contacts = [];
