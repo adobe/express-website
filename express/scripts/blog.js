@@ -59,8 +59,7 @@ async function fetchAuthorImage($image, author) {
     $div.innerHTML = main;
     const $img = $div.querySelector('img');
     const newPicture = createOptimizedPicture($img.src, $img.alt, false, [{ width: '200' }]);
-    const picture = $img.closest('picture');
-    if (picture) picture.parentElement.replaceChild(newPicture, picture);
+    $image.parentElement.replaceChild(newPicture, $image);
   }
 }
 
