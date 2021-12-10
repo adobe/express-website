@@ -15,6 +15,8 @@ import {
   createOptimizedPicture,
   createTag,
   readBlockConfig,
+  getLanguage,
+  getLocale,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js?ccx';
 
@@ -192,7 +194,8 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       title, teaser, image,
     } = post;
     const publicationDate = new Date(post.date * 1000);
-    const dateString = publicationDate.toLocaleDateString('en-US', {
+    const language = getLanguage(getLocale(window.location));
+    const dateString = publicationDate.toLocaleDateString(language, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

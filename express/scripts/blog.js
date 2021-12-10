@@ -17,6 +17,8 @@ import {
   getMeta,
   loadBlock,
   createOptimizedPicture,
+  getLocale,
+  getLanguage,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js?ccx';
 
@@ -113,6 +115,15 @@ export default async function decorateBlogPage() {
     // $eyebrow.innerHTML = tags[0];
     $blogHeader.append($eyebrow);
     $blogHeader.append($h1);
+    const publicationDate = new Date(date);
+    const language = getLanguage(getLocale(window.location));
+    const dateString = publicationDate.toLocaleDateString(language, {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
+
     const subheading = getMeta('subheading');
     if (subheading) {
       const $subheading = createTag('p', { class: 'subheading' });
@@ -125,7 +136,7 @@ export default async function decorateBlogPage() {
       $author.innerHTML = `<div class="image"><img src="/express/gnav-placeholder/adobe-logo.svg"/></div>
       <div>
         <div class="name">${author}</div>
-        <div class="date">${date}</div>
+        <div class="date">${dateString}</div>
       </div>
       <div class="author-social">
         <span>
