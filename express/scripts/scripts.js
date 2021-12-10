@@ -1473,27 +1473,27 @@ function loadDelayed() {
  * Decorates the page.
  */
 async function decoratePage() {
+  window.hlx = window.hlx || {};
+  window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+  window.hlx.codeSearch = '';
+  window.hlx.init = true;
+
+  const scriptEl = document.querySelector('script[src*="/express/scripts/scripts.js"]');
+  if (scriptEl) {
+    try {
+      window.hlx.codeSearch = new URL(scriptEl.src).search;
+      // console.log(window.hlx.codeSearch);
+    } catch (e) {
+      // console.log(e);
+    }
+  }
+
   await loadEager();
   loadLazy();
   loadDelayed();
 }
 
-window.hlx = window.hlx || {};
-window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
-window.hlx.codeSearch = '';
-
-const scriptEls = document.getElementsByTagName('script');
-if (scriptEls && scriptEls.length > 0) {
-  try {
-    const { src } = scriptEls[scriptEls.length - 1];
-    window.hlx.codeSearch = new URL(src).search;
-    // console.log(window.hlx.codeSearch);
-  } catch (e) {
-    // console.log(e);
-  }
-}
-
-if (!window.isTestEnv) {
+if (!window.hlx.init && !window.isTestEnv) {
   decoratePage();
 }
 
