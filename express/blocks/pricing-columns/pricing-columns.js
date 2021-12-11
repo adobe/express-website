@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global digitalData _satellite __satelliteLoadedCallback */
 /* eslint-disable no-underscore-dangle */
 
 import {
@@ -85,6 +86,35 @@ export function buildUrl(optionUrl, country, language) {
   return planUrl.href;
 }
 
+function dropdownAnalytics(plan) {
+  const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
+  const sparkEventName = 'pricing:commitmentTypeSelected';
+
+  digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+  digitalData._set('spark.eventData.eventName', sparkEventName);
+  digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
+  digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
+  digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
+  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+
+  _satellite.track('event', {
+    digitalData: digitalData._snapshot(),
+  });
+
+  digitalData._delete('primaryEvent.eventInfo.eventName');
+  digitalData._delete('spark.eventData.eventName');
+  digitalData._delete('spark.eventData.contextualData4');
+  digitalData._delete('spark.eventData.contextualData6');
+  digitalData._delete('spark.eventData.contextualData7');
+  digitalData._delete('spark.eventData.contextualData9');
+  digitalData._delete('spark.eventData.contextualData10');
+  digitalData._delete('spark.eventData.contextualData12');
+  digitalData._delete('spark.eventData.contextualData14');
+}
+
 function decorateIconList($column) {
   let $iconList = createTag('div', { class: 'pricing-iconlist' });
   let $iconListDescription;
@@ -110,22 +140,12 @@ function decorateIconList($column) {
   if ($iconList.children.length > 0) $column.appendChild($iconList);
 }
 
-async function selectPlan($pricingHeader, planUrl) {
+async function selectPlan($pricingHeader, planUrl, sendAnalyticEvent) {
   const link = new URL(planUrl);
   const params = link.searchParams;
-  let offerId = null;
-  let buttonId = null;
-
-  if (planUrl.includes('/sp/')) {
-    offerId = 'FREE0';
-    buttonId = 'free-trial';
-  } else {
-    offerId = params.get('items[0][id]');
-    buttonId = '3-month-trial';
-  }
+  let buttonId;
 
   const plan = {
-    offerId,
     url: planUrl,
     country: 'us',
     language: 'en',
@@ -133,6 +153,26 @@ async function selectPlan($pricingHeader, planUrl) {
     currency: 'US',
     symbol: '$',
   };
+
+  if (planUrl.includes('/sp/')) {
+    plan.offerId = 'FREE0';
+    plan.frequency = 'monthly';
+    plan.name = 'Free';
+    buttonId = 'free-trial';
+  } else {
+    plan.offerId = params.get('items[0][id]');
+    plan.frequency = null;
+    plan.name = 'Premium';
+    buttonId = '3-month-trial';
+  }
+
+  if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1') {
+    plan.frequency = 'Monthly';
+  } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24') {
+    plan.frequency = 'Annual';
+  } else {
+    plan.frequency = null;
+  }
 
   const countryOverride = new URLSearchParams(window.location.search).get('country');
   const offer = await getOffer(plan.offerId, countryOverride);
@@ -153,6 +193,10 @@ async function selectPlan($pricingHeader, planUrl) {
   $pricingHeader.querySelector('.pricing-columns-cta').href = buildUrl(plan.url, plan.country, plan.language);
   $pricingHeader.querySelector('.pricing-columns-cta').id = buttonId;
   $pricingHeader.querySelector('.pricing-columns-vat-info').innerHTML = plan.vatInfo || '';
+
+  if (sendAnalyticEvent) {
+    dropdownAnalytics(plan);
+  }
 }
 
 function decoratePlan($column) {
@@ -188,7 +232,7 @@ function decoratePlan($column) {
       const $pricingDropdown = createTag('select', { class: 'pricing-columns-dropdown' });
 
       $pricingDropdown.addEventListener('change', () => {
-        selectPlan($pricingHeader, $pricingDropdown.value);
+        selectPlan($pricingHeader, $pricingDropdown.value, true);
       });
 
       plans.forEach((plan) => {
@@ -208,7 +252,7 @@ function decoratePlan($column) {
     $pricingCta.href = plans[0].url;
     $pricingHeader.append($pricingCta);
 
-    selectPlan($pricingHeader, plans[0].url);
+    selectPlan($pricingHeader, plans[0].url, false);
   }
 
   if (!$elements[$elements.length - 1].classList.contains('button-container')) {

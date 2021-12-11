@@ -290,7 +290,9 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
       alt = $img && $img.getAttribute('alt');
 
       // try to get the image alternate text
-      if (alt) {
+      if ($a.classList.contains('placeholder')) {
+        adobeEventName += 'createFromScratch';
+      } else if (alt) {
         adobeEventName += textToName(alt);
       } else {
         adobeEventName += 'Click';
@@ -321,11 +323,11 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
         adobeEventName += 'pricing:creativeCloud:learnMore';
         sparkEventName = 'landing:creativeCloudLearnMorePressed';
       } else if ($a.id === 'free-trial') {
-        adobeEventName = 'pricing:cta:StartForFree';
+        adobeEventName += 'pricing:cta:StartForFree';
         sparkEventName = 'landing:ctaPressed';
         sparkButtonId = 'puf:startFreeTrial';
       } else if ($a.id === '3-month-trial') {
-        adobeEventName = 'pricing:cta:StartYour3MonthTrial';
+        adobeEventName += 'pricing:cta:StartYour3MonthTrial';
         sparkEventName = 'landing:ctaPressed';
         sparkButtonId = 'puf:start3MonthTrial';
         // View plans
@@ -396,25 +398,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     const $pricingDropdown = d.querySelector('.pricing-plan-dropdown');
     if ($pricingDropdown) {
       $pricingDropdown.addEventListener('change', () => {
-        const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
-        const sparkEventName = 'pricing:commitmentTypeSelected';
-
-        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-        digitalData._set('spark.eventData.eventName', sparkEventName);
-
-        _satellite.track('event', {
-          digitalData: digitalData._snapshot(),
-        });
-
-        digitalData._delete('primaryEvent.eventInfo.eventName');
-        digitalData._delete('spark.eventData.eventName');
-      });
-    }
-
-    // for tracking just the commitment type dropdown on the pricing columns block
-    const $pricingColumnsDropdown = d.querySelector('.pricing-columns-dropdown');
-    if ($pricingColumnsDropdown) {
-      $pricingColumnsDropdown.addEventListener('change', () => {
         const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
         const sparkEventName = 'pricing:commitmentTypeSelected';
 
