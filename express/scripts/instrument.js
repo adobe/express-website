@@ -276,29 +276,13 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
     let sparkEventName;
     let sparkButtonId;
     const $templateContainer = $a.closest('.template-list');
-    let $cardContainer;
-    let $img;
-    let alt;
     // let cardPosition;
 
     // Template button click
     if ($templateContainer) {
-      adobeEventName += 'template:';
-
-      $cardContainer = $a.closest('.template-list > div');
-      $img = $cardContainer && $cardContainer.querySelector('img');
-      alt = $img && $img.getAttribute('alt');
-
-      // try to get the image alternate text
-      if ($a.classList.contains('placeholder')) {
-        adobeEventName += 'createFromScratch';
-      } else if (alt) {
-        adobeEventName += textToName(alt);
-      } else {
-        adobeEventName += 'Click';
-      }
-
-      sparkEventName = 'landing:templatePressed';
+      // This behaviour was moved to the template-list.js
+      // This return statement prevents a double binding.
+      return;
       // Button in the FAQ
     } else if ($a.closest('.faq')) {
       adobeEventName = appendLinkText(`${adobeEventName}faq:`, $a);
