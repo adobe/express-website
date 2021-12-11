@@ -97,7 +97,7 @@ function dropdownAnalytics(plan) {
   digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
   digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
   digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
-  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name}`);
+  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
   digitalData._set('spark.eventData.contextualData14', 'quantity:1');
 
   _satellite.track('event', {
@@ -164,6 +164,14 @@ async function selectPlan($pricingHeader, planUrl, sendAnalyticEvent) {
     plan.frequency = null;
     plan.name = 'Premium';
     buttonId = '3-month-trial';
+  }
+
+  if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1') {
+    plan.frequency = 'Monthly';
+  } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24') {
+    plan.frequency = 'Annual';
+  } else {
+    plan.frequency = null;
   }
 
   const countryOverride = new URLSearchParams(window.location.search).get('country');
