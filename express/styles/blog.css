@@ -86,7 +86,7 @@
     background-image: url(/express/icons/cc-express-logo.svg);
     padding-top: 58px;
     background-repeat: no-repeat;
-    background-size: 311px;
+    background-size: min(311px, 100%);
   }
   
   .blog div.section-wrapper {
