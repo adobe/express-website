@@ -45,7 +45,13 @@ w.marketingtech = {
 w.targetGlobalSettings = w.targetGlobalSettings || {};
 w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
 
-loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
+let martechURL = 'https://www.adobe.com/marketingtech/main.min.js';
+
+if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
+  martechURL = 'https://www.adobe.com/marketingtech/main.stage.min.js';
+}
+
+loadScript(martechURL, () => {
   /* eslint-disable no-underscore-dangle */
 
   //------------------------------------------------------------------------------------
