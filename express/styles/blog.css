@@ -145,6 +145,10 @@
   .blog main svg.copy-failure {
     fill: var(--color-gray-400);
   }
+
+  .blog main div.sticky-promo-bar {
+    text-align: center;
+  }
   
 @media (min-width: 600px) {
   .blog main .hero .blog-header p.subheading {
