@@ -69,7 +69,7 @@ async function checkPricingPage(baseUrl) {
 // Check homepage and pricing page
 (async () => {
   await Promise.all([
-    'https://www.adobe.com/express',
+    '$$$URL$$$',
     // 'https://stage-express-website--adobe.hlx.live/express',
     // 'https://main--express-website--adobe.hlx3.page/express',
   ].map((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
