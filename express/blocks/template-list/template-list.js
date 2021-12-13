@@ -113,9 +113,6 @@ function trackTemplateClick($a) {
 
     digitalData._delete('primaryEvent.eventInfo.eventName');
     digitalData._delete('spark.eventData.eventName');
-
-    // console.log(sparkEventName);
-    // console.log(adobeEventName);
   }
 }
 
