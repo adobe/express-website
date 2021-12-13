@@ -156,7 +156,7 @@ function loadFEDS() {
     const env = getHelixEnv();
     if (env && env.spark) {
       // eslint-disable-next-line no-console
-      console.log('lower env detected');
+      // console.log('lower env detected');
       document.querySelectorAll('a[href^="https://spark.adobe.com/"]').forEach(($a) => {
         const hrefURL = new URL($a.href);
         hrefURL.host = env.spark;
