@@ -160,7 +160,6 @@ main .columns > div {
 
 main .columns.center .column {
   text-align: center;
-  margin: 0 24px;
 }
 
 main .columns.center .column p.button-container {
@@ -549,8 +548,13 @@ main .fixed-button.button-container.shown {
 }
 
 main .columns .column {
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+main .columns-fullsize-center-container .columns.fullsize .column {
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 main .columns .column.column-picture {
@@ -574,10 +578,15 @@ main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.
 }
 
 @media (min-width: 900px) {
+    
+  body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
+    padding-left: 0px;
+  }
+
   main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
     padding-top: 0;
   }
-  
+
   main .columns .column {
     padding-left: 32px;
     padding-right: 32px;
@@ -642,11 +651,5 @@ main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.
   
   main .columns .column:nth-child(2):not(.column-picture):not(.hero-animation-overlay) {
     padding-left: 16px;
-  }
-
-  body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
-    transform: none;
-    left: 0;
-    padding-left: 32px;
   }
 }
