@@ -119,6 +119,10 @@ w.fedsConfig = {
       window.location.href = sparkLoginUrl;
     },
   },
+  privacy: {
+    otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
+    footerLinkSelector: '#openCookieModal',
+  },
 };
 
 function loadIMS() {
@@ -128,14 +132,6 @@ function loadIMS() {
     locale,
   };
   loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
-}
-
-function loadPrivacy() {
-  window.fedsConfig.privacy = {
-    otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
-    footerLinkSelector: '#openCookieModal',
-  };
-  loadScript('https://www.adobe.com/etc/beagle/public/globalnav/adobe-privacy/latest/privacy.min.js');
 }
 
 function loadFEDS() {
@@ -168,7 +164,6 @@ function loadFEDS() {
         $a.setAttribute('href', hrefURL.toString());
       });
     }
-    setTimeout(loadPrivacy, 0);
   });
   let prefix = '';
   if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
