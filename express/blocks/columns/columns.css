@@ -557,7 +557,7 @@ body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
     bottom: 0;
   }
 
-  body.has-fixed-button .button-container a.primary.accent {
+  body.has-fixed-button .button-container a.accent {
     display: none;
   }
 
