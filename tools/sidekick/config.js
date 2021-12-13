@@ -14,8 +14,8 @@
 (() => {
   window.hlx.initSidekick({
     project: 'CCX',
-    outerHost: 'stage-express-website--adobe.hlx.live',
-    host: 'www.stage.adobe.com',
+    outerHost: 'express-website--adobe.hlx.live',
+    host: 'www.adobe.com',
     byocdn: true,
     hlx3: true,
     pushDownSelector: '#feds-header',
