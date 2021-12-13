@@ -68,5 +68,5 @@ async function checkPricingPage(baseUrl) {
 (async () => {
   await Promise.all([
     '$$$URL$$$',
-  ].map((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
+  ].forEach((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
 })();
