@@ -18,55 +18,47 @@
  */
 const assert = require('assert');
 
+const baseUrl = '$$$URL$$$';
 const TIMEOUT = 5000;
 
 /**
- * Checks if the homepage is loading and showing the expected content.
- * @param {string} baseUrl The base URL to check
+ * Checks if the homepage and pricing page are loading and showing the expected content.
+ * @param {string} homeUrl The homepage URL to check
  */
- async function checkHomepage(baseUrl) {
-  const url = `${baseUrl}`;
-  console.log(`Verifying ${url} ...`);
-  $browser.get(url)
+async function checkContent(homeUrl) {
+  return $browser.get(homeUrl)
+    .then(() => console.log('Verifying homepage...'))
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
     // check CTA button
     .then(() => $browser.findElement($driver.By.css('main a.button.accent')))
     .then((button) => button.getAttribute('href'))
-    .then((ctaUrl) => assert.equal(new URL(ctaUrl).origin, 'https://adobesparkpost.app.link', `Wrong CTA button origin: ${ctaUrl}`))
-    .then(() => console.log(`${url} successfully verified.`))
-    .catch((e) => {
-      assert.fail(`Verification of ${url} failed: ${e.message}`);
-    });
-}
-
-/**
- * Checks if the pricing page is loading and showing the expected content.
- * @param {string} baseUrl The base URL to check
- */
-async function checkPricingPage(baseUrl) {
-  const url = `${baseUrl}pricing`;
-  console.log(`Verifying ${url} ...`);
-  $browser.get(url)
+    .then((ctaUrl) => assert.equal(new URL(ctaUrl).origin, 'https://adobesparkpost.app.link', `Unexpected CTA button URL: ${ctaUrl}`))
+    .then(() => console.log('CTA button OK'))
+    .then(() => console.log('Homepage successfully verified.'))
+    // pricing page
+    .then(() => `${homeUrl}pricing`)
+    .then((url) => $browser.get(url))
+    .then(() => console.log('Verifying pricing page...'))
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
     // check free button
     .then(() => $browser.findElements($driver.By.css('.pricing-columns-cta.button')))
     .then((buttons) => buttons[0].getAttribute('href'))
-    .then((freeUrl) => assert.equal(new URL(freeUrl).origin, 'https://express.adobe.com', `Wrong free button origin: ${freeUrl}`))
+    .then((freeUrl) => assert.equal(new URL(freeUrl).origin, 'https://express.adobe.com', `Unexpected free button URL: ${freeUrl}`))
+    .then(() => console.log('Free button OK'))
     // check buy button
     .then(() => $browser.findElements($driver.By.css('.pricing-columns-cta.button')))
     .then((buttons) => buttons[1].getAttribute('href'))
-    .then((buyUrl) => assert.equal(new URL(buyUrl).origin, 'https://commerce.adobe.com', `Wrong buy button origin: ${buyUrl}`))
-    .then(() => console.log(`${url} successfully verified.`))
+    .then((buyUrl) => assert.equal(new URL(buyUrl).origin, 'https://commerce.adobe.com', `Unexpected buy button URL: ${buyUrl}`))
+    .then(() => console.log('Buy button OK'))
+    .then(() => console.log('Pricing page successfully verified.'))
     .catch((e) => {
-      assert.fail(`Verification of ${url} failed: ${e.message}`);
+      assert.fail(`Verification failed: ${e.message}`);
     });
 }
 
 // Check homepage and pricing page
 (async () => {
-  await Promise.all([
-    '$$$URL$$$',
-  ].forEach((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
+  await checkContent(baseUrl);
 })();
