@@ -535,7 +535,7 @@ main .fixed-button.button-container {
   width: 100%;
   padding-bottom: 20px;
   z-index: 2;
-  background: linear-gradient(180deg, transparent 0%, var(--color-white) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
   transform: translateY(101%);
   transition: transform 1s;
   pointer-events: none;
@@ -577,7 +577,26 @@ main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.
   padding-top: 16px;
 }
 
+
+body.has-fixed-button .button-container a.accent {
+  display: none;
+}
+
+body.has-fixed-button .button-container a.primaryCTA.accent,
+body.has-fixed-button .button-container.fixed-button a.accent,
+body.has-fixed-button .new-banner-container .button-container a.accent,
+body.has-fixed-button .banner-container .button-container a.accent {
+  display: inline-block;
+}
+
 @media (min-width: 900px) {
+  main .fixed-button.button-container {
+    display: none;
+  }
+  
+  body.has-fixed-button .button-container a.accent {
+    display: inline-block;
+  }
     
   body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
     padding-left: 0px;
@@ -633,10 +652,6 @@ main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.
 
   main .columns-fullsize-center-container .columns.fullsize > div > div .button-container.fixed-button {
     margin: 0;
-  }
-
-  main .fixed-button.button-container {
-    display: none;
   }
 
   main .columns .column {

@@ -3,6 +3,7 @@ version: 1
 sitemaps:
   website:
     origin: https://www.adobe.com
+    lastmod: YYYY-MM-DD
     languages:
       default:
         source: /express/query-index.json
@@ -82,6 +83,7 @@ sitemaps:
 
   blogs:
     origin: https://www.adobe.com
+    lastmod: YYYY-MM-DD
     languages:
       default:
         source: /express/learn/blog/query-index.json
