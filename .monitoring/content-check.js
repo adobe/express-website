@@ -37,8 +37,7 @@ async function checkContent(homeUrl) {
     .then(() => console.log('CTA button OK'))
     .then(() => console.log('Homepage successfully verified.'))
     // pricing page
-    .then(() => `${homeUrl}pricing`)
-    .then((url) => $browser.get(url))
+    .then(() => $browser.get(`${homeUrl}pricing`))
     .then(() => console.log('Verifying pricing page...'))
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
