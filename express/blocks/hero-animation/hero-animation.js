@@ -27,6 +27,33 @@ function timecodeToSeconds(timecode) {
   return seconds;
 }
 
+const animationBreakPointSettings = [
+  {
+    typeHint: 'mobile',
+    minWidth: 0,
+  },
+  {
+    typeHint: 'desktop',
+    minWidth: 400,
+  },
+  {
+    typeHint: 'hd',
+    minWidth: 1440,
+  },
+];
+
+function getBreakpoint(animations) {
+  let breakpoint = animations[Object.keys(animations)[0]].typeHint;
+  animationBreakPointSettings.forEach((bp) => {
+    if ((window.innerWidth > bp.minWidth) && animations[bp.typeHint]) breakpoint = bp.typeHint;
+  });
+  return breakpoint;
+}
+
+function getAnimation(animations, breakpoint) {
+  return animations[breakpoint];
+}
+
 function createAnimation(animations) {
   const attribs = {};
   ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
@@ -37,11 +64,12 @@ function createAnimation(animations) {
     animations[k].active = false;
   });
 
-  const breakpoint = window.innerWidth <= 400 ? 'mobile' : 'desktop';
-  attribs.poster = animations[breakpoint].poster;
-  attribs.title = animations[breakpoint].title;
-  const { source } = animations[breakpoint];
-  animations[breakpoint].active = true;
+  const breakpoint = getBreakpoint(animations);
+  const animation = getAnimation(animations, breakpoint);
+  attribs.poster = animation.poster;
+  attribs.title = animation.title;
+  const { source } = animation;
+  animation.active = true;
 
   // replace anchor with video element
   const $video = createTag('video', attribs);
@@ -63,8 +91,10 @@ function adjustLayout($overlay, $attributions, animations, $parent) {
     $attributions.style.left = '80px';
   }
 
-  const breakpoint = window.innerWidth <= 400 ? 'mobile' : 'desktop';
-  if (!animations[breakpoint].active) {
+  const breakpoint = getBreakpoint(animations);
+  const animation = getAnimation(animations, breakpoint);
+
+  if (!animation.active) {
     const $newVideo = createAnimation(animations);
     $parent.replaceChild($newVideo, $parent.querySelector('video'));
     $newVideo.addEventListener('canplay', () => {
@@ -82,7 +112,7 @@ export default async function decorate($block) {
   $rows.forEach(($div) => {
     const typeHint = $div.children[0].textContent.trim().toLowerCase();
     let rowType = 'content';
-    if (typeHint === 'mobile' || typeHint === 'desktop') rowType = 'animation';
+    if (animationBreakPointSettings.map((e) => e.typeHint).includes(typeHint)) rowType = 'animation';
     if (typeHint.startsWith('00:')) rowType = 'timecode';
 
     // content row
