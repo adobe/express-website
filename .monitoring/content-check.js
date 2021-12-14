@@ -18,27 +18,22 @@
  */
 const assert = require('assert');
 
-const TIMEOUT = 10000;
+const TIMEOUT = 5000;
 
 /**
  * Checks if the homepage is loading and showing the expected content.
  * @param {string} baseUrl The base URL to check
  */
  async function checkHomepage(baseUrl) {
-  const url = `${baseUrl}/`;
+  const url = `${baseUrl}`;
   console.log(`Verifying ${url} ...`);
   $browser.get(url)
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
-    // check document integrity
-    .then(() => $browser.findElement($driver.By.css('html')))
-    .then((html) => Promise.all([html.getAttribute('class'), html.getAttribute('lang')]))
-    .then(([template, lang]) => {
-      assert.ok(template === 'default', `Expected template to be "default", got "${template}" instead`);
-      assert.ok(lang === 'en', `Expected language to be "en", got "${lang}" instead`);
-    })
     // check CTA button
     .then(() => $browser.findElement($driver.By.css('main a.button.accent')))
+    .then((button) => button.getAttribute('href'))
+    .then((ctaUrl) => assert.equal(new URL(ctaUrl).origin, 'https://adobesparkpost.app.link', `Wrong CTA button origin: ${ctaUrl}`))
     .then(() => console.log(`${url} successfully verified.`))
     .catch((e) => {
       assert.fail(`Verification of ${url} failed: ${e.message}`);
@@ -50,15 +45,19 @@ const TIMEOUT = 10000;
  * @param {string} baseUrl The base URL to check
  */
 async function checkPricingPage(baseUrl) {
-  const url = `${baseUrl}/pricing`;
+  const url = `${baseUrl}pricing`;
   console.log(`Verifying ${url} ...`);
   $browser.get(url)
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
+    // check free button
+    .then(() => $browser.findElements($driver.By.css('.pricing-columns-cta.button')))
+    .then((buttons) => buttons[0].getAttribute('href'))
+    .then((freeUrl) => assert.equal(new URL(freeUrl).origin, 'https://express.adobe.com', `Wrong free button origin: ${freeUrl}`))
     // check buy button
-    .then(() => $browser.findElement($driver.By.linkText('Buy Now')))
-    .then((button) => button.getAttribute('href'))
-    .then((buyUrl) => assert.ok(buyUrl.startsWith('https://commerce.adobe.com')))
+    .then(() => $browser.findElements($driver.By.css('.pricing-columns-cta.button')))
+    .then((buttons) => buttons[1].getAttribute('href'))
+    .then((buyUrl) => assert.equal(new URL(buyUrl).origin, 'https://commerce.adobe.com', `Wrong buy button origin: ${buyUrl}`))
     .then(() => console.log(`${url} successfully verified.`))
     .catch((e) => {
       assert.fail(`Verification of ${url} failed: ${e.message}`);
@@ -69,7 +68,5 @@ async function checkPricingPage(baseUrl) {
 (async () => {
   await Promise.all([
     '$$$URL$$$',
-    // 'https://spark-website--adobe.hlx.live/express',
-    // 'https://spark-website--adobe.hlx.page/express',
-  ].map((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
+  ].forEach((baseUrl) => checkHomepage(baseUrl) && checkPricingPage(baseUrl)));
 })();

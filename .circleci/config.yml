@@ -1,0 +1,77 @@
+version: 2.1
+executors:
+  node14:
+    docker:
+    - image: circleci/node:14
+      environment:
+        NPM_CONFIG_PREFIX: "~/.npm-global"
+        working_directory: ~/repo
+
+orbs:
+  helix-post-deploy: adobe/helix-post-deploy@2.0.10
+
+jobs:
+  build:
+    executor: node14
+    steps:
+      - checkout
+      - run:
+          name: install latest npm
+          command: sudo npm -g install npm
+      - run:
+          name: Installing Dependencies
+          command: npm install
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
+
+  operations:
+    executor: node14
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - helix-post-deploy/monitoring:
+          newrelic_name: Adobe CCX - Uptime (prod)
+          newrelic_url: https://www.adobe.com/express/
+          newrelic_script: ./.monitoring/health-check.js
+          newrelic_group_policy: Customer Sites
+          newrelic_locations: AWS_US_WEST_1
+          newrelic_frequency: 1
+
+      - helix-post-deploy/monitoring:
+          newrelic_name: Adobe CC Express - Content (prod)
+          newrelic_url: https://www.adobe.com/express/
+          newrelic_type: browser
+          newrelic_script: ./.monitoring/content-check.js
+          newrelic_group_policy: Customer Sites
+
+      - helix-post-deploy/monitoring:
+          newrelic_name: Adobe CC Express - Content (live)
+          newrelic_url: https://express-website--adobe.hlx.live/express/
+          newrelic_type: browser
+          newrelic_script: ./.monitoring/content-check.js
+          newrelic_group_policy: Customer Sites
+
+      - helix-post-deploy/monitoring:
+          newrelic_name: Adobe CC Express - Content (preview)
+          newrelic_url: https://main--express-website--adobe.hlx3.page/express/
+          newrelic_type: browser
+          newrelic_script: ./.monitoring/content-check.js
+          newrelic_group_policy: Customer Sites
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: ops
+      - operations:
+          requires:
+            - build
+          context: Project Helix
+          filters:
+            branches:
+              only: ops
