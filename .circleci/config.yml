@@ -32,7 +32,7 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       - helix-post-deploy/monitoring:
-          newrelic_name: Adobe CCX - Uptime (prod)
+          newrelic_name: Adobe CC Express - Uptime (prod)
           newrelic_url: https://www.adobe.com/express/
           newrelic_script: ./.monitoring/health-check.js
           newrelic_group_policy: Customer Sites
