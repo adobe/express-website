@@ -3,122 +3,105 @@ version: 1
 sitemaps:
   website:
     origin: https://www.adobe.com
+    lastmod: YYYY-MM-DD
     languages:
       default:
         source: /express/query-index.json
         destination: /express/sitemap-us.xml
         hreflang: en
         alternate: /{path}
-        lastmod: YYYY-MM-DD
       germany:
         source: /de/express/query-index.json
         destination: /express/sitemap-de.xml
         hreflang: de
         alternate: /de/{path}
-        lastmod: YYYY-MM-DD
       spain:
         source: /es/express/query-index.json
         destination: /express/sitemap-es.xml
         hreflang: es
         alternate: /es/{path}
-        lastmod: YYYY-MM-DD
       france:
         source: /fr/express/query-index.json
         destination: /express/sitemap-fr.xml
         hreflang: fr
         alternate: /fr/{path}
-        lastmod: YYYY-MM-DD
       italy:
         source: /it/express/query-index.json
         destination: /express/sitemap-it.xml
         hreflang: it
         alternate: /it/{path}
-        lastmod: YYYY-MM-DD
       japan:
         source: /jp/express/query-index.json
         destination: /express/sitemap-jp.xml
         hreflang: ja
         alternate: /jp/{path}
-        lastmod: YYYY-MM-DD
       korea:
         source: /kr/express/query-index.json
         destination: /express/sitemap-kr.xml
         hreflang: ko
         alternate: /kr/{path}
-        lastmod: YYYY-MM-DD
       netherlands:
         source: /nl/express/query-index.json
         destination: /express/sitemap-nl.xml
         hreflang: nl
         alternate: /nl/{path}
-        lastmod: YYYY-MM-DD
       brasil:
         source: /br/express/query-index.json
         destination: /express/sitemap-br.xml
         hreflang: pt
         alternate: /br/{path}
-        lastmod: YYYY-MM-DD
       taiwan:
         source: /tw/express/query-index.json
         destination: /express/sitemap-tw.xml
         hreflang: zh-Hant
         alternate: /tw/{path}
-        lastmod: YYYY-MM-DD
       china:
         source: /cn/express/query-index.json
         destination: /express/sitemap-other.xml
         hreflang: zh-Hans
         alternate: /cn/{path}
-        lastmod: YYYY-MM-DD
       denmark:
         source: /dk/express/query-index.json
         destination: /express/sitemap-other.xml
         hreflang: da
         alternate: /dk/{path}
-        lastmod: YYYY-MM-DD
       finland:
         source: /fi/express/query-index.json
         destination: /express/sitemap-other.xml
         hreflang: fi
         alternate: /fi/{path}
-        lastmod: YYYY-MM-DD
       norway:
         source: /no/express/query-index.json
         destination: /express/sitemap-other.xml
         hreflang: nb
         alternate: /no/{path}
-        lastmod: YYYY-MM-DD
       sweden:
         source: /se/express/query-index.json
         destination: /express/sitemap-other.xml
         hreflang: sv
         alternate: /se/{path}
-        lastmod: YYYY-MM-DD
 
   blogs:
     origin: https://www.adobe.com
+    lastmod: YYYY-MM-DD
     languages:
       default:
         source: /express/learn/blog/query-index.json
         destination: /express/sitemap-blog.xml
         hreflang: en
         alternate: /{path}
-        lastmod: YYYY-MM-DD
       japan:
         source: /jp/express/learn/blog/query-index.json
         destination: /express/sitemap-blog.xml
         hreflang: ja
         alternate: /jp/{path}
-        lastmod: YYYY-MM-DD
       germany:
         source: /de/express/learn/blog/query-index.json
         destination: /express/sitemap-blog.xml
         hreflang: de
         alternate: /de/{path}
-        lastmod: YYYY-MM-DD
       france:
         source: /fr/express/learn/blog/query-index.json
         destination: /express/sitemap-blog.xml
         hreflang: fr
         alternate: /fr/{path}
-        lastmod: YYYY-MM-DD
