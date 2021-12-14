@@ -1,7 +1,7 @@
-# Adobe Spark Website
+# Adobe CC Express Website
 
 Inner CDN:
-- https://express-website--adobe.hlx.page/
+- https://main--express-website--adobe.hlx3.page/
 
 Outer CDN:
 - https://express-website--adobe.hlx.live/
@@ -11,5 +11,6 @@ Outer CDN:
 1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/helix-cli`
 1. Clone this repository locally: `git clone https://github.com/adobe/express-website.git`
 1. Go to the `express-website` directory: `cd express-website`
-1. Start Helix Simulator: `hlx up` (opens your browser at `http://localhost:3000`)
+1. Start Helix Simulator: `hlx up`
+1. Navigate to `http://localhost:3000/express/`
 1. Open the `express-website` directory in your favorite IDE and start coding :)
