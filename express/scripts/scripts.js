@@ -1390,7 +1390,7 @@ async function wordBreakJapanese() {
  */
 async function loadEager() {
   setTheme();
-  await decorateTesting();
+  if (!window.hlx.lighthouse) await decorateTesting();
   if (sessionStorage.getItem('helix-font') === 'loaded') {
     loadFonts();
   }
