@@ -626,6 +626,10 @@ main .columns.highlight .column.column-picture {
     padding-left: 16px;
   }
 
+  main .columns.highlight .column:nth-child(2):not(.column-picture):not(.hero-animation-overlay) {
+    padding-left: 32px;
+  }
+
   main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
     padding-top: 0;
     padding-bottom: 0;
