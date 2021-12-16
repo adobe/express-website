@@ -41,32 +41,34 @@ main .tutorials .tutorial-card-overlay:hover {
   background-image: linear-gradient(#00000080, #00000080);
 }
 
+main .tutorials .tutorial-card-overlay:hover::after {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 0;
+  height: 10px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid;
+  top: 50%;
+  left: 50%;
+  transform: scale(1.6);
+  color: var(--color-black);
+}
+
 main .tutorials .tutorial-card-overlay:hover::before {
-  content: '▶';
+  content: '';
+  margin-top: 4px;
+  margin-left: 1px;
   width: 40px;
-  height: 42px;
-  padding-left: 2px;
-  background-color: white;
+  height: 40px;
+  background-color: var(--color-white);
   border-radius: 50%;
-  color: black;
   position: absolute;
   top: 50%;
   left: 50%;
-  font-size: var(--body-font-size-l);
-  font-weight: 700;
-  line-height: 42px;
   transform: translate(-50%, -50%);
-}
-@media not all and (min-resolution:.001dpcm) { 
-  @supports (-webkit-appearance:none) {
-    /* safari-only rule to correct positioning */
-    main .tutorials .tutorial-card-overlay:hover::before {
-      padding-top: 1px;
-      padding-left: 4px;
-      width: 38px;
-      height: 41px;
-    }
-  }
 }
 
 main .tutorials .tutorial-card picture {
