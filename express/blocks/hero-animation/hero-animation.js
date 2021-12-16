@@ -123,11 +123,17 @@ export default async function decorate($block) {
       const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
       const source = `./media_${id}.mp4`;
 
+      const srcURL = new URL($poster.src);
+      const srcUSP = new URLSearchParams(srcURL.search);
+      srcUSP.set('format', 'webply');
+      const optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
+
       animations[typeHint] = {
         source,
-        poster: $poster.getAttribute('src'),
+        poster: optimizedPosterSrc,
         title: $poster.getAttribute('alt') || '',
       };
+
       $div.remove();
     }
 
