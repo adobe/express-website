@@ -42,16 +42,19 @@ main .tutorials .tutorial-card-overlay:hover {
 }
 
 main .tutorials .tutorial-card-overlay:hover::before {
-  content: 'Play';
-  padding: 8px 16px;
+  content: '▶';
+  width: 40px;
+  height: 42px;
+  padding-left: 2px;
   background-color: white;
-  border-radius: 20px;
+  border-radius: 50%;
   color: black;
   position: absolute;
   top: 50%;
   left: 50%;
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-l);
   font-weight: 700;
+  line-height: 42px;
   transform: translate(-50%, -50%);
 }
 
