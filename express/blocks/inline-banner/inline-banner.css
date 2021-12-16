@@ -5,7 +5,6 @@ main .inline-banner {
   color: var(--color-white);
   padding: 32px;
   margin: 32px auto;
-  width: 324px;
 }
 
 main .inline-banner.inverted {
