@@ -177,8 +177,29 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/image/remove-background')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/image/transparent-background')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/image/jpg-to-png')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToPNG');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/image/png-to-jpg')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToJPG');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/video/trim')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:trimVideo');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/video/resize')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:resizeVideo');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/video/crop')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:cropVideo');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/video/video-to-gif')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.endsWith('/feature/video/change-speed')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:changeVideoSpeed');
