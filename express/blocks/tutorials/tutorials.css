@@ -57,6 +57,17 @@ main .tutorials .tutorial-card-overlay:hover::before {
   line-height: 42px;
   transform: translate(-50%, -50%);
 }
+@media not all and (min-resolution:.001dpcm) { 
+  @supports (-webkit-appearance:none) {
+    /* safari-only rule to correct positioning */
+    main .tutorials .tutorial-card-overlay:hover::before {
+      padding-top: 1px;
+      padding-left: 4px;
+      width: 38px;
+      height: 41px;
+    }
+  }
+}
 
 main .tutorials .tutorial-card picture {
   z-index: -1;
