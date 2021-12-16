@@ -1390,7 +1390,7 @@ async function wordBreakJapanese() {
  */
 async function loadEager() {
   setTheme();
-  await decorateTesting();
+  if (!window.hlx.lighthouse) await decorateTesting();
   if (sessionStorage.getItem('helix-font') === 'loaded') {
     loadFonts();
   }
@@ -1410,13 +1410,15 @@ async function loadEager() {
     if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
-    const target = checkTesting();
-    if (target) {
-      const bodyHideStyleId = 'at-body-style';
-      hideBody(bodyHideStyleId);
-      setTimeout(() => {
-        unhideBody(bodyHideStyleId);
-      }, 3000);
+    if (!window.hlx.lighthouse) {
+      const target = checkTesting();
+      if (target) {
+        const bodyHideStyleId = 'at-body-style';
+        hideBody(bodyHideStyleId);
+        setTimeout(() => {
+          unhideBody(bodyHideStyleId);
+        }, 3000);
+      }
     }
 
     const lcpCandidate = document.querySelector('main img');
