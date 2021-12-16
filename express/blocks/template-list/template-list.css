@@ -15,7 +15,7 @@ main .template-list {
 main .template-list.sixcols {
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: start;
+  justify-content: center;
 }
 
 main .template-list-sixcols-container > div {

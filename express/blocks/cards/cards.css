@@ -15,12 +15,12 @@ main .cards {
   padding: 0;
   display: flex;
   flex-direction: column;
-  margin-bottom: 56px;
+  margin: 56px auto;
 }
 
 main .cards .card {
   background-color: #FFF;
-  width: 344px;
+  width: 100%;
   margin: 0 auto 16px auto;
   border-radius: 20px;
   display: flex;
@@ -94,6 +94,12 @@ main .cards.large .card .card-content h2 {
 main .cards.large .card .card-content p, main .cards.large .card .card-content li {
   text-align: left;
   font-size: 1.125rem;
+}
+
+@media (min-width:400px) {
+  main .cards .card {
+    width: 344px;
+  }
 }
 
 @media (min-width:900px) {
