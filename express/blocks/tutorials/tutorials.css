@@ -33,42 +33,27 @@ main .tutorials .tutorial-card-overlay {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 8px;
+  padding: 16px;
   cursor: pointer;
+}
+
+main .tutorials .tutorial-card-overlay .tutorial-card-play {
+  visibility: hidden;
+  line-height: 0;
+}
+
+main .tutorials .tutorial-card-overlay .tutorial-card-play svg {
+  fill: var(--color-white);
+  width: 32px;
+  height: 32px;
 }
 
 main .tutorials .tutorial-card-overlay:hover {
   background-image: linear-gradient(#00000080, #00000080);
 }
 
-main .tutorials .tutorial-card-overlay:hover::after {
-  content: "";
-  display: block;
-  box-sizing: border-box;
-  position: absolute;
-  width: 0;
-  height: 10px;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 6px solid;
-  top: 50%;
-  left: 50%;
-  transform: scale(1.6);
-  color: var(--color-black);
-}
-
-main .tutorials .tutorial-card-overlay:hover::before {
-  content: '';
-  margin-top: 4px;
-  margin-left: 1px;
-  width: 40px;
-  height: 40px;
-  background-color: var(--color-white);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+main .tutorials .tutorial-card-overlay:hover .tutorial-card-play {
+  visibility: visible;
 }
 
 main .tutorials .tutorial-card picture {
