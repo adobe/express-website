@@ -205,6 +205,14 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
     const imagePath = image.split('?')[0].split('_')[1];
     const cardPicture = createOptimizedPicture(`./media_${imagePath}?format=webply&optimize=medium&width=750`, title, false, [{ width: '750' }]);
     const heroPicture = createOptimizedPicture(`./media_${imagePath}?format=webply&optimize=medium&width=750`, title, false);
+    const readMore = {
+      us: 'Read More',
+      jp: 'もっと見る',
+      fr: 'En savoir plus',
+      de: 'Mehr dazu',
+    };
+    const locale = getLocale(window.location);
+    const readMoreString = readMore[locale] || '&nbsp;&nbsp;&nbsp;&rightarrow;&nbsp;&nbsp;&nbsp;';
     let pictureTag = cardPicture.outerHTML;
     if (isHero) {
       pictureTag = heroPicture.outerHTML;
@@ -221,7 +229,8 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
         <h3 class="blog-card-title">${title}</h3>
         <p class="blog-card-teaser">${teaser}</p>
         <p class="blog-card-date">${dateString}</p>
-        <p class="blog-card-cta button-container"><a href="${path}" title="&rightarrow;" class="button accent">&nbsp;&nbsp;&nbsp;&rightarrow;&nbsp;&nbsp;&nbsp;</a></p>
+        <p class="blog-card-cta button-container">
+          <a href="${path}" title="${readMoreString}" class="button accent">${readMoreString}</a></p>
       </div>`;
       $blogPosts.prepend($card);
     } else {
