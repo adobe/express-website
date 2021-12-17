@@ -13,6 +13,7 @@
 import {
   createTag,
   toClassName,
+  getIconElement,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js?ccx';
 
@@ -81,6 +82,7 @@ function createTutorialCard(title, url, time, $picture) {
   const $cardTop = createTag('div', { class: 'tutorial-card-top' });
   $cardTop.innerHTML = `<div class="tutorial-card-overlay"><div class="tutorial-card-play"></div>
   <div class="tutorial-card-duration">${time}</div></div>`;
+  $cardTop.querySelector(':scope .tutorial-card-play').appendChild(getIconElement('play', 44));
   $cardTop.prepend($picture);
   const $cardBottom = createTag('div', { class: 'tutorial-card-text' });
   $cardBottom.innerHTML = `<h3>${title}</h3>`;
