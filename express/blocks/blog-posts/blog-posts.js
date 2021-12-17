@@ -210,7 +210,7 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       'jp': 'もっと見る',
       'fr': 'En savoir plus',
       'de': 'Mehr dazu',
-      'nothing': '&nbsp;&nbsp;&nbsp;&rightarrow;&nbsp;&nbsp;&nbsp;'
+      'default': '&nbsp;&nbsp;&nbsp;&rightarrow;&nbsp;&nbsp;&nbsp;'
     };
     const locale = getLocale(window.location);
   
@@ -231,7 +231,7 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
         <p class="blog-card-teaser">${teaser}</p>
         <p class="blog-card-date">${dateString}</p>
         <p class="blog-card-cta button-container">
-          <a href="${path}" title="&rightarrow;" class="button accent">${readMore[locale]?readMore[locale]:readMore['nothing']}</a></p>
+          <a href="${path}" title="&rightarrow;" class="button accent">${readMore[locale]?readMore[locale]:readMore['default']}</a></p>
       </div>`;
       $blogPosts.prepend($card);
     } else {
