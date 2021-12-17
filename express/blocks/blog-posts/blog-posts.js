@@ -209,10 +209,11 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
       'us': 'Read More',
       'jp': 'もっと見る',
       'fr': 'En savoir plus',
-      'de': 'Mehr dazu',
-      'default': '&nbsp;&nbsp;&nbsp;&rightarrow;&nbsp;&nbsp;&nbsp;'
+      'de': 'Mehr dazu'
     };
+    
     const locale = getLocale(window.location);
+    const readMoreString = readMore[locale] || '&nbsp;&nbsp;&nbsp;&rightarrow;&nbsp;&nbsp;&nbsp;';
   
     let pictureTag = cardPicture.outerHTML;
     if (isHero) {
@@ -231,7 +232,7 @@ async function decorateBlogPosts($blogPosts, config, offset = 0) {
         <p class="blog-card-teaser">${teaser}</p>
         <p class="blog-card-date">${dateString}</p>
         <p class="blog-card-cta button-container">
-          <a href="${path}" title="&rightarrow;" class="button accent">${readMore[locale]?readMore[locale]:readMore['default']}</a></p>
+          <a href="${path}" title="${readMoreString}" class="button accent">${readMoreString}</a></p>
       </div>`;
       $blogPosts.prepend($card);
     } else {
