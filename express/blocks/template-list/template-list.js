@@ -21,12 +21,12 @@ import {
   decorateMain,
   addAnimationToggle,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 import {
   buildCarousel,
 // eslint-disable-next-line import/no-unresolved
-} from '../shared/carousel.js?ccx';
+} from '../shared/carousel.js';
 
 /**
  * Returns a picture element with webp and fallbacks

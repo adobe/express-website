@@ -20,7 +20,7 @@ import {
   getLocale,
   getLanguage,
 // eslint-disable-next-line import/no-unresolved
-} from './scripts.js?ccx';
+} from './scripts.js';
 
 /**
  * Builds a block DOM Element from a two dimensional array

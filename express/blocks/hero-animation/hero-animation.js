@@ -15,7 +15,7 @@ import {
   createTag,
   toClassName,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 function timecodeToSeconds(timecode) {
   const splits = timecode.split(':');

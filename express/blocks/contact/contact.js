@@ -12,7 +12,7 @@
 import {
   createTag,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 function decorateContactBlocks($block) {
   const contacts = [];

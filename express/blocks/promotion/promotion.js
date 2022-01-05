@@ -19,7 +19,7 @@ import {
   toClassName,
   createOptimizedPicture,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 const PROMOTION_FOLDER = 'express/promotions';
 

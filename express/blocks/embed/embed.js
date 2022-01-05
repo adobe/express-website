@@ -14,7 +14,7 @@
 import {
   loadScript,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 // 'open.spotify.com' returns 'spotify'
 function getServer(url) {

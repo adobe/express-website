@@ -14,10 +14,10 @@
 import {
   createTag,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 // eslint-disable-next-line import/no-unresolved
-import Context from '../../scripts/context.js?ccx';
+import Context from '../../scripts/context.js';
 
 const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
 

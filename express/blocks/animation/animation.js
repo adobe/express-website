@@ -13,7 +13,7 @@
 import {
   createTag,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 export default function decorate($block, name, doc) {
   doc.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {

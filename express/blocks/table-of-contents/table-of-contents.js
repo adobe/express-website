@@ -16,7 +16,7 @@ import {
   createTag,
   readBlockConfig,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 export default function decorate($block, name, doc) {
   const config = readBlockConfig($block);
