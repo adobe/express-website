@@ -161,7 +161,7 @@ export default function decorate($block) {
             entries.forEach((entry) => {
               if (entry.intersectionRatio > 0) {
                 $floatButton.classList.remove('shown');
-              } else {
+              } else if (document.body.classList.contains('has-fixed-button')) {
                 $floatButton.classList.add('shown');
               }
             });
