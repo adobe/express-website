@@ -16,7 +16,7 @@ import {
   transformLinkToAnimation,
   addAnimationToggle,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 function decorateIconList($columnCell, rowNum) {
   const icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')]

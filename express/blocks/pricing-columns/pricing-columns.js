@@ -18,7 +18,7 @@ import {
   getHelixEnv,
   getOffer,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
   const params = url.searchParams;

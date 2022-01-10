@@ -13,7 +13,7 @@
 import {
   addBlockClasses,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 export default function decorate($block) {
   addBlockClasses($block, ['step-image', 'step-description']);

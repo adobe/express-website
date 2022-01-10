@@ -13,7 +13,7 @@
 import {
   createTag,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 
 function getCarouselState($parent, classPrefix) {
   const platform = $parent.querySelector(`.${classPrefix}carousel-platform`);

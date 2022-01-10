@@ -17,12 +17,12 @@ import {
   formatPrice,
   addPublishDependencies,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js?ccx';
+} from '../../scripts/scripts.js';
 import {
   buildUrl,
   buildPlans,
 // eslint-disable-next-line import/no-unresolved
-} from '../pricing/pricing.js?ccx';
+} from '../pricing/pricing.js';
 
 async function decorateCommerceCTA($block) {
   const $rows = Array.from($block.children);

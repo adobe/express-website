@@ -11,7 +11,7 @@
  */
 
 // eslint-disable-next-line import/no-unresolved
-import { normalizeHeadings } from '../../scripts/scripts.js?ccx';
+import { normalizeHeadings } from '../../scripts/scripts.js';
 
 /**
  * Retrieves the content of a metadata tag.
