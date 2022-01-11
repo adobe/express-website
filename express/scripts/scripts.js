@@ -195,7 +195,7 @@ export function getIconElement(icons, size, placeholders = window.placeholders) 
     if (placeholders[icon]) {
       alt = placeholders[icon];
     }
-  })
+  });
   $div.innerHTML = getIcon(icons, alt, size);
   return ($div.firstChild);
 }
@@ -1035,7 +1035,8 @@ export async function fixIcons(block = document) {
           // console.log(blockName);
           if (smallIconBlocks.includes(blockName)) size = 22;
         }
-        $picture.parentElement.replaceChild(getIconElement([icon, mobileIcon], size, placeholders), $picture);
+        $picture.parentElement
+          .replaceChild(getIconElement([icon, mobileIcon], size, placeholders), $picture);
       }
     }
   });
