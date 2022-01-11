@@ -288,7 +288,9 @@ function getCookie(cname) {
 }
 
 function getCountry() {
-  let country = getCookie('international');
+  let country = new URLSearchParams(window.location.search).get('country')
+  if (!country) {
+    country = getCookie('international');
   if (!country) {
     country = getLocale(window.location);
   }
