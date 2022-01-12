@@ -288,7 +288,10 @@ function getCookie(cname) {
 }
 
 function getCountry() {
-  let country = getCookie('international');
+  let country = new URLSearchParams(window.location.search).get('country');
+  if (!country) {
+    country = getCookie('international');
+  }
   if (!country) {
     country = getLocale(window.location);
   }
@@ -435,7 +438,7 @@ function getCurrencyDisplay(currency) {
 export function formatPrice(price, currency) {
   const locale = ['USD', 'TWD'].includes(currency)
     ? 'en-GB' // use en-GB for intl $ symbol formatting
-    : getLanguage(getLocale(window.location));
+    : getCountry();
   const currencyDisplay = getCurrencyDisplay(currency);
   return new Intl.NumberFormat(locale, {
     style: 'currency',
