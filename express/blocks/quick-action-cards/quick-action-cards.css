@@ -1,0 +1,146 @@
+
+main .section-wrapper.quick-action-cards-container {
+  padding: 0;
+  text-align: left;
+}
+
+main .section-wrapper.quick-action-cards-container > div {
+  text-align: left;
+  margin: 0 auto;
+  max-width: 400px;
+  padding: 80px 32px;
+  box-sizing: content-box;
+}
+
+main .section-wrapper.quick-action-cards-container > div > h1,
+main .section-wrapper.quick-action-cards-container > div > h2,
+main .section-wrapper.quick-action-cards-container > div > h3,
+main .section-wrapper.quick-action-cards-container > div > h4,
+main .section-wrapper.quick-action-cards-container > div > h5,
+main .section-wrapper.quick-action-cards-container > div > h6,
+main .section-wrapper.quick-action-cards-container > div > p {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+main .quick-action-cards h1,
+main .quick-action-cards h2,
+main .quick-action-cards h3,
+main .quick-action-cards h4,
+main .quick-action-cards h5,
+main .quick-action-cards h6,
+main .quick-action-cards p {
+  color: var(--body-color);
+}
+
+main .quick-action-cards p.button-container {
+  text-align: left;
+  display: flex;
+  gap: 16px;
+}
+
+main .quick-action-cards p.button-container a {
+  margin: 0;
+}
+
+main .section-wrapper.quick-action-cards-container > div > p {
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+main .section-wrapper.quick-action-cards-container > div > :first-child {
+  margin-top: 0;
+}
+
+main .quick-action-cards {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 10px;
+}
+
+main .quick-action-cards .quick-action-card {
+  border-radius: 17px;
+  overflow: hidden;
+  border: 2px solid var(--color-gray-200);
+  text-align: left;
+}
+
+main .quick-action-cards .quick-action-card > div:not(.quick-action-card-image) {
+  padding: 20px;
+}
+
+main .quick-action-cards:not(.quick-action-cards--expanded) .quick-action-card:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) {
+  display: none;
+}
+
+main .quick-action-cards--buttons .quick-action-card--close {
+  display: none;
+}
+
+main svg.action-card-chevron {
+  transform: translateY(1px);
+}
+
+main .quick-action-card--close svg.action-card-chevron {
+  transform: translateY(1px) rotate(180deg);
+}
+
+main .quick-action-cards.quick-action-cards--expanded .quick-action-card {
+  display: block;
+}
+
+main .quick-action-cards.quick-action-cards--expanded ~ .quick-action-cards--buttons .quick-action-card--close {
+  display: block;
+}
+
+main .quick-action-cards.quick-action-cards--expanded ~ .quick-action-cards--buttons .quick-action-card--open {
+  display: none;
+} 
+
+main .section-wrapper.quick-action-cards-container > div > p.quick-action-cards--buttons {
+  margin: 0;
+  margin-top: 32px;
+  text-align: center;
+  display: block;
+}
+
+main .quick-action-card--open, 
+main .quick-action-card--close {
+  display: block;
+  text-decoration: none;
+  border-radius: 18px;
+  padding: 8px 1.2em 8px 1.2em;
+  text-align: center;
+  font-size: var(--body-font-size-s);
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--body-line-height);
+  cursor: pointer;
+  transition: background-color .3s, color .3s, border .3s;
+  border-width: 0;
+  border-style: solid;
+  margin: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: var(--color-gray-200);
+} 
+
+
+@media screen and (min-width: 900px) {
+  main .section-wrapper.quick-action-cards-container > div {
+    max-width: 1024px;
+  }
+
+  main .quick-action-cards {
+    gap: 32px 17px;
+  }
+
+  main .quick-action-cards .quick-action-card {
+    max-width: 31%;
+    max-width: calc(33% - 14px);
+  }
+}
