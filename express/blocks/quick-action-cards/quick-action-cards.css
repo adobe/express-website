@@ -126,9 +126,18 @@ main .quick-action-card--close {
   text-overflow: ellipsis;
   margin-left: auto;
   margin-right: auto;
-  background-color: var(--color-gray-200);
-} 
+  background-color: var(--color-info-secondary);
+}
 
+main .quick-action-card--open:hover , 
+main .quick-action-card--close:hover {
+  background-color: var(--color-info-secondary-hover);
+}
+
+main .quick-action-card--open:active , 
+main .quick-action-card--close:active {
+  background-color: var(--color-info-secondary-down);
+}
 
 @media screen and (min-width: 900px) {
   main .section-wrapper.quick-action-cards-container > div {
