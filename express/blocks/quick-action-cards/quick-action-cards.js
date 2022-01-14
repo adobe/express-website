@@ -50,7 +50,7 @@ export default function decorate($block) {
     } else {
       $block.parentNode.appendChild($pButton);
     }
-    $pButton.classList.add('quick-action-cards--buttons')
+    $pButton.classList.add('quick-action-cards--buttons');
     $pButton.appendChild($seeMore);
     $pButton.appendChild($seeLess);
   }
