@@ -38,7 +38,6 @@ function hideVideo(push) {
 }
 
 function displayVideo(url, title, push) {
-  console.log('test');
   const canPlayInline = url.includes('youtu') || url.includes('vimeo');
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'tutorials-overlay' });
@@ -72,7 +71,6 @@ function displayVideo(url, title, push) {
       vidType = 'vimeo';
       const vid = new URL(url).pathname.split('/')[1];
       vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
-      console.log(vidUrl);
     }
     playInlineVideo($video, vidUrl, vidType, title);
   } else {
@@ -82,8 +80,6 @@ function displayVideo(url, title, push) {
 
 function transformToVideoColumn($cell, $a) {
   $cell.classList.add('column-video');
-
-  console.log($a.href);
 
   $cell.addEventListener('click', () => {
     displayVideo($a.href, $a.textContent, true);
