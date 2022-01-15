@@ -26,7 +26,7 @@ function playInlineVideo($element, vid, type, title) {
 }
 
 function hideVideo(push) {
-  const $overlay = document.querySelector('main .tutorials-overlay');
+  const $overlay = document.querySelector('main .video-overlay');
   if ($overlay) {
     $overlay.remove();
     window.onkeyup = null;
@@ -40,8 +40,8 @@ function hideVideo(push) {
 function displayVideo(url, title, push) {
   const canPlayInline = url.includes('youtu') || url.includes('vimeo');
   if (canPlayInline) {
-    const $overlay = createTag('div', { class: 'tutorials-overlay' });
-    const $video = createTag('div', { class: 'tutorials-overlay-video', id: 'tutorials-overlay-video' });
+    const $overlay = createTag('div', { class: 'video-overlay' });
+    const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });
     $overlay.appendChild($video);
     $overlay.addEventListener('click', () => {
       hideVideo(true);
