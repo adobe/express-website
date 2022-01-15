@@ -188,14 +188,8 @@ export function getIcon(icons, alt, size = 44) {
   }
 }
 
-export function getIconElement(icons, size, placeholders = window.placeholders) {
+export function getIconElement(icons, size, alt) {
   const $div = createTag('div');
-  let alt = null;
-  icons.forEach((icon) => {
-    if (placeholders[icon]) {
-      alt = placeholders[icon];
-    }
-  });
   $div.innerHTML = getIcon(icons, alt, size);
   return ($div.firstChild);
 }
@@ -750,14 +744,23 @@ export function getMetadata(name) {
 
 export async function fetchPlaceholders() {
   if (!window.placeholders) {
-    const locale = getLocale(window.location);
-    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-    const resp = await fetch(`${urlPrefix}/express/placeholders.json`);
-    const json = await resp.json();
-    window.placeholders = {};
-    json.data.forEach((placeholder) => {
-      window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-    });
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/placeholders.json`);
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    } catch {
+      const resp = await fetch('/express/placeholders.json');
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    }
   }
   return window.placeholders;
 }
@@ -1026,17 +1029,22 @@ export async function fixIcons(block = document) {
             }
             return null;
           });
+        let altText = null;
+        if (placeholders[icon]) {
+          altText = placeholders[icon];
+        } else if (placeholders[mobileIcon]) {
+          altText = placeholders[mobileIcon];
+        }
         const $picture = $img.closest('picture');
         const $block = $picture.closest('.block');
         let size = 44;
         if ($block) {
           const smallIconBlocks = ['columns'];
           const blockName = $block.getAttribute('data-block-name');
-          // console.log(blockName);
           if (smallIconBlocks.includes(blockName)) size = 22;
         }
         $picture.parentElement
-          .replaceChild(getIconElement([icon, mobileIcon], size, placeholders), $picture);
+          .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
       }
     }
   });
