@@ -14,79 +14,24 @@ import {
   linkImage,
   createTag,
   transformLinkToAnimation,
-  addAnimationToggle, toClassName,
+  addAnimationToggle,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-const docTitle = document.title;
-
-function playInlineVideo($element, vid, type, title) {
-  $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
-  $element.classList.add(type);
-}
-
-function hideVideo(push) {
-  const $overlay = document.querySelector('main .video-overlay');
-  if ($overlay) {
-    $overlay.remove();
-    window.onkeyup = null;
-  }
-  if (push) {
-    // create new history entry
-    window.history.pushState({}, docTitle, window.location.href.split('#')[0]);
-  }
-}
-
-function displayVideo(url, title, push) {
-  const canPlayInline = url.includes('youtu') || url.includes('vimeo');
-  if (canPlayInline) {
-    const $overlay = createTag('div', { class: 'video-overlay' });
-    const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });
-    $overlay.appendChild($video);
-    $overlay.addEventListener('click', () => {
-      hideVideo(true);
-    });
-    window.onkeyup = ({ key }) => {
-      if (key === 'Escape') {
-        hideVideo(true);
-      }
-    };
-    if (push) {
-      // create new history entry
-      window.history.pushState({ url, title }, `${docTitle} | ${title}`, `#${toClassName(title)}`);
-    }
-    const $main = document.querySelector('main');
-    $main.append($overlay);
-    let vidUrl = '';
-    let vidType = 'default';
-    if (url.includes('youtu')) {
-      vidType = 'youtube';
-      const yturl = new URL(url);
-      let vid = yturl.searchParams.get('v');
-      if (!vid) {
-        vid = yturl.pathname.substr(1);
-      }
-      vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed&autoplay=1`;
-    } else if (url.includes('vimeo')) {
-      vidType = 'vimeo';
-      const vid = new URL(url).pathname.split('/')[1];
-      vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
-    }
-    playInlineVideo($video, vidUrl, vidType, title);
-  } else {
-    window.location.href = url;
-  }
-}
+import {
+  displayVideoModal,
+  hideVideoModal,
+} from '../shared/video.js';
 
 function transformToVideoColumn($cell, $a) {
   $cell.classList.add('column-video');
 
   $cell.addEventListener('click', () => {
-    displayVideo($a.href, $a.textContent, true);
+    displayVideoModal($a.href, $a.textContent, true);
   });
   $cell.addEventListener('keyup', ({ key }) => {
     if (key === 'Enter') {
-      displayVideo($a.href, $a.textContent);
+      displayVideoModal($a.href, $a.textContent);
     }
   });
 }
@@ -257,10 +202,10 @@ export default function decorate($block) {
 
       // handle history events
       window.addEventListener('popstate', ({ state }) => {
-        hideVideo();
+        hideVideoModal();
         const { url, title } = state;
         if (url) {
-          displayVideo(url, title);
+          displayVideoModal(url, title);
         }
       });
 
