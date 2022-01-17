@@ -42,6 +42,7 @@ export default function decorate($block) {
     $seeMore.classList.add('secondary');
     $seeMore.innerText = 'See more';
     $seeMore.insertAdjacentHTML('beforeend', chevron);
+    // eslint-disable-next-line no-script-url
     $seeMore.setAttribute('href', 'javascript: void(0)');
     $seeMore.addEventListener('click', () => {
       $block.classList.add('quick-action-cards--expanded');
@@ -52,6 +53,7 @@ export default function decorate($block) {
     $seeLess.classList.add('secondary');
     $seeLess.innerText = 'See less';
     $seeLess.insertAdjacentHTML('beforeend', chevron);
+    // eslint-disable-next-line no-script-url
     $seeLess.setAttribute('href', 'javascript: void(0)');
     $seeLess.addEventListener('click', () => {
       $block.classList.remove('quick-action-cards--expanded');
