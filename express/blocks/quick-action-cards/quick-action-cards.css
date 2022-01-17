@@ -78,11 +78,17 @@ main .quick-action-cards--buttons .quick-action-card--close {
   display: none;
 }
 
-main svg.action-card-chevron {
+main .quick-action-card--open svg, 
+main .quick-action-card--close svg {
   transform: translateY(1px);
+  float: unset;
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  margin-left: 6px;
 }
 
-main .quick-action-card--close svg.action-card-chevron {
+main .quick-action-card--close svg {
   transform: translateY(1px) rotate(180deg);
 }
 
@@ -91,7 +97,7 @@ main .quick-action-cards.quick-action-cards--expanded .quick-action-card {
 }
 
 main .quick-action-cards.quick-action-cards--expanded ~ .quick-action-cards--buttons .quick-action-card--close {
-  display: block;
+  display: inline-block;
 }
 
 main .quick-action-cards.quick-action-cards--expanded ~ .quick-action-cards--buttons .quick-action-card--open {
@@ -107,23 +113,7 @@ main .section-wrapper.quick-action-cards-container > div > p.quick-action-cards-
 
 main .quick-action-card--open, 
 main .quick-action-card--close {
-  display: block;
-  text-decoration: none;
-  border-radius: 18px;
-  padding: 8px 1.2em 8px 1.2em;
-  text-align: center;
-  font-size: var(--body-font-size-s);
-  font-style: normal;
-  font-weight: 600;
-  line-height: var(--body-line-height);
-  cursor: pointer;
-  transition: background-color .3s, color .3s, border .3s;
-  border-width: 0;
-  border-style: solid;
   margin: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin-left: auto;
   margin-right: auto;
   background-color: var(--color-info-secondary);

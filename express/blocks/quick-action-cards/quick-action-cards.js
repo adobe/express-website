@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  createTag,
+  getIcon,
 // eslint-disable-next-line import/no-unresolved
-import { createTag } from '../../scripts/scripts.js';
+} from '../../scripts/scripts.js';
 
 export default function decorate($block) {
   const $cards = Array.from($block.querySelectorAll(':scope>div'));
@@ -32,15 +35,24 @@ export default function decorate($block) {
     });
   });
   if ($cards.length > 3) {
-    const $seeMore = document.createElement('button');
+    const chevron = getIcon('chevron');
+    const $seeMore = document.createElement('a');
     $seeMore.classList.add('quick-action-card--open');
-    $seeMore.insertAdjacentHTML('beforeend', 'See more <svg class="action-card-chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 1200 1200"><path d="M600.006 989.352l178.709-178.709L1200 389.357l-178.732-178.709L600.006 631.91L178.721 210.648L0 389.369l421.262 421.262l178.721 178.721h.023z" fill="currentColor"></path></svg>');
+    $seeMore.classList.add('button');
+    $seeMore.classList.add('secondary');
+    $seeMore.innerText = 'See more';
+    $seeMore.insertAdjacentHTML('beforeend', chevron);
+    $seeMore.setAttribute('href', 'javascript: void(0)');
     $seeMore.addEventListener('click', () => {
       $block.classList.add('quick-action-cards--expanded');
     });
-    const $seeLess = document.createElement('button');
+    const $seeLess = document.createElement('a');
     $seeLess.classList.add('quick-action-card--close');
-    $seeLess.insertAdjacentHTML('beforeend', 'See less <svg class="action-card-chevron" xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 1200 1200"><path d="M600.006 989.352l178.709-178.709L1200 389.357l-178.732-178.709L600.006 631.91L178.721 210.648L0 389.369l421.262 421.262l178.721 178.721h.023z" fill="currentColor"></path></svg>');
+    $seeLess.classList.add('button');
+    $seeLess.classList.add('secondary');
+    $seeLess.innerText = 'See less';
+    $seeLess.insertAdjacentHTML('beforeend', chevron);
+    $seeLess.setAttribute('href', 'javascript: void(0)');
     $seeLess.addEventListener('click', () => {
       $block.classList.remove('quick-action-cards--expanded');
     });
