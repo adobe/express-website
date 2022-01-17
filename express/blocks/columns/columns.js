@@ -205,7 +205,8 @@ export default function decorate($block) {
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
       if ($a) {
-        if ($a.href.includes('vimeo') && $row.parentElement.classList.contains('highlight')) {
+        if (($a.href.includes('vimeo') || $a.href.includes('youtu'))
+          && $row.parentElement.classList.contains('highlight')) {
           transformToVideoColumn($cell, $a);
           $a.remove();
         }
