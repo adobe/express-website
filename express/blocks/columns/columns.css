@@ -345,11 +345,7 @@ main .columns.highlight.width-2-columns .column-picture {
   order: -1
 }
 
-main .column-video {
-  display: block;
-}
-
-main .columns.highlight .column-video picture:hover {
+main .columns-video {
   cursor: pointer;
 }
 

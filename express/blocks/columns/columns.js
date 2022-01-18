@@ -24,12 +24,16 @@ import {
 } from '../shared/video.js';
 
 function transformToVideoColumn($cell, $a) {
-  $cell.classList.add('column-video');
+  const $parent = $cell.parentElement;
 
-  $cell.addEventListener('click', () => {
+  $cell.classList.add('column-video');
+  $parent.classList.add('columns-video');
+
+  $parent.addEventListener('click', () => {
     displayVideoModal($a.href, $a.textContent, true);
   });
-  $cell.addEventListener('keyup', ({ key }) => {
+
+  $parent.addEventListener('keyup', ({ key }) => {
     if (key === 'Enter') {
       displayVideoModal($a.href, $a.textContent);
     }
