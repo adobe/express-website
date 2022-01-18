@@ -17,65 +17,10 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-const docTitle = document.title;
-
-function playInlineVideo($element, vid, type, title) {
-  $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
-  $element.classList.add(type);
-}
-
-function hideTutorial(push) {
-  const $overlay = document.querySelector('main .tutorials-overlay');
-  if ($overlay) {
-    $overlay.remove();
-    window.onkeyup = null;
-  }
-  if (push) {
-    // create new history entry
-    window.history.pushState({}, docTitle, window.location.href.split('#')[0]);
-  }
-}
-
-function displayTutorial(url, title, push) {
-  const canPlayInline = url.includes('youtu') || url.includes('vimeo');
-  if (canPlayInline) {
-    const $overlay = createTag('div', { class: 'tutorials-overlay' });
-    const $video = createTag('div', { class: 'tutorials-overlay-video', id: 'tutorials-overlay-video' });
-    $overlay.appendChild($video);
-    $overlay.addEventListener('click', () => {
-      hideTutorial(true);
-    });
-    window.onkeyup = ({ key }) => {
-      if (key === 'Escape') {
-        hideTutorial(true);
-      }
-    };
-    if (push) {
-      // create new history entry
-      window.history.pushState({ url, title }, `${docTitle} | ${title}`, `#${toClassName(title)}`);
-    }
-    const $main = document.querySelector('main');
-    $main.append($overlay);
-    let vidUrl = '';
-    let vidType = 'default';
-    if (url.includes('youtu')) {
-      vidType = 'youtube';
-      const yturl = new URL(url);
-      let vid = yturl.searchParams.get('v');
-      if (!vid) {
-        vid = yturl.pathname.substr(1);
-      }
-      vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed&autoplay=1`;
-    } else if (url.includes('vimeo')) {
-      vidType = 'vimeo';
-      const vid = new URL(url).pathname.split('/')[1];
-      vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
-    }
-    playInlineVideo($video, vidUrl, vidType, title);
-  } else {
-    window.location.href = url;
-  }
-}
+import {
+  displayVideoModal,
+  hideVideoModal,
+} from '../shared/video.js';
 
 function createTutorialCard(title, url, time, $picture) {
   const $card = createTag('a', { class: 'tutorial-card', title, tabindex: 0 });
@@ -87,11 +32,11 @@ function createTutorialCard(title, url, time, $picture) {
   const $cardBottom = createTag('div', { class: 'tutorial-card-text' });
   $cardBottom.innerHTML = `<h3>${title}</h3>`;
   $card.addEventListener('click', () => {
-    displayTutorial(url, title, true);
+    displayVideoModal(url, title, true);
   });
   $card.addEventListener('keyup', ({ key }) => {
     if (key === 'Enter') {
-      displayTutorial(url, title);
+      displayVideoModal(url, title);
     }
   });
   $card.appendChild($cardTop);
@@ -110,15 +55,15 @@ function decorateTutorials($block) {
     $block.appendChild($card);
     $tutorial.remove();
     if (toClassName(title) === window.location.hash.substr(1)) {
-      displayTutorial(url, title);
+      displayVideoModal(url, title);
     }
   });
   // handle history events
   window.addEventListener('popstate', ({ state }) => {
-    hideTutorial();
+    hideVideoModal();
     const { url, title } = state;
     if (url) {
-      displayTutorial(url, title);
+      displayVideoModal(url, title);
     }
   });
 }
