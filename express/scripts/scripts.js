@@ -180,6 +180,7 @@ export function getIcon(icons, alt, size = 44) {
     if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
     if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
+      ${alt ? `<title>${alt}</title>` : ''}
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
   } else {
@@ -187,9 +188,9 @@ export function getIcon(icons, alt, size = 44) {
   }
 }
 
-export function getIconElement(icons, size) {
+export function getIconElement(icons, size, alt) {
   const $div = createTag('div');
-  $div.innerHTML = getIcon(icons, null, size);
+  $div.innerHTML = getIcon(icons, alt, size);
   return ($div.firstChild);
 }
 
@@ -450,7 +451,6 @@ export function formatPrice(price, currency) {
 export async function getOffer(offerId, countryOverride) {
   let country = getCountry();
   if (countryOverride) country = countryOverride;
-  console.log(country);
   if (!country) country = 'us';
   let currency = getCurrency(country);
   if (!currency) {
@@ -740,6 +740,34 @@ export function getMetadata(name) {
   return $meta && $meta.content;
 }
 
+/**
+ * fetches the string variables.
+ * @returns {object} localized variables
+ */
+
+export async function fetchPlaceholders() {
+  if (!window.placeholders) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/placeholders.json`);
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    } catch {
+      const resp = await fetch('/express/placeholders.json');
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    }
+  }
+  return window.placeholders;
+}
+
 function addPromotion() {
   // check for existing promotion
   if (!document.querySelector('main .promotion')) {
@@ -984,12 +1012,12 @@ async function decorateTesting() {
   }
 }
 
-export function fixIcons(block = document) {
+export async function fixIcons(block = document) {
   /* backwards compatible icon handling, deprecated */
   block.querySelectorAll('svg use[href^="./_icons_"]').forEach(($use) => {
     $use.setAttribute('href', `/express/icons.svg#${$use.getAttribute('href').split('#')[1]}`);
   });
-
+  const placeholders = await fetchPlaceholders();
   /* new icons handling */
   block.querySelectorAll('img').forEach(($img) => {
     const alt = $img.getAttribute('alt');
@@ -1004,16 +1032,22 @@ export function fixIcons(block = document) {
             }
             return null;
           });
+        let altText = null;
+        if (placeholders[icon]) {
+          altText = placeholders[icon];
+        } else if (placeholders[mobileIcon]) {
+          altText = placeholders[mobileIcon];
+        }
         const $picture = $img.closest('picture');
         const $block = $picture.closest('.block');
         let size = 44;
         if ($block) {
           const smallIconBlocks = ['columns'];
           const blockName = $block.getAttribute('data-block-name');
-          // console.log(blockName);
           if (smallIconBlocks.includes(blockName)) size = 22;
         }
-        $picture.parentElement.replaceChild(getIconElement([icon, mobileIcon], size), $picture);
+        $picture.parentElement
+          .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
       }
     }
   });
