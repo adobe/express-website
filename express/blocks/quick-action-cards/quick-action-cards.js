@@ -13,6 +13,7 @@
 import {
   createTag,
   getIcon,
+  fetchPlaceholders,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -40,19 +41,21 @@ export default function decorate($block) {
     $seeMore.classList.add('quick-action-card--open');
     $seeMore.classList.add('button');
     $seeMore.classList.add('secondary');
-    $seeMore.innerText = 'See more';
-    $seeMore.insertAdjacentHTML('beforeend', chevron);
+    const $seeLess = document.createElement('a');
+    $seeLess.classList.add('quick-action-card--close');
+    $seeLess.classList.add('button');
+    $seeLess.classList.add('secondary');
+    fetchPlaceholders().then((placeholders) => {
+      $seeMore.innerText = placeholders['see-more'];
+      $seeLess.innerText = placeholders['see-less'];
+      $seeMore.insertAdjacentHTML('beforeend', chevron);
+      $seeLess.insertAdjacentHTML('beforeend', chevron);
+    });
     // eslint-disable-next-line no-script-url
     $seeMore.setAttribute('href', 'javascript: void(0)');
     $seeMore.addEventListener('click', () => {
       $block.classList.add('quick-action-cards--expanded');
     });
-    const $seeLess = document.createElement('a');
-    $seeLess.classList.add('quick-action-card--close');
-    $seeLess.classList.add('button');
-    $seeLess.classList.add('secondary');
-    $seeLess.innerText = 'See less';
-    $seeLess.insertAdjacentHTML('beforeend', chevron);
     // eslint-disable-next-line no-script-url
     $seeLess.setAttribute('href', 'javascript: void(0)');
     $seeLess.addEventListener('click', () => {
