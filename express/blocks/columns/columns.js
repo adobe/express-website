@@ -157,6 +157,10 @@ export default function decorate($block) {
         if (($a.href.includes('vimeo') || $a.href.includes('youtu'))
           && $row.parentElement.classList.contains('highlight')) {
           transformToVideoColumn($cell, $a);
+
+          $a.addEventListener('click', (e) => {
+            e.preventDefault();
+          });
         }
         if ($a.textContent.startsWith('https://')) {
           if ($a.href.endsWith('.mp4')) {
