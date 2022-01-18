@@ -18,6 +18,28 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+import {
+  displayVideoModal,
+  hideVideoModal,
+} from '../shared/video.js';
+
+function transformToVideoColumn($cell, $a) {
+  const $parent = $cell.parentElement;
+
+  $cell.classList.add('column-video');
+  $parent.classList.add('columns-video');
+
+  $parent.addEventListener('click', () => {
+    displayVideoModal($a.href, $a.textContent, true);
+  });
+
+  $parent.addEventListener('keyup', ({ key }) => {
+    if (key === 'Enter') {
+      displayVideoModal($a.href, $a.textContent);
+    }
+  });
+}
+
 function decorateIconList($columnCell, rowNum) {
   const icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')]
     .filter(($icon) => !$icon.closest('p').classList.contains('social-links'));
@@ -132,6 +154,14 @@ export default function decorate($block) {
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
       if ($a) {
+        if (($a.href.includes('vimeo') || $a.href.includes('youtu'))
+          && $row.parentElement.classList.contains('highlight')) {
+          transformToVideoColumn($cell, $a);
+
+          $a.addEventListener('click', (e) => {
+            e.preventDefault();
+          });
+        }
         if ($a.textContent.startsWith('https://')) {
           if ($a.href.endsWith('.mp4')) {
             transformLinkToAnimation($a);
@@ -176,6 +206,15 @@ export default function decorate($block) {
           $a.classList.replace('accent', 'primary');
         }
       }
+
+      // handle history events
+      window.addEventListener('popstate', ({ state }) => {
+        hideVideoModal();
+        const { url, title } = state;
+        if (url) {
+          displayVideoModal(url, title);
+        }
+      });
 
       $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
 

@@ -88,20 +88,50 @@ main .columns h1.columns-heading-very-long {
 
 main .columns h1.columns-heading-x-long {
   font-size: var(--heading-font-size-m);
-}  
+}
 
+main .video-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+main .video-overlay .video-overlay-video {
+  width: 90vw;
+  height: calc(90vw * 9 / 16);
+  max-height: 100vh;
+}
+
+main .video-overlay .video-overlay-video.vimeo {
+  width: 90vh;
+  max-width: 90vw;
+  height: 90vw;
+  max-height: 90vh;
+}
+
+main .video-overlay .video-overlay-video iframe {
+  width: 100%;
+  height: 100%;
+}
 
 @media (min-width: 1200px) {
   main .columns h1.columns-heading-long {
     font-size: var(--heading-font-size-xxl);
-  }  
+  }
   main .columns h1.columns-heading-very-long {
     font-size: var(--heading-font-size-xl);
-  }  
+  }
 
   main .columns h1.columns-heading-x-long {
     font-size: var(--heading-font-size-l);
-  }  
+  }
 }
 
 main .columns h2 {
@@ -116,7 +146,7 @@ main .columns h2.columns-heading-very-long {
 @media (min-width: 1200px) {
   main .columns h2.columns-heading-very-long {
     font-size: var(--heading-font-size-xl);
-  }  
+  }
 }
 
 main .columns h3 {
@@ -128,7 +158,7 @@ main .columns h4,
 main .columns h5,
 main .columns h6 {
   font-size: var(--heading-font-size-m);
-  line-height: 1.14; 
+  line-height: 1.14;
   margin-top: 32px;
 }
 
@@ -315,6 +345,10 @@ main .columns.highlight.width-2-columns .column-picture {
   order: -1
 }
 
+main .columns-video {
+  cursor: pointer;
+}
+
 main .columns.highlight > div {
   padding: 0;
 }
@@ -399,13 +433,13 @@ main .columns.highlight .column p {
     padding-left: 32px;
     padding-right: 32px;
   }
-  
+
   main .columns > div {
     flex-direction: row;
     text-align: left;
     align-items: center;
   }
-  
+
   main .section-wrapper div.columns > div {
     position: relative;
   }
@@ -424,7 +458,7 @@ main .columns.highlight .column p {
     line-height: 29px;
     display: block;
   }
-  
+
 main .columns .column {
   margin: 0;
 }
@@ -596,11 +630,11 @@ main .columns.highlight .column.column-picture {
   main .fixed-button.button-container {
     display: none;
   }
-  
+
   body.has-fixed-button .button-container a.accent {
     display: inline-block;
   }
-    
+
   body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
     padding-left: 0px;
   }
@@ -670,7 +704,7 @@ main .columns.highlight .column.column-picture {
     padding-left: 8px;
     padding-right: 8px;
   }
-  
+
   main .columns .column:nth-child(2):not(.column-picture):not(.hero-animation-overlay) {
     padding-left: 16px;
   }
