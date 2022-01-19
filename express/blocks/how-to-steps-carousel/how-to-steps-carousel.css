@@ -160,10 +160,9 @@ main .how-to-steps-carousel-container .icon {
     margin-bottom: 80px;
     object-position: right;
     object-fit: cover;
-    min-width: 100%;
-    max-width: 100%;
     min-height: 100%;
     max-height: 100%;
+    width: unset;
   }
 
   main .how-to-steps-carousel .tips .tip {
