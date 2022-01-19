@@ -439,7 +439,7 @@ function getCurrencyDisplay(currency) {
 export function formatPrice(price, currency) {
   const locale = ['USD', 'TWD'].includes(currency)
     ? 'en-GB' // use en-GB for intl $ symbol formatting
-    : getCountry();
+    : getLanguage(getCountry());
   const currencyDisplay = getCurrencyDisplay(currency);
   return new Intl.NumberFormat(locale, {
     style: 'currency',
