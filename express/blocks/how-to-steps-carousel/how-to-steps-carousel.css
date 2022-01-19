@@ -176,6 +176,7 @@ main .how-to-steps-carousel-container .icon {
   main .how-to-steps-carousel-container {
     display: flex;
     justify-content: center;
+    align-items: start;
   }
 
   main .how-to-steps-carousel-container > div {
