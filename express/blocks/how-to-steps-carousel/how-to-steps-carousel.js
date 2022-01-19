@@ -54,12 +54,11 @@ function activate(block, target) {
       const picture = container.querySelector('picture');
       const img = picture.querySelector('img');
       const panelHeight = block.parentElement.offsetHeight;
-      const imgHeight = img.offsetHeight;
-      if (imgHeight > panelHeight) {
-        picture.style.height = `${panelHeight}px`;
+      const imgHeight = img.naturalHeight;
+      if (imgHeight < panelHeight) {
         container.classList.add('no-cover');
       } else {
-        picture.style.height = `${imgHeight}px`;
+        picture.style.height = `${panelHeight}px`;
       }
     }
 
@@ -175,5 +174,16 @@ export default function decorate(block) {
     });
   }
 
-  initRotation(window, document);
+  const img = picture.querySelector('img');
+  const run = () => {
+    activate(block, block.querySelector('.tip-number.tip-1'));
+    initRotation(window, document);
+  };
+
+  if (!img.complete) {
+    img.addEventListener('load', run);
+    img.addEventListener('error', run);
+  } else {
+    run();
+  }
 }
