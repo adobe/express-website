@@ -175,5 +175,6 @@ export default function decorate(block) {
     });
   }
 
+  activate(block, block.querySelector('.tip-number.tip-1'));
   initRotation(window, document);
 }
