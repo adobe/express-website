@@ -175,6 +175,16 @@ export default function decorate(block) {
     });
   }
 
-  activate(block, block.querySelector('.tip-number.tip-1'));
-  initRotation(window, document);
+  const img = picture.querySelector('img');
+  const run = () => {
+    activate(block, block.querySelector('.tip-number.tip-1'));
+    initRotation(window, document);
+  };
+
+  if (!img.complete) {
+    img.addEventListener('load', run);
+    img.addEventListener('error', run);
+  } else {
+    run();
+  }
 }
