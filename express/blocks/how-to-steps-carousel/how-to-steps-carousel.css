@@ -184,6 +184,7 @@ main .how-to-steps-carousel-container .icon {
     padding: 80px 70px;
     width: 50%;
     height: 100%;
+    max-width: 600px;
   }
 
   main .how-to-steps-carousel-container > picture > img {
@@ -204,12 +205,6 @@ main .how-to-steps-carousel-container .icon {
 }
 
 @media (min-width: 1200px) {
-  main .how-to-steps-carousel-container {
-    max-width: 1600px;
-    margin-left: auto; 
-    margin-right: auto; 
-  }
-
   main .how-to-steps-carousel-container.no-cover > div {
     margin: 0 120px 0 20px;
   }
