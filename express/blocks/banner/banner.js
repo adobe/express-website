@@ -17,9 +17,12 @@ import {
 
 export default function decorate($block) {
   normalizeHeadings($block, ['h2', 'h3']);
-
+  const buttons = $block.querySelectorAll('a.button');
+  if (buttons.length > 1) {
+    $block.classList.add('multi-button');
+  }
   // button on dark background
-  $block.querySelectorAll('a.button').forEach(($button) => {
+  buttons.forEach(($button) => {
     $button.classList.remove('primary');
     $button.classList.remove('secondary');
 
@@ -28,6 +31,9 @@ export default function decorate($block) {
       $button.classList.add('large', 'primary', 'reverse');
     } else {
       $button.classList.add('accent', 'dark');
+      if ($block.classList.contains('multi-button')) {
+        $button.classList.add('reverse');
+      }
     }
   });
 }

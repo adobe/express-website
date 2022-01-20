@@ -50,6 +50,10 @@ main .banner .icon {
   width: 72px;
 }
 
+main .banner.multi-button .button-container {
+  display: inline-block;
+}
+
 @media (min-width:900px) {
   main .section-wrapper.banner-container {
     padding-left: 56px;
