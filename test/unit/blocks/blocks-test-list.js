@@ -111,6 +111,10 @@ export default [
     input: 'input/banner.h4.doc.html',
     expected: 'expected/banner.h3.block.html',
   }, {
+    name: 'Banner - multi button',
+    input: 'input/banner.multi-button.doc.html',
+    expected: 'expected/banner.multi-button.block.html',
+  }, {
     name: 'Inline Banner - h1 - converted to h2',
     input: 'input/inline-banner.h1.doc.html',
     expected: 'expected/inline-banner.h2.block.html',
