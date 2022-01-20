@@ -416,6 +416,7 @@ export function getLanguage(locale) {
     nl: 'nl-NL',
     br: 'pt-BR',
     se: 'sv-SE',
+    th: 'th-TH',
     tw: 'zh-Hant-TW',
     cn: 'zh-Hans-CN',
   };
