@@ -19,24 +19,38 @@ import {
 
 export default function decorate($block) {
   const $cards = Array.from($block.querySelectorAll(':scope>div'));
+  const chevron = getIcon('chevron');
   $cards.forEach(($card) => {
     $card.classList.add('quick-action-card');
     const $cardDivs = [...$card.children];
     $cardDivs.forEach(($div) => {
-      if ($div.querySelector('img')) {
+      if ($div.querySelector(':scope > picture:first-child')) {
         $div.classList.add('quick-action-card-image');
-      }
-      const $a = $div.querySelector('a');
-      if ($a && $a.textContent.startsWith('https://')) {
-        const $wrapper = createTag('a', { href: $a.href, class: 'quick-action-card' });
-        $a.remove();
-        $wrapper.innerHTML = $card.innerHTML;
-        $block.replaceChild($wrapper, $card);
+        const $a = $div.querySelector('a');
+        if ($a && $a.textContent.startsWith('https://')) {
+          const contents = Array.from($card.children);
+          const $wrapper = createTag('a', { href: $a.href });
+          $a.remove();
+          $card.appendChild($wrapper);
+          contents.forEach((child) => {
+            $wrapper.appendChild(child);
+          });
+        }
+      } else {
+        const $buttons = $div.querySelectorAll(':scope a');
+        for (let index = 0; index < $buttons.length; index += 1) {
+          if (index > 0) {
+            $buttons[index].insertAdjacentHTML('beforeend', chevron);
+            $buttons[index].classList.remove('button');
+            $buttons[index].classList.remove('primary');
+            $buttons[index].classList.remove('secondary');
+            $buttons[index].classList.remove('accent');
+          }
+        }
       }
     });
   });
   if ($cards.length > 3) {
-    const chevron = getIcon('chevron');
     const $seeMore = document.createElement('a');
     $seeMore.classList.add('quick-action-card--open');
     $seeMore.classList.add('button');
