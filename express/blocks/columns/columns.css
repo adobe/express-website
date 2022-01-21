@@ -240,6 +240,10 @@ main .columns .brand.icon {
   float: none;
 }
 
+main .columns.center .icon {
+  float: none;
+}
+
 main .columns .icon.icon-check {
   width: 22px;
 }
