@@ -84,7 +84,8 @@ function decoratePricingModal($block) {
   const $headerClose = createTag('a', { class: 'close' });
   $headerClose.classList.add('modal-header-close');
   $headerClose.addEventListener('click', closePopup);
-  const $cta = document.querySelector('a.cta.large');
+  const ctas = document.querySelectorAll('a.pricing-columns-cta.large');
+  const $cta = ctas ? ctas[ctas.length - 1] : null;
   if ($cta) {
     $cta.addEventListener('click', displayPopup);
     const $continue = $block.querySelector(':scope .button-container:last-of-type a.button');
