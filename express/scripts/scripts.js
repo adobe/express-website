@@ -1360,13 +1360,13 @@ function decoratePictures(main) {
   });
 }
 
-export function decorateMain($main) {
+export async function decorateMain($main) {
   splitSections($main);
   wrapSections($main.querySelectorAll(':scope > div'));
   decorateButtons($main);
   decorateBlocks($main);
   decorateMarqueeColumns($main);
-  fixIcons($main);
+  await fixIcons($main);
   decoratePictures($main);
   decorateLinkedPictures($main);
   decorateSocialIcons($main);
@@ -1436,7 +1436,7 @@ async function loadEager() {
 
   const main = document.querySelector('main');
   if (main) {
-    decorateMain(main);
+    await decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
     displayEnv();

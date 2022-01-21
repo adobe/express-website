@@ -229,13 +229,23 @@ main .columns > div span.num + * {
 }
 
 main .columns .icon {
-  width: unset;
-  height: 22px;
+  height: 24px;
+  margin-right: 12px;
+  float: left;
+}
+
+main .columns .brand.icon {
+  width: auto;
+  margin-right: 0;
+  float: none;
+}
+
+main .columns.center .icon {
+  float: none;
 }
 
 main .columns .icon.icon-check {
   width: 22px;
-  margin-right: 6px;
 }
 
 main .columns.columns-marquee .brand.icon {
