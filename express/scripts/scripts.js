@@ -446,7 +446,8 @@ export function formatPrice(price, currency) {
     style: 'currency',
     currency,
     currencyDisplay,
-  }).format(price);
+  }).format(price)
+    .replace('SAR', 'SR'); // custom currency symbol for SAR
 }
 
 export async function getOffer(offerId, countryOverride) {
