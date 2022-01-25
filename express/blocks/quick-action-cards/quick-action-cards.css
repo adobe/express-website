@@ -116,11 +116,11 @@ main .quick-action-cards.quick-action-cards--expanded .quick-action-card {
   display: block;
 }
 
-main .quick-action-cards.quick-action-cards--expanded ~ .quick-action-cards--buttons .quick-action-card--close {
+main .quick-action-cards.quick-action-cards--expanded + .quick-action-cards--buttons .quick-action-card--close {
   display: inline-block;
 }
 
-main .quick-action-cards.quick-action-cards--expanded ~ .quick-action-cards--buttons .quick-action-card--open {
+main .quick-action-cards.quick-action-cards--expanded + .quick-action-cards--buttons .quick-action-card--open {
   display: none;
 } 
 
