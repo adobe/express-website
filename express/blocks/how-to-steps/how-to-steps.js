@@ -45,7 +45,7 @@ export default function decorate($block, name, doc) {
     const $h3 = createTag('h3');
     $h3.innerHTML = $cells[0].textContent;
     const $p = createTag('p');
-    $p.innerHTML = $cells[1].textContent;
+    $p.innerHTML = $cells[1].innerHTML;
     const $text = createTag('div', { class: 'tip-text' });
     $text.append($h3);
     $text.append($p);
