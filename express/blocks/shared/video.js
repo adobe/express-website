@@ -35,7 +35,7 @@ export function hideVideoModal(push) {
 }
 
 export function displayVideoModal(url, title, push) {
-  const canPlayInline = url.includes('youtu') || url.includes('vimeo');
+  const canPlayInline = url && (url.includes('youtu') || url.includes('vimeo'));
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'video-overlay' });
     const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });

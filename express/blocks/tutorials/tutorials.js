@@ -48,7 +48,8 @@ function decorateTutorials($block) {
   const $tutorials = [...$block.children];
   $tutorials.forEach(($tutorial) => {
     const [$link, $time, $picture] = [...$tutorial.children];
-    const url = $link.querySelector('a').href;
+    const $a = $link.querySelector('a');
+    const url = $a && $a.href;
     const title = $link.textContent;
     const time = $time.textContent;
     const $card = createTutorialCard(title, url, time, $picture);
