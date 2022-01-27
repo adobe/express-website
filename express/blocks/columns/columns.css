@@ -17,7 +17,7 @@ main .columns-dark-container > div,
 main .columns-center-container > div,
 main .columns-top-container > div {
   padding: 0;
-  max-width: 500px;
+  max-width: 350px;
 }
 
 main .columns-highlight-container,
@@ -417,6 +417,14 @@ main .columns.highlight .column .columns-iconlist > div {
 
 main .columns.highlight .column p {
   font-size: var(--body-font-size-s);
+}
+@media (min-width: 600px) {
+  main .columns-container > div,
+  main .columns-dark-container > div,
+  main .columns-center-container > div,
+  main .columns-top-container > div {
+    max-width: 700px;
+  }
 }
 
 @media (min-width: 900px) {
