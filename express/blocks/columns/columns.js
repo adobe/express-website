@@ -56,8 +56,10 @@ function decorateIconList($columnCell, rowNum) {
     let $iconList = createTag('div', { class: 'columns-iconlist' });
     let $iconListDescription;
     [...$columnCell.children].forEach(($e) => {
-      const $img = $e.querySelector('img.icon, svg.icon');
-      const hasText = $img ? $img.closest('p').innerText !== '' : false;
+      const imgs = $e.querySelectorAll('img.icon, svg.icon');
+      // only build icon list if single icon plus text
+      const $img = imgs.length === 1 ? imgs[0] : null;
+      const hasText = $img ? $img.closest('p').textContent !== '' : false;
       if ($img && hasText) {
         const $iconListRow = createTag('div');
         const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
