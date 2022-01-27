@@ -1,4 +1,5 @@
-main .link-list-container > div {
+main .link-list-container > div,
+main .link-list-center-container > div {
   max-width: 1200px;
 }
 
@@ -109,13 +110,15 @@ main .link-list a.button.link-list-carousel-arrow-right::before {
 
 
 @media (min-width: 900px) {
-  main .link-list-container > div {
+  main .link-list-container > div,
+  main .link-list-center-container > div {
     padding: 0 50px;
   }
 }
 
 @media (min-width: 1200px) {
-  main .link-list-container > div {
-    padding: 0 55px;
+  main .link-list-container > div,
+  main .link-list-center-container > div {
+      padding: 0 55px;
   }
 }
