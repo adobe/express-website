@@ -1,4 +1,5 @@
-main .link-list-container > div {
+main .link-list-container > div,
+main .link-list-center-container > div {
   max-width: 1200px;
 }
 
@@ -9,6 +10,11 @@ main .link-list {
   width: 100%;
   text-align: left;
 
+}
+
+main .link-list.center {
+  width: fit-content;
+  max-width: 100%;
 }
 
 main .link-list h3 {
@@ -104,13 +110,15 @@ main .link-list a.button.link-list-carousel-arrow-right::before {
 
 
 @media (min-width: 900px) {
-  main .link-list-container > div {
+  main .link-list-container > div,
+  main .link-list-center-container > div {
     padding: 0 50px;
   }
 }
 
 @media (min-width: 1200px) {
-  main .link-list-container > div {
-    padding: 0 55px;
+  main .link-list-container > div,
+  main .link-list-center-container > div {
+      padding: 0 55px;
   }
 }

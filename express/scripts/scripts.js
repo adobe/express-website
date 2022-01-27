@@ -578,7 +578,7 @@ export function decorateBlocks($main) {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list',
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list',
       'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner'];
 
     if (blockName !== 'how-to-steps-carousel') {
