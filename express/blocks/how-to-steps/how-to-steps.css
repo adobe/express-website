@@ -16,7 +16,11 @@ main .how-to-steps-container > div {
 
 main .how-to-steps {
   margin-top: 20px;
-  margin-bottom: 120px;
+  margin-bottom: 0;
+}
+
+main .how-to-steps + .block {
+  margin-bottom: 80px;
 }
 
 main .how-to-steps > div {
