@@ -94,6 +94,9 @@ export function displayVideoModal(url, title, push) {
     $overlay.addEventListener('click', () => {
       hideVideoModal(true);
     });
+    $video.addEventListener('click', (evt) => {
+      evt.stopPropagation();
+    });
     window.onkeyup = ({ key }) => {
       if (key === 'Escape') {
         hideVideoModal(true);
