@@ -19,17 +19,21 @@ const docTitle = document.title;
 
 async function fetchVideoPromotions() {
   if (!window.videoPromotions) {
-    const locale = getLocale(window.location);
-    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-    const resp = await fetch(`${urlPrefix}/express/video-promotions.json`);
-    const json = await resp.json();
     window.videoPromotions = {};
-    json.data.forEach((entry) => {
-      const video = entry.Video;
-      if (video) {
-        window.videoPromotions[new URL(video).pathname] = entry.Promotion;
-      }
-    });
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/video-promotions.json`);
+      const json = await resp.json();
+      json.data.forEach((entry) => {
+        const video = entry.Video;
+        if (video) {
+          window.videoPromotions[new URL(video).pathname] = entry.Promotion;
+        }
+      });
+    } catch (e) {
+      // ignore
+    }
   }
   return window.videoPromotions;
 }
