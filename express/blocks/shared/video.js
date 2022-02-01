@@ -11,14 +11,60 @@
  */
 
 import {
-  createTag, toClassName,
+  createTag, getLocale, loadBlock, toClassName,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 const docTitle = document.title;
 
+async function fetchVideoPromotions() {
+  if (!window.videoPromotions) {
+    const locale = getLocale(window.location);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    const resp = await fetch(`${urlPrefix}/express/video-promotions.json`);
+    const json = await resp.json();
+    window.videoPromotions = {};
+    json.data.forEach((entry) => {
+      const video = entry.Video;
+      if (video) {
+        window.videoPromotions[new URL(video).pathname] = entry.Promotion;
+      }
+    });
+  }
+  return window.videoPromotions;
+}
+
 function playInlineVideo($element, vid, type, title) {
-  $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
+  if (type === 'html5') {
+    $element.innerHTML = `<video controls autoplay><source src="${vid}" type="video/mp4"></source></video>`;
+    const $video = $element.querySelector('video');
+    $video.addEventListener('loadeddata', async () => {
+      // check for video promotion
+      const videoPromos = await fetchVideoPromotions();
+      const promoName = videoPromos[vid];
+      if (promoName) {
+        $element.insertAdjacentHTML('beforeend', `<div class="promotion block" data-block-name="promotion">${promoName}</div>`);
+        const $promo = $element.querySelector('.promotion');
+        await loadBlock($promo, true);
+        $promo.querySelector(':scope a.button').className = 'button accent';
+        const $close = $promo.appendChild(createTag('div', { class: 'close' }));
+        $close.addEventListener('click', () => {
+          // eslint-disable-next-line no-use-before-define
+          hideVideoModal(true);
+        });
+      }
+    });
+    $video.addEventListener('ended', ({ target }) => {
+      const $promo = target.nextSibling;
+      if ($promo) {
+        $element.closest('.video-overlay').append($promo);
+        target.parentNode.remove();
+        $promo.classList.add('appear');
+      }
+    });
+  } else {
+    $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
+  }
   $element.classList.add(type);
 }
 
@@ -35,7 +81,7 @@ export function hideVideoModal(push) {
 }
 
 export function displayVideoModal(url, title, push) {
-  const canPlayInline = url && (url.includes('youtu') || url.includes('vimeo'));
+  const canPlayInline = url && (url.includes('youtu') || url.includes('vimeo') || url.includes('/media_'));
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'video-overlay' });
     const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });
@@ -68,6 +114,9 @@ export function displayVideoModal(url, title, push) {
       vidType = 'vimeo';
       const vid = new URL(url).pathname.split('/')[1];
       vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
+    } else if (url.includes('/media_')) {
+      vidType = 'html5';
+      vidUrl = new URL(url).pathname;
     }
     playInlineVideo($video, vidUrl, vidType, title);
   } else {
