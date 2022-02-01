@@ -164,7 +164,7 @@ main .video-overlay .close {
   border-radius: 20px;
   box-sizing: border-box;
   position: absolute;
-  background-color: #444;
+  background-color: var(--color-gray-700);
   cursor: pointer;
 }
 
@@ -181,7 +181,7 @@ main .video-overlay .close::before {
   border-radius: 5px;
   top: 9px;
   left: 4px;
-  color: white;
+  color: var(--color-white);
 }
 
 main .video-overlay .close::after {
