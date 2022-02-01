@@ -40,7 +40,8 @@ async function fetchVideoPromotions() {
 
 function playInlineVideo($element, vid, type, title) {
   if (type === 'html5') {
-    $element.innerHTML = `<video controls autoplay><source src="${vid}" type="video/mp4"></source></video>`;
+    const kind = vid.split('.').pop();
+    $element.innerHTML = `<video controls autoplay><source src="${vid}" type="video/${kind}"></source></video>`;
     const $video = $element.querySelector('video');
     $video.addEventListener('loadeddata', async () => {
       // check for video promotion
