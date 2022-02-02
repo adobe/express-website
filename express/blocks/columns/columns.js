@@ -15,6 +15,7 @@ import {
   createTag,
   transformLinkToAnimation,
   addAnimationToggle,
+  toClassName,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -25,19 +26,32 @@ import {
 
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;
-
+  const title = $a.textContent;
+  // gather video urls from all links in cell
+  const vidUrls = [];
+  $cell.querySelectorAll(':scope a.button').forEach(($button) => {
+    vidUrls.push($button.href);
+    if ($button !== $a) {
+      $button.closest('.button-container').remove();
+    }
+  });
   $cell.classList.add('column-video');
   $parent.classList.add('columns-video');
 
   $parent.addEventListener('click', () => {
-    displayVideoModal($a.href, $a.textContent, true);
+    displayVideoModal(vidUrls, title, true);
   });
 
   $parent.addEventListener('keyup', ({ key }) => {
     if (key === 'Enter') {
-      displayVideoModal($a.href, $a.textContent);
+      displayVideoModal(vidUrls, title);
     }
   });
+
+  // auto-play if hash matches title
+  if (toClassName(title) === window.location.hash.substring(1)) {
+    displayVideoModal(vidUrls, title);
+  }
 }
 
 function decorateIconList($columnCell, rowNum) {

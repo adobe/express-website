@@ -38,16 +38,29 @@ async function fetchVideoPromotions() {
   return window.videoPromotions;
 }
 
-function playInlineVideo($element, vid, type, title) {
-  if (type === 'html5') {
-    const kind = vid.split('.').pop();
-    $element.innerHTML = `<video controls autoplay playsinline><source src="${vid}" type="video/${kind}"></source></video>`;
+function showVideoPromotion($video, vid) {
+  const $promo = window.videoPromotions && window.videoPromotions[vid];
+  const $overlay = $video.closest('.video-overlay');
+  if ($promo && $promo.parentElement !== $overlay) {
+    $overlay.append($promo);
+    $video.closest('.video-overlay-video').remove();
+    $promo.classList.add('appear');
+  }
+}
+
+function playInlineVideo($element, vidUrls = [], playerType, title) {
+  const [primaryUrl] = vidUrls;
+  if (!primaryUrl) return;
+  if (playerType === 'html5') {
+    const sources = vidUrls.map((src) => `<source src="${src}" type="video/${src.split('.').pop()}"></source>`).join('');
+    const videoHTML = `<video controls autoplay playsinline>${sources}</video>`;
+    $element.innerHTML = videoHTML;
     const $video = $element.querySelector('video');
     $video.addEventListener('loadeddata', async () => {
       // check for video promotion
       const videoPromos = await fetchVideoPromotions();
-      const promoName = videoPromos[vid];
-      if (promoName) {
+      const promoName = videoPromos[primaryUrl];
+      if (typeof promoName === 'string') {
         $element.insertAdjacentHTML('beforeend', `<div class="promotion block" data-block-name="promotion">${promoName}</div>`);
         const $promo = $element.querySelector('.promotion');
         await loadBlock($promo, true);
@@ -57,20 +70,18 @@ function playInlineVideo($element, vid, type, title) {
           // eslint-disable-next-line no-use-before-define
           hideVideoModal(true);
         });
+        window.videoPromotions[primaryUrl] = $promo;
       }
     });
-    $video.addEventListener('ended', ({ target }) => {
-      const $promo = target.nextSibling;
-      if ($promo) {
-        $element.closest('.video-overlay').append($promo);
-        target.parentNode.remove();
-        $promo.classList.add('appear');
-      }
+    $video.addEventListener('ended', async () => {
+      // hide player and show promotion
+      showVideoPromotion($video, primaryUrl);
     });
   } else {
-    $element.innerHTML = `<iframe src="${vid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
+    // iframe 3rd party player
+    $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
   }
-  $element.classList.add(type);
+  $element.classList.add(playerType);
 }
 
 export function hideVideoModal(push) {
@@ -85,8 +96,11 @@ export function hideVideoModal(push) {
   }
 }
 
-export function displayVideoModal(url, title, push) {
-  const canPlayInline = url && (url.includes('youtu') || url.includes('vimeo') || url.includes('/media_'));
+export function displayVideoModal(url = [], title, push) {
+  let vidUrls = typeof url === 'string' ? [url] : url;
+  const [primaryUrl] = vidUrls;
+  const canPlayInline = vidUrls
+    .some((src) => src && (src.includes('youtu') || src.includes('vimeo') || src.includes('/media_')));
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'video-overlay' });
     const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });
@@ -104,30 +118,32 @@ export function displayVideoModal(url, title, push) {
     };
     if (push) {
       // create new history entry
-      window.history.pushState({ url, title }, `${docTitle} | ${title}`, `#${toClassName(title)}`);
+      window.history.pushState({ url: primaryUrl, title }, `${docTitle} | ${title}`, `#${toClassName(title)}`);
     }
     const $main = document.querySelector('main');
     $main.append($overlay);
-    let vidUrl = '';
+
     let vidType = 'default';
-    if (url.includes('youtu')) {
+    if (primaryUrl.includes('youtu')) {
       vidType = 'youtube';
-      const yturl = new URL(url);
+      const yturl = new URL(primaryUrl);
       let vid = yturl.searchParams.get('v');
       if (!vid) {
         vid = yturl.pathname.substr(1);
       }
-      vidUrl = `https://www.youtube.com/embed/${vid}?feature=oembed&autoplay=1`;
-    } else if (url.includes('vimeo')) {
+      vidUrls = [`https://www.youtube.com/embed/${vid}?feature=oembed&autoplay=1`];
+    } else if (primaryUrl.includes('vimeo')) {
       vidType = 'vimeo';
-      const vid = new URL(url).pathname.split('/')[1];
-      vidUrl = `https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`;
-    } else if (url.includes('/media_')) {
+      const vid = new URL(primaryUrl).pathname.split('/')[1];
+      vidUrls = [`https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`];
+    } else if (primaryUrl.includes('/media_')) {
       vidType = 'html5';
-      vidUrl = new URL(url).pathname;
+      // local video url(s), remove origin
+      vidUrls = vidUrls.map((vidUrl) => new URL(vidUrl).pathname);
     }
-    playInlineVideo($video, vidUrl, vidType, title);
+    playInlineVideo($video, vidUrls, vidType, title);
   } else {
-    window.location.href = url;
+    // redirect to first video url
+    [window.location.href] = vidUrls;
   }
 }
