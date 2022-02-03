@@ -55,6 +55,7 @@ function decorateTutorials($block) {
     const $card = createTutorialCard(title, url, time, $picture);
     $block.appendChild($card);
     $tutorial.remove();
+    // autoplay if hash matches title
     if (toClassName(title) === window.location.hash.substr(1)) {
       displayVideoModal(url, title);
     }

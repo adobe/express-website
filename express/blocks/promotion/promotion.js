@@ -69,7 +69,7 @@ export default async function decorate($block) {
     containerDiv.append(contentDiv);
 
     $block.innerHTML = '';
-    $block.append(h2);
+    if (h2) $block.append(h2);
     $block.append(containerDiv);
 
     decorateButtons($block);
