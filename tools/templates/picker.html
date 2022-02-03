@@ -70,9 +70,9 @@
 
         max-width: 240px;
         width: 240px; 
-        max-height: 240px;
-        height: 240px;
-        min-height: 240px;
+        max-height: 300px;
+        height: 300px;
+        min-height: 300px;
 
         align-self: flex-end;
         background-color: #dce0e3;
@@ -84,6 +84,7 @@
         height: 100%;
         position: relative;
         width: 100%;
+        max-height: 250px;
       }
 
       #results .template img, #results .template video {
@@ -98,15 +99,30 @@
         text-decoration: none;
       }
 
-      #results .template .title {
+      #results .template .data {
+        display: flex;
+        flex-direction: column;
+
         background-color: #fff;
         border: solid 1px #dce0e3;
         padding: 10px;
 
+      }
+
+      #results .template .data div {
         text-align: left;
         font-weight: 400;
         font-size: 13px;
-        min-height: 48px;
+        max-width: 218px;
+        max-height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      #results .template .data div span {
+        margin-right: 4px;
+        font-weight: bold;
       }
 
       #results .premium {
@@ -364,13 +380,28 @@
           .replace('\{dimension\}', 'width')
           .replace('\{size\}', 240);
 
+        const gcd = (a, b) => {
+          if (!b) {
+            return a;
+          }
+
+          return gcd(b, a % b);
+        }
+
+        const g = gcd(t.rendition.maxWidth, t.rendition.maxHeight);
+
+        const size = `${t.rendition.maxWidth/g}:${t.rendition.maxHeight/g} (${t.rendition.maxWidth} x ${t.rendition.maxHeight})`;
+
         return {
           asset,
           thumbnail,
           title: t.title,
           branchURL: t.branchURL,
           animated: t.animated,
-          premium: t.premium
+          premium: t.premium,
+          remixCount: t.remixCount,
+          created: t.created ? t.created.substring(0, t.created.indexOf('T')) : 'Unknown',
+          size
         };
       };
 
@@ -463,19 +494,19 @@
                     <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${tobj.thumbnail}">
                   <source src="${tobj.asset}" type="video/mp4">
                 </video>
-                </div>
-                <a href="${tobj.branchURL}" target="_blank">
-                  <div class="title">${tobj.title}</div>
-                </a>`;
+                </div>`;
             } else {
               template.innerHTML += `
                 <div class="thumbnail-container">
                   <img loading="lazy" src="${tobj.thumbnail}">
-                </div>
-                <a href="${tobj.branchURL}" target="_blank">
-                  <div class="title">${tobj.title}</div>
-                </a>`;
+                </div>`;
             }
+            template.innerHTML += `<div class="data">
+              <div class="title" title="${tobj.title}"><span>Title:</span><a href="${tobj.branchURL}" target="_blank">${tobj.title}</a></div>
+              <div class="size" title="${tobj.size}"><span>Size:</span>${tobj.size}</div>
+              <div class="created" title="${tobj.created}"><span>Created:</span>${tobj.created}</div>
+              <div class="remix" title="${tobj.remixCount}"><span>Remix count:</span>${tobj.remixCount}</div>
+            </div>`;
 
             if (tobj.premium) {
               template.innerHTML += `<div class="premium" title="Premium"></div>`;
