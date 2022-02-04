@@ -15,6 +15,7 @@
 import {
   addPublishDependencies,
   createTag,
+  fetchPlaceholders,
   getHelixEnv,
   getOffer,
 // eslint-disable-next-line import/no-unresolved
@@ -230,6 +231,9 @@ function decoratePlan($column) {
 
     if (plans.length > 1) {
       const $pricingDropdown = createTag('select', { class: 'pricing-columns-dropdown' });
+      fetchPlaceholders().then((placeholders) => {
+        $pricingDropdown.title = placeholders.subscription;
+      });
 
       $pricingDropdown.addEventListener('change', () => {
         selectPlan($pricingHeader, $pricingDropdown.value, true);
