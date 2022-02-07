@@ -97,7 +97,6 @@ main .pricing-columns-content {
 }
 
 main .pricing-columns-content h3 {
-    font-family: var(--heading-font-family);
     font-size: var(--body-font-size-xl);
     font-weight: 600;
     line-height: var(--body-line-height);
@@ -199,11 +198,11 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
 }
 
 @media (min-width: 1200px) {
-    main .pricing-columns {
+    main .pricing-columns.double {
         position: relative;
     }
 
-    main .pricing-columns::after {
+    main .pricing-columns.double::after {
         position: absolute;
         content: '';
         width: 1px;
@@ -217,31 +216,31 @@ main .pricing-columns-content .pricing-iconlist .pricing-iconlist .pricing-iconl
         max-width: 1100px;
     }
 
-    main .pricing-columns {
+    main .pricing-columns.double {
         width: 1100px;
         max-width: 1100px;
         flex-direction: row;
         justify-content: space-between;
     }
 
-    main .pricing-columns > div:nth-child(1) { order: 1; }
-    main .pricing-columns > div:nth-child(2) { order: 2; }
-    main .pricing-columns > div:nth-child(3) { order: 3; }
-    main .pricing-columns > div:nth-child(4) { order: 4; }
+    main .pricing-columns.double > div:nth-child(1) { order: 1; }
+    main .pricing-columns.double > div:nth-child(2) { order: 2; }
+    main .pricing-columns.double > div:nth-child(3) { order: 3; }
+    main .pricing-columns.double > div:nth-child(4) { order: 4; }
 
-    main .pricing-columns-header,
-    main .pricing-columns-content {
+    main .pricing-columns.double .pricing-columns-header,
+    main .pricing-columns.double .pricing-columns-content {
         width: 490px;
     }
 
-    main .pricing-columns-cta.button {
+    main .pricing-columns.double .pricing-columns-cta.button {
         flex: initial;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
     }
 
-    main .pricing-columns-cta-text {
+    main .pricing-columns.double .pricing-columns-cta-text {
         width: 100%;
         max-width: 100%;
     }
