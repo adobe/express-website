@@ -301,3 +301,10 @@ main .blog-posts .card .card-body p {
   border-color: red !important;
   border-width: 3px;
 }
+
+/* disable budoux on small screens  */
+@media (max-width: 600px) {
+  .budoux {
+    word-break: break-all !important;
+  }
+}
