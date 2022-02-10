@@ -451,6 +451,20 @@ export function formatPrice(price, currency) {
 }
 
 export async function getOffer(offerId, countryOverride) {
+  const vatInfos = {
+    de: 'inkl. MwSt',
+    dk: 'inklusive moms',
+    es: 'IVA incluido',
+    fi: 'sisältää ALV:n',
+    fr: 'TTC',
+    gb: 'incl. VAT',
+    it: 'IVA inclusa',
+    jp: '税込',
+    kr: '부가세 포함',
+    nl: 'inclusief BTW',
+    no: 'inkl. mva.',
+    se: 'inkl. moms',
+  };
   let country = getCountry();
   if (countryOverride) country = countryOverride;
   if (!country) country = 'us';
@@ -473,7 +487,7 @@ export async function getOffer(offerId, countryOverride) {
     const unitPrice = offer.price;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
-    const vatInfo = '';
+    const vatInfo = vatInfos[country] || '';
     return {
       country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo,
     };
