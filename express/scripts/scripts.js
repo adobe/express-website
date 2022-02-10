@@ -459,18 +459,21 @@ export async function getOffer(offerId, countryOverride) {
     country = 'us';
     currency = 'USD';
   }
-  const resp = await fetch('/express/system/offers.json');
-  const json = await resp.json();
-  const upperCountry = country.toUpperCase();
-  let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
-  if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
+  let offer = { price: 0 };
+
+  if (offerId !== 'FREE0') {
+    const upperCountry = country.toUpperCase();
+    const resp = await fetch(`https://bps-il.adobe.io/offers/${offerId}?country=${upperCountry}&api_key=AdobeDotComMiniPlansService&service_providers=PRICING`);
+    const json = await resp.json();
+    offer = json[0].pricing.prices[0].price_details.display_rules;
+  }
 
   if (offer) {
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
-    const unitPrice = offer.p;
+    const unitPrice = offer.price;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
-    const vatInfo = offer.vat;
+    const vatInfo = '';
     return {
       country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo,
     };
