@@ -594,6 +594,11 @@ main .columns .column {
     max-width: 1024px;
   }
 
+  main .columns-fullsize-container > div,
+  main .columns-fullsize-center-container > div {
+    max-width: 1122px;
+  }
+
   main .columns:not(.fullsize) .column:not(.column-picture):not(.hero-animation-overlay) {
     padding: 40px;
   }
@@ -628,39 +633,39 @@ body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
   padding-left: 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
+main .columns.fullsize .hero-animation-overlay {
   order: -1;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div {
+main .columns.fullsize > div > div {
   display: grid;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container {
+main .columns.fullsize > div > div .button-container {
   grid-row: 2;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .has-brand > div .button-container {
+main .columns.fullsize .has-brand > div .button-container {
   grid-row: 3;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div p {
+main .columns.fullsize > div > div p {
   margin: 16px 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container {
+main .columns.fullsize > div > div .button-container {
   margin: 16px 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container a {
+main .columns.fullsize > div > div .button-container a {
   margin: 16px 0 0 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .has-brand > div p:first-child {
+main .columns.fullsize .has-brand > div p:first-child {
   margin: 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container.fixed-button {
+main .columns.fullsize > div > div .button-container.fixed-button {
   margin: 0;
 }
 
@@ -689,7 +694,7 @@ main .columns .column {
   padding-right: 32px;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .column {
+main .columns.fullsize .column {
   padding-left: 24px;
   padding-right: 24px;
 }
@@ -705,12 +710,12 @@ body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
   padding-left: 32px;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
+main .columns.fullsize .hero-animation-overlay {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
+main .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
   padding-top: 16px;
 }
 
@@ -769,34 +774,34 @@ main .columns.highlight .column.column-picture {
     padding-left: 32px;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
+  main .columns.fullsize .hero-animation-overlay {
     padding-top: 0;
     padding-bottom: 0;
     order: unset;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div {
+  main .columns.fullsize > div > div {
     display: block;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div p {
+  main .columns.fullsize > div > div p {
     margin: 16px 0;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div .button-container {
+  main .columns.fullsize > div > div .button-container {
     margin: 0;
     margin-top: 40px;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div .button-container a {
+  main .columns.fullsize > div > div .button-container a {
     margin: 0;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize .has-brand > div p:first-child {
+  main .columns.fullsize .has-brand > div p:first-child {
     margin: 16px 0;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div .button-container.fixed-button {
+  main .columns.fullsize > div > div .button-container.fixed-button {
     margin: 0;
   }
 
