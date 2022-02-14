@@ -81,6 +81,20 @@
         padding-top: 15px;
       }
 
+      .twocolumns {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .twocolumns > div {
+        flex: 1 0 50%;
+      }
+
+      .twocolumns > div.full {
+        flex: 1 0 100%;
+      }
+
       main .content {
         width: 80%;
       }
@@ -453,6 +467,20 @@
           type = types[0].value;
         }
 
+        const animateds = document.querySelectorAll('[name="animated"]:checked');
+        let animated = null;
+        if (animateds && animateds.length === 1) {
+          animated = animateds[0].value;
+        }
+
+        const locales = document.querySelectorAll('[name="locale"]:checked');
+        let locale = [];
+        if (locales && locales.length > 0 && locales.length < 15) {
+          locales.forEach(l => {
+            locale.push(l.value);
+          });
+        }
+
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
           searchParams.set('q', search.value);
@@ -462,6 +490,18 @@
             searchParams.set('type', type);
           } else {
             searchParams.delete('type');
+          }
+
+          if (animated) {
+            searchParams.set('animated', animated);
+          } else {
+            searchParams.delete('animated');
+          }
+
+          if (locale.length > 0) {
+            searchParams.set('locale', locale.join(','));
+          } else {
+            searchParams.delete('locale');
           }
 
           const url = new URL(window.location.href);
@@ -501,6 +541,15 @@
         switch(type) {
           case 'premium': filters = `${filters} AND premium:(true)`; break;
           case 'free': filters = `${filters} AND premium:(false)`; break;
+        }
+        
+        switch(animated) {
+          case 'animated': filters = `${filters} AND animated:(true)`; break;
+          case 'still': filters = `${filters} AND animated:(false)`; break;
+        }
+
+        if (locale.length > 0) {
+          filters = `${filters} AND locales:("${locale.join('*" OR "')}*")`;
         }
 
         const params = {
@@ -735,6 +784,82 @@
               <label for="free">Free</label>
             </div>
           </div>
+          <div class="searchField">
+            <h3>Animated</h3>
+            <div>
+              <input type="checkbox" id="animated" name="animated" value="animated" checked>
+              <label for="animated">Animated</label>
+            </div>
+            <div>
+              <input type="checkbox" id="still" name="animated" value="still" checked>
+              <label for="still">Still</label>
+            </div>
+          </div>
+          <div class="searchField">
+            <h3>Locales</h3>
+            <div class="twocolumns">
+              <div>
+                <input type="checkbox" id="en" name="locale" value="en" checked>
+                <label for="en">English</label>
+              </div>
+              <div>
+                <input type="checkbox" id="fr" name="locale" value="fr" checked>
+                <label for="fr">French</label>
+              </div>
+              <div>
+                <input type="checkbox" id="de" name="locale" value="de" checked>
+                <label for="de">German</label>
+              </div>
+              <div>
+                <input type="checkbox" id="it" name="locale" value="it" checked>
+                <label for="it">Italian</label>
+              </div>
+              <div>
+                <input type="checkbox" id="pt" name="locale" value="pt" checked>
+                <label for="pt">Portuguese</label>
+              </div>
+              <div>
+                <input type="checkbox" id="es" name="locale" value="es" checked>
+                <label for="es">Spanish</label>
+              </div>
+              <div>
+                <input type="checkbox" id="nl" name="locale" value="nl" checked>
+                <label for="nl">Netherlands</label>
+              </div>
+              <div>
+                <input type="checkbox" id="fi" name="locale" value="fi" checked>
+                <label for="fi">Finnish</label>
+              </div>
+              <div>
+                <input type="checkbox" id="da" name="locale" value="da" checked>
+                <label for="da">Danish</label>
+              </div>
+              <div class="full">
+                <input type="checkbox" id="nb" name="locale" value="nb" checked>
+                <label for="nb">Norwegian - Bokmal</label>
+              </div>
+              <div class="full">
+                <input type="checkbox" id="sv" name="locale" value="sv" checked>
+                <label for="sv">Swedish - Sweden</label>
+              </div>
+              <div>
+                <input type="checkbox" id="ja" name="locale" value="ja" checked>
+                <label for="ja">Japanese</label>
+              </div>
+              <div>
+                <input type="checkbox" id="ko" name="locale" value="ko" checked>
+                <label for="ko">Korean</label>
+              </div>
+              <div class="full">
+                <input type="checkbox" id="zh-hans" name="locale" value="zh-hans" checked>
+                <label for="zh-hans">Chinese (Simplified)</label>
+              </div>
+              <div class="full">
+                <input type="checkbox" id="zh-hant" name="locale" value="zh-hant" checked>
+                <label for="zh-hant">Chinese (Traditional)</label>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="content">
           <h1>Pick your templates</h1>
@@ -781,6 +906,31 @@
           const types = document.querySelectorAll('[name="type"]');
           types.forEach(t => {
             if (t.value === type) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
+        }
+
+        const animated = params.get('animated');
+        if (animated) {
+          const animateds = document.querySelectorAll('[name="animated"]');
+          animateds.forEach(t => {
+            if (t.value === animated) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
+        }
+
+        const locale = params.get('locale');
+        if (locale) {
+          const ls = locale.split(',');
+          const locales = document.querySelectorAll('[name="locale"]');
+          locales.forEach(t => {
+            if (ls.indexOf(t.value) !== -1) {
               t.checked = true;
             } else {
               t.checked = false;
