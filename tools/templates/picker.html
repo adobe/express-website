@@ -68,6 +68,14 @@
         width: 20%;
       }
 
+      .filter .searchField {
+        display: flex;
+        flex-direction: column;
+        font-family: 'Adobe Clean';
+        font-size: 0.8rem;
+        padding-top: 15px;
+      }
+
       main .content {
         width: 80%;
       }
@@ -433,10 +441,12 @@
         resultContainer.innerHTML = '';
 
         const search = document.getElementById('search');
+        const sort = document.querySelector('[name="sort"]:checked');
 
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
           searchParams.set('q', search.value);
+          searchParams.set('sort', sort.value);
 
           const url = new URL(window.location.href);
           url.search = searchParams.toString();
@@ -446,6 +456,7 @@
         }
 
         let q = '';
+        let orderBy = '-created';
         let branchURL = '';
 
         search.value.split(' ').forEach(s => {
@@ -462,9 +473,17 @@
           return;
         }
 
+        switch (sort.value) {
+          case 'oldest': orderBy = 'created'; break;
+          case 'mostremixed': orderBy = '-remixCount,-created'; break;
+          case 'leastremixed': orderBy = 'remixCount'; break;
+          default: orderBy = '-created';
+        };
+
         const params = {
           q,
           filters: `branchURL:${branchURL || '*'}`,
+          orderBy,
           limit: 100,
         };
 
@@ -664,6 +683,24 @@
             <input type="text" typeautocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
             <button onclick="search()">Search</button>
           </div>
+          <div class="searchField">
+            <div>
+              <input type="radio" id="newest" name="sort" value="newest" checked>
+              <label for="newest">Newest to Oldest</label>
+            </div>
+            <div>
+              <input type="radio" id="oldest" name="sort" value="oldest">
+              <label for="oldest">Oldest to Newest</label>
+            </div>
+            <div>
+              <input type="radio" id="mostremixed" name="sort" value="mostremixed">
+              <label for="mostremixed">Most Remixed</label>
+            </div>
+            <div>
+              <input type="radio" id="leastremixed" name="sort" value="leastremixed">
+              <label for="leastremixed">Least Remixed</label>
+            </div>
+          </div>
         </div>
         <div class="content">
           <h1>Pick your templates</h1>
@@ -697,6 +734,14 @@
     <script>
       window.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
+        const sort = params.get('sort');
+        if (sort) {
+          const input = document.getElementById(sort);
+          if (input) {
+            input.checked = true;
+          }
+        }
+
         const q = params.get('q');
         if (q) {
           document.getElementById('search').value = q;
