@@ -798,6 +798,10 @@
           <div class="searchField">
             <h3>Locales</h3>
             <div class="twocolumns">
+              <div class="full">
+                <input type="checkbox" id="localeToggle" name="localeToggle" value="localeToggle" checked>
+                <label for="localeToggle">Toggle all</label>
+              </div>
               <div>
                 <input type="checkbox" id="en" name="locale" value="en" checked>
                 <label for="en">English</label>
@@ -834,11 +838,11 @@
                 <input type="checkbox" id="da" name="locale" value="da" checked>
                 <label for="da">Danish</label>
               </div>
-              <div class="full">
+              <div>
                 <input type="checkbox" id="nb" name="locale" value="nb" checked>
                 <label for="nb">Norwegian - Bokmal</label>
               </div>
-              <div class="full">
+              <div>
                 <input type="checkbox" id="sv" name="locale" value="sv" checked>
                 <label for="sv">Swedish - Sweden</label>
               </div>
@@ -847,16 +851,16 @@
                 <label for="ja">Japanese</label>
               </div>
               <div>
-                <input type="checkbox" id="ko" name="locale" value="ko" checked>
-                <label for="ko">Korean</label>
-              </div>
-              <div class="full">
                 <input type="checkbox" id="zh-hans" name="locale" value="zh-hans" checked>
                 <label for="zh-hans">Chinese (Simplified)</label>
               </div>
-              <div class="full">
+              <div>
                 <input type="checkbox" id="zh-hant" name="locale" value="zh-hant" checked>
                 <label for="zh-hant">Chinese (Traditional)</label>
+              </div>
+              <div>
+                <input type="checkbox" id="ko" name="locale" value="ko" checked>
+                <label for="ko">Korean</label>
               </div>
             </div>
           </div>
@@ -892,6 +896,15 @@
     </div>
     <script>
       window.addEventListener('DOMContentLoaded', () => {
+        const localeToggle = document.getElementById('localeToggle');
+        localeToggle.addEventListener('click', () => {
+          const locales = document.querySelectorAll('[name="locale"]');
+          locales.forEach(l => {
+            l.checked = localeToggle.checked;
+          });
+        });
+
+
         const params = new URLSearchParams(window.location.search);
         const sort = params.get('sort');
         if (sort) {
