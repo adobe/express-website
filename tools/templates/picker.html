@@ -6,13 +6,30 @@
     <style>
       body {
         font-family: 'Adobe Clean';
+        overflow: hidden;
       }
 
       main {
-        padding: 20px;
+        padding: 10px;
         font-size: 1.3rem;
         line-height: 1.2em;
       }
+
+      h1 {
+        font-size: 1.6rem;
+        margin: 0.2em 0;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        margin: 0.2em 0;
+      }
+
+      .layout {
+        display: flex;
+        flex-direction: row;
+      }
+
 
       main select {
         font-size: 1rem;
@@ -22,9 +39,9 @@
       }
     
       #search {
-        width: 50%;
+        width: 65%;
         font-family: 'Adobe Clean';
-        font-size: 2rem;
+        font-size: 1.5rem;
         border: none;
         border-bottom: solid 1px grey;
         padding-top: 5px;
@@ -48,19 +65,25 @@
       }
 
       main .filter {
-        padding: 20px 10px 20px 10px;
+        width: 20%;
+      }
+
+      main .content {
+        width: 80%;
       }
 
       main button {
-        border-radius: 1em;
-        padding: 5px 20px;
-        font-size: 1.5rem;
+        border-radius: .5em;
+        padding: 2px 10px;
+        font-size: .8rem;
       }
 
       #results {
         display: flex;
         flex-wrap: wrap;
         padding-bottom: 150px;
+        overflow-y: scroll;
+        height: 70vh;
       }
 
       #results .template {
@@ -634,18 +657,23 @@
   </head>
   <body>
     <main>
-      <h1>Pick your templates</h1>
-      <div class="filter">
-        <div>
-          <input type="text" typeautocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
-          <button onclick="search()">Search</button>
+      <div class="layout">
+        <div class="filter">
+          <h2>Filters</h2>
+          <div>
+            <input type="text" typeautocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
+            <button onclick="search()">Search</button>
+          </div>
         </div>
-        <div id="select-all" class="hidden">
-          <input id="select-all-checkbox" type="checkbox" onclick="toggleSelectAll()">
-          <label for="select-all-checkbox" onclick="toggleSelectAll()">select all</label>
+        <div class="content">
+          <h1>Pick your templates</h1>
+          <div id="select-all" class="hidden">
+            <input id="select-all-checkbox" type="checkbox" onclick="toggleSelectAll()">
+            <label for="select-all-checkbox" onclick="toggleSelectAll()">select all</label>
+          </div>
+          <div id="results"></div>
         </div>
       </div>
-      <div id="results"></div>
       <div id="selectionPanel" class="hidden">
         <div id="selectedList"></div>
         <div id="copyOptions">
