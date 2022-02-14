@@ -24,6 +24,11 @@
         font-size: 1.2rem;
         margin: 0.2em 0;
       }
+      
+      h3 {
+        font-size: 1rem;
+        margin: 0.2em 0;
+      }
 
       .layout {
         display: flex;
@@ -442,11 +447,22 @@
 
         const search = document.getElementById('search');
         const sort = document.querySelector('[name="sort"]:checked');
+        const types = document.querySelectorAll('[name="type"]:checked');
+        let type = null;
+        if (types && types.length === 1) {
+          type = types[0].value;
+        }
 
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
           searchParams.set('q', search.value);
           searchParams.set('sort', sort.value);
+
+          if (type) {
+            searchParams.set('type', type);
+          } else {
+            searchParams.delete('type');
+          }
 
           const url = new URL(window.location.href);
           url.search = searchParams.toString();
@@ -480,9 +496,16 @@
           default: orderBy = '-created';
         };
 
+        let filters = `branchURL:${branchURL || '*'}`;
+
+        switch(type) {
+          case 'premium': filters = `${filters} AND premium:(true)`; break;
+          case 'free': filters = `${filters} AND premium:(false)`; break;
+        }
+
         const params = {
           q,
-          filters: `branchURL:${branchURL || '*'}`,
+          filters,
           orderBy,
           limit: 100,
         };
@@ -701,6 +724,17 @@
               <label for="leastremixed">Least Remixed</label>
             </div>
           </div>
+          <div class="searchField">
+            <h3>Type</h3>
+            <div>
+              <input type="checkbox" id="premium" name="type" value="premium" checked>
+              <label for="premium">Premium</label>
+            </div>
+            <div>
+              <input type="checkbox" id="free" name="type" value="free" checked>
+              <label for="free">Free</label>
+            </div>
+          </div>
         </div>
         <div class="content">
           <h1>Pick your templates</h1>
@@ -740,6 +774,18 @@
           if (input) {
             input.checked = true;
           }
+        }
+
+        const type = params.get('type');
+        if (type) {
+          const types = document.querySelectorAll('[name="type"]');
+          types.forEach(t => {
+            if (t.value === type) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
         }
 
         const q = params.get('q');
