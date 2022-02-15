@@ -371,9 +371,54 @@ loadScript(martechURL, () => {
     digitalData._delete('spark.eventData.eventName');
   }
 
+  function trackBranchParameters($links) {
+    const rootUrl = new URL(loc.href);
+    const rootUrlParameters = rootUrl.searchParams;
+
+    const sdid = rootUrlParameters.get('sdid');
+    const mv = rootUrlParameters.get('mv');
+    const sKwcid = rootUrlParameters.get('s_kwcid');
+    const efId = rootUrlParameters.get('ef_id');
+
+    if (sdid || mv || sKwcid || efId) {
+      $links.forEach(($a) => {
+        const buttonUrl = new URL($a.href);
+        const urlParams = buttonUrl.searchParams;
+
+        if (buttonUrl.href.match('adobesparkpost.app.link')) {
+          if (sdid) {
+            urlParams.set('campaign_id', sdid);
+          }
+
+          if (mv) {
+            urlParams.set('channel', mv);
+          }
+
+          if (sKwcid) {
+            const sKwcidParameters = sKwcid.split('!');
+
+            if (sKwcidParameters[2] === '3') {
+              urlParams.set('ad_partner', 'Google%20AdWords');
+            } // Missing Facebook.
+          }
+
+          urlParams.set('feature', 'paid%20advertising');
+        }
+
+        buttonUrl.search = urlParams.toString();
+        $a.href = buttonUrl.toString();
+      });
+    }
+  }
+
   function decorateAnalyticsEvents() {
+    const $links = d.querySelectorAll('main a');
+
+    // for adding branch parameters to branch links
+    trackBranchParameters($links);
+
     // for tracking all of the links
-    d.querySelectorAll('main a').forEach(($a) => {
+    $links.forEach(($a) => {
       $a.addEventListener('click', () => {
         trackButtonClick($a);
       });
