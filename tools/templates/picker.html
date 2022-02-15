@@ -902,9 +902,22 @@
           locales.forEach(l => {
             l.checked = localeToggle.checked;
           });
+          search();
         });
 
+        const sorts = document.querySelectorAll('[name="sort"]');
+        const types = document.querySelectorAll('[name="type"]');
+        const animateds = document.querySelectorAll('[name="animated"]');
+        const locales = document.querySelectorAll('[name="locale"]');
 
+        Array.from(sorts)
+          .concat(Array.from(types))
+          .concat(Array.from(animateds))
+          .concat(Array.from(locales))
+          .forEach((i) => {
+            i.addEventListener('change', search);
+          });
+        
         const params = new URLSearchParams(window.location.search);
         const sort = params.get('sort');
         if (sort) {
@@ -916,7 +929,6 @@
 
         const type = params.get('type');
         if (type) {
-          const types = document.querySelectorAll('[name="type"]');
           types.forEach(t => {
             if (t.value === type) {
               t.checked = true;
@@ -928,7 +940,6 @@
 
         const animated = params.get('animated');
         if (animated) {
-          const animateds = document.querySelectorAll('[name="animated"]');
           animateds.forEach(t => {
             if (t.value === animated) {
               t.checked = true;
@@ -941,7 +952,6 @@
         const locale = params.get('locale');
         if (locale) {
           const ls = locale.split(',');
-          const locales = document.querySelectorAll('[name="locale"]');
           locales.forEach(t => {
             if (ls.indexOf(t.value) !== -1) {
               t.checked = true;
