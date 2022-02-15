@@ -120,6 +120,11 @@
         max-height: 70vh;
       }
 
+      #results.has-result {
+        background-color: lightslategrey;
+        justify-content: center;
+      }
+
       #results .no-result {
         padding: 45px 0;
       }
@@ -495,6 +500,7 @@
         isSearchRunning = true;
         const resultContainer = document.querySelector('#results');
         resultContainer.innerHTML = '';
+        resultContainer.classList.remove('has-result');
 
         const searchInput = document.getElementById('search');
         const sort = document.querySelector('[name="sort"]:checked');
@@ -634,9 +640,9 @@
         const selectAll = document.querySelector('#select-all');
         if (results.length > 0) {
           selectAll.classList.remove('hidden');
+          resultContainer.classList.add('has-result');
         } else {
           selectAll.classList.add('hidden');
-
           resultContainer.innerHTML = '<div class="no-result">No template matches your search criteria.</div>'
         }
 
