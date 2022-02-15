@@ -472,11 +472,10 @@
         if (isSearchRunning) {
           // wait to stop the search first
           stopSearch = true;
-          console.log('Stopping the search...');
           window.setTimeout(() => { search(); }, 200);
           return;
         }
-        console.log('Running...');
+
         stopSearch = false;
         isSearchRunning = true;
         const resultContainer = document.querySelector('#results');
@@ -627,13 +626,11 @@
 
         while (results.length > 0) {
           if (stopSearch) {
-            console.log('Stop search requested! 1');
             results = [];
             break;
           }
           await asyncForEach(results, async t => {
             if (stopSearch) {
-              console.log('Stop search requested! 2');
               results = [];
               return;
             }
@@ -698,7 +695,6 @@
           }
         }
 
-        console.log('End of search');
         isSearchRunning = false;
         console.log(`Showing a total of ${total}/${searchTotal} templates`);
       }
