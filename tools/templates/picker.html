@@ -81,6 +81,13 @@
         padding-top: 15px;
       }
 
+      #widthFrom, #widthTo,
+      #heightFrom, #heightTo {
+        font-family: 'Adobe Clean';
+        font-size: 0.8rem;
+        width: 38px;
+      }
+
       .twocolumns {
         display: flex;
         flex-direction: row;
@@ -481,23 +488,31 @@
           });
         }
 
+        const widthFrom = document.getElementById('widthFrom').value;
+        const widthTo = document.getElementById('widthTo').value;
+        const heightFrom = document.getElementById('heightFrom').value;
+        const heightTo = document.getElementById('heightTo').value;
+
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
           searchParams.set('q', search.value);
           searchParams.set('sort', sort.value);
 
-          if (type) {
-            searchParams.set('type', type);
-          } else {
-            searchParams.delete('type');
+          const setParam = (sp, name, value) => {
+            if (value) {
+              sp.set(name, value);
+            } else {
+              sp.delete(name);
+            }  
           }
 
-          if (animated) {
-            searchParams.set('animated', animated);
-          } else {
-            searchParams.delete('animated');
-          }
-
+          setParam(searchParams, 'type', type);
+          setParam(searchParams, 'animated', animated);
+          setParam(searchParams, 'widthFrom', widthFrom);
+          setParam(searchParams, 'widthTo', widthTo);
+          setParam(searchParams, 'heightFrom', heightFrom);
+          setParam(searchParams, 'heightTo', heightTo);
+          
           if (locale.length > 0) {
             searchParams.set('locale', locale.join(','));
           } else {
@@ -550,6 +565,14 @@
 
         if (locale.length > 0) {
           filters = `${filters} AND locales:("${locale.join('*" OR "')}*")`;
+        }
+
+        if (widthFrom || widthTo) {
+          filters = `${filters} AND (rendition.maxWidth:[${widthFrom || '*'} TO ${widthTo || '*'}])`;
+        }
+
+        if (heightFrom || heightTo) {
+          filters = `${filters} AND (rendition.maxHeight:[${heightFrom || '*'} TO ${heightTo || '*'}])`;
         }
 
         const params = {
@@ -864,6 +887,11 @@
               </div>
             </div>
           </div>
+          <div class="searchField">
+            <h3>Size</h3>
+            <div>Width from&nbsp;&nbsp;<input type="text" id="widthFrom" name="widthFrom"> to <input type="text" id="widthTo" name="widthTo"></div>
+            <div>Height from&nbsp;<input type="text" id="heightFrom" name="heightFrom"> to <input type="text" id="heightTo" name="heightTo"></div>
+          </div>
         </div>
         <div class="content">
           <h1>Pick your templates</h1>
@@ -917,6 +945,16 @@
           .forEach((i) => {
             i.addEventListener('change', search);
           });
+
+        const widthFrom = document.getElementById('widthFrom');
+        const widthTo = document.getElementById('widthTo');
+        const heightFrom = document.getElementById('heightFrom');
+        const heightTo = document.getElementById('heightTo');
+
+        widthFrom.addEventListener('change', search);
+        widthTo.addEventListener('change', search);
+        heightFrom.addEventListener('change', search);
+        heightTo.addEventListener('change', search);
         
         const params = new URLSearchParams(window.location.search);
         const sort = params.get('sort');
@@ -960,6 +998,18 @@
             }
           });
         }
+
+        const setInputValue = (ps, name, input) => {
+          const p = ps.get(name);
+          if (p) {
+            input.value = p;
+          }
+        }
+
+        setInputValue(params, 'widthFrom', widthFrom);
+        setInputValue(params, 'widthTo', widthTo);
+        setInputValue(params, 'heightFrom', heightFrom);
+        setInputValue(params, 'heightTo', heightTo);
 
         const q = params.get('q');
         if (q) {
