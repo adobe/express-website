@@ -1207,6 +1207,9 @@ function makeRelativeLinks($main) {
         || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
+      } else if (hostname !== 'adobesparkpost.app.link') {
+        // open external links in a new tab
+        $a.target = '_blank';
       }
     } catch (e) {
       // invalid url
