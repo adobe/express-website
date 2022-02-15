@@ -131,9 +131,9 @@
 
         max-width: 240px;
         width: 240px; 
-        max-height: 300px;
-        height: 300px;
-        min-height: 300px;
+        max-height: 350px;
+        height: 350px;
+        min-height: 350px;
 
         align-self: flex-end;
         background-color: #dce0e3;
@@ -453,6 +453,17 @@
 
         const size = `${t.rendition.maxWidth/g}:${t.rendition.maxHeight/g} (${t.rendition.maxWidth} x ${t.rendition.maxHeight})`;
 
+        const getFromArray = (obj, name, index) => {
+          const a = obj[name];
+          if (a && a.length > 0) {
+            if (!isNaN(index)) {
+              return a[index];
+            }
+            return a.join(', ');
+          }
+          return 'None';
+        };
+
         return {
           asset,
           thumbnail,
@@ -462,7 +473,11 @@
           premium: t.premium,
           remixCount: t.remixCount,
           created: t.created ? t.created.substring(0, t.created.indexOf('T')) : 'Unknown',
-          size
+          size,
+          category: getFromArray(t, 'categories', 0),
+          categories: getFromArray(t, 'categories'),
+          keywords: getFromArray(t, 'topics'),
+          usecase: getFromArray(t, 'tasks')
         };
       };
 
@@ -666,6 +681,9 @@
             template.innerHTML += `<div class="data">
               <div class="title" title="${tobj.title}"><span>Title:</span><a href="${tobj.branchURL}" target="_blank">${tobj.title}</a></div>
               <div class="size" title="${tobj.size}"><span>Size:</span>${tobj.size}</div>
+              <div class="category" title="${tobj.categories}"><span>Category:</span>${tobj.category}</div>
+              <div class="keywords" title="${tobj.keywords}"><span>Keywords:</span>${tobj.keywords}</div>
+              <div class="usecase" title="${tobj.usecase}"><span>Use Case:</span>${tobj.usecase}</div>
               <div class="created" title="${tobj.created}"><span>Created:</span>${tobj.created}</div>
               <div class="remix" title="${tobj.remixCount}"><span>Remix count:</span>${tobj.remixCount}</div>
             </div>`;
