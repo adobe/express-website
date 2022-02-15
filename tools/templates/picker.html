@@ -120,6 +120,10 @@
         max-height: 70vh;
       }
 
+      #results .no-result {
+        padding: 45px 0;
+      }
+
       #results .template {
         user-select: none;
 
@@ -462,11 +466,23 @@
         };
       };
 
+      let isSearchRunning = false;
+      let stopSearch = false;
       const search = async () => {
+        if (isSearchRunning) {
+          // wait to stop the search first
+          stopSearch = true;
+          console.log('Stopping the search...');
+          window.setTimeout(() => { search(); }, 200);
+          return;
+        }
+        console.log('Running...');
+        stopSearch = false;
+        isSearchRunning = true;
         const resultContainer = document.querySelector('#results');
         resultContainer.innerHTML = '';
 
-        const search = document.getElementById('search');
+        const searchInput = document.getElementById('search');
         const sort = document.querySelector('[name="sort"]:checked');
         const types = document.querySelectorAll('[name="type"]:checked');
         let type = null;
@@ -495,7 +511,7 @@
 
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
-          searchParams.set('q', search.value);
+          searchParams.set('q', searchInput.value);
           searchParams.set('sort', sort.value);
 
           const setParam = (sp, name, value) => {
@@ -530,7 +546,7 @@
         let orderBy = '-created';
         let branchURL = '';
 
-        search.value.split(' ').forEach(s => {
+        searchInput.value.split(' ').forEach(s => {
           try {
             const link = new URL(s);
             branchURL += `${link.pathname.substring(1)} `;
@@ -540,7 +556,7 @@
         });
 
         if (!q.trim()) {
-          search.classList.add('mandatory');
+          searchInput.classList.add('mandatory');
           return;
         }
 
@@ -605,10 +621,23 @@
           selectAll.classList.remove('hidden');
         } else {
           selectAll.classList.add('hidden');
+
+          resultContainer.innerHTML = '<div class="no-result">No template matches your search criteria.</div>'
         }
 
         while (results.length > 0) {
+          if (stopSearch) {
+            console.log('Stop search requested! 1');
+            results = [];
+            break;
+          }
           await asyncForEach(results, async t => {
+            if (stopSearch) {
+              console.log('Stop search requested! 2');
+              results = [];
+              return;
+            }
+
             const tobj = resultToTemplate(t);
 
             // API seems to return duplicates
@@ -619,7 +648,6 @@
             }
 
             total++;
-
 
             const template = document.createElement('div');
             template.classList.add('template');
@@ -660,7 +688,7 @@
             resultContainer.append(template);
           });
 
-          if (json._links && json._links.next && json._links.next.href) {
+          if (!stopSearch && json._links && json._links.next && json._links.next.href) {
             res = await fetch(`${API_ROOT}${json._links.next.href}`, options);
 
             json = await res.json();
@@ -670,6 +698,8 @@
           }
         }
 
+        console.log('End of search');
+        isSearchRunning = false;
         console.log(`Showing a total of ${total}/${searchTotal} templates`);
       }
 
