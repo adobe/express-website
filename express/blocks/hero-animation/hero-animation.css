@@ -126,10 +126,6 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
     margin: 0;
 }
 
-main .hero-animation.dark {
-    color: var(--color-white);
-}
-
 @media (min-width: 400px) {
     main .hero-animation {
         padding-top: max( 49%, 375px);
@@ -165,6 +161,10 @@ main .hero-animation.dark {
         padding: 0;
     }
     
+    main .hero-animation.dark {
+        color: var(--color-white);
+    }
+
     main .hero-animation h1 {
         font-size: var(--heading-font-size-xxl);
     }
