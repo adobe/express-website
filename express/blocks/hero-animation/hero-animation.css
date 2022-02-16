@@ -9,16 +9,19 @@ main .hero-animation.appear {
     height: unset;
 }
 
-main .hero-animation-container > div {
+main .hero-animation-container > div,
+main .hero-animation-dark-container > div {
     max-width: 1200px;
 }
 
 
-main .hero-animation-container {
+main .hero-animation-container,
+main .hero-animation-dark-container {
     position: relative;
 }
 
-main .hero-animation-container > div {
+main .hero-animation-container > div,
+main .hero-animation-dark-container > div {
     padding: 0;
 }
 
@@ -123,7 +126,6 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
     margin: 0;
 }
 
-
 @media (min-width: 400px) {
     main .hero-animation {
         padding-top: max( 49%, 375px);
@@ -147,7 +149,8 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
         padding-top: 0;
     }    
 
-    main .hero-animation-container > div {
+    main .hero-animation-container > div,
+    main .hero-animation-dark-container > div {
         padding: 0 56px;
     }
 
@@ -158,6 +161,10 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
         padding: 0;
     }
     
+    main .hero-animation.dark {
+        color: var(--color-white);
+    }
+
     main .hero-animation h1 {
         font-size: var(--heading-font-size-xxl);
     }
@@ -171,7 +178,8 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
 }
 
 @media (min-width: 1800px) {
-    main .hero-animation-container > div {
+    main .hero-animation-container > div,
+    main .hero-animation-dark-container > div {
         max-width: 65%;
     }    
 }
