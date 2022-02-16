@@ -161,7 +161,8 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
         padding: 0;
     }
     
-    main .hero-animation.dark {
+    main .hero-animation.dark,
+    main .hero-animation.dark a:any-link {
         color: var(--color-white);
     }
 
