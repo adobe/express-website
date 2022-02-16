@@ -17,6 +17,11 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+import {
+  isVideoLink,
+  displayVideoModal,
+} from '../shared/video.js';
+
 function timecodeToSeconds(timecode) {
   const splits = timecode.split(':');
   let seconds = 0;
@@ -104,6 +109,41 @@ function adjustLayout($overlay, $attributions, animations, $parent) {
   }
 }
 
+function transformToVideoLink($cell, $a) {
+  $a.addEventListener('click', (e) => {
+    e.preventDefault();
+  });
+  const title = $a.textContent;
+  // gather video urls from all links in cell
+  const vidUrls = [];
+  [...$cell.querySelectorAll(':scope a')]
+    .filter(($link) => isVideoLink($link.href))
+    .forEach(($link) => {
+      vidUrls.push($link.href);
+      if ($link !== $a) {
+        if ($link.classList.contains('button')) {
+          // remove button with container
+          $link.closest('.button-container').remove();
+        } else {
+          // remove link only
+          $link.remove();
+        }
+      }
+    });
+
+  $a.addEventListener('click', (e) => {
+    e.preventDefault();
+    displayVideoModal(vidUrls, title, true);
+  });
+
+  $a.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      displayVideoModal(vidUrls, title);
+    }
+  });
+}
+
 export default async function decorate($block) {
   const $rows = [...$block.children];
   const attributions = [];
@@ -167,6 +207,13 @@ export default async function decorate($block) {
         adjustLayout($innerDiv, $attributions, animations, $videoParent);
       }
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
+
+      // check for video link
+      const videoLink = [...$div.querySelectorAll('a')]
+        .find(($a) => isVideoLink($a.href));
+      if (videoLink) {
+        transformToVideoLink($div, videoLink);
+      }
     }
 
     // timecode animations
@@ -199,6 +246,7 @@ export default async function decorate($block) {
   });
   const button = $block.querySelector('.button');
   if (button) button.classList.add('large');
+
   $block.append($attributions);
   addAnimationToggle($block);
   $block.classList.add('appear');

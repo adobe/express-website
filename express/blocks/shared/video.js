@@ -84,6 +84,12 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
   $element.classList.add(playerType);
 }
 
+export function isVideoLink(url) {
+  return url.includes('youtu')
+    || url.includes('vimeo')
+    || /.*\/media_.*(mp4|webm|m3u8)$/.test(url);
+}
+
 export function hideVideoModal(push) {
   const $overlay = document.querySelector('main .video-overlay');
   if ($overlay) {
@@ -100,7 +106,7 @@ export function displayVideoModal(url = [], title, push) {
   let vidUrls = typeof url === 'string' ? [url] : url;
   const [primaryUrl] = vidUrls;
   const canPlayInline = vidUrls
-    .some((src) => src && (src.includes('youtu') || src.includes('vimeo') || src.includes('/media_')));
+    .some((src) => src && isVideoLink(src));
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'video-overlay' });
     const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });
