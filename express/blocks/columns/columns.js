@@ -100,13 +100,13 @@ function addHeaderSizing($block) {
   const headings = $block.querySelectorAll('h1, h2');
   // Each threshold of JP should be smaller than other languages
   // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp' ?
-    [
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
       { name: 'long', threshold: 12 },
       { name: 'very-long', threshold: 16 },
       { name: 'x-long', threshold: 20 },
-    ] :
-    [
+    ]
+    : [
       { name: 'long', threshold: 30 },
       { name: 'very-long', threshold: 40 },
       { name: 'x-long', threshold: 50 },
