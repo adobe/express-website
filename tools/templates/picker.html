@@ -96,7 +96,7 @@
         width: 22px;
       }
 
-      .twocolumns {
+      .twocolumns, .twocolumns20 {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -104,6 +104,18 @@
 
       .twocolumns > div {
         flex: 1 0 50%;
+      }
+
+      .twocolumns20 > div {
+        flex-grow: 1;
+      }
+
+      .twocolumns20 > div:nth-child(odd) {
+        width: 20%;
+      }
+      
+      .twocolumns20 > div:nth-child(even) {
+        width: 80%;
       }
 
       .twocolumns > div.full {
@@ -952,9 +964,14 @@
           </div>
           <div class="searchField">
             <h3>Size</h3>
-            <div>Width from&nbsp;&nbsp;<input type="text" id="widthFrom" name="widthFrom"> to <input type="text" id="widthTo" name="widthTo"></div>
-            <div>Height from&nbsp;<input type="text" id="heightFrom" name="heightFrom"> to <input type="text" id="heightTo" name="heightTo"></div>
-            <div>Ratio&nbsp;<input type="text" id="ration" name="ratiod"> : <input type="text" id="ratiod" name="ratiod"></div>
+            <div class="twocolumns20">
+              <div>Width</div>
+              <div>from <input type="text" id="widthFrom" name="widthFrom"> to <input type="text" id="widthTo" name="widthTo"></div>
+              <div>Height</div>
+              <div>from <input type="text" id="heightFrom" name="heightFrom"> to <input type="text" id="heightTo" name="heightTo"></div>
+              <div>Ratio</div>
+              <div><input type="text" id="ration" name="ratiod"> : <input type="text" id="ratiod" name="ratiod"></div>
+            </div>
           </div>
         </div>
         <div class="content">
