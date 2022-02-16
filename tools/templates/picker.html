@@ -83,6 +83,12 @@
         padding-top: 15px;
       }
 
+      .filter .searchField div {
+        font-size: 0.8rem;
+        padding-top: 0;
+        line-height: 1rem;
+      }
+
       #widthFrom, #widthTo,
       #heightFrom, #heightTo {
         font-family: 'Adobe Clean', 'Trebuchet MS';
@@ -538,6 +544,14 @@
           });
         }
 
+        const usecases = document.querySelectorAll('[name="usecase"]:checked');
+        let usecase = [];
+        if (usecases && usecases.length > 0 && usecases.length < 17) {
+          usecases.forEach(l => {
+            usecase.push(l.value);
+          });
+        }
+
         const widthFrom = document.getElementById('widthFrom').value;
         const widthTo = document.getElementById('widthTo').value;
         const heightFrom = document.getElementById('heightFrom').value;
@@ -571,6 +585,12 @@
             searchParams.set('locale', locale.join(','));
           } else {
             searchParams.delete('locale');
+          }
+  
+          if (usecase.length > 0) {
+            searchParams.set('usecase', usecase.join(','));
+          } else {
+            searchParams.delete('usecase');
           }
 
           const url = new URL(window.location.href);
@@ -620,6 +640,23 @@
 
         if (locale.length > 0) {
           filters = `${filters} AND locales:("${locale.join('*" OR "')}*")`;
+        }
+
+        if (usecase.length > 0) {
+          const index = usecase.indexOf('none');
+          if (index > -1) {
+            usecase.splice(index, 1);
+          }
+
+          if (usecase.length > 0) {
+            if (index > -1) {
+              filters = `${filters} AND (tasks:("${usecase.join('" OR "')}") OR (NOT _exists_:tasks))`;
+            } else {
+              filters = `${filters} AND tasks:("${usecase.join('" OR "')}")`;
+            }
+          } else {
+            filters = `${filters} AND (NOT _exists_:tasks)`;
+          }
         }
 
         if (widthFrom || widthTo) {
@@ -854,21 +891,23 @@
             <button onclick="search()">Search</button>
           </div>
           <div class="searchField">
-            <div>
-              <input type="radio" id="newest" name="sort" value="newest" checked>
-              <label for="newest">Newest to Oldest</label>
-            </div>
-            <div>
-              <input type="radio" id="oldest" name="sort" value="oldest">
-              <label for="oldest">Oldest to Newest</label>
-            </div>
-            <div>
-              <input type="radio" id="mostremixed" name="sort" value="mostremixed">
-              <label for="mostremixed">Most Remixed</label>
-            </div>
-            <div>
-              <input type="radio" id="leastremixed" name="sort" value="leastremixed">
-              <label for="leastremixed">Least Remixed</label>
+            <div class="twocolumns">
+              <div>
+                <input type="radio" id="newest" name="sort" value="newest" checked>
+                <label for="newest">Newest to Oldest</label>
+              </div>
+              <div>
+                <input type="radio" id="oldest" name="sort" value="oldest">
+                <label for="oldest">Oldest to Newest</label>
+              </div>
+              <div>
+                <input type="radio" id="mostremixed" name="sort" value="mostremixed">
+                <label for="mostremixed">Most Remixed</label>
+              </div>
+              <div>
+                <input type="radio" id="leastremixed" name="sort" value="leastremixed">
+                <label for="leastremixed">Least Remixed</label>
+              </div>
             </div>
           </div>
           <div class="twocolumns">
@@ -892,6 +931,83 @@
               <div>
                 <input type="checkbox" id="still" name="animated" value="still" checked>
                 <label for="still">Still</label>
+              </div>
+            </div>
+          </div>
+          <div class="searchField">
+            <h3>Use Case</h3>
+            <div class="twocolumns">
+              <div class="full">
+                <input type="checkbox" id="usecaseToggle" name="usecaseToggle" value="usecaseToggle" checked>
+                <label for="usecaseToggle">Toggle all</label>
+              </div>
+              <div>
+                <input type="checkbox" id="none" name="usecase" value="none" checked>
+                <label for="none">None</label>
+              </div>
+              <div>
+                <input type="checkbox" id="flyer" name="usecase" value="flyer" checked>
+                <label for="flyer">flyer</label>
+              </div>
+              <div>
+                <input type="checkbox" id="poster" name="usecase" value="poster" checked>
+                <label for="poster">poster</label>
+              </div>
+              <div>
+                <input type="checkbox" id="banner" name="usecase" value="banner" checked>
+                <label for="banner">banner</label>
+              </div>
+              <div>
+                <input type="checkbox" id="facebook-ad" name="usecase" value="facebook-ad" checked>
+                <label for="facebook-ad">facebook-ad</label>
+              </div>
+              <div>
+                <input type="checkbox" id="instagram-feed-ad" name="usecase" value="instagram-feed-ad" checked>
+                <label for="instagram-feed-ad">instagram-feed-ad</label>
+              </div>
+              <div>
+                <input type="checkbox" id="menu-standard" name="usecase" value="menu-standard" checked>
+                <label for="menu-standard">menu-standard</label>
+              </div>
+              <div>
+                <input type="checkbox" id="coupon" name="usecase" value="coupon" checked>
+                <label for="coupon">coupon</label>
+              </div>
+              <div>
+                <input type="checkbox" id="greeting-card" name="usecase" value="greeting-card" checked>
+                <label for="greeting-card">greeting-card</label>
+              </div>
+              <div>
+                <input type="checkbox" id="invitation" name="usecase" value="invitation" checked>
+                <label for="invitation">invitation</label>
+              </div>
+              <div>
+                <input type="checkbox" id="worksheet" name="usecase" value="worksheet" checked>
+                <label for="worksheet">worksheet</label>
+              </div>
+              <div>
+                <input type="checkbox" id="instagram-landscape-post" name="usecase" value="instagram-landscape-post" checked>
+                <label for="instagram-landscape-post">instagram-landscape-post</label>
+              </div>
+              <div>
+                <input type="checkbox" id="instagram-portrait-post" name="usecase" value="instagram-portrait-post" checked>
+                <label for="instagram-portrait-post">instagram-portrait-post</label>
+              </div>
+              <div>
+                <input type="checkbox" id="instagram-square-post" name="usecase" value="instagram-square-post" checked>
+                <label for="instagram-square-post">instagram-square-post</label>
+              </div>
+              <div>
+                <input type="checkbox" id="menu-card" name="usecase" value="menu-card" checked>
+                <label for="menu-card">menu-card</label>
+              </div>
+              <div>
+                <input type="checkbox" id="menu-tall" name="usecase" value="menu-tall" checked>
+                <label for="menu-tall">menu-tall</label>
+              </div>
+              <div>
+                <input type="checkbox" id="planner" name="usecase" value="planner" checked>
+                <label for="planner">planner</label>
               </div>
             </div>
           </div>
@@ -1016,15 +1132,26 @@
           search();
         });
 
+        const usecaseToggle = document.getElementById('usecaseToggle');
+        usecaseToggle.addEventListener('click', () => {
+          const usecases = document.querySelectorAll('[name="usecase"]');
+          usecases.forEach(l => {
+            l.checked = usecaseToggle.checked;
+          });
+          search();
+        });
+
         const sorts = document.querySelectorAll('[name="sort"]');
         const types = document.querySelectorAll('[name="type"]');
         const animateds = document.querySelectorAll('[name="animated"]');
         const locales = document.querySelectorAll('[name="locale"]');
+        const usecases = document.querySelectorAll('[name="usecase"]');
 
         Array.from(sorts)
           .concat(Array.from(types))
           .concat(Array.from(animateds))
           .concat(Array.from(locales))
+          .concat(Array.from(usecases))
           .forEach((i) => {
             i.addEventListener('change', search);
           });
@@ -1078,6 +1205,18 @@
         if (locale) {
           const ls = locale.split(',');
           locales.forEach(t => {
+            if (ls.indexOf(t.value) !== -1) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
+        }
+
+        const usecase = params.get('usecase');
+        if (usecase) {
+          const ls = usecase.split(',');
+          usecases.forEach(t => {
             if (ls.indexOf(t.value) !== -1) {
               t.checked = true;
             } else {
