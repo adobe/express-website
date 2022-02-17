@@ -27,7 +27,6 @@ import {
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;
   const title = $a.textContent;
-  const $sibling = $parent.querySelector('.column-picture');
   // gather video urls from all links in cell
   const vidUrls = [];
   $cell.querySelectorAll(':scope a.button').forEach(($button) => {
@@ -36,13 +35,20 @@ function transformToVideoColumn($cell, $a) {
       $button.closest('.button-container').remove();
     }
   });
+
   $cell.classList.add('column-video');
   $parent.classList.add('columns-video');
 
-  const $videoOverlay = createTag('div', { class: 'column-video-overlay' });
-  const $videoOverlayIcon = getIconElement('play', 44);
-  $videoOverlay.append($videoOverlayIcon);
-  $sibling.append($videoOverlay);
+  setTimeout(() => {
+    const $sibling = $parent.querySelector('.column-picture');
+    
+    if ($sibling) {
+      const $videoOverlay = createTag('div', { class: 'column-video-overlay' });
+      const $videoOverlayIcon = getIconElement('play', 44);
+      $videoOverlay.append($videoOverlayIcon);
+      $sibling.append($videoOverlay);
+    }
+  }, 1);
 
   $parent.addEventListener('click', () => {
     displayVideoModal(vidUrls, title, true);
