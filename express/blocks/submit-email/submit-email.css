@@ -61,6 +61,10 @@
   padding-left: 12px;
 }
 
+.submit-email form .form-block .email-input.error {
+  border: 2px solid #EC5B62;
+}
+
 .submit-email form .form-block .email-input::placeholder { 
   color: var(--color-gray-400);
 }

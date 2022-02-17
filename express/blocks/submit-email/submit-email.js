@@ -10,6 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+function validEmail(email) {
+  const emailRegex = /\S+@\S+\.\S+/;
+  return emailRegex.test(email);
+}
+
 function decorateSubmitEmailBlock($block) {
   const $container = document.querySelector('.submit-email-container');
 
@@ -32,6 +37,9 @@ function decorateSubmitEmailBlock($block) {
   $emailInput.classList.add('email-input');
   $emailInput.setAttribute('type', 'email');
   $emailInput.setAttribute('placeholder', 'Email');
+  $emailInput.addEventListener('input', () => {
+    $emailInput.classList.remove('error');
+  });
 
   const $submitButton = document.createElement('a');
   $submitButton.textContent = 'Submit';
@@ -41,10 +49,13 @@ function decorateSubmitEmailBlock($block) {
   $submitButton.addEventListener('click', (e) => {
     e.preventDefault();
     const email = $emailInput.value;
-    if (email) {
+    if (email && validEmail(email)) {
       // TODO: Send email to server
       $formHeading.textContent = 'Thanks for signing up!';
       $formHeading.classList.add('success');
+      $emailInput.classList.remove('error');
+    } else {
+      $emailInput.classList.add('error');
     }
   });
 
