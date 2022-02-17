@@ -15,7 +15,9 @@ import {
   createTag,
   transformLinkToAnimation,
   addAnimationToggle,
-  toClassName, getIconElement,
+  toClassName,
+  getLocale,
+  getIconElement,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -108,13 +110,21 @@ function decorateIconList($columnCell, rowNum) {
 
 function addHeaderSizing($block) {
   const headings = $block.querySelectorAll('h1, h2');
-  headings.forEach((h) => {
-    const { length } = h.textContent;
-    const sizes = [
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 12 },
+      { name: 'very-long', threshold: 18 },
+      { name: 'x-long', threshold: 24 },
+    ]
+    : [
       { name: 'long', threshold: 30 },
       { name: 'very-long', threshold: 40 },
       { name: 'x-long', threshold: 50 },
     ];
+  headings.forEach((h) => {
+    const { length } = h.textContent;
     sizes.forEach((size) => {
       if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
     });
