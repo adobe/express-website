@@ -51,6 +51,13 @@ export default function decorate($block) {
     });
   });
   if ($cards.length > 3) {
+    let $top = $block.previousElementSibling;
+    if ($top && $top.tagName === 'P') {
+      $top = $top.previousElementSibling;
+    }
+    if (!['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes($top.tagName)) {
+      $top = $block;
+    }
     const $seeMore = document.createElement('a');
     $seeMore.classList.add('quick-action-card--open');
     $seeMore.classList.add('button');
@@ -74,6 +81,7 @@ export default function decorate($block) {
     $seeLess.setAttribute('href', 'javascript: void(0)');
     $seeLess.addEventListener('click', () => {
       $block.classList.remove('quick-action-cards--expanded');
+      window.scrollTo(0, $top.offsetTop);
     });
     const $pButton = document.createElement('p');
     if ($block.nextSibling) {

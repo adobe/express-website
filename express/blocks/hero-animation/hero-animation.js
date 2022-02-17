@@ -17,6 +17,11 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+import {
+  isVideoLink,
+  displayVideoModal,
+} from '../shared/video.js';
+
 function timecodeToSeconds(timecode) {
   const splits = timecode.split(':');
   let seconds = 0;
@@ -56,7 +61,7 @@ function getAnimation(animations, breakpoint) {
 
 function createAnimation(animations) {
   const attribs = {};
-  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
+  ['playsinline', 'autoplay', 'muted'].forEach((p) => {
     attribs[p] = '';
   });
 
@@ -66,6 +71,10 @@ function createAnimation(animations) {
 
   const breakpoint = getBreakpoint(animations);
   const animation = getAnimation(animations, breakpoint);
+
+  if (animation.params.loop) {
+    attribs.loop = '';
+  }
   attribs.poster = animation.poster;
   attribs.title = animation.title;
   const { source } = animation;
@@ -104,6 +113,41 @@ function adjustLayout($overlay, $attributions, animations, $parent) {
   }
 }
 
+function transformToVideoLink($cell, $a) {
+  $a.addEventListener('click', (e) => {
+    e.preventDefault();
+  });
+  const title = $a.textContent;
+  // gather video urls from all links in cell
+  const vidUrls = [];
+  [...$cell.querySelectorAll(':scope a')]
+    .filter(($link) => isVideoLink($link.href))
+    .forEach(($link) => {
+      vidUrls.push($link.href);
+      if ($link !== $a) {
+        if ($link.classList.contains('button')) {
+          // remove button with container
+          $link.closest('.button-container').remove();
+        } else {
+          // remove link only
+          $link.remove();
+        }
+      }
+    });
+
+  $a.addEventListener('click', (e) => {
+    e.preventDefault();
+    displayVideoModal(vidUrls, title, true);
+  });
+
+  $a.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      displayVideoModal(vidUrls, title);
+    }
+  });
+}
+
 export default async function decorate($block) {
   const $rows = [...$block.children];
   const attributions = [];
@@ -120,6 +164,7 @@ export default async function decorate($block) {
       const $a = $div.querySelector('a');
       const $poster = $div.querySelector('img');
       const url = new URL($a.href);
+      const params = new URLSearchParams(url.search);
       const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
       const source = `./media_${id}.mp4`;
 
@@ -128,10 +173,15 @@ export default async function decorate($block) {
       srcUSP.set('format', 'webply');
       const optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
 
+      const videoParameters = {
+        loop: params.get('loop') !== 'false',
+      };
+
       animations[typeHint] = {
         source,
         poster: optimizedPosterSrc,
         title: $poster.getAttribute('alt') || '',
+        params: videoParameters,
       };
 
       $div.remove();
@@ -167,6 +217,13 @@ export default async function decorate($block) {
         adjustLayout($innerDiv, $attributions, animations, $videoParent);
       }
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
+
+      // check for video link
+      const videoLink = [...$div.querySelectorAll('a')]
+        .find(($a) => isVideoLink($a.href));
+      if (videoLink) {
+        transformToVideoLink($div, videoLink);
+      }
     }
 
     // timecode animations
@@ -199,6 +256,7 @@ export default async function decorate($block) {
   });
   const button = $block.querySelector('.button');
   if (button) button.classList.add('large');
+
   $block.append($attributions);
   addAnimationToggle($block);
   $block.classList.add('appear');

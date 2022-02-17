@@ -17,9 +17,9 @@ import {
 
 export default function decorate($block, name, doc) {
   doc.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
-    const href = $a.getAttribute('href');
+    const { href } = $a;
     const url = new URL(href);
-    const helixId = url.pathname.split('/')[2];
+    const suffix = url.pathname.split('/media_')[1];
     const $parent = $a.parentNode;
 
     if (href.endsWith('.mp4')) {
@@ -44,7 +44,7 @@ export default function decorate($block, name, doc) {
         href='/hlx_'+href.split('/')[4].replace('#image','');
       }
       */
-      $video.innerHTML = `<source src="${href}" type="video/mp4">`;
+      $video.innerHTML = `<source src="./media_${suffix}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
       if (isAnimation) {
         $video.addEventListener('canplay', () => {
@@ -52,10 +52,6 @@ export default function decorate($block, name, doc) {
           $video.play();
         });
       }
-    }
-
-    if (href.endsWith('.gif')) {
-      $a.parentNode.replaceChild(createTag('img', { src: `/hlx_${helixId}.gif` }), $a);
     }
 
     const $next = $parent.nextElementSibling;

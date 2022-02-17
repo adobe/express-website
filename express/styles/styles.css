@@ -727,6 +727,8 @@ main .columns.columns-marquee {
     max-width: 1200px;
   }
 
+  main .columns-fullsize-container > div,
+  main .columns-fullsize-center-container > div,
   main .template-list-sixcols-container > div {
     max-width: 1122px;
   }
@@ -736,4 +738,9 @@ main .template-list-sixcols-container > div {
   padding: 0;
 }
 
-
+/* disable budoux on small screens  */
+@media (max-width: 600px) {
+  h1.budoux, h2.budoux, h3.budoux, h4.budoux, h5.budoux {
+    word-break: normal !important;
+  }
+}

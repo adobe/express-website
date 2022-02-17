@@ -15,6 +15,9 @@ import {
   createTag,
   transformLinkToAnimation,
   addAnimationToggle,
+  toClassName,
+  getLocale,
+  getIconElement,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -25,19 +28,43 @@ import {
 
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;
+  const title = $a.textContent;
+  // gather video urls from all links in cell
+  const vidUrls = [];
+  $cell.querySelectorAll(':scope a.button').forEach(($button) => {
+    vidUrls.push($button.href);
+    if ($button !== $a) {
+      $button.closest('.button-container').remove();
+    }
+  });
 
   $cell.classList.add('column-video');
   $parent.classList.add('columns-video');
 
+  setTimeout(() => {
+    const $sibling = $parent.querySelector('.column-picture');
+    if ($sibling) {
+      const $videoOverlay = createTag('div', { class: 'column-video-overlay' });
+      const $videoOverlayIcon = getIconElement('play', 44);
+      $videoOverlay.append($videoOverlayIcon);
+      $sibling.append($videoOverlay);
+    }
+  }, 1);
+
   $parent.addEventListener('click', () => {
-    displayVideoModal($a.href, $a.textContent, true);
+    displayVideoModal(vidUrls, title, true);
   });
 
   $parent.addEventListener('keyup', ({ key }) => {
     if (key === 'Enter') {
-      displayVideoModal($a.href, $a.textContent);
+      displayVideoModal(vidUrls, title);
     }
   });
+
+  // auto-play if hash matches title
+  if (toClassName(title) === window.location.hash.substring(1)) {
+    displayVideoModal(vidUrls, title);
+  }
 }
 
 function decorateIconList($columnCell, rowNum) {
@@ -83,13 +110,21 @@ function decorateIconList($columnCell, rowNum) {
 
 function addHeaderSizing($block) {
   const headings = $block.querySelectorAll('h1, h2');
-  headings.forEach((h) => {
-    const { length } = h.textContent;
-    const sizes = [
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 12 },
+      { name: 'very-long', threshold: 18 },
+      { name: 'x-long', threshold: 24 },
+    ]
+    : [
       { name: 'long', threshold: 30 },
       { name: 'very-long', threshold: 40 },
       { name: 'x-long', threshold: 50 },
     ];
+  headings.forEach((h) => {
+    const { length } = h.textContent;
     sizes.forEach((size) => {
       if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
     });
@@ -156,7 +191,7 @@ export default function decorate($block) {
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
       if ($a) {
-        if (($a.href.includes('vimeo') || $a.href.includes('youtu'))
+        if (($a.href.includes('vimeo') || $a.href.includes('youtu') || $a.href.includes('/media_'))
           && $row.parentElement.classList.contains('highlight')) {
           transformToVideoColumn($cell, $a);
 

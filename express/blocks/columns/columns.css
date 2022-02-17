@@ -90,37 +90,6 @@ main .columns h1.columns-heading-x-long {
   font-size: var(--heading-font-size-m);
 }
 
-main .video-overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-main .video-overlay .video-overlay-video {
-  width: 90vw;
-  height: calc(90vw * 9 / 16);
-  max-height: 100vh;
-}
-
-main .video-overlay .video-overlay-video.vimeo {
-  width: 90vh;
-  max-width: 90vw;
-  height: 90vw;
-  max-height: 90vh;
-}
-
-main .video-overlay .video-overlay-video iframe {
-  width: 100%;
-  height: 100%;
-}
-
 @media (min-width: 1200px) {
   main .columns h1.columns-heading-long {
     font-size: var(--heading-font-size-xxl);
@@ -359,6 +328,47 @@ main .columns-video {
   cursor: pointer;
 }
 
+main .columns-video .column-picture {
+  position: relative;
+}
+
+main .columns-video .column-picture img {
+  display: block;
+}
+
+main .columns-video .column-picture .column-video-overlay {
+  position: absolute;
+  top: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(#ffffff00, #90909025, #000000a0);
+}
+
+main .columns-video .column-picture .column-video-overlay svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  fill: var(--color-white);
+  transform: translate(-50%, -50%);
+  width: 66px;
+  height: 66px;
+}
+
+@media (min-width: 900px) {
+  main .columns-video .column-picture {
+    position: initial;
+  }
+
+  main .columns-video .column-picture .column-video-overlay {
+    width: 50%;
+  }
+}
+
+main .columns-video:hover .column-video-overlay {
+  display: block;
+}
+
 main .columns.highlight > div {
   padding: 0;
 }
@@ -507,6 +517,11 @@ main .columns .column {
     max-width: 1024px;
   }
 
+  main .columns-fullsize-container > div,
+  main .columns-fullsize-center-container > div {
+    max-width: 1122px;
+  }
+
   main .columns:not(.fullsize) .column:not(.column-picture):not(.hero-animation-overlay) {
     padding: 40px;
   }
@@ -541,39 +556,39 @@ body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
   padding-left: 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
+main .columns.fullsize .hero-animation-overlay {
   order: -1;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div {
+main .columns.fullsize > div > div {
   display: grid;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container {
+main .columns.fullsize > div > div .button-container {
   grid-row: 2;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .has-brand > div .button-container {
+main .columns.fullsize .has-brand > div .button-container {
   grid-row: 3;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div p {
+main .columns.fullsize > div > div p {
   margin: 16px 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container {
+main .columns.fullsize > div > div .button-container {
   margin: 16px 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container a {
+main .columns.fullsize > div > div .button-container a {
   margin: 16px 0 0 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .has-brand > div p:first-child {
+main .columns.fullsize .has-brand > div p:first-child {
   margin: 0;
 }
 
-main .columns-fullsize-center-container .columns.fullsize > div > div .button-container.fixed-button {
+main .columns.fullsize > div > div .button-container.fixed-button {
   margin: 0;
 }
 
@@ -602,7 +617,7 @@ main .columns .column {
   padding-right: 32px;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .column {
+main .columns.fullsize .column {
   padding-left: 24px;
   padding-right: 24px;
 }
@@ -618,12 +633,12 @@ body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
   padding-left: 32px;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
+main .columns.fullsize .hero-animation-overlay {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
+main .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
   padding-top: 16px;
 }
 
@@ -682,34 +697,34 @@ main .columns.highlight .column.column-picture {
     padding-left: 32px;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize .hero-animation-overlay {
+  main .columns.fullsize .hero-animation-overlay {
     padding-top: 0;
     padding-bottom: 0;
     order: unset;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div {
+  main .columns.fullsize > div > div {
     display: block;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div p {
+  main .columns.fullsize > div > div p {
     margin: 16px 0;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div .button-container {
+  main .columns.fullsize > div > div .button-container {
     margin: 0;
     margin-top: 40px;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div .button-container a {
+  main .columns.fullsize > div > div .button-container a {
     margin: 0;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize .has-brand > div p:first-child {
+  main .columns.fullsize .has-brand > div p:first-child {
     margin: 16px 0;
   }
 
-  main .columns-fullsize-center-container .columns.fullsize > div > div .button-container.fixed-button {
+  main .columns.fullsize > div > div .button-container.fixed-button {
     margin: 0;
   }
 

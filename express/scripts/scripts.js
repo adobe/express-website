@@ -578,8 +578,8 @@ export function decorateBlocks($main) {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner'];
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns'];
 
     if (blockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
@@ -893,7 +893,8 @@ export function decorateButtons(block = document) {
     }
     if (!noButtonBlocks.includes(blockName)
       && originalHref !== $a.textContent
-      && !$a.textContent.endsWith(' >')) {
+      && !$a.textContent.endsWith(' >')
+      && !$a.textContent.endsWith(' ›')) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -1207,6 +1208,9 @@ function makeRelativeLinks($main) {
         || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
+      } else if (hostname !== 'adobesparkpost.app.link') {
+        // open external links in a new tab
+        $a.target = '_blank';
       }
     } catch (e) {
       // invalid url
@@ -1339,10 +1343,10 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
       picture.appendChild(source);
     } else {
       const img = document.createElement('img');
-      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
       img.setAttribute('loading', eager ? 'eager' : 'lazy');
       img.setAttribute('alt', alt);
       picture.appendChild(img);
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
     }
   });
 
