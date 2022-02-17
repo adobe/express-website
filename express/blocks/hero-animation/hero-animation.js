@@ -61,7 +61,7 @@ function getAnimation(animations, breakpoint) {
 
 function createAnimation(animations) {
   const attribs = {};
-  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
+  ['playsinline', 'autoplay', 'muted'].forEach((p) => {
     attribs[p] = '';
   });
 
@@ -71,6 +71,10 @@ function createAnimation(animations) {
 
   const breakpoint = getBreakpoint(animations);
   const animation = getAnimation(animations, breakpoint);
+
+  if (animation.params.loop) {
+    attribs.loop = '';
+  }
   attribs.poster = animation.poster;
   attribs.title = animation.title;
   const { source } = animation;
@@ -160,6 +164,7 @@ export default async function decorate($block) {
       const $a = $div.querySelector('a');
       const $poster = $div.querySelector('img');
       const url = new URL($a.href);
+      const params = new URLSearchParams(url.search);
       const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
       const source = `./media_${id}.mp4`;
 
@@ -168,10 +173,15 @@ export default async function decorate($block) {
       srcUSP.set('format', 'webply');
       const optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
 
+      const videoParameters = {
+        loop: params.get('loop') !== 'false',
+      };
+
       animations[typeHint] = {
         source,
         poster: optimizedPosterSrc,
         title: $poster.getAttribute('alt') || '',
+        params: videoParameters,
       };
 
       $div.remove();
