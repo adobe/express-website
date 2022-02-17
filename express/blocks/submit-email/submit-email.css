@@ -1,0 +1,108 @@
+.submit-email-container .submit-email {
+  background-color: #FAFAFA;
+  padding: 56px 16px;
+  border-radius: 20px;
+}
+
+.submit-email > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.submit-email .icon-cc-express-logo, 
+.submit-email .icon-creative-cloud-express {
+  width: 127px;
+  height: 124px;
+}
+
+.submit-email h1 {
+  font-size: var(--heading-font-size-m);
+  font-weight: 900;
+  text-align: left;
+  line-height: 36px;
+  padding: 40px 0px;
+}
+
+.submit-email span {
+  font-size: var(--body-font-size-xs);
+  padding-right: 3px;
+  line-height: 20px;
+}
+
+.submit-email form .form-heading {
+  font-size: var(--body-font-size-xxl);
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.submit-email form .form-heading.success {
+  color: #33AB84;
+}
+
+.submit-email form .form-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.submit-email form .form-block > a {
+  margin-left: 0px;
+}
+
+.submit-email form .form-block .email-input {
+  border: 2px solid var(--color-gray-300);
+  border-radius: 6px;
+  width: 215px;
+  height: 32px;
+  margin-bottom: 16px;
+  padding-left: 12px;
+}
+
+.submit-email form .form-block .email-input::placeholder { 
+  color: var(--color-gray-400);
+}
+
+
+@media(min-width: 900px) {
+  .submit-email-container .submit-email {
+    padding: 56px;
+    padding-bottom: 80px;
+  }
+
+  .submit-email > div {
+    flex-direction: row;
+    gap: 40px;
+  }
+
+  .submit-email > div > div:nth-child(1) {
+    flex: 0 0 127px;
+  }
+
+  .submit-email h1 {
+    font-size: var(--heading-font-size-l);
+    line-height: 44px;
+    padding-top: 12px;
+  }
+
+  .submit-email form .form-block {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .submit-email form .form-block > a {
+    margin-top: 0px;
+  }
+
+  .submit-email span {
+    display: block;
+  }
+}
+
+@media(min-width: 1200px) {
+  .submit-email span {
+    display: inline-block;
+  }
+}
