@@ -41,7 +41,6 @@ function transformToVideoColumn($cell, $a) {
 
   setTimeout(() => {
     const $sibling = $parent.querySelector('.column-picture');
-    
     if ($sibling) {
       const $videoOverlay = createTag('div', { class: 'column-video-overlay' });
       const $videoOverlayIcon = getIconElement('play', 44);
