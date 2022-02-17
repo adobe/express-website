@@ -65,8 +65,8 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         const $promo = $element.querySelector('.promotion');
         await loadBlock($promo, true);
         $promo.querySelector(':scope a.button').className = 'button accent';
-        const $close = $promo.appendChild(createTag('div', { class: 'close' }));
-        $close.addEventListener('click', () => {
+        const $PromoClose = $promo.appendChild(createTag('div', { class: 'close' }));
+        $PromoClose.addEventListener('click', () => {
           // eslint-disable-next-line no-use-before-define
           hideVideoModal(true);
         });
@@ -82,6 +82,11 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
   }
   $element.classList.add(playerType);
+  const $videoClose = $element.appendChild(createTag('div', { class: 'close' }));
+  $videoClose.addEventListener('click', () => {
+    // eslint-disable-next-line no-use-before-define
+    hideVideoModal(true);
+  });
 }
 
 export function isVideoLink(url) {
