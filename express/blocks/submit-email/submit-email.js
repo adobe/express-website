@@ -10,23 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-function decorateSubmitEmailBlock($block) {
+function decorateSubmitEmailBlock(block) {
   const container = document.querySelector('.submit-email-container');
 
   const icon = container.querySelector('.icon-creative-cloud-express, .icon-cc-express-logo');
-  const block = container.querySelector('.submit-email');
 
   // Remove submit-email block wrapping div
   const blockParentDiv = block.parentElement;
   container.insertBefore(block, container.firstChild);
-  container.removeChild(blockParentDiv)
+  container.removeChild(blockParentDiv);
   icon.setAttribute('src', '/express/icons/creative-cloud-express.svg');
 
   const heading = container.querySelector('h1');
 
   const form = document.createElement('form');
   const formHeading = document.createElement('h2');
-  formHeading.textContent = "Subscribe Now";
+  formHeading.textContent = 'Subscribe Now';
   formHeading.classList.add('form-heading');
 
   const emailInput = document.createElement('input');
@@ -35,16 +34,16 @@ function decorateSubmitEmailBlock($block) {
   emailInput.setAttribute('placeholder', 'Email');
 
   const submitButton = document.createElement('a');
-  submitButton.textContent = "Submit";
+  submitButton.textContent = 'Submit';
   submitButton.setAttribute('href', '');
   submitButton.classList.add('button');
   submitButton.classList.add('accent');
-  submitButton.addEventListener('click', function (e) {
+  submitButton.addEventListener('click', (e) => {
     e.preventDefault();
     const email = emailInput.value;
     if (email) {
       // TODO: Send email to server
-      formHeading.textContent = "Thanks for signing up!";
+      formHeading.textContent = 'Thanks for signing up!';
       formHeading.classList.add('success');
     }
   });
@@ -61,7 +60,7 @@ function decorateSubmitEmailBlock($block) {
   // Change p to spans
   const paragraphs = block.querySelectorAll('p');
   for (const p of paragraphs) {
-    var span = document.createElement('span');
+    const span = document.createElement('span');
     span.innerHTML = p.innerHTML;
     p.parentNode.replaceChild(span, p);
   }
