@@ -103,8 +103,8 @@ function addHeaderSizing($block) {
   const sizes = getLocale(window.location) === 'jp'
     ? [
       { name: 'long', threshold: 12 },
-      { name: 'very-long', threshold: 16 },
-      { name: 'x-long', threshold: 20 },
+      { name: 'very-long', threshold: 18 },
+      { name: 'x-long', threshold: 24 },
     ]
     : [
       { name: 'long', threshold: 30 },
