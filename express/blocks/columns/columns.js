@@ -15,7 +15,7 @@ import {
   createTag,
   transformLinkToAnimation,
   addAnimationToggle,
-  toClassName,
+  toClassName, getIconElement,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -35,8 +35,19 @@ function transformToVideoColumn($cell, $a) {
       $button.closest('.button-container').remove();
     }
   });
+
   $cell.classList.add('column-video');
   $parent.classList.add('columns-video');
+
+  setTimeout(() => {
+    const $sibling = $parent.querySelector('.column-picture');
+    if ($sibling) {
+      const $videoOverlay = createTag('div', { class: 'column-video-overlay' });
+      const $videoOverlayIcon = getIconElement('play', 44);
+      $videoOverlay.append($videoOverlayIcon);
+      $sibling.append($videoOverlay);
+    }
+  }, 1);
 
   $parent.addEventListener('click', () => {
     displayVideoModal(vidUrls, title, true);
