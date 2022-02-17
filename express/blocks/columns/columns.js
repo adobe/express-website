@@ -15,7 +15,7 @@ import {
   createTag,
   transformLinkToAnimation,
   addAnimationToggle,
-  toClassName,
+  toClassName, getIconElement,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -27,6 +27,7 @@ import {
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;
   const title = $a.textContent;
+  const $sibling = $parent.querySelector('.column-picture');
   // gather video urls from all links in cell
   const vidUrls = [];
   $cell.querySelectorAll(':scope a.button').forEach(($button) => {
@@ -37,6 +38,11 @@ function transformToVideoColumn($cell, $a) {
   });
   $cell.classList.add('column-video');
   $parent.classList.add('columns-video');
+
+  const $videoOverlay = createTag('div', { class: 'column-video-overlay' });
+  const $videoOverlayIcon = getIconElement('play', 44);
+  $videoOverlay.append($videoOverlayIcon);
+  $sibling.append($videoOverlay);
 
   $parent.addEventListener('click', () => {
     displayVideoModal(vidUrls, title, true);
