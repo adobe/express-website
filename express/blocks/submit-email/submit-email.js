@@ -10,11 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-function validEmail(email) {
-  const emailRegex = /\S+@\S+\.\S+/;
-  return emailRegex.test(email);
-}
-
 export default function decorate($block) {
   const $container = document.querySelector('.submit-email-container');
 
@@ -33,15 +28,20 @@ export default function decorate($block) {
   $formHeading.textContent = 'Subscribe Now';
   $formHeading.classList.add('form-heading');
 
+  const $submitButton = document.createElement('a');
   const $emailInput = document.createElement('input');
   $emailInput.classList.add('email-input');
   $emailInput.setAttribute('type', 'email');
   $emailInput.setAttribute('placeholder', 'Email');
-  $emailInput.addEventListener('input', () => {
+  $emailInput.addEventListener('keydown', (e) => {
     $emailInput.classList.remove('error');
+    const key = e.key || e.keyCode;
+    if (key === 13 || key === 'Enter') {
+      e.preventDefault();
+      $submitButton.click();
+    }
   });
 
-  const $submitButton = document.createElement('a');
   $submitButton.textContent = 'Submit';
   $submitButton.setAttribute('href', '');
   $submitButton.classList.add('button');
@@ -49,13 +49,16 @@ export default function decorate($block) {
   $submitButton.addEventListener('click', (e) => {
     e.preventDefault();
     const email = $emailInput.value;
-    if (email && validEmail(email)) {
+
+    if (email && $form.checkValidity()) {
       // TODO: Send email to server
       $formHeading.textContent = 'Thanks for signing up!';
       $formHeading.classList.add('success');
       $emailInput.classList.remove('error');
+      $emailInput.value = '';
     } else {
       $emailInput.classList.add('error');
+      $form.reportValidity();
     }
   });
 
