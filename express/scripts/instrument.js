@@ -398,7 +398,7 @@ loadScript(martechURL, () => {
             const sKwcidParameters = sKwcid.split('!');
 
             if (typeof sKwcidParameters[2] !== 'undefined' && sKwcidParameters[2] === '3') {
-              urlParams.set('ad_partner', 'Google%20AdWords');
+              urlParams.set('~customer_placement', 'Google%20AdWords');
             } // Missing Facebook.
 
             if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
