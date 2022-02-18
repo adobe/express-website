@@ -528,7 +528,7 @@ main .columns .column {
 
   main .columns.fullsize .column.hero-animation-overlay {
     position: relative;
-    min-height: 610px;
+    height: 610px;
   }
 
   main .columns.fullsize .column.columns-picture > p,
@@ -539,7 +539,7 @@ main .columns .column {
   main .columns.fullsize .column video {
     position: absolute;
     left: 0;
-    max-width: max-content;
+    max-width: 600px;
   }
 
   main .columns.fullsize + h2 {
