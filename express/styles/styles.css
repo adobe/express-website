@@ -744,3 +744,10 @@ main .template-list-sixcols-container > div {
     word-break: normal !important;
   }
 }
+
+/* Store icons */
+img.icon-apple-store, img.icon-google-play, img.icon-galaxy-store, img.icon-microsoft-store {
+  height: 70px;
+  width: auto;
+  margin: 8px;
+}
