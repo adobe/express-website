@@ -387,11 +387,11 @@ loadScript(martechURL, () => {
 
         if (buttonUrl.href.match('adobesparkpost.app.link')) {
           if (sdid) {
-            urlParams.set('campaign_id', sdid);
+            urlParams.set('~campaign_id', sdid);
           }
 
           if (mv) {
-            urlParams.set('channel', mv);
+            urlParams.set('~customer_campaign', mv);
           }
 
           if (sKwcid) {
@@ -402,11 +402,11 @@ loadScript(martechURL, () => {
             } // Missing Facebook.
 
             if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
-              urlParams.set('keyword', sKwcidParameters[8]);
+              urlParams.set('~keyword', sKwcidParameters[8]);
             }
           }
 
-          urlParams.set('feature', 'paid%20advertising');
+          urlParams.set('~feature', 'paid%20advertising');
         }
 
         buttonUrl.search = urlParams.toString();
