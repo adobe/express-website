@@ -15,7 +15,7 @@ function validEmail(email) {
   return emailRegex.test(email);
 }
 
-function decorateSubmitEmailBlock($block) {
+export default function decorate($block) {
   const $container = document.querySelector('.submit-email-container');
 
   const $icon = $container.querySelector('.icon-creative-cloud-express, .icon-cc-express-logo');
@@ -74,8 +74,4 @@ function decorateSubmitEmailBlock($block) {
     span.innerHTML = p.innerHTML;
     p.parentNode.replaceChild(span, p);
   }
-}
-
-export default function decorate($block) {
-  decorateSubmitEmailBlock($block);
 }
