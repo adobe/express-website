@@ -1209,7 +1209,7 @@ function makeRelativeLinks($main) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
       } else if (hostname !== 'adobesparkpost.app.link'
-        && protocol !== 'tel:') {
+        && !['tel:', 'mail:', 'sms:'].includes(protocol)) {
         // open external links in a new tab
         $a.target = '_blank';
       }
