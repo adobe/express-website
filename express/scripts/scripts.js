@@ -1201,14 +1201,15 @@ function makeRelativeLinks($main) {
     if (!$a.href) return;
     try {
       const {
-        hostname, pathname, search, hash,
+        protocol, hostname, pathname, search, hash,
       } = new URL($a.href);
       if (hostname.endsWith('.page')
         || hostname.endsWith('.live')
         || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
-      } else if (hostname !== 'adobesparkpost.app.link') {
+      } else if (hostname !== 'adobesparkpost.app.link'
+        && protocol !== 'tel:') {
         // open external links in a new tab
         $a.target = '_blank';
       }
