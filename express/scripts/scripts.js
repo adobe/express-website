@@ -913,6 +913,15 @@ export function decorateButtons(block = document) {
           $twoup.classList.add('button-container');
         }
       }
+      if ($a.textContent.trim().startsWith('{{icon-') && $a.textContent.trim().endsWith('}}')) {
+        const $iconName = /{{icon-([\w-]+)}}/g.exec($a.textContent.trim())[1];
+        if ($iconName) {
+          const $icon = getIcon($iconName, `${$iconName} icon`);
+          $a.innerHTML = $icon;
+          $a.classList.remove('button', 'primary', 'secondary', 'accent');
+          $a.title = $iconName;
+        }
+      }
     }
   });
 }
