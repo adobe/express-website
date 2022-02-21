@@ -746,7 +746,7 @@ main .template-list-sixcols-container > div {
 }
 
 /* Store icons */
-img.icon-apple-store, img.icon-google-play, img.icon-galaxy-store, img.icon-microsoft-store {
+img.icon-apple-store, img.icon-google-play-store, img.icon-galaxy-store, img.icon-microsoft-store {
   height: 70px;
   width: auto;
   margin: 8px;
