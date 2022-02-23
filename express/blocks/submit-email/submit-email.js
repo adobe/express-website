@@ -61,7 +61,7 @@ export default function decorate($block) {
       const requestOptions = {
         method: 'POST',
         headers,
-        body,
+        body: JSON.stringify(body),
       };
 
       fetch('https://www.adobe.com/api2/subscribe_v1', requestOptions)
