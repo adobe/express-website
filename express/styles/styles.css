@@ -526,6 +526,12 @@ main .hero .icon {
   width: 2em;
 }
 
+main .icon.icon-cc-express-stacked,
+main .columns .icon.icon-cc-express-stacked {
+  width: unset;
+  height: unset;
+}
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
