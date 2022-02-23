@@ -51,11 +51,32 @@ export default function decorate($block) {
     const email = $emailInput.value;
 
     if (email && $form.checkValidity()) {
-      // TODO: Send email to server
-      $formHeading.textContent = 'Thanks for signing up!';
-      $formHeading.classList.add('success');
-      $emailInput.classList.remove('error');
-      $emailInput.value = '';
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+
+      const body = {
+        sname: 'adbemeta',
+        email,
+        consent_notice: '<div class="disclaimer detail-spectrum-m" style="letter-spacing: 0px; padding-top: 15px;">The Adobe family of companies may keep me informed with personalized emails. See our <a href="https://www.adobe.com/privacy/policy.html" target="_blank">Privacy Policy</a> for more details or to opt-out at any time.</div>',
+        current_url: window.location.href,
+      };
+
+      const requestOptions = {
+        method: 'POST',
+        headers,
+        body,
+      };
+
+      fetch('https://www.adobe.com/api2/subscribe_v1', requestOptions)
+        .then(() => {
+          $formHeading.textContent = 'Thanks for signing up!';
+          $formHeading.classList.add('success');
+          $emailInput.classList.remove('error');
+          $emailInput.value = '';
+        })
+        .catch(() => {
+          $formHeading.textContent = 'An error occurred during subscription';
+        });
     } else {
       $emailInput.classList.add('error');
       $form.reportValidity();
