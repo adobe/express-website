@@ -532,6 +532,10 @@ main .columns .icon.icon-cc-express-stacked {
   height: unset;
 }
 
+main .banner .icon.icon-facebook {
+  fill: #1877f2;
+}
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
