@@ -13,13 +13,10 @@
 export default function decorate($block) {
   const $container = document.querySelector('.submit-email-container');
 
-  const $icon = $container.querySelector('.icon-creative-cloud-express, .icon-cc-express-logo');
-
   // Remove submit-email block wrapping div
   const $blockParentDiv = $block.parentElement;
   $container.insertBefore($block, $container.firstChild);
   $container.removeChild($blockParentDiv);
-  $icon.setAttribute('src', '/express/icons/creative-cloud-express.svg');
 
   const $heading = $container.querySelector('h1');
 
