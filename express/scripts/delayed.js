@@ -164,6 +164,12 @@ function loadFEDS() {
         $a.setAttribute('href', hrefURL.toString());
       });
     }
+
+    /* region based redirect to homepage */
+    if (window.feds && window.feds.data && window.feds.data.location && window.feds.data.location.country === 'CN') {
+      const regionpath = locale === 'us' ? '/' : `/${locale}/`;
+      window.location.href = regionpath;
+    }
   });
   let prefix = '';
   if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
