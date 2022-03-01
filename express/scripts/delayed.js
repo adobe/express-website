@@ -186,3 +186,4 @@ if (!window.hlx || !window.hlx.lighthouse) {
 /* Core Web Vitals RUM collection */
 
 sampleRUM('cwv');
+sampleRUM.observe(document.querySelectorAll('main picture > img'));

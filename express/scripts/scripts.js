@@ -11,6 +11,8 @@
  */
 /* eslint-disable no-console */
 
+window.RUM_GENERATION = 'ccx-gen-3';
+
 /**
  * log RUM if part of the sample.
  * @param {string} checkpoint identifies the checkpoint in funnel
@@ -34,8 +36,8 @@ export function sampleRUM(checkpoint, data = {}) {
     const { random, weight, id } = window.hlx.rum;
     if (random && (random * weight < 1)) {
       const sendPing = () => {
-        // eslint-disable-next-line object-curly-newline
-        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: 'ccx-gen2', checkpoint, ...data });
+        // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
+        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: window.RUM_GENERATION, checkpoint, ...data });
         const url = `https://rum.hlx3.page/.rum/${weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
@@ -43,23 +45,85 @@ export function sampleRUM(checkpoint, data = {}) {
       sendPing();
       // special case CWV
       if (checkpoint === 'cwv') {
-        // eslint-disable-next-line import/no-unresolved
-        import('https://unpkg.com/web-vitals?module').then((mod) => {
+        // use classic script to avoid CORS issues
+        const script = document.createElement('script');
+        script.src = 'https://rum.hlx3.page/.rum/web-vitals/dist/web-vitals.iife.js';
+        script.onload = () => {
           const storeCWV = (measurement) => {
             data.cwv = {};
             data.cwv[measurement.name] = measurement.value;
             sendPing();
           };
-          mod.getCLS(storeCWV);
-          mod.getFID(storeCWV);
-          mod.getLCP(storeCWV);
-        });
+            // When loading `web-vitals` using a classic script, all the public
+            // methods can be found on the `webVitals` global namespace.
+          window.webVitals.getCLS(storeCWV);
+          window.webVitals.getFID(storeCWV);
+          window.webVitals.getLCP(storeCWV);
+        };
+        document.head.appendChild(script);
       }
     }
   } catch (e) {
     // something went wrong
   }
 }
+
+sampleRUM.mediaobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting)
+    .forEach((entry) => {
+      sampleRUM.mediaobserver.unobserve(entry.target); // observe only once
+      const target = sampleRUM.targetselector(entry.target);
+      const source = sampleRUM.sourceselector(entry.target);
+      sampleRUM('viewmedia', { target, source });
+    });
+}, { threshold: 0.25 }) : { observe: () => {} };
+
+sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting)
+    .forEach((entry) => {
+      sampleRUM.blockobserver.unobserve(entry.target); // observe only once
+      const target = sampleRUM.targetselector(entry.target);
+      const source = sampleRUM.sourceselector(entry.target);
+      sampleRUM('viewblock', { target, source });
+    });
+}, { threshold: 0.25 }) : { observe: () => {} };
+
+sampleRUM.observe = ((elements) => {
+  elements.forEach((element) => {
+    if (element.tagName.toLowerCase() === 'img'
+    || element.tagName.toLowerCase() === 'video'
+    || element.tagName.toLowerCase() === 'audio'
+    || element.tagName.toLowerCase() === 'iframe') {
+      sampleRUM.mediaobserver.observe(element);
+    } else {
+      sampleRUM.blockobserver.observe(element);
+    }
+  });
+});
+
+sampleRUM.sourceselector = (element) => {
+  if (element === document.body || element === document.documentElement) {
+    return undefined;
+  }
+  if (element.id) {
+    return `#${element.id}`;
+  }
+  if (element.getAttribute('data-block-name')) {
+    return `.${element.getAttribute('data-block-name')}`;
+  }
+  return sampleRUM.sourceselector(element.parentElement);
+};
+
+sampleRUM.targetselector = (element) => {
+  let value = element.getAttribute('href') || element.currentSrc || element.getAttribute('src');
+  if (value && value.startsWith('https://')) {
+    // resolve relative links
+    value = new URL(value, window.location).href;
+  }
+  return value;
+};
 
 sampleRUM('top');
 window.addEventListener('load', () => sampleRUM('load'));
@@ -595,6 +659,8 @@ export function decorateBlocks($main) {
     $block.setAttribute('data-block-name', blockName);
     $block.setAttribute('data-block-status', 'initialized');
   });
+
+  sampleRUM.observe($main.querySelectorAll('div[data-block-name]'));
 }
 
 function decorateMarqueeColumns($main) {
