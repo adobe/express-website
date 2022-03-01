@@ -382,10 +382,10 @@ loadScript(martechURL, () => {
 
     if (sdid || mv || sKwcid || efId) {
       $links.forEach(($a) => {
-        const buttonUrl = new URL($a.href);
-        const urlParams = buttonUrl.searchParams;
+        if ($a.href && $a.href.match('adobesparkpost.app.link')) {
+          const buttonUrl = new URL($a.href);
+          const urlParams = buttonUrl.searchParams;
 
-        if (buttonUrl.href.match('adobesparkpost.app.link')) {
           if (sdid) {
             urlParams.set('~campaign_id', sdid);
           }
@@ -407,10 +407,10 @@ loadScript(martechURL, () => {
           }
 
           urlParams.set('~feature', 'paid%20advertising');
-        }
 
-        buttonUrl.search = urlParams.toString();
-        $a.href = buttonUrl.toString();
+          buttonUrl.search = urlParams.toString();
+          $a.href = buttonUrl.toString();
+        }
       });
     }
   }
