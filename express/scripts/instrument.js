@@ -382,34 +382,31 @@ loadScript(martechURL, () => {
 
     if (sdid || mv || sKwcid || efId) {
       $links.forEach(($a) => {
-        if ($a.href) {
+        if ($a.href && $a.href.match('adobesparkpost.app.link')) {
           const buttonUrl = new URL($a.href);
           const urlParams = buttonUrl.searchParams;
 
-          if (buttonUrl.href.match('adobesparkpost.app.link')) {
-
-            if (sdid) {
-              urlParams.set('~campaign_id', sdid);
-            }
-
-            if (mv) {
-              urlParams.set('~customer_campaign', mv);
-            }
-
-            if (sKwcid) {
-              const sKwcidParameters = sKwcid.split('!');
-
-              if (typeof sKwcidParameters[2] !== 'undefined' && sKwcidParameters[2] === '3') {
-                urlParams.set('~customer_placement', 'Google%20AdWords');
-              } // Missing Facebook.
-
-              if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
-                urlParams.set('~keyword', sKwcidParameters[8]);
-              }
-            }
-
-            urlParams.set('~feature', 'paid%20advertising');
+          if (sdid) {
+            urlParams.set('~campaign_id', sdid);
           }
+
+          if (mv) {
+            urlParams.set('~customer_campaign', mv);
+          }
+
+          if (sKwcid) {
+            const sKwcidParameters = sKwcid.split('!');
+
+            if (typeof sKwcidParameters[2] !== 'undefined' && sKwcidParameters[2] === '3') {
+              urlParams.set('~customer_placement', 'Google%20AdWords');
+            } // Missing Facebook.
+
+            if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
+              urlParams.set('~keyword', sKwcidParameters[8]);
+            }
+          }
+
+          urlParams.set('~feature', 'paid%20advertising');
 
           buttonUrl.search = urlParams.toString();
           $a.href = buttonUrl.toString();
