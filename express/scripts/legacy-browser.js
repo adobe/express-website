@@ -8,7 +8,7 @@ if ((!window.fetch) || (window.location.href.indexOf('legacy=on') >= 0)) {
       }, 0);
     };  
     var id = ''.concat(hashCode(window.location.href), '-').concat(new Date().getTime(), '-').concat(Math.random().toString(16).substr(2, 14));
-    var data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1, id: id }); var img = new Image(); img.src = 'https://rum.hlx3.page/.rum/10?data='+encodeURIComponent(data);  
+    var data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 10, id: id }); var img = new Image(); img.src = 'https://rum.hlx3.page/.rum/10?data='+encodeURIComponent(data);  
   }
   var locale = window.location.href.split('/')[3];
   var redirect = 'https://express.adobe.com/unsupported';
