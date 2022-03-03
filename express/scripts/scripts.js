@@ -1488,9 +1488,10 @@ function loadIMS() {
 }
 
 function loadFEDS() {
+  const locale = getLocale(window.location);
+
   async function showRegionPicker() {
     const $body = document.body;
-    const locale = getLocale(window.location);
     const regionpath = locale === 'us' ? '/' : `/${locale}/`;
     const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com' : '';
     const url = `${host}${regionpath}`;
@@ -1553,20 +1554,20 @@ function loadFEDS() {
       window.sprk_full_consent = false;
     }
   }
-  
+
   window.addEventListener('adobePrivacy:PrivacyConsent', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
-  
+
     footer: {
       regionModal: () => {
         showRegionPicker();
       },
     },
-    locale: getLocale(window.location),
+    locale: (locale === 'us' ? 'en' : locale),
     content: {
       experience: 'cc-express/cc-express-gnav',
     },
@@ -1587,7 +1588,6 @@ function loadFEDS() {
       footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
     },
   };
-
 
   window.addEventListener('feds.events.experience.loaded', () => {
     document.querySelector('body').classList.add('feds-loaded');
