@@ -163,9 +163,9 @@ async function fetchPlan(planUrl) {
     plan.stringId = '3-month-trial';
   }
 
-  if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1') {
+  if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1' || plan.offerId === 'CFB1B7F391F77D02FE858C43C4A5C64F') {
     plan.frequency = 'Monthly';
-  } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24') {
+  } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24' || plan.offerId === 'BADDACAB87D148A48539B303F3C5FA92') {
     plan.frequency = 'Annual';
   } else {
     plan.frequency = null;
