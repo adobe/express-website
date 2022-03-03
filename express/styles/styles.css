@@ -527,6 +527,16 @@ main .hero .icon {
   width: 2em;
 }
 
+main .icon.icon-cc-express-stacked,
+main .columns .icon.icon-cc-express-stacked {
+  width: unset;
+  height: unset;
+}
+
+main .banner .icon.icon-facebook {
+  fill: #1877f2;
+}
+
 main .hero .hero-bg {
     position: absolute;
     top: 0;
@@ -744,4 +754,11 @@ main .template-list-sixcols-container > div {
   h1.budoux, h2.budoux, h3.budoux, h4.budoux, h5.budoux {
     word-break: normal !important;
   }
+}
+
+/* Store icons */
+img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-microsoft-store {
+  height: 70px;
+  width: auto;
+  margin: 8px;
 }

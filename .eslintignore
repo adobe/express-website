@@ -1,2 +1,3 @@
 express/scripts/budoux-index-ja.min.js
 node_modules/*
+tools/templates/fraction.min.js

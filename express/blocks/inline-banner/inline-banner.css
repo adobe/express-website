@@ -20,7 +20,7 @@ main .inline-banner a:any-link {
 }
 
 main .inline-banner.inverted a:not(.button):any-link {
-  color: var(--color-black);
+  color: var(--color-info-accent);
 }
 
 main .inline-banner .icon {

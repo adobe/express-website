@@ -90,124 +90,6 @@ main .columns h1.columns-heading-x-long {
   font-size: var(--heading-font-size-m);
 }
 
-main .video-overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-main .video-overlay .video-overlay-video {
-  width: 90vw;
-  height: calc(90vw * 9 / 16);
-  max-height: 100vh;
-}
-
-main .video-overlay .video-overlay-video.vimeo {
-  width: 90vh;
-  max-width: 90vw;
-  height: 90vw;
-  max-height: 90vh;
-}
-
-main .video-overlay .video-overlay-video iframe,
-main .video-overlay .video-overlay-video video {
-  width: 100%;
-  height: 100%;
-}
-
-main .video-overlay .promotion {
-  display: none;
-  position: relative;
-  max-width: 337px;
-  margin: 24px auto;
-}
-
-main .video-overlay .promotion.appear {
-  display: block;
-}
-
-main .video-overlay .promotion .promotion-wrapper {
-  margin-top: 0;
-  border-radius: 0;
-  background-color: var(--color-white);
-}
-
-main .video-overlay .promotion .promotion-wrapper .promotion-hero img {
-  border-radius: 0;
-  object-fit: cover;
-}
-
-main .video-overlay .promotion .promotion-wrapper .promotion-content {
-  margin: 0 24px;
-}
-
-main .video-overlay .promotion .promotion-wrapper .promotion-content a.button {
-  margin: 0;
-}
-
-main .video-overlay .promotion .promotion-wrapper .promotion-content h3 {
-  font-size: var(--body-font-size-xxl);
-}
-
-main .video-overlay .close {
-  top: 12px;
-  right: 12px;
-  display: block;
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
-  box-sizing: border-box;
-  position: absolute;
-  background-color: var(--color-gray-700);
-  cursor: pointer;
-}
-
-main .video-overlay .close::after,
-main .video-overlay .close::before {
-  content: "";
-  display: block;
-  box-sizing: border-box;
-  position: absolute;
-  width: 12px;
-  height: 2px;
-  background: currentColor;
-  transform: rotate(45deg);
-  border-radius: 5px;
-  top: 9px;
-  left: 4px;
-  color: var(--color-white);
-}
-
-main .video-overlay .close::after {
-  transform: rotate(-45deg);
-}
-
-@media (min-width: 600px) {
-
-  main .video-overlay .promotion {
-    max-width: 720px;
-  }
-
-  main .video-overlay .promotion .promotion-wrapper {
-    display: flex;
-  }
-
-  main .video-overlay .promotion .promotion-wrapper > div {
-    width: 50%;
-  }
-
-  main .video-overlay .promotion .promotion-wrapper .promotion-content h3 {
-    font-size: var(--heading-font-size-l);
-  }
-}
-
 @media (min-width: 1200px) {
   main .columns h1.columns-heading-long {
     font-size: var(--heading-font-size-xxl);
@@ -446,6 +328,47 @@ main .columns-video {
   cursor: pointer;
 }
 
+main .columns-video .column-picture {
+  position: relative;
+}
+
+main .columns-video .column-picture img {
+  display: block;
+}
+
+main .columns-video .column-picture .column-video-overlay {
+  position: absolute;
+  top: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(#ffffff00, #90909025, #000000a0);
+}
+
+main .columns-video .column-picture .column-video-overlay svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  fill: var(--color-white);
+  transform: translate(-50%, -50%);
+  width: 66px;
+  height: 66px;
+}
+
+@media (min-width: 900px) {
+  main .columns-video .column-picture {
+    position: initial;
+  }
+
+  main .columns-video .column-picture .column-video-overlay {
+    width: 50%;
+  }
+}
+
+main .columns-video:hover .column-video-overlay {
+  display: block;
+}
+
 main .columns.highlight > div {
   padding: 0;
 }
@@ -605,7 +528,7 @@ main .columns .column {
 
   main .columns.fullsize .column.hero-animation-overlay {
     position: relative;
-    min-height: 610px;
+    height: 610px;
   }
 
   main .columns.fullsize .column.columns-picture > p,
@@ -616,7 +539,7 @@ main .columns .column {
   main .columns.fullsize .column video {
     position: absolute;
     left: 0;
-    max-width: max-content;
+    max-width: 600px;
   }
 
   main .columns.fullsize + h2 {

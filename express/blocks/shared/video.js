@@ -65,8 +65,8 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         const $promo = $element.querySelector('.promotion');
         await loadBlock($promo, true);
         $promo.querySelector(':scope a.button').className = 'button accent';
-        const $close = $promo.appendChild(createTag('div', { class: 'close' }));
-        $close.addEventListener('click', () => {
+        const $PromoClose = $promo.appendChild(createTag('div', { class: 'close' }));
+        $PromoClose.addEventListener('click', () => {
           // eslint-disable-next-line no-use-before-define
           hideVideoModal(true);
         });
@@ -82,6 +82,17 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
   }
   $element.classList.add(playerType);
+  const $videoClose = $element.appendChild(createTag('div', { class: 'close' }));
+  $videoClose.addEventListener('click', () => {
+    // eslint-disable-next-line no-use-before-define
+    hideVideoModal(true);
+  });
+}
+
+export function isVideoLink(url) {
+  return url.includes('youtu')
+    || url.includes('vimeo')
+    || /.*\/media_.*(mp4|webm|m3u8)$/.test(url);
 }
 
 export function hideVideoModal(push) {
@@ -100,7 +111,7 @@ export function displayVideoModal(url = [], title, push) {
   let vidUrls = typeof url === 'string' ? [url] : url;
   const [primaryUrl] = vidUrls;
   const canPlayInline = vidUrls
-    .some((src) => src && (src.includes('youtu') || src.includes('vimeo') || src.includes('/media_')));
+    .some((src) => src && isVideoLink(src));
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'video-overlay' });
     const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });

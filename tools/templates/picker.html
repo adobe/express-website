@@ -5,14 +5,36 @@
     <link id="favicon" rel="icon" type="image/svg+xml" href="/express/icons/cc-express.svg">
     <style>
       body {
-        font-family: 'Adobe Clean';
+        font-family: 'Adobe Clean', 'Trebuchet MS';
+        overflow: hidden;
       }
 
       main {
-        padding: 20px;
+        padding: 10px;
         font-size: 1.3rem;
         line-height: 1.2em;
       }
+
+      h1 {
+        font-size: 1.6rem;
+        margin: 0.2em 0;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        margin: 0.2em 0;
+      }
+      
+      h3 {
+        font-size: 1rem;
+        margin: 0.2em 0;
+      }
+
+      .layout {
+        display: flex;
+        flex-direction: row;
+      }
+
 
       main select {
         font-size: 1rem;
@@ -22,9 +44,9 @@
       }
     
       #search {
-        width: 50%;
-        font-family: 'Adobe Clean';
-        font-size: 2rem;
+        width: 65%;
+        font-family: 'Adobe Clean', 'Trebuchet MS';
+        font-size: 1.5rem;
         border: none;
         border-bottom: solid 1px grey;
         padding-top: 5px;
@@ -48,19 +70,83 @@
       }
 
       main .filter {
-        padding: 20px 10px 20px 10px;
+        width: 25%;
+        overflow-y: auto;
+        height: 90vh;
+      }
+
+      .filter .searchField {
+        display: flex;
+        flex-direction: column;
+        font-family: 'Adobe Clean', 'Trebuchet MS';
+        font-size: 0.8rem;
+        padding-top: 15px;
+      }
+
+      #widthFrom, #widthTo,
+      #heightFrom, #heightTo {
+        font-family: 'Adobe Clean', 'Trebuchet MS';
+        font-size: 0.8rem;
+        width: 38px;
+      }
+
+      #ratiod, #ration {
+        font-family: 'Adobe Clean', 'Trebuchet MS';
+        font-size: 0.8rem;
+        width: 22px;
+      }
+
+      .twocolumns, .twocolumns20 {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .twocolumns > div {
+        flex: 1 0 50%;
+      }
+
+      .twocolumns20 > div {
+        flex-grow: 1;
+      }
+
+      .twocolumns20 > div:nth-child(odd) {
+        width: 20%;
+      }
+      
+      .twocolumns20 > div:nth-child(even) {
+        width: 80%;
+      }
+
+      .twocolumns > div.full {
+        flex: 1 0 100%;
+      }
+
+      main .content {
+        width: 75%;
       }
 
       main button {
-        border-radius: 1em;
-        padding: 5px 20px;
-        font-size: 1.5rem;
+        border-radius: .5em;
+        padding: 2px 10px;
+        font-size: .8rem;
       }
 
       #results {
         display: flex;
         flex-wrap: wrap;
         padding-bottom: 150px;
+        overflow-y: auto;
+        max-height: 70vh;
+      }
+
+      #results.has-result {
+        background-color: lightslategrey;
+        justify-content: center;
+      }
+
+      #results .no-result {
+        padding: 45px 0;
       }
 
       #results .template {
@@ -70,9 +156,9 @@
 
         max-width: 240px;
         width: 240px; 
-        max-height: 240px;
-        height: 240px;
-        min-height: 240px;
+        max-height: 350px;
+        height: 350px;
+        min-height: 350px;
 
         align-self: flex-end;
         background-color: #dce0e3;
@@ -84,6 +170,7 @@
         height: 100%;
         position: relative;
         width: 100%;
+        max-height: 250px;
       }
 
       #results .template img, #results .template video {
@@ -98,15 +185,30 @@
         text-decoration: none;
       }
 
-      #results .template .title {
+      #results .template .data {
+        display: flex;
+        flex-direction: column;
+
         background-color: #fff;
         border: solid 1px #dce0e3;
         padding: 10px;
 
+      }
+
+      #results .template .data div {
         text-align: left;
         font-weight: 400;
         font-size: 13px;
-        min-height: 48px;
+        max-width: 218px;
+        max-height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      #results .template .data div span {
+        margin-right: 4px;
+        font-weight: bold;
       }
 
       #results .premium {
@@ -187,7 +289,7 @@
         flex-grow: 1;
         min-height: 120px;
         max-height: 30vh;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
 
       #selectedList .more {
@@ -231,6 +333,7 @@
       }
 
     </style>
+    <script src="fraction.min.js"></script>
     <script>
       const maxSelectedDrawn = 99;
       const templateSelection = [];
@@ -364,25 +467,111 @@
           .replace('\{dimension\}', 'width')
           .replace('\{size\}', 240);
 
+        const f = new Fraction(t.rendition.maxWidth / t.rendition.maxHeight).simplify(0.008);
+        const ratio = `${f.n}:${f.d}`
+        const size = `${ratio} (${t.rendition.maxWidth} x ${t.rendition.maxHeight})`;
+
+        const getFromArray = (obj, name, index) => {
+          const a = obj[name];
+          if (a && a.length > 0) {
+            if (!isNaN(index)) {
+              return a[index];
+            }
+            return a.join(', ');
+          }
+          return 'None';
+        };
+
         return {
           asset,
           thumbnail,
           title: t.title,
           branchURL: t.branchURL,
           animated: t.animated,
-          premium: t.premium
+          premium: t.premium,
+          remixCount: t.remixCount,
+          created: t.created ? t.created.substring(0, t.created.indexOf('T')) : 'Unknown',
+          size,
+          category: getFromArray(t, 'categories', 0),
+          categories: getFromArray(t, 'categories'),
+          keywords: getFromArray(t, 'topics'),
+          usecase: getFromArray(t, 'tasks'),
+          ratio
         };
       };
 
+      let isSearchRunning = false;
+      let stopSearch = false;
       const search = async () => {
+        if (isSearchRunning) {
+          // wait to stop the search first
+          stopSearch = true;
+          window.setTimeout(() => { search(); }, 200);
+          return;
+        }
+
+        stopSearch = false;
+        isSearchRunning = true;
         const resultContainer = document.querySelector('#results');
         resultContainer.innerHTML = '';
+        resultContainer.classList.remove('has-result');
 
-        const search = document.getElementById('search');
+        const searchInput = document.getElementById('search');
+        const sort = document.querySelector('[name="sort"]:checked');
+        const types = document.querySelectorAll('[name="type"]:checked');
+        let type = null;
+        if (types && types.length === 1) {
+          type = types[0].value;
+        }
+
+        const animateds = document.querySelectorAll('[name="animated"]:checked');
+        let animated = null;
+        if (animateds && animateds.length === 1) {
+          animated = animateds[0].value;
+        }
+
+        const locales = document.querySelectorAll('[name="locale"]:checked');
+        let locale = [];
+        if (locales && locales.length > 0 && locales.length < 15) {
+          locales.forEach(l => {
+            locale.push(l.value);
+          });
+        }
+
+        const widthFrom = document.getElementById('widthFrom').value;
+        const widthTo = document.getElementById('widthTo').value;
+        const heightFrom = document.getElementById('heightFrom').value;
+        const heightTo = document.getElementById('heightTo').value;
+        const ration = document.getElementById('ration').value;
+        const ratiod = document.getElementById('ratiod').value;
 
         if (window.history.pushState) {
           const searchParams = new URLSearchParams(window.location.search);
-          searchParams.set('q', search.value);
+          searchParams.set('q', searchInput.value);
+          searchParams.set('sort', sort.value);
+
+          const setParam = (sp, name, value) => {
+            if (value) {
+              sp.set(name, value);
+            } else {
+              sp.delete(name);
+            }  
+          }
+
+          setParam(searchParams, 'type', type);
+          setParam(searchParams, 'animated', animated);
+          setParam(searchParams, 'widthFrom', widthFrom);
+          setParam(searchParams, 'widthTo', widthTo);
+          setParam(searchParams, 'heightFrom', heightFrom);
+          setParam(searchParams, 'heightTo', heightTo);
+          setParam(searchParams, 'ration', ration);
+          setParam(searchParams, 'ratiod', ratiod);
+          
+          if (locale.length > 0) {
+            searchParams.set('locale', locale.join(','));
+          } else {
+            searchParams.delete('locale');
+          }
 
           const url = new URL(window.location.href);
           url.search = searchParams.toString();
@@ -392,9 +581,10 @@
         }
 
         let q = '';
+        let orderBy = '-created';
         let branchURL = '';
 
-        search.value.split(' ').forEach(s => {
+        searchInput.value.split(' ').forEach(s => {
           try {
             const link = new URL(s);
             branchURL += `${link.pathname.substring(1)} `;
@@ -404,13 +594,46 @@
         });
 
         if (!q.trim()) {
-          search.classList.add('mandatory');
+          searchInput.classList.add('mandatory');
+          isSearchRunning = false;
           return;
+        }
+
+        switch (sort.value) {
+          case 'oldest': orderBy = 'created'; break;
+          case 'mostremixed': orderBy = '-remixCount,-created'; break;
+          case 'leastremixed': orderBy = 'remixCount'; break;
+          default: orderBy = '-created';
+        };
+
+        let filters = `branchURL:${branchURL || '*'}`;
+
+        switch(type) {
+          case 'premium': filters = `${filters} AND premium:(true)`; break;
+          case 'free': filters = `${filters} AND premium:(false)`; break;
+        }
+        
+        switch(animated) {
+          case 'animated': filters = `${filters} AND animated:(true)`; break;
+          case 'still': filters = `${filters} AND animated:(false)`; break;
+        }
+
+        if (locale.length > 0) {
+          filters = `${filters} AND locales:("${locale.join('*" OR "')}*")`;
+        }
+
+        if (widthFrom || widthTo) {
+          filters = `${filters} AND (rendition.maxWidth:[${widthFrom || '*'} TO ${widthTo || '*'}])`;
+        }
+
+        if (heightFrom || heightTo) {
+          filters = `${filters} AND (rendition.maxHeight:[${heightFrom || '*'} TO ${heightTo || '*'}])`;
         }
 
         const params = {
           q,
-          filters: `branchURL:${branchURL || '*'}`,
+          filters,
+          orderBy,
           limit: 100,
         };
 
@@ -432,16 +655,24 @@
         const searchTotal = json._embedded.total;
         let total = 0;
 
-        const selectAll = document.querySelector('#select-all');
-        if (results.length > 0) {
-          selectAll.classList.remove('hidden');
-        } else {
-          selectAll.classList.add('hidden');
-        }
-
         while (results.length > 0) {
+          if (stopSearch) {
+            results = [];
+            break;
+          }
           await asyncForEach(results, async t => {
+            if (stopSearch) {
+              results = [];
+              return;
+            }
+
             const tobj = resultToTemplate(t);
+
+            // client side filtering
+            if (ration || ratiod) {
+              const regex = new RegExp(`^${ration || '.*'}\:${ratiod || '.*$'}`);
+              if (!tobj.ratio.match(regex)) return;
+            }
 
             // API seems to return duplicates
             if (allResults.find((tmplt) => tmplt.branchURL ===  tobj.branchURL)) {
@@ -451,7 +682,6 @@
             }
 
             total++;
-
 
             const template = document.createElement('div');
             template.classList.add('template');
@@ -463,19 +693,22 @@
                     <video autoplay muted loop playsinline autoplay="true" loop="true" poster="${tobj.thumbnail}">
                   <source src="${tobj.asset}" type="video/mp4">
                 </video>
-                </div>
-                <a href="${tobj.branchURL}" target="_blank">
-                  <div class="title">${tobj.title}</div>
-                </a>`;
+                </div>`;
             } else {
               template.innerHTML += `
                 <div class="thumbnail-container">
                   <img loading="lazy" src="${tobj.thumbnail}">
-                </div>
-                <a href="${tobj.branchURL}" target="_blank">
-                  <div class="title">${tobj.title}</div>
-                </a>`;
+                </div>`;
             }
+            template.innerHTML += `<div class="data">
+              <div class="title" title="${tobj.title}"><span>Title:</span><a href="${tobj.branchURL}" target="_blank">${tobj.title}</a></div>
+              <div class="size" title="${tobj.size}"><span>Size:</span>${tobj.size}</div>
+              <div class="category" title="${tobj.categories}"><span>Category:</span>${tobj.category}</div>
+              <div class="keywords" title="${tobj.keywords}"><span>Keywords:</span>${tobj.keywords}</div>
+              <div class="usecase" title="${tobj.usecase}"><span>Use Case:</span>${tobj.usecase}</div>
+              <div class="created" title="${tobj.created}"><span>Created:</span>${tobj.created}</div>
+              <div class="remix" title="${tobj.remixCount}"><span>Remix count:</span>${tobj.remixCount}</div>
+            </div>`;
 
             if (tobj.premium) {
               template.innerHTML += `<div class="premium" title="Premium"></div>`;
@@ -492,7 +725,7 @@
             resultContainer.append(template);
           });
 
-          if (json._links && json._links.next && json._links.next.href) {
+          if (!stopSearch && json._links && json._links.next && json._links.next.href) {
             res = await fetch(`${API_ROOT}${json._links.next.href}`, options);
 
             json = await res.json();
@@ -502,6 +735,16 @@
           }
         }
 
+        const selectAll = document.querySelector('#select-all');
+        if (total > 0) {
+          selectAll.classList.remove('hidden');
+          resultContainer.classList.add('has-result');
+        } else {
+          selectAll.classList.add('hidden');
+          resultContainer.innerHTML = '<div class="no-result">No template matches your search criteria.</div>'
+        }
+
+        isSearchRunning = false;
         console.log(`Showing a total of ${total}/${searchTotal} templates`);
       }
 
@@ -603,18 +846,145 @@
   </head>
   <body>
     <main>
-      <h1>Pick your templates</h1>
-      <div class="filter">
-        <div>
-          <input type="text" typeautocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
-          <button onclick="search()">Search</button>
+      <div class="layout">
+        <div class="filter">
+          <h2>Filters</h2>
+          <div>
+            <input type="text" typeautocomplete="off" placeholder="Type to search" id="search" onkeyup="searchOnReturn(event)">
+            <button onclick="search()">Search</button>
+          </div>
+          <div class="searchField">
+            <div>
+              <input type="radio" id="newest" name="sort" value="newest" checked>
+              <label for="newest">Newest to Oldest</label>
+            </div>
+            <div>
+              <input type="radio" id="oldest" name="sort" value="oldest">
+              <label for="oldest">Oldest to Newest</label>
+            </div>
+            <div>
+              <input type="radio" id="mostremixed" name="sort" value="mostremixed">
+              <label for="mostremixed">Most Remixed</label>
+            </div>
+            <div>
+              <input type="radio" id="leastremixed" name="sort" value="leastremixed">
+              <label for="leastremixed">Least Remixed</label>
+            </div>
+          </div>
+          <div class="twocolumns">
+            <div class="searchField">
+              <h3>Type</h3>
+              <div>
+                <input type="checkbox" id="premium" name="type" value="premium" checked>
+                <label for="premium">Premium</label>
+              </div>
+              <div>
+                <input type="checkbox" id="free" name="type" value="free" checked>
+                <label for="free">Free</label>
+              </div>
+            </div>
+            <div class="searchField">
+              <h3>Animated</h3>
+              <div>
+                <input type="checkbox" id="animated" name="animated" value="animated" checked>
+                <label for="animated">Animated</label>
+              </div>
+              <div>
+                <input type="checkbox" id="still" name="animated" value="still" checked>
+                <label for="still">Still</label>
+              </div>
+            </div>
+          </div>
+          <div class="searchField">
+            <h3>Locales</h3>
+            <div class="twocolumns">
+              <div class="full">
+                <input type="checkbox" id="localeToggle" name="localeToggle" value="localeToggle" checked>
+                <label for="localeToggle">Toggle all</label>
+              </div>
+              <div>
+                <input type="checkbox" id="en" name="locale" value="en" checked>
+                <label for="en">English</label>
+              </div>
+              <div>
+                <input type="checkbox" id="fr" name="locale" value="fr" checked>
+                <label for="fr">French</label>
+              </div>
+              <div>
+                <input type="checkbox" id="de" name="locale" value="de" checked>
+                <label for="de">German</label>
+              </div>
+              <div>
+                <input type="checkbox" id="it" name="locale" value="it" checked>
+                <label for="it">Italian</label>
+              </div>
+              <div>
+                <input type="checkbox" id="pt" name="locale" value="pt" checked>
+                <label for="pt">Portuguese</label>
+              </div>
+              <div>
+                <input type="checkbox" id="es" name="locale" value="es" checked>
+                <label for="es">Spanish</label>
+              </div>
+              <div>
+                <input type="checkbox" id="nl" name="locale" value="nl" checked>
+                <label for="nl">Netherlands</label>
+              </div>
+              <div>
+                <input type="checkbox" id="fi" name="locale" value="fi" checked>
+                <label for="fi">Finnish</label>
+              </div>
+              <div>
+                <input type="checkbox" id="da" name="locale" value="da" checked>
+                <label for="da">Danish</label>
+              </div>
+              <div>
+                <input type="checkbox" id="nb" name="locale" value="nb" checked>
+                <label for="nb">Norwegian - Bokmal</label>
+              </div>
+              <div>
+                <input type="checkbox" id="sv" name="locale" value="sv" checked>
+                <label for="sv">Swedish - Sweden</label>
+              </div>
+              <div>
+                <input type="checkbox" id="ja" name="locale" value="ja" checked>
+                <label for="ja">Japanese</label>
+              </div>
+              <div>
+                <input type="checkbox" id="zh-hans" name="locale" value="zh-hans" checked>
+                <label for="zh-hans">Chinese (Simplified)</label>
+              </div>
+              <div>
+                <input type="checkbox" id="zh-hant" name="locale" value="zh-hant" checked>
+                <label for="zh-hant">Chinese (Traditional)</label>
+              </div>
+              <div>
+                <input type="checkbox" id="ko" name="locale" value="ko" checked>
+                <label for="ko">Korean</label>
+              </div>
+            </div>
+          </div>
+          <div class="searchField">
+            <h3>Size</h3>
+            <div class="twocolumns20">
+              <div>Width</div>
+              <div>from <input type="text" id="widthFrom" name="widthFrom"> to <input type="text" id="widthTo" name="widthTo"></div>
+              <div>Height</div>
+              <div>from <input type="text" id="heightFrom" name="heightFrom"> to <input type="text" id="heightTo" name="heightTo"></div>
+              <div>Ratio</div>
+              <div><input type="text" id="ration" name="ratiod"> : <input type="text" id="ratiod" name="ratiod"></div>
+            </div>
+          </div>
         </div>
-        <div id="select-all" class="hidden">
-          <input id="select-all-checkbox" type="checkbox" onclick="toggleSelectAll()">
-          <label for="select-all-checkbox" onclick="toggleSelectAll()">select all</label>
+        <div class="content">
+          <h1>Pick your templates</h1>
+          <div id="select-all" class="hidden">
+            <input id="select-all-checkbox" type="checkbox" onclick="toggleSelectAll()">
+            <label for="select-all-checkbox" onclick="toggleSelectAll()">select all</label>
+          </div>
+          <div id="results"></div>
         </div>
       </div>
-      <div id="results"></div>
       <div id="selectionPanel" class="hidden">
         <div id="selectedList"></div>
         <div id="copyOptions">
@@ -637,7 +1007,99 @@
     </div>
     <script>
       window.addEventListener('DOMContentLoaded', () => {
+        const localeToggle = document.getElementById('localeToggle');
+        localeToggle.addEventListener('click', () => {
+          const locales = document.querySelectorAll('[name="locale"]');
+          locales.forEach(l => {
+            l.checked = localeToggle.checked;
+          });
+          search();
+        });
+
+        const sorts = document.querySelectorAll('[name="sort"]');
+        const types = document.querySelectorAll('[name="type"]');
+        const animateds = document.querySelectorAll('[name="animated"]');
+        const locales = document.querySelectorAll('[name="locale"]');
+
+        Array.from(sorts)
+          .concat(Array.from(types))
+          .concat(Array.from(animateds))
+          .concat(Array.from(locales))
+          .forEach((i) => {
+            i.addEventListener('change', search);
+          });
+
+        const widthFrom = document.getElementById('widthFrom');
+        const widthTo = document.getElementById('widthTo');
+        const heightFrom = document.getElementById('heightFrom');
+        const heightTo = document.getElementById('heightTo');
+        const ration = document.getElementById('ration');
+        const ratiod = document.getElementById('ratiod');
+
+        widthFrom.addEventListener('change', search);
+        widthTo.addEventListener('change', search);
+        heightFrom.addEventListener('change', search);
+        heightTo.addEventListener('change', search);
+        ration.addEventListener('change', search);
+        ratiod.addEventListener('change', search);
+        
         const params = new URLSearchParams(window.location.search);
+        const sort = params.get('sort');
+        if (sort) {
+          const input = document.getElementById(sort);
+          if (input) {
+            input.checked = true;
+          }
+        }
+
+        const type = params.get('type');
+        if (type) {
+          types.forEach(t => {
+            if (t.value === type) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
+        }
+
+        const animated = params.get('animated');
+        if (animated) {
+          animateds.forEach(t => {
+            if (t.value === animated) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
+        }
+
+        const locale = params.get('locale');
+        if (locale) {
+          const ls = locale.split(',');
+          locales.forEach(t => {
+            if (ls.indexOf(t.value) !== -1) {
+              t.checked = true;
+            } else {
+              t.checked = false;
+            }
+          });
+        }
+
+        const setInputValue = (ps, name, input) => {
+          const p = ps.get(name);
+          if (p) {
+            input.value = p;
+          }
+        }
+
+        setInputValue(params, 'widthFrom', widthFrom);
+        setInputValue(params, 'widthTo', widthTo);
+        setInputValue(params, 'heightFrom', heightFrom);
+        setInputValue(params, 'heightTo', heightTo);
+        setInputValue(params, 'ration', ration);
+        setInputValue(params, 'ratiod', ratiod);
+
         const q = params.get('q');
         if (q) {
           document.getElementById('search').value = q;

@@ -577,7 +577,7 @@ export function decorateBlocks($main) {
     if ($section) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list',
+    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
       'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns'];
 
     if (blockName !== 'how-to-steps-carousel') {
@@ -869,7 +869,8 @@ export function decorateButtons(block = document) {
     }
     if (!noButtonBlocks.includes(blockName)
       && originalHref !== $a.textContent
-      && !$a.textContent.endsWith(' >')) {
+      && !$a.textContent.endsWith(' >')
+      && !$a.textContent.endsWith(' ›')) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -886,6 +887,15 @@ export function decorateButtons(block = document) {
             && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
+        }
+      }
+      if ($a.textContent.trim().startsWith('{{icon-') && $a.textContent.trim().endsWith('}}')) {
+        const $iconName = /{{icon-([\w-]+)}}/g.exec($a.textContent.trim())[1];
+        if ($iconName) {
+          const $icon = getIcon($iconName, `${$iconName} icon`);
+          $a.innerHTML = $icon;
+          $a.classList.remove('button', 'primary', 'secondary', 'accent');
+          $a.title = $iconName;
         }
       }
     }
@@ -1176,13 +1186,17 @@ function makeRelativeLinks($main) {
     if (!$a.href) return;
     try {
       const {
-        hostname, pathname, search, hash,
+        protocol, hostname, pathname, search, hash,
       } = new URL($a.href);
       if (hostname.endsWith('.page')
         || hostname.endsWith('.live')
         || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
+      } else if (hostname !== 'adobesparkpost.app.link'
+        && !['tel:', 'mailto:', 'sms:'].includes(protocol)) {
+        // open external links in a new tab
+        $a.target = '_blank';
       }
     } catch (e) {
       // invalid url
@@ -1603,6 +1617,12 @@ function loadFEDS() {
         hrefURL.host = env.spark;
         $a.setAttribute('href', hrefURL.toString());
       });
+    }
+
+    /* region based redirect to homepage */
+    if (window.feds && window.feds.data && window.feds.data.location && window.feds.data.location.country === 'CN') {
+      const regionpath = locale === 'us' ? '/' : `/${locale}/`;
+      window.location.href = regionpath;
     }
   });
   let prefix = '';
