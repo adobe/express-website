@@ -508,7 +508,6 @@ function decorateHeaderAndFooter() {
 
   document.querySelector('footer').innerHTML = `
     <div id="feds-footer"></div>
-    <div class="evidon-notice-link"></div>
   `;
 }
 
@@ -711,29 +710,6 @@ export function readBlockConfig($block) {
     }
   });
   return config;
-}
-
-async function loadFont(name, url, weight) {
-  const font = new FontFace(name, url, { weight });
-  const fontLoaded = await font.load();
-  return (fontLoaded);
-}
-
-async function loadFonts() {
-  try {
-    /* todo promise.All */
-    const f900 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
-    const f400 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
-    const f700 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
-    document.fonts.add(f900);
-    document.fonts.add(f400);
-    document.fonts.add(f700);
-    sessionStorage.setItem('helix-fonts', 'loaded');
-  } catch (err) {
-    /* something went wrong */
-    console.log(err);
-  }
-  document.body.classList.add('font-loaded');
 }
 
 export function getMetadata(name) {
@@ -1445,9 +1421,6 @@ async function wordBreakJapanese() {
 async function loadEager() {
   setTheme();
   if (!window.hlx.lighthouse) await decorateTesting();
-  if (sessionStorage.getItem('helix-font') === 'loaded') {
-    loadFonts();
-  }
 
   const main = document.querySelector('main');
   if (main) {
@@ -1497,7 +1470,6 @@ async function loadLazy() {
   sampleRUM('lcp');
 
   loadBlocks(main);
-  loadFonts();
   loadCSS('/express/styles/lazy-styles.css');
   resolveFragments();
   addPromotion();
@@ -1505,24 +1477,159 @@ async function loadLazy() {
   if (!window.hlx.lighthouse) loadMartech();
 }
 
-/**
- * loads everything that happens a lot later, without impacting
- * the user experience.
- */
-function loadDelayed() {
-  /* trigger delayed.js load */
-  const delayedScript = '/express/scripts/delayed.js';
-  const usp = new URLSearchParams(window.location.search);
-  const delayed = usp.get('delayed');
+function loadIMS() {
+  window.adobeid = {
+    client_id: 'MarvelWeb3',
+    scope: 'AdobeID,openid',
+    locale: getLocale(window.location),
+    environment: 'prod',
+  };
+  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
+}
 
-  if (!(delayed === 'off' || document.querySelector(`head script[src="${delayedScript}"]`))) {
-    let ms = 0;
-    const delay = usp.get('delay');
-    if (delay) ms = +delay;
-    setTimeout(() => {
-      loadScript(delayedScript, null, 'module');
-    }, ms);
+function loadFEDS() {
+  const locale = getLocale(window.location);
+
+  async function showRegionPicker() {
+    const $body = document.body;
+    const regionpath = locale === 'us' ? '/' : `/${locale}/`;
+    const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com' : '';
+    const url = `${host}${regionpath}`;
+    const resp = await fetch(url);
+    const html = await resp.text();
+    const $div = createTag('div');
+    $div.innerHTML = html;
+    const $regionNav = $div.querySelector('nav.language-Navigation');
+    if (!$regionNav) {
+      return;
+    }
+    const $regionPicker = createTag('div', { id: 'region-picker' });
+    $body.appendChild($regionPicker);
+    $regionPicker.appendChild($regionNav);
+    $regionNav.appendChild(createTag('div', { class: 'close' }));
+    $regionPicker.addEventListener('click', (event) => {
+      if (event.target === $regionPicker || event.target === $regionNav) {
+        $regionPicker.remove();
+      }
+    });
+    $regionPicker.querySelectorAll('li a').forEach(($a) => {
+      $a.addEventListener('click', (event) => {
+        const pathSplits = new URL($a.href).pathname.split('/');
+        const prefix = pathSplits[1] ? `/${pathSplits[1]}` : '';
+        const destLocale = pathSplits[1] ? `${pathSplits[1]}` : 'us';
+        const off = locale !== 'us' ? locale.length + 1 : 0;
+        const gPath = window.location.pathname.substr(off);
+        let domain = '';
+        if (window.location.hostname.endsWith('.adobe.com')) domain = ' domain=adobe.com;';
+        const cookieValue = `international=${destLocale};${domain} path=/`;
+        // eslint-disable-next-line no-console
+        console.log(`setting international based on language switch to: ${cookieValue}`);
+        document.cookie = cookieValue;
+        event.preventDefault();
+        window.location.href = prefix + gPath;
+      });
+    });
+    // focus link of current region
+    const lang = getLanguage(getLocale(new URL(window.location.href))).toLowerCase();
+    const currentRegion = $regionPicker.querySelector(`li a[lang="${lang}"]`);
+    if (currentRegion) {
+      currentRegion.focus();
+    }
   }
+
+  function handleConsentSettings() {
+    try {
+      if (!window.adobePrivacy || window.adobePrivacy.hasUserProvidedCustomConsent()) {
+        window.sprk_full_consent = false;
+        return;
+      }
+      if (window.adobePrivacy.hasUserProvidedConsent()) {
+        window.sprk_full_consent = true;
+      } else {
+        window.sprk_full_consent = false;
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn("Couldn't determine user consent status:", e);
+      window.sprk_full_consent = false;
+    }
+  }
+
+  window.addEventListener('adobePrivacy:PrivacyConsent', handleConsentSettings);
+  window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
+  window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
+
+  window.fedsConfig = {
+    ...(window.fedsConfig || {}),
+
+    footer: {
+      regionModal: () => {
+        showRegionPicker();
+      },
+    },
+    locale: (locale === 'us' ? 'en' : locale),
+    content: {
+      experience: 'cc-express/cc-express-gnav',
+    },
+    profile: {
+      customSignIn: () => {
+        const sparkLang = getLanguage(locale);
+        const sparkPrefix = sparkLang === 'en-US' ? '' : `/${sparkLang}`;
+        let sparkLoginUrl = `https://express.adobe.com${sparkPrefix}/sp/`;
+        const env = getHelixEnv();
+        if (env && env.spark) {
+          sparkLoginUrl = sparkLoginUrl.replace('express.adobe.com', env.spark);
+        }
+        window.location.href = sparkLoginUrl;
+      },
+    },
+    privacy: {
+      otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
+      footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
+    },
+  };
+
+  window.addEventListener('feds.events.experience.loaded', () => {
+    document.querySelector('body').classList.add('feds-loaded');
+    /* attempt to switch link */
+    if (window.location.pathname.includes('/create/')
+      || window.location.pathname.includes('/discover/')
+      || window.location.pathname.includes('/feature/')) {
+      const $aNav = document.querySelector('header a.feds-navLink--primaryCta');
+      const $aHero = document.querySelector('main > div:first-of-type a.button.accent');
+      if ($aNav && $aHero) {
+        $aNav.href = $aHero.href;
+      }
+    }
+
+    /* switch all links if lower envs */
+    const env = getHelixEnv();
+    if (env && env.spark) {
+      // eslint-disable-next-line no-console
+      // console.log('lower env detected');
+      document.querySelectorAll('a[href^="https://spark.adobe.com/"]').forEach(($a) => {
+        const hrefURL = new URL($a.href);
+        hrefURL.host = env.spark;
+        $a.setAttribute('href', hrefURL.toString());
+      });
+      document.querySelectorAll('a[href^="https://express.adobe.com/"]').forEach(($a) => {
+        const hrefURL = new URL($a.href);
+        hrefURL.host = env.spark;
+        $a.setAttribute('href', hrefURL.toString());
+      });
+    }
+
+    /* region based redirect to homepage */
+    if (window.feds && window.feds.data && window.feds.data.location && window.feds.data.location.country === 'CN') {
+      const regionpath = locale === 'us' ? '/' : `/${locale}/`;
+      window.location.href = regionpath;
+    }
+  });
+  let prefix = '';
+  if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
+    prefix = 'https://www.adobe.com';
+  }
+  loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`).id = 'feds-script';
 }
 
 /**
@@ -1535,7 +1642,8 @@ async function decoratePage() {
 
   await loadEager();
   loadLazy();
-  loadDelayed();
+  loadIMS();
+  loadFEDS();
 }
 
 if (!window.hlx.init && !window.isTestEnv) {
