@@ -925,6 +925,27 @@ export function checkTesting() {
   return (getMeta('testing').toLowerCase() === 'on');
 }
 
+export function unhideBody(id) {
+  try {
+    document.head.removeChild(document.getElementById(id));
+  } catch (e) {
+    // nothing
+  }
+}
+
+export function hideBody(id) {
+  const style = document.createElement('style');
+  style.id = id;
+  style.textContent = 'body{visibility: hidden !important}';
+
+  try {
+    document.head.appendChild(style);
+  } catch (e) {
+    // nothing
+  }
+}
+
+
 async function decorateTesting() {
   let runTest = true;
   // let reason = '';
@@ -933,6 +954,16 @@ async function decorateTesting() {
   if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
     // eslint-disable-next-line no-console
     console.log('rushing martech');
+    if (!window.hlx.lighthouse) {
+      const target = checkTesting();
+      if (target) {
+        const bodyHideStyleId = 'helix-body-style';
+        hideBody(bodyHideStyleId);
+        setTimeout(() => {
+          unhideBody(bodyHideStyleId);
+        }, 3000);
+      }
+    }
     loadScript('/express/scripts/instrument.js', null, 'module');
   }
 
@@ -1369,26 +1400,6 @@ window.spark = {};
 const hostparam = new URLSearchParams(window.location.search).get('hostname');
 window.spark.hostname = hostparam || window.location.hostname;
 
-export function unhideBody(id) {
-  try {
-    document.head.removeChild(document.getElementById(id));
-  } catch (e) {
-    // nothing
-  }
-}
-
-export function hideBody(id) {
-  const style = document.createElement('style');
-  style.id = id;
-  style.textContent = 'body{visibility: hidden !important}';
-
-  try {
-    document.head.appendChild(style);
-  } catch (e) {
-    // nothing
-  }
-}
-
 export function addAnimationToggle(target) {
   target.addEventListener('click', () => {
     const videos = target.querySelectorAll('video');
@@ -1437,16 +1448,6 @@ async function loadEager() {
     if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
-    if (!window.hlx.lighthouse) {
-      const target = checkTesting();
-      if (target) {
-        const bodyHideStyleId = 'helix-body-style';
-        hideBody(bodyHideStyleId);
-        setTimeout(() => {
-          unhideBody(bodyHideStyleId);
-        }, 3000);
-      }
-    }
 
     const lcpCandidate = document.querySelector('main img');
     await new Promise((resolve) => {
