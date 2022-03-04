@@ -1369,7 +1369,7 @@ window.spark = {};
 const hostparam = new URLSearchParams(window.location.search).get('hostname');
 window.spark.hostname = hostparam || window.location.hostname;
 
-function unhideBody(id) {
+export function unhideBody(id) {
   try {
     document.head.removeChild(document.getElementById(id));
   } catch (e) {
@@ -1377,7 +1377,7 @@ function unhideBody(id) {
   }
 }
 
-function hideBody(id) {
+export function hideBody(id) {
   const style = document.createElement('style');
   style.id = id;
   style.textContent = 'body{visibility: hidden !important}';
@@ -1440,7 +1440,7 @@ async function loadEager() {
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
       if (target) {
-        const bodyHideStyleId = 'at-body-style';
+        const bodyHideStyleId = 'helix-body-style';
         hideBody(bodyHideStyleId);
         setTimeout(() => {
           unhideBody(bodyHideStyleId);
