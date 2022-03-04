@@ -17,7 +17,6 @@ import {
   getLanguage,
   getMetadata,
   checkTesting,
-  unhideBody,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
@@ -54,10 +53,6 @@ if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
 
 loadScript(martechURL, () => {
   /* eslint-disable no-underscore-dangle */
-
-  /* let target take over */
-  const bodyHideStyleId = 'helix-body-style';
-  unhideBody(bodyHideStyleId);
 
   //------------------------------------------------------------------------------------
   // gathering the data
