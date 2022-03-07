@@ -13,6 +13,7 @@ main .columns-highlight-container {
 }
 
 main .columns-container > div,
+main .columns-fullsize-container > div,
 main .columns-dark-container > div,
 main .columns-center-container > div,
 main .columns-top-container > div {
@@ -590,6 +591,8 @@ main .columns.fullsize .has-brand > div p:first-child {
 
 main .columns.fullsize > div > div .button-container.fixed-button {
   margin: 0;
+  display: flex;
+  justify-content: center;
 }
 
 main .fixed-button.button-container {
@@ -726,6 +729,7 @@ main .columns.highlight .column.column-picture {
 
   main .columns.fullsize > div > div .button-container.fixed-button {
     margin: 0;
+    display: none;
   }
 
   main .columns .column {
