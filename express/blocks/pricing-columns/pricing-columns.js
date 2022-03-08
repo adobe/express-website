@@ -88,6 +88,9 @@ export function buildUrl(optionUrl, country, language) {
 }
 
 function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
+  const url = new URL(window.location.href);
+  const sparkTouchpoint = url.searchParams.get('touchpointName');
+
   digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
   digitalData._set('spark.eventData.eventName', sparkEventName);
   digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
@@ -97,6 +100,7 @@ function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
   digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
   digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
   digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+  digitalData._set('spark.eventData.trigger', sparkTouchpoint);
 
   _satellite.track('event', {
     digitalData: digitalData._snapshot(),
@@ -263,7 +267,7 @@ function decoratePlan($column) {
       const { planUrl } = $pricingCta.dataset;
       const plan = await fetchPlan(planUrl);
       const adobeEventName = 'adobe.com:express:pricing:beginPurchaseFlow';
-      const sparkEventName = 'pricing:beginPurchaseFlow';
+      const sparkEventName = 'beginPurchaseFlow';
       pushPricingAnalytics(adobeEventName, sparkEventName, plan);
     });
     $pricingHeader.append($pricingCta);
