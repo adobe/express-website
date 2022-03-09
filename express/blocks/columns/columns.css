@@ -438,6 +438,10 @@ main .columns.highlight .column p {
     transform: unset;
   }
 
+  body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
+    padding-left: 0;
+  }
+
   body.no-brand-header main .columns .has-brand {
     padding-top: 0;
   }
@@ -619,6 +623,12 @@ main .columns .column.column-picture {
   padding-right: 8px;
 }
 
+body.no-brand-header main .columns.columns-marquee:not(.center):not(.fullsize) .brand.icon {
+  transform: none;
+  left: 0;
+  padding-left: 32px;
+}
+
 main .columns.fullsize .hero-animation-overlay {
   padding-top: 4px;
   padding-bottom: 4px;
@@ -652,6 +662,10 @@ main .columns.highlight .column.column-picture {
 
   body.has-fixed-button .button-container a.accent {
     display: inline-block;
+  }
+
+  body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
+    padding-left: 0px;
   }
 
   main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
