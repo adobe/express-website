@@ -68,9 +68,11 @@ export default function decorate($block) {
     const params = new URL(window.location).searchParams;
     const TOTAL_TEST_MESSAGES = Math.min(params.get('total'), 100000);
     const CHUNK_SIZE = Math.min(params.get('chunkSize'), 2000);
+    const key = params.get('key') || 'test';
+    const SLEEP = params.get('sleep') || 30;
 
     for (let i = 0; i < TOTAL_TEST_MESSAGES; i += 1) {
-      const email = `adobe-test-${total}@adobetest.com`;
+      const email = `adobe-test-${total}-${key}@adobetest.com`;
       const body = {
         sname: 'adbemeta',
         email,
@@ -108,7 +110,7 @@ export default function decorate($block) {
 
       // Slight delay
       // eslint-disable-next-line no-await-in-loop
-      await sleep(30);
+      await sleep(SLEEP);
 
       // If the duration of this chunk is greater than 1 minute or
       // we have already sent 2000 messages then start a new chunk
