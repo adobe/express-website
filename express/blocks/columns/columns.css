@@ -429,14 +429,6 @@ main .columns.highlight .column .columns-iconlist > div {
 main .columns.highlight .column p {
   font-size: var(--body-font-size-s);
 }
-@media (min-width: 600px) {
-  main .columns-container > div,
-  main .columns-dark-container > div,
-  main .columns-center-container > div,
-  main .columns-top-container > div {
-    max-width: 700px;
-  }
-}
 
 @media (min-width: 900px) {
   body.no-brand-header main .columns.columns-marquee .brand.icon {
@@ -444,6 +436,10 @@ main .columns.highlight .column p {
     top: unset;
     left: unset;
     transform: unset;
+  }
+
+  body.no-brand-header main .columns.columns-marquee:not(.center):not(.fullsize) .brand.icon {
+    padding-left: 0;
   }
 
   body.no-brand-header main .columns .has-brand {
@@ -455,6 +451,7 @@ main .columns.highlight .column p {
   }
 
   main .columns-container > div,
+  main .columns-fullsize-container > div,
   main .columns-dark-container > div,
   main .columns-center-container > div,
   main .columns-top-container > div {
@@ -553,10 +550,6 @@ main .columns .column {
   padding-right: 0;
 }
 
-body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
-  padding-left: 0;
-}
-
 main .columns.fullsize .hero-animation-overlay {
   order: -1;
 }
@@ -630,7 +623,7 @@ main .columns .column.column-picture {
   padding-right: 8px;
 }
 
-body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
+body.no-brand-header main .columns.columns-marquee:not(.center):not(.fullsize) .brand.icon {
   transform: none;
   left: 0;
   padding-left: 32px;
@@ -671,8 +664,8 @@ main .columns.highlight .column.column-picture {
     display: inline-block;
   }
 
-  body.no-brand-header main .columns.columns-marquee:not(.center) .brand.icon {
-    padding-left: 0px;
+  body.no-brand-header main .columns.columns-marquee:not(.center):not(.fullsize) .brand.icon {
+    padding-left: 0;
   }
 
   main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
