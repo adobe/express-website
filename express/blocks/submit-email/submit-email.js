@@ -87,6 +87,7 @@ export default function decorate($block) {
       try {
         // eslint-disable-next-line no-await-in-loop
         await fetch('https://www.adobe.com/api2/subscribe_v1', requestOptions);
+        console.log(`Sent ${index} email to: ${email}`);
         $formHeading.textContent = 'Thanks for signing up!';
         $formHeading.classList.add('success');
         $emailInput.classList.remove('error');
@@ -103,7 +104,7 @@ export default function decorate($block) {
       // Calculate duration of current chunk
       const now = new Date().getTime();
       const duration = now - chunkStart;
-      console.log(`Sent ${index} email to: ${email} - Duration ${duration}ms`);
+      console.log(`Total Attempted ${total} - Chunk Duration ${duration}ms`);
 
       // Slight delay
       // eslint-disable-next-line no-await-in-loop
