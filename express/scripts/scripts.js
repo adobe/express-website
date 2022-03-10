@@ -1513,7 +1513,7 @@ function loadFEDS() {
       }
     });
     $regionPicker.querySelectorAll('li a').forEach(($a) => {
-      $a.addEventListener('click', (event) => {
+      $a.addEventListener('click', async (event) => {
         const pathSplits = new URL($a.href).pathname.split('/');
         const prefix = pathSplits[1] ? `/${pathSplits[1]}` : '';
         const destLocale = pathSplits[1] ? `${pathSplits[1]}` : 'us';
@@ -1526,7 +1526,10 @@ function loadFEDS() {
         console.log(`setting international based on language switch to: ${cookieValue}`);
         document.cookie = cookieValue;
         event.preventDefault();
-        window.location.href = prefix + gPath;
+        const checkResp = await fetch(prefix + gPath);
+        if (checkResp.ok) {
+          window.location.href = `${prefix}/`;
+        }
       });
     });
     // focus link of current region
