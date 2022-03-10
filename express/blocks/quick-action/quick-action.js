@@ -18,7 +18,9 @@ export default function decorate(block) {
   window.qtWebViewScheme = 'false';
   window.qtColorTheme = '';
   // eslint-disable-next-line no-underscore-dangle
-  window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express.adobe.com/express-apps/quick-actions-api' }
+  window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express.adobe.com/express-apps/quick-actions-api' };
+  // eslint-disable-next-line no-underscore-dangle
+  window._sparkImsOnReadyCalled = true;
   block.innerHTML = '<div id="quick-task-container"></div>';
-  loadScript('https://express-stage.adobe.com/static/platform-shell/standalone-host-app-1fecd562.js');
+  loadScript('https://express.adobe.com/static/platform-shell/standalone-host-app-e38b7076.js');
 }
