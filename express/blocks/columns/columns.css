@@ -665,7 +665,7 @@ main .columns.highlight .column.column-picture {
   }
 
   body.no-brand-header main .columns.columns-marquee:not(.center):not(.fullsize) .brand.icon {
-    padding-left: 0px;
+    padding-left: 0;
   }
 
   main .columns-fullsize-center-container .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation-overlay) {
