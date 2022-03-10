@@ -65,7 +65,7 @@ export default function decorate($block) {
 
     const failed = [];
 
-    const TOTAL_TEST_MESSAGES = 100000;
+    const TOTAL_TEST_MESSAGES = 1000;
 
     for (let i = 0; i < TOTAL_TEST_MESSAGES; i += 1) {
       const email = `adobe-test-${total}@adobetest.com`;
@@ -108,10 +108,11 @@ export default function decorate($block) {
 
       // If the duration of this chunk is greater than 1 minute or
       // we have already sent 2000 messages then start a new chunk
-      if (duration > 60000 || index === 2000) {
+      if (duration > 60000 || index === 200) {
         index = 0;
         console.log('Hit limit.. pausing');
 
+        // if we finished before the minute mark then wait until the minute mark
         // eslint-disable-next-line no-await-in-loop
         await sleep(60000 - duration);
         chunkStart = new Date().getTime();
