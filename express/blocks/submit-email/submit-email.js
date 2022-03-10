@@ -65,7 +65,9 @@ export default function decorate($block) {
 
     const failed = [];
 
-    const TOTAL_TEST_MESSAGES = 1000;
+    const params = new URL(window.location).searchParams;
+    const TOTAL_TEST_MESSAGES = Math.min(params.get('total'), 100000);
+    const CHUNK_SIZE = Math.min(params.get('chunkSize'), 2000);
 
     for (let i = 0; i < TOTAL_TEST_MESSAGES; i += 1) {
       const email = `adobe-test-${total}@adobetest.com`;
@@ -90,6 +92,7 @@ export default function decorate($block) {
         $emailInput.classList.remove('error');
         $emailInput.value = '';
       } catch (error) {
+        console.log('Error: ', error.message);
         $formHeading.textContent = `An error occurred during subscription: ${error.message}`;
         failed.push(email);
       }
@@ -108,7 +111,7 @@ export default function decorate($block) {
 
       // If the duration of this chunk is greater than 1 minute or
       // we have already sent 2000 messages then start a new chunk
-      if (duration > 60000 || index === 200) {
+      if (duration > 60000 || index === CHUNK_SIZE) {
         index = 0;
         console.log('Hit limit.. pausing');
 
