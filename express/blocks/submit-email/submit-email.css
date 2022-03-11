@@ -22,7 +22,7 @@
   font-weight: 900;
   text-align: left;
   line-height: 36px;
-  padding: 40px 0px;
+  padding: 12px 0px;
 }
 
 .submit-email span {
@@ -35,6 +35,7 @@
   font-size: var(--body-font-size-xxl);
   font-weight: bold;
   text-align: left;
+  margin-top: 16px;
   margin-bottom: 16px;
 }
 
