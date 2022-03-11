@@ -508,7 +508,6 @@ function decorateHeaderAndFooter() {
 
   document.querySelector('footer').innerHTML = `
     <div id="feds-footer"></div>
-    <div class="evidon-notice-link"></div>
   `;
 }
 
@@ -713,29 +712,6 @@ export function readBlockConfig($block) {
   return config;
 }
 
-async function loadFont(name, url, weight) {
-  const font = new FontFace(name, url, { weight });
-  const fontLoaded = await font.load();
-  return (fontLoaded);
-}
-
-async function loadFonts() {
-  try {
-    /* todo promise.All */
-    const f900 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
-    const f400 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
-    const f700 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
-    document.fonts.add(f900);
-    document.fonts.add(f400);
-    document.fonts.add(f700);
-    sessionStorage.setItem('helix-fonts', 'loaded');
-  } catch (err) {
-    /* something went wrong */
-    console.log(err);
-  }
-  document.body.classList.add('font-loaded');
-}
-
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
@@ -800,16 +776,15 @@ function loadMartech() {
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
+}
 
-  const martechUrl = '/express/scripts/delayed.js';
-  // loadLazyFooter();
-  if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 0;
-    const delay = usp.get('delay');
-    if (delay) ms = +delay;
-    setTimeout(() => {
-      loadScript(martechUrl, null, 'module');
-    }, ms);
+function loadGnav() {
+  const usp = new URLSearchParams(window.location.search);
+  const gnav = usp.get('gnav');
+
+  const gnavUrl = '/express/scripts/gnav.js';
+  if (!(gnav === 'off' || document.querySelector(`head script[src="${gnavUrl}"]`))) {
+    loadScript(gnavUrl, null, 'module');
   }
 }
 
@@ -911,6 +886,15 @@ export function decorateButtons(block = document) {
             && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
+        }
+      }
+      if ($a.textContent.trim().startsWith('{{icon-') && $a.textContent.trim().endsWith('}}')) {
+        const $iconName = /{{icon-([\w-]+)}}/g.exec($a.textContent.trim())[1];
+        if ($iconName) {
+          const $icon = getIcon($iconName, `${$iconName} icon`);
+          $a.innerHTML = $icon;
+          $a.classList.remove('button', 'primary', 'secondary', 'accent');
+          $a.title = $iconName;
         }
       }
     }
@@ -1201,14 +1185,15 @@ function makeRelativeLinks($main) {
     if (!$a.href) return;
     try {
       const {
-        hostname, pathname, search, hash,
+        protocol, hostname, pathname, search, hash,
       } = new URL($a.href);
       if (hostname.endsWith('.page')
         || hostname.endsWith('.live')
         || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
-      } else if (hostname !== 'adobesparkpost.app.link') {
+      } else if (hostname !== 'adobesparkpost.app.link'
+        && !['tel:', 'mailto:', 'sms:'].includes(protocol)) {
         // open external links in a new tab
         $a.target = '_blank';
       }
@@ -1435,9 +1420,6 @@ async function wordBreakJapanese() {
 async function loadEager() {
   setTheme();
   if (!window.hlx.lighthouse) await decorateTesting();
-  if (sessionStorage.getItem('helix-font') === 'loaded') {
-    loadFonts();
-  }
 
   const main = document.querySelector('main');
   if (main) {
@@ -1487,32 +1469,11 @@ async function loadLazy() {
   sampleRUM('lcp');
 
   loadBlocks(main);
-  loadFonts();
   loadCSS('/express/styles/lazy-styles.css');
   resolveFragments();
   addPromotion();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
-}
-
-/**
- * loads everything that happens a lot later, without impacting
- * the user experience.
- */
-function loadDelayed() {
-  /* trigger delayed.js load */
-  const delayedScript = '/express/scripts/delayed.js';
-  const usp = new URLSearchParams(window.location.search);
-  const delayed = usp.get('delayed');
-
-  if (!(delayed === 'off' || document.querySelector(`head script[src="${delayedScript}"]`))) {
-    let ms = 0;
-    const delay = usp.get('delay');
-    if (delay) ms = +delay;
-    setTimeout(() => {
-      loadScript(delayedScript, null, 'module');
-    }, ms);
-  }
 }
 
 /**
@@ -1525,7 +1486,7 @@ async function decoratePage() {
 
   await loadEager();
   loadLazy();
-  loadDelayed();
+  loadGnav();
 }
 
 if (!window.hlx.init && !window.isTestEnv) {

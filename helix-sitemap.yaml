@@ -105,3 +105,18 @@ sitemaps:
         destination: /express/sitemap-blog.xml
         hreflang: fr
         alternate: /fr/{path}
+      spain:
+        source: /es/express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: es
+        alternate: /es/{path}
+      brazil:
+        source: /br/express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: pt
+        alternate: /br/{path}
+      it:
+        source: /it/express/learn/blog/query-index.json
+        destination: /express/sitemap-blog.xml
+        hreflang: it
+        alternate: /it/{path}

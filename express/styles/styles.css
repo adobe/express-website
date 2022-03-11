@@ -1,5 +1,12 @@
 /* default content */
 
+@font-face {
+  font-family: 'Trebuchet MS';
+  size-adjust: 90%;
+  src: local('Trebuchet MS'),
+       local('TrebuchetMS');
+}
+
 :root {
   --color-white: #FFF;
   --color-gray-100: #F8F8F8;
@@ -31,7 +38,7 @@
   /* body */
   --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-200);
-  --body-font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
+  --body-font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
   --body-serif-font-family: 'adobe-clean-serif', 'Adobe Clean Serif', serif;
   --body-font-weight: normal;
   --body-color: var(--color-gray-800);
@@ -362,8 +369,6 @@ main h1, h2, h3, h4, h5, h6 {
 
 main h1 {
   font-size: var(--heading-font-size-xxl);
-  opacity: 0;
-  transition: opacity 0.2s;
 }
 
 main h2 {
@@ -454,10 +459,6 @@ main .section-wrapper:last-of-type {
   }
 }
 
-.font-loaded main h1 {
-  opacity: 1;
-}
-
 /* hero */
 main .hero {
   color: var(--color-white);
@@ -524,6 +525,16 @@ main .icon {
 main .hero .icon {
   height: 2em;
   width: 2em;
+}
+
+main .icon.icon-cc-express-stacked,
+main .columns .icon.icon-cc-express-stacked {
+  width: unset;
+  height: unset;
+}
+
+main .banner .icon.icon-facebook {
+  fill: #1877f2;
 }
 
 main .hero .hero-bg {
@@ -743,4 +754,11 @@ main .template-list-sixcols-container > div {
   h1.budoux, h2.budoux, h3.budoux, h4.budoux, h5.budoux {
     word-break: normal !important;
   }
+}
+
+/* Store icons */
+img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-microsoft-store {
+  height: 70px;
+  width: auto;
+  margin: 8px;
 }
