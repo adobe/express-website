@@ -122,6 +122,7 @@ export function getIcon(icons, alt, size = 44) {
     'brand',
     'brand-libraries',
     'brandswitch',
+    'calendar',
     'certified',
     'changespeed',
     'check',
