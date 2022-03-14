@@ -209,6 +209,7 @@ export default function decorate($block) {
       }
       if ($a && $a.classList.contains('button')) {
         if ($block.classList.contains('fullsize')) {
+          $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
           const $floatButton = $a.parentElement.cloneNode(true);
           $floatButton.classList.add('fixed-button');
