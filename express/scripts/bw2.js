@@ -153,8 +153,8 @@ function toggleWBR(div = document.body, text = '', poses = [], maxLevel = 5) {
     while (cl < minWidths.length - 1 && minWidths[cl] > w) {
       cl += 1;
     }
-    div.querySelectorAll(`.jpn-balanced-wbr-l${cl}`).forEach((e) => e.classList.remove('wbr-off'));
-    div.querySelectorAll(`:not(.jpn-balanced-wbr-l${cl})`).forEach((e) => e.classList.add('wbr-off'));
+    div.querySelectorAll(`wbr.jpn-balanced-wbr-l${cl}`).forEach((e) => e.classList.remove('wbr-off'));
+    div.querySelectorAll(`wbr:not(.jpn-balanced-wbr-l${cl})`).forEach((e) => e.classList.add('wbr-off'));
   });
 
   resizeObserver.observe(div);
