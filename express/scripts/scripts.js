@@ -1389,6 +1389,42 @@ function hideBody(id) {
   }
 }
 
+/**
+ * Generates the intersection observer (after the blocks are finished loading)
+ * to make sure that the fixed button is visible on page load if the
+ * title is too long to show the PrimaryCTA
+ */
+function generateFixedButton() {
+  if (document.body.classList.contains('has-fixed-button')) {
+    const $primaryCTA = document.querySelector('.primaryCTA');
+    const $floatButton = document.querySelector('.fixed-button');
+    const $banner = document.querySelector('.banner-container');
+
+    const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.intersectionRatio > 0) {
+        $floatButton.classList.remove('shown');
+      } else {
+        $floatButton.classList.add('shown');
+      }
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0,
+    });
+
+    if (document.readyState === 'complete') {
+      hideFixedButtonWhenInView.observe($primaryCTA);
+      if ($banner) hideFixedButtonWhenInView.observe($banner);
+    } else {
+      window.addEventListener('load', () => {
+        hideFixedButtonWhenInView.observe($primaryCTA);
+        if ($banner) hideFixedButtonWhenInView.observe($banner);
+      });
+    }
+  }
+}
+
 export function addAnimationToggle(target) {
   target.addEventListener('click', () => {
     const videos = target.querySelectorAll('video');
@@ -1410,7 +1446,7 @@ async function wordBreakJapanese() {
   }
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
-  document.querySelectorAll('h1, h2, h3, h3, h4, h5, p').forEach((el) => {
+  document.querySelectorAll('h1, h2, h3, h4, h5, p:not(.button-container)').forEach((el) => {
     parser.applyElement(el);
   });
 }
@@ -1436,7 +1472,9 @@ async function loadEager() {
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
 
+    generateFixedButton();
     document.querySelector('body').classList.add('appear');
+
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
       if (target) {
