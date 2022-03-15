@@ -17,15 +17,41 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function updateSlider($slider) {
-  const thumbwidth = 60; // the pixel width of the thumb, to get position of tooltip & background.
-  const $input = $slider.querySelector('input[type="range"]');
+function generateRatingSlider($block) {
+  const $slider = createTag('div', { class: 'slider' });
+  $block.append($slider);
+  const $div = createTag('div');
+  $slider.append($div);
+  const $input = createTag('input', {
+    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5',
+  });
+  $div.append($input);
+  $div.insertAdjacentHTML('afterbegin', /* html */`
+    <div class="tooltip">
+      <div>
+        <span class="tooltip--text">
+          Super happy <!-- to-do: use placeholder -->
+        </span>
+        <div class="tooltip--image">
+          <!-- to-do: getIcon -->
+          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />
+        <div>
+      </div>
+    </div>
+  `);
+  const star = getIcon('star');
+  $slider.insertAdjacentHTML('beforeend', /* html */`
+    <div class="slider-bottom">
+      <div class="vertical-line"><span class="stars one-star">${star}</span></div>
+      <div class="vertical-line"><span class="stars two-stars">${star.repeat(2)}</span></div>
+      <div class="vertical-line"><span class="stars three-stars">${star.repeat(3)}</span></div>
+      <div class="vertical-line"><span class="stars four-stars">${star.repeat(4)}</span></div>
+      <div class="vertical-line"><span class="stars five-stars">${star.repeat(5)}</span></div>
+    </div>
+  `);
   const $tooltip = $slider.querySelector('.tooltip');
   const $tooltipText = $slider.querySelector('.tooltip--text');
   const $tooltipImg = $slider.querySelector('.tooltip--image img');
-
-  const val = parseFloat($input.value) ?? 0;
-
   const ratings = [
     {
       class: 'one-star',
@@ -54,61 +80,31 @@ function updateSlider($slider) {
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
     },
   ];
-
-  $tooltipText.innerText = ratings[val - 1].text;
-  $tooltipImg.setAttribute('src', ratings[val - 1].img);
-  ratings.forEach((obj) => $slider.parentElement.classList.remove(obj.class));
-  $slider.parentElement.classList.add(ratings[val - 1].class);
-
-  // set position the tooltip with the thumb
-  const pos = (val - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
-  const thumbCorrect = thumbwidth * (pos - 0.25) * -1;
-  const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
-  $tooltip.style.left = `${titlepos}px`;
-  // show "progress" on the track
-  const percent = pos * 100;
-  $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
-}
-
-function generateRatingSlider($block) {
-  const $slider = createTag('div', { class: 'slider' });
-  $block.append($slider);
-  const $div = createTag('div');
-  $slider.append($div);
-  const $input = createTag('input', {
-    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '1', value: '5',
-  });
-  $div.append($input);
-  $div.insertAdjacentHTML('afterbegin', /* html */`
-    <div class="tooltip">
-      <div>
-        <span class="tooltip--text">
-          Super happy <!-- to-do: use placeholder -->
-        </span>
-        <div class="tooltip--image">
-          <!-- to-do: getIcon -->
-          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />
-        <div>
-      </div>
-    </div>
-  `);
-  const star = getIcon('star');
-  $slider.insertAdjacentHTML('beforeend', /* html */`
-    <div class="slider-bottom">
-      <div class="vertical-line"><span class="stars one-star">${star}</span></div>
-      <div class="vertical-line"><span class="stars two-stars">${star.repeat(2)}</span></div>
-      <div class="vertical-line"><span class="stars three-stars">${star.repeat(3)}</span></div>
-      <div class="vertical-line"><span class="stars four-stars">${star.repeat(4)}</span></div>
-      <div class="vertical-line"><span class="stars five-stars">${star.repeat(5)}</span></div>
-    </div>
-  `);
-  updateSlider($slider);
-  $input.addEventListener('input', () => updateSlider($slider), false);
-  $input.addEventListener('change', () => updateSlider($slider), false);
-  $input.addEventListener('keyup', () => updateSlider($slider), false);
-  window.addEventListener('resize', () => {
-    setTimeout(updateSlider($slider), 100);
-  });
+  function update(rounded = false) {
+    let val = parseFloat($input.value) ?? 0;
+    const index = Math.round(val);
+    if (rounded) {
+      val = index;
+      $input.value = index;
+    }
+    $tooltipText.innerText = ratings[index - 1].text;
+    $tooltipImg.setAttribute('src', ratings[index - 1].img);
+    ratings.forEach((obj) => $block.classList.remove(obj.class));
+    $block.classList.add(ratings[index - 1].class);
+    // set position the tooltip with the thumb
+    const thumbwidth = 60; // pixels
+    const pos = (val - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
+    const thumbCorrect = thumbwidth * (pos - 0.25) * -1;
+    const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
+    $tooltip.style.left = `${titlepos}px`;
+    // show "progress" on the track
+    const percent = pos * 100;
+    $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
+  }
+  update();
+  $input.addEventListener('input', () => update(false));
+  $input.addEventListener('change', () => update(true));
+  window.addEventListener('resize', () => update(true));
 }
 
 export default function decorate($block) {
