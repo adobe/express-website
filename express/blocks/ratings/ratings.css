@@ -89,6 +89,9 @@ main .ratings .slider .vertical-line {
   top: 60px;
   color: #e8e8e8;
   cursor: pointer;
+  padding: 2px;
+  background: transparent;
+  border: none;
 }
 
 .stars img {
