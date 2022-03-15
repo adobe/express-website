@@ -51,10 +51,10 @@ function sliderFunctionality($block) {
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
     },
   ];
-  function update(rounded = false) {
+  function update(snap = true) {
     let val = parseFloat($input.value) ?? 0;
     const index = Math.round(val);
-    if (rounded) {
+    if (snap) {
       val = index;
       $input.value = index;
     }
@@ -73,14 +73,26 @@ function sliderFunctionality($block) {
     $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
   }
   update();
+
+  // Event listeners to update the tooltip & thumb
   $input.addEventListener('input', () => update(false));
-  $input.addEventListener('change', () => update(true));
-  window.addEventListener('resize', () => update(true));
+  $input.addEventListener('change', () => update());
+  $input.addEventListener('keyup', (e) => {
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
+      $input.value -= 1;
+    } else if (e.code === 'ArrowRight' || e.code === 'ArrowUp') {
+      $input.value += 1;
+    }
+    update();
+  });
+  window.addEventListener('resize', () => update());
+
+  // Update when click on star
   const $stars = Array.from($slider.querySelectorAll('.stars'));
   $stars.forEach(($star, index) => {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
-      update(true);
+      update();
     });
   });
 }
