@@ -123,10 +123,10 @@ function decorateRatingSlider($block) {
   $slider.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">
       <div class="vertical-line"><button aria-label="One star" class="stars one-star">${star}</button></div>
-      <div class="vertical-line"><button aria-label="Two stars"  class="stars two-stars">${star.repeat(2)}</button></div>
-      <div class="vertical-line"><button aria-label="Three stars"  class="stars three-stars">${star.repeat(3)}</button></div>
-      <div class="vertical-line"><button aria-label="Four stars"  class="stars four-stars">${star.repeat(4)}</button></div>
-      <div class="vertical-line"><button aria-label="Five stars"  class="stars five-stars">${star.repeat(5)}</button></div>
+      <div class="vertical-line"><button aria-label="Two stars" class="stars two-stars">${star.repeat(2)}</button></div>
+      <div class="vertical-line"><button aria-label="Three stars" class="stars three-stars">${star.repeat(3)}</button></div>
+      <div class="vertical-line"><button aria-label="Four stars" class="stars four-stars">${star.repeat(4)}</button></div>
+      <div class="vertical-line"><button aria-label="Five stars" class="stars five-stars">${star.repeat(5)}</button></div>
     </div>
   `);
   sliderFunctionality($block, $slider);
