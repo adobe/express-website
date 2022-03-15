@@ -78,7 +78,7 @@ main .ratings .slider .lines {
 
 main .ratings .slider .vertical-line {
   height: 20px;
-  border-left: 2px solid #b6b6b6;
+  border-left: 2px solid var(--color-gray-400);
 }
 
 /* Custom styling for the native range input, with cross-browser compatibility */
