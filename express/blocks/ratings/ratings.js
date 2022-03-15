@@ -72,7 +72,7 @@ function generateRatingSlider($block) {
   const $div = createTag('div');
   $slider.append($div);
   const $input = createTag('input', {
-    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.5', value: '5',
+    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '1', value: '5',
   });
   $div.append($input);
   $div.insertAdjacentHTML('afterbegin', /* html */`
