@@ -22,38 +22,34 @@ function updateSlider($slider) {
   const $tooltipText = $slider.querySelector('.tooltip--text');
   const $tooltipImg = $slider.querySelector('.tooltip--image img');
 
+  const val = parseFloat($input.value) ?? 1;
+
   // temporarily getting images from emojipedia
-  const superHappy = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png';
-  const satisfied = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png';
-  const content = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png';
-  const dissatisfied = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png';
-  const upset = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png';
+  const ratings = [
+    {
+      text: 'Super happy',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
+    },
+    {
+      text: 'Satisfied',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png',
+    },
+    {
+      text: 'Content',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png',
+    },
+    {
+      text: 'Dissatisfied',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png',
+    },
+    {
+      text: 'Upset',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png',
+    },
+  ];
 
-  let val = parseFloat($input.value);
-  if (val === '') val = 0;
-
-  let text = 'Super happy';
-  let img = superHappy;
-
-  // Update tooltip
-  if (val === 5) {
-    text = 'Super happy';
-    img = superHappy;
-  } else if (val >= 4) {
-    text = 'Satisfied';
-    img = satisfied;
-  } else if (val >= 3) {
-    text = 'Content';
-    img = content;
-  } else if (val >= 2) {
-    text = 'Dissatisfied';
-    img = dissatisfied;
-  } else if (val >= 1) {
-    text = 'Upset';
-    img = upset;
-  }
-  $tooltipText.innerText = text;
-  $tooltipImg.setAttribute('src', img);
+  $tooltipText.innerText = ratings[val - 1].text;
+  $tooltipImg.setAttribute('src', ratings[val - 1].img);
 
   // set position the tooltip with the thumb
   const pos = (val - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
@@ -62,8 +58,7 @@ function updateSlider($slider) {
   $tooltip.style.left = `${titlepos}px`;
   // show "progress" on the track
   const percent = pos * 100;
-  const gradient = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
-  $input.style.background = gradient;
+  $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
 }
 
 function generateRatingSlider($block) {
@@ -106,8 +101,11 @@ function generateRatingSlider($block) {
 }
 
 export default function decorate($block) {
-  $block.innerHTML = /* html */`
-  <h2 id="rate-our-quick-action">Rate our Quick Action</div>
-  `;
+  const $rating = createTag('h2', { id: 'rate-our-quick-action' });
+  $rating.textContent = 'Rate our Quick Action';
+
+  $block.innerHTML = '';
+  $block.append($rating);
+
   generateRatingSlider($block);
 }
