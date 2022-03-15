@@ -18,7 +18,7 @@ import {
   toClassName,
   getLocale,
   getIconElement,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 import {
@@ -270,4 +270,26 @@ export default function decorate($block) {
   });
   addAnimationToggle($block);
   addHeaderSizing($block);
+  if (numCols === 6) mobileButtonForSixCols();//ccx0022
+}
+
+//ccx0022
+function mobileButtonForSixCols() {
+  let button = document.querySelectorAll('.template-list--sixcols-mobile-button-');
+  if (!button.length) {
+    const sixCols = document.querySelectorAll('.template-list--sixcols-');
+    if (sixCols.length) {
+      const image = document.createElement('img');
+      image.setAttribute('src', '/content/dam/cc/optimization/ccx0022/ccx0022_scroll.gif');
+
+      button = document.createElement('a');
+      button.setAttribute('class', 'template-list--sixcols-mobile-button-');
+      button.appendChild(image);
+      sixCols[0].appendChild(button);
+      button.addEventListener('click', function () {
+        this.parentNode.scrollIntoView(true);
+        this.parentNode.removeChild(this);
+      });
+    }
+  }
 }
