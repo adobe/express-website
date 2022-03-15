@@ -1523,7 +1523,7 @@ async function wordBreakJapanese() {
   }
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
-  const { BalancedWordWrapper } = await import('./bw2.js');
+  const BalancedWordWrapper = (await import('./bw2.js')).default;
   const bw2 = new BalancedWordWrapper();
   document.querySelectorAll('h1, h2, h3, h4, h5, p:not(.button-container)').forEach((el) => {
     parser.applyElement(el);
