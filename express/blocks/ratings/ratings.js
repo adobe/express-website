@@ -22,29 +22,29 @@ function updateSlider($slider) {
   const $tooltipText = $slider.querySelector('.tooltip--text');
   const $tooltipImg = $slider.querySelector('.tooltip--image img');
 
-  const val = parseFloat($input.value) ?? 1;
+  const val = parseFloat($input.value) ?? 6;
 
   // temporarily getting images from emojipedia
   const ratings = [
     {
-      text: 'Super happy',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
-    },
-    {
-      text: 'Satisfied',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png',
-    },
-    {
-      text: 'Content',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png',
+      text: 'Upset',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png',
     },
     {
       text: 'Dissatisfied',
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png',
     },
     {
-      text: 'Upset',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png',
+      text: 'Content',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png',
+    },
+    {
+      text: 'Satisfied',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png',
+    },
+    {
+      text: 'Super happy',
+      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
     },
   ];
 
