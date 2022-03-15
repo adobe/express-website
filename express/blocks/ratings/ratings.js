@@ -35,7 +35,7 @@ function updateSlider($slider) {
     },
     {
       class: 'two-stars',
-      text: 'Dissatisfied',
+      text: 'Dissatisfied', // to-do: use placeholder for these text values
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png',
     },
     {
@@ -83,9 +83,10 @@ function generateRatingSlider($block) {
     <div class="tooltip">
       <div>
         <span class="tooltip--text">
-          Super happy
+          Super happy <!-- to-do: use placeholder -->
         </span>
         <div class="tooltip--image">
+          <!-- to-do: getIcon -->
           <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />
         <div>
       </div>
