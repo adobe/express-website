@@ -69,7 +69,7 @@ main .ratings .slider > div {
   margin: 0;
 }
 
-main .ratings .slider .lines {
+main .ratings .slider .slider-bottom {
   display: flex;
   justify-content: space-between;
   padding: 32px 27px 80px 30px;

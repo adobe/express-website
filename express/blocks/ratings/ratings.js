@@ -94,7 +94,7 @@ function generateRatingSlider($block) {
   `);
   const star = getIcon('star');
   $slider.insertAdjacentHTML('beforeend', /* html */`
-    <div class="lines">
+    <div class="slider-bottom">
       <div class="vertical-line"><span class="stars one-star">${star}</span></div>
       <div class="vertical-line"><span class="stars two-stars">${star.repeat(2)}</span></div>
       <div class="vertical-line"><span class="stars three-stars">${star.repeat(3)}</span></div>
