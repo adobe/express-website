@@ -17,38 +17,9 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function generateRatingSlider($block) {
-  const $slider = createTag('div', { class: 'slider' });
-  $block.append($slider);
-  const $div = createTag('div');
-  $slider.append($div);
-  const $input = createTag('input', {
-    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5',
-  });
-  $div.append($input);
-  $div.insertAdjacentHTML('afterbegin', /* html */`
-    <div class="tooltip">
-      <div>
-        <span class="tooltip--text">
-          Super happy <!-- to-do: use placeholder -->
-        </span>
-        <div class="tooltip--image">
-          <!-- to-do: getIcon -->
-          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />
-        <div>
-      </div>
-    </div>
-  `);
-  const star = getIcon('star');
-  $slider.insertAdjacentHTML('beforeend', /* html */`
-    <div class="slider-bottom">
-      <div class="vertical-line"><span class="stars one-star">${star}</span></div>
-      <div class="vertical-line"><span class="stars two-stars">${star.repeat(2)}</span></div>
-      <div class="vertical-line"><span class="stars three-stars">${star.repeat(3)}</span></div>
-      <div class="vertical-line"><span class="stars four-stars">${star.repeat(4)}</span></div>
-      <div class="vertical-line"><span class="stars five-stars">${star.repeat(5)}</span></div>
-    </div>
-  `);
+function sliderFunctionality($block) {
+  const $slider = $block.querySelector('.slider');
+  const $input = $slider.querySelector('input[type="range');
   const $tooltip = $slider.querySelector('.tooltip');
   const $tooltipText = $slider.querySelector('.tooltip--text');
   const $tooltipImg = $slider.querySelector('.tooltip--image img');
@@ -56,7 +27,7 @@ function generateRatingSlider($block) {
     {
       class: 'one-star',
       text: 'Upset',
-      // temporarily getting images from emojipedia
+      // temporarily getting images from emojipedia. to-do getIcon
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png',
     },
     {
@@ -105,6 +76,48 @@ function generateRatingSlider($block) {
   $input.addEventListener('input', () => update(false));
   $input.addEventListener('change', () => update(true));
   window.addEventListener('resize', () => update(true));
+  const $stars = Array.from($slider.querySelectorAll('.stars'));
+  $stars.forEach(($star, index) => {
+    $star.addEventListener('click', () => {
+      $input.value = index + 1;
+      update(true);
+    });
+  });
+}
+
+function decorateRatingSlider($block) {
+  const $slider = createTag('div', { class: 'slider' });
+  $block.append($slider);
+  const $div = createTag('div');
+  $slider.append($div);
+  const $input = createTag('input', {
+    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5',
+  });
+  $div.append($input);
+  $div.insertAdjacentHTML('afterbegin', /* html */`
+    <div class="tooltip">
+      <div>
+        <span class="tooltip--text">
+          Super happy <!-- to-do: use placeholder -->
+        </span>
+        <div class="tooltip--image">
+          <!-- to-do: getIcon -->
+          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />
+        <div>
+      </div>
+    </div>
+  `);
+  const star = getIcon('star');
+  $slider.insertAdjacentHTML('beforeend', /* html */`
+    <div class="slider-bottom">
+      <div class="vertical-line"><span class="stars one-star">${star}</span></div>
+      <div class="vertical-line"><span class="stars two-stars">${star.repeat(2)}</span></div>
+      <div class="vertical-line"><span class="stars three-stars">${star.repeat(3)}</span></div>
+      <div class="vertical-line"><span class="stars four-stars">${star.repeat(4)}</span></div>
+      <div class="vertical-line"><span class="stars five-stars">${star.repeat(5)}</span></div>
+    </div>
+  `);
+  sliderFunctionality($block, $slider);
 }
 
 export default function decorate($block) {
@@ -115,5 +128,5 @@ export default function decorate($block) {
   $block.innerHTML = '';
   $block.append($h2);
 
-  generateRatingSlider($block);
+  decorateRatingSlider($block);
 }

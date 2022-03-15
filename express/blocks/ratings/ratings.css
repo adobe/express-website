@@ -88,6 +88,7 @@ main .ratings .slider .vertical-line {
   transform: translateX(-50%);
   top: 60px;
   color: #e8e8e8;
+  cursor: pointer;
 }
 
 .stars img {
