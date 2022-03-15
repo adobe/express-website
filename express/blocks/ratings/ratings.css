@@ -58,7 +58,7 @@ main .ratings .slider .tooltip--image img {
 }
 
 main .ratings .slider {
-  padding-top: 3rem;
+  padding-top: 5rem;
   /* adds space for the absolute-positioned tooltip */
 }
 
