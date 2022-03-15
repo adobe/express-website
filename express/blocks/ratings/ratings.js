@@ -87,6 +87,15 @@ function generateRatingSlider($block) {
       </div>
     </div>
   `);
+  $slider.insertAdjacentHTML('beforeend', /* html */`
+    <div class="lines">
+      <span class="vertical-line"></span>
+      <span class="vertical-line"></span>
+      <span class="vertical-line"></span>
+      <span class="vertical-line"></span>
+      <span class="vertical-line"></span>
+    </div>
+  `);
   updateSlider($slider);
   $input.addEventListener('input', () => updateSlider($slider), false);
   $input.addEventListener('change', () => updateSlider($slider), false);
