@@ -95,10 +95,10 @@ function generateRatingSlider($block) {
   $slider.insertAdjacentHTML('beforeend', /* html */`
     <div class="lines">
       <div class="vertical-line"><span class="stars one-star">${star}</span></div>
-      <div class="vertical-line"><span class="stars two-stars">${star}${star}</span></div>
-      <div class="vertical-line"><span class="stars three-stars">${star}${star}${star}</span></div>
-      <div class="vertical-line"><span class="stars four-stars">${star}${star}${star}${star}</span></div>
-      <div class="vertical-line"><span class="stars five-stars">${star}${star}${star}${star}${star}</span></div>
+      <div class="vertical-line"><span class="stars two-stars">${star.repeat(2)}</span></div>
+      <div class="vertical-line"><span class="stars three-stars">${star.repeat(3)}</span></div>
+      <div class="vertical-line"><span class="stars four-stars">${star.repeat(4)}</span></div>
+      <div class="vertical-line"><span class="stars five-stars">${star.repeat(5)}</span></div>
     </div>
   `);
   updateSlider($slider);
