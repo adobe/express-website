@@ -69,16 +69,38 @@ main .ratings .slider > div {
   margin: 0;
 }
 
-
 main .ratings .slider .lines {
   display: flex;
   justify-content: space-between;
-  padding: 30px;
+  padding: 32px 27px 80px 30px;
 }
 
 main .ratings .slider .vertical-line {
   height: 20px;
   border-left: 2px solid var(--color-gray-400);
+  position: relative;
+}
+
+.stars {
+  display: flex;
+  position: absolute;
+  left: calc(50% - 2px);
+  transform: translateX(-50%);
+  top: 60px;
+  color: #e8e8e8;
+}
+
+.stars img {
+  height: 20px;
+  width: 20px;
+}
+
+.one-star .stars.one-star,
+.two-stars .stars.two-stars,
+.three-stars .stars.three-stars,
+.four-stars .stars.four-stars,
+.five-stars .stars.five-stars {
+  color: #5c5ce0;
 }
 
 /* Custom styling for the native range input, with cross-browser compatibility */

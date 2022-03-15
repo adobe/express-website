@@ -12,6 +12,8 @@
 
 import {
   createTag,
+  getIcon,
+  toClassName,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -22,27 +24,32 @@ function updateSlider($slider) {
   const $tooltipText = $slider.querySelector('.tooltip--text');
   const $tooltipImg = $slider.querySelector('.tooltip--image img');
 
-  const val = parseFloat($input.value) ?? 6;
+  const val = parseFloat($input.value) ?? 5;
 
-  // temporarily getting images from emojipedia
   const ratings = [
     {
+      class: 'one-star',
       text: 'Upset',
+      // temporarily getting images from emojipedia
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png',
     },
     {
+      class: 'two-stars',
       text: 'Dissatisfied',
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png',
     },
     {
+      class: 'three-stars',
       text: 'Content',
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png',
     },
     {
+      class: 'four-stars',
       text: 'Satisfied',
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png',
     },
     {
+      class: 'five-stars',
       text: 'Super happy',
       img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
     },
@@ -50,6 +57,8 @@ function updateSlider($slider) {
 
   $tooltipText.innerText = ratings[val - 1].text;
   $tooltipImg.setAttribute('src', ratings[val - 1].img);
+  ratings.forEach((obj) => $slider.parentElement.classList.remove(obj.class));
+  $slider.parentElement.classList.add(ratings[val - 1].class);
 
   // set position the tooltip with the thumb
   const pos = (val - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
@@ -82,13 +91,14 @@ function generateRatingSlider($block) {
       </div>
     </div>
   `);
+  const star = getIcon('star');
   $slider.insertAdjacentHTML('beforeend', /* html */`
     <div class="lines">
-      <span class="vertical-line"></span>
-      <span class="vertical-line"></span>
-      <span class="vertical-line"></span>
-      <span class="vertical-line"></span>
-      <span class="vertical-line"></span>
+      <div class="vertical-line"><span class="stars one-star">${star}</span></div>
+      <div class="vertical-line"><span class="stars two-stars">${star}${star}</span></div>
+      <div class="vertical-line"><span class="stars three-stars">${star}${star}${star}</span></div>
+      <div class="vertical-line"><span class="stars four-stars">${star}${star}${star}${star}</span></div>
+      <div class="vertical-line"><span class="stars five-stars">${star}${star}${star}${star}${star}</span></div>
     </div>
   `);
   updateSlider($slider);
@@ -101,11 +111,12 @@ function generateRatingSlider($block) {
 }
 
 export default function decorate($block) {
-  const $rating = createTag('h2', { id: 'rate-our-quick-action' });
-  $rating.textContent = 'Rate our Quick Action';
+  const title = 'Rate our Quick Action';
+  const $h2 = createTag('h2', { id: toClassName(title) });
+  $h2.textContent = title;
 
   $block.innerHTML = '';
-  $block.append($rating);
+  $block.append($h2);
 
   generateRatingSlider($block);
 }
