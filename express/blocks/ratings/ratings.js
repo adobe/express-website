@@ -24,7 +24,7 @@ function updateSlider($slider) {
   const $tooltipText = $slider.querySelector('.tooltip--text');
   const $tooltipImg = $slider.querySelector('.tooltip--image img');
 
-  const val = parseFloat($input.value) ?? 5;
+  const val = parseFloat($input.value) ?? 0;
 
   const ratings = [
     {
