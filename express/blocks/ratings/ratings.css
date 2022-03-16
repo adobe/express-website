@@ -28,6 +28,7 @@ main .ratings .slider .tooltip {
   display: flex;
   justify-content: center;
   align-items: center;
+  left: 85%;
 }
 
 main .ratings .slider .tooltip > div {
@@ -200,7 +201,7 @@ main .ratings form [type=range] {
   height: 30px;
   border-radius: 60px;
   cursor: pointer;
-  background: #dedef9;
+  background: linear-gradient(90deg, #5c5ce0 86.625%,#dedef9 87.125%);
 }
 main .ratings form [type=range]::-moz-focus-outer {
   border: 0;
