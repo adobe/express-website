@@ -35,6 +35,7 @@ function sliderFunctionality($block) {
   const $input = $block.querySelector('input[type=range]');
   const $tooltipText = $block.querySelector('.tooltip--text');
   const $tooltipImg = $block.querySelector('.tooltip--image');
+  const $textarea = $block.querySelector('.slider-comment textarea');
   const $textareaLabel = $block.querySelector('.slider-comment label');
   const $stars = Array.from($block.querySelectorAll('.stars'));
   const ratings = [
@@ -43,30 +44,40 @@ function sliderFunctionality($block) {
       img: getIcon('emoji-angry-face'),
       text: 'Upset', // to-do: placeholders
       textareaLabel: "What went wrong? We're on it.", // to-do: placeholders
+      textareaInside: 'Your feedback', // to-do: placeholders
+      feedbackRequired: true,
     },
     {
       class: 'two-stars',
       img: getIcon('emoji-thinking-face'),
       text: 'Dissatisfied', // to-do: placeholders
       textareaLabel: 'We value your feedback. How can we improve?', // to-do: placeholders
+      textareaInside: 'Your feedback', // to-do: placeholders
+      feedbackRequired: true,
     },
     {
       class: 'three-stars',
       img: getIcon('emoji-upside-down-face'),
       text: 'Content', // to-do: placeholders
       textareaLabel: 'Content is cool, but not cool enough. What can we do better?', // to-do: placeholders
+      textareaInside: 'Your feedback', // to-do: placeholders
+      feedbackRequired: true,
     },
     {
       class: 'four-stars',
       img: getIcon('emoji-smiling-face'),
       text: 'Satisfied', // to-do: placeholders
       textareaLabel: 'Satisfied is good, but what would make us great?', // to-do: placeholders
+      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
+      feedbackRequired: false,
     },
     {
       class: 'five-stars',
       img: getIcon('emoji-star-struck'),
       text: 'Super happy', // to-do: placeholders
       textareaLabel: "That's great, tell us what you loved.", // to-do: placeholders
+      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
+      feedbackRequired: false,
     },
   ];
   // Updates the value of the slider and tooltip.
@@ -80,6 +91,12 @@ function sliderFunctionality($block) {
     $tooltipText.textContent = ratings[index - 1].text;
     $tooltipImg.innerHTML = ratings[index - 1].img;
     $textareaLabel.textContent = ratings[index - 1].textareaLabel;
+    $textarea.setAttribute('placeholder', ratings[index - 1].textareaInside);
+    if (ratings[index - 1].feedbackRequired) {
+      $textarea.setAttribute('required', 'true');
+    } else {
+      $textarea.removeAttribute('required');
+    }
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
     updateSliderStyle($block, $input.value);
@@ -134,7 +151,6 @@ function decorateRatingSlider($block) {
   `);
   updateSliderStyle($block, $input.value);
 
-  const textAreaInside = 'Your feedback (Optional)'; // to-do: placeholders
   const subtmitButtonText = 'Submit rating'; // to-do: placeholders
 
   const star = getIcon('star');
@@ -148,7 +164,7 @@ function decorateRatingSlider($block) {
     </div>
     <div class="slider-comment">
       <label for="comment"></label>
-      <textarea id="comment" name="comment" rows="5" placeholder="${textAreaInside}"></textarea>
+      <textarea id="comment" name="comment" rows="5" placeholder=""></textarea>
       <input type="submit" value="${subtmitButtonText}">
     </div>
   `);
