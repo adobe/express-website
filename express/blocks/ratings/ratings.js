@@ -162,7 +162,7 @@ function decorateRatingSlider($block) {
     <div class="slider-comment">
       <label for="comment">${textArea}</label>
       <textarea id="comment" name="comment" rows="5" placeholder="${textAreaInside}"></textarea>
-      <input type="submit" value="Submit feedback">
+      <input type="submit" value="Submit rating">
     </div>
   `);
 
