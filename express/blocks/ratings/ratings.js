@@ -185,7 +185,7 @@ function decorateRatingSlider($block) {
       Your comment: "${comment}"
     </p>`;
 
-    window.scrollTo(0, $block.closest('.section-wrapper').offsetTop);
+    window.scrollTo(0, $block.closest('.section-wrapper').offsetTop - 64);
   });
   sliderFunctionality($block, $form);
 }
