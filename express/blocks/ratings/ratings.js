@@ -126,6 +126,7 @@ function sliderFunctionality($block) {
 
 // Generates rating slider HTML.
 function decorateRatingSlider($block, title) {
+  const $section = $block.closest('.section-wrapper');
   const $form = createTag('form');
   $block.append($form);
   const $slider = createTag('div', { class: 'slider' });
@@ -181,7 +182,7 @@ function decorateRatingSlider($block, title) {
       Your comment: "${comment}"
     </p>`;
 
-    window.scrollTo(0, $block.closest('.section-wrapper').offsetTop - 64);
+    if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
   });
   sliderFunctionality($block, $form);
 }
