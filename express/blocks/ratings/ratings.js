@@ -74,12 +74,12 @@ function sliderFunctionality($block) {
     const pos = (val - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
     const thumbCorrect = thumbwidth * (pos - 0.25) * -1;
     const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
+    $tooltip.style.right = 'auto';
     $tooltip.style.left = `${titlepos}px`;
     // show "progress" on the track
     const percent = pos * 100;
     $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
   }
-  update();
 
   // Event listeners to update the tooltip & thumb
   $input.addEventListener('input', () => update(false));
@@ -117,11 +117,14 @@ function decorateRatingSlider($block) {
     type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5', 'aria-labelledby': toClassName(title),
   });
   $slider.append($input);
+  // Initial state of the slider:
   $slider.insertAdjacentHTML('afterbegin', /* html */`
     <div class="tooltip">
       <div>
-        <span class="tooltip--text"></span>
-        <div class="tooltip--image"><div>
+        <span class="tooltip--text">Super happy</span>
+        <div class="tooltip--image">
+          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png" />
+        <div>
       </div>
     </div>
   `);
@@ -141,8 +144,8 @@ function decorateRatingSlider($block) {
     <div class="slider-comment">
       <label for="comment">${textArea}</label>
       <textarea id="comment" name="comment" rows="5" placeholder="${textAreaInside}"></textarea>
+      <input type="submit" class="button btn" value="Submit feedback">
     </div>
-    <input type="submit" class="button btn" value="Submit feedback">
   `);
 
   $form.addEventListener('submit', (e) => {

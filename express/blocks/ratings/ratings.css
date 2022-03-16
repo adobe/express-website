@@ -4,13 +4,18 @@ main .ratings-container.section-wrapper {
   padding-bottom: 80px;
 }
 
+main .ratings {
+  text-align: center;
+}
+
 main .ratings .slider .tooltip {
   position: absolute;
   background: #FFFFFF;
   height: 60px;
   width: 60px;
   border-radius: 50%;
-  left: 50%;
+  left: auto;
+  right: 0;
   top: 50%;
   transform: translate(2px, -50%);
   box-sizing: border-box;
@@ -96,14 +101,28 @@ main .ratings .slider-bottom .stars img {
 main .ratings.one-star .slider-bottom .stars.one-star,
 main .ratings.two-stars .slider-bottom .stars.two-stars,
 main .ratings.three-stars .slider-bottom .stars.three-stars,
-main .ratings.four-stars .slider-bottom .stars.four-stars,
-main .ratings.five-stars .slider-bottom .stars.five-stars {
+main .ratings.four-stars .slider-bottom .stars.four-stars {
+  color: #5c5ce0;
+}
+
+main .ratings:not(.one-star):not(.two-stars):not(.three-stars):not(.four-stars) .slider-bottom .stars.five-stars {
   color: #5c5ce0;
 }
 
 main .ratings .slider-comment {
-  padding: 32px 0;
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.2s;
 }
+
+main .ratings.one-star .slider-comment,
+main .ratings.two-stars .slider-comment,
+main .ratings.three-stars .slider-comment,
+main .ratings.four-stars .slider-comment,
+main .ratings.five-stars .slider-comment {
+  height: 300px;
+}
+
 
 main .ratings .slider-comment label {
   font-family: var(--body-font-family);
@@ -114,12 +133,14 @@ main .ratings .slider-comment label {
   padding: 0;
   text-align: center;
   width: 100%;
+  box-sizing: border-box;
+  display: block;
+  padding-top: 32px;
 }
 
 main .ratings .slider-comment textarea {
   resize: none;
   border: 2px solid var(--color-gray-400);
-  width: 100%;
   border-radius: 6px;
   padding: 10px;
   font-family: var(--body-font-family);
@@ -127,6 +148,9 @@ main .ratings .slider-comment textarea {
   color: var(--body-color);
   margin: 16px 0;
   background: var(--color-white);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 main .ratings form [type=submit] {
@@ -177,6 +201,7 @@ main .ratings form [type=range] {
   height: 30px;
   border-radius: 60px;
   cursor: pointer;
+  background: #5c5ce0;
 }
 main .ratings form [type=range]::-moz-focus-outer {
   border: 0;
