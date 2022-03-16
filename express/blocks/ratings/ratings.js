@@ -153,6 +153,10 @@ function decorateRatingSlider($block) {
     console.log(`${rating} stars - "${comment}"`); // test
 
     // to-do: submit rating.
+    $block.innerHTML = `<h2>Thank you for your feedback</h2>
+    <p>testing that it worked:</p>
+    <p>Your rating: ${rating} stars</p>
+    <p>Your comment: "${comment}"</p>`;
   });
   sliderFunctionality($block, $form);
 }
