@@ -128,13 +128,13 @@ function sliderFunctionality($block) {
 function decorateRatingSlider($block, title) {
   const $section = $block.closest('.section-wrapper');
   const $form = createTag('form');
-  $block.append($form);
+  $block.appendChild($form);
   const $slider = createTag('div', { class: 'slider' });
-  $form.append($slider);
+  $form.appendChild($slider);
   const $input = createTag('input', {
     type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '4.5', 'aria-labelledby': toClassName(title),
   });
-  $slider.append($input);
+  $slider.appendChild($input);
   // Initial state of the slider:
   $slider.insertAdjacentHTML('afterbegin', /* html */`
     <div class="tooltip">
@@ -173,13 +173,14 @@ function decorateRatingSlider($block, title) {
 
     // to-do: submit rating.
 
-    // For Testing purposes:
-    $block.innerHTML = `<h2>Thank you for your feedback</h2>
-    <p>testing that it worked:</p>
+    $block.innerHTML = /* html */`
+    <h2>Thank you for your feedback</h2>
     <p>
-      Your rating: ${rating} stars
+      (Testing that the block is working correctly):
       <br />
-      Your comment: "${comment}"
+      Your rating: ${rating} stars <!-- for testing purposes -->
+      <br />
+      Your comment: "${comment}" <!-- for testing purposes -->
     </p>`;
 
     if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
@@ -189,15 +190,22 @@ function decorateRatingSlider($block, title) {
 
 export default function decorate($block) {
   const $CTA = $block.querySelector('a');
-
-  // eslint-disable-next-line no-console
-  console.log($CTA); // <--- our quick action
-
   $block.innerHTML = '';
-  const title = 'Rate our Quick Action';
+  const title = 'Rate our Quick Action'; // to-do: placeholders
   const $h2 = createTag('h2', { id: toClassName(title) });
   $h2.textContent = title;
-  $block.append($h2);
+  $block.appendChild($h2);
 
-  decorateRatingSlider($block, title);
+  const actionUsed = true; // to-do: logic to see if the action was used.
+
+  if (actionUsed) {
+    decorateRatingSlider($block, title);
+  } else {
+    const $div = createTag('div', { class: 'cannot-rate' });
+    const $p = createTag('p');
+    $p.textContent = 'You need to use the Quick Action before you can rate it.'; // to-do: placeholders
+    $div.appendChild($p);
+    $div.appendChild($CTA);
+    $block.appendChild($div);
+  }
 }

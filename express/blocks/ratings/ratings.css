@@ -8,6 +8,12 @@ main .ratings {
   text-align: center;
 }
 
+main .ratings .cannot-rate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 main .ratings .slider .tooltip {
   position: absolute;
   background: #FFFFFF;
