@@ -57,7 +57,7 @@ function sliderFunctionality($block) {
       textareaLabel: "That's great, tell us what you loved.",
     },
   ];
-  function update(snap = true) {
+  function updateSlider(snap = true) {
     let val = parseFloat($input.value) ?? 0;
     const index = Math.round(val);
     if (snap) {
@@ -82,24 +82,26 @@ function sliderFunctionality($block) {
   }
 
   // Event listeners to update the tooltip & thumb
-  $input.addEventListener('input', () => update(false));
-  $input.addEventListener('change', () => update());
+  $input.addEventListener('input', () => updateSlider(false));
+  $input.addEventListener('change', () => updateSlider());
   $input.addEventListener('keyup', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
       $input.value -= 1;
     } else if (e.code === 'ArrowRight' || e.code === 'ArrowUp') {
       $input.value += 1;
     }
-    update();
+    updateSlider();
   });
-  window.addEventListener('resize', () => update());
+  window.addEventListener('resize', () => {
+    if ($block.classList.contains('one-star', 'two-stars', 'three-stars', 'four-stars', 'five-stars')) updateSlider();
+  });
 
   // Update when click on star
   const $stars = Array.from($block.querySelectorAll('.stars'));
   $stars.forEach(($star, index) => {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
-      update();
+      updateSlider();
     });
   });
 }

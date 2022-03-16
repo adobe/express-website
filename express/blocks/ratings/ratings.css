@@ -112,7 +112,7 @@ main .ratings:not(.one-star):not(.two-stars):not(.three-stars):not(.four-stars) 
 main .ratings .slider-comment {
   height: 0px;
   overflow: hidden;
-  transition: height 0.2s;
+  transition: height 0.4s;
 }
 
 main .ratings.one-star .slider-comment,
@@ -120,7 +120,7 @@ main .ratings.two-stars .slider-comment,
 main .ratings.three-stars .slider-comment,
 main .ratings.four-stars .slider-comment,
 main .ratings.five-stars .slider-comment {
-  height: 300px;
+  height: 320px;
 }
 
 
