@@ -17,110 +17,97 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function updateTooltip($block, pos = 0.875) {
+// Updates the front-end style of the slider.
+function updateSliderStyle($block, value) {
+  const thumbwidth = 60;
   const $input = $block.querySelector('input[type=range]');
-  const thumbwidth = 60; // pixels
   const $tooltip = $block.querySelector('.tooltip');
-  const thumbCorrect = thumbwidth * (pos - 0.25) * -1;
+  const pos = (value - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
+  const thumbCorrect = (thumbwidth * (pos - 0.25) * -1) - 0.1;
   const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
   $tooltip.style.left = `${titlepos}px`;
+  const percent = pos * 99;
+  $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
 }
 
+// Implements the slider logic.
 function sliderFunctionality($block) {
   const $input = $block.querySelector('input[type=range]');
-  const $tooltip = $block.querySelector('.tooltip');
   const $tooltipText = $block.querySelector('.tooltip--text');
   const $tooltipImg = $block.querySelector('.tooltip--image');
   const $textareaLabel = $block.querySelector('.slider-comment label');
+  const $stars = Array.from($block.querySelectorAll('.stars'));
   const ratings = [
     {
       class: 'one-star',
-      text: 'Upset',
-      // temporarily getting images from emojipedia.
-      // to-do: getIcon()
-      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png" />',
-      textareaLabel: "What went wrong? We're on it.",
+      img: getIcon('emoji-angry-face'),
+      text: 'Upset', // to-do: placeholders
+      textareaLabel: "What went wrong? We're on it.", // to-do: placeholders
     },
     {
       class: 'two-stars',
-      text: 'Dissatisfied', // to-do: use placeholder for these text values
-      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png" />',
-      textareaLabel: 'We value your feedback. How can we improve?',
+      img: getIcon('emoji-thinking-face'),
+      text: 'Dissatisfied', // to-do: placeholders
+      textareaLabel: 'We value your feedback. How can we improve?', // to-do: placeholders
     },
     {
       class: 'three-stars',
-      text: 'Content',
-      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png" />',
-      textareaLabel: 'Content is cool, but not cool enough. What can we do better?',
+      img: getIcon('emoji-upside-down-face'),
+      text: 'Content', // to-do: placeholders
+      textareaLabel: 'Content is cool, but not cool enough. What can we do better?', // to-do: placeholders
     },
     {
       class: 'four-stars',
-      text: 'Satisfied',
-      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />',
-      textareaLabel: 'Satisfied is good, but what would make us great?',
+      img: getIcon('emoji-smiling-face'),
+      text: 'Satisfied', // to-do: placeholders
+      textareaLabel: 'Satisfied is good, but what would make us great?', // to-do: placeholders
     },
     {
       class: 'five-stars',
-      text: 'Super happy',
-      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png" />',
-      textareaLabel: "That's great, tell us what you loved.",
+      img: getIcon('emoji-star-struck'),
+      text: 'Super happy', // to-do: placeholders
+      textareaLabel: "That's great, tell us what you loved.", // to-do: placeholders
     },
   ];
-  function updateSlider(snap = true) {
+  // Updates the value of the slider and tooltip.
+  function updateSliderValue(snap = true) {
     let val = parseFloat($input.value) ?? 0;
     const index = Math.round(val);
     if (snap) {
       val = index;
       $input.value = index;
     }
-    $tooltipText.innerText = ratings[index - 1].text;
+    $tooltipText.textContent = ratings[index - 1].text;
     $tooltipImg.innerHTML = ratings[index - 1].img;
-    $textareaLabel.innerText = ratings[index - 1].textareaLabel;
+    $textareaLabel.textContent = ratings[index - 1].textareaLabel;
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
-    // set position the tooltip with the thumb
-    const thumbwidth = 60; // pixels
-    const pos = (val - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
-    const thumbCorrect = thumbwidth * (pos - 0.25) * -1;
-    const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
-    $tooltip.style.right = 'auto';
-    $tooltip.style.left = `${titlepos}px`;
-    // show "progress" on the track
-    const percent = pos * 100;
-    $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
+    updateSliderStyle($block, $input.value);
   }
-
-  // Event listeners to update the tooltip & thumb
-  $input.addEventListener('input', () => updateSlider(false));
-  $input.addEventListener('change', () => updateSlider());
+  // Slider event listeners.
+  $input.addEventListener('input', () => updateSliderValue(false));
+  $input.addEventListener('change', () => updateSliderValue());
   $input.addEventListener('keyup', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
       $input.value -= 1;
-      updateSlider();
+      updateSliderValue();
     } else if (e.code === 'ArrowRight' || e.code === 'ArrowUp') {
       $input.value += 1;
-      updateSlider();
+      updateSliderValue();
     }
   });
   window.addEventListener('resize', () => {
-    updateTooltip($block);
-    ratings.forEach((obj) => {
-      if ($block.classList.contains(obj.class)) {
-        updateSlider();
-      }
-    });
+    updateSliderStyle($block, $input.value);
   });
-
-  // Update when click on star
-  const $stars = Array.from($block.querySelectorAll('.stars'));
   $stars.forEach(($star, index) => {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
-      updateSlider();
+      updateSliderValue();
     });
   });
 }
 
+// Generates rating slider HTML.
 function decorateRatingSlider($block) {
   const title = 'Rate our Quick Action';
   const $h2 = createTag('h2', { id: toClassName(title) });
@@ -138,19 +125,19 @@ function decorateRatingSlider($block) {
   $slider.insertAdjacentHTML('afterbegin', /* html */`
     <div class="tooltip">
       <div>
-        <span class="tooltip--text">Super happy</span>
+        <span class="tooltip--text"></span>
         <div class="tooltip--image">
-          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png" />
+          ${getIcon('emoji-star-struck')}
         <div>
       </div>
     </div>
   `);
-  const star = getIcon('star');
-  updateTooltip($block);
+  updateSliderStyle($block, $input.value);
 
-  const textArea = "That's great, tell us what you loved."; // to-do: placeholders
   const textAreaInside = 'Your feedback (Optional)'; // to-do: placeholders
+  const subtmitButtonText = 'Submit rating'; // to-do: placeholders
 
+  const star = getIcon('star');
   $form.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">
       <div class="vertical-line"><button type="button" aria-label="1" class="stars one-star">${star}</button></div>
@@ -160,20 +147,20 @@ function decorateRatingSlider($block) {
       <div class="vertical-line"><button type="button" aria-label="5" class="stars five-stars">${star.repeat(5)}</button></div>
     </div>
     <div class="slider-comment">
-      <label for="comment">${textArea}</label>
+      <label for="comment"></label>
       <textarea id="comment" name="comment" rows="5" placeholder="${textAreaInside}"></textarea>
-      <input type="submit" value="Submit rating">
+      <input type="submit" value="${subtmitButtonText}">
     </div>
   `);
-
+  // Form-submit event listener.
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
-    // eslint-disable-next-line no-console
-    console.log(`${rating} stars - "${comment}"`); // test
 
     // to-do: submit rating.
+
+    // For Testing purposes:
     $block.innerHTML = `<h2>Thank you for your feedback</h2>
     <p>testing that it worked:</p>
     <p>Your rating: ${rating} stars</p>
@@ -184,6 +171,5 @@ function decorateRatingSlider($block) {
 
 export default function decorate($block) {
   $block.innerHTML = '';
-
   decorateRatingSlider($block);
 }

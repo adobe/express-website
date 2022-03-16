@@ -14,8 +14,6 @@ main .ratings .slider .tooltip {
   height: 60px;
   width: 60px;
   border-radius: 50%;
-  left: auto;
-  right: 0;
   top: 50%;
   transform: translate(2px, -50%);
   box-sizing: border-box;
@@ -202,7 +200,7 @@ main .ratings form [type=range] {
   height: 30px;
   border-radius: 60px;
   cursor: pointer;
-  background: linear-gradient(90deg, #5c5ce0 87.5%,#dedef9 88%);
+  background: #dedef9;
 }
 main .ratings form [type=range]::-moz-focus-outer {
   border: 0;
