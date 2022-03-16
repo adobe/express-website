@@ -93,7 +93,9 @@ function sliderFunctionality($block) {
     updateSlider();
   });
   window.addEventListener('resize', () => {
-    if ($block.classList.contains('one-star', 'two-stars', 'three-stars', 'four-stars', 'five-stars')) updateSlider();
+    ratings.forEach((obj) => {
+      if ($block.classList.contains(obj.class)) updateSlider();
+    });
   });
 
   // Update when click on star
