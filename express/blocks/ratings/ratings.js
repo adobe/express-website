@@ -99,7 +99,7 @@ function sliderFunctionality($block) {
     }
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
-    updateSliderStyle($block, $input.value);
+    setTimeout(updateSliderStyle($block, $input.value), 2000);
   }
   // Slider event listeners.
   $input.addEventListener('input', () => updateSliderValue(false));
@@ -125,11 +125,7 @@ function sliderFunctionality($block) {
 }
 
 // Generates rating slider HTML.
-function decorateRatingSlider($block) {
-  const title = 'Rate our Quick Action';
-  const $h2 = createTag('h2', { id: toClassName(title) });
-  $h2.textContent = title;
-  $block.append($h2);
+function decorateRatingSlider($block, title) {
   const $form = createTag('form');
   $block.append($form);
   const $slider = createTag('div', { class: 'slider' });
@@ -191,6 +187,16 @@ function decorateRatingSlider($block) {
 }
 
 export default function decorate($block) {
+  const $CTA = $block.querySelector('a');
+
+  // eslint-disable-next-line no-console
+  console.log($CTA); // <--- our quick action
+
   $block.innerHTML = '';
-  decorateRatingSlider($block);
+  const title = 'Rate our Quick Action';
+  const $h2 = createTag('h2', { id: toClassName(title) });
+  $h2.textContent = title;
+  $block.append($h2);
+
+  decorateRatingSlider($block, title);
 }
