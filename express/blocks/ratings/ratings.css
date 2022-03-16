@@ -48,6 +48,10 @@ main .ratings .slider .tooltip--text {
   font-size: 14px;
 }
 
+main .ratings:not(.one-star):not(.two-stars):not(.three-stars):not(.four-stars):not(.five-stars) .slider .tooltip--text {
+  display: none;
+}
+
 main .ratings .slider .tooltip--image,
 main .ratings .slider .tooltip--image img {
   height: 24px;
@@ -119,7 +123,6 @@ main .ratings.four-stars .slider-comment,
 main .ratings.five-stars .slider-comment {
   height: 320px;
 }
-
 
 main .ratings .slider-comment label {
   font-family: var(--body-font-family);
