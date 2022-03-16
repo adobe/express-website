@@ -102,11 +102,10 @@ function sliderFunctionality($block) {
     updateSlider();
   });
   window.addEventListener('resize', () => {
+    updateTooltip($block);
     ratings.forEach((obj) => {
       if ($block.classList.contains(obj.class)) {
         updateSlider();
-      } else {
-        updateTooltip($block);
       }
     });
   });
