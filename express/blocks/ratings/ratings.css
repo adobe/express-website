@@ -101,11 +101,8 @@ main .ratings .slider-bottom .stars img {
 main .ratings.one-star .slider-bottom .stars.one-star,
 main .ratings.two-stars .slider-bottom .stars.two-stars,
 main .ratings.three-stars .slider-bottom .stars.three-stars,
-main .ratings.four-stars .slider-bottom .stars.four-stars {
-  color: #5c5ce0;
-}
-
-main .ratings:not(.one-star):not(.two-stars):not(.three-stars):not(.four-stars) .slider-bottom .stars.five-stars {
+main .ratings.four-stars .slider-bottom .stars.four-stars,
+main .ratings.five-stars .slider-bottom .stars.five-stars {
   color: #5c5ce0;
 }
 
@@ -201,7 +198,7 @@ main .ratings form [type=range] {
   height: 30px;
   border-radius: 60px;
   cursor: pointer;
-  background: #5c5ce0;
+  background: linear-gradient(90deg, #5c5ce0 87.5%,#dedef9 88%);
 }
 main .ratings form [type=range]::-moz-focus-outer {
   border: 0;

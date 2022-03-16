@@ -17,8 +17,17 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+function updateTooltip($block, pos = 0.875) {
+  const $input = $block.querySelector('input[type=range]');
+  const thumbwidth = 60; // pixels
+  const $tooltip = $block.querySelector('.tooltip');
+  const thumbCorrect = thumbwidth * (pos - 0.25) * -1;
+  const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
+  $tooltip.style.left = `${titlepos}px`;
+}
+
 function sliderFunctionality($block) {
-  const $input = $block.querySelector('input[type="range');
+  const $input = $block.querySelector('input[type=range]');
   const $tooltip = $block.querySelector('.tooltip');
   const $tooltipText = $block.querySelector('.tooltip--text');
   const $tooltipImg = $block.querySelector('.tooltip--image');
@@ -94,7 +103,11 @@ function sliderFunctionality($block) {
   });
   window.addEventListener('resize', () => {
     ratings.forEach((obj) => {
-      if ($block.classList.contains(obj.class)) updateSlider();
+      if ($block.classList.contains(obj.class)) {
+        updateSlider();
+      } else {
+        updateTooltip($block);
+      }
     });
   });
 
@@ -118,7 +131,7 @@ function decorateRatingSlider($block) {
   const $slider = createTag('div', { class: 'slider' });
   $form.append($slider);
   const $input = createTag('input', {
-    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5', 'aria-labelledby': toClassName(title),
+    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '4.5', 'aria-labelledby': toClassName(title),
   });
   $slider.append($input);
   // Initial state of the slider:
@@ -133,6 +146,7 @@ function decorateRatingSlider($block) {
     </div>
   `);
   const star = getIcon('star');
+  updateTooltip($block);
 
   const textArea = "That's great, tell us what you loved."; // to-do: placeholders
   const textAreaInside = 'Your feedback (Optional)'; // to-do: placeholders
