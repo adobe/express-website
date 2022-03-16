@@ -16,7 +16,7 @@ main .ratings .cannot-rate {
 
 main .ratings .slider .tooltip {
   position: absolute;
-  background: #FFFFFF;
+  background: var(--color-white);
   height: 60px;
   width: 60px;
   border-radius: 50%;
@@ -43,7 +43,7 @@ main .ratings .slider .tooltip > div {
 
 main .ratings .slider .tooltip--text {
   position: absolute;
-  background: #FFFFFF;
+  background: var(--color-white);
   top: -80px;
   left: 50%;
   transform: translateX(-50%);
@@ -95,7 +95,7 @@ main .ratings .slider-bottom .stars {
   left: calc(50% - 2px);
   transform: translateX(-50%);
   top: 60px;
-  color: #e8e8e8;
+  color: var(--color-gray-200);
   cursor: pointer;
   padding: 2px;
   background: transparent;
@@ -112,7 +112,7 @@ main .ratings.two-stars .slider-bottom .stars.two-stars,
 main .ratings.three-stars .slider-bottom .stars.three-stars,
 main .ratings.four-stars .slider-bottom .stars.four-stars,
 main .ratings.five-stars .slider-bottom .stars.five-stars {
-  color: #5c5ce0;
+  color: var(--color-info-accent);
 }
 
 main .ratings .slider-comment {
@@ -207,7 +207,7 @@ main .ratings form [type=range] {
   height: 30px;
   border-radius: 60px;
   cursor: pointer;
-  background: linear-gradient(90deg, #5c5ce0 86.625%,#dedef9 87.125%);
+  background: linear-gradient(90deg, var(--color-info-accent) 86.625%, var(--color-info-accent-light) 87.125%);
 }
 main .ratings form [type=range]::-moz-focus-outer {
   border: 0;

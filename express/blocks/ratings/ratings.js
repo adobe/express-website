@@ -27,7 +27,7 @@ function updateSliderStyle($block, value) {
   const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
   $tooltip.style.left = `${titlepos}px`;
   const percent = pos * 99;
-  $input.style.background = `linear-gradient(90deg, #5c5ce0 ${percent}%,#dedef9 ${percent + 0.5}%)`;
+  $input.style.background = `linear-gradient(90deg, var(--color-info-accent) ${percent}%, var(--color-info-accent-light) ${percent + 0.5}%)`;
 }
 
 // Implements the slider logic.
