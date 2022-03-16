@@ -4,13 +4,6 @@ main .ratings-container.section-wrapper {
   padding-bottom: 80px;
 }
 
-/* 
-/* Ratings Slider
-*/
-main .ratings .slider {
-  width: 100%;
-}
-
 main .ratings .slider .tooltip {
   position: absolute;
   background: #FFFFFF;
@@ -57,31 +50,32 @@ main .ratings .slider .tooltip--image img {
   object-fit: contain;
 }
 
-main .ratings .slider {
+main .ratings form {
   padding-top: 5rem;
+  width: 100%;
   /* adds space for the absolute-positioned tooltip */
 }
 
-main .ratings .slider > div {
+main .ratings .slider {
   position: relative;
   box-sizing: border-box;
   width: 100%;
   margin: 0;
 }
 
-main .ratings .slider .slider-bottom {
+main .ratings .slider-bottom {
   display: flex;
   justify-content: space-between;
   padding: 32px 27px 80px 30px;
 }
 
-main .ratings .slider .vertical-line {
+main .ratings .slider-bottom .vertical-line {
   height: 20px;
   border-left: 2px solid var(--color-gray-400);
   position: relative;
 }
 
-.stars {
+main .ratings .slider-bottom .stars {
   display: flex;
   position: absolute;
   left: calc(50% - 2px);
@@ -94,21 +88,88 @@ main .ratings .slider .vertical-line {
   border: none;
 }
 
-.stars img {
+main .ratings .slider-bottom .stars img {
   height: 20px;
   width: 20px;
 }
 
-.one-star .stars.one-star,
-.two-stars .stars.two-stars,
-.three-stars .stars.three-stars,
-.four-stars .stars.four-stars,
-.five-stars .stars.five-stars {
+main .ratings.one-star .slider-bottom .stars.one-star,
+main .ratings.two-stars .slider-bottom .stars.two-stars,
+main .ratings.three-stars .slider-bottom .stars.three-stars,
+main .ratings.four-stars .slider-bottom .stars.four-stars,
+main .ratings.five-stars .slider-bottom .stars.five-stars {
   color: #5c5ce0;
 }
 
+main .ratings .slider-comment {
+  padding: 32px 0;
+}
+
+main .ratings .slider-comment label {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xl);
+  line-height: var(--body-line-height);
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+
+main .ratings .slider-comment textarea {
+  resize: none;
+  border: 2px solid var(--color-gray-400);
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  color: var(--body-color);
+  margin: 16px 0;
+  background: var(--color-white);
+}
+
+main .ratings form [type=submit] {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height);
+  font-weight: 700;
+  font-style: normal;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  margin: 0;
+  padding: 13px 1.5em 13px 1.5em;
+  border-radius: 27px;
+  transition: background-color .3s, color .3s, border .3s;
+  border: 2px solid var(--color-gray-200);
+  background: var(--color-gray-200);
+}
+
+main .ratings form [type=submit]:hover {
+  background-color: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+}
+
+main .ratings form [type=submit]:active {
+  background-color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
+}
+
+main .ratings form [type=submit]:focus {
+  background-color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-gray-400);
+}
+
 /* Custom styling for the native range input, with cross-browser compatibility */
-main .ratings .slider [type=range] {
+main .ratings form [type=range] {
   -webkit-appearance: none;
   background: transparent;
   margin: 0;
@@ -117,22 +178,22 @@ main .ratings .slider [type=range] {
   border-radius: 60px;
   cursor: pointer;
 }
-main .ratings .slider [type=range]::-moz-focus-outer {
+main .ratings form [type=range]::-moz-focus-outer {
   border: 0;
 }
-main .ratings .slider [type=range]:focus {
+main .ratings form [type=range]:focus {
   outline: 0;
 }
-main .ratings .slider [type=range]:focus::-webkit-slider-runnable-track,
-main .ratings .slider [type=range]:focus::-ms-fill-lower,
-main .ratings .slider [type=range]:focus::-ms-fill-upper {
+main .ratings form [type=range]:focus::-webkit-slider-runnable-track,
+main .ratings form [type=range]:focus::-ms-fill-lower,
+main .ratings form [type=range]:focus::-ms-fill-upper {
   background: rgba(0, 0, 0, 0);
 }
-main .ratings .slider [type=range]:focus-visible {
+main .ratings form [type=range]:focus-visible {
   outline: 2px solid rgba(0,0,0,0.55);
   outline-offset: -2px;
 }
-main .ratings .slider [type=range]::-webkit-slider-runnable-track {
+main .ratings form [type=range]::-webkit-slider-runnable-track {
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 60px;
@@ -143,7 +204,7 @@ main .ratings .slider [type=range]::-webkit-slider-runnable-track {
   border: 0 solid rgba(0, 0, 0, 0);
   border-radius: 60px;
 }
-main .ratings .slider [type=range]::-webkit-slider-thumb {
+main .ratings form [type=range]::-webkit-slider-thumb {
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   background: rgba(0, 0, 0, 0);
   border: 0px solid rgba(0, 0, 0, 0);
@@ -155,7 +216,7 @@ main .ratings .slider [type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -15px;
 }
-main .ratings .slider [type=range]::-moz-range-track {
+main .ratings form [type=range]::-moz-range-track {
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 60px;
@@ -167,7 +228,7 @@ main .ratings .slider [type=range]::-moz-range-track {
   border-radius: 60px;
   height: 15px;
 }
-main .ratings .slider [type=range]::-moz-range-thumb {
+main .ratings form [type=range]::-moz-range-thumb {
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   background: rgba(0, 0, 0, 0);
   border: 0px solid rgba(0, 0, 0, 0);
@@ -177,7 +238,7 @@ main .ratings .slider [type=range]::-moz-range-thumb {
   height: 60px;
   width: 60px;
 }
-main .ratings .slider [type=range]::-ms-track {
+main .ratings form [type=range]::-ms-track {
   cursor: pointer;
   transition: all 0.2s ease;
   border-radius: 60px;
@@ -188,19 +249,19 @@ main .ratings .slider [type=range]::-ms-track {
   border-width: 30px 0;
   color: transparent;
 }
-main .ratings .slider [type=range]::-ms-fill-lower {
+main .ratings form [type=range]::-ms-fill-lower {
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   background: rgba(0, 0, 0, 0);
   border: 0 solid rgba(0, 0, 0, 0);
   border-radius: 120px;
 }
-main .ratings .slider [type=range]::-ms-fill-upper {
+main .ratings form [type=range]::-ms-fill-upper {
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   background: rgba(0, 0, 0, 0);
   border: 0 solid rgba(0, 0, 0, 0);
   border-radius: 120px;
 }
-main .ratings .slider [type=range]::-ms-thumb {
+main .ratings form [type=range]::-ms-thumb {
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   background: rgba(0, 0, 0, 0);
   border: 0px solid rgba(0, 0, 0, 0);

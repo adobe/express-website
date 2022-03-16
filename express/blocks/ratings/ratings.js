@@ -18,37 +18,43 @@ import {
 } from '../../scripts/scripts.js';
 
 function sliderFunctionality($block) {
-  const $slider = $block.querySelector('.slider');
-  const $input = $slider.querySelector('input[type="range');
-  const $tooltip = $slider.querySelector('.tooltip');
-  const $tooltipText = $slider.querySelector('.tooltip--text');
-  const $tooltipImg = $slider.querySelector('.tooltip--image img');
+  const $input = $block.querySelector('input[type="range');
+  const $tooltip = $block.querySelector('.tooltip');
+  const $tooltipText = $block.querySelector('.tooltip--text');
+  const $tooltipImg = $block.querySelector('.tooltip--image');
+  const $textareaLabel = $block.querySelector('.slider-comment label');
   const ratings = [
     {
       class: 'one-star',
       text: 'Upset',
-      // temporarily getting images from emojipedia. to-do getIcon
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png',
+      // temporarily getting images from emojipedia.
+      // to-do: getIcon()
+      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/angry-face_1f620.png" />',
+      textareaLabel: "What went wrong? We're on it.",
     },
     {
       class: 'two-stars',
       text: 'Dissatisfied', // to-do: use placeholder for these text values
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png',
+      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/thinking-face_1f914.png" />',
+      textareaLabel: 'We value your feedback. How can we improve?',
     },
     {
       class: 'three-stars',
       text: 'Content',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png',
+      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/upside-down-face_1f643.png" />',
+      textareaLabel: 'Content is cool, but not cool enough. What can we do better?',
     },
     {
       class: 'four-stars',
       text: 'Satisfied',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png',
+      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />',
+      textareaLabel: 'Satisfied is good, but what would make us great?',
     },
     {
       class: 'five-stars',
       text: 'Super happy',
-      img: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png',
+      img: '<img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/star-struck_1f929.png" />',
+      textareaLabel: "That's great, tell us what you loved.",
     },
   ];
   function update(snap = true) {
@@ -59,7 +65,8 @@ function sliderFunctionality($block) {
       $input.value = index;
     }
     $tooltipText.innerText = ratings[index - 1].text;
-    $tooltipImg.setAttribute('src', ratings[index - 1].img);
+    $tooltipImg.innerHTML = ratings[index - 1].img;
+    $textareaLabel.innerText = ratings[index - 1].textareaLabel;
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
     // set position the tooltip with the thumb
@@ -88,7 +95,7 @@ function sliderFunctionality($block) {
   window.addEventListener('resize', () => update());
 
   // Update when click on star
-  const $stars = Array.from($slider.querySelectorAll('.stars'));
+  const $stars = Array.from($block.querySelectorAll('.stars'));
   $stars.forEach(($star, index) => {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
@@ -98,47 +105,60 @@ function sliderFunctionality($block) {
 }
 
 function decorateRatingSlider($block) {
+  const title = 'Rate our Quick Action';
+  const $h2 = createTag('h2', { id: toClassName(title) });
+  $h2.textContent = title;
+  $block.append($h2);
+  const $form = createTag('form');
+  $block.append($form);
   const $slider = createTag('div', { class: 'slider' });
-  $block.append($slider);
-  const $div = createTag('div');
-  $slider.append($div);
+  $form.append($slider);
   const $input = createTag('input', {
-    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5',
+    type: 'range', name: 'rating', id: 'rating', min: '1', max: '5', step: '0.001', value: '5', 'aria-labelledby': toClassName(title),
   });
-  $div.append($input);
-  $div.insertAdjacentHTML('afterbegin', /* html */`
+  $slider.append($input);
+  $slider.insertAdjacentHTML('afterbegin', /* html */`
     <div class="tooltip">
       <div>
-        <span class="tooltip--text">
-          Super happy <!-- to-do: use placeholder -->
-        </span>
-        <div class="tooltip--image">
-          <!-- to-do: getIcon -->
-          <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/33/smiling-face-with-smiling-eyes_1f60a.png" />
-        <div>
+        <span class="tooltip--text"></span>
+        <div class="tooltip--image"><div>
       </div>
     </div>
   `);
   const star = getIcon('star');
-  $slider.insertAdjacentHTML('beforeend', /* html */`
+
+  const textArea = "That's great, tell us what you loved."; // to-do: placeholders
+  const textAreaInside = 'Your feedback (Optional)'; // to-do: placeholders
+
+  $form.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">
-      <div class="vertical-line"><button aria-label="One star" class="stars one-star">${star}</button></div>
-      <div class="vertical-line"><button aria-label="Two stars" class="stars two-stars">${star.repeat(2)}</button></div>
-      <div class="vertical-line"><button aria-label="Three stars" class="stars three-stars">${star.repeat(3)}</button></div>
-      <div class="vertical-line"><button aria-label="Four stars" class="stars four-stars">${star.repeat(4)}</button></div>
-      <div class="vertical-line"><button aria-label="Five stars" class="stars five-stars">${star.repeat(5)}</button></div>
+      <div class="vertical-line"><button type="button" aria-label="1" class="stars one-star">${star}</button></div>
+      <div class="vertical-line"><button type="button" aria-label="2" class="stars two-stars">${star.repeat(2)}</button></div>
+      <div class="vertical-line"><button type="button" aria-label="3" class="stars three-stars">${star.repeat(3)}</button></div>
+      <div class="vertical-line"><button type="button" aria-label="4" class="stars four-stars">${star.repeat(4)}</button></div>
+      <div class="vertical-line"><button type="button" aria-label="5" class="stars five-stars">${star.repeat(5)}</button></div>
     </div>
+    <div class="slider-comment">
+      <label for="comment">${textArea}</label>
+      <textarea id="comment" name="comment" rows="5" placeholder="${textAreaInside}"></textarea>
+    </div>
+    <input type="submit" class="button btn" value="Submit feedback">
   `);
-  sliderFunctionality($block, $slider);
+
+  $form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const rating = $input.value;
+    const comment = $form.querySelector('#comment').value;
+    // eslint-disable-next-line no-console
+    console.log(`${rating} stars - "${comment}"`); // test
+
+    // to-do: submit rating.
+  });
+  sliderFunctionality($block, $form);
 }
 
 export default function decorate($block) {
-  const title = 'Rate our Quick Action';
-  const $h2 = createTag('h2', { id: toClassName(title) });
-  $h2.textContent = title;
-
   $block.innerHTML = '';
-  $block.append($h2);
 
   decorateRatingSlider($block);
 }
