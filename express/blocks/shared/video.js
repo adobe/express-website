@@ -52,7 +52,7 @@ function getMimeType(src) {
   if (src.endsWith('.m3u8')) {
     return 'application/x-mpegURL';
   }
-  return src.split('.').pop();
+  return `video/${src.split('.').pop()}`;
 }
 
 function playInlineVideo($element, vidUrls = [], playerType, title) {
