@@ -179,8 +179,13 @@ function decorateRatingSlider($block) {
     // For Testing purposes:
     $block.innerHTML = `<h2>Thank you for your feedback</h2>
     <p>testing that it worked:</p>
-    <p>Your rating: ${rating} stars</p>
-    <p>Your comment: "${comment}"</p>`;
+    <p>
+      Your rating: ${rating} stars
+      <br />
+      Your comment: "${comment}"
+    </p>`;
+
+    window.scrollTo(0, $block.closest('.section-wrapper').offsetTop);
   });
   sliderFunctionality($block, $form);
 }
