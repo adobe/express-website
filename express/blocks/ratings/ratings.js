@@ -96,10 +96,11 @@ function sliderFunctionality($block) {
   $input.addEventListener('keyup', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
       $input.value -= 1;
+      updateSlider();
     } else if (e.code === 'ArrowRight' || e.code === 'ArrowUp') {
       $input.value += 1;
+      updateSlider();
     }
-    updateSlider();
   });
   window.addEventListener('resize', () => {
     updateTooltip($block);
