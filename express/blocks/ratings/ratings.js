@@ -19,14 +19,16 @@ import {
 
 // Updates the front-end style of the slider.
 function updateSliderStyle($block, value) {
-  const thumbwidth = 60;
   const $input = $block.querySelector('input[type=range]');
   const $tooltip = $block.querySelector('.tooltip');
+
+  const thumbWidth = 60;
   const pos = (value - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
-  const thumbCorrect = (thumbwidth * (pos - 0.25) * -1) - 0.1;
-  const titlepos = (pos * $input.offsetWidth) - (thumbwidth / 4) + thumbCorrect;
-  $tooltip.style.left = `${titlepos}px`;
+  const thumbCorrect = (thumbWidth * (pos - 0.25) * -1) - 0.1;
+  const titlePos = (pos * $input.offsetWidth) - (thumbWidth / 4) + thumbCorrect;
   const percent = pos * 99;
+
+  $tooltip.style.left = `${titlePos}px`;
   $input.style.background = `linear-gradient(90deg, var(--color-info-accent) ${percent}%, var(--color-info-accent-light) ${percent + 0.5}%)`;
 }
 
@@ -38,6 +40,7 @@ function sliderFunctionality($block) {
   const $textarea = $block.querySelector('.slider-comment textarea');
   const $textareaLabel = $block.querySelector('.slider-comment label');
   const $stars = Array.from($block.querySelectorAll('.stars'));
+
   const ratings = [
     {
       class: 'one-star',
