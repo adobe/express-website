@@ -20,12 +20,12 @@ import {
   toClassName,
   decorateMain,
   addAnimationToggle,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 import {
   buildCarousel,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '../shared/carousel.js';
 
 /**
@@ -544,6 +544,22 @@ export async function decorateTemplateList($block) {
     const cells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
+    //ccx0022 begin
+    let button = document.querySelectorAll('.template-list--sixcols-mobile-button-');
+    if (!button.length) {
+      const image = document.createElement('img');
+      image.setAttribute('src', '/content/dam/cc/optimization/ccx0022/ccx0022_scroll.gif');
+
+      button = document.createElement('a');
+      button.setAttribute('class', 'template-list--sixcols-mobile-button-');
+      button.appendChild(image);
+      $block.appendChild(button);
+      button.addEventListener('click', function () {
+        this.parentNode.scrollIntoView(true);
+        this.parentNode.removeChild(this);
+      });
+    }
+    //ccx00xx end
     const masonry = new Masonry($block, cells);
     masonry.draw();
     window.addEventListener('resize', () => {

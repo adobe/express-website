@@ -742,19 +742,3 @@ main .columns.highlight .column.column-picture {
     padding-left: 16px;
   }
 }
-
-/*ccx0022*/
-.template-list--sixcols-mobile-button- {
-  padding: 7px 8px;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 999;
-  width: 64px;
-  height: 62px;
-}
-@media screen and (min-width: 600px) {
-    .template-list--sixcols-mobile-button- {
-      display: none;
-    }
-}
