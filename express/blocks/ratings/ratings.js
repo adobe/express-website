@@ -99,7 +99,7 @@ function sliderFunctionality($block) {
     }
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
-    setTimeout(updateSliderStyle($block, $input.value), 2000);
+    updateSliderStyle($block, $input.value);
   }
   // Slider event listeners.
   $input.addEventListener('input', () => updateSliderValue(false));
@@ -146,7 +146,7 @@ function decorateRatingSlider($block, title) {
       </div>
     </div>
   `);
-  updateSliderStyle($block, $input.value);
+  setTimeout(updateSliderStyle($block, $input.value), 2000);
 
   const subtmitButtonText = 'Submit rating'; // to-do: placeholders
 
