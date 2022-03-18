@@ -544,22 +544,7 @@ export async function decorateTemplateList($block) {
     const cells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
-    //ccx0022 begin
-    let button = document.querySelectorAll('.template-list--sixcols-mobile-button-');
-    if (!button.length) {
-      const image = document.createElement('img');
-      image.setAttribute('src', '/content/dam/cc/optimization/ccx0022/ccx0022_scroll.gif');
 
-      button = document.createElement('a');
-      button.setAttribute('class', 'template-list--sixcols-mobile-button-');
-      button.appendChild(image);
-      $block.appendChild(button);
-      button.addEventListener('click', function () {
-        this.parentNode.scrollIntoView(true);
-        this.parentNode.removeChild(this);
-      });
-    }
-    //ccx00xx end
     const masonry = new Masonry($block, cells);
     masonry.draw();
     window.addEventListener('resize', () => {
@@ -567,6 +552,29 @@ export async function decorateTemplateList($block) {
     });
   } else {
     $block.classList.add('template-list-complete');
+  }
+
+  // sixcols mobile button
+  if ($block.classList.contains('sixcols') && !document.querySelector('.template-list-scrollbutton')) {
+    const image = document.createElement('img');
+    // replace image with more permanent solution
+    image.setAttribute('src', '/express/blocks/template-list/scrollbutton.gif');
+
+    const button = document.createElement('a');
+    button.setAttribute('class', 'template-list-scrollbutton');
+    button.appendChild(image);
+    $block.appendChild(button);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        button.remove();
+        observer.disconnect();
+      }
+    });
+    observer.observe($block);
+
+    button.addEventListener('click', () => {
+      $block.scrollIntoView(true);
+    });
   }
 }
 

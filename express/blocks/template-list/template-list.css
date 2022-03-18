@@ -356,13 +356,13 @@ main .template-list.sixcols .template.placeholder {
   margin: 15px auto;
 }
 
-/*ccx0022*/
-main .template-list.sixcols .template-list--sixcols-mobile-button- {
+/* template-list-scrollbutton */
+main .template-list.sixcols .template-list-scrollbutton {
   padding: 7px 8px;
   position: fixed;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: 1;
   width: 64px;
   height: 62px;
 }
@@ -468,8 +468,8 @@ main .template-list.flex-masonry .template.appear {
     margin: 21px;
   }
   
-  /*ccx0022*/
-  main .template-list.sixcols .template-list--sixcols-mobile-button- {
+  /* template-list-scrollbutton */
+  main .template-list.sixcols .template-list-scrollbutton {
     display: none;
   }
 
