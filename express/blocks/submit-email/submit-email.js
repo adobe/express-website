@@ -66,11 +66,13 @@ export default function decorate($block) {
         .then(() => {
           $formHeading.textContent = 'Thanks for signing up!';
           $formHeading.classList.add('success');
+          $formHeading.classList.remove('error');
           $emailInput.classList.remove('error');
           $emailInput.value = '';
         })
         .catch(() => {
           $formHeading.textContent = 'An error occurred during subscription';
+          $formHeading.classList.add('error');
         });
     } else {
       $emailInput.classList.add('error');
@@ -78,7 +80,7 @@ export default function decorate($block) {
     }
   });
 
-  $block.querySelector('.submit-email > div > div:nth-child(2)').appendChild($form);
+  $block.querySelector('.submit-email > div > div').appendChild($form);
 
   const $formBlock = document.createElement('div');
   $formBlock.classList.add('form-block');
