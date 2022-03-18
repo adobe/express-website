@@ -20,7 +20,7 @@ export default function decorate($block) {
 
   const $form = document.createElement('form');
   const $formHeading = document.createElement('h2');
-  $formHeading.textContent = 'Subscribe Now';
+  $formHeading.textContent = 'Subscribe now.';
   $formHeading.classList.add('form-heading');
 
   const $submitButton = document.createElement('a');
