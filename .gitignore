@@ -2,6 +2,7 @@
 .cache/
 .DS_Store
 .env
+.idea
 node_modules/
 pipeline.log
 logs
