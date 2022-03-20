@@ -71,6 +71,8 @@ function loadFEDS() {
         event.preventDefault();
         const checkResp = await fetch(prefix + gPath);
         if (checkResp.ok) {
+          window.location.href = prefix + gPath;
+        } else {
           window.location.href = `${prefix}/`;
         }
       });
