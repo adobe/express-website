@@ -50,7 +50,7 @@ export default function decorate($block) {
       headers.append('Content-Type', 'application/json');
 
       const body = {
-        sname: 'adbemeta-live',
+        sname: 'adbemeta_live',
         email,
         consent_notice: '<div class="disclaimer detail-spectrum-m" style="letter-spacing: 0px; padding-top: 15px;">The Adobe family of companies may keep me informed with personalized emails about the Adobe x Meta Express your brand campaign. See our <a href="https://www.adobe.com/privacy/policy.html" target="_blank">Privacy Policy</a> for more details or to opt-out at any time.</div>',
         current_url: window.location.href,
