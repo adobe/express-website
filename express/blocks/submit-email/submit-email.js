@@ -20,7 +20,7 @@ export default function decorate($block) {
 
   const $form = document.createElement('form');
   const $formHeading = document.createElement('h2');
-  $formHeading.textContent = 'Subscribe Now';
+  $formHeading.textContent = 'Subscribe now.';
   $formHeading.classList.add('form-heading');
 
   const $submitButton = document.createElement('a');
@@ -50,7 +50,7 @@ export default function decorate($block) {
       headers.append('Content-Type', 'application/json');
 
       const body = {
-        sname: 'adbemeta',
+        sname: 'adbemeta_live',
         email,
         consent_notice: '<div class="disclaimer detail-spectrum-m" style="letter-spacing: 0px; padding-top: 15px;">The Adobe family of companies may keep me informed with personalized emails about the Adobe x Meta Express your brand campaign. See our <a href="https://www.adobe.com/privacy/policy.html" target="_blank">Privacy Policy</a> for more details or to opt-out at any time.</div>',
         current_url: window.location.href,
@@ -66,11 +66,13 @@ export default function decorate($block) {
         .then(() => {
           $formHeading.textContent = 'Thanks for signing up!';
           $formHeading.classList.add('success');
+          $formHeading.classList.remove('error');
           $emailInput.classList.remove('error');
           $emailInput.value = '';
         })
         .catch(() => {
           $formHeading.textContent = 'An error occurred during subscription';
+          $formHeading.classList.add('error');
         });
     } else {
       $emailInput.classList.add('error');
@@ -78,7 +80,7 @@ export default function decorate($block) {
     }
   });
 
-  $block.querySelector('.submit-email > div > div:nth-child(2)').appendChild($form);
+  $block.querySelector('.submit-email > div > div').appendChild($form);
 
   const $formBlock = document.createElement('div');
   $formBlock.classList.add('form-block');
