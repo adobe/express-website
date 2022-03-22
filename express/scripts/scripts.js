@@ -38,7 +38,7 @@ export function sampleRUM(checkpoint, data = {}) {
       const sendPing = () => {
         // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
         const body = JSON.stringify({ weight, id, referer: window.location.href, generation: window.RUM_GENERATION, checkpoint, ...data });
-        const url = `https://rum.hlx3.page/.rum/${weight}`;
+        const url = `https://rum.hlx.page/.rum/${weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
       };
@@ -47,7 +47,7 @@ export function sampleRUM(checkpoint, data = {}) {
       if (checkpoint === 'cwv') {
         // use classic script to avoid CORS issues
         const script = document.createElement('script');
-        script.src = 'https://rum.hlx3.page/.rum/web-vitals/dist/web-vitals.iife.js';
+        script.src = 'https://rum.hlx.page/.rum/web-vitals/dist/web-vitals.iife.js';
         script.onload = () => {
           const storeCWV = (measurement) => {
             data.cwv = {};
