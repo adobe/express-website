@@ -358,13 +358,13 @@ main .template-list.sixcols .template.placeholder {
 
 /* template-list-scrollbutton */
 main .template-list.sixcols .template-list-scrollbutton {
-  padding: 7px 8px;
+  padding: 0;
   position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  width: 64px;
-  height: 62px;
+  bottom: 22px;
+  right: 8px;
+  z-index: 3;
+  width: 60px;
+  height: 60px;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
