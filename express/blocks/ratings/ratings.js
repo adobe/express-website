@@ -149,11 +149,10 @@ function decorateRatingSlider($block, title) {
       </div>
     </div>
   `);
-  setTimeout(updateSliderStyle($block, $input.value), 2000);
 
   const subtmitButtonText = 'Submit rating'; // to-do: placeholders
-
   const star = getIcon('star');
+
   $form.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">
       <div class="vertical-line"><button type="button" aria-label="1" class="stars one-star">${star}</button></div>
@@ -168,6 +167,7 @@ function decorateRatingSlider($block, title) {
       <input type="submit" value="${subtmitButtonText}">
     </div>
   `);
+
   // Form-submit event listener.
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -193,10 +193,15 @@ function decorateRatingSlider($block, title) {
 
 export default function decorate($block) {
   const $CTA = $block.querySelector('a');
+  $CTA.classList.add('xlarge');
   $block.innerHTML = '';
   const title = 'Rate our Quick Action'; // to-do: placeholders
   const $h2 = createTag('h2', { id: toClassName(title) });
   $h2.textContent = title;
+  const star = getIcon('star');
+  const $stars = createTag('span', { class: 'rating-stars' });
+  $stars.innerHTML = `${star.repeat(5)}`;
+  $h2.appendChild($stars);
   $block.appendChild($h2);
 
   const actionUsed = true; // to-do: logic to see if the action was used.

@@ -8,10 +8,38 @@ main .ratings {
   text-align: center;
 }
 
-main .ratings .cannot-rate {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+main .ratings .rating-stars {
+  color: var(--color-info-accent);
+  margin-top: 20px;
+}
+
+main .ratings .rating-stars svg {
+  height: 30px;
+  width: 30px;
+  transform: translateY(2px);
+  margin: 0 2px;
+}
+
+@media (min-width: 900px) {
+  main .ratings .cannot-rate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  main .ratings .cannot-rate .button {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 1.5rem;
+  }
+
+  main .ratings .rating-stars {
+    margin: 0 20px
+  }
+
+  main .ratings h2 {
+    margin-left: 20px;
+  }
 }
 
 main .ratings .slider .tooltip {
@@ -34,7 +62,8 @@ main .ratings .slider .tooltip {
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 85%;
+  left: 82.2%;
+  z-index: 2;
 }
 
 main .ratings .slider .tooltip > div {
@@ -102,9 +131,64 @@ main .ratings .slider-bottom .stars {
   border: none;
 }
 
-main .ratings .slider-bottom .stars img {
-  height: 20px;
-  width: 20px;
+main .ratings .slider-bottom .stars svg {
+  height: 18px;
+  width: 18px;
+}
+
+@media (max-width: 899px) {
+  main .ratings .slider-bottom {
+    padding-bottom: 32px;
+    padding-top: 20px;
+  }
+
+  main .ratings .slider-bottom .vertical-line {
+    height: 4px;
+    border-left: 2px solid var(--color-gray-200);
+  }
+
+  main .ratings .slider-bottom .vertical-line .stars {
+    top: 16px;
+  }
+
+  main .ratings .slider-bottom .vertical-line:not(:first-child):not(:last-child) .stars {
+    color: transparent;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  main .ratings .rating-stars {
+    display: block;
+    width: 100%;
+  }
+
+  main .ratings .slider .tooltip {
+    left: 75%;
+  }
+
+  main .ratings .slider-bottom .stars svg {
+    height: 14px;
+    width: 14px;
+  }
+
+  main .ratings.one-star .slider-bottom .vertical-line .stars,
+  main .ratings.two-stars .slider-bottom .vertical-line .stars,
+  main .ratings.three-stars .slider-bottom .vertical-line .stars,
+  main .ratings.four-stars .slider-bottom .vertical-line .stars,
+  main .ratings.five-stars .slider-bottom .vertical-line .stars {
+    color: transparent;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  main .ratings.one-star .slider-bottom .vertical-line .stars.one-star,
+  main .ratings.two-stars .slider-bottom .vertical-line .stars.two-stars,
+  main .ratings.three-stars .slider-bottom .vertical-line .stars.three-stars,
+  main .ratings.four-stars .slider-bottom .vertical-line .stars.four-stars,
+  main .ratings.five-stars .slider-bottom .vertical-line .stars.five-stars {
+    color: var(--color-info-accent);
+    opacity: 1;
+  }
 }
 
 main .ratings.one-star .slider-bottom .stars.one-star,
@@ -113,6 +197,7 @@ main .ratings.three-stars .slider-bottom .stars.three-stars,
 main .ratings.four-stars .slider-bottom .stars.four-stars,
 main .ratings.five-stars .slider-bottom .stars.five-stars {
   color: var(--color-info-accent);
+  opacity: 1;
 }
 
 main .ratings .slider-comment {
