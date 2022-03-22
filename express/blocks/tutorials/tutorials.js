@@ -63,7 +63,7 @@ function decorateTutorials($block) {
   // handle history events
   window.addEventListener('popstate', ({ state }) => {
     hideVideoModal();
-    const { url, title } = state;
+    const { url, title } = state || {};
     if (url) {
       displayVideoModal(url, title);
     }

@@ -230,6 +230,8 @@ class Masonry {
       column.outerHeight += +$cell.style.height.split('px')[0] + 20;
     }
 
+    $cell.querySelector(':scope > div:nth-of-type(2)').classList.add('button-container');
+
     /* set tab index and event listeners */
     if (this.cells[0] === $cell) {
       /* first cell focus handler */
@@ -439,7 +441,8 @@ export async function decorateTemplateList($block) {
   // make copy of children to avoid modifying list while looping
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
-    const $link = $tmplt.querySelector(':scope > div:nth-of-type(2) > a');
+    const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
+    const $link = $linkContainer.querySelector(':scope a');
     if ($link) {
       const $a = createTag('a', {
         href: $link.href ? addSearchQueryToHref($link.href) : '#',
@@ -456,9 +459,10 @@ export async function decorateTemplateList($block) {
 
       // convert A to SPAN
       const $newLink = createTag('span', { class: 'template-link' });
-      $newLink.append(...$link.childNodes);
-      $link.parentNode.append($newLink);
-      $link.remove();
+      $newLink.append($link.textContent);
+
+      $linkContainer.innerHTML = '';
+      $linkContainer.append($newLink);
     }
 
     if ($tmplt.children.length === 3) {

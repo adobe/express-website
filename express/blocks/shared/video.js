@@ -48,11 +48,18 @@ function showVideoPromotion($video, vid) {
   }
 }
 
+function getMimeType(src) {
+  if (src.endsWith('.m3u8')) {
+    return 'application/x-mpegURL';
+  }
+  return `video/${src.split('.').pop()}`;
+}
+
 function playInlineVideo($element, vidUrls = [], playerType, title) {
   const [primaryUrl] = vidUrls;
   if (!primaryUrl) return;
   if (playerType === 'html5') {
-    const sources = vidUrls.map((src) => `<source src="${src}" type="video/${src.split('.').pop()}"></source>`).join('');
+    const sources = vidUrls.map((src) => `<source src="${src}" type="${getMimeType(src)}"></source>`).join('');
     const videoHTML = `<video controls autoplay playsinline>${sources}</video>`;
     $element.innerHTML = videoHTML;
     const $video = $element.querySelector('video');

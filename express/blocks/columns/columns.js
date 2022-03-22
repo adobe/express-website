@@ -210,35 +210,11 @@ export default function decorate($block) {
       if ($a && $a.classList.contains('button')) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
-
-          const $primaryCTA = $a;
-          const $floatButton = $primaryCTA.parentElement.cloneNode(true);
+          $a.classList.add('primaryCTA');
+          const $floatButton = $a.parentElement.cloneNode(true);
           $floatButton.classList.add('fixed-button');
           document.body.classList.add('has-fixed-button');
           $cell.appendChild($floatButton);
-          $primaryCTA.classList.add('primaryCTA');
-          $floatButton.style.display = 'none';
-
-          setTimeout(() => {
-            $floatButton.classList.remove('shown');
-            $floatButton.style.display = '';
-          }, 1000);
-
-          const hideButtonWhenInView = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.intersectionRatio > 0) {
-                $floatButton.classList.remove('shown');
-              } else if (document.body.classList.contains('has-fixed-button')) {
-                $floatButton.classList.add('shown');
-              }
-            });
-          }, { threshold: 0 });
-
-          hideButtonWhenInView.observe($primaryCTA);
-          const banner = document.querySelector('.banner-container');
-          if (banner) {
-            hideButtonWhenInView.observe(banner);
-          }
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
@@ -247,7 +223,7 @@ export default function decorate($block) {
       // handle history events
       window.addEventListener('popstate', ({ state }) => {
         hideVideoModal();
-        const { url, title } = state;
+        const { url, title } = state || {};
         if (url) {
           displayVideoModal(url, title);
         }

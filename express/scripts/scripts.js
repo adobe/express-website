@@ -186,6 +186,7 @@ export function getIcon(icons, alt, size = 44) {
     'brand',
     'brand-libraries',
     'brandswitch',
+    'calendar',
     'certified',
     'changespeed',
     'check',
@@ -572,7 +573,6 @@ function decorateHeaderAndFooter() {
 
   document.querySelector('footer').innerHTML = `
     <div id="feds-footer"></div>
-    <div class="evidon-notice-link"></div>
   `;
 }
 
@@ -779,29 +779,6 @@ export function readBlockConfig($block) {
   return config;
 }
 
-async function loadFont(name, url, weight) {
-  const font = new FontFace(name, url, { weight });
-  const fontLoaded = await font.load();
-  return (fontLoaded);
-}
-
-async function loadFonts() {
-  try {
-    /* todo promise.All */
-    const f900 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
-    const f400 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
-    const f700 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
-    document.fonts.add(f900);
-    document.fonts.add(f400);
-    document.fonts.add(f700);
-    sessionStorage.setItem('helix-fonts', 'loaded');
-  } catch (err) {
-    /* something went wrong */
-    console.log(err);
-  }
-  document.body.classList.add('font-loaded');
-}
-
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
@@ -866,16 +843,15 @@ function loadMartech() {
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
+}
 
-  const martechUrl = '/express/scripts/delayed.js';
-  // loadLazyFooter();
-  if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 0;
-    const delay = usp.get('delay');
-    if (delay) ms = +delay;
-    setTimeout(() => {
-      loadScript(martechUrl, null, 'module');
-    }, ms);
+function loadGnav() {
+  const usp = new URLSearchParams(window.location.search);
+  const gnav = usp.get('gnav');
+
+  const gnavUrl = '/express/scripts/gnav.js';
+  if (!(gnav === 'off' || document.querySelector(`head script[src="${gnavUrl}"]`))) {
+    loadScript(gnavUrl, null, 'module');
   }
 }
 
@@ -1479,6 +1455,42 @@ function hideBody(id) {
   }
 }
 
+/**
+ * Generates the intersection observer (after the blocks are finished loading)
+ * to make sure that the fixed button is visible on page load if the
+ * title is too long to show the PrimaryCTA
+ */
+function generateFixedButton() {
+  if (document.body.classList.contains('has-fixed-button')) {
+    const $primaryCTA = document.querySelector('.primaryCTA');
+    const $floatButton = document.querySelector('.fixed-button');
+    const $banner = document.querySelector('.banner-container');
+
+    const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.intersectionRatio > 0) {
+        $floatButton.classList.remove('shown');
+      } else {
+        $floatButton.classList.add('shown');
+      }
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0,
+    });
+
+    if (document.readyState === 'complete') {
+      hideFixedButtonWhenInView.observe($primaryCTA);
+      if ($banner) hideFixedButtonWhenInView.observe($banner);
+    } else {
+      window.addEventListener('load', () => {
+        hideFixedButtonWhenInView.observe($primaryCTA);
+        if ($banner) hideFixedButtonWhenInView.observe($banner);
+      });
+    }
+  }
+}
+
 export function addAnimationToggle(target) {
   target.addEventListener('click', () => {
     const videos = target.querySelectorAll('video');
@@ -1500,7 +1512,7 @@ async function wordBreakJapanese() {
   }
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
-  document.querySelectorAll('h1, h2, h3, h3, h4, h5, p').forEach((el) => {
+  document.querySelectorAll('h1, h2, h3, h4, h5, p:not(.button-container)').forEach((el) => {
     parser.applyElement(el);
   });
 }
@@ -1511,9 +1523,6 @@ async function wordBreakJapanese() {
 async function loadEager() {
   setTheme();
   if (!window.hlx.lighthouse) await decorateTesting();
-  if (sessionStorage.getItem('helix-font') === 'loaded') {
-    loadFonts();
-  }
 
   const main = document.querySelector('main');
   if (main) {
@@ -1529,7 +1538,9 @@ async function loadEager() {
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
 
+    generateFixedButton();
     document.querySelector('body').classList.add('appear');
+
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
       if (target) {
@@ -1563,32 +1574,13 @@ async function loadLazy() {
   sampleRUM('lcp');
 
   loadBlocks(main);
-  loadFonts();
   loadCSS('/express/styles/lazy-styles.css');
   resolveFragments();
   addPromotion();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
-}
 
-/**
- * loads everything that happens a lot later, without impacting
- * the user experience.
- */
-function loadDelayed() {
-  /* trigger delayed.js load */
-  const delayedScript = '/express/scripts/delayed.js';
-  const usp = new URLSearchParams(window.location.search);
-  const delayed = usp.get('delayed');
-
-  if (!(delayed === 'off' || document.querySelector(`head script[src="${delayedScript}"]`))) {
-    let ms = 0;
-    const delay = usp.get('delay');
-    if (delay) ms = +delay;
-    setTimeout(() => {
-      loadScript(delayedScript, null, 'module');
-    }, ms);
-  }
+  sampleRUM.observe(document.querySelectorAll('main picture > img'));
 }
 
 /**
@@ -1601,7 +1593,7 @@ async function decoratePage() {
 
   await loadEager();
   loadLazy();
-  loadDelayed();
+  loadGnav();
 }
 
 if (!window.hlx.init && !window.isTestEnv) {
