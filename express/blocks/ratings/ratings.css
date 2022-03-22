@@ -232,6 +232,9 @@ main .ratings .slider-comment textarea {
 }
 
 main .ratings form [type=submit] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
   line-height: var(--body-line-height);
