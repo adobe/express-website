@@ -55,7 +55,7 @@ jobs:
 
       - helix-post-deploy/monitoring:
           newrelic_name: Adobe CC Express - Content (preview)
-          newrelic_url: https://main--express-website--adobe.hlx3.page/express/
+          newrelic_url: https://main--express-website--adobe.hlx.page/express/
           newrelic_type: browser
           newrelic_script: ./.monitoring/content-check.js
           newrelic_group_policy: Customer Sites
