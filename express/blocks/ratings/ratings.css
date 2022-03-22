@@ -107,6 +107,7 @@ main .ratings .slider-bottom .stars {
   padding: 2px;
   background: transparent;
   border: none;
+  white-space: nowrap;
 }
 
 main .ratings .slider-bottom .stars svg {
@@ -130,9 +131,7 @@ main .ratings .slider-bottom .stars svg {
   }
 
   main .ratings .slider-bottom .vertical-line:not(:first-child):not(:last-child) .stars {
-    color: transparent;
-    opacity: 0;
-    pointer-events: none;
+    display: none;
   }
 
   main .ratings .rating-stars {
@@ -154,9 +153,7 @@ main .ratings .slider-bottom .stars svg {
   main .ratings.three-stars .slider-bottom .vertical-line .stars,
   main .ratings.four-stars .slider-bottom .vertical-line .stars,
   main .ratings.five-stars .slider-bottom .vertical-line .stars {
-    color: transparent;
-    opacity: 0;
-    pointer-events: none;
+    display: none;
   }
 
   main .ratings.one-star .slider-bottom .vertical-line .stars.one-star,
@@ -165,7 +162,7 @@ main .ratings .slider-bottom .stars svg {
   main .ratings.four-stars .slider-bottom .vertical-line .stars.four-stars,
   main .ratings.five-stars .slider-bottom .vertical-line .stars.five-stars {
     color: var(--color-info-accent);
-    opacity: 1;
+    display: block;
   }
 
   main .ratings .slider .tooltip--text {
@@ -185,7 +182,7 @@ main .ratings.three-stars .slider-bottom .stars.three-stars,
 main .ratings.four-stars .slider-bottom .stars.four-stars,
 main .ratings.five-stars .slider-bottom .stars.five-stars {
   color: var(--color-info-accent);
-  opacity: 1;
+  display: block;
 }
 
 main .ratings .slider-comment {
