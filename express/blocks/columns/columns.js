@@ -18,7 +18,6 @@ import {
   toClassName,
   getLocale,
   getIconElement,
-  // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 import {
