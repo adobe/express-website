@@ -20,28 +20,6 @@ main .ratings .rating-stars svg {
   margin: 0 2px;
 }
 
-@media (min-width: 900px) {
-  main .ratings .cannot-rate {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  main .ratings .cannot-rate .button {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    margin-left: 1.5rem;
-  }
-
-  main .ratings .rating-stars {
-    margin: 0 20px
-  }
-
-  main .ratings h2 {
-    margin-left: 20px;
-  }
-}
-
 main .ratings .slider .tooltip {
   position: absolute;
   background: var(--color-white);
@@ -189,6 +167,16 @@ main .ratings .slider-bottom .stars svg {
     color: var(--color-info-accent);
     opacity: 1;
   }
+
+  main .ratings .slider .tooltip--text {
+    top: -68px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  main .ratings form {
+    padding-top: 4.5rem;
+  }
 }
 
 main .ratings.one-star .slider-bottom .stars.one-star,
@@ -211,7 +199,7 @@ main .ratings.two-stars .slider-comment,
 main .ratings.three-stars .slider-comment,
 main .ratings.four-stars .slider-comment,
 main .ratings.five-stars .slider-comment {
-  height: 320px;
+  height: 310px;
 }
 
 main .ratings .slider-comment label {
@@ -387,4 +375,49 @@ main .ratings form [type=range]::-ms-thumb {
   height: 60px;
   width: 60px;
   margin-top: 7.5px;
+}
+
+main .ratings h2 {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 235px;
+}
+
+@media (min-width: 900px) {
+  main .ratings .cannot-rate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  main .ratings .cannot-rate .button {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 1.5rem;
+  }
+
+  main .ratings .rating-stars {
+    margin: 0 20px
+  }
+
+  main .ratings h2 {
+    margin-left: 20px;
+    max-width: unset;
+  }
+  
+  main .ratings .slider-comment label {
+    padding-top: 50px;
+  }
+
+  main .ratings form [type=submit] {
+    margin-top: 30px;
+  }
+
+  main .ratings.one-star .slider-comment,
+  main .ratings.two-stars .slider-comment,
+  main .ratings.three-stars .slider-comment,
+  main .ratings.four-stars .slider-comment,
+  main .ratings.five-stars .slider-comment {
+    height: 330px;
+  }
 }
