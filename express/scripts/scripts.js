@@ -104,7 +104,7 @@ sampleRUM.observe = ((elements) => {
 });
 
 sampleRUM.sourceselector = (element) => {
-  if (element === document.body || element === document.documentElement) {
+  if (element === document.body || element === document.documentElement || !element) {
     return undefined;
   }
   if (element.id) {
