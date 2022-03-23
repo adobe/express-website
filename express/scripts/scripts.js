@@ -1277,7 +1277,7 @@ function displayEnv() {
     /* setup based on referrer */
     if (document.referrer) {
       const url = new URL(document.referrer);
-      const expressEnvs = ['express-stage.adobe.com', 'express-qa.adobe.com'];
+      const expressEnvs = ['express-stage.adobe.com', 'express-qa.adobe.com', 'express-dev.adobe.com'];
       if (url.hostname.endsWith('.adobeprojectm.com') || expressEnvs.includes(url.hostname)) {
         setHelixEnv('stage', { spark: url.host });
       }
