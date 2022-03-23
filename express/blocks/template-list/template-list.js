@@ -20,12 +20,12 @@ import {
   toClassName,
   decorateMain,
   addAnimationToggle,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 import {
   buildCarousel,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '../shared/carousel.js';
 
 /**
@@ -548,6 +548,7 @@ export async function decorateTemplateList($block) {
     const cells = Array.from($block.children);
     $block.classList.remove('masonry');
     $block.classList.add('flex-masonry');
+
     const masonry = new Masonry($block, cells);
     masonry.draw();
     window.addEventListener('resize', () => {
@@ -555,6 +556,29 @@ export async function decorateTemplateList($block) {
     });
   } else {
     $block.classList.add('template-list-complete');
+  }
+
+  // sixcols mobile button
+  if ($block.classList.contains('sixcols') && !document.querySelector('.template-list-scrollbutton')) {
+    const image = document.createElement('img');
+    // replace image with more permanent solution
+    image.setAttribute('src', '/express/blocks/template-list/scrollbutton.gif');
+
+    const button = document.createElement('a');
+    button.setAttribute('class', 'template-list-scrollbutton');
+    button.appendChild(image);
+    $block.appendChild(button);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        button.remove();
+        observer.disconnect();
+      }
+    });
+    observer.observe($block);
+
+    button.addEventListener('click', () => {
+      $block.scrollIntoView(true);
+    });
   }
 }
 
