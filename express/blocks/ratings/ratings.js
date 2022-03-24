@@ -21,20 +21,20 @@ import {
 function updateSliderStyle($block, value) {
   const $input = $block.querySelector('input[type=range]');
   const $tooltip = $block.querySelector('.tooltip');
-
+  const $sliderFill = $block.querySelector('.slider-fill');
   const thumbWidth = 60;
   const pos = (value - $input.getAttribute('min')) / ($input.getAttribute('max') - $input.getAttribute('min'));
   const thumbCorrect = (thumbWidth * (pos - 0.25) * -1) - 0.1;
   const titlePos = (pos * $input.offsetWidth) - (thumbWidth / 4) + thumbCorrect;
-  const percent = pos * 99;
-
   $tooltip.style.left = `${titlePos}px`;
-  $input.style.background = `linear-gradient(90deg, var(--color-info-accent) ${percent}%, var(--color-info-accent-light) ${percent + 0.5}%)`;
+  $sliderFill.style.width = `${titlePos + (thumbWidth / 2)}px`;
 }
 
 // Implements the slider logic.
 function sliderFunctionality($block) {
   const $input = $block.querySelector('input[type=range]');
+  const $sliderFill = $block.querySelector('.slider-fill');
+  const $tooltip = $block.querySelector('.tooltip');
   const $tooltipText = $block.querySelector('.tooltip--text');
   const $tooltipImg = $block.querySelector('.tooltip--image');
   const $textarea = $block.querySelector('.slider-comment textarea');
@@ -116,6 +116,18 @@ function sliderFunctionality($block) {
       updateSliderValue();
     }
   });
+  ['mousedown', 'touchstart'].forEach((event) => {
+    $input.addEventListener(event, () => {
+      $tooltip.style.transition = 'none';
+      $sliderFill.style.transition = 'none';
+    });
+  });
+  ['mouseup', 'touchend'].forEach((event) => {
+    $input.addEventListener(event, () => {
+      $tooltip.style.transition = 'left .3s, right .3s';
+      $sliderFill.style.transition = 'width .3s';
+    });
+  });
   window.addEventListener('resize', () => {
     updateSliderStyle($block, $input.value);
   });
@@ -140,6 +152,7 @@ function decorateRatingSlider($block, title) {
   $slider.appendChild($input);
   // Initial state of the slider:
   $slider.insertAdjacentHTML('afterbegin', /* html */`
+    <div class="slider-fill"></div>
     <div class="tooltip">
       <div>
         <span class="tooltip--text"></span>
