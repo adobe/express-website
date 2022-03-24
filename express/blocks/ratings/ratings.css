@@ -294,6 +294,15 @@ main .ratings form [type=submit]:focus {
     0 0 0 4px var(--color-gray-400);
 }
 
+main .ratings form textarea:required:placeholder-shown ~ [type=submit] {
+  background-color: var(--color-gray-200);
+  border-color: var(--color-gray-200);
+  color: var(--color-white);
+  outline: none;
+  box-shadow: none;
+  cursor: default;
+}
+
 /* Custom styling for the native range input, with cross-browser compatibility */
 main .ratings form [type=range] {
   -webkit-appearance: none;

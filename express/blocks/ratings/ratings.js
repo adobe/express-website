@@ -64,7 +64,7 @@ function sliderFunctionality($block) {
       text: 'Content', // to-do: placeholders
       textareaLabel: 'Content is cool, but not cool enough. What can we do better?', // to-do: placeholders
       textareaInside: 'Your feedback', // to-do: placeholders
-      feedbackRequired: true,
+      feedbackRequired: false,
     },
     {
       class: 'four-stars',
