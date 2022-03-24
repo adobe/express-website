@@ -423,7 +423,7 @@ main .ratings h2 {
   main .ratings.three-stars .slider-comment,
   main .ratings.four-stars .slider-comment,
   main .ratings.five-stars .slider-comment {
-    height: 330px;
+    height: 336px;
   }
 
   main .ratings .slider-comment {
