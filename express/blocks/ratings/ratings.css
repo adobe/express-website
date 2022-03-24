@@ -397,6 +397,10 @@ main .ratings h2 {
     margin: 0 20px
   }
 
+  main .ratings .slider-bottom .stars {
+    color: var(--color-gray-200);
+  }
+
   main .ratings h2 {
     margin-left: 20px;
     max-width: unset;
