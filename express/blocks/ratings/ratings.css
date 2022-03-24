@@ -301,6 +301,7 @@ main .ratings form textarea:required:placeholder-shown ~ [type=submit] {
   outline: none;
   box-shadow: none;
   cursor: default;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 /* Custom styling for the native range input, with cross-browser compatibility */
@@ -313,6 +314,7 @@ main .ratings form [type=range] {
   border-radius: 60px;
   cursor: pointer;
   background: var(--color-info-accent-light);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 main .ratings form [type=range]::-moz-focus-outer {
   border: 0;
