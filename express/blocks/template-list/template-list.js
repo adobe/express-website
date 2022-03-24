@@ -103,8 +103,11 @@ function trackTemplateClick($a) {
     } else {
       adobeEventName += 'Click';
     }
-
-    sparkEventName = 'landing:templatePressed';
+    if ($a.classList.contains('template-list-scrollbutton')) {
+      sparkEventName = 'landing:scrollbuttonPressed';
+    } else {
+      sparkEventName = 'landing:templatePressed';
+    }
 
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
     digitalData._set('spark.eventData.eventName', sparkEventName);
