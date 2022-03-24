@@ -128,6 +128,7 @@ export function getIcon(icons, alt, size = 44) {
     'check',
     'chevron',
     'cloud-storage',
+    'crop-image',
     'crop-video',
     'convert',
     'convert-png-jpg',
