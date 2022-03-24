@@ -328,6 +328,10 @@ main .ratings form [type=range]:focus-visible {
   outline: 2px solid rgba(0,0,0,0.55);
   outline-offset: -2px;
 }
+main .ratings form [type=range]:focus-visible + .slider-fill {
+  outline: 2px solid rgba(0,0,0,0.55);
+  outline-offset: -2px;
+}
 main .ratings form [type=range]::-webkit-slider-runnable-track {
   cursor: pointer;
   transition: all 0.2s ease;

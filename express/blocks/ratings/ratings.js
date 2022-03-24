@@ -152,7 +152,6 @@ function decorateRatingSlider($block, title) {
   $slider.appendChild($input);
   // Initial state of the slider:
   $slider.insertAdjacentHTML('afterbegin', /* html */`
-    <div class="slider-fill"></div>
     <div class="tooltip">
       <div>
         <span class="tooltip--text"></span>
@@ -162,6 +161,7 @@ function decorateRatingSlider($block, title) {
       </div>
     </div>
   `);
+  $slider.appendChild(createTag('div', { class: 'slider-fill' }));
 
   const subtmitButtonText = 'Submit rating'; // to-do: placeholders
   const star = getIcon('star');
