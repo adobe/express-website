@@ -575,6 +575,7 @@ export async function decorateTemplateList($block) {
     observer.observe($block);
 
     button.addEventListener('click', () => {
+      trackTemplateClick(button);
       $block.scrollIntoView(true);
     });
   }
