@@ -47,7 +47,7 @@ function sliderFunctionality($block) {
       img: getIcon('emoji-angry-face'),
       text: 'Upset', // to-do: placeholders
       textareaLabel: "What went wrong? We're on it.", // to-do: placeholders
-      textareaInside: 'Your feedback', // to-do: placeholders
+      textareaInside: 'Your feedback (Required)', // to-do: placeholders
       feedbackRequired: true,
     },
     {
@@ -55,7 +55,7 @@ function sliderFunctionality($block) {
       img: getIcon('emoji-thinking-face'),
       text: 'Dissatisfied', // to-do: placeholders
       textareaLabel: 'We value your feedback. How can we improve?', // to-do: placeholders
-      textareaInside: 'Your feedback', // to-do: placeholders
+      textareaInside: 'Your feedback (Required)', // to-do: placeholders
       feedbackRequired: true,
     },
     {
@@ -63,7 +63,7 @@ function sliderFunctionality($block) {
       img: getIcon('emoji-upside-down-face'),
       text: 'Content', // to-do: placeholders
       textareaLabel: 'Content is cool, but not cool enough. What can we do better?', // to-do: placeholders
-      textareaInside: 'Your feedback', // to-do: placeholders
+      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
       feedbackRequired: false,
     },
     {
