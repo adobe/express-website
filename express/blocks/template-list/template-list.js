@@ -96,6 +96,8 @@ function trackTemplateClick($a) {
     // try to get the image alternate text
     if ($a.classList.contains('placeholder')) {
       adobeEventName += 'createFromScratch';
+    } else if ($a.classList.contains('template-list-scrollbutton')) {
+      adobeEventName += 'scrollbuttonPressed';
     } else if (alt) {
       adobeEventName += textToName(alt);
     } else {
