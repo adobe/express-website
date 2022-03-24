@@ -45,15 +45,15 @@ function sliderFunctionality($block) {
     {
       class: 'one-star',
       img: getIcon('emoji-angry-face'),
-      text: 'Upset', // to-do: placeholders
-      textareaLabel: "What went wrong? We're on it.", // to-do: placeholders
+      text: 'Disappointing', // to-do: placeholders
+      textareaLabel: "We're sorry to hear that. What went wrong?", // to-do: placeholders
       textareaInside: 'Your feedback (Required)', // to-do: placeholders
       feedbackRequired: true,
     },
     {
       class: 'two-stars',
       img: getIcon('emoji-thinking-face'),
-      text: 'Dissatisfied', // to-do: placeholders
+      text: 'Insufficient', // to-do: placeholders
       textareaLabel: 'We value your feedback. How can we improve?', // to-do: placeholders
       textareaInside: 'Your feedback (Required)', // to-do: placeholders
       feedbackRequired: true,
@@ -61,24 +61,24 @@ function sliderFunctionality($block) {
     {
       class: 'three-stars',
       img: getIcon('emoji-upside-down-face'),
-      text: 'Content', // to-do: placeholders
-      textareaLabel: 'Content is cool, but not cool enough. What can we do better?', // to-do: placeholders
-      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
-      feedbackRequired: false,
-    },
-    {
-      class: 'four-stars',
-      img: getIcon('emoji-smiling-face'),
       text: 'Satisfied', // to-do: placeholders
       textareaLabel: 'Satisfied is good, but what would make us great?', // to-do: placeholders
       textareaInside: 'Your feedback (Optional)', // to-do: placeholders
       feedbackRequired: false,
     },
     {
+      class: 'four-stars',
+      img: getIcon('emoji-smiling-face'),
+      text: 'Helpful', // to-do: placeholders
+      textareaLabel: 'Was there more we could do to be better?', // to-do: placeholders
+      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
+      feedbackRequired: false,
+    },
+    {
       class: 'five-stars',
       img: getIcon('emoji-star-struck'),
-      text: 'Super happy', // to-do: placeholders
-      textareaLabel: "That's great, tell us what you loved.", // to-do: placeholders
+      text: 'Amazing', // to-do: placeholders
+      textareaLabel: "That's great. Could you tell us what you loved?", // to-do: placeholders
       textareaInside: 'Your feedback (Optional)', // to-do: placeholders
       feedbackRequired: false,
     },
