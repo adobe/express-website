@@ -356,6 +356,17 @@ main .template-list.sixcols .template.placeholder {
   margin: 15px auto;
 }
 
+/* template-list-scrollbutton */
+main .template-list.sixcols .template-list-scrollbutton {
+  padding: 0;
+  position: fixed;
+  bottom: 22px;
+  right: 8px;
+  z-index: 3;
+  width: 60px;
+  height: 60px;
+}
+
 main .template-list .template.placeholder div:nth-of-type(2) {
   padding: 0;
   margin: 0;
@@ -456,6 +467,11 @@ main .template-list.flex-masonry .template.appear {
     width: 145px;
     margin: 21px;
   }
+  
+  /* template-list-scrollbutton */
+  main .template-list.sixcols .template-list-scrollbutton {
+    display: none;
+  }
 
   /* template-list inside columns */
 
@@ -469,6 +485,7 @@ main .template-list.flex-masonry .template.appear {
   main .template-list.horizontal {
     max-width: 800px;
   }
+
 }
 
 @media (min-width: 1200px) {

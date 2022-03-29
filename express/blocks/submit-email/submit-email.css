@@ -1,3 +1,8 @@
+.submit-email-container {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
 .submit-email-container .submit-email {
   background-color: #FAFAFA;
   padding: 56px 16px;
@@ -75,6 +80,11 @@
 
 
 @media(min-width: 900px) {
+  .submit-email-container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
   .submit-email .icon-cc-express-logo, 
   .submit-email .icon-creative-cloud-express {
     height: 51px;
@@ -122,6 +132,11 @@
 }
 
 @media(min-width: 1200px) {
+  .submit-email-container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  
   .submit-email-container .submit-email {
     padding: 80px;
   }
