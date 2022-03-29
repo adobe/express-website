@@ -123,19 +123,11 @@ function sliderFunctionality($block) {
       $sliderFill.style.transition = 'none';
     });
   });
-  function smoothScrollIntoView(e) {
-    if (e.getBoundingClientRect().bottom > window.innerHeight) {
-      e.scrollIntoView({ block: 'end', inline: 'start', behavior: 'smooth' });
-    } else if (e.getBoundingClientRect().top < 0) {
-      e.scrollIntoView({ block: 'start', inline: 'end', behavior: 'smooth' });
-    }
-  }
   ['mouseup', 'touchend'].forEach((event) => {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
-      $submit.focus({ preventScroll: true });
-      smoothScrollIntoView($submit);
+      $submit.focus();
     });
   });
   window.addEventListener('resize', () => {
