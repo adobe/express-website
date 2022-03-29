@@ -127,7 +127,8 @@ function sliderFunctionality($block) {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
-      $submit.focus();
+      // eslint-disable-next-line no-unused-expressions
+      $textarea.getAttribute('required') ? $textarea.focus() : $submit.focus();
     });
   });
   window.addEventListener('resize', () => {
