@@ -103,6 +103,7 @@ function sliderFunctionality($block) {
     }
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
+    $block.classList.add('rated');
     updateSliderStyle($block, $input.value);
   }
   // Slider event listeners.
@@ -123,12 +124,24 @@ function sliderFunctionality($block) {
       $sliderFill.style.transition = 'none';
     });
   });
+  let firstTime = true;
   ['mouseup', 'touchend'].forEach((event) => {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
-      // eslint-disable-next-line no-unused-expressions
-      $textarea.getAttribute('required') ? $textarea.focus() : $submit.focus();
+      if ($textarea.getAttribute('required')) {
+        $textarea.focus({ preventScroll: true });
+      } else {
+        $submit.focus({ preventScroll: true });
+      }
+      if (firstTime) {
+        setTimeout(() => {
+          $submit.scrollIntoViewIfNeeded(false);
+        }, 450);
+      } else {
+        $submit.scrollIntoViewIfNeeded(false);
+      }
+      firstTime = false;
     });
   });
   window.addEventListener('resize', () => {
