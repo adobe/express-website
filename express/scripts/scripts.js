@@ -1400,27 +1400,27 @@ function generateFixedButton() {
     const $primaryCTA = document.querySelector('.primaryCTA');
     const $floatButton = document.querySelector('.fixed-button');
     const $banner = document.querySelector('.banner-container');
-    const observedElements = [$primaryCTA, $banner];
 
     const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.intersectionRatio > 0) {
-          $floatButton.classList.remove('shown');
-        } else {
-          $floatButton.classList.add('shown');
-        }
-      });
-    }, { root: null, rootMargin: '0px', threshold: 0 });
+      const entry = entries[0];
+      if (entry.intersectionRatio > 0) {
+        $floatButton.classList.remove('shown');
+      } else {
+        $floatButton.classList.add('shown');
+      }
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0,
+    });
 
     if (document.readyState === 'complete') {
-      observedElements.forEach(($el) => {
-        if ($el) hideFixedButtonWhenInView.observe($el);
-      });
+      hideFixedButtonWhenInView.observe($primaryCTA);
+      if ($banner) hideFixedButtonWhenInView.observe($banner);
     } else {
       window.addEventListener('load', () => {
-        observedElements.forEach(($el) => {
-          if ($el) hideFixedButtonWhenInView.observe($el);
-        });
+        hideFixedButtonWhenInView.observe($primaryCTA);
+        if ($banner) hideFixedButtonWhenInView.observe($banner);
       });
     }
   }
