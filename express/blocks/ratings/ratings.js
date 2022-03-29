@@ -130,9 +130,7 @@ function sliderFunctionality($block) {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
-      if ($textarea.getAttribute('required')) {
-        $textarea.focus({ preventScroll: true });
-      } else {
+      if (!$textarea.getAttribute('required')) {
         $submit.focus({ preventScroll: true });
       }
       if (firstTime) {
