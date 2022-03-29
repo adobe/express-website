@@ -96,13 +96,18 @@ function trackTemplateClick($a) {
     // try to get the image alternate text
     if ($a.classList.contains('placeholder')) {
       adobeEventName += 'createFromScratch';
+    } else if ($a.classList.contains('template-list-scrollbutton')) {
+      adobeEventName += 'scrollbuttonPressed';
     } else if (alt) {
       adobeEventName += textToName(alt);
     } else {
       adobeEventName += 'Click';
     }
-
-    sparkEventName = 'landing:templatePressed';
+    if ($a.classList.contains('template-list-scrollbutton')) {
+      sparkEventName = 'landing:scrollbuttonPressed';
+    } else {
+      sparkEventName = 'landing:templatePressed';
+    }
 
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
     digitalData._set('spark.eventData.eventName', sparkEventName);
@@ -577,6 +582,7 @@ export async function decorateTemplateList($block) {
     observer.observe($block);
 
     button.addEventListener('click', () => {
+      trackTemplateClick(button);
       $block.scrollIntoView(true);
     });
   }
