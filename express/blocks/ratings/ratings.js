@@ -64,8 +64,8 @@ function sliderFunctionality($block) {
       img: getIcon('emoji-upside-down-face'),
       text: 'Satisfied', // to-do: placeholders
       textareaLabel: 'Satisfied is good, but what would make us great?', // to-do: placeholders
-      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
-      feedbackRequired: false,
+      textareaInside: 'Your feedback (Required)', // to-do: placeholders
+      feedbackRequired: true,
     },
     {
       class: 'four-stars',
