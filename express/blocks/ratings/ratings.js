@@ -40,6 +40,7 @@ function sliderFunctionality($block) {
   const $textarea = $block.querySelector('.slider-comment textarea');
   const $textareaLabel = $block.querySelector('.slider-comment label');
   const $stars = Array.from($block.querySelectorAll('.stars'));
+  const $submit = $block.querySelector('input[type=submit]');
 
   const ratings = [
     {
@@ -122,11 +123,19 @@ function sliderFunctionality($block) {
       $sliderFill.style.transition = 'none';
     });
   });
+  function smoothScrollIntoView(e) {
+    if (e.getBoundingClientRect().bottom > window.innerHeight) {
+      e.scrollIntoView({ block: 'end', inline: 'start', behavior: 'smooth' });
+    } else if (e.getBoundingClientRect().top < 0) {
+      e.scrollIntoView({ block: 'start', inline: 'end', behavior: 'smooth' });
+    }
+  }
   ['mouseup', 'touchend'].forEach((event) => {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
-      $block.querySelector('input[type=submit]').focus();
+      $submit.focus({ preventScroll: true });
+      smoothScrollIntoView($submit);
     });
   });
   window.addEventListener('resize', () => {
