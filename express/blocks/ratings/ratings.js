@@ -13,6 +13,7 @@
 import {
   createTag,
   getIcon,
+  getIconElement,
   toClassName,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
@@ -46,7 +47,7 @@ function sliderFunctionality($block) {
   const ratings = [
     {
       class: 'one-star',
-      img: getIcon('emoji-angry-face'),
+      img: getIconElement('emoji-angry-face'),
       text: 'Disappointing', // to-do: placeholders
       textareaLabel: "We're sorry to hear that. What went wrong?", // to-do: placeholders
       textareaInside: 'Your feedback (Required)', // to-do: placeholders
@@ -54,7 +55,7 @@ function sliderFunctionality($block) {
     },
     {
       class: 'two-stars',
-      img: getIcon('emoji-thinking-face'),
+      img: getIconElement('emoji-thinking-face'),
       text: 'Insufficient', // to-do: placeholders
       textareaLabel: 'We value your feedback. How can we improve?', // to-do: placeholders
       textareaInside: 'Your feedback (Required)', // to-do: placeholders
@@ -62,7 +63,7 @@ function sliderFunctionality($block) {
     },
     {
       class: 'three-stars',
-      img: getIcon('emoji-upside-down-face'),
+      img: getIconElement('emoji-upside-down-face'),
       text: 'Satisfied', // to-do: placeholders
       textareaLabel: 'Satisfied is good, but what would make us great?', // to-do: placeholders
       textareaInside: 'Your feedback (Required)', // to-do: placeholders
@@ -70,7 +71,7 @@ function sliderFunctionality($block) {
     },
     {
       class: 'four-stars',
-      img: getIcon('emoji-smiling-face'),
+      img: getIconElement('emoji-smiling-face'),
       text: 'Helpful', // to-do: placeholders
       textareaLabel: 'Was there more we could do to be better?', // to-do: placeholders
       textareaInside: 'Your feedback (Optional)', // to-do: placeholders
@@ -78,7 +79,7 @@ function sliderFunctionality($block) {
     },
     {
       class: 'five-stars',
-      img: getIcon('emoji-star-struck'),
+      img: getIconElement('emoji-star-struck'),
       text: 'Amazing', // to-do: placeholders
       textareaLabel: "That's great. Could you tell us what you loved?", // to-do: placeholders
       textareaInside: 'Your feedback (Optional)', // to-do: placeholders
@@ -94,7 +95,8 @@ function sliderFunctionality($block) {
       $input.value = index;
     }
     $tooltipText.textContent = ratings[index - 1].text;
-    $tooltipImg.innerHTML = ratings[index - 1].img;
+    $tooltipImg.innerHTML = '';
+    $tooltipImg.appendChild(ratings[index - 1].img);
     $textareaLabel.textContent = ratings[index - 1].textareaLabel;
     $textarea.setAttribute('placeholder', ratings[index - 1].textareaInside);
     if (ratings[index - 1].feedbackRequired) {
@@ -194,7 +196,6 @@ function decorateRatingSlider($block, title) {
       <textarea id="comment" name="comment" rows="4" placeholder=""></textarea>
       <input type="submit" value="${subtmitButtonText}">
     </div>
-    <div class="ratings-scroll-anchor"></div>
   `);
 
   // Form-submit event listener.
@@ -245,4 +246,6 @@ export default function decorate($block) {
     $div.appendChild($CTA);
     $block.appendChild($div);
   }
+
+  $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
 }
