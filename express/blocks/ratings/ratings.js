@@ -126,6 +126,7 @@ function sliderFunctionality($block) {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
+      $block.querySelector('input[type=submit]').focus();
     });
   });
   window.addEventListener('resize', () => {
@@ -176,7 +177,7 @@ function decorateRatingSlider($block, title) {
     </div>
     <div class="slider-comment">
       <label for="comment"></label>
-      <textarea id="comment" name="comment" rows="5" placeholder=""></textarea>
+      <textarea id="comment" name="comment" rows="4" placeholder=""></textarea>
       <input type="submit" value="${subtmitButtonText}">
     </div>
   `);

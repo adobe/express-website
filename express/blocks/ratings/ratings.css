@@ -282,18 +282,23 @@ main .ratings form [type=submit]:hover {
   border-color: var(--color-gray-300);
 }
 
-main .ratings form [type=submit]:active {
-  background-color: var(--color-gray-400);
-  border-color: var(--color-gray-400);
-}
-
 main .ratings form [type=submit]:focus {
-  background-color: var(--color-gray-400);
-  border-color: var(--color-gray-400);
+  background-color: var(--color-gray-300);
+  border-color: var(--color-gray-300);
   outline: none;
   box-shadow:
     0 0 0 2px var(--color-white),
     0 0 0 4px var(--color-gray-400);
+}
+
+main .ratings form [type=submit]:focus:hover {
+  background-color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
+}
+
+main .ratings form [type=submit]:active {
+  background-color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
 }
 
 main .ratings form textarea:required:placeholder-shown ~ [type=submit] {
@@ -415,7 +420,7 @@ main .ratings h2 {
   }
 
   main .ratings form [type=submit] {
-    margin-top: 30px;
+    margin-top: 24px;
   }
 
   main .ratings.one-star .slider-comment,
