@@ -439,3 +439,8 @@ main .ratings h2 {
     max-width: 750px;
   }
 }
+
+html {
+  /* Smooth-scroll when focus on "submit-rating" button after using slider */
+  scroll-behavior: smooth;
+}
