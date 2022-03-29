@@ -41,6 +41,7 @@ function sliderFunctionality($block) {
   const $textareaLabel = $block.querySelector('.slider-comment label');
   const $stars = Array.from($block.querySelectorAll('.stars'));
   const $submit = $block.querySelector('input[type=submit]');
+  const $scrollAnchor = $block.querySelector('.ratings-scroll-anchor');
 
   const ratings = [
     {
@@ -136,10 +137,10 @@ function sliderFunctionality($block) {
       }
       if (firstTime) {
         setTimeout(() => {
-          $submit.scrollIntoViewIfNeeded(false);
+          $scrollAnchor.scrollIntoViewIfNeeded(false);
         }, 450);
       } else {
-        $submit.scrollIntoViewIfNeeded(false);
+        $scrollAnchor.scrollIntoViewIfNeeded(false);
       }
       firstTime = false;
     });
@@ -195,6 +196,7 @@ function decorateRatingSlider($block, title) {
       <textarea id="comment" name="comment" rows="4" placeholder=""></textarea>
       <input type="submit" value="${subtmitButtonText}">
     </div>
+    <div class="ratings-scroll-anchor"></div>
   `);
 
   // Form-submit event listener.

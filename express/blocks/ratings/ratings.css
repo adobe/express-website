@@ -1,7 +1,7 @@
 main .ratings-container.section-wrapper {
   background: var(--color-gray-100);
   padding-top: 80px;
-  padding-bottom: 80px;
+  padding-bottom: 0;
 }
 
 main .ratings {
@@ -438,6 +438,10 @@ main .ratings h2 {
   main .ratings {
     max-width: 750px;
   }
+}
+
+main .ratings .ratings-scroll-anchor {
+  padding-bottom: 80px;
 }
 
 html {
