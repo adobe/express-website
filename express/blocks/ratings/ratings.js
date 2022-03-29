@@ -196,6 +196,7 @@ function decorateRatingSlider($block, title) {
       <textarea id="comment" name="comment" rows="4" placeholder=""></textarea>
       <input type="submit" value="${subtmitButtonText}">
     </div>
+    <div class="ratings-scroll-anchor"></div>
   `);
 
   // Form-submit event listener.
@@ -245,7 +246,6 @@ export default function decorate($block) {
     $div.appendChild($p);
     $div.appendChild($CTA);
     $block.appendChild($div);
+    $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
   }
-
-  $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
 }
