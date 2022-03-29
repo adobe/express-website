@@ -1400,6 +1400,7 @@ function generateFixedButton() {
     const $primaryCTA = document.querySelector('.primaryCTA');
     const $floatButton = document.querySelector('.fixed-button');
     const $banner = document.querySelector('.banner-container');
+    const $ratings = document.querySelector('.ratings-container');
 
     const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
       const entry = entries[0];
@@ -1417,10 +1418,12 @@ function generateFixedButton() {
     if (document.readyState === 'complete') {
       hideFixedButtonWhenInView.observe($primaryCTA);
       if ($banner) hideFixedButtonWhenInView.observe($banner);
+      if ($ratings) hideFixedButtonWhenInView.observe($ratings);
     } else {
       window.addEventListener('load', () => {
         hideFixedButtonWhenInView.observe($primaryCTA);
         if ($banner) hideFixedButtonWhenInView.observe($banner);
+        if ($ratings) hideFixedButtonWhenInView.observe($ratings);
       });
     }
   }
