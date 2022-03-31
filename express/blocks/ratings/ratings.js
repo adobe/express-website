@@ -246,7 +246,6 @@ function decorateRatingSlider($block, title) {
     submitRating(rating, comment);
 
     $block.innerHTML = /* html */`
-    <h2>Thank you for your feedback</h2>
     <h2>${placeholders['rating-submission-title']}</h2>
     <p>${placeholders['rating-submission-text']}</p>`;
 
