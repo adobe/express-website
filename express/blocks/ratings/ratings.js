@@ -12,6 +12,7 @@
 
 import {
   createTag,
+  fetchPlaceholders,
   getIcon,
   getIconElement,
   getLocale,
@@ -78,45 +79,47 @@ function sliderFunctionality($block) {
   const $submit = $block.querySelector('input[type=submit]');
   const $scrollAnchor = $block.querySelector('.ratings-scroll-anchor');
 
+  const placeholders = fetchPlaceholders();
+
   const ratings = [
     {
       class: 'one-star',
       img: getIconElement('emoji-angry-face'),
-      text: 'Disappointing', // to-do: placeholders
-      textareaLabel: "We're sorry to hear that. What went wrong?", // to-do: placeholders
-      textareaInside: 'Your feedback (Required)', // to-do: placeholders
+      text: placeholders['one-star-rating'],
+      textareaLabel: placeholders['one-star-rating-text'],
+      textareaInside: placeholders['one-star-rating-input'],
       feedbackRequired: true,
     },
     {
       class: 'two-stars',
       img: getIconElement('emoji-thinking-face'),
-      text: 'Insufficient', // to-do: placeholders
-      textareaLabel: 'We value your feedback. How can we improve?', // to-do: placeholders
-      textareaInside: 'Your feedback (Required)', // to-do: placeholders
+      text: placeholders['two-star-rating'],
+      textareaLabel: placeholders['two-star-rating-text'],
+      textareaInside: placeholders['two-star-rating-input'],
       feedbackRequired: true,
     },
     {
       class: 'three-stars',
       img: getIconElement('emoji-upside-down-face'),
-      text: 'Satisfied', // to-do: placeholders
-      textareaLabel: 'Satisfied is good, but what would make us great?', // to-do: placeholders
-      textareaInside: 'Your feedback (Required)', // to-do: placeholders
+      text: placeholders['three-star-rating'],
+      textareaLabel: placeholders['three-star-rating-text'],
+      textareaInside: placeholders['three-star-rating-input'],
       feedbackRequired: true,
     },
     {
       class: 'four-stars',
       img: getIconElement('emoji-smiling-face'),
-      text: 'Helpful', // to-do: placeholders
-      textareaLabel: 'Was there more we could do to be better?', // to-do: placeholders
-      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
+      text: placeholders['four-star-rating'],
+      textareaLabel: placeholders['four-star-rating-text'],
+      textareaInside: placeholders['four-star-rating-input'],
       feedbackRequired: false,
     },
     {
       class: 'five-stars',
       img: getIconElement('emoji-star-struck'),
-      text: 'Amazing', // to-do: placeholders
-      textareaLabel: "That's great. Could you tell us what you loved?", // to-do: placeholders
-      textareaInside: 'Your feedback (Optional)', // to-do: placeholders
+      text: placeholders['five-star-rating'],
+      textareaLabel: placeholders['five-star-rating-text'],
+      textareaInside: placeholders['five-star-rating-input'],
       feedbackRequired: false,
     },
   ];
@@ -238,18 +241,14 @@ function decorateRatingSlider($block, title) {
     e.preventDefault();
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
+    const placeholders = fetchPlaceholders();
 
     submitRating(rating, comment);
 
     $block.innerHTML = /* html */`
     <h2>Thank you for your feedback</h2>
-    <p>
-      (Testing that the block is working correctly):
-      <br />
-      Your rating: ${rating} stars <!-- for testing purposes -->
-      <br />
-      Your comment: "${comment}" <!-- for testing purposes -->
-    </p>`;
+    <h2>${placeholders['rating-submission-title']}</h2>
+    <p>${placeholders['rating-submission-text']}</p>`;
 
     if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
   });
