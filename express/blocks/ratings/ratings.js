@@ -255,6 +255,14 @@ function decorateRatingSlider($block, title) {
   sliderFunctionality($block, $form);
 }
 
+function buildRatingSchema() {
+  fetch('https://www.adobe.com/reviews-api/ccx/dev/remove-background.json')
+    .then((response) => response.json())
+    .then((response) => {
+      // actually build the schema.
+    });
+}
+
 export default function decorate($block) {
   const $CTA = $block.querySelector('a');
   $CTA.classList.add('xlarge');
@@ -281,4 +289,6 @@ export default function decorate($block) {
     $block.appendChild($div);
     $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
   }
+
+  buildRatingSchema();
 }
