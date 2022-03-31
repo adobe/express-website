@@ -14,9 +14,43 @@ import {
   createTag,
   getIcon,
   getIconElement,
+  getLocale,
   toClassName,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+
+function submitRating(rating, comment) {
+  const content = {
+    data: [
+      {
+        name: 'SegmentId',
+        value: '1234',
+      },
+      {
+        name: 'Locale',
+        value: getLocale(window.location),
+      },
+      {
+        name: 'Rating',
+        value: rating,
+      },
+      {
+        name: 'Timestamp',
+        value: new Date().toLocaleString(),
+      },
+      {
+        name: 'Comment',
+        value: comment,
+      },
+    ],
+  };
+
+  fetch('https://www.adobe.com/reviews-api/ccx/dev/remove-background', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(content),
+  });
+}
 
 // Updates the front-end style of the slider.
 function updateSliderStyle($block, value) {
@@ -205,7 +239,7 @@ function decorateRatingSlider($block, title) {
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
 
-    // to-do: submit rating.
+    submitRating(rating, comment);
 
     $block.innerHTML = /* html */`
     <h2>Thank you for your feedback</h2>
