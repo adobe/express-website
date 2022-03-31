@@ -18,6 +18,7 @@ import {
   fixIcons,
   toClassName,
   createOptimizedPicture,
+  trackBranchParameters,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -83,5 +84,11 @@ export default async function decorate($block) {
     });
   } else {
     $block.innerHTML = '';
+  }
+
+  const $links = $block.querySelectorAll('a');
+
+  if ($links) {
+    trackBranchParameters($links);
   }
 }
