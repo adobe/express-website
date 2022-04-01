@@ -78,51 +78,53 @@ function sliderFunctionality($block) {
   const $stars = Array.from($block.querySelectorAll('.stars'));
   const $submit = $block.querySelector('input[type=submit]');
   const $scrollAnchor = $block.querySelector('.ratings-scroll-anchor');
+  let ratings;
 
-  const placeholders = fetchPlaceholders();
+  fetchPlaceholders().then((placeholders) => {
+    ratings = [
+      {
+        class: 'one-star',
+        img: getIconElement('emoji-angry-face'),
+        text: placeholders['one-star-rating'],
+        textareaLabel: placeholders['one-star-rating-text'],
+        textareaInside: placeholders['one-star-rating-input'],
+        feedbackRequired: true,
+      },
+      {
+        class: 'two-stars',
+        img: getIconElement('emoji-thinking-face'),
+        text: placeholders['two-star-rating'],
+        textareaLabel: placeholders['two-star-rating-text'],
+        textareaInside: placeholders['two-star-rating-input'],
+        feedbackRequired: true,
+      },
+      {
+        class: 'three-stars',
+        img: getIconElement('emoji-upside-down-face'),
+        text: placeholders['three-star-rating'],
+        textareaLabel: placeholders['three-star-rating-text'],
+        textareaInside: placeholders['three-star-rating-input'],
+        feedbackRequired: true,
+      },
+      {
+        class: 'four-stars',
+        img: getIconElement('emoji-smiling-face'),
+        text: placeholders['four-star-rating'],
+        textareaLabel: placeholders['four-star-rating-text'],
+        textareaInside: placeholders['four-star-rating-input'],
+        feedbackRequired: false,
+      },
+      {
+        class: 'five-stars',
+        img: getIconElement('emoji-star-struck'),
+        text: placeholders['five-star-rating'],
+        textareaLabel: placeholders['five-star-rating-text'],
+        textareaInside: placeholders['five-star-rating-input'],
+        feedbackRequired: false,
+      },
+    ];
+  });
 
-  const ratings = [
-    {
-      class: 'one-star',
-      img: getIconElement('emoji-angry-face'),
-      text: placeholders['one-star-rating'],
-      textareaLabel: placeholders['one-star-rating-text'],
-      textareaInside: placeholders['one-star-rating-input'],
-      feedbackRequired: true,
-    },
-    {
-      class: 'two-stars',
-      img: getIconElement('emoji-thinking-face'),
-      text: placeholders['two-star-rating'],
-      textareaLabel: placeholders['two-star-rating-text'],
-      textareaInside: placeholders['two-star-rating-input'],
-      feedbackRequired: true,
-    },
-    {
-      class: 'three-stars',
-      img: getIconElement('emoji-upside-down-face'),
-      text: placeholders['three-star-rating'],
-      textareaLabel: placeholders['three-star-rating-text'],
-      textareaInside: placeholders['three-star-rating-input'],
-      feedbackRequired: true,
-    },
-    {
-      class: 'four-stars',
-      img: getIconElement('emoji-smiling-face'),
-      text: placeholders['four-star-rating'],
-      textareaLabel: placeholders['four-star-rating-text'],
-      textareaInside: placeholders['four-star-rating-input'],
-      feedbackRequired: false,
-    },
-    {
-      class: 'five-stars',
-      img: getIconElement('emoji-star-struck'),
-      text: placeholders['five-star-rating'],
-      textareaLabel: placeholders['five-star-rating-text'],
-      textareaInside: placeholders['five-star-rating-input'],
-      feedbackRequired: false,
-    },
-  ];
   // Updates the value of the slider and tooltip.
   function updateSliderValue(snap = true) {
     let val = parseFloat($input.value) ?? 0;
