@@ -179,13 +179,26 @@ function sliderFunctionality($block) {
   // Slider event listeners.
   $input.addEventListener('input', () => updateSliderValue(false));
   $input.addEventListener('change', () => updateSliderValue());
+  let firstTimeInteract = true;
+  function scrollToScrollAnchor() {
+    if (firstTimeInteract) {
+      setTimeout(() => {
+        $scrollAnchor.scrollIntoViewIfNeeded(false);
+      }, 450);
+    } else {
+      $scrollAnchor.scrollIntoViewIfNeeded(false);
+    }
+    firstTimeInteract = false;
+  }
   $input.addEventListener('keyup', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
       $input.value -= 1;
       updateSliderValue();
+      scrollToScrollAnchor();
     } else if (e.code === 'ArrowRight' || e.code === 'ArrowUp') {
       $input.value += 1;
       updateSliderValue();
+      scrollToScrollAnchor();
     }
   });
   ['mousedown', 'touchstart'].forEach((event) => {
@@ -194,7 +207,6 @@ function sliderFunctionality($block) {
       $sliderFill.style.transition = 'none';
     });
   });
-  let firstTime = true;
   ['mouseup', 'touchend'].forEach((event) => {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
@@ -203,14 +215,7 @@ function sliderFunctionality($block) {
       if (!$textarea.getAttribute('required')) {
         $submit.focus({ preventScroll: true });
       }
-      if (firstTime) {
-        setTimeout(() => {
-          $scrollAnchor.scrollIntoViewIfNeeded(false);
-        }, 450);
-      } else {
-        $scrollAnchor.scrollIntoViewIfNeeded(false);
-      }
-      firstTime = false;
+      scrollToScrollAnchor();
     });
   });
   window.addEventListener('resize', () => {
@@ -220,6 +225,7 @@ function sliderFunctionality($block) {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
       updateSliderValue();
+      scrollToScrollAnchor();
     });
   });
 }
