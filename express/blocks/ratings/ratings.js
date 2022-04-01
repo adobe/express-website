@@ -130,7 +130,28 @@ function sliderFunctionality($block) {
   const $stars = Array.from($block.querySelectorAll('.stars'));
   const $submit = $block.querySelector('input[type=submit]');
   const $scrollAnchor = $block.querySelector('.ratings-scroll-anchor');
+  const $commentBox = $block.querySelector('.slider-comment');
 
+  // Updates the comment box
+  function updateCommentBoxAndTimer() {
+    const val = parseFloat($input.value) ?? 0;
+    const index = Math.round(val);
+    if (val !== index) return;
+
+    // To-do: hide submit button if feedback is optional
+    // then show submit button if they start typing in the input field.
+
+    // To-do timer functionality instead of submit for optional feedback.
+
+    $commentBox.classList.add('submit--appear');
+    // if (ratings[index - 1].feedbackRequired) {
+    //   $commentBox.classList.add('submit--appear');
+    // } else {
+    //   $commentBox.classList.remove('submit--appear');
+    // }
+
+    $commentBox.classList.add('comment--appear');
+  }
   // Updates the value of the slider and tooltip.
   function updateSliderValue(snap = true) {
     let val = parseFloat($input.value) ?? 0;
@@ -138,6 +159,7 @@ function sliderFunctionality($block) {
     if (snap) {
       val = index;
       $input.value = index;
+      updateCommentBoxAndTimer();
     }
     $tooltipText.textContent = ratings[index - 1].text;
     $tooltipImg.innerHTML = '';
@@ -177,6 +199,7 @@ function sliderFunctionality($block) {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
+      //  remove next 3 lines after timer has been added.
       if (!$textarea.getAttribute('required')) {
         $submit.focus({ preventScroll: true });
       }
@@ -271,10 +294,12 @@ function buildRatingSchema() {
 }
 
 export default function decorate($block) {
+  const $AuthoredH2 = $block.querySelector('h2');
   const $CTA = $block.querySelector('a');
   $CTA.classList.add('xlarge');
   $block.innerHTML = '';
-  const title = 'Rate our Quick Action'; // to-do: placeholders
+  let title = 'Rate our Quick Action'; // to-do: placeholders for default title
+  if ($AuthoredH2) title = $AuthoredH2.textContent;
   const $h2 = createTag('h2', { id: toClassName(title) });
   $h2.textContent = title;
   const star = getIcon('star');

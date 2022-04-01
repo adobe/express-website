@@ -216,11 +216,11 @@ main .ratings .slider-comment {
   transition: height 0.4s;
 }
 
-main .ratings.one-star .slider-comment,
-main .ratings.two-stars .slider-comment,
-main .ratings.three-stars .slider-comment,
-main .ratings.four-stars .slider-comment,
-main .ratings.five-stars .slider-comment {
+main .ratings .slider-comment.comment--appear {
+  height: 220px;
+}
+
+main .ratings .slider-comment.comment--appear.submit--appear {
   height: 336px;
 }
 
@@ -423,11 +423,11 @@ main .ratings h2 {
     margin-top: 24px;
   }
 
-  main .ratings.one-star .slider-comment,
-  main .ratings.two-stars .slider-comment,
-  main .ratings.three-stars .slider-comment,
-  main .ratings.four-stars .slider-comment,
-  main .ratings.five-stars .slider-comment {
+  main .ratings .slider-comment.comment--appear {
+    height: 220px;
+  }
+
+  main .ratings .slider-comment.comment--appear.submit--appear {
     height: 336px;
   }
 
