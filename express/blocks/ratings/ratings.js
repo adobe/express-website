@@ -184,11 +184,11 @@ function sliderFunctionality($block) {
     if (firstTimeInteract) {
       setTimeout(() => {
         $scrollAnchor.scrollIntoViewIfNeeded(false);
-      }, 450);
+      }, 450); // Allows for comment slide animation.
+      firstTimeInteract = false;
     } else {
       $scrollAnchor.scrollIntoViewIfNeeded(false);
     }
-    firstTimeInteract = false;
   }
   $input.addEventListener('keyup', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
