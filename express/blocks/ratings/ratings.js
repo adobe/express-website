@@ -278,7 +278,8 @@ function decorateRatingSlider($block, title) {
 
     $block.innerHTML = /* html */`
     <h2>${submissionTitle}</h2>
-    <p>${submissionText}</p>`;
+    <p>${submissionText}</p>
+    <div class="ratings-scroll-anchor"></div>`;
 
     if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
   });
