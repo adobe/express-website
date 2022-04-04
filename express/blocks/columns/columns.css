@@ -554,18 +554,6 @@ main .columns.fullsize .hero-animation-overlay {
   order: -1;
 }
 
-main .columns.fullsize > div > div {
-  display: grid;
-}
-
-main .columns.fullsize > div > div .button-container {
-  grid-row: 2;
-}
-
-main .columns.fullsize .has-brand > div .button-container {
-  grid-row: 3;
-}
-
 main .columns.fullsize > div > div p {
   margin: 16px 0;
 }
