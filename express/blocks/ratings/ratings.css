@@ -389,12 +389,15 @@ main .ratings h2#rate-our-quick-action {
   margin-right: auto;
 }
 
+main .ratings .cannot-rate {
+  padding-bottom: 80px;
+}
+
 @media (min-width: 900px) {
   main .ratings .cannot-rate {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-bottom: 80px;
   }
 
   main .ratings .cannot-rate .button {
