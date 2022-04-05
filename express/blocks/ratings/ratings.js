@@ -278,7 +278,7 @@ function getCurrentRatingStars() {
   const starEmpty = getIcon('star-empty');
   const $stars = createTag('span', { class: 'rating-stars' });
 
-  const rating = 4.9; // to-do: get correct rating.
+  const rating = 2.6; // to-do: get correct rating.
 
   const ratingAmount = 75694; // to-do: get correct number of ratings.
 
@@ -389,8 +389,8 @@ function regenerateBlockState($block, title, $CTA, sheet) {
   const actionRated = hasRated(sheet);
   const actionUsed = determineActionUsed();
   if (actionRated) {
-    const titleText = 'This Quick Action is rated:'; // to-do: placeholders
-    const paragraphText = 'You have already submitted your rating for this action. Thank you!'; // to-do: placeholders
+    const titleText = 'This Quick Action is rated'; // to-do: placeholders
+    const paragraphText = 'You have already submitted your rating for this action. Thank you for your feedback!'; // to-do: placeholders
     decorateCannotRateBlock($block, titleText, paragraphText);
   } else if (actionUsed) {
     decorateRatingSlider($block, title, sheet);
