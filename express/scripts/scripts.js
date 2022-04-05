@@ -109,6 +109,10 @@ export function getMeta(name) {
   return value;
 }
 
+export function getLottie(animation, loop = true) {
+  return (`<lottie-player class="lottie lottie-${animation}" src="/express/lottie/${animation}.json" background="transparent" speed="1" ${(loop) ? 'loop' : ''} autoplay></lottie-player>`);
+}
+
 export function getIcon(icons, alt, size = 44) {
   // eslint-disable-next-line no-param-reassign
   icons = Array.isArray(icons) ? icons : [icons];

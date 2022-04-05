@@ -762,3 +762,9 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
   width: auto;
   margin: 8px;
 }
+
+/* Lottie player default */
+.lottie {
+  width: 32px;
+  height: 32px;
+}

@@ -163,6 +163,20 @@ main .ratings .slider-bottom .stars svg {
   margin: 0 1px;
 }
 
+main .ratings .slider-bottom .timer {
+  position: absolute;
+  left: calc(50% - 1px);
+  transform: translateX(-50%);
+  top: 2px;
+  padding-top: 2px;
+  background: var(--color-gray-100);
+}
+
+main .ratings .slider-bottom .lottie {
+  width: 24px;
+  height: 24px;
+}
+
 main .ratings .slider .tooltip {
   transition: left .3s, right .3s;
 }
@@ -444,6 +458,15 @@ main .ratings .no-slider {
     color: var(--color-gray-200);
   }
 
+  main .ratings .slider-bottom .timer {
+    top: 26px;
+  }
+
+  main .ratings .slider-bottom .lottie {
+    width: 28px;
+    height: 28px;
+  }  
+  
   main .ratings h2,
   main .ratings h2#rate-our-quick-action {
     margin-left: 20px;

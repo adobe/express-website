@@ -15,6 +15,7 @@ import {
   fetchPlaceholders,
   getIcon,
   getIconElement,
+  getLottie,
   getLocale,
   toClassName,
 // eslint-disable-next-line import/no-unresolved
@@ -172,29 +173,43 @@ function sliderFunctionality($block) {
   const $submit = $block.querySelector('input[type=submit]');
   const $scrollAnchor = $block.querySelector('.ratings-scroll-anchor');
   const $commentBox = $block.querySelector('.slider-comment');
-
+  const $timer = createTag('div', { class: 'timer' });
+  // Countdown timer to auto-submit
+  const countdown = (bool) => {
+    if (bool) {
+      $timer.innerHTML = getLottie('countdown', 27, false);
+      let counter = 10;
+      window.ratingSubmitCountdown = setInterval(() => {
+        if (counter > 0) {
+          counter -= 1;
+        } else {
+          clearInterval(window.ratingSubmitCountdown);
+          $submit.click();
+        }
+        console.log(counter);
+      }, 950);
+    } else if (window.ratingSubmitCountdown) clearInterval(window.ratingSubmitCountdown);
+  };
   // Updates the comment box
-  function updateCommentBoxAndTimer() {
+  const updateCommentBoxAndTimer = () => {
     const val = parseFloat($input.value) ?? 0;
     const index = Math.round(val);
     if (val !== index) return;
-
-    // To-do: hide submit button if feedback is optional
-    // then show submit button if they start typing in the input field.
-
-    // To-do timer functionality instead of submit for optional feedback.
-
-    $commentBox.classList.add('submit--appear');
-    // if (ratings[index - 1].feedbackRequired) {
-    //   $commentBox.classList.add('submit--appear');
-    // } else {
-    //   $commentBox.classList.remove('submit--appear');
-    // }
-
+    if (ratings[index - 1].feedbackRequired || $textarea.value !== '') {
+      $commentBox.classList.add('submit--appear');
+      $timer.remove();
+      countdown(false);
+    } else {
+      $commentBox.classList.remove('submit--appear');
+      $stars[index - 1].parentElement.appendChild($timer);
+      countdown(true);
+    }
     $commentBox.classList.add('comment--appear');
-  }
+  };
   // Updates the value of the slider and tooltip.
-  function updateSliderValue(snap = true) {
+  const updateSliderValue = (snap = true) => {
+    $timer.remove();
+    countdown(false);
     let val = parseFloat($input.value) ?? 0;
     const index = Math.round(val);
     if (snap) {
@@ -216,12 +231,12 @@ function sliderFunctionality($block) {
     $block.classList.add(ratings[index - 1].class);
     $block.classList.add('rated');
     updateSliderStyle($block, $input.value);
-  }
+  };
   // Slider event listeners.
   $input.addEventListener('input', () => updateSliderValue(false));
   $input.addEventListener('change', () => updateSliderValue());
   let firstTimeInteract = true;
-  function scrollToScrollAnchor() {
+  const scrollToScrollAnchor = () => {
     if (firstTimeInteract) {
       setTimeout(() => {
         $scrollAnchor.scrollIntoViewIfNeeded(false);
@@ -230,7 +245,7 @@ function sliderFunctionality($block) {
     } else {
       $scrollAnchor.scrollIntoViewIfNeeded(false);
     }
-  }
+  };
   $input.addEventListener('keyup', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'ArrowDown') {
       $input.value -= 1;
@@ -253,7 +268,7 @@ function sliderFunctionality($block) {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
       //  remove next 3 lines after timer has been added.
-      if (!$textarea.getAttribute('required')) {
+      if (!$textarea.getAttribute('required') || $textarea.value !== '') {
         $submit.focus({ preventScroll: true });
       }
       scrollToScrollAnchor();
@@ -262,12 +277,21 @@ function sliderFunctionality($block) {
   window.addEventListener('resize', () => {
     updateSliderStyle($block, $input.value);
   });
+  // Stars event listeners.
   $stars.forEach(($star, index) => {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
       updateSliderValue();
       scrollToScrollAnchor();
     });
+  });
+  // Textarea event listener.
+  $textarea.addEventListener('keyup', () => {
+    if ($textarea.value !== '') {
+      $commentBox.classList.add('submit--appear');
+      $timer.remove();
+      countdown(false);
+    }
   });
 }
 
@@ -398,6 +422,34 @@ function regenerateBlockState($block, title, $CTA, sheet) {
   }
 }
 
+// Lazy-load lottie player if you scroll to ratings block.
+function lazyLoadLottiePlayer($block) {
+  let alreadyLoaded = false;
+  const loadLottiePlayer = () => {
+    if (alreadyLoaded) return;
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
+    document.head.appendChild(script);
+    alreadyLoaded = true;
+  };
+  const observer = (entries) => {
+    const entry = entries[0];
+    if (entry.isIntersecting) {
+      if (entry.intersectionRatio >= 0.25) {
+        loadLottiePlayer();
+      }
+    }
+  };
+  const options = {
+    root: null,
+    rootMargin: '0px',
+    threshold: [0.0, 0.25],
+  };
+  const intersectionObserver = new IntersectionObserver(observer, options);
+  intersectionObserver.observe($block);
+}
+
 // Initiate ratings block
 export default function decorate($block) {
   const $title = $block.querySelector('h2');
@@ -412,4 +464,13 @@ export default function decorate($block) {
   regenerateBlockState($block, title, $CTA, sheet);
 
   buildRatingSchema();
+
+  // Lazy-load lottie player:
+  if (document.readyState === 'complete') {
+    lazyLoadLottiePlayer($block);
+  } else {
+    window.addEventListener('load', () => {
+      lazyLoadLottiePlayer($block);
+    });
+  }
 }
