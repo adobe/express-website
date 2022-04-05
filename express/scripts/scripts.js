@@ -176,6 +176,8 @@ export function getIcon(icons, alt, size = 44) {
     'webmobile',
     'youtube',
     'star',
+    'star-half',
+    'star-empty',
   ];
   if (symbols.includes(icon)) {
     const iconName = icon;

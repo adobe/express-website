@@ -4,15 +4,45 @@ main .ratings-container.section-wrapper {
   padding-bottom: 0;
 }
 
+main .ratings-container.section-wrapper > div {
+  max-width: 1024px;
+}
+
 main .ratings {
   text-align: center;
+}
+
+main .ratings form {
   max-width: 265px;
   margin: 0 auto;
+}
+
+main .ratings h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 main .ratings .rating-stars {
   color: var(--color-info-accent);
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main .ratings .rating-votes {
+  font-size: var(--heading-font-size-s);
+  color: var(--body-color);
+  font-weight: 400;
+  display: block;
+  padding-top: 18px;
+  padding-bottom: 10px;
+}
+
+main .ratings .rating-votes strong {
+  font-weight: 900;
 }
 
 main .ratings .rating-stars svg {
@@ -389,18 +419,18 @@ main .ratings h2#rate-our-quick-action {
   margin-right: auto;
 }
 
-main .ratings .cannot-rate {
+main .ratings .no-slider {
   padding-bottom: 80px;
 }
 
 @media (min-width: 900px) {
-  main .ratings .cannot-rate {
+  main .ratings .no-slider {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  main .ratings .cannot-rate .button {
+  main .ratings .no-slider .button {
     padding-top: 8px;
     padding-bottom: 8px;
     margin-left: 1.5rem;
@@ -440,8 +470,13 @@ main .ratings .cannot-rate {
     padding: 0 30px;
   }
 
-  main .ratings {
+  main .ratings form {
     max-width: 750px;
+  }
+
+  main .ratings .rating-votes {
+    padding-left: 56px;
+    font-size: var(--heading-font-size-m);
   }
 }
 

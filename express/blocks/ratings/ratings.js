@@ -274,8 +274,26 @@ function sliderFunctionality($block) {
 // Gets the current rating and returns star div element.
 function getCurrentRatingStars() {
   const star = getIcon('star');
+  const starHalf = getIcon('star-half');
+  const starEmpty = getIcon('star-empty');
   const $stars = createTag('span', { class: 'rating-stars' });
-  $stars.innerHTML = `${star.repeat(5)}`;
+
+  const rating = 4.9; // to-do: get correct rating.
+
+  const ratingAmount = 75694; // to-do: get correct number of ratings.
+
+  if (ratingAmount >= 10000) {
+    const ratingRoundedHalf = Math.round(rating * 2) / 2;
+    const filledStars = Math.floor(ratingRoundedHalf);
+    const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
+    const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
+    $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)}`;
+    const $votes = createTag('span', { class: 'rating-votes' });
+    $votes.innerHTML = `<strong>${rating} / 5</strong> - ${ratingAmount} Votes`;
+    $stars.appendChild($votes);
+  } else {
+    $stars.innerHTML = `${star.repeat(5)}`;
+  }
   return $stars;
 }
 
@@ -307,10 +325,8 @@ function decorateRatingSlider($block, title, sheet) {
     </div>
   `);
   $slider.appendChild(createTag('div', { class: 'slider-fill' }));
-
   const submitButtonText = 'Submit rating'; // to-do: placeholders
   const star = getIcon('star');
-
   $form.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">
       <div class="vertical-line"><button type="button" aria-label="1" class="stars one-star">${star}</button></div>
@@ -337,7 +353,7 @@ function decorateRatingSlider($block, title, sheet) {
 
     $block.innerHTML = /* html */`
     <h2>${submissionTitle}</h2>
-    <div class="cannot-rate">
+    <div class="no-slider">
       <p>${submissionText}</p>
     </div>`;
 
@@ -360,7 +376,7 @@ function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
   const $stars = getCurrentRatingStars();
   $h2.appendChild($stars);
   $block.appendChild($h2);
-  const $textAndCTA = createTag('div', { class: 'cannot-rate' });
+  const $textAndCTA = createTag('div', { class: 'no-slider' });
   const $p = createTag('p');
   $p.textContent = paragraph;
   $textAndCTA.appendChild($p);
