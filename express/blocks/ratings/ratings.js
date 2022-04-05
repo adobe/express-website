@@ -75,13 +75,27 @@ fetchPlaceholders().then((placeholders) => {
   submissionText = placeholders['rating-submission-text'];
 });
 
-function determineActionUsed() {
+function hasRated() {
   // dev mode: check use-rating query parameter
   const u = new URL(window.location.href);
-  const param = u.searchParams.get('used-action');
+  const param = u.searchParams.get('action-rated');
   if (param) {
-    if (param === 'used') return true;
-    if (param === 'unused') return false;
+    if (param === 'true') return true;
+    if (param === 'false') return false;
+  }
+
+  // "production" mode: check for localStorage
+  const ccxActionRatings = localStorage.getItem('ccxActionRatings');
+  return (ccxActionRatings && ccxActionRatings.includes('dev/remove-background'));
+}
+
+function determineActionUsed() {
+  // dev mode: check action-used query parameter
+  const u = new URL(window.location.href);
+  const param = u.searchParams.get('action-used');
+  if (param) {
+    if (param === 'true') return true;
+    if (param === 'false') return false;
   }
 
   // "production" mode: check for audience
@@ -120,6 +134,16 @@ function submitRating(rating, comment) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(content),
   });
+
+  let ccxActionRatings = localStorage.getItem('ccxActionRatings');
+
+  if (ccxActionRatings) {
+    ccxActionRatings.push('dev/remove-background');
+  } else {
+    ccxActionRatings = ['dev/remove-background'];
+  }
+
+  localStorage.setItem('ccxActionRatings', ccxActionRatings);
 }
 
 // Updates the front-end style of the slider.
@@ -331,9 +355,15 @@ export default function decorate($block) {
   $h2.appendChild($stars);
   $block.appendChild($h2);
 
+  const actionRated = hasRated();
   const actionUsed = determineActionUsed();
 
-  if (actionUsed) {
+  if (actionRated) {
+    $block.innerHTML = /* html */`
+    <h2>You've already submitted your feedback for this action</h2>
+    <p>We have taken your feedback into consideration, and hope that you will continue to use our products in the future.</p>
+    <div class="ratings-scroll-anchor"></div>`;
+  } else if (actionUsed) {
     decorateRatingSlider($block, title);
   } else {
     const $div = createTag('div', { class: 'cannot-rate' });
