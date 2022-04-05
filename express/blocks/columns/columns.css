@@ -550,20 +550,9 @@ main .columns .column {
   padding-right: 0;
 }
 
+main .columns.fullsize .column-picture,
 main .columns.fullsize .hero-animation-overlay {
   order: -1;
-}
-
-main .columns.fullsize > div > div {
-  display: grid;
-}
-
-main .columns.fullsize > div > div .button-container {
-  grid-row: 2;
-}
-
-main .columns.fullsize .has-brand > div .button-container {
-  grid-row: 3;
 }
 
 main .columns.fullsize > div > div p {
@@ -693,6 +682,7 @@ main .columns.highlight .column.column-picture {
     padding-left: 32px;
   }
 
+  main .columns.fullsize .column-picture,
   main .columns.fullsize .hero-animation-overlay {
     padding-top: 0;
     padding-bottom: 0;
