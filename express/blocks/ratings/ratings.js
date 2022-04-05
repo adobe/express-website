@@ -271,15 +271,14 @@ function sliderFunctionality($block) {
   });
 }
 
-// Gets the current rating and returns star div element.
+// Gets the current rating and returns star span element.
 function getCurrentRatingStars() {
   const star = getIcon('star');
   const starHalf = getIcon('star-half');
   const starEmpty = getIcon('star-empty');
   const $stars = createTag('span', { class: 'rating-stars' });
 
-  const rating = 2.6; // to-do: get correct rating.
-
+  const rating = 3.6; // to-do: get correct rating.
   const ratingAmount = 75694; // to-do: get correct number of ratings.
 
   if (ratingAmount >= 10000) {
@@ -289,7 +288,8 @@ function getCurrentRatingStars() {
     const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
     $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)}`;
     const $votes = createTag('span', { class: 'rating-votes' });
-    $votes.innerHTML = `<strong>${rating} / 5</strong> - ${ratingAmount} Votes`;
+    const votesText = 'Votes'; // to-do: placeholders
+    $votes.innerHTML = `<strong>${rating} / 5</strong> - ${ratingAmount} ${votesText}`;
     $stars.appendChild($votes);
   } else {
     $stars.innerHTML = `${star.repeat(5)}`;
@@ -297,7 +297,7 @@ function getCurrentRatingStars() {
   return $stars;
 }
 
-// Generates rating slider HTML.
+// Decorates the rating Form and Slider HTML.
 function decorateRatingSlider($block, title, sheet) {
   const $h2 = createTag('h2', { id: toClassName(title) });
   $h2.textContent = title;
@@ -342,21 +342,17 @@ function decorateRatingSlider($block, title, sheet) {
     </div>
     <div class="ratings-scroll-anchor"></div>
   `);
-
   // Form-submit event listener.
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
-
     submitRating(sheet, rating, comment);
-
     $block.innerHTML = /* html */`
     <h2>${submissionTitle}</h2>
     <div class="no-slider">
       <p>${submissionText}</p>
     </div>`;
-
     if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
   });
   sliderFunctionality($block, $form);
@@ -370,6 +366,7 @@ function buildRatingSchema() {
     });
 }
 
+// Decorate block state when user is not allowed to rate (already rated / hasn't used block)
 function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
   const $h2 = createTag('h2', { id: toClassName(title) });
   $h2.textContent = title;
@@ -384,6 +381,7 @@ function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
   $block.appendChild($textAndCTA);
 }
 
+// Determine if user is allowed to rate, and then re-decorate the block.
 function regenerateBlockState($block, title, $CTA, sheet) {
   $block.innerHTML = '';
   const actionRated = hasRated(sheet);
@@ -400,6 +398,7 @@ function regenerateBlockState($block, title, $CTA, sheet) {
   }
 }
 
+// Initiate ratings block
 export default function decorate($block) {
   const $title = $block.querySelector('h2');
   const title = $title ? $title.textContent : 'Rate our Quick Action'; // to-do: placeholders
@@ -409,7 +408,8 @@ export default function decorate($block) {
   $CTA.classList.add('xlarge');
   $block.innerHTML = '';
 
-  regenerateBlockState($block, title, $CTA, sheet); // listen for state-change then call function
+  // to-do: listen for state-change then call function below whenever it changes.
+  regenerateBlockState($block, title, $CTA, sheet);
 
   buildRatingSchema();
 }
