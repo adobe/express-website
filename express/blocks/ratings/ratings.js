@@ -182,6 +182,8 @@ function sliderFunctionality($block) {
       window.ratingSubmitCountdown = setInterval(() => {
         if (counter > 0) {
           counter -= 1;
+
+          $timer.innerText = counter; // remove this after lottie animation is fixed:
         } else {
           clearInterval(window.ratingSubmitCountdown);
           $submit.click();
