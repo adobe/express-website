@@ -337,8 +337,9 @@ function decorateRatingSlider($block, title, sheet) {
 
     $block.innerHTML = /* html */`
     <h2>${submissionTitle}</h2>
-    <p>${submissionText}</p>
-    <div class="ratings-scroll-anchor"></div>`;
+    <div class="cannot-rate">
+      <p>${submissionText}</p>
+    </div>`;
 
     if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
   });
@@ -359,13 +360,12 @@ function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
   const $stars = getCurrentRatingStars();
   $h2.appendChild($stars);
   $block.appendChild($h2);
-  const $textAndCTA = createTag('div', { class: 'cannot-rate-text' });
+  const $textAndCTA = createTag('div', { class: 'cannot-rate' });
   const $p = createTag('p');
   $p.textContent = paragraph;
   $textAndCTA.appendChild($p);
   if ($CTA) $textAndCTA.appendChild($CTA);
   $block.appendChild($textAndCTA);
-  $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
 }
 
 function regenerateBlockState($block, title, $CTA, sheet) {
