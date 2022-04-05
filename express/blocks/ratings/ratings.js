@@ -20,6 +20,9 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+// eslint-disable-next-line import/no-unresolved
+import Context from '../../scripts/context.js';
+
 let ratings;
 let submissionTitle;
 let submissionText;
@@ -72,12 +75,26 @@ fetchPlaceholders().then((placeholders) => {
   submissionText = placeholders['rating-submission-text'];
 });
 
+function determineActionUsed() {
+  // dev mode: check use-rating query parameter
+  const u = new URL(window.location.href);
+  const param = u.searchParams.get('used-action');
+  if (param) {
+    if (param === 'used') return true;
+    if (param === 'unused') return false;
+  }
+
+  // "production" mode: check for audience
+  const audiences = Context.get('audiences');
+  return (audiences && audiences.includes('24241150'));
+}
+
 function submitRating(rating, comment) {
   const content = {
     data: [
       {
-        name: 'SegmentId',
-        value: '1234',
+        name: 'Segments',
+        value: Context.get('audiences') ?? '',
       },
       {
         name: 'Locale',
@@ -278,7 +295,6 @@ function decorateRatingSlider($block, title) {
     e.preventDefault();
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
-    const placeholders = fetchPlaceholders();
 
     submitRating(rating, comment);
 
@@ -315,7 +331,7 @@ export default function decorate($block) {
   $h2.appendChild($stars);
   $block.appendChild($h2);
 
-  const actionUsed = true; // to-do: logic to see if the action was used.
+  const actionUsed = determineActionUsed();
 
   if (actionUsed) {
     decorateRatingSlider($block, title);
