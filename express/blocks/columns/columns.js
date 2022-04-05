@@ -182,7 +182,8 @@ export default function decorate($block) {
 
       // legal copy
       $cell.querySelectorAll(':scope p').forEach(($p) => {
-        if ($p.textContent.trim().startsWith('* ')) {
+        const pText = $p.textContent.trim();
+        if (['*', '†'].includes(pText.charAt(0))) {
           $p.classList.add('legal-copy');
         }
       });
