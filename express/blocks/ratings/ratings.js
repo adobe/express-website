@@ -271,8 +271,21 @@ function sliderFunctionality($block) {
   });
 }
 
+// Gets the current rating and returns star div element.
+function getCurrentRatingStars() {
+  const star = getIcon('star');
+  const $stars = createTag('span', { class: 'rating-stars' });
+  $stars.innerHTML = `${star.repeat(5)}`;
+  return $stars;
+}
+
 // Generates rating slider HTML.
-function decorateRatingSlider(sheet, $block, title) {
+function decorateRatingSlider($block, title, sheet) {
+  const $h2 = createTag('h2', { id: toClassName(title) });
+  $h2.textContent = title;
+  const $stars = getCurrentRatingStars();
+  $h2.appendChild($stars);
+  $block.appendChild($h2);
   const $section = $block.closest('.section-wrapper');
   const $form = createTag('form');
   $block.appendChild($form);
@@ -340,42 +353,47 @@ function buildRatingSchema() {
     });
 }
 
-export default function decorate($block) {
-  const $title = $block.querySelector('h2');
-  const $CTA = $block.querySelector('a');
-  const $sheet = $block.querySelector('strong');
-  const sheet = $sheet.textContent;
-  const title = $title ? $title.textContent : 'Rate our Quick Action';
+function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
   const $h2 = createTag('h2', { id: toClassName(title) });
-  const star = getIcon('star');
-  const $stars = createTag('span', { class: 'rating-stars' });
-
-  $CTA.classList.add('xlarge');
-  $block.innerHTML = '';
   $h2.textContent = title;
-  $stars.innerHTML = `${star.repeat(5)}`;
+  const $stars = getCurrentRatingStars();
   $h2.appendChild($stars);
   $block.appendChild($h2);
+  const $textAndCTA = createTag('div', { class: 'cannot-rate-text' });
+  const $p = createTag('p');
+  $p.textContent = paragraph;
+  $textAndCTA.appendChild($p);
+  if ($CTA) $textAndCTA.appendChild($CTA);
+  $block.appendChild($textAndCTA);
+  $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
+}
 
+function regenerateBlockState($block, title, $CTA, sheet) {
+  $block.innerHTML = '';
   const actionRated = hasRated(sheet);
   const actionUsed = determineActionUsed();
-
-  if (actionUsed) {
-    decorateRatingSlider(sheet, $block, title);
-  } else if (actionRated) {
-    $block.innerHTML = /* html */`
-    <h2>You've already submitted your feedback for this action</h2>
-    <p>We have taken your feedback into consideration, and hope that you will continue to use our products in the future.</p>
-    <div class="ratings-scroll-anchor"></div>`;
+  if (actionRated) {
+    const titleText = 'This Quick Action is rated:'; // to-do: placeholders
+    const paragraphText = 'You have already submitted your rating for this action. Thank you!'; // to-do: placeholders
+    decorateCannotRateBlock($block, titleText, paragraphText);
+  } else if (actionUsed) {
+    decorateRatingSlider($block, title, sheet);
   } else {
-    const $div = createTag('div', { class: 'cannot-rate' });
-    const $p = createTag('p');
-    $p.textContent = 'You need to use the Quick Action before you can rate it.'; // to-do: placeholders
-    $div.appendChild($p);
-    $div.appendChild($CTA);
-    $block.appendChild($div);
-    $block.appendChild(createTag('div', { class: 'ratings-scroll-anchor' }));
+    const paragraphText = 'You need to use the Quick Action before you can rate it.'; // to-do: placeholders
+    decorateCannotRateBlock($block, title, paragraphText, $CTA);
   }
+}
+
+export default function decorate($block) {
+  const $title = $block.querySelector('h2');
+  const title = $title ? $title.textContent : 'Rate our Quick Action'; // to-do: placeholders
+  const $sheet = $block.querySelector('strong');
+  const sheet = $sheet.textContent;
+  const $CTA = $block.querySelector('a');
+  $CTA.classList.add('xlarge');
+  $block.innerHTML = '';
+
+  regenerateBlockState($block, title, $CTA, sheet); // listen for state-change then call function
 
   buildRatingSchema();
 }

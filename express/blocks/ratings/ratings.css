@@ -383,20 +383,20 @@ main .ratings form [type=range]::-moz-range-thumb {
   width: 60px;
 }
 
-main .ratings h2 {
+main .ratings h2#rate-our-quick-action {
+  max-width: 235px;
   margin-left: auto;
   margin-right: auto;
-  max-width: 235px;
 }
 
 @media (min-width: 900px) {
-  main .ratings .cannot-rate {
+  main .ratings .cannot-rate-text {
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  main .ratings .cannot-rate .button {
+  main .ratings .cannot-rate-text .button {
     padding-top: 8px;
     padding-bottom: 8px;
     margin-left: 1.5rem;
@@ -410,7 +410,8 @@ main .ratings h2 {
     color: var(--color-gray-200);
   }
 
-  main .ratings h2 {
+  main .ratings h2,
+  main .ratings h2#rate-our-quick-action {
     margin-left: 20px;
     max-width: unset;
   }
