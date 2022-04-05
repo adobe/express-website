@@ -109,8 +109,8 @@ export function getMeta(name) {
   return value;
 }
 
-export function getLottie(animation, loop = true) {
-  return (`<lottie-player class="lottie lottie-${animation}" src="/express/icons/${animation}.json" background="transparent" speed="1" ${(loop) ? 'loop' : ''} autoplay></lottie-player>`);
+export function getLottie(animation, src, loop = true) {
+  return (`<lottie-player class="lottie lottie-${animation}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop' : ''} autoplay></lottie-player>`);
 }
 
 export function getIcon(icons, alt, size = 44) {
