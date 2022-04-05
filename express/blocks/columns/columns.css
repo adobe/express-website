@@ -550,6 +550,7 @@ main .columns .column {
   padding-right: 0;
 }
 
+main .columns.fullsize .column-picture,
 main .columns.fullsize .hero-animation-overlay {
   order: -1;
 }
@@ -681,6 +682,7 @@ main .columns.highlight .column.column-picture {
     padding-left: 32px;
   }
 
+  main .columns.fullsize .column-picture,
   main .columns.fullsize .hero-animation-overlay {
     padding-top: 0;
     padding-bottom: 0;
