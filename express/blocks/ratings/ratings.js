@@ -75,7 +75,7 @@ fetchPlaceholders().then((placeholders) => {
   submissionText = placeholders['rating-submission-text'];
 });
 
-function hasRated() {
+function hasRated(sheet) {
   // dev mode: check use-rating query parameter
   const u = new URL(window.location.href);
   const param = u.searchParams.get('action-rated');
@@ -86,7 +86,7 @@ function hasRated() {
 
   // "production" mode: check for localStorage
   const ccxActionRatings = localStorage.getItem('ccxActionRatings');
-  return (ccxActionRatings && ccxActionRatings.includes('dev/remove-background'));
+  return (ccxActionRatings && ccxActionRatings.includes(sheet));
 }
 
 function determineActionUsed() {
@@ -103,7 +103,7 @@ function determineActionUsed() {
   return (audiences && audiences.includes('24241150'));
 }
 
-function submitRating(rating, comment) {
+function submitRating(sheet, rating, comment) {
   const content = {
     data: [
       {
@@ -129,7 +129,7 @@ function submitRating(rating, comment) {
     ],
   };
 
-  fetch('https://www.adobe.com/reviews-api/ccx/dev/remove-background', {
+  fetch(`https://www.adobe.com/reviews-api/ccx${sheet}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(content),
@@ -138,9 +138,9 @@ function submitRating(rating, comment) {
   let ccxActionRatings = localStorage.getItem('ccxActionRatings');
 
   if (ccxActionRatings) {
-    ccxActionRatings.push('dev/remove-background');
+    ccxActionRatings.push(sheet);
   } else {
-    ccxActionRatings = ['dev/remove-background'];
+    ccxActionRatings = [sheet];
   }
 
   localStorage.setItem('ccxActionRatings', ccxActionRatings);
@@ -272,7 +272,7 @@ function sliderFunctionality($block) {
 }
 
 // Generates rating slider HTML.
-function decorateRatingSlider($block, title) {
+function decorateRatingSlider(sheet, $block, title) {
   const $section = $block.closest('.section-wrapper');
   const $form = createTag('form');
   $block.appendChild($form);
@@ -295,7 +295,7 @@ function decorateRatingSlider($block, title) {
   `);
   $slider.appendChild(createTag('div', { class: 'slider-fill' }));
 
-  const subtmitButtonText = 'Submit rating'; // to-do: placeholders
+  const submitButtonText = 'Submit rating'; // to-do: placeholders
   const star = getIcon('star');
 
   $form.insertAdjacentHTML('beforeend', /* html */`
@@ -309,7 +309,7 @@ function decorateRatingSlider($block, title) {
     <div class="slider-comment">
       <label for="comment"></label>
       <textarea id="comment" name="comment" rows="4" placeholder=""></textarea>
-      <input type="submit" value="${subtmitButtonText}">
+      <input type="submit" value="${submitButtonText}">
     </div>
     <div class="ratings-scroll-anchor"></div>
   `);
@@ -320,7 +320,7 @@ function decorateRatingSlider($block, title) {
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
 
-    submitRating(rating, comment);
+    submitRating(sheet, rating, comment);
 
     $block.innerHTML = /* html */`
     <h2>${submissionTitle}</h2>
@@ -341,21 +341,23 @@ function buildRatingSchema() {
 }
 
 export default function decorate($block) {
-  const $AuthoredH2 = $block.querySelector('h2');
+  const $title = $block.querySelector('h2');
   const $CTA = $block.querySelector('a');
-  $CTA.classList.add('xlarge');
-  $block.innerHTML = '';
-  let title = 'Rate our Quick Action'; // to-do: placeholders for default title
-  if ($AuthoredH2) title = $AuthoredH2.textContent;
+  const $sheet = $block.querySelector('strong');
+  const sheet = $sheet.textContent;
+  const title = $title ? $title.textContent : 'Rate our Quick Action';
   const $h2 = createTag('h2', { id: toClassName(title) });
-  $h2.textContent = title;
   const star = getIcon('star');
   const $stars = createTag('span', { class: 'rating-stars' });
+
+  $CTA.classList.add('xlarge');
+  $block.innerHTML = '';
+  $h2.textContent = title;
   $stars.innerHTML = `${star.repeat(5)}`;
   $h2.appendChild($stars);
   $block.appendChild($h2);
 
-  const actionRated = hasRated();
+  const actionRated = hasRated(sheet);
   const actionUsed = determineActionUsed();
 
   if (actionRated) {
@@ -364,7 +366,7 @@ export default function decorate($block) {
     <p>We have taken your feedback into consideration, and hope that you will continue to use our products in the future.</p>
     <div class="ratings-scroll-anchor"></div>`;
   } else if (actionUsed) {
-    decorateRatingSlider($block, title);
+    decorateRatingSlider(sheet, $block, title);
   } else {
     const $div = createTag('div', { class: 'cannot-rate' });
     const $p = createTag('p');
