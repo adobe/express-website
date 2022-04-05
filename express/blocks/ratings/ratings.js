@@ -360,13 +360,13 @@ export default function decorate($block) {
   const actionRated = hasRated(sheet);
   const actionUsed = determineActionUsed();
 
-  if (actionRated) {
+  if (actionUsed) {
+    decorateRatingSlider(sheet, $block, title);
+  } else if (actionRated) {
     $block.innerHTML = /* html */`
     <h2>You've already submitted your feedback for this action</h2>
     <p>We have taken your feedback into consideration, and hope that you will continue to use our products in the future.</p>
     <div class="ratings-scroll-anchor"></div>`;
-  } else if (actionUsed) {
-    decorateRatingSlider(sheet, $block, title);
   } else {
     const $div = createTag('div', { class: 'cannot-rate' });
     const $p = createTag('p');
