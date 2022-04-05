@@ -320,10 +320,7 @@ loadScript(martechURL, () => {
     } else if ($a.closest('.hero')) {
       adobeEventName = appendLinkText(`${adobeEventName}hero:`, $a);
       sparkEventName = 'landing:ctaPressed';
-      // Scrollbutton for sixcols
-    } else if ($a.classList.contains('template-list-scrollbutton')) {
-      adobeEventName = appendLinkText(`${adobeEventName}scrollbutton:`, $a);
-      sparkEventName = 'landing:scrollbuttonPressed';
+
       // Click in the pricing block
     } else if (sparkLandingPageType === 'pricing') {
       // edu link
