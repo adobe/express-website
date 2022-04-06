@@ -182,12 +182,12 @@ function sliderFunctionality($block) {
       window.ratingSubmitCountdown = setInterval(() => {
         if (counter > 0) {
           counter -= 1;
+          // eslint-disable-next-line no-console
+          console.log(`rating will be submitted in: ${counter} seconds.`);
         } else {
           clearInterval(window.ratingSubmitCountdown);
           $submit.click();
         }
-        // eslint-disable-next-line no-console
-        console.log(`rating will be submitted in: ${counter} seconds.`);
       }, 950);
     } else if (window.ratingSubmitCountdown) clearInterval(window.ratingSubmitCountdown);
   };
