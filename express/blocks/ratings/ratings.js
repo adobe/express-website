@@ -427,7 +427,7 @@ function lazyLoadLottiePlayer($block) {
     if (alreadyLoaded) return;
     const script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
+    script.src = '/express/scripts/lottie-player-min.js';
     document.head.appendChild(script);
     alreadyLoaded = true;
   };
