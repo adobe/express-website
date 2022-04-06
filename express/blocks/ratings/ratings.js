@@ -182,13 +182,12 @@ function sliderFunctionality($block) {
       window.ratingSubmitCountdown = setInterval(() => {
         if (counter > 0) {
           counter -= 1;
-
-          $timer.innerText = counter; // remove this after lottie animation is fixed
         } else {
           clearInterval(window.ratingSubmitCountdown);
           $submit.click();
         }
-        console.log(counter);
+        // eslint-disable-next-line no-console
+        console.log(`rating will be submitted in: ${counter} seconds.`);
       }, 950);
     } else if (window.ratingSubmitCountdown) clearInterval(window.ratingSubmitCountdown);
   };
@@ -287,13 +286,10 @@ function sliderFunctionality($block) {
       scrollToScrollAnchor();
     });
   });
-  // Textarea event listener.
-  $textarea.addEventListener('keyup', () => {
-    if ($textarea.value !== '') {
-      $commentBox.classList.add('submit--appear');
-      $timer.remove();
-      countdown(false);
-    }
+  $textarea.addEventListener('focus', () => {
+    $commentBox.classList.add('submit--appear');
+    $timer.remove();
+    countdown(false);
   });
 }
 
