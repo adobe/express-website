@@ -109,23 +109,23 @@ export function getMeta(name) {
   return value;
 }
 
-// Load lottie player if it isn't already loaded.
-export function loadLottiePlayer() {
-  if (window['lottie-player']) return;
-  const script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
-  document.head.appendChild(script);
-  window['lottie-player'] = true;
-}
-
-// Get lottie animation - remember to loadLottiePlayer() or lazyLoadLottiePlayer() to see it.
+// Get lottie animation HTML - remember to lazyLoadLottiePlayer() to see it.
 export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
   return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
 }
 
 // Lazy-load lottie player if you scroll to the block.
 export function lazyLoadLottiePlayer($block = null) {
+  const loadLottiePlayer = () => {
+    if (window['lottie-player']) return;
+
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
+    document.head.appendChild(script);
+    window['lottie-player'] = true;
+  };
   if ($block) {
     const addIntersectionObserver = (block) => {
       const observer = (entries) => {
