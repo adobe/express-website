@@ -177,7 +177,7 @@ function sliderFunctionality($block) {
   // Countdown timer to auto-submit
   const countdown = (bool) => {
     if (bool) {
-      $timer.innerHTML = getLottie('countdown', '/express/blocks/ratings/countdown.json', 27, false);
+      $timer.innerHTML = getLottie('countdown', '/express/blocks/ratings/countdown.json', false);
       let counter = 10;
       window.ratingSubmitCountdown = setInterval(() => {
         if (counter > 0) {
