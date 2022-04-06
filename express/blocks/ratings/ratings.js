@@ -16,6 +16,7 @@ import {
   getIcon,
   getIconElement,
   getLottie,
+  lazyLoadLottiePlayer,
   getLocale,
   toClassName,
 // eslint-disable-next-line import/no-unresolved
@@ -418,34 +419,6 @@ function regenerateBlockState($block, title, $CTA, sheet) {
   }
 }
 
-// Lazy-load lottie player if you scroll to ratings block.
-function lazyLoadLottiePlayer($block) {
-  let alreadyLoaded = false;
-  const loadLottiePlayer = () => {
-    if (alreadyLoaded) return;
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '/express/scripts/lottie-player-min.js';
-    document.head.appendChild(script);
-    alreadyLoaded = true;
-  };
-  const observer = (entries) => {
-    const entry = entries[0];
-    if (entry.isIntersecting) {
-      if (entry.intersectionRatio >= 0.25) {
-        loadLottiePlayer();
-      }
-    }
-  };
-  const options = {
-    root: null,
-    rootMargin: '0px',
-    threshold: [0.0, 0.25],
-  };
-  const intersectionObserver = new IntersectionObserver(observer, options);
-  intersectionObserver.observe($block);
-}
-
 // Initiate ratings block
 export default function decorate($block) {
   const $title = $block.querySelector('h2');
@@ -461,12 +434,5 @@ export default function decorate($block) {
 
   buildRatingSchema();
 
-  // Lazy-load lottie player:
-  if (document.readyState === 'complete') {
-    lazyLoadLottiePlayer($block);
-  } else {
-    window.addEventListener('load', () => {
-      lazyLoadLottiePlayer($block);
-    });
-  }
+  lazyLoadLottiePlayer($block);
 }
