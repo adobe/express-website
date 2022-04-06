@@ -268,8 +268,7 @@ function sliderFunctionality($block) {
     $input.addEventListener(event, () => {
       $tooltip.style.transition = 'left .3s, right .3s';
       $sliderFill.style.transition = 'width .3s';
-      //  remove next 3 lines after timer has been added.
-      if (!$textarea.getAttribute('required') || $textarea.value !== '') {
+      if ((!$textarea.getAttribute('required') && $textarea.value !== '') || $textarea.value !== '') {
         $submit.focus({ preventScroll: true });
       }
       scrollToScrollAnchor();
@@ -278,7 +277,6 @@ function sliderFunctionality($block) {
   window.addEventListener('resize', () => {
     updateSliderStyle($block, $input.value);
   });
-  // Stars event listeners.
   $stars.forEach(($star, index) => {
     $star.addEventListener('click', () => {
       $input.value = index + 1;
