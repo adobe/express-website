@@ -119,7 +119,7 @@ export function loadLottiePlayer() {
   window['lottie-player'] = true;
 }
 
-// Get lottie animation
+// Get lottie animation - remember to loadLottiePlayer() or lazyLoadLottiePlayer() to see it.
 export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
   return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
 }
