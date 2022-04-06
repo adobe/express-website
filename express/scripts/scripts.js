@@ -122,7 +122,7 @@ export function loadLottiePlayer() {
 // Get lottie animation
 export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
   loadLottiePlayer();
-  return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay' : ''}${(control) ? 'controls' : ''}${(hover) ? 'hover' : ''}></lottie-player>`);
+  return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
 }
 
 // Lazy-load lottie player if you scroll to the block.
