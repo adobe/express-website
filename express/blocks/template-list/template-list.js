@@ -106,7 +106,15 @@ function trackTemplateClick($a) {
     if ($a.classList.contains('template-list-scrollbutton')) {
       sparkEventName = 'landing:scrollbuttonPressed';
     } else {
+      const w = window.location.href;
+
       sparkEventName = 'landing:templatePressed';
+
+      if (w.includes('/express-your-fandom')) {
+        const $templates = document.querySelectorAll('a.template');
+        const templateIndex = Array.from($templates).indexOf($a) + 1;
+        sparkEventName += `:${templateIndex}`;
+      }
     }
 
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
