@@ -131,6 +131,10 @@ loadScript(martechURL, () => {
   ) {
     sparkLandingPageType = 'edu';
     // other
+  } else if (
+    pathname.includes('/express-your-fandom')
+  ) {
+    sparkLandingPageType = 'express-your-fandom';
   } else {
     sparkLandingPageType = 'other';
   }
@@ -320,8 +324,10 @@ loadScript(martechURL, () => {
     } else if ($a.closest('.hero')) {
       adobeEventName = appendLinkText(`${adobeEventName}hero:`, $a);
       sparkEventName = 'landing:ctaPressed';
-
       // Click in the pricing block
+    } else if (sparkLandingPageType === 'express-your-fandom') {
+      adobeEventName = appendLinkText(`${adobeEventName}express-your-fandom:`, $a);
+      sparkEventName = 'landing:ctaPressed';
     } else if (sparkLandingPageType === 'pricing') {
       // edu link
       if ($a.pathname.includes('/edu')) {
