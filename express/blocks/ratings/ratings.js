@@ -28,6 +28,9 @@ import Context from '../../scripts/context.js';
 let ratings;
 let submissionTitle;
 let submissionText;
+let sheet;
+let ratingTotal;
+let ratingAverage;
 
 fetchPlaceholders().then((placeholders) => {
   ratings = [
@@ -77,7 +80,7 @@ fetchPlaceholders().then((placeholders) => {
   submissionText = placeholders['rating-submission-text'];
 });
 
-function hasRated(sheet) {
+function hasRated() {
   // dev mode: check use-rating query parameter
   const u = new URL(window.location.href);
   const param = u.searchParams.get('action-rated');
@@ -105,7 +108,7 @@ function determineActionUsed() {
   return (audiences && audiences.includes('24241150'));
 }
 
-function submitRating(sheet, rating, comment) {
+function submitRating(rating, comment) {
   const content = {
     data: [
       {
@@ -299,10 +302,13 @@ function getCurrentRatingStars() {
   const starEmpty = getIcon('star-empty');
   const $stars = createTag('span', { class: 'rating-stars' });
 
-  const rating = 3.6; // to-do: get correct rating.
-  const ratingAmount = 75694; // to-do: get correct number of ratings.
+  const rating = ratingAverage ?? 5;
+  const ratingAmount = ratingTotal ?? 0;
 
-  if (ratingAmount >= 10000) {
+  console.log(rating);
+  console.log(ratingAmount);
+
+  if (ratingAmount >= 1) {
     const ratingRoundedHalf = Math.round(rating * 2) / 2;
     const filledStars = Math.floor(ratingRoundedHalf);
     const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
@@ -319,7 +325,7 @@ function getCurrentRatingStars() {
 }
 
 // Decorates the rating Form and Slider HTML.
-function decorateRatingSlider($block, title, sheet) {
+function decorateRatingSlider($block, title) {
   const $h2 = createTag('h2', { id: toClassName(title) });
   $h2.textContent = title;
   const $stars = getCurrentRatingStars();
@@ -368,7 +374,7 @@ function decorateRatingSlider($block, title, sheet) {
     e.preventDefault();
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
-    submitRating(sheet, rating, comment);
+    submitRating(rating, comment);
     $block.innerHTML = /* html */`
     <h2>${submissionTitle}</h2>
     <div class="no-slider">
@@ -379,11 +385,21 @@ function decorateRatingSlider($block, title, sheet) {
   sliderFunctionality($block, $form);
 }
 
-function buildRatingSchema() {
+function fetchRatingInformation() {
   fetch('https://www.adobe.com/reviews-api/ccx/dev/remove-background.json')
     .then((response) => response.json())
     .then((response) => {
-      // actually build the schema.
+      if (response.data[0].Average) {
+        ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
+      }
+
+      if (response.data[0].Total) {
+        ratingTotal = parseFloat(response.data[0].Total);
+      }
+
+      if (ratingAverage || ratingTotal) {
+        document.dispatchEvent(new Event('ratings_received'));
+      }
     });
 }
 
@@ -403,16 +419,16 @@ function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
 }
 
 // Determine if user is allowed to rate, and then re-decorate the block.
-function regenerateBlockState($block, title, $CTA, sheet) {
+function regenerateBlockState($block, title, $CTA) {
   $block.innerHTML = '';
-  const actionRated = hasRated(sheet);
+  const actionRated = hasRated();
   const actionUsed = determineActionUsed();
   if (actionRated) {
     const titleText = 'This Quick Action is rated'; // to-do: placeholders
     const paragraphText = 'You have already submitted your rating for this action. Thank you for your feedback!'; // to-do: placeholders
     decorateCannotRateBlock($block, titleText, paragraphText);
   } else if (actionUsed) {
-    decorateRatingSlider($block, title, sheet);
+    decorateRatingSlider($block, title);
   } else {
     const paragraphText = 'You need to use the Quick Action before you can rate it.'; // to-do: placeholders
     decorateCannotRateBlock($block, title, paragraphText, $CTA);
@@ -424,15 +440,20 @@ export default function decorate($block) {
   const $title = $block.querySelector('h2');
   const title = $title ? $title.textContent : 'Rate our Quick Action'; // to-do: placeholders
   const $sheet = $block.querySelector('strong');
-  const sheet = $sheet.textContent;
   const $CTA = $block.querySelector('a');
+  sheet = $sheet.textContent;
   $CTA.classList.add('xlarge');
   $block.innerHTML = '';
 
-  // to-do: listen for state-change then call function below whenever it changes.
-  regenerateBlockState($block, title, $CTA, sheet);
+  fetchRatingInformation();
 
-  buildRatingSchema();
+  // Generate original block.
+  regenerateBlockState($block, title, $CTA);
+
+  // When the ratings are retrieved.
+  document.addEventListener('ratings_received', () => {
+    regenerateBlockState($block, title, $CTA);
+  });
 
   lazyLoadLottiePlayer($block);
 }
