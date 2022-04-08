@@ -80,6 +80,17 @@ fetchPlaceholders().then((placeholders) => {
   submissionText = placeholders['rating-submission-text'];
 });
 
+function buildSchema() {
+  const script = document.createElement('script');
+  script.setAttribute('type', 'application/ld+json');
+  script.textContent = JSON.stringify({
+    '@type': 'Product',
+    '@context': 'https://schema.org',
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: ratingAverage, ratingCount: ratingTotal },
+  });
+  document.body.appendChild(script);
+}
+
 function hasRated() {
   // dev mode: check use-rating query parameter
   const u = new URL(window.location.href);
@@ -453,6 +464,7 @@ export default function decorate($block) {
   // When the ratings are retrieved.
   document.addEventListener('ratings_received', () => {
     regenerateBlockState($block, title, $CTA);
+    buildSchema(title);
   });
 
   lazyLoadLottiePlayer($block);
