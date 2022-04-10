@@ -614,14 +614,25 @@ export async function loadBlock(block, eager = false) {
   if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
+    let cssPath = `/express/blocks/${blockName}/${blockName}.css`;
+    let jsPath = `/express/blocks/${blockName}/${blockName}.js`;
+
+    if (window.hlx.experiment && window.hlx.experiment.run) {
+      const { experiment } = window.hlx;
+      if (experiment.blocks.includes(blockName)) {
+        cssPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.css`;
+        jsPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.js`;
+      }
+    }
+
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(cssPath, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(jsPath);
             if (mod.default) {
               await mod.default(block, blockName, document, eager);
             }
@@ -926,78 +937,114 @@ export function checkTesting() {
   return (getMeta('testing').toLowerCase() === 'on');
 }
 
-async function decorateTesting() {
-  let runTest = true;
-  // let reason = '';
-  const usp = new URLSearchParams(window.location.search);
-  const martech = usp.get('martech');
-  if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-    // eslint-disable-next-line no-console
-    console.log('rushing martech');
-    loadScript('/express/scripts/instrument.js', null, 'module');
-  }
+/**
+ * Sanitizes a name for use as class name.
+ * @param {*} name The unsanitized name
+ * @returns {string} The class name
+ */
+export function toCamelCase(name) {
+  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
+
+export function getExperiment() {
+  let experiment = getMeta('experiment').toLowerCase();
 
   if (!window.location.host.includes('adobe.com')) {
-    runTest = false;
+    experiment = '';
     // reason = 'not prod host';
   }
   if (window.location.hash) {
-    runTest = false;
+    experiment = '';
     // reason = 'suppressed by #';
   }
-  if (window.location.search === '?test') {
-    runTest = true;
-  }
+
   if (navigator.userAgent.match(/bot|crawl|spider/i)) {
-    runTest = false;
+    experiment = '';
     // reason = 'bot detected';
   }
 
-  if (runTest) {
-    let $testTable;
-    document.querySelectorAll('table th').forEach(($th) => {
-      if ($th.textContent.toLowerCase().trim() === 'a/b test') {
-        $testTable = $th.closest('table');
-      }
+  const usp = new URLSearchParams(window.location.search);
+  if (usp.has('experiment')) {
+    experiment = usp.get('experiment');
+  }
+
+  return experiment;
+}
+
+/**
+ * Gets experiment config
+ * @param {string} experiment
+ */
+
+async function fetchExperimentConfig(experiment) {
+  const path = `/express/experiments/${experiment}/manifest.json`;
+  try {
+    const config = {};
+    const resp = await fetch(path);
+    const json = await resp.json();
+    json.data.forEach((line) => {
+      const key = toCamelCase(line.Name);
+      let value = line.Value;
+      if (key === 'blocks') value = value.split(',').map((e) => e.trim().toLowerCase());
+      config[key] = value;
     });
+    config.id = experiment;
+    return config;
+  } catch (e) {
+    console.log(e);
+    console.log(`error loading experiment manifest: ${path}`);
+  }
+  return null;
+}
 
-    const testSetup = [];
+/**
+ * replaces main with content from path
+ * @param {string} path
+ */
 
-    if ($testTable) {
-      $testTable.querySelectorAll('tr').forEach(($row) => {
-        const $name = $row.children[0];
-        const $percentage = $row.children[1];
-        const $a = $name.querySelector('a');
-        if ($a) {
-          const url = new URL($a.href);
-          testSetup.push({
-            url: url.pathname,
-            traffic: parseFloat($percentage.textContent) / 100.0,
-          });
-        }
-      });
-    }
+async function replaceInner(path, main) {
+  const plainPath = `${path}.plain.html`;
+  try {
+    const resp = await fetch(plainPath);
+    const html = await resp.text();
+    main.innerHTML = html;
+  } catch (e) {
+    console.log(e);
+    console.log(`error loading experiment content: ${plainPath}`);
+  }
+  return null;
+}
 
-    let test = Math.random();
-    let selectedUrl = '';
-    testSetup.forEach((e) => {
-      if (test >= 0 && test < e.traffic) {
-        selectedUrl = e.url;
-      }
-      test -= e.traffic;
-    });
-
-    if (selectedUrl) {
+async function decorateTesting() {
+  try {
+  // let reason = '';
+    const usp = new URLSearchParams(window.location.search);
+    const martech = usp.get('martech');
+    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
       // eslint-disable-next-line no-console
-      console.log(selectedUrl);
-      const plainUrl = `${selectedUrl.replace('.html', '')}.plain.html`;
-      const resp = await fetch(plainUrl);
-      const html = await resp.text();
-      document.querySelector('main').innerHTML = html;
+      console.log('rushing martech');
+      loadScript('/express/scripts/instrument.js', null, 'module');
     }
-  } else {
-    // eslint-disable-next-line no-console
-    // console.log(`Test is not run => ${reason}`);
+
+    const experiment = getExperiment();
+    console.log('experiment', experiment);
+    const forceExperiment = usp.get('forceExperiment');
+
+    if (experiment) {
+      const config = await fetchExperimentConfig(experiment);
+      config.run = forceExperiment || (Math.random() < +config.audience);
+      console.log('run', config.run, +config.audience);
+
+      window.hlx = window.hlx || {};
+      window.hlx.experiment = config;
+      if (config.run && config.content) {
+        console.log('running');
+        const path = new URL(config.content).pathname.split('.')[0];
+        await replaceInner(path, document.querySelector('main'));
+      }
+    }
+  } catch (e) {
+    console.log('error testing', e);
   }
 }
 
