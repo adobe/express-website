@@ -29,6 +29,7 @@ let ratings;
 let submissionTitle;
 let submissionText;
 let sheet;
+let sheetCamelCase;
 let ratingTotal;
 let ratingAverage;
 
@@ -249,7 +250,7 @@ function sliderFunctionality($block) {
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
     $block.classList.add('rated');
-    localStorage.setItem('ccxActionRatingsFeedback', [sheet, $input.value, $textarea.value]);
+    localStorage.setItem(`ccxActionRatingsFeedback${sheetCamelCase}`, [$input.value, $textarea.value]);
     updateSliderStyle($block, $input.value);
   };
   // Slider event listeners.
@@ -310,13 +311,13 @@ function sliderFunctionality($block) {
   });
   // Get text from localStorage if they navigated away after typing then came back
   $textarea.addEventListener('keyup', () => {
-    localStorage.setItem('ccxActionRatingsFeedback', [sheet, $input.value, $textarea.value]);
+    localStorage.setItem(`ccxActionRatingsFeedback${sheetCamelCase}`, [$input.value, $textarea.value]);
   });
-  const ccxActionRatingsFeedback = localStorage.getItem('ccxActionRatingsFeedback');
-  if (ccxActionRatingsFeedback && ccxActionRatingsFeedback.includes(sheet)) {
-    const match = ccxActionRatingsFeedback.match(/([^,]+),([^,]+),((.|\n)*)/);
-    const localStorageRating = match[2];
-    const localStoragetext = match[3];
+  const ccxActionRatingsFeedback = localStorage.getItem(`ccxActionRatingsFeedback${sheetCamelCase}`);
+  if (ccxActionRatingsFeedback) {
+    const match = ccxActionRatingsFeedback.match(/([^,]+),((.|\n)*)/);
+    const localStorageRating = match[1];
+    const localStoragetext = match[2];
     if (localStoragetext && localStoragetext !== '') {
       $textarea.value = localStoragetext;
       $input.value = localStorageRating;
@@ -404,7 +405,7 @@ function decorateRatingSlider($block, title, headingTag = 'h2') {
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
     submitRating(rating, comment);
-    localStorage.removeItem('ccxActionRatingsFeedback');
+    localStorage.removeItem(`ccxActionRatingsFeedback${sheetCamelCase}`);
     $block.innerHTML = `
     <${headingTag} id="${toClassName(submissionTitle)}">${submissionTitle}</${headingTag}>
     <div class="no-slider">
@@ -476,6 +477,8 @@ export default function decorate($block) {
   if ($CTA) $CTA.classList.add('xlarge');
   const $sheet = $block.querySelector('strong');
   sheet = $sheet.textContent;
+  sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+|-+|\/+/g, '');
+
   $block.innerHTML = '';
 
   fetchRatingInformation();
