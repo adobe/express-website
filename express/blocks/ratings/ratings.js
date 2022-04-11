@@ -84,6 +84,7 @@ function buildSchema() {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/ld+json');
   script.textContent = JSON.stringify({
+    name: document.title,
     '@type': 'Product',
     '@context': 'https://schema.org',
     aggregateRating: { '@type': 'AggregateRating', ratingValue: ratingAverage, ratingCount: ratingTotal },
