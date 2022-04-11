@@ -272,12 +272,13 @@ main .ratings .slider-comment label {
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-xl);
   line-height: var(--body-line-height);
+  min-height: var(--body-font-size-xl);
+  box-sizing: content-box;
   font-weight: 700;
   margin: 0;
   padding: 0;
   text-align: center;
   width: 100%;
-  box-sizing: border-box;
   display: block;
   padding-top: 32px;
 }

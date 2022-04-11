@@ -197,13 +197,17 @@ function sliderFunctionality($block) {
         if (counter > 0) {
           counter -= 1;
           // eslint-disable-next-line no-console
-          console.log(`rating will be submitted in: ${counter} seconds.`);
+          console.log(`rating will be submitted in: ${counter + 1} seconds.`);
         } else {
           clearInterval(window.ratingSubmitCountdown);
+          window.ratingSubmitCountdown = null;
           $submit.click();
         }
-      }, 950);
-    } else if (window.ratingSubmitCountdown) clearInterval(window.ratingSubmitCountdown);
+      }, 920);
+    } else if (window.ratingSubmitCountdown) {
+      clearInterval(window.ratingSubmitCountdown);
+      window.ratingSubmitCountdown = null;
+    }
   };
   // Updates the comment box
   const updateCommentBoxAndTimer = () => {
@@ -245,6 +249,7 @@ function sliderFunctionality($block) {
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
     $block.classList.add('rated');
+    localStorage.setItem('ccxActionRatingsFeedback', [sheet, $input.value, $textarea.value]);
     updateSliderStyle($block, $input.value);
   };
   // Slider event listeners.
@@ -303,6 +308,22 @@ function sliderFunctionality($block) {
     $timer.remove();
     countdown(false);
   });
+  // Get text from localStorage if they navigated away after typing then came back
+  $textarea.addEventListener('keyup', (e) => {
+    localStorage.setItem('ccxActionRatingsFeedback', [sheet, $input.value, $textarea.value]);
+  });
+  const ccxActionRatingsFeedback = localStorage.getItem('ccxActionRatingsFeedback');
+  if (ccxActionRatingsFeedback && ccxActionRatingsFeedback.includes(sheet)) {
+    const match = ccxActionRatingsFeedback.match(/([^,]+),([^,]+),(.*)/);
+    const localStorageRating = match[2];
+    const localStoragetext = match[3];
+    if (localStoragetext && localStoragetext !== '') {
+      $textarea.value = localStoragetext;
+      $input.value = localStorageRating;
+      $commentBox.classList.add('comment--appear');
+      updateSliderValue();
+    }
+  }
 }
 
 // Gets the current rating and returns star span element.
@@ -383,6 +404,7 @@ function decorateRatingSlider($block, title, headingTag = 'h2') {
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
     submitRating(rating, comment);
+    localStorage.removeItem('ccxActionRatingsFeedback');
     $block.innerHTML = `
     <${headingTag} id="${toClassName(submissionTitle)}">${submissionTitle}</${headingTag}>
     <div class="no-slider">
