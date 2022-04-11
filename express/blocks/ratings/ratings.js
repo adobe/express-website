@@ -313,13 +313,10 @@ function getCurrentRatingStars() {
   const starHalf = getIcon('star-half');
   const starEmpty = getIcon('star-empty');
   const $stars = createTag('span', { class: 'rating-stars' });
-
   const rating = ratingAverage ?? 5;
-  const ratingAmount = ratingTotal ?? 0;
-
-  console.log(rating);
-  console.log(ratingAmount);
-
+  let ratingAmount = ratingTotal ?? 0;
+  // round to nearest decimal point:
+  ratingAmount = Math.round(ratingAmount * 10) / 10;
   if (ratingAmount >= 1) {
     const ratingRoundedHalf = Math.round(rating * 2) / 2;
     const filledStars = Math.floor(ratingRoundedHalf);
