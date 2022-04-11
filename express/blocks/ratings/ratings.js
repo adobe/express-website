@@ -450,7 +450,7 @@ function regenerateBlockState($block, title, $CTA, headingTag = 'h2') {
 
 // Initiate ratings block
 export default function decorate($block) {
-  const $heading = $block.querySelector('h1') || $block.querySelector('h2') || $block.querySelector('h3') || $block.querySelector('h4');
+  const $heading = $block.querySelector('h1') ?? $block.querySelector('h2') ?? $block.querySelector('h3') ?? $block.querySelector('h4');
   const title = ($heading) ? $heading.textContent : 'Rate our Quick Action'; // to-do: placeholders
   const headingTag = ($heading) ? $heading.tagName : 'h2';
   const $CTA = $block.querySelector('a');
