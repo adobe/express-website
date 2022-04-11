@@ -309,7 +309,7 @@ function sliderFunctionality($block) {
     countdown(false);
   });
   // Get text from localStorage if they navigated away after typing then came back
-  $textarea.addEventListener('keyup', (e) => {
+  $textarea.addEventListener('keyup', () => {
     localStorage.setItem('ccxActionRatingsFeedback', [sheet, $input.value, $textarea.value]);
   });
   const ccxActionRatingsFeedback = localStorage.getItem('ccxActionRatingsFeedback');
