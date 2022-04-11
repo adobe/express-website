@@ -338,11 +338,13 @@ function getCurrentRatingStars() {
 
 // Decorates the rating Form and Slider HTML.
 function decorateRatingSlider($block, title, headingTag = 'h2') {
-  const $heading = createTag(headingTag, { id: toClassName(title), class: 'ratings-heading' });
+  const $headingWrapper = createTag('div', { class: 'ratings-heading' });
+  const $heading = createTag(headingTag, { id: toClassName(title) });
   $heading.textContent = title;
+  $headingWrapper.appendChild($heading);
   const $stars = getCurrentRatingStars();
-  $heading.appendChild($stars);
-  $block.appendChild($heading);
+  $headingWrapper.appendChild($stars);
+  $block.appendChild($headingWrapper);
   const $section = $block.closest('.section-wrapper');
   const $form = createTag('form');
   $block.appendChild($form);
@@ -417,11 +419,13 @@ function fetchRatingInformation() {
 
 // Decorate block state when user is not allowed to rate (already rated / hasn't used block)
 function decorateCannotRateBlock($block, title, paragraph, $CTA = null, headingTag = 'h2') {
-  const $heading = createTag(headingTag, { id: toClassName(title), class: 'ratings-heading' });
+  const $headingWrapper = createTag('div', { class: 'ratings-heading' });
+  const $heading = createTag(headingTag, { id: toClassName(title) });
   $heading.textContent = title;
+  $headingWrapper.appendChild($heading);
   const $stars = getCurrentRatingStars();
-  $heading.appendChild($stars);
-  $block.appendChild($heading);
+  $headingWrapper.appendChild($stars);
+  $block.appendChild($headingWrapper);
   const $textAndCTA = createTag('div', { class: 'no-slider' });
   const $p = createTag('p');
   $p.textContent = paragraph;

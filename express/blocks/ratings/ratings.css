@@ -427,10 +427,14 @@ main .ratings form [type=range]::-moz-range-thumb {
   width: 60px;
 }
 
-main .ratings .ratings-heading#rate-our-quick-action {
+main .ratings #rate-our-quick-action {
   max-width: 235px;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+@media (max-width: 599px) {
+  main .ratings #rate-our-quick-action {
+    max-width: 180px;
+  }
 }
 
 main .ratings .no-slider {
@@ -467,10 +471,12 @@ main .ratings .no-slider {
     height: 28px;
   }  
   
-  main .ratings .ratings-heading,
-  main .ratings .ratings-heading#rate-our-quick-action {
-    margin-left: 20px;
+  main .ratings #rate-our-quick-action {
     max-width: unset;
+  }
+
+  main .ratings .ratings-heading {
+    margin-left: 20px;
   }
   
   main .ratings .slider-comment label {
