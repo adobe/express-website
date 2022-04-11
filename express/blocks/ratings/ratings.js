@@ -386,7 +386,7 @@ function decorateRatingSlider($block, title, headingTag = 'h2') {
     const comment = $form.querySelector('#comment').value;
     submitRating(rating, comment);
     $block.innerHTML = `
-    <${headingTag} class="ratings-title" id="${toClassName(submissionTitle)}">${submissionTitle}</${headingTag}>
+    <${headingTag} id="${toClassName(submissionTitle)}">${submissionTitle}</${headingTag}>
     <div class="no-slider">
       <p>${submissionText}</p>
     </div>`;
