@@ -314,7 +314,7 @@ function sliderFunctionality($block) {
   });
   const ccxActionRatingsFeedback = localStorage.getItem('ccxActionRatingsFeedback');
   if (ccxActionRatingsFeedback && ccxActionRatingsFeedback.includes(sheet)) {
-    const match = ccxActionRatingsFeedback.match(/([^,]+),([^,]+),(.*)/);
+    const match = ccxActionRatingsFeedback.match(/([^,]+),([^,]+),((.|\n)*)/);
     const localStorageRating = match[2];
     const localStoragetext = match[3];
     if (localStoragetext && localStoragetext !== '') {
