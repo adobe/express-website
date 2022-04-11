@@ -152,12 +152,10 @@ function submitRating(rating, comment) {
     body: JSON.stringify(content),
   });
 
-  let ccxActionRatings = localStorage.getItem('ccxActionRatings') ?? [];
+  const ccxActionRatings = localStorage.getItem('ccxActionRatings') ?? [];
 
-  if (ccxActionRatings) {
+  if (!ccxActionRatings.includes(sheet)) {
     ccxActionRatings.push(sheet);
-  } else {
-    ccxActionRatings = [sheet];
   }
 
   localStorage.setItem('ccxActionRatings', ccxActionRatings);
