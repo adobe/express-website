@@ -250,7 +250,7 @@ function sliderFunctionality($block) {
     ratings.forEach((obj) => $block.classList.remove(obj.class));
     $block.classList.add(ratings[index - 1].class);
     $block.classList.add('rated');
-    localStorage.setItem(`ccxActionRatingsFeedback${sheetCamelCase}`, [$input.value, $textarea.value]);
+    localStorage.setItem(`ccxActionRatingsFeedback${sheetCamelCase}`, `${$input.value},${$textarea.value}`);
     updateSliderStyle($block, $input.value);
   };
   // Slider event listeners.
@@ -311,11 +311,11 @@ function sliderFunctionality($block) {
   });
   // Get text from localStorage if they navigated away after typing then came back
   $textarea.addEventListener('keyup', () => {
-    localStorage.setItem(`ccxActionRatingsFeedback${sheetCamelCase}`, [$input.value, $textarea.value]);
+    localStorage.setItem(`ccxActionRatingsFeedback${sheetCamelCase}`, `${$input.value},${$textarea.value}`);
   });
   const ccxActionRatingsFeedback = localStorage.getItem(`ccxActionRatingsFeedback${sheetCamelCase}`);
   if (ccxActionRatingsFeedback) {
-    const match = ccxActionRatingsFeedback.match(/([^,]+),((.|\n)*)/);
+    const match = ccxActionRatingsFeedback.match(/([^,]*),((.|\n)*)/);
     const localStorageRating = match[1];
     const localStoragetext = match[2];
     if (localStoragetext && localStoragetext !== '') {
