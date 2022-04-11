@@ -337,12 +337,12 @@ function getCurrentRatingStars() {
 }
 
 // Decorates the rating Form and Slider HTML.
-function decorateRatingSlider($block, title) {
-  const $h2 = createTag('h2', { id: toClassName(title) });
-  $h2.textContent = title;
+function decorateRatingSlider($block, title, headingTag = 'h2') {
+  const $heading = createTag(headingTag, { id: toClassName(title), class: 'ratings-heading' });
+  $heading.textContent = title;
   const $stars = getCurrentRatingStars();
-  $h2.appendChild($stars);
-  $block.appendChild($h2);
+  $heading.appendChild($stars);
+  $block.appendChild($heading);
   const $section = $block.closest('.section-wrapper');
   const $form = createTag('form');
   $block.appendChild($form);
@@ -387,8 +387,8 @@ function decorateRatingSlider($block, title) {
     const rating = $input.value;
     const comment = $form.querySelector('#comment').value;
     submitRating(rating, comment);
-    $block.innerHTML = /* html */`
-    <h2>${submissionTitle}</h2>
+    $block.innerHTML = `
+    <${headingTag} class="ratings-title" id="${toClassName(submissionTitle)}">${submissionTitle}</${headingTag}>
     <div class="no-slider">
       <p>${submissionText}</p>
     </div>`;
@@ -416,12 +416,12 @@ function fetchRatingInformation() {
 }
 
 // Decorate block state when user is not allowed to rate (already rated / hasn't used block)
-function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
-  const $h2 = createTag('h2', { id: toClassName(title) });
-  $h2.textContent = title;
+function decorateCannotRateBlock($block, title, paragraph, $CTA = null, headingTag = 'h2') {
+  const $heading = createTag(headingTag, { id: toClassName(title), class: 'ratings-heading' });
+  $heading.textContent = title;
   const $stars = getCurrentRatingStars();
-  $h2.appendChild($stars);
-  $block.appendChild($h2);
+  $heading.appendChild($stars);
+  $block.appendChild($heading);
   const $textAndCTA = createTag('div', { class: 'no-slider' });
   const $p = createTag('p');
   $p.textContent = paragraph;
@@ -431,40 +431,41 @@ function decorateCannotRateBlock($block, title, paragraph, $CTA = null) {
 }
 
 // Determine if user is allowed to rate, and then re-decorate the block.
-function regenerateBlockState($block, title, $CTA) {
+function regenerateBlockState($block, title, $CTA, headingTag = 'h2') {
   $block.innerHTML = '';
   const actionRated = hasRated();
   const actionUsed = determineActionUsed();
   if (actionRated) {
     const titleText = 'This Quick Action is rated'; // to-do: placeholders
     const paragraphText = 'You have already submitted your rating for this action. Thank you for your feedback!'; // to-do: placeholders
-    decorateCannotRateBlock($block, titleText, paragraphText);
+    decorateCannotRateBlock($block, titleText, paragraphText, null, headingTag);
   } else if (actionUsed) {
-    decorateRatingSlider($block, title);
+    decorateRatingSlider($block, title, headingTag);
   } else {
     const paragraphText = 'You need to use the Quick Action before you can rate it.'; // to-do: placeholders
-    decorateCannotRateBlock($block, title, paragraphText, $CTA);
+    decorateCannotRateBlock($block, title, paragraphText, $CTA, headingTag);
   }
 }
 
 // Initiate ratings block
 export default function decorate($block) {
-  const $title = $block.querySelector('h2');
-  const title = $title ? $title.textContent : 'Rate our Quick Action'; // to-do: placeholders
-  const $sheet = $block.querySelector('strong');
+  const $heading = $block.querySelector('h1') || $block.querySelector('h2') || $block.querySelector('h3') || $block.querySelector('h4');
+  const title = ($heading) ? $heading.textContent : 'Rate our Quick Action'; // to-do: placeholders
+  const headingTag = ($heading) ? $heading.tagName : 'h2';
   const $CTA = $block.querySelector('a');
+  if ($CTA) $CTA.classList.add('xlarge');
+  const $sheet = $block.querySelector('strong');
   sheet = $sheet.textContent;
-  $CTA.classList.add('xlarge');
   $block.innerHTML = '';
 
   fetchRatingInformation();
 
   // Generate original block.
-  regenerateBlockState($block, title, $CTA);
+  regenerateBlockState($block, title, $CTA, headingTag);
 
   // When the ratings are retrieved.
   document.addEventListener('ratings_received', () => {
-    regenerateBlockState($block, title, $CTA);
+    regenerateBlockState($block, title, $CTA, headingTag);
     buildSchema(title);
   });
 

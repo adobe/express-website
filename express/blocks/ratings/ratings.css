@@ -17,7 +17,7 @@ main .ratings form {
   margin: 0 auto;
 }
 
-main .ratings h2 {
+main .ratings .ratings-heading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -427,7 +427,7 @@ main .ratings form [type=range]::-moz-range-thumb {
   width: 60px;
 }
 
-main .ratings h2#rate-our-quick-action {
+main .ratings .ratings-heading#rate-our-quick-action {
   max-width: 235px;
   margin-left: auto;
   margin-right: auto;
@@ -467,8 +467,8 @@ main .ratings .no-slider {
     height: 28px;
   }  
   
-  main .ratings h2,
-  main .ratings h2#rate-our-quick-action {
+  main .ratings .ratings-heading,
+  main .ratings .ratings-heading#rate-our-quick-action {
     margin-left: 20px;
     max-width: unset;
   }
