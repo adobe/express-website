@@ -348,7 +348,9 @@ function getCurrentRatingStars() {
   let rating = ratingAverage ?? 5;
   rating = Math.round(rating * 10) / 10; // round nearest decimal point
   const ratingAmount = ratingTotal ?? 0;
-  if (ratingAmount >= 10000) {
+  const u = new URL(window.location.href);
+  const param = u.searchParams.get('show-stars');
+  if (ratingAmount >= 10000 || param) {
     const ratingRoundedHalf = Math.round(rating * 2) / 2;
     const filledStars = Math.floor(ratingRoundedHalf);
     const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
