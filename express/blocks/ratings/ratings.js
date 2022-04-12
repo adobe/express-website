@@ -364,7 +364,7 @@ function getCurrentRatingStars() {
 }
 
 // Decorates the rating Form and Slider HTML.
-function decorateRatingSlider($block, title, headingTag = 'h2') {
+function decorateRatingSlider($block, title, headingTag = 'h3') {
   const $headingWrapper = createTag('div', { class: 'ratings-heading' });
   const $heading = createTag(headingTag, { id: toClassName(title) });
   $heading.textContent = title;
@@ -445,7 +445,7 @@ function fetchRatingInformation() {
 }
 
 // Decorate block state when user is not allowed to rate (already rated / hasn't used block)
-function decorateCannotRateBlock($block, title, paragraph, $CTA = null, headingTag = 'h2') {
+function decorateCannotRateBlock($block, title, paragraph, $CTA = null, headingTag = 'h3') {
   const $headingWrapper = createTag('div', { class: 'ratings-heading' });
   const $heading = createTag(headingTag, { id: toClassName(title) });
   $heading.textContent = title;
@@ -462,7 +462,7 @@ function decorateCannotRateBlock($block, title, paragraph, $CTA = null, headingT
 }
 
 // Determine if user is allowed to rate, and then re-decorate the block.
-function regenerateBlockState($block, title, $CTA, headingTag = 'h2') {
+function regenerateBlockState($block, title, $CTA, headingTag = 'h3') {
   $block.innerHTML = '';
   const actionRated = hasRated();
   const actionUsed = determineActionUsed();
@@ -477,14 +477,16 @@ function regenerateBlockState($block, title, $CTA, headingTag = 'h2') {
 
 // Initiate ratings block
 export default function decorate($block) {
-  const $heading = $block.querySelector('h1') ?? $block.querySelector('h2') ?? $block.querySelector('h3') ?? $block.querySelector('h4');
+  const $rows = Array.from($block.children);
+  if (!$rows[1]) return;
+  const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
   const title = ($heading) ? $heading.textContent : defaultTitle;
-  const headingTag = ($heading) ? $heading.tagName : 'h2';
-  const $CTA = $block.querySelector('a');
+  const headingTag = ($heading) ? $heading.tagName : 'h3';
+  const $CTA = $rows[0].querySelector('a');
   if ($CTA) $CTA.classList.add('xlarge');
-  const $sheet = $block.querySelector('strong');
-  sheet = $sheet.textContent;
-  sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+|-+|\/+/g, '');
+  const $sheet = $rows[1].firstElementChild;
+  sheet = $sheet.textContent.trim();
+  sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
 
   $block.innerHTML = '';
 
