@@ -118,11 +118,10 @@ export function getLottie(name, src, loop = true, autoplay = true, control = fal
 export function lazyLoadLottiePlayer($block = null) {
   const loadLottiePlayer = () => {
     if (window['lottie-player']) return;
-
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
-    script.src = 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js';
+    script.src = '/express/scripts/lottie-player.1.5.6.js';
     document.head.appendChild(script);
     window['lottie-player'] = true;
   };
