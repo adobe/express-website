@@ -440,8 +440,10 @@ loadScript(martechURL, () => {
 
   decorateAnalyticsEvents();
 
-  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
+  const ENABLE_RATE_ACTION_AUDIENCE = 'enableRatingAction';
+  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
+  const USED_ACTION_SEGMENT_ID = '24241150';
 
   Context.set('audiences', []);
 
@@ -462,10 +464,17 @@ loadScript(martechURL, () => {
             digitalData: digitalData._snapshot(),
           });
         }
+
+        if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
+          const audiences = Context.get('audiences');
+          audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
+        }
       };
 
       loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
     }
+
+    document.dispatchEvent(new Event('context_loaded'));
   }
 
   __satelliteLoadedCallback(getAudiences);

@@ -118,7 +118,7 @@ function determineActionUsed() {
 
   // "production" mode: check for audience
   const audiences = Context.get('audiences');
-  return (audiences && audiences.includes('24241150'));
+  return (audiences && audiences.includes('enableRatingAction'));
 }
 
 function submitRating(rating, comment) {
@@ -153,10 +153,10 @@ function submitRating(rating, comment) {
     body: JSON.stringify(content),
   });
 
-  const ccxActionRatings = localStorage.getItem('ccxActionRatings') ?? [];
+  let ccxActionRatings = localStorage.getItem('ccxActionRatings') ?? '';
 
   if (!ccxActionRatings.includes(sheet)) {
-    ccxActionRatings.push(sheet);
+    ccxActionRatings = ccxActionRatings.length > 0 ? sheet : `,${sheet}`;
   }
 
   localStorage.setItem('ccxActionRatings', ccxActionRatings);
@@ -485,6 +485,11 @@ export default function decorate($block) {
 
   // Generate original block.
   regenerateBlockState($block, title, $CTA, headingTag);
+
+  // When the context comes in.
+  document.addEventListener('context_loaded', () => {
+    regenerateBlockState($block, title, $CTA, headingTag);
+  });
 
   // When the ratings are retrieved.
   document.addEventListener('ratings_received', () => {
