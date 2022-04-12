@@ -382,7 +382,8 @@ function decorateRatingSlider($block, title, headingTag = 'h3') {
   });
   $slider.appendChild($input);
   // Initial state of the slider:
-  $slider.insertAdjacentHTML('afterbegin', /* html */`
+  $slider.appendChild(createTag('div', { class: 'slider-fill' }));
+  $slider.insertAdjacentHTML('beforeend', /* html */`
     <div class="tooltip">
       <div>
         <span class="tooltip--text"></span>
@@ -392,7 +393,6 @@ function decorateRatingSlider($block, title, headingTag = 'h3') {
       </div>
     </div>
   `);
-  $slider.appendChild(createTag('div', { class: 'slider-fill' }));
   const star = getIcon('star');
   $form.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">

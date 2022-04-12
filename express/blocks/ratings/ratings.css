@@ -73,7 +73,6 @@ main .ratings .slider .tooltip {
   justify-content: center;
   align-items: center;
   left: 82.2%;
-  z-index: 3;
   transition: left .3s, right .3s;
 }
 
@@ -87,7 +86,6 @@ main .ratings .slider-fill {
   background: var(--color-info-accent);
   pointer-events: none;
   border-radius: 60px;
-  z-index: 2;
   transition: width .3s;
 }
 
