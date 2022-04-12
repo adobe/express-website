@@ -38,6 +38,7 @@ let sheet;
 let sheetCamelCase;
 let ratingTotal;
 let ratingAverage;
+let showRatingAverage = false;
 
 fetchPlaceholders().then((placeholders) => {
   ratings = [
@@ -349,8 +350,8 @@ function getCurrentRatingStars() {
   rating = Math.round(rating * 10) / 10; // round nearest decimal point
   const ratingAmount = ratingTotal ?? 0;
   const u = new URL(window.location.href);
-  const param = u.searchParams.get('show-stars');
-  if ((ratingAmount >= 10000 || param === 'true') && param !== 'false') {
+  const param = u.searchParams.get('show-average');
+  if ((showRatingAverage || param === 'true') && param !== 'false') {
     const ratingRoundedHalf = Math.round(rating * 2) / 2;
     const filledStars = Math.floor(ratingRoundedHalf);
     const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
@@ -481,6 +482,10 @@ function regenerateBlockState($block, title, $CTA, headingTag = 'h3') {
 export default function decorate($block) {
   const $rows = Array.from($block.children);
   if (!$rows[1]) return;
+
+  const classes = $block.classList;
+  if (classes.contains('show') || classes.contains('average') || classes.contains('total')) showRatingAverage = true;
+
   const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
   const title = ($heading) ? $heading.textContent : defaultTitle;
   const headingTag = ($heading) ? $heading.tagName : 'h3';

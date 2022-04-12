@@ -633,7 +633,7 @@ export function decorateBlocks($main) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns', 'ratings'];
 
     if (blockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
