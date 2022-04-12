@@ -350,7 +350,7 @@ function getCurrentRatingStars() {
   const ratingAmount = ratingTotal ?? 0;
   const u = new URL(window.location.href);
   const param = u.searchParams.get('show-stars');
-  if (ratingAmount >= 10000 || param) {
+  if (ratingAmount >= 10000 || param === 'true') {
     const ratingRoundedHalf = Math.round(rating * 2) / 2;
     const filledStars = Math.floor(ratingRoundedHalf);
     const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
