@@ -38,12 +38,12 @@ w.marketingtech = {
     analytics: {
       additionalAccounts: 'adbemmarvelweb.prod, adbadobesparkprod',
     },
-    target: checkTesting(),
+    target: true,
     audienceManager: true,
   },
 };
 w.targetGlobalSettings = w.targetGlobalSettings || {};
-w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
+w.targetGlobalSettings.bodyHidingEnabled = true;
 
 let martechURL = 'https://www.adobe.com/marketingtech/main.min.js';
 
