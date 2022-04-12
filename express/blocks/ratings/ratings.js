@@ -26,8 +26,14 @@ import {
 import Context from '../../scripts/context.js';
 
 let ratings;
+let submitButtonText;
 let submissionTitle;
 let submissionText;
+let defaultTitle;
+let actionNotUsedText;
+let alreadySubmittedTitle;
+let alreadySubmittedText;
+let votesText;
 let sheet;
 let sheetCamelCase;
 let ratingTotal;
@@ -77,8 +83,14 @@ fetchPlaceholders().then((placeholders) => {
     },
   ];
 
+  submitButtonText = placeholders['rating-submit'];
   submissionTitle = placeholders['rating-submission-title'];
   submissionText = placeholders['rating-submission-text'];
+  defaultTitle = placeholders['rating-default-title'];
+  actionNotUsedText = placeholders['rating-action-not-used'];
+  alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
+  alreadySubmittedText = placeholders['rating-already-submitted-text'];
+  votesText = placeholders['rating-votes'];
 });
 
 function buildSchema() {
@@ -343,7 +355,6 @@ function getCurrentRatingStars() {
     const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
     $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)}`;
     const $votes = createTag('span', { class: 'rating-votes' });
-    const votesText = 'Votes'; // to-do: placeholders
     $votes.innerHTML = `<strong>${rating} / 5</strong> - ${ratingAmount} ${votesText}`;
     $stars.appendChild($votes);
   } else {
@@ -382,7 +393,6 @@ function decorateRatingSlider($block, title, headingTag = 'h2') {
     </div>
   `);
   $slider.appendChild(createTag('div', { class: 'slider-fill' }));
-  const submitButtonText = 'Submit rating'; // to-do: placeholders
   const star = getIcon('star');
   $form.insertAdjacentHTML('beforeend', /* html */`
     <div class="slider-bottom">
@@ -457,21 +467,18 @@ function regenerateBlockState($block, title, $CTA, headingTag = 'h2') {
   const actionRated = hasRated();
   const actionUsed = determineActionUsed();
   if (actionRated) {
-    const titleText = 'This Quick Action is rated'; // to-do: placeholders
-    const paragraphText = 'You have already submitted your rating for this action. Thank you for your feedback!'; // to-do: placeholders
-    decorateCannotRateBlock($block, titleText, paragraphText, null, headingTag);
+    decorateCannotRateBlock($block, alreadySubmittedTitle, alreadySubmittedText, null, headingTag);
   } else if (actionUsed) {
     decorateRatingSlider($block, title, headingTag);
   } else {
-    const paragraphText = 'You need to use the Quick Action before you can rate it.'; // to-do: placeholders
-    decorateCannotRateBlock($block, title, paragraphText, $CTA, headingTag);
+    decorateCannotRateBlock($block, title, actionNotUsedText, $CTA, headingTag);
   }
 }
 
 // Initiate ratings block
 export default function decorate($block) {
   const $heading = $block.querySelector('h1') ?? $block.querySelector('h2') ?? $block.querySelector('h3') ?? $block.querySelector('h4');
-  const title = ($heading) ? $heading.textContent : 'Rate our Quick Action'; // to-do: placeholders
+  const title = ($heading) ? $heading.textContent : defaultTitle;
   const headingTag = ($heading) ? $heading.tagName : 'h2';
   const $CTA = $block.querySelector('a');
   if ($CTA) $CTA.classList.add('xlarge');
