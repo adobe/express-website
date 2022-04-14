@@ -328,7 +328,7 @@ export default function decorate($block) {
     const ccxActionRatingsFeedback = localStorage.getItem(`ccxActionRatingsFeedback${sheetCamelCase}`);
     if (ccxActionRatingsFeedback) {
       const match = ccxActionRatingsFeedback.match(/([^,]*),((.|\n)*)/);
-      const localStorageRating = match[1];
+      const localStorageRating = parseInt(match[1], 10);
       const localStoragetext = match[2];
       if (localStoragetext && localStoragetext !== '') {
         $textarea.value = localStoragetext;
