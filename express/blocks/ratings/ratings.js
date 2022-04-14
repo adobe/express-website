@@ -493,7 +493,7 @@ export default function decorate($block) {
       alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
       alreadySubmittedText = placeholders['rating-already-submitted-text'];
       votesText = placeholders['rating-votes'];
-      regenerateBlockState(title, $CTA, headingTag)
+      regenerateBlockState(title, $CTA, headingTag);
     });
 
     // When the context comes in.
