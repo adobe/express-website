@@ -26,7 +26,6 @@ import {
 import Context from '../../scripts/context.js';
 
 export default function decorate($block) {
-  let ratings;
   let submitButtonText;
   let submissionTitle;
   let submissionText;
@@ -40,51 +39,66 @@ export default function decorate($block) {
   let ratingTotal;
   let ratingAverage;
   let showRatingAverage = false;
+  const ratings = [
+    // Default values if placeholders aren't loading.
+    {
+      class: 'one-star',
+      img: getIconElement('emoji-angry-face'),
+      text: 'Disappointing',
+      textareaLabel: "We're sorry to hear that. What went wrong?",
+      textareaInside: 'Your feedback (Required)',
+      feedbackRequired: true,
+    },
+    {
+      class: 'two-stars',
+      img: getIconElement('emoji-thinking-face'),
+      text: 'Insufficient',
+      textareaLabel: 'We value your feedback. How can we improve?',
+      textareaInside: 'Your feedback (Required)',
+      feedbackRequired: true,
+    },
+    {
+      class: 'three-stars',
+      img: getIconElement('emoji-upside-down-face'),
+      text: 'Satisfied',
+      textareaLabel: 'Satisfied is good, but what would make it great?',
+      textareaInside: 'Your feedback (Required)',
+      feedbackRequired: true,
+    },
+    {
+      class: 'four-stars',
+      img: getIconElement('emoji-smiling-face'),
+      text: 'Helpful',
+      textareaLabel: 'Was there more we could do to be better?',
+      textareaInside: 'Your feedback (Optional)',
+      feedbackRequired: false,
+    },
+    {
+      class: 'five-stars',
+      img: getIconElement('emoji-star-struck'),
+      text: 'Amazing',
+      textareaLabel: "That's great. Could you tell us what you loved?",
+      textareaInside: 'Your feedback (Optional)',
+      feedbackRequired: false,
+    },
+  ];
 
   fetchPlaceholders().then((placeholders) => {
-    ratings = [
-      {
-        class: 'one-star',
-        img: getIconElement('emoji-angry-face'),
-        text: placeholders['one-star-rating'],
-        textareaLabel: placeholders['one-star-rating-text'],
-        textareaInside: placeholders['one-star-rating-input'],
-        feedbackRequired: true,
-      },
-      {
-        class: 'two-stars',
-        img: getIconElement('emoji-thinking-face'),
-        text: placeholders['two-star-rating'],
-        textareaLabel: placeholders['two-star-rating-text'],
-        textareaInside: placeholders['two-star-rating-input'],
-        feedbackRequired: true,
-      },
-      {
-        class: 'three-stars',
-        img: getIconElement('emoji-upside-down-face'),
-        text: placeholders['three-star-rating'],
-        textareaLabel: placeholders['three-star-rating-text'],
-        textareaInside: placeholders['three-star-rating-input'],
-        feedbackRequired: true,
-      },
-      {
-        class: 'four-stars',
-        img: getIconElement('emoji-smiling-face'),
-        text: placeholders['four-star-rating'],
-        textareaLabel: placeholders['four-star-rating-text'],
-        textareaInside: placeholders['four-star-rating-input'],
-        feedbackRequired: false,
-      },
-      {
-        class: 'five-stars',
-        img: getIconElement('emoji-star-struck'),
-        text: placeholders['five-star-rating'],
-        textareaLabel: placeholders['five-star-rating-text'],
-        textareaInside: placeholders['five-star-rating-input'],
-        feedbackRequired: false,
-      },
-    ];
-
+    ratings[0].text = placeholders['one-star-rating'];
+    ratings[0].textareaLabel = placeholders['one-star-rating-text'];
+    ratings[0].textareaInside = placeholders['one-star-rating-input'];
+    ratings[1].text = placeholders['two-star-rating'];
+    ratings[1].textareaLabel = placeholders['two-star-rating-text'];
+    ratings[1].textareaInside = placeholders['two-star-rating-input'];
+    ratings[2].text = placeholders['three-star-rating'];
+    ratings[2].textareaLabel = placeholders['three-star-rating-text'];
+    ratings[2].textareaInside = placeholders['three-star-rating-input'];
+    ratings[3].text = placeholders['four-star-rating'];
+    ratings[3].textareaLabel = placeholders['four-star-rating-text'];
+    ratings[3].textareaInside = placeholders['four-star-rating-input'];
+    ratings[4].text = placeholders['five-star-rating'];
+    ratings[4].textareaLabel = placeholders['five-star-rating-text'];
+    ratings[4].textareaInside = placeholders['five-star-rating-input'];
     submitButtonText = placeholders['rating-submit'];
     submissionTitle = placeholders['rating-submission-title'];
     submissionText = placeholders['rating-submission-text'];
@@ -328,7 +342,7 @@ export default function decorate($block) {
     const ccxActionRatingsFeedback = localStorage.getItem(`ccxActionRatingsFeedback${sheetCamelCase}`);
     if (ccxActionRatingsFeedback) {
       const match = ccxActionRatingsFeedback.match(/([^,]*),((.|\n)*)/);
-      const localStorageRating = parseInt(match[1], 10);
+      const localStorageRating = match[1];
       const localStoragetext = match[2];
       if (localStoragetext && localStoragetext !== '') {
         $textarea.value = localStoragetext;
@@ -425,7 +439,7 @@ export default function decorate($block) {
       </div>`;
       if (window.scrollY > $section.offsetTop) window.scrollTo(0, $section.offsetTop - 64);
     });
-    sliderFunctionality($form);
+    sliderFunctionality();
   }
 
   function fetchRatingInformation() {
@@ -477,39 +491,39 @@ export default function decorate($block) {
     }
   }
 
-  // Initiate ratings block
-  const $rows = Array.from($block.children);
-  if (!$rows[1]) return;
+  function initiateBlock() {
+    const $rows = Array.from($block.children);
+    if (!$rows[1]) return;
 
-  const classes = $block.classList;
-  if (classes.contains('show') && classes.contains('average')) showRatingAverage = true;
+    const classes = $block.classList;
+    if (classes.contains('show') && classes.contains('average')) showRatingAverage = true;
 
-  const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
-  const title = ($heading) ? $heading.textContent : defaultTitle;
-  const headingTag = ($heading) ? $heading.tagName : 'h3';
-  const $CTA = $rows[0].querySelector('a');
-  if ($CTA) $CTA.classList.add('xlarge');
-  const $sheet = $rows[1].firstElementChild;
-  sheet = $sheet.textContent.trim();
-  sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
+    const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
+    const title = ($heading) ? $heading.textContent : defaultTitle;
+    const headingTag = ($heading) ? $heading.tagName : 'h3';
+    const $CTA = $rows[0].querySelector('a');
+    if ($CTA) $CTA.classList.add('xlarge');
+    const $sheet = $rows[1].firstElementChild;
+    sheet = $sheet.textContent.trim();
+    sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
 
-  $block.innerHTML = '';
+    $block.innerHTML = '';
 
-  fetchRatingInformation();
+    fetchRatingInformation();
 
-  // Generate original block.
-  regenerateBlockState(title, $CTA, headingTag);
+    // When the context comes in.
+    document.addEventListener('context_loaded', () => {
+      regenerateBlockState(title, $CTA, headingTag);
+    });
 
-  // When the context comes in.
-  document.addEventListener('context_loaded', () => {
-    regenerateBlockState(title, $CTA, headingTag);
-  });
+    // When the ratings are retrieved.
+    document.addEventListener('ratings_received', () => {
+      regenerateBlockState(title, $CTA, headingTag);
+      buildSchema(title);
+    });
 
-  // When the ratings are retrieved.
-  document.addEventListener('ratings_received', () => {
-    regenerateBlockState(title, $CTA, headingTag);
-    buildSchema(title);
-  });
+    lazyLoadLottiePlayer($block);
+  }
 
-  lazyLoadLottiePlayer($block);
+  initiateBlock();
 }
