@@ -965,7 +965,7 @@ export function getExperiment() {
 
   const usp = new URLSearchParams(window.location.search);
   if (usp.has('experiment')) {
-    experiment = usp.get('experiment');
+    [experiment] = usp.get('experiment').split('/');
   }
 
   return experiment;
@@ -1068,7 +1068,7 @@ async function decorateTesting() {
 
     const experiment = getExperiment();
     console.log('experiment', experiment);
-    const forceExperiment = usp.get('forceExperiment');
+    const forceExperiment = usp.get('experiment');
 
     if (experiment) {
       const config = await fetchExperimentConfig(experiment);
@@ -1080,8 +1080,9 @@ async function decorateTesting() {
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
         if (config.run && config.content) {
-          if (config.variantNames.includes(forceExperiment)) {
-            config.selectedVariant = forceExperiment;
+          const forced = forceExperiment.split('/')[1] ? forceExperiment.split('/')[1] : '';
+          if (forced && config.variantNames.includes(forced)) {
+            config.selectedVariant = forced;
           } else {
             let random = Math.random();
             let i = config.variantNames.length;
