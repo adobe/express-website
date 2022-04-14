@@ -1,0 +1,520 @@
+main .ratings-container.section-wrapper,
+main .ratings-show-average-container.section-wrapper {
+  background: var(--color-gray-100);
+  padding-top: 80px;
+  padding-bottom: 0;
+}
+
+main .ratings-container.section-wrapper > div,
+main .ratings-show-average-container.section-wrapper > div {
+  max-width: 1024px;
+}
+
+main .ratings {
+  text-align: center;
+}
+
+main .ratings form {
+  max-width: 265px;
+  margin: 0 auto;
+}
+
+main .ratings .ratings-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+main .ratings .rating-stars {
+  color: var(--color-info-accent);
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main .ratings .rating-votes {
+  font-size: var(--heading-font-size-s);
+  color: var(--body-color);
+  font-weight: 400;
+  display: block;
+  padding-top: 18px;
+  padding-bottom: 10px;
+}
+
+main .ratings .rating-votes strong {
+  font-weight: 900;
+}
+
+main .ratings .rating-stars svg {
+  height: 30px;
+  width: 30px;
+  transform: translateY(2px);
+  margin: 0 2px;
+}
+
+main .ratings .slider .tooltip {
+  position: absolute;
+  background: var(--color-white);
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(2px, -50%);
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-align: center;
+  box-shadow: 0px 1px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 82.2%;
+  transition: left .3s, right .3s;
+}
+
+main .ratings .slider-fill {
+  min-width: 30px;
+  height: 30px;
+  width: 86.625%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--color-info-accent);
+  pointer-events: none;
+  border-radius: 60px;
+  transition: width .3s;
+}
+
+main .ratings .slider .tooltip > div {
+  position: relative;
+}
+
+main .ratings .slider .tooltip--text {
+  position: absolute;
+  background: var(--color-white);
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0px 1px 12px rgba(0, 0, 0, 0.3);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+main .ratings:not(.one-star):not(.two-stars):not(.three-stars):not(.four-stars):not(.five-stars) .slider .tooltip--text {
+  display: none;
+}
+
+main .ratings .slider .tooltip--image,
+main .ratings .slider .tooltip--image img {
+  height: 24px;
+  width: 24px;
+  object-fit: contain;
+}
+
+main .ratings form {
+  padding-top: 5rem;
+  width: 100%;
+  /* adds space for the absolute-positioned tooltip */
+}
+
+main .ratings .slider {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+}
+
+main .ratings .slider-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding: 32px 27px 80px 30px;
+}
+
+main .ratings .slider-bottom .vertical-line {
+  height: 20px;
+  border-left: 2px solid var(--color-gray-400);
+  position: relative;
+}
+
+main .ratings .slider-bottom .stars {
+  display: flex;
+  position: absolute;
+  left: calc(50% - 2px);
+  transform: translateX(-50%);
+  top: 60px;
+  color: var(--color-info-accent-light);
+  cursor: pointer;
+  padding: 2px;
+  background: transparent;
+  border: none;
+  white-space: nowrap;
+}
+
+main .ratings .slider-bottom .stars svg {
+  height: 24px;
+  width: 24px;
+  margin: 0 1px;
+}
+
+main .ratings .slider-bottom .timer {
+  position: absolute;
+  left: calc(50% - 1px);
+  transform: translateX(-50%);
+  top: 2px;
+  padding-top: 2px;
+  background: var(--color-gray-100);
+}
+
+main .ratings .slider-bottom .lottie {
+  width: 24px;
+  height: 24px;
+}
+
+main .ratings .slider .tooltip {
+  transition: left .3s, right .3s;
+}
+
+@media (max-width: 899px) {
+  main .ratings .slider-bottom {
+    padding: 20px 25px 50px 28px
+  }
+
+  main .ratings .slider-bottom .vertical-line {
+    height: 5px;
+    border-left: 2px solid var(--color-gray-300);
+  }
+
+  main .ratings .slider-bottom .vertical-line .stars {
+    top: 30px;
+  }
+
+  main .ratings .slider-bottom .vertical-line:not(:first-child):not(:last-child) .stars {
+    display: none;
+  }
+
+  main .ratings .rating-stars {
+    display: block;
+    width: 100%;
+  }
+
+  main .ratings .slider .tooltip {
+    left: 67%;
+  }
+
+  main .ratings .slider-fill {
+    width: 76%;
+  }
+
+  main .ratings .slider-bottom .stars svg {
+    height: 20px;
+    width: 20px;
+  }
+
+  main .ratings.one-star .slider-bottom .vertical-line .stars,
+  main .ratings.two-stars .slider-bottom .vertical-line .stars,
+  main .ratings.three-stars .slider-bottom .vertical-line .stars,
+  main .ratings.four-stars .slider-bottom .vertical-line .stars,
+  main .ratings.five-stars .slider-bottom .vertical-line .stars {
+    display: none;
+  }
+
+  main .ratings.one-star .slider-bottom .vertical-line .stars.one-star,
+  main .ratings.two-stars .slider-bottom .vertical-line .stars.two-stars,
+  main .ratings.three-stars .slider-bottom .vertical-line .stars.three-stars,
+  main .ratings.four-stars .slider-bottom .vertical-line .stars.four-stars,
+  main .ratings.five-stars .slider-bottom .vertical-line .stars.five-stars {
+    color: var(--color-info-accent);
+    display: block;
+  }
+
+  main .ratings .slider .tooltip--text {
+    top: -68px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  main .ratings form {
+    padding-top: 4.5rem;
+  }
+}
+
+main .ratings.one-star .slider-bottom .stars.one-star,
+main .ratings.two-stars .slider-bottom .stars.two-stars,
+main .ratings.three-stars .slider-bottom .stars.three-stars,
+main .ratings.four-stars .slider-bottom .stars.four-stars,
+main .ratings.five-stars .slider-bottom .stars.five-stars {
+  color: var(--color-info-accent);
+  display: block;
+}
+
+main .ratings .slider-comment {
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.4s;
+}
+
+main .ratings .slider-comment.comment--appear {
+  height: 220px;
+}
+
+main .ratings .slider-comment.comment--appear.submit--appear {
+  height: 336px;
+}
+
+main .ratings .slider-comment label {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xl);
+  line-height: var(--body-line-height);
+  min-height: var(--body-font-size-xl);
+  box-sizing: content-box;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  display: block;
+  padding-top: 32px;
+}
+
+main .ratings .slider-comment textarea {
+  resize: none;
+  border: 2px solid var(--color-gray-400);
+  border-radius: 6px;
+  padding: 10px;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  color: var(--body-color);
+  margin: 16px 0;
+  background: var(--color-white);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+main .ratings form [type=submit] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height);
+  color: var(--body-color);
+  font-weight: 700;
+  font-style: normal;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  margin: 0;
+  padding: 13px 1.5em 13px 1.5em;
+  border-radius: 27px;
+  transition: background-color .3s, color .3s, border .3s;
+  border: 2px solid var(--color-gray-200);
+  background: var(--color-gray-200);
+}
+
+main .ratings form [type=submit]:hover {
+  background-color: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+}
+
+main .ratings form [type=submit]:focus {
+  background-color: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 4px var(--color-gray-400);
+}
+
+main .ratings form [type=submit]:focus:hover {
+  background-color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
+}
+
+main .ratings form [type=submit]:active {
+  background-color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
+}
+
+main .ratings form textarea:required:placeholder-shown ~ [type=submit] {
+  background-color: #f0f0f0;
+  border-color: #f0f0f0;
+  color: #b9b9b9;
+  outline: none;
+  box-shadow: none;
+  cursor: default;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* Custom styling for the native range input, with cross-browser compatibility */
+main .ratings form [type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+  margin: 0;
+  width: 100%;
+  height: 30px;
+  border-radius: 60px;
+  cursor: pointer;
+  background: var(--color-info-accent-light);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+main .ratings form [type=range]::-moz-focus-outer {
+  border: 0;
+}
+main .ratings form [type=range]:focus {
+  outline: 0;
+}
+main .ratings form [type=range]:focus-visible {
+  outline: 2px solid rgba(0,0,0,0.55);
+  outline-offset: -2px;
+}
+main .ratings form [type=range]:focus-visible + .slider-fill {
+  outline: 2px solid rgba(0,0,0,0.55);
+  outline-offset: -2px;
+}
+main .ratings form [type=range]::-webkit-slider-runnable-track {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 60px;
+  height: 30px;
+  width: 100%;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  background: var(--color-info-accent-light);
+  border: 0 solid rgba(0, 0, 0, 0);
+  border-radius: 60px;
+}
+main .ratings form [type=range]::-webkit-slider-thumb {
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0);
+  border: 0px solid rgba(0, 0, 0, 0);
+  border-radius: 60px;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 60px;
+  width: 60px;
+  -webkit-appearance: none;
+  margin-top: -15px;
+}
+main .ratings form [type=range]::-moz-range-track {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 60px;
+  height: 30px;
+  width: 100%;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  background: var(--color-info-accent-light);
+  border: 0 solid rgba(0, 0, 0, 0);
+  border-radius: 60px;
+  height: 15px;
+}
+main .ratings form [type=range]::-moz-range-thumb {
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0);
+  border: 0px solid rgba(0, 0, 0, 0);
+  border-radius: 60px;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 60px;
+  width: 60px;
+}
+
+main .ratings #rate-our-quick-action {
+  max-width: 235px;
+}
+
+@media (max-width: 599px) {
+  main .ratings #rate-our-quick-action {
+    max-width: 180px;
+  }
+}
+
+main .ratings .no-slider {
+  padding-bottom: 80px;
+}
+
+@media (min-width: 900px) {
+  main .ratings .no-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  main .ratings .no-slider .button {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 1.5rem;
+  }
+
+  main .ratings .rating-stars {
+    margin: 0 20px
+  }
+
+  main .ratings .slider-bottom .stars {
+    color: var(--color-gray-200);
+  }
+
+  main .ratings .slider-bottom .timer {
+    top: 26px;
+  }
+
+  main .ratings .slider-bottom .lottie {
+    width: 28px;
+    height: 28px;
+  }  
+  
+  main .ratings #rate-our-quick-action {
+    max-width: unset;
+  }
+
+  main .ratings .ratings-heading {
+    margin-left: 20px;
+  }
+  
+  main .ratings .slider-comment label {
+    padding-top: 50px;
+  }
+
+  main .ratings form [type=submit] {
+    margin-top: 24px;
+  }
+
+  main .ratings .slider-comment.comment--appear {
+    height: 220px;
+  }
+
+  main .ratings .slider-comment.comment--appear.submit--appear {
+    height: 336px;
+  }
+
+  main .ratings .slider-comment {
+    padding: 0 30px;
+  }
+
+  main .ratings form {
+    max-width: 750px;
+  }
+
+  main .ratings .rating-votes {
+    padding-left: 56px;
+    font-size: var(--heading-font-size-m);
+  }
+}
+
+main .ratings .ratings-scroll-anchor {
+  padding-bottom: 76px;
+}
+
+html {
+  /* Smooth-scroll when focus on "submit-rating" button after using slider */
+  scroll-behavior: smooth;
+}

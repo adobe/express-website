@@ -109,6 +109,56 @@ export function getMeta(name) {
   return value;
 }
 
+// Get lottie animation HTML - remember to lazyLoadLottiePlayer() to see it.
+export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
+  return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
+}
+
+// Lazy-load lottie player if you scroll to the block.
+export function lazyLoadLottiePlayer($block = null) {
+  const loadLottiePlayer = () => {
+    if (window['lottie-player']) return;
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = '/express/scripts/lottie-player.1.5.6.js';
+    document.head.appendChild(script);
+    window['lottie-player'] = true;
+  };
+  if ($block) {
+    const addIntersectionObserver = (block) => {
+      const observer = (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          if (entry.intersectionRatio >= 0.25) {
+            loadLottiePlayer();
+          }
+        }
+      };
+      const options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: [0.0, 0.25],
+      };
+      const intersectionObserver = new IntersectionObserver(observer, options);
+      intersectionObserver.observe(block);
+    };
+    if (document.readyState === 'complete') {
+      addIntersectionObserver($block);
+    } else {
+      window.addEventListener('load', () => {
+        addIntersectionObserver($block);
+      });
+    }
+  } else if (document.readyState === 'complete') {
+    loadLottiePlayer();
+  } else {
+    window.addEventListener('load', () => {
+      loadLottiePlayer();
+    });
+  }
+}
+
 export function getIcon(icons, alt, size = 44) {
   // eslint-disable-next-line no-param-reassign
   icons = Array.isArray(icons) ? icons : [icons];
@@ -175,6 +225,9 @@ export function getIcon(icons, alt, size = 44) {
     'users',
     'webmobile',
     'youtube',
+    'star',
+    'star-half',
+    'star-empty',
   ];
   if (symbols.includes(icon)) {
     const iconName = icon;
@@ -580,7 +633,7 @@ export function decorateBlocks($main) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns', 'ratings'];
 
     if (blockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
@@ -1400,6 +1453,7 @@ function generateFixedButton() {
     const $primaryCTA = document.querySelector('.primaryCTA');
     const $floatButton = document.querySelector('.fixed-button');
     const $banner = document.querySelector('.banner-container');
+    const $ratings = document.querySelector('.ratings-container');
 
     const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
       const entry = entries[0];
@@ -1417,10 +1471,12 @@ function generateFixedButton() {
     if (document.readyState === 'complete') {
       hideFixedButtonWhenInView.observe($primaryCTA);
       if ($banner) hideFixedButtonWhenInView.observe($banner);
+      if ($ratings) hideFixedButtonWhenInView.observe($ratings);
     } else {
       window.addEventListener('load', () => {
         hideFixedButtonWhenInView.observe($primaryCTA);
         if ($banner) hideFixedButtonWhenInView.observe($banner);
+        if ($ratings) hideFixedButtonWhenInView.observe($ratings);
       });
     }
   }
