@@ -949,7 +949,7 @@ export function toCamelCase(name) {
 export function getExperiment() {
   let experiment = getMeta('experiment').toLowerCase();
 
-  if (!window.location.host.includes('adobe.com')) {
+  if (!window.location.host.includes('adobe.com') && !window.location.host.includes('.hlx.live')) {
     experiment = '';
     // reason = 'not prod host';
   }
@@ -982,17 +982,46 @@ async function fetchExperimentConfig(experiment) {
     const config = {};
     const resp = await fetch(path);
     const json = await resp.json();
-    json.data.forEach((line) => {
+    json.settings.data.forEach((line) => {
       const key = toCamelCase(line.Name);
       let value = line.Value;
       if (key === 'blocks') value = value.split(',').map((e) => e.trim().toLowerCase());
       config[key] = value;
     });
     config.id = experiment;
+
+    const variants = {};
+    let variantNames = Object.keys(json.experiences.data[0]);
+    variantNames.shift();
+    variantNames = variantNames.map((vn) => toCamelCase(vn));
+    variantNames.forEach((variantName) => {
+      variants[variantName] = {};
+    });
+
+    let lastKey = 'default';
+
+    json.experiences.data.forEach((line) => {
+      let key = toCamelCase(line.Name);
+      if (!key) key = lastKey;
+      lastKey = key;
+      const vns = Object.keys(line);
+      vns.shift();
+      vns.forEach((vn) => {
+        const camelVN = toCamelCase(vn);
+        if (key === 'pages') {
+          variants[camelVN][key] = variants[camelVN][key] || [];
+          variants[camelVN][key].push(new URL(line[vn]).pathname);
+        } else {
+          variants[camelVN][key] = line[vn];
+        }
+      });
+    });
+    config.variants = variants;
+    config.variantNames = variantNames;
+    console.log(config);
     return config;
   } catch (e) {
-    console.log(e);
-    console.log(`error loading experiment manifest: ${path}`);
+    console.log(`error loading experiment manifest: ${path}`, e);
   }
   return null;
 }
@@ -1015,6 +1044,17 @@ async function replaceInner(path, main) {
   return null;
 }
 
+function checkExperimentAudience(audience) {
+  if (audience === 'mobile') {
+    console.log(window.innerWidth);
+    return window.innerWidth < 600;
+  }
+  if (audience === 'desktop') {
+    return window.innerWidth > 600;
+  }
+  return true;
+}
+
 async function decorateTesting() {
   try {
   // let reason = '';
@@ -1032,15 +1072,41 @@ async function decorateTesting() {
 
     if (experiment) {
       const config = await fetchExperimentConfig(experiment);
-      config.run = forceExperiment || (Math.random() < +config.audience);
-      console.log('run', config.run, +config.audience);
+      console.log(config);
+      if (toCamelCase(config.status) === 'active') {
+        config.run = forceExperiment || checkExperimentAudience(toClassName(config.audience));
+        console.log('run', config.run, config.audience);
 
-      window.hlx = window.hlx || {};
-      window.hlx.experiment = config;
-      if (config.run && config.content) {
-        console.log('running');
-        const path = new URL(config.content).pathname.split('.')[0];
-        await replaceInner(path, document.querySelector('main'));
+        window.hlx = window.hlx || {};
+        window.hlx.experiment = config;
+        if (config.run && config.content) {
+          if (config.variantNames.includes(forceExperiment)) {
+            config.selectedVariant = forceExperiment;
+          } else {
+            let random = Math.random();
+            let i = config.variantNames.length;
+            while (random > 0 && i > 0) {
+              i -= 1;
+              console.log(random, i);
+              random -= +config.variants[config.variantNames[i]].percentageSplit;
+            }
+            config.selectedVariant = config.variantNames[i];
+          }
+          console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          if (config.selectedVariant !== 'control') {
+            const currentPath = window.location.pathname;
+            const pageIndex = config.variants.control.pages.indexOf(currentPath);
+            if (pageIndex >= 0) {
+              const page = config.variants[config.selectedVariant].pages[pageIndex];
+              if (page) {
+                const experimentPath = new URL(page, window.location.href).pathname.split('.')[0];
+                if (experimentPath && experimentPath !== currentPath) {
+                  await replaceInner(experimentPath, document.querySelector('main'));
+                }
+              }
+            }
+          }
+        }
       }
     }
   } catch (e) {
