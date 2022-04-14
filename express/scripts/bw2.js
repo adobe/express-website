@@ -85,7 +85,8 @@ function insertAllLevelLineBreak(text = '', seps = [], maxLevel = 5, ratio = 1.0
   for (let l = 1; l <= maxLevel; l += 1) {
     const step = Math.ceil(text.length / (l + 1));
     const firstPos = Math.ceil(step * ratio);
-    const fbpos = getNearestWrappingPoint(text, seps, firstPos, false);
+    const bidirect = (ratio <= 1.0);
+    const fbpos = getNearestWrappingPoint(text, seps, firstPos, bidirect);
     if (fbpos >= 0 && fbpos < text.length) {
       poses[fbpos] = poses[fbpos] || [];
       if (poses[fbpos].indexOf(l) < 0) {
