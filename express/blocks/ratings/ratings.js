@@ -484,7 +484,7 @@ export default function decorate($block) {
   if (!$rows[1]) return;
 
   const classes = $block.classList;
-  if (classes.contains('show') || classes.contains('average') || classes.contains('total')) showRatingAverage = true;
+  if (classes.contains('show') && classes.contains('average')) showRatingAverage = true;
 
   const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
   const title = ($heading) ? $heading.textContent : defaultTitle;
