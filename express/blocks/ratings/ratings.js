@@ -174,11 +174,11 @@ export default function decorate($block) {
     const $submit = $block.querySelector('input[type=submit]');
     const $scrollAnchor = $block.querySelector('.ratings-scroll-anchor');
     const $commentBox = $block.querySelector('.slider-comment');
-    const $timer = createTag('div', { class: 'timer' });
+    const $timerAnimation = createTag('div', { class: 'timer' });
     // Countdown timer to auto-submit
     const countdown = (bool) => {
       if (bool) {
-        $timer.innerHTML = getLottie('countdown', '/express/blocks/ratings/countdown.json', false, true, false, false);
+        $timerAnimation.innerHTML = getLottie('countdown', '/express/blocks/ratings/countdown.json', false, true, false, false);
         let counter = 10;
         window.ratingSubmitCountdown = setInterval(() => {
           if (counter > 0) {
@@ -201,18 +201,18 @@ export default function decorate($block) {
       if (val !== index) return;
       if (ratings[index - 1].feedbackRequired || $textarea.value !== '') {
         $commentBox.classList.add('submit--appear');
-        $timer.remove();
+        $timerAnimation.remove();
         countdown(false);
       } else {
         $commentBox.classList.remove('submit--appear');
-        $stars[index - 1].parentElement.appendChild($timer);
+        $stars[index - 1].parentElement.appendChild($timerAnimation);
         countdown(true);
       }
       $commentBox.classList.add('comment--appear');
     };
     // Updates the value of the slider and tooltip.
     const updateSliderValue = (snap = true) => {
-      $timer.remove();
+      $timerAnimation.remove();
       countdown(false);
       let val = parseFloat($input.value) ?? 0;
       const index = Math.round(val);
@@ -290,7 +290,7 @@ export default function decorate($block) {
     });
     $textarea.addEventListener('focus', () => {
       $commentBox.classList.add('submit--appear');
-      $timer.remove();
+      $timerAnimation.remove();
       countdown(false);
     });
     // Get text from localStorage if they navigated away after typing then came back
