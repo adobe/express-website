@@ -40,74 +40,32 @@ export default function decorate($block) {
   let ratingAverage;
   let showRatingAverage = false;
   const ratings = [
-    // Default values if placeholders aren't loading.
     {
       class: 'one-star',
       img: getIconElement('emoji-angry-face'),
-      text: 'Disappointing',
-      textareaLabel: "We're sorry to hear that. What went wrong?",
-      textareaInside: 'Your feedback (Required)',
       feedbackRequired: true,
     },
     {
       class: 'two-stars',
       img: getIconElement('emoji-thinking-face'),
-      text: 'Insufficient',
-      textareaLabel: 'We value your feedback. How can we improve?',
-      textareaInside: 'Your feedback (Required)',
       feedbackRequired: true,
     },
     {
       class: 'three-stars',
       img: getIconElement('emoji-upside-down-face'),
-      text: 'Satisfied',
-      textareaLabel: 'Satisfied is good, but what would make it great?',
-      textareaInside: 'Your feedback (Required)',
       feedbackRequired: true,
     },
     {
       class: 'four-stars',
       img: getIconElement('emoji-smiling-face'),
-      text: 'Helpful',
-      textareaLabel: 'Was there more we could do to be better?',
-      textareaInside: 'Your feedback (Optional)',
       feedbackRequired: false,
     },
     {
       class: 'five-stars',
       img: getIconElement('emoji-star-struck'),
-      text: 'Amazing',
-      textareaLabel: "That's great. Could you tell us what you loved?",
-      textareaInside: 'Your feedback (Optional)',
       feedbackRequired: false,
     },
   ];
-
-  fetchPlaceholders().then((placeholders) => {
-    ratings[0].text = placeholders['one-star-rating'];
-    ratings[0].textareaLabel = placeholders['one-star-rating-text'];
-    ratings[0].textareaInside = placeholders['one-star-rating-input'];
-    ratings[1].text = placeholders['two-star-rating'];
-    ratings[1].textareaLabel = placeholders['two-star-rating-text'];
-    ratings[1].textareaInside = placeholders['two-star-rating-input'];
-    ratings[2].text = placeholders['three-star-rating'];
-    ratings[2].textareaLabel = placeholders['three-star-rating-text'];
-    ratings[2].textareaInside = placeholders['three-star-rating-input'];
-    ratings[3].text = placeholders['four-star-rating'];
-    ratings[3].textareaLabel = placeholders['four-star-rating-text'];
-    ratings[3].textareaInside = placeholders['four-star-rating-input'];
-    ratings[4].text = placeholders['five-star-rating'];
-    ratings[4].textareaLabel = placeholders['five-star-rating-text'];
-    ratings[4].textareaInside = placeholders['five-star-rating-input'];
-    submitButtonText = placeholders['rating-submit'];
-    submissionTitle = placeholders['rating-submission-title'];
-    submissionText = placeholders['rating-submission-text'];
-    defaultTitle = placeholders['rating-default-title'];
-    actionNotUsedText = placeholders['rating-action-not-used'];
-    alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
-    alreadySubmittedText = placeholders['rating-already-submitted-text'];
-    votesText = placeholders['rating-votes'];
-  });
 
   function buildSchema() {
     const script = document.createElement('script');
@@ -510,6 +468,33 @@ export default function decorate($block) {
     $block.innerHTML = '';
 
     fetchRatingInformation();
+
+    fetchPlaceholders().then((placeholders) => {
+      ratings[0].text = placeholders['one-star-rating'];
+      ratings[0].textareaLabel = placeholders['one-star-rating-text'];
+      ratings[0].textareaInside = placeholders['one-star-rating-input'];
+      ratings[1].text = placeholders['two-star-rating'];
+      ratings[1].textareaLabel = placeholders['two-star-rating-text'];
+      ratings[1].textareaInside = placeholders['two-star-rating-input'];
+      ratings[2].text = placeholders['three-star-rating'];
+      ratings[2].textareaLabel = placeholders['three-star-rating-text'];
+      ratings[2].textareaInside = placeholders['three-star-rating-input'];
+      ratings[3].text = placeholders['four-star-rating'];
+      ratings[3].textareaLabel = placeholders['four-star-rating-text'];
+      ratings[3].textareaInside = placeholders['four-star-rating-input'];
+      ratings[4].text = placeholders['five-star-rating'];
+      ratings[4].textareaLabel = placeholders['five-star-rating-text'];
+      ratings[4].textareaInside = placeholders['five-star-rating-input'];
+      submitButtonText = placeholders['rating-submit'];
+      submissionTitle = placeholders['rating-submission-title'];
+      submissionText = placeholders['rating-submission-text'];
+      defaultTitle = placeholders['rating-default-title'];
+      actionNotUsedText = placeholders['rating-action-not-used'];
+      alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
+      alreadySubmittedText = placeholders['rating-already-submitted-text'];
+      votesText = placeholders['rating-votes'];
+      regenerateBlockState(title, $CTA, headingTag)
+    });
 
     // When the context comes in.
     document.addEventListener('context_loaded', () => {
