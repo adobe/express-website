@@ -210,8 +210,6 @@ function sliderFunctionality($block) {
       window.ratingSubmitCountdown = setInterval(() => {
         if (counter > 0) {
           counter -= 1;
-          // eslint-disable-next-line no-console
-          console.log(`rating will be submitted in: ${counter + 1} seconds.`);
         } else {
           clearInterval(window.ratingSubmitCountdown);
           window.ratingSubmitCountdown = null;
