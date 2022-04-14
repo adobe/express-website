@@ -150,11 +150,17 @@ function toggleWBR(div = document.body, text = '', poses = [], maxLevel = 5) {
       return;
     }
     let cl = 0;
-    while (cl < minWidths.length - 1 && minWidths[cl] > w) {
+    while (cl < minWidths.length && minWidths[cl] > w) {
       cl += 1;
     }
-    div.querySelectorAll(`wbr.jpn-balanced-wbr-l${cl}`).forEach((e) => e.classList.remove('wbr-off'));
-    div.querySelectorAll(`wbr:not(.jpn-balanced-wbr-l${cl})`).forEach((e) => e.classList.add('wbr-off'));
+    if (cl < minWidths.length) {
+      div.querySelectorAll(`wbr.jpn-balanced-wbr-l${cl}`).forEach((e) => e.classList.remove('wbr-off'));
+      div.querySelectorAll(`wbr:not(.jpn-balanced-wbr-l${cl})`).forEach((e) => e.classList.add('wbr-off'));
+    } else {
+      // Lengths of lines exceed container's width event at maximum number of line wraps.
+      // Enable all WBR tags as a last resort
+      div.querySelectorAll('wbr').forEach((e) => e.classList.remove('wbr-off'));
+    }
   });
 
   resizeObserver.observe(div);
