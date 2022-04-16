@@ -1055,6 +1055,36 @@ function checkExperimentAudience(audience) {
   return true;
 }
 
+function getLastExperimentVariant(experimentId) {
+  console.log('get last experiment', experimentId);
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  if (experimentsStr) {
+    const experiments = JSON.parse(experimentsStr);
+    if (experiments[experimentId]) {
+      return experiments[experimentId].variant;
+    }
+  }
+  return '';
+}
+
+function setLastExperimentVariant(experimentId, variant) {
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  const experiments = experimentsStr ? JSON.parse(experimentsStr) : {};
+
+  const now = new Date();
+  const expKeys = Object.keys(experiments);
+  expKeys.forEach((key) => {
+    const date = new Date(experiments[key].date);
+    if (now - date > (1000 * 86400 * 30)) {
+      delete experiments[key];
+    }
+  });
+  const [date] = now.toISOString().split('T');
+
+  experiments[experimentId] = { variant, date };
+  localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
+}
+
 async function decorateTesting() {
   try {
   // let reason = '';
@@ -1068,19 +1098,19 @@ async function decorateTesting() {
 
     const experiment = getExperiment();
     console.log('experiment', experiment);
-    const forceExperiment = usp.get('experiment');
+    const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
 
     if (experiment) {
       const config = await fetchExperimentConfig(experiment);
       console.log(config);
       if (toCamelCase(config.status) === 'active') {
-        config.run = forceExperiment || checkExperimentAudience(toClassName(config.audience));
+        config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
         if (config.run && config.content) {
-          const forced = forceExperiment.split('/')[1] ? forceExperiment.split('/')[1] : '';
+          const forced = forcedVariant || getLastExperimentVariant(config.id);
           if (forced && config.variantNames.includes(forced)) {
             config.selectedVariant = forced;
           } else {
@@ -1093,6 +1123,7 @@ async function decorateTesting() {
             }
             config.selectedVariant = config.variantNames[i];
           }
+          setLastExperimentVariant(config.id, config.selectedVariant);
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
