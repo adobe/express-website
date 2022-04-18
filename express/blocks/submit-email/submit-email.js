@@ -37,7 +37,7 @@ export default function decorate($block) {
     }
   });
 
-  $submitButton.textContent = 'Submit';
+  $submitButton.textContent = 'Get notified';
   $submitButton.setAttribute('href', '');
   $submitButton.classList.add('button');
   $submitButton.classList.add('accent');
