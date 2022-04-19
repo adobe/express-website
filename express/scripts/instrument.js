@@ -30,15 +30,25 @@ const w = window;
 const d = document;
 const loc = w.location;
 const { pathname } = loc;
+let marketingEnvironment;
+let marketingAdditionalAccounts;
+
+if (loc.href.includes('express-stage.adobeprojectm.com') || loc.href.includes('stage.adobe.com')) {
+  marketingEnvironment = 'stage';
+  marketingAdditionalAccounts = 'adbemmarvelweb.rebootdev2, adbadobesparkqa';
+} else {
+  marketingEnvironment = 'production';
+  marketingAdditionalAccounts = 'adbemmarvelweb.prod, adbadobesparkprod';
+}
 
 w.marketingtech = {
   adobe: {
     launch: {
       property: 'global',
-      environment: 'production',
+      environment: marketingEnvironment,
     },
     analytics: {
-      additionalAccounts: 'adbemmarvelweb.prod, adbadobesparkprod',
+      additionalAccounts: marketingAdditionalAccounts,
     },
     target: checkTesting(),
     audienceManager: true,
