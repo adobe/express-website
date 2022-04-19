@@ -1527,14 +1527,20 @@ async function wordBreakJapanese() {
     parser.applyElement(el);
   });
 
-  window.setTimeout(async () => {
-    const BalancedWordWrapper = (await import('./bw2.js')).default;
-    const bw2 = new BalancedWordWrapper();
-    document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
-      // apply balanced word wrap to headings
-      bw2.applyElement(el);
-    });
-  }, 1000);
+  const BalancedWordWrapper = (await import('./bw2.js')).default;
+  const bw2 = new BalancedWordWrapper();
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    // apply balanced word wrap to headings
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        bw2.applyElement(el);
+      });
+    } else {
+      window.setTimeout(() => {
+        bw2.applyElement(el);
+      }, 1000);
+    }
+  });
 }
 
 /**
