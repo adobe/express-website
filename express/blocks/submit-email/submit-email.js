@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import { fetchPlaceholders } from '../../scripts/scripts.js';
 
 export default function decorate($block) {
   const $container = document.querySelector('.submit-email-container');
@@ -37,7 +38,10 @@ export default function decorate($block) {
     }
   });
 
-  $submitButton.textContent = 'Get notified';
+  fetchPlaceholders().then((placeholders) => {
+    $submitButton.textContent = placeholders['subscribe-cta'];
+  });
+
   $submitButton.setAttribute('href', '');
   $submitButton.classList.add('button');
   $submitButton.classList.add('accent');
