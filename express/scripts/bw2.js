@@ -47,8 +47,10 @@ function separateTextAndDelimiter(text = '') {
   const seps = [];
   for (let i = 0; i < pipedText.length; i += 1) {
     if (pipedText[i] === SEP) {
-      seps.pop();
-      seps.push(1);
+      if (seps.length > 0) {
+        seps.pop();
+        seps.push(1);
+      }
     } else {
       seps.push(0);
       newText.push(pipedText[i]);
@@ -57,39 +59,48 @@ function separateTextAndDelimiter(text = '') {
   return { text: newText.join(''), seps };
 }
 
-function getNearestWrappingPoint(text = '', seps = [], pos = 0, bidirectional = true) {
-  let i = 0;
-  for (; pos - i > 0 && pos + i < text.length; i += 1) {
-    if (bidirectional && seps[pos - i - 1] === 1) {
-      return pos - i - 1;
-    }
-    if (seps[pos + i] === 1) {
-      return pos + i;
+function getNearestWrappingPoint(seps = [], widthsFromStart = [], pos = 0, bidirectional = true) {
+  let prev = -1;
+  for (const [i, w] of widthsFromStart.entries()) {
+    if (seps[i] === 1) {
+      if (w > pos) {
+        if (prev < 0) {
+          return i;
+        } else {
+          const leftDist = pos - widthsFromStart[prev];
+          const rightDist = w - pos;
+          return leftDist <= rightDist && bidirectional ? prev : i;
+        }
+      } else {
+        prev = i;
+      }
     }
   }
-  while (bidirectional && pos - i > 0) {
-    if (seps[pos - i - 1] === 1) {
-      return pos - i - 1;
-    }
-    i += 1;
-  }
-  while (pos + i < text.length) {
-    if (seps[pos + i] === 1) {
-      return pos + i;
-    }
-    i += 1;
-  }
-  return -1;
+  return prev;
 }
 
-function insertAllLevelLineBreak(text = '', seps = [], maxLevel = 5, ratio = 1.0) {
+function getChunkWidths(el = document.body, text = '', seps = []) {
+  const widthsFromStart = new Array(text.length);
+  widthsFromStart.fill(0);
+  const font = getCanvasFontSize(el);
+  for (const [i, v] of seps.entries()) {
+    if (v === 1) {
+      widthsFromStart[i] = getTextWidth(text.substring(0, i + 1), font);
+    }
+  }
+  widthsFromStart[widthsFromStart.length - 1] = getTextWidth(text, font);
+  return { widthsFromStart };
+}
+
+function insertAllLevelLineBreak(text = '', seps = [], widthsFromStart = [], maxLevel = 5, ratio = 1.0) {
   let newText = '';
   const poses = Array(text.length);
+  const wholeWidth = widthsFromStart[widthsFromStart.length - 1];
   for (let l = 1; l <= maxLevel; l += 1) {
-    const step = Math.ceil(text.length / (l + 1));
-    const firstPos = Math.ceil(step * ratio) - 1;
+    const step = wholeWidth / (l + 1);
+    const firstPos = step * ratio;
     const bidirect = (ratio <= 1.0);
-    const fbpos = getNearestWrappingPoint(text, seps, firstPos, bidirect);
+    const fbpos = getNearestWrappingPoint(seps, widthsFromStart, firstPos, bidirect);
     if (fbpos >= 0 && fbpos < text.length) {
       poses[fbpos] = poses[fbpos] || [];
       if (poses[fbpos].indexOf(l) < 0) {
@@ -97,8 +108,8 @@ function insertAllLevelLineBreak(text = '', seps = [], maxLevel = 5, ratio = 1.0
       }
     }
 
-    for (let pos = Math.max(firstPos, step) + step; pos < text.length; pos += step) {
-      const bpos = getNearestWrappingPoint(text, seps, pos);
+    for (let pos = Math.max(widthsFromStart[fbpos], step) + step; pos < wholeWidth; pos += step) {
+      const bpos = getNearestWrappingPoint(seps, widthsFromStart, pos);
       if (bpos >= 0 && bpos < text.length) {
         poses[bpos] = poses[bpos] || [];
         if (poses[bpos].indexOf(l) < 0) {
@@ -126,9 +137,12 @@ function insertAllLevelLineBreak(text = '', seps = [], maxLevel = 5, ratio = 1.0
   return { newText, poses };
 }
 
-function toggleWBR(div = document.body, text = '', poses = [], maxLevel = 5) {
+function toggleWBR(
+  div = document.body, poses = [], widthsFromStart = [], maxLevel = 5,
+) {
   const minWidths = Array(maxLevel + 1);
-  minWidths[0] = getTextWidth(text, getCanvasFontSize(div));
+  const wholeWidth = widthsFromStart[widthsFromStart.length - 1];
+  minWidths[0] = wholeWidth;
   for (let l = 1; l <= maxLevel; l += 1) {
     const levelPoses = [];
     poses.forEach((p, i) => {
@@ -138,12 +152,12 @@ function toggleWBR(div = document.body, text = '', poses = [], maxLevel = 5) {
     });
     levelPoses.sort();
     const lengths = [];
-    let prev = 0;
+    let prevWidth = 0;
     for (const bpos of levelPoses) {
-      lengths.push(getTextWidth(text.substring(prev, bpos + 1), getCanvasFontSize(div)));
-      prev = bpos + 1;
+      lengths.push(widthsFromStart[bpos] - prevWidth);
+      prevWidth = widthsFromStart[bpos];
     }
-    lengths.push(getTextWidth(text.substring(prev, text.length), getCanvasFontSize(div)));
+    lengths.push(wholeWidth - prevWidth);
     minWidths[l] = Math.max(...lengths);
   }
 
@@ -179,8 +193,11 @@ export default class BalancedWordWrapper {
   applyElement = (el = document.body, ratio = this.ratio) => {
     const oriText = el.innerHTML;
     const { text, seps } = separateTextAndDelimiter(oriText);
-    const { newText, poses } = insertAllLevelLineBreak(text, seps, this.maxLevel, ratio);
+    const { widthsFromStart } = getChunkWidths(el, text, seps);
+    const { newText, poses } = insertAllLevelLineBreak(
+      text, seps, widthsFromStart, this.maxLevel, ratio,
+    );
     el.innerHTML = newText;
-    toggleWBR(el, text, poses, this.maxLevel);
+    toggleWBR(el, poses, widthsFromStart, this.maxLevel);
   }
 }

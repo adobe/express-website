@@ -48,24 +48,6 @@ describe('Japanese balanced word wrap', () => {
         'bbb',
       ]);
       bw2 = new BalancedWordWrapper(2);
-      t1.innerHTML = 'aaa<wbr>bbb<wbr>ccc';
-      bw2.applyElement(t1);
-      validate(t1, [
-        'aaa',
-        { nodeName: 'wbr', classList: [1, 2] },
-        'bbb',
-        { nodeName: 'wbr', classList: [2] },
-        'ccc',
-      ]);
-      t1.innerHTML = 'aaa<wbr>bbbb<wbr>ccc';
-      bw2.applyElement(t1);
-      validate(t1, [
-        'aaa',
-        { nodeName: 'wbr', classList: [1, 2] },
-        'bbbb',
-        { nodeName: 'wbr', classList: [2] },
-        'ccc',
-      ]);
       t1.innerHTML = 'aa<wbr>bbbb<wbr>ccc';
       bw2.applyElement(t1);
       validate(t1, [
@@ -76,20 +58,105 @@ describe('Japanese balanced word wrap', () => {
         'ccc',
       ]);
       t1.innerHTML = 'aaa<wbr>bbb<wbr>ccc<wbr>ddd<wbr>eee<wbr>fff';
-      bw2 = new BalancedWordWrapper();
       bw2.applyElement(t1);
       validate(t1, [
         'aaa',
-        { nodeName: 'wbr', classList: [3, 4, 5] },
+        { nodeName: 'wbr', classList: [] },
         'bbb',
-        { nodeName: 'wbr', classList: [2, 5] },
+        { nodeName: 'wbr', classList: [2] },
         'ccc',
-        { nodeName: 'wbr', classList: [1, 3, 4, 5] },
+        { nodeName: 'wbr', classList: [1] },
         'ddd',
-        { nodeName: 'wbr', classList: [2, 4, 5] },
+        { nodeName: 'wbr', classList: [2] },
         'eee',
-        { nodeName: 'wbr', classList: [3, 4, 5] },
+        { nodeName: 'wbr', classList: [] },
         'fff',
+      ]);
+      bw2 = new BalancedWordWrapper(3);
+      t1.innerHTML = '作ろうと<wbr>しているのは、<wbr>どのような<wbr>チラシですか。';
+      bw2.applyElement(t1);
+      validate(t1, [
+        '作ろうと',
+        { nodeName: 'wbr', classList: [3] },
+        'しているのは、',
+        { nodeName: 'wbr', classList: [1, 2, 3] },
+        'どのような',
+        { nodeName: 'wbr', classList: [2, 3] },
+        'チラシですか。',
+      ]);
+      t1.innerHTML = '作ろうと<wbr>しているのは、<wbr>どのような<wbr>バナーでしょうか。';
+      bw2.applyElement(t1);
+      validate(t1, [
+        '作ろうと',
+        { nodeName: 'wbr', classList: [3] },
+        'しているのは、',
+        { nodeName: 'wbr', classList: [1, 2, 3] },
+        'どのような',
+        { nodeName: 'wbr', classList: [2, 3] },
+        'バナーでしょうか。',
+      ]);
+      t1.innerHTML = '作ろうと<wbr>しているのは、<wbr>どのような<wbr>広告画像でしょうか。';
+      bw2.applyElement(t1);
+      validate(t1, [
+        '作ろうと',
+        { nodeName: 'wbr', classList: [3] },
+        'しているのは、',
+        { nodeName: 'wbr', classList: [1, 2, 3] },
+        'どのような',
+        { nodeName: 'wbr', classList: [2, 3] },
+        '広告画像でしょうか。',
+      ]);
+      t1.innerHTML = '逆再生された<wbr>ビデオクリップを<wbr>スピードアップしたり、<wbr>スローダウンしたりしましょう。';
+      bw2.applyElement(t1);
+      validate(t1, [
+        '逆再生された',
+        { nodeName: 'wbr', classList: [3] },
+        'ビデオクリップを',
+        { nodeName: 'wbr', classList: [2] },
+        'スピードアップしたり、',
+        { nodeName: 'wbr', classList: [1, 2, 3] },
+        'スローダウンしたりしましょう。',
+      ]);
+      t1.innerHTML = 'MOVファイルを<wbr>MP4<wbr>ビデオに<wbr>変換する<wbr>準備は<wbr>できましたか。';
+      bw2.applyElement(t1);
+      validate(t1, [
+        'MOVファイルを',
+        { nodeName: 'wbr', classList: [3] },
+        'MP4',
+        { nodeName: 'wbr', classList: [2] },
+        'ビデオに',
+        { nodeName: 'wbr', classList: [1, 3] },
+        '変換する',
+        { nodeName: 'wbr', classList: [2] },
+        '準備は',
+        { nodeName: 'wbr', classList: [3] },
+        'できましたか。',
+      ]);
+      t1.innerHTML = 'ビデオを<wbr>トリミングする<wbr>準備は<wbr>できましたか。';
+      bw2 = new BalancedWordWrapper(2);
+      bw2.applyElement(t1);
+      validate(t1, [
+        'ビデオを',
+        { nodeName: 'wbr', classList: [2] },
+        'トリミングする',
+        { nodeName: 'wbr', classList: [1] },
+        '準備は',
+        { nodeName: 'wbr', classList: [2] },
+        'できましたか。',
+      ]);
+      t1.innerHTML = 'Creative Cloud Expressで、<wbr>注目される<wbr>YouTube<wbr>チャンネルアートを<wbr>作成';
+      bw2 = new BalancedWordWrapper(1);
+      bw2.applyElement(t1);
+      validate(t1, [
+        'Creative Cloud Expressで、',
+        { nodeName: 'wbr', classList: [] },
+        '注目される',
+        { nodeName: 'wbr', classList: [1] },
+        'YouTube',
+        { nodeName: 'wbr', classList: [] },
+        'チャンネルアートを',
+        { nodeName: 'wbr', classList: [] },
+        '作成',
       ]);
     });
 
@@ -101,7 +168,32 @@ describe('Japanese balanced word wrap', () => {
       validate(t1, [
         'aaa', { nodeName: 'wbr' }, 'bbb',
       ]);
+      t1.innerHTML = '\uff3faaabbb';
+      bw2.applyElement(t1);
+      validate(t1, [
+        'aaabbb',
+      ]);
+      t1.innerHTML = '\uff3f\uff3faaabbb';
+      bw2.applyElement(t1);
+      validate(t1, [
+        'aaabbb',
+      ]);
+      t1.innerHTML = 'aaabbb\uff3f';
+      bw2.applyElement(t1);
+      validate(t1, [
+        'aaabbb', { nodeName: 'wbr' },
+      ]);
+      t1.innerHTML = 'aaabbb\uff3f\uff3f';
+      bw2.applyElement(t1);
+      validate(t1, [
+        'aaabbb', { nodeName: 'wbr' },
+      ]);
       t1.innerHTML = 'aaa\uff3f\uff3fbbb';
+      bw2.applyElement(t1);
+      validate(t1, [
+        'aaa', { nodeName: 'wbr' }, 'bbb',
+      ]);
+      t1.innerHTML = 'aaa\uff3f\uff3f<wbr>bbb';
       bw2.applyElement(t1);
       validate(t1, [
         'aaa', { nodeName: 'wbr' }, 'bbb',
