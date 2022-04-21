@@ -113,7 +113,11 @@ loadScript(martechURL, () => {
         && !pathname.includes('/blog/')
       )
   ) {
-    sparkLandingPageType = 'learn';
+    if (pathname.includes('/express-your-brand')) {
+      sparkLandingPageType = 'express-your-brand';
+    } else {
+      sparkLandingPageType = 'learn';
+    }
     // blog
   } else if (
     pathname === '/express/learn/blog'
@@ -326,7 +330,10 @@ loadScript(martechURL, () => {
       sparkEventName = 'landing:ctaPressed';
       // Click in the pricing block
     } else if (sparkLandingPageType === 'express-your-fandom') {
-      adobeEventName = appendLinkText(`${adobeEventName}express-your-fandom:`, $a);
+      adobeEventName = appendLinkText(`${adobeEventName}${sparkLandingPageType}:`, $a);
+      sparkEventName = 'landing:ctaPressed';
+    } else if (sparkLandingPageType === 'express-your-brand') {
+      adobeEventName = appendLinkText(`${adobeEventName}learn:${sparkLandingPageType}:`, $a);
       sparkEventName = 'landing:ctaPressed';
     } else if (sparkLandingPageType === 'pricing') {
       // edu link
