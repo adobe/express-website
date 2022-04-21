@@ -15,6 +15,10 @@
 
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
+const SEP = '\n';
+// alternative word wrap separators which can be inserted by authors
+// currently allows: fullwidth low line U+FF3F
+const ALTERNATIVE_SEPS = /[\uff3f]/gm;
 
 function getTextWidth(text, font) {
   context.font = font;
@@ -34,13 +38,15 @@ function getCanvasFontSize(el = document.body) {
   return `${fontWeight} ${fontSize} ${fontFamily}`;
 }
 
-function separateTextAndDelimiter(text) {
-  // replace <wbr> tag with | in original text
-  const pipedText = text.split('<wbr>').join('|');
+function separateTextAndDelimiter(text = '') {
+  // replace alternative word wrap separators with internal separator
+  const altRemoved = text.replace(ALTERNATIVE_SEPS, SEP);
+  // replace <wbr> tag with internal separator in original text
+  const pipedText = altRemoved.split('<wbr>').join(SEP);
   const newText = [];
   const seps = [];
   for (let i = 0; i < pipedText.length; i += 1) {
-    if (pipedText[i] === '|') {
+    if (pipedText[i] === SEP) {
       seps.pop();
       seps.push(1);
     } else {
@@ -52,21 +58,18 @@ function separateTextAndDelimiter(text) {
 }
 
 function getNearestWrappingPoint(text = '', seps = [], pos = 0, bidirectional = true) {
-  if (seps[pos] === 1) {
-    return pos;
-  }
-  let i = 1;
-  for (; pos - i >= 0 && pos + i < text.length; i += 1) {
-    if (bidirectional && seps[pos - i] === 1) {
-      return pos - i;
+  let i = 0;
+  for (; pos - i > 0 && pos + i < text.length; i += 1) {
+    if (bidirectional && seps[pos - i - 1] === 1) {
+      return pos - i - 1;
     }
     if (seps[pos + i] === 1) {
       return pos + i;
     }
   }
-  while (bidirectional && pos - i >= 0) {
-    if (seps[pos - i] === 1) {
-      return pos - i;
+  while (bidirectional && pos - i > 0) {
+    if (seps[pos - i - 1] === 1) {
+      return pos - i - 1;
     }
     i += 1;
   }
@@ -84,7 +87,7 @@ function insertAllLevelLineBreak(text = '', seps = [], maxLevel = 5, ratio = 1.0
   const poses = Array(text.length);
   for (let l = 1; l <= maxLevel; l += 1) {
     const step = Math.ceil(text.length / (l + 1));
-    const firstPos = Math.ceil(step * ratio);
+    const firstPos = Math.ceil(step * ratio) - 1;
     const bidirect = (ratio <= 1.0);
     const fbpos = getNearestWrappingPoint(text, seps, firstPos, bidirect);
     if (fbpos >= 0 && fbpos < text.length) {
@@ -175,9 +178,6 @@ export default class BalancedWordWrapper {
 
   applyElement = (el = document.body, ratio = this.ratio) => {
     const oriText = el.innerHTML;
-    if (oriText.indexOf('<wbr>') < 0) {
-      return;
-    }
     const { text, seps } = separateTextAndDelimiter(oriText);
     const { newText, poses } = insertAllLevelLineBreak(text, seps, this.maxLevel, ratio);
     el.innerHTML = newText;
