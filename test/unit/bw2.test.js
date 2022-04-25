@@ -219,5 +219,51 @@ describe('Japanese balanced word wrap', () => {
         'aaa', { nodeName: 'wbr' }, 'bbb', { nodeName: 'wbr' }, 'ccc',
       ]);
     });
+
+    it('should handle nested tags properly', () => {
+      const bw2 = new BalancedWordWrapper(2);
+      const t1 = createTag('h1');
+      t1.innerHTML = '<strong class="foo">aa<wbr>bbbb<wbr>ccc</strong>';
+      bw2.applyElement(t1);
+      validate(t1.childNodes[0], [
+        'aa',
+        { nodeName: 'wbr', classList: [2] },
+        'bbbb',
+        { nodeName: 'wbr', classList: [1, 2] },
+        'ccc',
+      ]);
+      t1.innerHTML = '<strong class="foo">aa<wbr>bbbb<wbr>ccc</strong>ddd<wbr>eee';
+      // in this case, direct text children of t1 will be ignored by this logic and kept unchanged
+      bw2.applyElement(t1);
+      expect(t1.childNodes.length).to.equal(4);
+      validate(t1, [
+        { nodeName: 'strong' },
+        'ddd',
+        { nodeName: 'wbr', classList: [] },
+        'eee',
+      ]);
+      validate(t1.childNodes[0], [
+        'aa',
+        { nodeName: 'wbr', classList: [2] },
+        'bbbb',
+        { nodeName: 'wbr', classList: [1, 2] },
+        'ccc',
+      ]);
+      t1.innerHTML = '<strong class="foo">aaa\uff3fbbb</strong>';
+      bw2.applyElement(t1);
+      validate(t1.childNodes[0], [
+        'aaa', { nodeName: 'wbr' }, 'bbb',
+      ]);
+      t1.innerHTML = '<strong class="foo">\uff3faaabbb</strong>';
+      bw2.applyElement(t1);
+      validate(t1.childNodes[0], [
+        'aaabbb',
+      ]);
+      t1.innerHTML = '<strong class="foo">aaabbb\uff3f</strong>';
+      bw2.applyElement(t1);
+      validate(t1.childNodes[0], [
+        'aaabbb', { nodeName: 'wbr' },
+      ]);
+    });
   });
 });

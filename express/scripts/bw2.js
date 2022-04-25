@@ -191,7 +191,24 @@ export default class BalancedWordWrapper {
   }
 
   applyElement = (el = document.body, ratio = this.ratio) => {
-    const oriText = el.innerHTML;
+    const children = el.childNodes;
+    let oriText = '';
+    let hasChildElement = false;
+    children.forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'WBR') {
+        hasChildElement = true;
+        this.applyElement(node, ratio);
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        oriText += node.textContent;
+      } else if (node.nodeName === 'WBR') {
+        oriText += '<wbr>';
+      }
+    });
+    if (hasChildElement) {
+      // current element has child elements, which have been handled recursively,
+      // do nothing but return
+      return;
+    }
     const { text, seps } = separateTextAndDelimiter(oriText);
     const { widthsFromStart } = getChunkWidths(el, text, seps);
     const { newText, poses } = insertAllLevelLineBreak(
