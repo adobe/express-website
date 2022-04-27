@@ -340,9 +340,11 @@ main .columns-video .column-picture img {
 main .columns-video .column-picture .column-video-overlay {
   position: absolute;
   top: 0;
-  display: none;
   width: 100%;
   height: 100%;
+}
+
+main .columns-video:hover .column-picture .column-video-overlay {
   background-image: linear-gradient(#ffffff00, #90909025, #000000a0);
 }
 
@@ -364,10 +366,6 @@ main .columns-video .column-picture .column-video-overlay svg {
   main .columns-video .column-picture .column-video-overlay {
     width: 50%;
   }
-}
-
-main .columns-video:hover .column-video-overlay {
-  display: block;
 }
 
 main .columns.highlight > div {
