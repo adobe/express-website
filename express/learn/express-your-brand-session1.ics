@@ -1,55 +1,55 @@
 BEGIN:VCALENDAR
+METHOD:PUBLISH
+PRODID:Microsoft Exchange Server 2010
 VERSION:2.0
-PRODID:-//Apple Inc.//macOS 11.6.3//EN
-CALSCALE:GREGORIAN
+BEGIN:VTIMEZONE
+TZID:tzone://Microsoft/Utc
+BEGIN:STANDARD
+DTSTART:16010101T000000
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0000
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:16010101T000000
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0000
+END:DAYLIGHT
+END:VTIMEZONE
 BEGIN:VEVENT
-SUMMARY:Express Your Brand Session 1: Creatively Engage Your Audience on
-  Social with Adobe x Meta
-X-MICROSOFT-DONOTFORWARDMEETING:FALSE
-PRIORITY:5
+ORGANIZER;CN=Timothy Liu:mailto:timliu@adobe.com
+DESCRIPTION:Find out how easy it is to boost your brand\, create posts that
+  pop\, and stand out in a sea of social. Join us for our next session whic
+ h will cover the importance of social media and why maintaining it with fr
+ esh content is necessary to market your small business. We will also show 
+ you hands-on steps and practical tips on how to best create content easily
+  and quickly. We look forward to seeing you soon!\n\nLive Session: https:/
+ /www.facebook.com/adobeexpress\nSession on Demand: www.adobe.com/express/l
+ earn/express-your-brand<http://www.adobe.com/express/learn/express-your-br
+ and>\n
+UID:040000008200E00074C5B7101A82E008000000008F1B65B89256D801000000000000000
+ 010000000D10AF8A341011F4EA415A850084D9C90
+SUMMARY:Express Your Brand Session 1: Creatively Engage Your Audience on So
+ cial with Adobe x Meta
+DTSTART:20220517T170000Z
+DTEND:20220517T180000Z
 CLASS:PUBLIC
-X-MICROSOFT-CDO-IMPORTANCE:1
-ORGANIZER;CN="Timothy Liu":mailto:timliu@adobe.com
+PRIORITY:5
+DTSTAMP:20220427T174858Z
 TRANSP:OPAQUE
+STATUS:CONFIRMED
+LOCATION:
 X-MICROSOFT-CDO-BUSYSTATUS:BUSY
-UID:040000008200E00074C5B7101A82E00800000000DB5C68997553D801000000000000
- 0000100000009BA77EA465A3B84AAB4B7D5FDD4789AB
-DTSTART;VALUE=DATE:20220517
-SEQUENCE:0
 X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY
-X-MICROSOFT-ONLINEMEETINGCONFLINK:
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+X-MICROSOFT-CDO-IMPORTANCE:1
 X-MICROSOFT-CDO-INSTTYPE:0
 X-MICROSOFT-ONLINEMEETINGEXTERNALLINK:
-STATUS:CONFIRMED
-DTSTAMP:20220418T224657Z
-LAST-MODIFIED:20220422T030247Z
+X-MICROSOFT-ONLINEMEETINGCONFLINK:
+X-MICROSOFT-DONOTFORWARDMEETING:FALSE
 X-MICROSOFT-DISALLOW-COUNTER:FALSE
-CREATED:20220418T224245Z
-X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
-DTEND;VALUE=DATE:20220518
-X-APPLE-TRAVEL-ADVISORY-BEHAVIOR:AUTOMATIC
-DESCRIPTION:Find out how easy it is to boost your brand\, create posts t
- hat pop\, and stand out in a sea of social. Join us for our next session
-  which will cover the importance of social media and why maintaining it 
- with fresh content is necessary to market your small business. We will a
- lso show you hands-on steps and practical tips on how to best create con
- tent easily and quickly.​  We look forward to seeing you soon!\n\nLive s
- ession: https://www.facebook.com/adobeexpress\nSession on Demand: www.ad
- obe.com/express/learn/express-your-brand\n
 BEGIN:VALARM
-X-WR-ALARMUID:EC2B8813-FB5B-49E5-B6CE-7EED62ABBCD9
-UID:EC2B8813-FB5B-49E5-B6CE-7EED62ABBCD9
-TRIGGER:-PT15H
-ATTACH;VALUE=URI:Chord
-X-APPLE-LOCAL-DEFAULT-ALARM:TRUE
-ACTION:AUDIO
-X-APPLE-DEFAULT-ALARM:TRUE
-END:VALARM
-BEGIN:VALARM
-X-WR-ALARMUID:5896F26B-36C3-420D-A2E9-A09658578D3F
-UID:5896F26B-36C3-420D-A2E9-A09658578D3F
-TRIGGER:-PT18H
 DESCRIPTION:REMINDER
+TRIGGER;RELATED=START:-PT15M
 ACTION:DISPLAY
 END:VALARM
 END:VEVENT
