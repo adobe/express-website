@@ -401,7 +401,7 @@ export default function decorate($block) {
   }
 
   function fetchRatingInformation() {
-    fetch('https://www.adobe.com/reviews-api/ccx/dev/remove-background.json')
+    fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`)
       .then((response) => response.json())
       .then((response) => {
         if (response.data[0].Average) {
