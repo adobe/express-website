@@ -39,6 +39,7 @@ export default function decorate($block) {
   let ratingTotal;
   let ratingAverage;
   let showRatingAverage = false;
+  let actionTitle;
   const ratings = [
     {
       class: 'one-star',
@@ -331,6 +332,9 @@ export default function decorate($block) {
       const $votes = createTag('span', { class: 'rating-votes' });
       $votes.innerHTML = `<strong>${rating} / 5</strong> - ${ratingAmount} ${votesText}`;
       $stars.appendChild($votes);
+      if (rating > 4.2) {
+        buildSchema(actionTitle);
+      }
     } else {
       $stars.innerHTML = `${star.repeat(5)}`;
     }
@@ -401,7 +405,7 @@ export default function decorate($block) {
   }
 
   function fetchRatingInformation() {
-    fetch('https://www.adobe.com/reviews-api/ccx/dev/remove-background.json')
+    fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`)
       .then((response) => response.json())
       .then((response) => {
         if (response.data[0].Average) {
@@ -457,11 +461,11 @@ export default function decorate($block) {
     if (classes.contains('show') && classes.contains('average')) showRatingAverage = true;
 
     const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
-    const title = ($heading) ? $heading.textContent : defaultTitle;
     const headingTag = ($heading) ? $heading.tagName : 'h3';
     const $CTA = $rows[0].querySelector('a');
     if ($CTA) $CTA.classList.add('xlarge');
     const $sheet = $rows[1].firstElementChild;
+    actionTitle = ($heading) ? $heading.textContent : defaultTitle;
     sheet = $sheet.textContent.trim();
     sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
 
@@ -493,18 +497,17 @@ export default function decorate($block) {
       alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
       alreadySubmittedText = placeholders['rating-already-submitted-text'];
       votesText = placeholders['rating-votes'];
-      regenerateBlockState(title, $CTA, headingTag);
+      regenerateBlockState(actionTitle, $CTA, headingTag);
     });
 
     // When the context comes in.
     document.addEventListener('context_loaded', () => {
-      regenerateBlockState(title, $CTA, headingTag);
+      regenerateBlockState(actionTitle, $CTA, headingTag);
     });
 
     // When the ratings are retrieved.
     document.addEventListener('ratings_received', () => {
-      regenerateBlockState(title, $CTA, headingTag);
-      buildSchema(title);
+      regenerateBlockState(actionTitle, $CTA, headingTag);
     });
 
     lazyLoadLottiePlayer($block);
