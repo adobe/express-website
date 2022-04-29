@@ -446,6 +446,7 @@ loadScript(martechURL, () => {
   const USED_ACTION_SEGMENT_ID = 24241150;
 
   Context.set('audiences', []);
+  Context.set('segments', []);
 
   function getAudiences() {
     const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
@@ -455,7 +456,9 @@ loadScript(martechURL, () => {
       w.setAudienceManagerSegments = (json) => {
         if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
           const audiences = Context.get('audiences');
+          const segments = Context.get('segments');
           audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
+          segments.push(RETURNING_VISITOR_SEGMENT_ID);
 
           digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
           digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
@@ -467,7 +470,9 @@ loadScript(martechURL, () => {
 
         if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
           const audiences = Context.get('audiences');
+          const segments = Context.get('segments');
           audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
+          segments.push(USED_ACTION_SEGMENT_ID);
         }
 
         document.dispatchEvent(new Event('context_loaded'));

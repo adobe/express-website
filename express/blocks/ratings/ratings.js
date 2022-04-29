@@ -109,11 +109,12 @@ export default function decorate($block) {
   }
 
   function submitRating(rating, comment) {
+    const segments = Context.get('segments');
     const content = {
       data: [
         {
           name: 'Segments',
-          value: Context.get('audiences') ?? '',
+          value: segments.length ? segments.join(', ') : '',
         },
         {
           name: 'Locale',
@@ -124,12 +125,12 @@ export default function decorate($block) {
           value: rating,
         },
         {
-          name: 'Timestamp',
-          value: new Date().toLocaleString(),
+          name: 'Feedback',
+          value: comment,
         },
         {
-          name: 'Comment',
-          value: comment,
+          name: 'Timestamp',
+          value: new Date().toLocaleString('en-US', { timeZone: 'UTC' }),
         },
       ],
     };
