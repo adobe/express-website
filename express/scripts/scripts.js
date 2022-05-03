@@ -660,6 +660,20 @@ function decorateMarqueeColumns($main) {
 }
 
 /**
+ * scroll to hash
+ */
+
+export function scrollToHash() {
+  const { hash } = window.location;
+  if (hash) {
+    const elem = document.querySelector(hash);
+    if (elem) {
+      elem.scrollIntoView(true);
+    }
+  }
+}
+
+/**
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
@@ -1566,6 +1580,7 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
+  scrollToHash();
   resolveFragments();
   addPromotion();
   addFavIcon('/express/icons/cc-express.svg');
