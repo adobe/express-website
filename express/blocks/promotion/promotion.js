@@ -50,6 +50,10 @@ export default async function decorate($block) {
 
     const containerDiv = createTag('div', { class: 'promotion-wrapper' });
 
+    containerDiv.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
     const heroPicture = div.querySelector('picture');
     if (heroPicture) {
       const img = heroPicture.querySelector('img');
@@ -89,6 +93,8 @@ export default async function decorate($block) {
   const $links = $block.querySelectorAll('a');
 
   if ($links) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: $links });
+    document.dispatchEvent(linksPopulated);
     trackBranchParameters($links);
   }
 }

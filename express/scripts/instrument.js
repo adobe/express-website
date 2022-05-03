@@ -113,7 +113,11 @@ loadScript(martechURL, () => {
         && !pathname.includes('/blog/')
       )
   ) {
-    sparkLandingPageType = 'learn';
+    if (pathname.includes('/express-your-brand')) {
+      sparkLandingPageType = 'express-your-brand';
+    } else {
+      sparkLandingPageType = 'learn';
+    }
     // blog
   } else if (
     pathname === '/express/learn/blog'
@@ -326,7 +330,10 @@ loadScript(martechURL, () => {
       sparkEventName = 'landing:ctaPressed';
       // Click in the pricing block
     } else if (sparkLandingPageType === 'express-your-fandom') {
-      adobeEventName = appendLinkText(`${adobeEventName}express-your-fandom:`, $a);
+      adobeEventName = appendLinkText(`${adobeEventName}${sparkLandingPageType}:`, $a);
+      sparkEventName = 'landing:ctaPressed';
+    } else if (sparkLandingPageType === 'express-your-brand') {
+      adobeEventName = appendLinkText(`${adobeEventName}learn:${sparkLandingPageType}:`, $a);
       sparkEventName = 'landing:ctaPressed';
     } else if (sparkLandingPageType === 'pricing') {
       // edu link
@@ -436,6 +443,40 @@ loadScript(martechURL, () => {
         digitalData._delete('spark.eventData.eventName');
       });
     }
+
+    // Tracking any video column blocks.
+    const $columnVideos = document.querySelectorAll('.column-video');
+    if ($columnVideos.length) {
+      $columnVideos.forEach(($columnVideo) => {
+        const $parent = $columnVideo.closest('.columns');
+        const $a = $columnVideo.querySelector('a');
+
+        const adobeEventName = appendLinkText(`adobe.com:express:cta:learn:columns:${sparkLandingPageType}:`, $a);
+        const sparkEventName = 'landing:columnsPressed';
+
+        $parent.addEventListener('click', (e) => {
+          e.stopPropagation();
+          digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+          digitalData._set('spark.eventData.eventName', sparkEventName);
+
+          _satellite.track('event', {
+            digitalData: digitalData._snapshot(),
+          });
+
+          digitalData._delete('primaryEvent.eventInfo.eventName');
+          digitalData._delete('spark.eventData.eventName');
+        });
+      });
+    }
+
+    // Tracking any link or links that is added after page loaded.
+    document.addEventListener('linkspopulated', (e) => {
+      e.detail.forEach(($link) => {
+        $link.addEventListener('click', () => {
+          trackButtonClick($link);
+        });
+      });
+    });
   }
 
   decorateAnalyticsEvents();
