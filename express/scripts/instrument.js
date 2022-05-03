@@ -443,6 +443,15 @@ loadScript(martechURL, () => {
         digitalData._delete('spark.eventData.eventName');
       });
     }
+
+    // Tracking any link or links that is added after page loaded.
+    document.addEventListener('linkspopulated', (e) => {
+      e.detail.forEach(($link) => {
+        $link.addEventListener('click', () => {
+          trackButtonClick($link);
+        });
+      });
+    });
   }
 
   decorateAnalyticsEvents();

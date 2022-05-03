@@ -93,6 +93,8 @@ export default async function decorate($block) {
   const $links = $block.querySelectorAll('a');
 
   if ($links) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: $links });
+    document.dispatchEvent(linksPopulated);
     trackBranchParameters($links);
   }
 }
