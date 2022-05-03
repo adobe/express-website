@@ -444,6 +444,31 @@ loadScript(martechURL, () => {
       });
     }
 
+    // Tracking any video column blocks.
+    const $columnVideos = document.querySelectorAll('.column-video');
+    if ($columnVideos.length) {
+      $columnVideos.forEach(($columnVideo) => {
+        const $parent = $columnVideo.closest('.columns');
+        const $a = $columnVideo.querySelector('a');
+
+        const adobeEventName = appendLinkText(`adobe.com:express:cta:learn:columns:${sparkLandingPageType}:`, $a);
+        const sparkEventName = 'landing:columnsPressed';
+
+        $parent.addEventListener('click', (e) => {
+          e.stopPropagation();
+          digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+          digitalData._set('spark.eventData.eventName', sparkEventName);
+
+          _satellite.track('event', {
+            digitalData: digitalData._snapshot(),
+          });
+
+          digitalData._delete('primaryEvent.eventInfo.eventName');
+          digitalData._delete('spark.eventData.eventName');
+        });
+      });
+    }
+
     // Tracking any link or links that is added after page loaded.
     document.addEventListener('linkspopulated', (e) => {
       e.detail.forEach(($link) => {
