@@ -196,3 +196,43 @@ indices:
     include:
       - '/se/express/**'
     target: /se/express/query-index.xlsx
+
+  education:
+    include:
+      - '/education/express/**'
+      - '/de/education/express/**'
+      - '/es/education/express/**'
+      - '/fr/education/express/**'
+      - '/it/education/express/**'
+      - '/jp/education/express/**'
+      - '/kr/education/express/**'
+      - '/nl/education/express/**'
+      - '/br/education/express/**'
+      - '/tw/education/express/**'
+      - '/cn/education/express/**'
+      - '/dk/education/express/**'
+      - '/fi/education/express/**'
+      - '/no/education/express/**'
+      - '/se/education/express/**'
+    target: /education/express/query-index.xlsx
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: |
+          attribute(el, 'content')
+      image:
+        select: head > meta[property="og:image"]
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+      lastModified:
+        select: none
+        value: |
+          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
+      shortTitle:
+        select: head > meta[name="short-title"]
+        value: |
+          attribute(el, 'content')
+      robots:
+        select: head > meta[name="robots"]
+        value: |
+          attribute(el, 'content')
