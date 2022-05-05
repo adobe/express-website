@@ -82,6 +82,7 @@ indices:
   website: &website
     include:
       - '/express/**'
+      - '/education/express/**'
     exclude:
       - '/express/learn/blog/*'
     target: /express/query-index.xlsx
@@ -111,6 +112,8 @@ indices:
     <<: *website
     include:
       - '/de/express/**'
+      - '/de/education/express/**'
+
     exclude:
       - '/de/express/learn/blog/*'
     target: /de/express/query-index.xlsx
@@ -119,12 +122,14 @@ indices:
     <<: *website
     include:
       - '/es/express/**'
+      - '/es/education/express/**'
     target: /es/express/query-index.xlsx
 
   france:
     <<: *website
     include:
       - '/fr/express/**'
+      - '/fr/education/express/**'
     exclude:
       - '/fr/express/learn/blog/*'
     target: /fr/express/query-index.xlsx
@@ -133,12 +138,14 @@ indices:
     <<: *website
     include:
       - '/it/express/**'
+      - '/it/education/express/**'
     target: /it/express/query-index.xlsx
 
   japan:
     <<: *website
     include:
       - '/jp/express/**'
+      - '/jp/education/express/**'
     exclude:
       - '/jp/express/learn/blog/*'
     target: /jp/express/query-index.xlsx
@@ -147,52 +154,61 @@ indices:
     <<: *website
     include:
       - '/kr/express/**'
+      - '/kr/education/express/**'
     target: /kr/express/query-index.xlsx
 
   netherlands:
     <<: *website
     include:
       - '/nl/express/**'
+      - '/nl/education/express/**'
     target: /nl/express/query-index.xlsx
 
   brasil:
     <<: *website
     include:
       - '/br/express/**'
+      - '/br/education/express/**'
     target: /br/express/query-index.xlsx
 
   taiwan:
     <<: *website
     include:
       - '/tw/express/**'
+      - '/tw/education/express/**'
     target: /tw/express/query-index.xlsx
 
   china:
     <<: *website
     include:
       - '/cn/express/**'
+      - '/cn/education/express/**'
     target: /cn/express/query-index.xlsx
 
   denmark:
     <<: *website
     include:
       - '/dk/express/**'
+      - '/dk/education/express/**'
     target: /dk/express/query-index.xlsx
 
   finland:
     <<: *website
     include:
       - '/fi/express/**'
+      - '/fi/education/express/**'
     target: /fi/express/query-index.xlsx
 
   norway:
     <<: *website
     include:
       - '/no/express/**'
+      - '/no/education/express/**'
     target: /no/express/query-index.xlsx
 
   sweden:
     <<: *website
     include:
       - '/se/express/**'
+      - '/se/education/express/**'
     target: /se/express/query-index.xlsx
