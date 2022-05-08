@@ -976,7 +976,7 @@ export function getExperiment() {
  * @param {string} experiment
  */
 
-async function fetchExperimentConfig(experiment) {
+export async function fetchExperimentConfig(experiment) {
   const path = `/express/experiments/${experiment}/manifest.json`;
   try {
     const config = {};
@@ -1672,6 +1672,9 @@ async function decoratePage() {
   await loadEager();
   loadLazy();
   loadGnav();
+  if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === ('localhost')) {
+    import('../../tools/preview/preview.js');
+  }
 }
 
 if (!window.hlx.init && !window.isTestEnv) {
