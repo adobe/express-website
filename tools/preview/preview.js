@@ -11,7 +11,12 @@
  */
 /* eslint-disable no-console */
 
-import { loadCSS, getMetadata, fetchExperimentConfig } from '../../express/scripts/scripts.js';
+import {
+  loadCSS,
+  toClassName,
+  getMetadata,
+  fetchExperimentConfig,
+} from '../../express/scripts/scripts.js';
 
 function createTesting() {
   if (getMetadata('testing')) {
@@ -28,18 +33,38 @@ async function createExperiment() {
   console.log('preview experiment', experiment);
   if (experiment) {
     const config = await fetchExperimentConfig(experiment);
+    const createVariant = (variantName) => {
+      const variant = config.variants[variantName];
+      const split = +variant.percentageSplit
+        || 1 - config.variantNames.reduce((c, vn) => c + +config.variants[vn].percentageSplit, 0);
+      const percentage = Math.round(split * 10000) / 100;
+      const div = document.createElement('div');
+      div.className = 'hlx-variant';
+      div.innerHTML = `<div><h5>${variantName}</h5>
+      <p>${variant.label}</p>
+      <p>${percentage}%</p></div>
+      <div class="hlx-button"><a href="${window.location.pathname}?experiment=${experiment}/${variantName}">Simulate</a></div>`;
+      return (div);
+    };
+
     const div = document.createElement('div');
     div.className = 'hlx-experiment hlx-badge';
+    div.classList.add(`hlx-experiment-status-${toClassName(config.status)}`);
     div.innerHTML = `Experiment: ${config.id} <span class="hlx-open"></span>
       <div class="hlx-popup hlx-hidden">
         <h4>${config.testName}</h4>
-        <div class="hlx-details></div>
-        <div class="hlx-variants></div>
+        <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.blocks.join(',')}</div>
+        <div class="hlx-variants"></div>
       </div>`;
     console.log(config.id);
     const popup = div.querySelector('.hlx-popup');
     div.addEventListener('click', () => {
       popup.classList.toggle('hlx-hidden');
+    });
+
+    const variants = div.querySelector('.hlx-variants');
+    config.variantNames.forEach((vname) => {
+      variants.append(createVariant(vname));
     });
     return (div);
   }

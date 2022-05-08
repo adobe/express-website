@@ -54,9 +54,36 @@
     right: 0;
     background-color: #444;
     padding: 32px;
-    width: 300px;
+    min-width: 300px;
     border-radius: 16px;
     box-shadow: 0 0 10px #000;
+    font-size: 12px;
+}
+
+.hlx-popup a:any-link {
+    color: #eee;
+    border: 2px solid;
+    padding: 5px 12px;
+    display: inline-block;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.hlx-popup h4, .hlx-popup h5 {
+    margin: 0;
+}
+
+.hlx-popup h4 {
+    font-size: 16px;
+}
+
+.hlx-popup h5 {
+    font-size: 14px;
+}
+
+
+.hlx-popup p {
+    margin: 0;
 }
 
 .hlx-popup::before {
@@ -68,9 +95,26 @@
     border-right: 15px solid transparent;    
     border-top: 15px solid #444;
     bottom: -15px;
-    right: 25px;
+    right: 30px;
   }
 
 .hlx-hidden {
     display: none;
+}
+
+.hlx-badge.hlx-experiment-status-active {
+    background-color: #280;
+}
+
+.hlx-variant {
+    margin: 16px 0;
+    display: flex;
+}
+
+.hlx-variant > div {
+    flex: 1 1 auto;
+}
+
+.hlx-variant > div.hlx-button {
+    flex: 0 0 auto;
 }
