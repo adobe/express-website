@@ -54,15 +54,15 @@ function infinityScroll($parent, classPrefix, $children) {
     state = getCarouselState($parent, classPrefix);
     const scrollPos = state.platform.scrollLeft;
     const maxScroll = state.platform.scrollWidth;
-    if (scrollPos > (maxScroll / 5) * 4) {
-      e.preventDefault();
+    if ((scrollPos > (maxScroll / 5) * 4) || scrollPos < 30) {
+      if (e) e.preventDefault();
       stopScrolling();
       state.platform.scrollTo({
         left: ((maxScroll / 5) * 2),
         behavior: 'instant',
       });
     } else if (scrollPos < (maxScroll / 5) - state.blockWidth) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       stopScrolling();
       state.platform.scrollTo({
         left: (((maxScroll / 5) * 3) - state.blockWidth),
@@ -70,14 +70,7 @@ function infinityScroll($parent, classPrefix, $children) {
       });
     }
   };
-
-  setTimeout(() => {
-    state.platform.scrollTo({
-      left: ((state.platform.scrollWidth / 5) * 2),
-      behavior: 'smooth',
-    });
-  }, 1000);
-
+  moveToCenterIfScroll();
   state.platform.addEventListener('scroll', (e) => {
     moveToCenterIfScroll(e);
   });
