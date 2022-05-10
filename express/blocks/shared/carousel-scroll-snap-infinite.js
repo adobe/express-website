@@ -71,6 +71,13 @@ function infinityScroll($parent, classPrefix, $children) {
     }
   };
 
+  setTimeout(() => {
+    state.platform.scrollTo({
+      left: ((state.platform.scrollWidth / 5) * 2),
+      behavior: 'smooth',
+    });
+  }, 1000);
+
   state.platform.addEventListener('scroll', (e) => {
     moveToCenterIfScroll(e);
   });
