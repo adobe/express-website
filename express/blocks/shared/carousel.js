@@ -72,6 +72,7 @@ function toggleControls($parent, infinityScrollEnabled) {
   if (infinityScrollEnabled) return;
   const state = getCarouselState($parent);
   state.faderLeft.style.display = state.platform.scrollLeft > 20 ? 'flex' : 'none';
+  console.log(state.platform.offsetWidth + state.platform.scrollLeft >= state.platform.scrollWidth);
   state.faderRight.style.display = (state.platform.offsetWidth + state.platform.scrollLeft >= state.platform.scrollWidth) ? 'none' : 'flex';
 }
 
@@ -123,6 +124,9 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
         mediaLoaded += 1;
         if (media.length === mediaLoaded) {
           toggleControls($parent, infinityScrollEnabled);
+          setTimeout(() => {
+            toggleControls($parent, infinityScrollEnabled);
+          }, 2000);
           if (infinityScrollEnabled) {
             const state = getCarouselState($parent);
             state.platform.scrollTo({
@@ -136,6 +140,16 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   } else {
     // carousel without media, toggle controls right away
     toggleControls($parent, infinityScrollEnabled);
+    setTimeout(() => {
+      toggleControls($parent, infinityScrollEnabled);
+    }, 2000);
+    if (infinityScrollEnabled) {
+      const state = getCarouselState($parent);
+      state.platform.scrollTo({
+        left: ((state.platform.scrollWidth / 5) * 2),
+        behavior: 'smooth',
+      });
+    }
   }
   // Wheel horizontal scroll event handler
   $platform.addEventListener('wheel', (e) => {
