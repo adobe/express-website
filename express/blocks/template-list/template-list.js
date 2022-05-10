@@ -26,7 +26,7 @@ import {
 import {
   buildCarousel,
   // eslint-disable-next-line import/no-unresolved
-} from '../shared/carousel-scroll-snap-infinite.js';
+} from '../shared/carousel.js';
 
 /**
  * Returns a picture element with webp and fallbacks
@@ -554,7 +554,7 @@ export async function decorateTemplateList($block) {
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel(':scope > .template', $block, '');
+    buildCarousel(':scope > .template', $block, true);
   } else if (rows > 6 || $block.classList.contains('sixcols')) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
