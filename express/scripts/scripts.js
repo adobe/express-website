@@ -198,6 +198,7 @@ export function getIcon(icons, alt, size = 44) {
     'mergevideo',
     'mobile-round',
     'muteaudio',
+    'palette',
     'photos',
     'photoeffects',
     'pinterest',
