@@ -61,13 +61,6 @@ function infinityScroll($parent, classPrefix, $children) {
         left: ((maxScroll / 5) * 2),
         behavior: 'instant',
       });
-    } else if (scrollPos < (maxScroll / 5) - state.blockWidth) {
-      if (e) e.preventDefault();
-      stopScrolling();
-      state.platform.scrollTo({
-        left: (((maxScroll / 5) * 3) - state.blockWidth),
-        behavior: 'instant',
-      });
     }
   };
   moveToCenterIfScroll();
