@@ -35,17 +35,16 @@ function getCarouselState($parent, classPrefix) {
 
 function infinityScroll($parent, classPrefix, $children) {
   let state = getCarouselState($parent, classPrefix);
-  // Append twice to be able to simulate infinite scroll.
-  const duplicateContent = () => {
-    $children.forEach(($child) => {
-      state.platform.append($child.cloneNode(true));
-    });
-  };
-  const stopScrolling = () => {
+  const stopScrolling = () => { // To prevent mobile shakiness
     state.platform.style.overflowX = 'hidden';
     setTimeout(() => {
       state.platform.style.overflowX = 'scroll';
     }, 20);
+  };
+  const duplicateContent = () => {
+    $children.forEach(($child) => {
+      state.platform.append($child.cloneNode(true));
+    });
   };
   for (let i = 0; i < 4; i += 1) {
     duplicateContent();
@@ -106,7 +105,6 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
   $arrowRight.addEventListener('click', () => moveCarousel($parent, -240, classPrefix, infinityScrollEnabled));
   $faderLeft.appendChild($arrowLeft);
   $faderRight.appendChild($arrowRight);
-
   if (infinityScrollEnabled) {
     // Infinite Scroll
     infinityScroll($parent, classPrefix, [...$carouselContent]);
@@ -116,7 +114,6 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
     window.addEventListener('resize', () => toggleControls($parent, classPrefix, infinityScrollEnabled));
     $platform.addEventListener('scroll', () => toggleControls($parent, classPrefix, infinityScrollEnabled));
   }
-
   const media = [...$parent.querySelectorAll('img, video')];
   if (media.length) {
     // carousel with media, wait for media to load before toggling controls
@@ -140,7 +137,6 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
     // carousel without media, toggle controls right away
     toggleControls($parent, classPrefix, infinityScrollEnabled);
   }
-
   // Wheel horizontal scroll event handler
   $platform.addEventListener('wheel', (e) => e.preventDefault());
   function handleWheel(e) {
@@ -150,7 +146,6 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
       moveCarousel($parent, 240, classPrefix, infinityScrollEnabled);
     }
     $platform.removeEventListener('wheel', handleWheel);
-
     setTimeout(() => {
       $platform.addEventListener('wheel', handleWheel);
     }, 300);
