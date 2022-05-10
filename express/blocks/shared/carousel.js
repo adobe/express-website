@@ -138,17 +138,21 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     toggleControls($parent, infinityScrollEnabled);
   }
   // Wheel horizontal scroll event handler
-  $platform.addEventListener('wheel', (e) => e.preventDefault());
+  $platform.addEventListener('wheel', (e) => {
+    if (e.deltaX === 0) e.preventDefault())
+  };
   function handleWheel(e) {
-    if (e.deltaY > 0) {
-      moveCarousel($parent, -240, infinityScrollEnabled);
-    } else {
-      moveCarousel($parent, 240, infinityScrollEnabled);
+    if (e.deltaX === 0) {
+      if (e.deltaY > 0) {
+        moveCarousel($parent, -240, infinityScrollEnabled);
+      } else {
+        moveCarousel($parent, 240, infinityScrollEnabled);
+      }
+      $platform.removeEventListener('wheel', handleWheel);
+      setTimeout(() => {
+        $platform.addEventListener('wheel', handleWheel);
+      }, 300);
     }
-    $platform.removeEventListener('wheel', handleWheel);
-    setTimeout(() => {
-      $platform.addEventListener('wheel', handleWheel);
-    }, 300);
   }
   $platform.addEventListener('wheel', handleWheel);
 }
