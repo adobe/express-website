@@ -26,7 +26,7 @@ import {
 import {
   buildCarousel,
   // eslint-disable-next-line import/no-unresolved
-} from '../shared/carousel.js';
+} from '../shared/carousel-scroll-snap-infinite.js';
 
 /**
  * Returns a picture element with webp and fallbacks

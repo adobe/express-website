@@ -144,7 +144,6 @@ main .template-list .template:not(.placeholder) .icon {
 
 main .template-list.horizontal {
   display: block;
-  overflow: hidden;
   max-width: 375px;
   margin-left: auto; 
   margin-right: auto;
