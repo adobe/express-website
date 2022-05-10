@@ -160,7 +160,7 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
 
     setTimeout(() => {
       $platform.addEventListener('wheel', handleWheel);
-    }, 500);
+    }, 300);
   }
   $platform.addEventListener('wheel', handleWheel);
 }
