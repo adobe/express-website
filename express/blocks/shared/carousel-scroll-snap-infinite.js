@@ -70,12 +70,6 @@ function infinityScroll($parent, classPrefix, $children) {
       });
     }
   };
-  setTimeout(() => {
-    state.platform.scrollTo({
-      left: ((state.platform.scrollWidth / 5) * 2),
-      behavior: 'smooth',
-    });
-  }, 1000);
 
   state.platform.addEventListener('scroll', (e) => {
     moveToCenterIfScroll(e);
@@ -119,22 +113,6 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
   $arrowRight.addEventListener('click', () => moveCarousel($parent, -240, classPrefix, infinityScrollEnabled));
   $faderLeft.appendChild($arrowLeft);
   $faderRight.appendChild($arrowRight);
-  const media = [...$parent.querySelectorAll('img, video')];
-  if (media.length) {
-    // carousel with media, wait for media to load before toggling controls
-    let mediaLoaded = 0;
-    media.forEach(($media) => {
-      $media.addEventListener('load', () => {
-        mediaLoaded += 1;
-        if (media.length === mediaLoaded) {
-          toggleControls($parent, classPrefix, infinityScrollEnabled);
-        }
-      });
-    });
-  } else {
-    // carousel without media, toggle controls right away
-    toggleControls($parent, classPrefix, infinityScrollEnabled);
-  }
 
   if (infinityScrollEnabled) {
     // Infinite Scroll
@@ -144,6 +122,30 @@ export function buildCarousel(selector = ':scope > *', $parent, classPrefix) {
   } else {
     window.addEventListener('resize', () => toggleControls($parent, classPrefix, infinityScrollEnabled));
     $platform.addEventListener('scroll', () => toggleControls($parent, classPrefix, infinityScrollEnabled));
+  }
+
+  const media = [...$parent.querySelectorAll('img, video')];
+  if (media.length) {
+    // carousel with media, wait for media to load before toggling controls
+    let mediaLoaded = 0;
+    media.forEach(($media) => {
+      $media.addEventListener('load', () => {
+        mediaLoaded += 1;
+        if (media.length === mediaLoaded) {
+          toggleControls($parent, classPrefix, infinityScrollEnabled);
+          if (infinityScrollEnabled) {
+            const state = getCarouselState($parent, classPrefix);
+            state.platform.scrollTo({
+              left: ((state.platform.scrollWidth / 5) * 2),
+              behavior: 'smooth',
+            });
+          }
+        }
+      });
+    });
+  } else {
+    // carousel without media, toggle controls right away
+    toggleControls($parent, classPrefix, infinityScrollEnabled);
   }
 
   // Wheel horizontal scroll event handler
