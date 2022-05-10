@@ -72,7 +72,6 @@ function toggleControls($parent, infinityScrollEnabled) {
   if (infinityScrollEnabled) return;
   const state = getCarouselState($parent);
   state.faderLeft.style.display = state.platform.scrollLeft > 20 ? 'flex' : 'none';
-  console.log(state.platform.offsetWidth + state.platform.scrollLeft >= state.platform.scrollWidth);
   state.faderRight.style.display = (state.platform.offsetWidth + state.platform.scrollLeft >= state.platform.scrollWidth) ? 'none' : 'flex';
 }
 
