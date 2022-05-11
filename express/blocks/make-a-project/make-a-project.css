@@ -1,0 +1,92 @@
+main .section-wrapper.make-a-project-container > div {
+  margin: 0;
+  max-width: unset;
+}
+
+main .make-a-project {
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+}
+
+main .make-a-project > div > div {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  text-align: left;
+}
+
+main .make-a-project h2 {
+  font-size: var(--heading-font-size-xl);
+  line-height: 1;
+}
+
+main .make-a-project > div > div > * {
+  margin: 20px 0 20px;
+}
+
+main .make-a-project p:first-child .icon {
+  height: 32px;
+  width: auto;
+}
+
+main .make-a-project ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 22px;
+}
+
+main .make-a-project li {
+  max-width: 60px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+}
+
+main .make-a-project li a:any-link {
+  color: var(--color-white);
+}
+
+main .make-a-project li svg {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  padding: 19px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+main .make-a-project li::before {
+  position: absolute;
+  content: " ";
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--color-gray-700);
+}
+
+main .make-a-project .make-a-project-description {
+  padding: 0 10px;
+  background-color: var(--body-background-color);
+  color: var(--body-color)
+}
+
+main .make-a-project .make-a-project-description p.button-container {
+  text-align: left;
+}
+
+main .make-a-project .make-a-project-description a.button {
+  margin: 0;
+}
+
+@media (min-width: 400px) {
+  /* mobile only */
+  main .make-a-project {
+    display: none;
+  }
+}
