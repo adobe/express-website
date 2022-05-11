@@ -38,7 +38,7 @@ function infinityScroll($parent, $children) {
   const stopScrolling = () => { // To prevent mobile shakiness
     state.platform.style.overflowX = 'hidden';
     setTimeout(() => {
-      state.platform.style.overflowX = 'scroll';
+      state.platform.style.removeProperty('overflow-x');
     }, 20);
   };
   const duplicateContent = () => {
