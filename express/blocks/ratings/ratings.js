@@ -69,6 +69,9 @@ export default function decorate($block) {
   ];
 
   function buildSchema() {
+    if (!ratingAverage || !ratingTotal) {
+      return;
+    }
     const script = document.createElement('script');
     script.setAttribute('type', 'application/ld+json');
     script.textContent = JSON.stringify({
@@ -77,7 +80,7 @@ export default function decorate($block) {
       '@context': 'https://schema.org',
       aggregateRating: { '@type': 'AggregateRating', ratingValue: ratingAverage, ratingCount: ratingTotal },
     });
-    document.body.appendChild(script);
+    document.head.appendChild(script);
   }
 
   function hasRated() {
