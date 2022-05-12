@@ -60,6 +60,7 @@ main .make-a-project li a:any-link {
   color: var(--color-white);
 }
 
+main .make-a-project li img,
 main .make-a-project li svg {
   position: absolute;
   top: 19px;

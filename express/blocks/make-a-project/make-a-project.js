@@ -17,7 +17,7 @@ export default function decorate($block) {
     // decorate project links
     $marquee.querySelectorAll(':scope ul li a').forEach(($link) => {
       const $icon = $link.previousSibling;
-      if ($icon) {
+      if ($icon && $icon.firstElementChild) {
         // remove title from SVG
         $icon.firstElementChild.remove();
         $link.prepend($icon);
