@@ -39,7 +39,6 @@ main .make-a-project ul {
   margin: 0;
   padding: 0;
   display: flex;
-  /* gap: 22px; */
 }
 
 main .make-a-project li {
@@ -51,6 +50,10 @@ main .make-a-project li {
   text-align: center;
   font-size: var(--body-font-size-s);
   font-weight: 600;
+}
+
+main .make-a-project li:first-of-type {
+  margin-left: 15px;
 }
 
 main .make-a-project li a:any-link {
@@ -93,7 +96,7 @@ main .make-a-project .make-a-project-description a.button {
 }
 
 main .make-a-project .carousel-container {
-  padding-top: 0;
+  padding: 0;
 }
 
 main .make-a-project .carousel-platform {
