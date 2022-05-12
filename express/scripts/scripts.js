@@ -1575,6 +1575,14 @@ async function loadEager() {
   }
 }
 
+function removeMetadata() {
+  document.head.querySelectorAll('meta').forEach((meta) => {
+    if (meta.content && meta.content.includes('--none--')) {
+      meta.remove();
+    }
+  });
+}
+
 /**
  * loads everything that doesn't need to be delayed.
  */
@@ -1589,6 +1597,7 @@ async function loadLazy() {
   scrollToHash();
   resolveFragments();
   addPromotion();
+  removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
 }
