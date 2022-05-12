@@ -59,11 +59,11 @@ main .make-a-project li a:any-link {
 
 main .make-a-project li svg {
   position: absolute;
-  top: 0;
+  top: 19px;
+  left: 19px;
   width: 22px;
   height: 22px;
   fill: currentColor;
-  padding: 19px;
   display: flex;
   flex-direction: column;
 }
