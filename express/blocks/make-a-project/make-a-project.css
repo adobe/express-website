@@ -92,6 +92,14 @@ main .make-a-project .make-a-project-description a.button {
   margin: 0;
 }
 
+main .make-a-project .carousel-container {
+  padding-top: 0;
+}
+
+main .make-a-project .carousel-platform {
+  margin-top: 0;
+}
+
 main .make-a-project .carousel-fader-left,
 main .make-a-project .carousel-fader-right {
   /* use important to overrule element style */
