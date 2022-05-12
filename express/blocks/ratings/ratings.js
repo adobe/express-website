@@ -80,7 +80,7 @@ export default function decorate($block) {
       '@context': 'https://schema.org',
       aggregateRating: { '@type': 'AggregateRating', ratingValue: ratingAverage, ratingCount: ratingTotal },
     });
-    document.body.appendChild(script);
+    document.head.appendChild(script);
   }
 
   function hasRated() {
