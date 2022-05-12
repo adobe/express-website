@@ -39,12 +39,14 @@ main .make-a-project ul {
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 22px;
+  /* gap: 22px; */
 }
 
 main .make-a-project li {
   max-width: 60px;
+  margin-right: 22px;
   display: flex;
+  position: relative;
   flex-direction: column;
   text-align: center;
   font-size: var(--body-font-size-s);
@@ -56,23 +58,24 @@ main .make-a-project li a:any-link {
 }
 
 main .make-a-project li svg {
-  position: relative;
+  position: absolute;
+  top: 0;
   width: 22px;
   height: 22px;
   fill: currentColor;
   padding: 19px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
 }
 
 main .make-a-project li::before {
-  position: absolute;
+  float: left;
   content: " ";
   width: 60px;
   height: 60px;
   border-radius: 50%;
   background-color: var(--color-gray-700);
+  margin-bottom: 10px;
 }
 
 main .make-a-project .make-a-project-description {
@@ -87,6 +90,12 @@ main .make-a-project .make-a-project-description p.button-container {
 
 main .make-a-project .make-a-project-description a.button {
   margin: 0;
+}
+
+main .make-a-project .carousel-fader-left,
+main .make-a-project .carousel-fader-right {
+  /* use important to overrule element style */
+  display: none !important;
 }
 
 @media (min-width: 400px) {

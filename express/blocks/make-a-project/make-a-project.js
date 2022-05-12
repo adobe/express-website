@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-// import { buildCarousel } from '../shared/carousel.js';
+import { buildCarousel } from '../shared/carousel.js';
 
 export default function decorate($block) {
   if ($block.children.length) {
@@ -24,7 +24,7 @@ export default function decorate($block) {
       }
     });
     // add carousel
-    // buildCarousel('ul', $marquee);
+    buildCarousel('ul', $marquee);
   }
   if ($block.children.length > 1) {
     // decorate description row
