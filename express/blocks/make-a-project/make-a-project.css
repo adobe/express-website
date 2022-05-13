@@ -11,28 +11,29 @@ main .section-wrapper.make-a-project-container > div {
 main .make-a-project {
   background-color: var(--color-gray-800);
   color: var(--color-white);
-}
-
-main .make-a-project > div > div {
   display: flex;
   flex-direction: column;
-  padding: 20px 15px;
+}
+
+main .make-a-project .make-a-project-marquee {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
   text-align: left;
 }
 
-main .make-a-project h2 {
+main .make-a-project .make-a-project-marquee > div > * {
+  margin: 20px 0 20px 15px;
+}
+
+main .make-a-project .make-a-project-marquee h2 {
   text-align: left;
   font-size: var(--heading-font-size-xl);
   line-height: 1;
-  min-height: 90px;
 }
 
 main .make-a-project p {
   font-size: var(--body-font-size-xl);
-}
-
-main .make-a-project > div > div > * {
-  margin: 20px 0 20px;
 }
 
 main .make-a-project p:first-child .icon {
@@ -40,11 +41,13 @@ main .make-a-project p:first-child .icon {
   width: auto;
 }
 
-main .make-a-project ul {
+main .make-a-project .make-a-project-marquee ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  padding: 20px 0 0 0;
   display: flex;
+  margin-left: 0;
+  overflow-y: hidden;
+  overflow-x: scroll;
 }
 
 main .make-a-project li {
@@ -60,6 +63,10 @@ main .make-a-project li {
 
 main .make-a-project li:first-of-type {
   margin-left: 15px;
+}
+
+main .make-a-project li:last-of-type {
+  margin-right: 15px;
 }
 
 main .make-a-project li a:any-link {
@@ -89,9 +96,10 @@ main .make-a-project li::before {
 }
 
 main .make-a-project .make-a-project-description {
-  padding: 0 10px;
+  padding: 0 30px;
   background-color: var(--body-background-color);
-  color: var(--body-color)
+  color: var(--body-color);
+  text-align: left;
 }
 
 main .make-a-project .make-a-project-description p.button-container {
@@ -102,29 +110,15 @@ main .make-a-project .make-a-project-description a.button {
   margin: 0;
 }
 
-main .make-a-project .carousel-container {
-  padding: 0;
-}
-
-main .make-a-project .carousel-platform {
-  margin-top: 0;
-  margin-bottom: 40px;
-}
-
-main .make-a-project .carousel-fader-left,
-main .make-a-project .carousel-fader-right {
-  /* use important to overrule element style */
-  display: none !important;
-}
-
 @media (min-width:600px) {
-  main .make-a-project > div > div,
-  main .make-a-project h2,
+  main .make-a-project .make-a-project-marquee > div,
+  main .make-a-project .make-a-project-marquee h2,
+  main .make-a-project .make-a-project-description,
   main .make-a-project .make-a-project-description p.button-container {
     text-align: center;
   }
 
-  main .make-a-project .carousel-platform {
+  main .make-a-project ul {
     justify-content: center;
   }
 }

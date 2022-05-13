@@ -9,11 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { buildCarousel } from '../shared/carousel.js';
-
 export default function decorate($block) {
   if ($block.children.length) {
     const $marquee = $block.children[0];
+    $marquee.classList.add('make-a-project-marquee');
     // decorate project links
     $marquee.querySelectorAll(':scope ul li a').forEach(($link) => {
       const $icon = $link.previousSibling;
@@ -23,8 +22,6 @@ export default function decorate($block) {
         $link.prepend($icon);
       }
     });
-    // add carousel
-    buildCarousel('ul', $marquee);
   }
   if ($block.children.length > 1) {
     // decorate description row
