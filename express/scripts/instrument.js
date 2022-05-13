@@ -502,7 +502,7 @@ loadScript(martechURL, () => {
 
     // tracking videos loaded asynchronously.
     document.addEventListener('videoloaded', (e) => {
-        trackVideoAnalytics(e.detail.video, e.detail.parameters);
+      trackVideoAnalytics(e.detail.video, e.detail.parameters);
     });
   }
 
