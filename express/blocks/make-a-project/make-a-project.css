@@ -21,8 +21,13 @@ main .make-a-project > div > div {
 }
 
 main .make-a-project h2 {
+  text-align: left;
   font-size: var(--heading-font-size-xl);
   line-height: 1;
+}
+
+main .make-a-project p {
+  font-size: var(--body-font-size-xl);
 }
 
 main .make-a-project > div > div > * {
@@ -109,11 +114,4 @@ main .make-a-project .carousel-fader-left,
 main .make-a-project .carousel-fader-right {
   /* use important to overrule element style */
   display: none !important;
-}
-
-@media (min-width: 400px) {
-  /* mobile only */
-  main .make-a-project {
-    display: none;
-  }
 }

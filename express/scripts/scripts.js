@@ -355,7 +355,7 @@ function wrapSections($sections) {
       const keys = Object.keys(meta);
       keys.forEach((key) => {
         if (key === 'style') $div.classList.add(toClassName(meta.style));
-        else $div.dataset[key] = meta[key];
+        else $div.dataset[key] = meta[key].toLowerCase();
       });
       sectionMeta.remove();
     }
