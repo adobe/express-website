@@ -1187,6 +1187,7 @@ function setTheme() {
     $body.classList.add(themeClass);
     if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
+  $body.dataset.device = navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop';
 }
 
 function decorateLinkedPictures($main) {

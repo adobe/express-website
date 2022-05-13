@@ -695,19 +695,12 @@ main .section-wrapper .hero {
   color: initial;
 }
 
-main .section-wrapper > div[data-audience="tablet"],
-main .section-wrapper > div[data-audience="desktop"] {
+body[data-device="mobile"] main .section-wrapper > div[data-audience="desktop"] {
   display: none;
 }
 
-@media (min-width:400px) {
-  main .section-wrapper > div[data-audience="mobile"] {
-    display: none;
-  }
-
-  main .section-wrapper > div[data-audience="tablet"] {
-    display: initial;
-  }
+body[data-device="desktop"] main .section-wrapper > div[data-audience="mobile"] {
+  display: none;
 }
 
 @media (min-width:900px) {
@@ -717,14 +710,6 @@ main .section-wrapper > div[data-audience="desktop"] {
 }
 
 @media (min-width:1200px) {
-  main .section-wrapper > div[data-audience="mobile, tablet"] {
-    display: none;
-  }
-
-  main .section-wrapper > div[data-audience="desktop"] {
-    display: initial;
-  }
-
   main .section-wrapper > div {
     max-width: 1024px;
   }
