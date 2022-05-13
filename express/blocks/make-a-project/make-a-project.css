@@ -24,6 +24,7 @@ main .make-a-project h2 {
   text-align: left;
   font-size: var(--heading-font-size-xl);
   line-height: 1;
+  min-height: 90px;
 }
 
 main .make-a-project p {
@@ -114,4 +115,16 @@ main .make-a-project .carousel-fader-left,
 main .make-a-project .carousel-fader-right {
   /* use important to overrule element style */
   display: none !important;
+}
+
+@media (min-width:600px) {
+  main .make-a-project > div > div,
+  main .make-a-project h2,
+  main .make-a-project .make-a-project-description p.button-container {
+    text-align: center;
+  }
+
+  main .make-a-project .carousel-platform {
+    justify-content: center;
+  }
 }
