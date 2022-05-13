@@ -108,14 +108,16 @@ main .make-a-project .make-a-project-description a.button {
 }
 
 @media (min-width:600px) {
-  main .make-a-project .make-a-project-marquee > div,
-  main .make-a-project .make-a-project-marquee h2,
+  main .make-a-project .make-a-project-marquee > div > * {
+    margin: 20px 40px;
+  }
+
+  main .make-a-project .make-a-project-marquee > div > ul {
+    padding-left: 0;
+  }
+
   main .make-a-project .make-a-project-description,
   main .make-a-project .make-a-project-description p.button-container {
     text-align: center;
-  }
-
-  main .make-a-project ul {
-    justify-content: center;
   }
 }
