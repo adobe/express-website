@@ -17,6 +17,22 @@ import {
 
 const docTitle = document.title;
 
+async function fetchVideoAnalytics() {
+  if (!window.videoAnalytics) {
+    window.videoAnalytics = [];
+    try {
+      const resp = await fetch('/express/video-analytics.json');
+      const json = await resp.json();
+      json.data.forEach((entry) => {
+        window.videoAnalytics.push(entry);
+      });
+    } catch (e) {
+      // ignore
+    }
+  }
+  return window.videoAnalytics;
+}
+
 async function fetchVideoPromotions() {
   if (!window.videoPromotions) {
     window.videoPromotions = {};
@@ -66,6 +82,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
     $video.addEventListener('loadeddata', async () => {
       // check for video promotion
       const videoPromos = await fetchVideoPromotions();
+      const videoAnalytics = await fetchVideoAnalytics();
       const promoName = videoPromos[primaryUrl];
       if (typeof promoName === 'string') {
         $element.insertAdjacentHTML('beforeend', `<div class="promotion block" data-block-name="promotion">${promoName}</div>`);
@@ -79,31 +96,40 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         });
         window.videoPromotions[primaryUrl] = $promo;
       }
+
+      if (videoAnalytics.length) {
+        videoAnalytics.forEach((analytic) => {
+          if (window.location.pathname.includes(analytic.Page)) {
+            const filenames = analytic.Filenames ? analytic.Filenames.split('\n') : [];
+
+            filenames.forEach((filename) => {
+              if ($video.currentSrc.includes(filename)) {
+                const information = {
+                  video: $video,
+                  parameters: {
+                    videoName: analytic.videoName ?? null,
+                    videoId: analytic.videoId ?? null,
+                    videoLength: $video.duration,
+                    product: 'Adobe Express',
+                    videoCategory: 'default',
+                    videoDescription: analytic.videoDescription ?? null,
+                    videoPlayer: 'html5-video',
+                    videoMediaType: 'VOD',
+                  },
+                };
+
+                const videoLoaded = new CustomEvent('videoloaded', { detail: information });
+                document.dispatchEvent(videoLoaded);
+              }
+            });
+          }
+        });
+      }
     });
     $video.addEventListener('ended', async () => {
       // hide player and show promotion
       showVideoPromotion($video, primaryUrl);
     });
-
-    if (window.location.pathname.includes('express-your-brand')) {
-      const information = {
-        video: $video,
-        parameters: {
-          videoName: 'Creatively Engage Your Audience on Social',
-          videoId: 'adobe-x-meta',
-          videoLength: $video.duration,
-          product: 'Adobe Express',
-          videoCategory: 'default',
-          videoDescription: 'See how to grow your business and engage with customers on social media. You’ll learn from Chrishell Stause and experts from Adobe and Meta.',
-          videoPlayer: 'HTML2',
-          videoMediaType: 'MP4',
-        },
-      };
-      $video.id = information.parameters.videoId;
-
-      const videoLoaded = new CustomEvent('videoloaded', { detail: information });
-      document.dispatchEvent(videoLoaded);
-    }
   } else {
     // iframe 3rd party player
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
