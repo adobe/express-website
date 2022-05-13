@@ -400,7 +400,6 @@ loadScript(martechURL, () => {
     digitalData._set('video.videoInfo.videoName', videoName);
     digitalData._set('video.videoInfo.videoId', videoId);
     digitalData._set('video.videoInfo.videoLength', videoLength);
-    digitalData._set('video.videoInfo.language', language);
     digitalData._set('video.videoInfo.product', product);
     digitalData._set('video.videoInfo.videoCategory', videoCategory);
     digitalData._set('video.videoInfo.videoDescription', videoDescription);

@@ -132,7 +132,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
           }
         });
       }
-    }, 10);
+    }, 1);
   } else {
     // iframe 3rd party player
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
