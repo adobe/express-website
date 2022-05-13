@@ -1531,7 +1531,7 @@ async function wordBreakJapanese() {
   const bw2 = new BalancedWordWrapper();
   document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
     // apply balanced word wrap to headings
-    if (window.requestIdleCallback) {
+    if (typeof window.requestIdleCallback === 'function') {
       window.requestIdleCallback(() => {
         bw2.applyElement(el);
       });
