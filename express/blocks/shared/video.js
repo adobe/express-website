@@ -84,6 +84,26 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
       // hide player and show promotion
       showVideoPromotion($video, primaryUrl);
     });
+
+    if (window.location.pathname.includes('express-your-brand')) {
+      const information = {
+        video: $video,
+        parameters: {
+          videoName: 'Creatively Engage Your Audience on Social',
+          videoId: 'adobe-x-meta',
+          videoLength: $video.duration,
+          product: 'Adobe Express',
+          videoCategory: 'default',
+          videoDescription: 'See how to grow your business and engage with customers on social media. You’ll learn from Chrishell Stause and experts from Adobe and Meta.',
+          videoPlayer: 'HTML2',
+          videoMediaType: 'MP4',
+        },
+      };
+      $video.id = information.parameters.videoId;
+
+      const videoLoaded = new CustomEvent('videoloaded', { detail: information });
+      document.dispatchEvent(videoLoaded);
+    }
   } else {
     // iframe 3rd party player
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;

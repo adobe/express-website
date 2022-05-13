@@ -386,6 +386,35 @@ loadScript(martechURL, () => {
     digitalData._delete('spark.eventData.eventName');
   }
 
+  function trackVideoAnalytics($video, parameters) {
+    const {
+      videoName,
+      videoId,
+      videoLength,
+      product,
+      videoCategory,
+      videoDescription,
+      videoResolution,
+      videoPlayer,
+      videoMediaType,
+    } = parameters;
+
+    console.log('Event loaded:');
+    console.log($video);
+    console.log(parameters);
+
+    digitalData._set('video.videoInfo.videoName', videoName);
+    digitalData._set('video.videoInfo.videoId', videoId);
+    digitalData._set('video.videoInfo.videoLength', videoLength);
+    digitalData._set('video.videoInfo.language', language);
+    digitalData._set('video.videoInfo.product', product);
+    digitalData._set('video.videoInfo.videoCategory', videoCategory);
+    digitalData._set('video.videoInfo.videoDescription', videoDescription);
+    digitalData._set('video.videoInfo.videoResolution', videoResolution);
+    digitalData._set('video.videoInfo.videoPlayer', videoPlayer);
+    digitalData._set('video.videoInfo.videoMediaType', videoMediaType);
+  }
+
   function decorateAnalyticsEvents() {
     const $links = d.querySelectorAll('main a');
 
@@ -476,6 +505,11 @@ loadScript(martechURL, () => {
           trackButtonClick($link);
         });
       });
+    });
+
+    // tracking videos loaded asynchronously.
+    document.addEventListener('videoloaded', (e) => {
+        trackVideoAnalytics(e.detail.video, e.detail.parameters);
     });
   }
 
