@@ -17,6 +17,22 @@ import {
 
 const docTitle = document.title;
 
+async function fetchVideoAnalytics() {
+  if (!window.videoAnalytics) {
+    window.videoAnalytics = [];
+    try {
+      const resp = await fetch('/express/video-analytics.json');
+      const json = await resp.json();
+      json.data.forEach((entry) => {
+        window.videoAnalytics.push(entry);
+      });
+    } catch (e) {
+      // ignore
+    }
+  }
+  return window.videoAnalytics;
+}
+
 async function fetchVideoPromotions() {
   if (!window.videoPromotions) {
     window.videoPromotions = {};
@@ -60,7 +76,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
   if (!primaryUrl) return;
   if (playerType === 'html5') {
     const sources = vidUrls.map((src) => `<source src="${src}" type="${getMimeType(src)}"></source>`).join('');
-    const videoHTML = `<video controls autoplay playsinline>${sources}</video>`;
+    const videoHTML = `<video controls playsinline>${sources}</video>`;
     $element.innerHTML = videoHTML;
     const $video = $element.querySelector('video');
     $video.addEventListener('loadeddata', async () => {
@@ -79,6 +95,39 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         });
         window.videoPromotions[primaryUrl] = $promo;
       }
+
+      const videoAnalytics = await fetchVideoAnalytics();
+
+      if (videoAnalytics.length) {
+        videoAnalytics.forEach((analytic) => {
+          if (window.location.pathname.includes(analytic.Page)) {
+            const filenames = analytic.Filenames ? analytic.Filenames.split('\n') : [];
+
+            filenames.forEach((filename) => {
+              if ($video.currentSrc.includes(filename)) {
+                const information = {
+                  video: $video,
+                  parameters: {
+                    videoName: analytic.videoName ?? null,
+                    videoId: analytic.videoId ?? null,
+                    videoLength: $video.duration,
+                    product: 'Adobe Express',
+                    videoCategory: 'default',
+                    videoDescription: analytic.videoDescription ?? null,
+                    videoPlayer: 'html5-video',
+                    videoMediaType: 'VOD',
+                  },
+                };
+
+                const videoLoaded = new CustomEvent('videoloaded', { detail: information });
+                document.dispatchEvent(videoLoaded);
+              }
+            });
+          }
+        });
+      }
+
+      $video.play();
     });
     $video.addEventListener('ended', async () => {
       // hide player and show promotion
