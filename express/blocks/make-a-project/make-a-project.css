@@ -23,7 +23,7 @@ main .make-a-project .make-a-project-marquee {
 }
 
 main .make-a-project .make-a-project-marquee > div > * {
-  margin: 20px 0 20px 15px;
+  margin: 20px 15px;
 }
 
 main .make-a-project .make-a-project-marquee h2 {
@@ -43,11 +43,12 @@ main .make-a-project p:first-child .icon {
 
 main .make-a-project .make-a-project-marquee ul {
   list-style: none;
-  padding: 20px 0 0 0;
+  padding: 20px 15px 0;
   display: flex;
   margin-left: 0;
-  overflow-y: hidden;
+  margin-right: 0;
   overflow-x: scroll;
+  max-width: 100vw;
 }
 
 main .make-a-project li {
@@ -61,12 +62,8 @@ main .make-a-project li {
   font-weight: 600;
 }
 
-main .make-a-project li:first-of-type {
-  margin-left: 15px;
-}
-
 main .make-a-project li:last-of-type {
-  margin-right: 15px;
+  margin-right: 0;
 }
 
 main .make-a-project li a:any-link {
