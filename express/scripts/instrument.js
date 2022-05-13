@@ -394,6 +394,7 @@ loadScript(martechURL, () => {
       product,
       videoCategory,
       videoDescription,
+      videoPlayer,
       videoMediaType,
     } = parameters;
 
@@ -403,6 +404,7 @@ loadScript(martechURL, () => {
     digitalData._set('video.videoInfo.product', product);
     digitalData._set('video.videoInfo.videoCategory', videoCategory);
     digitalData._set('video.videoInfo.videoDescription', videoDescription);
+    digitalData._set('video.videoInfo.videoPlayer', videoPlayer);
     digitalData._set('video.videoInfo.videoMediaType', videoMediaType);
   }
 
