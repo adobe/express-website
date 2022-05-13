@@ -82,7 +82,6 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
     $video.addEventListener('loadeddata', async () => {
       // check for video promotion
       const videoPromos = await fetchVideoPromotions();
-      const videoAnalytics = await fetchVideoAnalytics();
       const promoName = videoPromos[primaryUrl];
       if (typeof promoName === 'string') {
         $element.insertAdjacentHTML('beforeend', `<div class="promotion block" data-block-name="promotion">${promoName}</div>`);
@@ -96,6 +95,14 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         });
         window.videoPromotions[primaryUrl] = $promo;
       }
+    });
+    $video.addEventListener('ended', async () => {
+      // hide player and show promotion
+      showVideoPromotion($video, primaryUrl);
+    });
+
+    setTimeout(async () => {
+      const videoAnalytics = await fetchVideoAnalytics();
 
       if (videoAnalytics.length) {
         videoAnalytics.forEach((analytic) => {
@@ -125,10 +132,6 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
           }
         });
       }
-    });
-    $video.addEventListener('ended', async () => {
-      // hide player and show promotion
-      showVideoPromotion($video, primaryUrl);
     });
   } else {
     // iframe 3rd party player
