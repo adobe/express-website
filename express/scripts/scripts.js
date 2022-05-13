@@ -940,6 +940,11 @@ export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
     const originalHref = $a.href;
+    if ($a.children.length > 0) {
+      // We can use this to eliminate styling so only text
+      // propagates to buttons.
+      $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
+    }
     $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
@@ -1582,6 +1587,14 @@ async function loadEager() {
   }
 }
 
+function removeMetadata() {
+  document.head.querySelectorAll('meta').forEach((meta) => {
+    if (meta.content && meta.content.includes('--none--')) {
+      meta.remove();
+    }
+  });
+}
+
 /**
  * loads everything that doesn't need to be delayed.
  */
@@ -1596,6 +1609,7 @@ async function loadLazy() {
   scrollToHash();
   resolveFragments();
   addPromotion();
+  removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
 }
