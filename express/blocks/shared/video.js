@@ -76,7 +76,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
   if (!primaryUrl) return;
   if (playerType === 'html5') {
     const sources = vidUrls.map((src) => `<source src="${src}" type="${getMimeType(src)}"></source>`).join('');
-    const videoHTML = `<video controls autoplay playsinline>${sources}</video>`;
+    const videoHTML = `<video controls playsinline>${sources}</video>`;
     $element.innerHTML = videoHTML;
     const $video = $element.querySelector('video');
     $video.addEventListener('loadeddata', async () => {
@@ -95,13 +95,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         });
         window.videoPromotions[primaryUrl] = $promo;
       }
-    });
-    $video.addEventListener('ended', async () => {
-      // hide player and show promotion
-      showVideoPromotion($video, primaryUrl);
-    });
 
-    setTimeout(async () => {
       const videoAnalytics = await fetchVideoAnalytics();
 
       if (videoAnalytics.length) {
@@ -132,7 +126,13 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
           }
         });
       }
-    }, 1);
+
+      $video.play();
+    });
+    $video.addEventListener('ended', async () => {
+      // hide player and show promotion
+      showVideoPromotion($video, primaryUrl);
+    });
   } else {
     // iframe 3rd party player
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
