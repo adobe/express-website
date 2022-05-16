@@ -22,7 +22,8 @@ main .make-a-project .make-a-project-marquee {
   text-align: left;
 }
 
-main .make-a-project .make-a-project-marquee > div > * {
+main .make-a-project .make-a-project-marquee h2,
+main .make-a-project .make-a-project-marquee p {
   margin: 20px 15px;
 }
 
@@ -43,17 +44,16 @@ main .make-a-project p:first-child .icon {
 
 main .make-a-project .make-a-project-marquee ul {
   list-style: none;
-  padding: 20px 15px 0;
+  padding: 20px 15px;
   display: flex;
-  margin-left: 0;
-  margin-right: 0;
+  margin: 20px 0 0 0;
   overflow-x: scroll;
   max-width: 100vw;
 }
 
 main .make-a-project li {
   max-width: 60px;
-  margin-right: 22px;
+  padding-right: 22px;
   display: flex;
   position: relative;
   flex-direction: column;
@@ -63,7 +63,7 @@ main .make-a-project li {
 }
 
 main .make-a-project li:last-of-type {
-  margin-right: 0;
+  padding-right: 15px;
 }
 
 main .make-a-project li a:any-link {
