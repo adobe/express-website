@@ -19,6 +19,7 @@ import {
   lazyLoadLottiePlayer,
   getLocale,
   toClassName,
+  getMetadata,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -75,9 +76,10 @@ export default function decorate($block) {
     const script = document.createElement('script');
     script.setAttribute('type', 'application/ld+json');
     script.textContent = JSON.stringify({
-      name: document.title,
       '@type': 'Product',
       '@context': 'https://schema.org',
+      name: document.title,
+      description: getMetadata('description'),
       aggregateRating: { '@type': 'AggregateRating', ratingValue: ratingAverage, ratingCount: ratingTotal },
     });
     document.head.appendChild(script);
