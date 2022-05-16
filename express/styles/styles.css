@@ -768,3 +768,8 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
   width: 32px;
   height: 32px;
 }
+
+/* Japanese heading balanced word wrap styles */
+wbr.wbr-off {
+  display: none;
+}
