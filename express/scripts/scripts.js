@@ -54,8 +54,8 @@ export function sampleRUM(checkpoint, data = {}) {
             data.cwv[measurement.name] = measurement.value;
             sendPing();
           };
-            // When loading `web-vitals` using a classic script, all the public
-            // methods can be found on the `webVitals` global namespace.
+          // When loading `web-vitals` using a classic script, all the public
+          // methods can be found on the `webVitals` global namespace.
           window.webVitals.getCLS(storeCWV);
           window.webVitals.getFID(storeCWV);
           window.webVitals.getLCP(storeCWV);
@@ -77,7 +77,7 @@ sampleRUM.mediaobserver = (window.IntersectionObserver) ? new IntersectionObserv
       const source = sampleRUM.sourceselector(entry.target);
       sampleRUM('viewmedia', { target, source });
     });
-}, { threshold: 0.25 }) : { observe: () => {} };
+}, { threshold: 0.25 }) : { observe: () => { } };
 
 sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
   entries
@@ -88,14 +88,14 @@ sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserv
       const source = sampleRUM.sourceselector(entry.target);
       sampleRUM('viewblock', { target, source });
     });
-}, { threshold: 0.25 }) : { observe: () => {} };
+}, { threshold: 0.25 }) : { observe: () => { } };
 
 sampleRUM.observe = ((elements) => {
   elements.forEach((element) => {
     if (element.tagName.toLowerCase() === 'img'
-    || element.tagName.toLowerCase() === 'video'
-    || element.tagName.toLowerCase() === 'audio'
-    || element.tagName.toLowerCase() === 'iframe') {
+      || element.tagName.toLowerCase() === 'video'
+      || element.tagName.toLowerCase() === 'audio'
+      || element.tagName.toLowerCase() === 'iframe') {
       sampleRUM.mediaobserver.observe(element);
     } else {
       sampleRUM.blockobserver.observe(element);
@@ -167,7 +167,7 @@ export function getMeta(name) {
     const nameAttr = $m.getAttribute('name');
     const propertyAttr = $m.getAttribute('property');
     return ((nameAttr && nameLower === nameAttr.toLowerCase())
-    || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+      || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
   });
   if ($metas[0]) value = $metas[0].getAttribute('content');
   return value;
@@ -957,12 +957,12 @@ export function decorateButtons(block = document) {
           $up.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
         }
@@ -1153,7 +1153,7 @@ function setLastExperimentVariant(experimentId, variant) {
 
 async function decorateTesting() {
   try {
-  // let reason = '';
+    // let reason = '';
     const usp = new URLSearchParams(window.location.search);
     const martech = usp.get('martech');
     if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
@@ -1190,6 +1190,7 @@ async function decorateTesting() {
             config.selectedVariant = config.variantNames[i];
           }
           setLastExperimentVariant(config.id, config.selectedVariant);
+          sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
