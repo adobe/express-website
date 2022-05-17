@@ -168,7 +168,8 @@ loadScript(martechURL, () => {
   /* set experiment and variant information */
   if (window.hlx.experiment) {
     const { experiment } = window.hlx;
-    digitalData._set('page.pageInfo.experiment', `${experiment.id}/${experiment.selectedVariant}`);
+    digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.campaignid', experiment.id);
+    digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.offerid', experiment.selectedVariant);
   }
 
   digitalData._set('spark.eventData.pageurl', loc.href);
