@@ -21,6 +21,8 @@ export default function decorate(block) {
   window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express-stage.adobe.com/express-apps/quick-actions-api' };
   // eslint-disable-next-line no-underscore-dangle
   window._sparkImsOnReadyCalled = true;
-  block.innerHTML = '<div id="quick-task-container"></div>';
+  block.innerHTML = `<div id="quick-task-container"></div>
+  <cclqt-sign-up-modal id="qt-sign-up-modal"></cclqt-sign-up-modal>
+  <cclqt-done-modal id="qt-done-modal"></cclqt-done-modal>`;
   loadScript('https://express-stage.adobe.com/static/platform-shell/standalone-host-app-1fecd562.js');
 }
