@@ -39,11 +39,16 @@ async function createExperiment() {
         || 1 - config.variantNames.reduce((c, vn) => c + +config.variants[vn].percentageSplit, 0);
       const percentage = Math.round(split * 10000) / 100;
       const div = document.createElement('div');
+
+      const experimentURL = new URL(window.location.href);
+      // this will retain other query params such as ?rum=on
+      experimentURL.searchParams.set('experiment', `${experiment}/${variantName}`);
+
       div.className = 'hlx-variant';
       div.innerHTML = `<div><h5>${variantName}</h5>
       <p>${variant.label}</p>
       <p>${percentage}%</p></div>
-      <div class="hlx-button"><a href="${window.location.pathname}?experiment=${experiment}/${variantName}">Simulate</a></div>`;
+      <div class="hlx-button"><a href="${experimentURL.href}">Simulate</a></div>`;
       return (div);
     };
 
