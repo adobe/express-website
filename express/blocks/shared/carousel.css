@@ -73,6 +73,10 @@ main .carousel-container.controls-hidden .carousel-fader-right {
   opacity: 0;
 }
 
+main .carousel-container.controls-hidden {
+  scroll-snap-type: none;
+}
+
 main .carousel-container a.button.carousel-arrow {
   cursor: pointer;
   display: block;
