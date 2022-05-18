@@ -45,9 +45,12 @@ async function createExperiment() {
       experimentURL.searchParams.set('experiment', `${experiment}/${variantName}`);
 
       div.className = 'hlx-variant';
-      div.innerHTML = `<div><h5>${variantName}</h5>
-      <p>${variant.label}</p>
-      <p>${percentage}%</p></div>
+      div.innerHTML = `<div>
+      <h5>${variantName}</h5>
+        <p>${variant.label}</p>
+        <p>${percentage}%</p>
+        <p class="performance"></p>
+      </div>
       <div class="hlx-button"><a href="${experimentURL.href}">Simulate</a></div>`;
       return (div);
     };
@@ -63,13 +66,44 @@ async function createExperiment() {
       </div>`;
     console.log(config.id);
     const popup = div.querySelector('.hlx-popup');
+
+    const variantMap = {};
+
     div.addEventListener('click', () => {
       popup.classList.toggle('hlx-hidden');
+
+      // the query is a bit slow, so I'm only fetching the results when the popup is opened
+      const resultsURL = new URL(`https://helix-pages.anywhere.run/helix-services/run-query@ci3553/rum-experiments`); // we change ci3553 to v2 once the corresponding PR has been merged
+      resultsURL.searchParams.set('experiment', experiment);
+      if (window.hlx.sidekickConfig?.host) {
+        // restrict results to the production host, this also reduces query cost
+        resultsURL.searchParams.set('domain', window.hlx.sidekickConfig.host);
+      }
+      fetch(resultsURL.href).then(async (response) => {
+        const { results } = await response.json();
+        results.forEach(result => {
+          const nf = {
+            format: (num) => Math.floor(num) + '%'
+          };
+          const variant = variantMap[result.variant];
+          if (variant) {
+            const performance = variant.querySelector('.performance');
+            performance.innerHTML = `
+              <span>click rate: ${nf.format(100 * Number.parseFloat(result.variant_conversion_rate))}</span>
+              <span>vs. ${nf.format(100 * Number.parseFloat(result.control_conversion_rate))}</span>
+              <span>significance: ${nf.format(100 * Number.parseFloat(result.p_value))}</span> <!-- everything below 95% is not good enough for the social sciences to be considered significant --->
+            `;
+          }
+        });
+      });
     });
+
 
     const variants = div.querySelector('.hlx-variants');
     config.variantNames.forEach((vname) => {
-      variants.append(createVariant(vname));
+      const variantDiv = createVariant(vname);
+      variants.append(variantDiv);
+      variantMap[vname] = variantDiv;
     });
     return (div);
   }
