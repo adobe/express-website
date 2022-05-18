@@ -141,12 +141,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     initialState();
   }
 
-  // Hide controls if the user does not use controls to scroll through the carousel
-  $platform.addEventListener('wheel', (e) => {
-    if ((e.deltaX > 30 || e.deltaX < -30) && isScrolling) {
-      hideControls = true;
-    }
-  });
+  // Hide controls if the user swipes through the carousel
   let lastPos = null;
   $platform.addEventListener('touchstart', (e) => {
     lastPos = e;
