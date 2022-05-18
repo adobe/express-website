@@ -66,14 +66,14 @@ main .carousel-container .carousel-fader-right {
   pointer-events: none;
 }
 
-main .carousel-container .carousel-fader-left.arrow-hidden,
-main .carousel-container .carousel-fader-right.arrow-hidden,
-main .carousel-container.controls-hidden .carousel-fader-left,
-main .carousel-container.controls-hidden .carousel-fader-right {
+main .carousel-container .carousel-platform .carousel-fader-left.arrow-hidden,
+main .carousel-container .carousel-platform .carousel-fader-right.arrow-hidden,
+main .carousel-container .carousel-platform.controls-hidden .carousel-fader-left,
+main .carousel-container .carousel-platform.controls-hidden .carousel-fader-right {
   opacity: 0;
 }
 
-main .carousel-container.controls-hidden {
+main .carousel-container .carousel-platform.controls-hidden {
   scroll-snap-type: none;
 }
 

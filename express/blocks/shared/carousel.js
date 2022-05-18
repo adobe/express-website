@@ -53,7 +53,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
       toggleArrow($faderRight, showRight);
     }
     if (hideControls) {
-      $container.classList.add('controls-hidden');
+      $platform.classList.add('controls-hidden');
     }
   };
 
