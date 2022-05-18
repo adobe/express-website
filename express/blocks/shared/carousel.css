@@ -32,7 +32,7 @@ main .carousel-container .carousel-platform > * {
 }
 
 main .carousel-container .carousel-fader-left {
-  display: none;
+  display: flex;
   position: absolute;
   height: 100%;
   width: 60px;
@@ -44,12 +44,12 @@ main .carousel-container .carousel-fader-left {
     rgba(255, 255, 255, 0),
     rgba(255, 255, 255, 1)
   );
-  transition: display 0.2s;
+  transition: opacity 0.2s, display 0.2s;
   pointer-events: none;
 }
 
 main .carousel-container .carousel-fader-right {
-  display: none;
+  display: flex;
   position: absolute;
   height: 100%;
   width: 68px;
@@ -62,8 +62,15 @@ main .carousel-container .carousel-fader-right {
     rgba(255, 255, 255, 0),
     rgba(255, 255, 255, 1)
   );
-  transition: display 0.2s;
+  transition: opacity 0.2s;
   pointer-events: none;
+}
+
+main .carousel-container .carousel-fader-left.arrow-hidden,
+main .carousel-container .carousel-fader-right.arrow-hidden,
+main .carousel-container.controls-hidden .carousel-fader-left,
+main .carousel-container.controls-hidden .carousel-fader-right {
+  opacity: 0;
 }
 
 main .carousel-container a.button.carousel-arrow {
