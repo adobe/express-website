@@ -554,7 +554,7 @@ export async function decorateTemplateList($block) {
 
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    buildCarousel(':scope > .template', $block, false);
+    buildCarousel(':scope > .template', $block, true);
   } else if (rows > 6 || $block.classList.contains('sixcols')) {
     /* flex masonry */
     // console.log(`masonry-rows: ${rows}`);
