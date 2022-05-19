@@ -44,7 +44,6 @@ main .carousel-container .carousel-fader-left {
   left: 0;
   transition: opacity 0.2s, display 0.2s;
   pointer-events: none;
-  background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }
 
 main .carousel-container .carousel-fader-right {
@@ -59,7 +58,6 @@ main .carousel-container .carousel-fader-right {
   flex-direction: row-reverse;
   transition: opacity 0.2s;
   pointer-events: none;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }
 
 main .carousel-container a.button.carousel-arrow {
@@ -109,8 +107,25 @@ main .carousel-container a.button.carousel-arrow-right::before {
   transform: rotate(45deg);
 }
 
+/* Remove snapping in mobile-breakpoint if they scrolled using drag */
+main .carousel-container.controls-hidden .carousel-platform {
+  scroll-snap-type: none;
+}
+
 @media (min-width: 900px) {  
   main .carousel-container a.button.carousel-arrow {
     margin: 0 10px;
+  }
+
+  main .carousel-container .carousel-fader-left {
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .carousel-container .carousel-fader-right {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .carousel-container.controls-hidden .carousel-platform {
+    scroll-snap-type: x mandatory;
   }
 }

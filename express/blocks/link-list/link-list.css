@@ -63,11 +63,6 @@ main .link-list a.button.secondary {
 
 /* Carousel styles (Link-list specific) */
 
-/* Remove snapping in mobile-breakpoint if they scrolled using drag */
-main .link-list .carousel-container.controls-hidden .carousel-platform {
-  scroll-snap-type: none;
-}
-
 /* Remove max-width on mobile breakpoints */
 main .section-wrapper.link-list-container,
 main .section-wrapper.link-list-container > div,
@@ -98,26 +93,9 @@ main .link-list .carousel-platform p.button-container:first-child {
   margin-left: 32px;
 }
 
-main .link-list .carousel-container .carousel-fader-left,
-main .link-list .carousel-container .carousel-fader-right {
-  background: none;
-}
-
 @media (min-width: 900px) {
   main .link-list .carousel-platform {
     scroll-padding: 0;
-  }
-
-  main .link-list .carousel-container .carousel-fader-left {
-    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-  }
-
-  main .link-list .carousel-container .carousel-fader-right {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-  }
-
-  main .link-list .carousel-container.controls-hidden .carousel-platform {
-    scroll-snap-type: x mandatory;
   }
 
   main .section-wrapper.link-list-container > div,

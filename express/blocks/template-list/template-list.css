@@ -428,16 +428,14 @@ main .template-list.flex-masonry .template.appear {
 /* Carousel styles (Template-list specific) */
 
 /* hide controls in mobile-breakpoint if they scrolled using drag */
-main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden,
-main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden,
 main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
 main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
   opacity: 0;
 }
 
-/* Remove snapping in mobile-breakpoint if they scrolled using drag */
-main .template-list.horizontal .carousel-container.controls-hidden .carousel-platform {
-  scroll-snap-type: none;
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+  pointer-events: none;
 }
 
 /* Remove max-width on mobile breakpoints */
@@ -469,20 +467,25 @@ main .template-list.horizontal .carousel-platform {
   scroll-padding: 12px;
 }
 
-main .template-list.horizontal .carousel-container .carousel-fader-left,
-main .template-list.horizontal .carousel-container .carousel-fader-right {
-  background: none;
-}
-
 @media (min-width: 600px) {
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
     opacity: unset;
   }
 
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+    pointer-events: auto;
+  }
+
   main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden,
   main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden {
     opacity: 0;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
+    pointer-events: none;
   }
 
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-platform {
