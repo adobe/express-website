@@ -47,7 +47,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   };
   const toggleControls = () => {
     if (!infinityScrollEnabled) {
-      const showLeft = ($platform.scrollLeft > 20);
+      const showLeft = ($platform.scrollLeft > 33);
       toggleArrow($faderLeft, showLeft);
       const showRight = !($platform.offsetWidth + $platform.scrollLeft >= $platform.scrollWidth);
       toggleArrow($faderRight, showRight);
@@ -124,7 +124,6 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
       });
     }
     toggleControls();
-    setTimeout(toggleControls, 2000);
   };
 
   // Carousel with media: wait for media to load before toggling controls and infinityScroll
@@ -134,11 +133,15 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     media.forEach(($media) => {
       $media.addEventListener('load', () => {
         mediaLoaded += 1;
-        if (media.length === mediaLoaded) initialState();
+        if (media.length === mediaLoaded) {
+          initialState();
+          setTimeout(initialState, 2000);
+        }
       });
     });
   } else {
     initialState();
+    setTimeout(initialState, 2000);
   }
 
   // Hide controls if the user swipes through the carousel
