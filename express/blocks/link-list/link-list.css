@@ -63,14 +63,6 @@ main .link-list a.button.secondary {
 
 /* Carousel styles (Link-list specific) */
 
-/* hide controls in mobile-breakpoint if they scrolled using drag */
-main .link-list .carousel-container .carousel-fader-left.arrow-hidden,
-main .link-list .carousel-container .carousel-fader-right.arrow-hidden,
-main .link-list .carousel-container.controls-hidden .carousel-fader-left,
-main .link-list .carousel-container.controls-hidden .carousel-fader-right {
-  opacity: 0;
-}
-
 /* Remove snapping in mobile-breakpoint if they scrolled using drag */
 main .link-list .carousel-container.controls-hidden .carousel-platform {
   scroll-snap-type: none;
@@ -122,16 +114,6 @@ main .link-list .carousel-container .carousel-fader-right {
 
   main .link-list .carousel-container .carousel-fader-right {
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-  }
-
-  main .link-list .carousel-container.controls-hidden .carousel-fader-left,
-  main .link-list .carousel-container.controls-hidden .carousel-fader-right {
-    opacity: unset;
-  }
-
-  main .link-list .carousel-container .carousel-fader-left.arrow-hidden,
-  main .link-list .carousel-container .carousel-fader-right.arrow-hidden {
-    opacity: 0;
   }
 
   main .link-list .carousel-container.controls-hidden .carousel-platform {
