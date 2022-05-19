@@ -111,17 +111,6 @@ main .link-list .carousel-container .carousel-fader-right {
   background: none;
 }
 
-@media (min-width: 600px) {
-  main .link-list .carousel-container.controls-hidden .carousel-fader-left,
-  main .link-list .carousel-container.controls-hidden .carousel-fader-right {
-    opacity: unset;
-  }
-
-  main .link-list .carousel-container.controls-hidden .carousel-platform {
-    scroll-snap-type: x mandatory;
-  }
-}
-
 @media (min-width: 900px) {
   main .link-list .carousel-platform {
     scroll-padding: 0;
@@ -133,6 +122,20 @@ main .link-list .carousel-container .carousel-fader-right {
 
   main .link-list .carousel-container .carousel-fader-right {
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .link-list .carousel-container.controls-hidden .carousel-fader-left,
+  main .link-list .carousel-container.controls-hidden .carousel-fader-right {
+    opacity: unset;
+  }
+
+  main .link-list .carousel-container .carousel-fader-left.arrow-hidden,
+  main .link-list .carousel-container .carousel-fader-right.arrow-hidden {
+    opacity: 0;
+  }
+
+  main .link-list .carousel-container.controls-hidden .carousel-platform {
+    scroll-snap-type: x mandatory;
   }
 
   main .section-wrapper.link-list-container > div,
