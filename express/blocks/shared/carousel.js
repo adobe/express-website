@@ -76,7 +76,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     isScrolling = true;
     scrollTimer = window.setTimeout(() => {
       isScrolling = false;
-    }, 10);
+    }, 400);
     toggleControls();
   });
 
