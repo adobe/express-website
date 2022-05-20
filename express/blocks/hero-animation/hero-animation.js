@@ -82,8 +82,9 @@ function createAnimation(animations) {
 
   // replace anchor with video element
   const $video = createTag('video', attribs);
-  $video.innerHTML = `
-  <source src="${source}" type="video/mp4">`;
+  if (source) {
+    $video.innerHTML = `<source src="${source}" type="video/mp4">`;
+  }
   return $video;
 }
 
@@ -161,21 +162,25 @@ export default async function decorate($block) {
 
     // content row
     if (rowType === 'animation') {
+      let source;
+      let videoParameters = {};
       const $a = $div.querySelector('a');
       const $poster = $div.querySelector('img');
-      const url = new URL($a.href);
-      const params = new URLSearchParams(url.search);
-      const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
-      const source = `./media_${id}.mp4`;
+      if ($a) {
+        const url = new URL($a.href);
+        const params = new URLSearchParams(url.search);
+        videoParameters = {
+          loop: params.get('loop') !== 'false',
+        };
+        const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
+        source = `./media_${id}.mp4`;
+      }
 
       const srcURL = new URL($poster.src);
       const srcUSP = new URLSearchParams(srcURL.search);
       srcUSP.set('format', 'webply');
+      srcUSP.set('width', typeHint === 'desktop' ? 2000 : 750);
       const optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
-
-      const videoParameters = {
-        loop: params.get('loop') !== 'false',
-      };
 
       animations[typeHint] = {
         source,

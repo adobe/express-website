@@ -72,7 +72,7 @@ async function filterBlogPosts(config) {
     /* filter posts by tag and author */
     const f = {};
     for (const name of Object.keys(config)) {
-      const filterNames = ['tags', 'author'];
+      const filterNames = ['tags', 'author', 'category'];
       if (filterNames.includes(name)) {
         const vals = config[name];
         let v = vals;

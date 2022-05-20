@@ -173,6 +173,56 @@ export function getMeta(name) {
   return value;
 }
 
+// Get lottie animation HTML - remember to lazyLoadLottiePlayer() to see it.
+export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
+  return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
+}
+
+// Lazy-load lottie player if you scroll to the block.
+export function lazyLoadLottiePlayer($block = null) {
+  const loadLottiePlayer = () => {
+    if (window['lottie-player']) return;
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = '/express/scripts/lottie-player.1.5.6.js';
+    document.head.appendChild(script);
+    window['lottie-player'] = true;
+  };
+  if ($block) {
+    const addIntersectionObserver = (block) => {
+      const observer = (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          if (entry.intersectionRatio >= 0.25) {
+            loadLottiePlayer();
+          }
+        }
+      };
+      const options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: [0.0, 0.25],
+      };
+      const intersectionObserver = new IntersectionObserver(observer, options);
+      intersectionObserver.observe(block);
+    };
+    if (document.readyState === 'complete') {
+      addIntersectionObserver($block);
+    } else {
+      window.addEventListener('load', () => {
+        addIntersectionObserver($block);
+      });
+    }
+  } else if (document.readyState === 'complete') {
+    loadLottiePlayer();
+  } else {
+    window.addEventListener('load', () => {
+      loadLottiePlayer();
+    });
+  }
+}
+
 export function getIcon(icons, alt, size = 44) {
   // eslint-disable-next-line no-param-reassign
   icons = Array.isArray(icons) ? icons : [icons];
@@ -212,6 +262,7 @@ export function getIcon(icons, alt, size = 44) {
     'mergevideo',
     'mobile-round',
     'muteaudio',
+    'palette',
     'photos',
     'photoeffects',
     'pinterest',
@@ -239,6 +290,9 @@ export function getIcon(icons, alt, size = 44) {
     'users',
     'webmobile',
     'youtube',
+    'star',
+    'star-half',
+    'star-empty',
   ];
   if (symbols.includes(icon)) {
     const iconName = icon;
@@ -644,7 +698,7 @@ export function decorateBlocks($main) {
       $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
     }
     const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns'];
+      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns', 'ratings'];
 
     if (blockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
@@ -669,6 +723,20 @@ function decorateMarqueeColumns($main) {
   const $firstColumnsBlock = $main.querySelector('.section-wrapper:first-of-type .columns:first-of-type');
   if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
+  }
+}
+
+/**
+ * scroll to hash
+ */
+
+export function scrollToHash() {
+  const { hash } = window.location;
+  if (hash) {
+    const elem = document.querySelector(hash);
+    if (elem) {
+      elem.scrollIntoView(true);
+    }
   }
 }
 
@@ -938,6 +1006,11 @@ export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
     const originalHref = $a.href;
+    if ($a.children.length > 0) {
+      // We can use this to eliminate styling so only text
+      // propagates to buttons.
+      $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
+    }
     $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
     const $block = $a.closest('div.section-wrapper > div > div');
@@ -1612,6 +1685,7 @@ function generateFixedButton() {
     const $primaryCTA = document.querySelector('.primaryCTA');
     const $floatButton = document.querySelector('.fixed-button');
     const $banner = document.querySelector('.banner-container');
+    const $ratings = document.querySelector('.ratings-container');
 
     const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
       const entry = entries[0];
@@ -1629,10 +1703,12 @@ function generateFixedButton() {
     if (document.readyState === 'complete') {
       hideFixedButtonWhenInView.observe($primaryCTA);
       if ($banner) hideFixedButtonWhenInView.observe($banner);
+      if ($ratings) hideFixedButtonWhenInView.observe($ratings);
     } else {
       window.addEventListener('load', () => {
         hideFixedButtonWhenInView.observe($primaryCTA);
         if ($banner) hideFixedButtonWhenInView.observe($banner);
+        if ($ratings) hideFixedButtonWhenInView.observe($ratings);
       });
     }
   }
@@ -1661,6 +1737,21 @@ async function wordBreakJapanese() {
   const parser = loadDefaultJapaneseParser();
   document.querySelectorAll('h1, h2, h3, h4, h5, p:not(.button-container)').forEach((el) => {
     parser.applyElement(el);
+  });
+
+  const BalancedWordWrapper = (await import('./bw2.js')).default;
+  const bw2 = new BalancedWordWrapper();
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    // apply balanced word wrap to headings
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => {
+        bw2.applyElement(el);
+      });
+    } else {
+      window.setTimeout(() => {
+        bw2.applyElement(el);
+      }, 1000);
+    }
   });
 }
 
@@ -1711,6 +1802,14 @@ async function loadEager() {
   }
 }
 
+function removeMetadata() {
+  document.head.querySelectorAll('meta').forEach((meta) => {
+    if (meta.content && meta.content.includes('--none--')) {
+      meta.remove();
+    }
+  });
+}
+
 /**
  * loads everything that doesn't need to be delayed.
  */
@@ -1722,8 +1821,10 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
+  scrollToHash();
   resolveFragments();
   addPromotion();
+  removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
 

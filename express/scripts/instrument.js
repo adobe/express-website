@@ -113,7 +113,11 @@ loadScript(martechURL, () => {
         && !pathname.includes('/blog/')
       )
   ) {
-    sparkLandingPageType = 'learn';
+    if (pathname.includes('/express-your-brand')) {
+      sparkLandingPageType = 'express-your-brand';
+    } else {
+      sparkLandingPageType = 'learn';
+    }
     // blog
   } else if (
     pathname === '/express/learn/blog'
@@ -333,7 +337,10 @@ loadScript(martechURL, () => {
       sparkEventName = 'landing:ctaPressed';
       // Click in the pricing block
     } else if (sparkLandingPageType === 'express-your-fandom') {
-      adobeEventName = appendLinkText(`${adobeEventName}express-your-fandom:`, $a);
+      adobeEventName = appendLinkText(`${adobeEventName}${sparkLandingPageType}:`, $a);
+      sparkEventName = 'landing:ctaPressed';
+    } else if (sparkLandingPageType === 'express-your-brand') {
+      adobeEventName = appendLinkText(`${adobeEventName}learn:${sparkLandingPageType}:`, $a);
       sparkEventName = 'landing:ctaPressed';
     } else if (sparkLandingPageType === 'pricing') {
       // edu link
@@ -384,6 +391,28 @@ loadScript(martechURL, () => {
 
     digitalData._delete('primaryEvent.eventInfo.eventName');
     digitalData._delete('spark.eventData.eventName');
+  }
+
+  function trackVideoAnalytics($video, parameters) {
+    const {
+      videoName,
+      videoId,
+      videoLength,
+      product,
+      videoCategory,
+      videoDescription,
+      videoPlayer,
+      videoMediaType,
+    } = parameters;
+
+    digitalData._set('video.videoInfo.videoName', videoName);
+    digitalData._set('video.videoInfo.videoId', videoId);
+    digitalData._set('video.videoInfo.videoLength', videoLength);
+    digitalData._set('video.videoInfo.product', product);
+    digitalData._set('video.videoInfo.videoCategory', videoCategory);
+    digitalData._set('video.videoInfo.videoDescription', videoDescription);
+    digitalData._set('video.videoInfo.videoPlayer', videoPlayer);
+    digitalData._set('video.videoInfo.videoMediaType', videoMediaType);
   }
 
   function decorateAnalyticsEvents() {
@@ -443,14 +472,56 @@ loadScript(martechURL, () => {
         digitalData._delete('spark.eventData.eventName');
       });
     }
+
+    // Tracking any video column blocks.
+    const $columnVideos = document.querySelectorAll('.column-video');
+    if ($columnVideos.length) {
+      $columnVideos.forEach(($columnVideo) => {
+        const $parent = $columnVideo.closest('.columns');
+        const $a = $columnVideo.querySelector('a');
+
+        const adobeEventName = appendLinkText(`adobe.com:express:cta:learn:columns:${sparkLandingPageType}:`, $a);
+        const sparkEventName = 'landing:columnsPressed';
+
+        $parent.addEventListener('click', (e) => {
+          e.stopPropagation();
+          digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+          digitalData._set('spark.eventData.eventName', sparkEventName);
+
+          _satellite.track('event', {
+            digitalData: digitalData._snapshot(),
+          });
+
+          digitalData._delete('primaryEvent.eventInfo.eventName');
+          digitalData._delete('spark.eventData.eventName');
+        });
+      });
+    }
+
+    // Tracking any link or links that is added after page loaded.
+    document.addEventListener('linkspopulated', (e) => {
+      e.detail.forEach(($link) => {
+        $link.addEventListener('click', () => {
+          trackButtonClick($link);
+        });
+      });
+    });
+
+    // tracking videos loaded asynchronously.
+    document.addEventListener('videoloaded', (e) => {
+      trackVideoAnalytics(e.detail.video, e.detail.parameters);
+    });
   }
 
   decorateAnalyticsEvents();
 
-  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
+  const ENABLE_RATE_ACTION_AUDIENCE = 'enableRatingAction';
+  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
+  const USED_ACTION_SEGMENT_ID = 24241150;
 
   Context.set('audiences', []);
+  Context.set('segments', []);
 
   function getAudiences() {
     const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
@@ -460,7 +531,9 @@ loadScript(martechURL, () => {
       w.setAudienceManagerSegments = (json) => {
         if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
           const audiences = Context.get('audiences');
+          const segments = Context.get('segments');
           audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
+          segments.push(RETURNING_VISITOR_SEGMENT_ID);
 
           digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
           digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
@@ -469,6 +542,15 @@ loadScript(martechURL, () => {
             digitalData: digitalData._snapshot(),
           });
         }
+
+        if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
+          const audiences = Context.get('audiences');
+          const segments = Context.get('segments');
+          audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
+          segments.push(USED_ACTION_SEGMENT_ID);
+        }
+
+        document.dispatchEvent(new Event('context_loaded'));
       };
 
       loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
