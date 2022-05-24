@@ -371,6 +371,37 @@ export function linkImage($elem) {
   }
 }
 
+export function readBlockConfig($block) {
+  const config = {};
+  $block.querySelectorAll(':scope>div').forEach(($row) => {
+    if ($row.children) {
+      const $cols = [...$row.children];
+      if ($cols[1]) {
+        const $value = $cols[1];
+        const name = toClassName($cols[0].textContent);
+        let value = '';
+        if ($value.querySelector('a')) {
+          const $as = [...$value.querySelectorAll('a')];
+          if ($as.length === 1) {
+            value = $as[0].href;
+          } else {
+            value = $as.map(($a) => $a.href);
+          }
+        } else if ($value.querySelector('p')) {
+          const $ps = [...$value.querySelectorAll('p')];
+          if ($ps.length === 1) {
+            value = $ps[0].textContent;
+          } else {
+            value = $ps.map(($p) => $p.textContent);
+          }
+        } else value = $row.children[1].textContent;
+        config[name] = value;
+      }
+    }
+  });
+  return config;
+}
+
 function wrapSections($sections) {
   $sections.forEach(($div) => {
     if ($div.textContent.trim() === '' && !$div.firstElementChild) {
@@ -380,6 +411,17 @@ function wrapSections($sections) {
       const $wrapper = createTag('div', { class: 'section-wrapper' });
       $div.parentNode.appendChild($wrapper);
       $wrapper.appendChild($div);
+    }
+    /* process section metadata */
+    const sectionMeta = $div.querySelector('div.section-metadata');
+    if (sectionMeta) {
+      const meta = readBlockConfig(sectionMeta);
+      const keys = Object.keys(meta);
+      keys.forEach((key) => {
+        if (key === 'style') $div.classList.add(toClassName(meta.style));
+        else $div.dataset[key] = meta[key].toLowerCase();
+      });
+      sectionMeta.remove();
     }
   });
 }
@@ -817,37 +859,6 @@ export function loadScript(url, callback, type) {
 //   });
 // }
 
-export function readBlockConfig($block) {
-  const config = {};
-  $block.querySelectorAll(':scope>div').forEach(($row) => {
-    if ($row.children) {
-      const $cols = [...$row.children];
-      if ($cols[1]) {
-        const $value = $cols[1];
-        const name = toClassName($cols[0].textContent);
-        let value = '';
-        if ($value.querySelector('a')) {
-          const $as = [...$value.querySelectorAll('a')];
-          if ($as.length === 1) {
-            value = $as[0].href;
-          } else {
-            value = $as.map(($a) => $a.href);
-          }
-        } else if ($value.querySelector('p')) {
-          const $ps = [...$value.querySelectorAll('p')];
-          if ($ps.length === 1) {
-            value = $ps[0].textContent;
-          } else {
-            value = $ps.map(($p) => $p.textContent);
-          }
-        } else value = $row.children[1].textContent;
-        config[name] = value;
-      }
-    }
-  });
-  return config;
-}
-
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
@@ -1247,6 +1258,7 @@ function setTheme() {
     $body.classList.add(themeClass);
     if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
+  $body.dataset.device = navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop';
 }
 
 function decorateLinkedPictures($main) {

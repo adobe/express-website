@@ -695,6 +695,14 @@ main .section-wrapper .hero {
   color: initial;
 }
 
+body[data-device="mobile"] main .section-wrapper > div[data-audience="desktop"] {
+  display: none;
+}
+
+body[data-device="desktop"] main .section-wrapper > div[data-audience="mobile"] {
+  display: none;
+}
+
 @media (min-width:900px) {
   main .section-wrapper > div {
     max-width: 830px;
