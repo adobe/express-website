@@ -1085,6 +1085,10 @@ export function toCamelCase(name) {
   return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 }
 
+/**
+ * Gets the experiment name, if any for the page based on env, useragent, queyr params
+ * @returns {string} experimentid
+ */
 export function getExperiment() {
   let experiment = getMeta('experiment').toLowerCase();
 
@@ -1111,8 +1115,20 @@ export function getExperiment() {
 }
 
 /**
- * Gets experiment config
- * @param {string} experiment
+ * Gets experiment config from the manifest and transforms it to more
+ * easily consumable structure.
+ *
+ * the manifest consists of two sheets "settings" and "experiences"
+ *
+ * "settings" is applicable to the entire test and contains information
+ * like "Audience", "Status" or "Blocks".
+ *
+ * "experience" hosts the experiences in columns, consisting of:
+ * a "Percentage Split", "Label" and a set of "Pages".
+ *
+ *
+ * @param {string} experimentid
+ * @returns {object} containing the experiment manifest
  */
 
 export async function fetchExperimentConfig(experiment) {
@@ -1170,12 +1186,12 @@ export async function fetchExperimentConfig(experiment) {
  * @param {string} path
  */
 
-async function replaceInner(path, main) {
+async function replaceInner(path, element) {
   const plainPath = `${path}.plain.html`;
   try {
     const resp = await fetch(plainPath);
     const html = await resp.text();
-    main.innerHTML = html;
+    element.innerHTML = html;
   } catch (e) {
     console.log(e);
     console.log(`error loading experiment content: ${plainPath}`);
@@ -1183,9 +1199,14 @@ async function replaceInner(path, main) {
   return null;
 }
 
+/**
+ * this is an extensible stub to take on audience mappings
+ * @param {string} audience
+ * @return {boolean} is member of this audience
+ */
+
 function checkExperimentAudience(audience) {
   if (audience === 'mobile') {
-    console.log(window.innerWidth);
     return window.innerWidth < 600;
   }
   if (audience === 'desktop') {
@@ -1193,6 +1214,12 @@ function checkExperimentAudience(audience) {
   }
   return true;
 }
+
+/**
+ * gets the variant id that this visitor has been assigned to if any
+ * @param {string} experimentId
+ * @return {string} assigned variant or empty string if none set
+ */
 
 function getLastExperimentVariant(experimentId) {
   console.log('get last experiment', experimentId);
@@ -1205,6 +1232,13 @@ function getLastExperimentVariant(experimentId) {
   }
   return '';
 }
+
+/**
+ * sets/updates the variant id that is assigned to this visitor,
+ * also cleans up old variant ids
+ * @param {string} experimentId
+ * @param {variant} variant
+ */
 
 function setLastExperimentVariant(experimentId, variant) {
   const experimentsStr = localStorage.getItem('hlx-experiments');
@@ -1223,6 +1257,10 @@ function setLastExperimentVariant(experimentId, variant) {
   experiments[experimentId] = { variant, date };
   localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
 }
+
+/**
+ * checks if a test is active on this page and if so executes the test
+ */
 
 async function decorateTesting() {
   try {
