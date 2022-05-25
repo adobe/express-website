@@ -1193,8 +1193,7 @@ async function replaceInner(path, element) {
     const html = await resp.text();
     element.innerHTML = html;
   } catch (e) {
-    console.log(e);
-    console.log(`error loading experiment content: ${plainPath}`);
+    console.log(`error loading experiment content: ${plainPath}`, e);
   }
   return null;
 }
