@@ -73,7 +73,7 @@ async function createExperiment() {
       popup.classList.toggle('hlx-hidden');
 
       // the query is a bit slow, so I'm only fetching the results when the popup is opened
-      const resultsURL = new URL(`https://helix-pages.anywhere.run/helix-services/run-query@ci3553/rum-experiments`); // we change ci3553 to v2 once the corresponding PR has been merged
+      const resultsURL = new URL('https://helix-pages.anywhere.run/helix-services/run-query@v2/rum-experiments');
       resultsURL.searchParams.set('experiment', experiment);
       if (window.hlx.sidekickConfig?.host) {
         // restrict results to the production host, this also reduces query cost
