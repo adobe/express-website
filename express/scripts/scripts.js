@@ -1166,7 +1166,7 @@ export async function fetchExperimentConfig(experiment) {
 }
 
 /**
- * replaces main with content from path
+ * Replaces main with content from path
  * @param {string} path
  */
 
