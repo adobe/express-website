@@ -81,9 +81,9 @@ async function createExperiment() {
       }
       fetch(resultsURL.href).then(async (response) => {
         const { results } = await response.json();
-        results.forEach(result => {
+        results.forEach((result) => {
           const nf = {
-            format: (num) => Math.floor(num) + '%'
+            format: (num) => `${Math.floor(num)}%`,
           };
           const variant = variantMap[result.variant];
           if (variant) {
@@ -97,7 +97,6 @@ async function createExperiment() {
         });
       });
     });
-
 
     const variants = div.querySelector('.hlx-variants');
     config.variantNames.forEach((vname) => {
