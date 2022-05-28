@@ -54,8 +54,8 @@ export function sampleRUM(checkpoint, data = {}) {
             data.cwv[measurement.name] = measurement.value;
             sendPing();
           };
-            // When loading `web-vitals` using a classic script, all the public
-            // methods can be found on the `webVitals` global namespace.
+          // When loading `web-vitals` using a classic script, all the public
+          // methods can be found on the `webVitals` global namespace.
           window.webVitals.getCLS(storeCWV);
           window.webVitals.getFID(storeCWV);
           window.webVitals.getLCP(storeCWV);
@@ -77,7 +77,7 @@ sampleRUM.mediaobserver = (window.IntersectionObserver) ? new IntersectionObserv
       const source = sampleRUM.sourceselector(entry.target);
       sampleRUM('viewmedia', { target, source });
     });
-}, { threshold: 0.25 }) : { observe: () => {} };
+}, { threshold: 0.25 }) : { observe: () => { } };
 
 sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
   entries
@@ -88,14 +88,14 @@ sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserv
       const source = sampleRUM.sourceselector(entry.target);
       sampleRUM('viewblock', { target, source });
     });
-}, { threshold: 0.25 }) : { observe: () => {} };
+}, { threshold: 0.25 }) : { observe: () => { } };
 
 sampleRUM.observe = ((elements) => {
   elements.forEach((element) => {
     if (element.tagName.toLowerCase() === 'img'
-    || element.tagName.toLowerCase() === 'video'
-    || element.tagName.toLowerCase() === 'audio'
-    || element.tagName.toLowerCase() === 'iframe') {
+      || element.tagName.toLowerCase() === 'video'
+      || element.tagName.toLowerCase() === 'audio'
+      || element.tagName.toLowerCase() === 'iframe') {
       sampleRUM.mediaobserver.observe(element);
     } else {
       sampleRUM.blockobserver.observe(element);
@@ -167,7 +167,7 @@ export function getMeta(name) {
     const nameAttr = $m.getAttribute('name');
     const propertyAttr = $m.getAttribute('property');
     return ((nameAttr && nameLower === nameAttr.toLowerCase())
-    || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+      || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
   });
   if ($metas[0]) value = $metas[0].getAttribute('content');
   return value;
@@ -748,14 +748,25 @@ export async function loadBlock(block, eager = false) {
   if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
+    let cssPath = `/express/blocks/${blockName}/${blockName}.css`;
+    let jsPath = `/express/blocks/${blockName}/${blockName}.js`;
+
+    if (window.hlx.experiment && window.hlx.experiment.run) {
+      const { experiment } = window.hlx;
+      if (experiment.blocks.includes(blockName)) {
+        cssPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.css`;
+        jsPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.js`;
+      }
+    }
+
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(cssPath, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(jsPath);
             if (mod.default) {
               await mod.default(block, blockName, document, eager);
             }
@@ -1019,12 +1030,12 @@ export function decorateButtons(block = document) {
           $up.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
         }
@@ -1065,78 +1076,247 @@ export function checkTesting() {
   return (getMeta('testing').toLowerCase() === 'on');
 }
 
-async function decorateTesting() {
-  let runTest = true;
-  // let reason = '';
-  const usp = new URLSearchParams(window.location.search);
-  const martech = usp.get('martech');
-  if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-    // eslint-disable-next-line no-console
-    console.log('rushing martech');
-    loadScript('/express/scripts/instrument.js', null, 'module');
-  }
+/**
+ * Sanitizes a string and turns it into camel case.
+ * @param {*} name The unsanitized string
+ * @returns {string} The camel cased string
+ */
+export function toCamelCase(name) {
+  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
 
-  if (!window.location.host.includes('adobe.com')) {
-    runTest = false;
+/**
+ * Gets the experiment name, if any for the page based on env, useragent, queyr params
+ * @returns {string} experimentid
+ */
+export function getExperiment() {
+  let experiment = getMeta('experiment').toLowerCase();
+
+  if (!window.location.host.includes('adobe.com') && !window.location.host.includes('.hlx.live')) {
+    experiment = '';
     // reason = 'not prod host';
   }
   if (window.location.hash) {
-    runTest = false;
+    experiment = '';
     // reason = 'suppressed by #';
   }
-  if (window.location.search === '?test') {
-    runTest = true;
-  }
+
   if (navigator.userAgent.match(/bot|crawl|spider/i)) {
-    runTest = false;
+    experiment = '';
     // reason = 'bot detected';
   }
 
-  if (runTest) {
-    let $testTable;
-    document.querySelectorAll('table th').forEach(($th) => {
-      if ($th.textContent.toLowerCase().trim() === 'a/b test') {
-        $testTable = $th.closest('table');
-      }
+  const usp = new URLSearchParams(window.location.search);
+  if (usp.has('experiment')) {
+    [experiment] = usp.get('experiment').split('/');
+  }
+
+  return experiment;
+}
+/**
+ * Gets experiment config from the manifest and transforms it to more
+ * easily consumable structure.
+ *
+ * the manifest consists of two sheets "settings" and "experiences"
+ *
+ * "settings" is applicable to the entire test and contains information
+ * like "Audience", "Status" or "Blocks".
+ *
+ * "experience" hosts the experiences in columns, consisting of:
+ * a "Percentage Split", "Label" and a set of "Pages".
+ *
+ *
+ * @param {string} experimentid
+ * @returns {object} containing the experiment manifest
+ */
+export async function fetchExperimentConfig(experiment) {
+  const path = `/express/experiments/${experiment}/manifest.json`;
+  try {
+    const config = {};
+    const resp = await fetch(path);
+    const json = await resp.json();
+    json.settings.data.forEach((line) => {
+      const key = toCamelCase(line.Name);
+      let value = line.Value;
+      if (key === 'blocks') value = value.split(',').map((e) => e.trim().toLowerCase());
+      config[key] = value;
+    });
+    config.id = experiment;
+
+    const variants = {};
+    let variantNames = Object.keys(json.experiences.data[0]);
+    variantNames.shift();
+    variantNames = variantNames.map((vn) => toCamelCase(vn));
+    variantNames.forEach((variantName) => {
+      variants[variantName] = {};
     });
 
-    const testSetup = [];
+    let lastKey = 'default';
 
-    if ($testTable) {
-      $testTable.querySelectorAll('tr').forEach(($row) => {
-        const $name = $row.children[0];
-        const $percentage = $row.children[1];
-        const $a = $name.querySelector('a');
-        if ($a) {
-          const url = new URL($a.href);
-          testSetup.push({
-            url: url.pathname,
-            traffic: parseFloat($percentage.textContent) / 100.0,
-          });
+    json.experiences.data.forEach((line) => {
+      let key = toCamelCase(line.Name);
+      if (!key) key = lastKey;
+      lastKey = key;
+      const vns = Object.keys(line);
+      vns.shift();
+      vns.forEach((vn) => {
+        const camelVN = toCamelCase(vn);
+        if (key === 'pages') {
+          variants[camelVN][key] = variants[camelVN][key] || [];
+          variants[camelVN][key].push(new URL(line[vn]).pathname);
+        } else {
+          variants[camelVN][key] = line[vn];
         }
       });
-    }
-
-    let test = Math.random();
-    let selectedUrl = '';
-    testSetup.forEach((e) => {
-      if (test >= 0 && test < e.traffic) {
-        selectedUrl = e.url;
-      }
-      test -= e.traffic;
     });
+    config.variants = variants;
+    config.variantNames = variantNames;
+    console.log(config);
+    return config;
+  } catch (e) {
+    console.log(`error loading experiment manifest: ${path}`, e);
+  }
+  return null;
+}
 
-    if (selectedUrl) {
-      // eslint-disable-next-line no-console
-      console.log(selectedUrl);
-      const plainUrl = `${selectedUrl.replace('.html', '')}.plain.html`;
-      const resp = await fetch(plainUrl);
-      const html = await resp.text();
-      document.querySelector('main').innerHTML = html;
+/**
+ * Replaces element with content from path
+ * @param {string} path
+ * @param {HTMLElement} element
+ */
+async function replaceInner(path, element) {
+  const plainPath = `${path}.plain.html`;
+  try {
+    const resp = await fetch(plainPath);
+    const html = await resp.text();
+    element.innerHTML = html;
+  } catch (e) {
+    console.log(`error loading experiment content: ${plainPath}`, e);
+  }
+  return null;
+}
+
+/**
+ * this is an extensible stub to take on audience mappings
+ * @param {string} audience
+ * @return {boolean} is member of this audience
+ */
+
+function checkExperimentAudience(audience) {
+  if (audience === 'mobile') {
+    return window.innerWidth < 600;
+  }
+  if (audience === 'desktop') {
+    return window.innerWidth > 600;
+  }
+  return true;
+}
+
+/**
+ * gets the variant id that this visitor has been assigned to if any
+ * @param {string} experimentId
+ * @return {string} assigned variant or empty string if none set
+ */
+
+function getLastExperimentVariant(experimentId) {
+  console.log('get last experiment', experimentId);
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  if (experimentsStr) {
+    const experiments = JSON.parse(experimentsStr);
+    if (experiments[experimentId]) {
+      return experiments[experimentId].variant;
     }
-  } else {
-    // eslint-disable-next-line no-console
-    // console.log(`Test is not run => ${reason}`);
+  }
+  return '';
+}
+
+/**
+ * sets/updates the variant id that is assigned to this visitor,
+ * also cleans up old variant ids
+ * @param {string} experimentId
+ * @param {variant} variant
+ */
+
+function setLastExperimentVariant(experimentId, variant) {
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  const experiments = experimentsStr ? JSON.parse(experimentsStr) : {};
+
+  const now = new Date();
+  const expKeys = Object.keys(experiments);
+  expKeys.forEach((key) => {
+    const date = new Date(experiments[key].date);
+    if (now - date > (1000 * 86400 * 30)) {
+      delete experiments[key];
+    }
+  });
+  const [date] = now.toISOString().split('T');
+
+  experiments[experimentId] = { variant, date };
+  localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
+}
+
+/**
+ * checks if a test is active on this page and if so executes the test
+ */
+async function decorateTesting() {
+  try {
+    // let reason = '';
+    const usp = new URLSearchParams(window.location.search);
+    const martech = usp.get('martech');
+    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+      // eslint-disable-next-line no-console
+      console.log('rushing martech');
+      loadScript('/express/scripts/instrument.js', null, 'module');
+    }
+
+    const experiment = getExperiment();
+    const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
+
+    if (experiment) {
+      console.log('experiment', experiment);
+      const config = await fetchExperimentConfig(experiment);
+      console.log(config);
+      if (toCamelCase(config.status) === 'active') {
+        config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
+        console.log('run', config.run, config.audience);
+
+        window.hlx = window.hlx || {};
+        window.hlx.experiment = config;
+        if (config.run && config.content) {
+          const forced = forcedVariant || getLastExperimentVariant(config.id);
+          if (forced && config.variantNames.includes(forced)) {
+            config.selectedVariant = forced;
+          } else {
+            let random = Math.random();
+            let i = config.variantNames.length;
+            while (random > 0 && i > 0) {
+              i -= 1;
+              console.log(random, i);
+              random -= +config.variants[config.variantNames[i]].percentageSplit;
+            }
+            config.selectedVariant = config.variantNames[i];
+          }
+          setLastExperimentVariant(config.id, config.selectedVariant);
+          sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
+          console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          if (config.selectedVariant !== 'control') {
+            const currentPath = window.location.pathname;
+            const pageIndex = config.variants.control.pages.indexOf(currentPath);
+            if (pageIndex >= 0) {
+              const page = config.variants[config.selectedVariant].pages[pageIndex];
+              if (page) {
+                const experimentPath = new URL(page, window.location.href).pathname.split('.')[0];
+                if (experimentPath && experimentPath !== currentPath) {
+                  await replaceInner(experimentPath, document.querySelector('main'));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log('error testing', e);
   }
 }
 
@@ -1696,6 +1876,9 @@ async function decoratePage() {
   await loadEager();
   loadLazy();
   loadGnav();
+  if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === ('localhost')) {
+    import('../../tools/preview/preview.js');
+  }
 }
 
 if (!window.hlx.init && !window.isTestEnv) {
