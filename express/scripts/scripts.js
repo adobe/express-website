@@ -1077,9 +1077,9 @@ export function checkTesting() {
 }
 
 /**
- * Sanitizes a name for use as class name.
- * @param {*} name The unsanitized name
- * @returns {string} The class name
+ * Sanitizes a string and turns it into camel case.
+ * @param {*} name The unsanitized string
+ * @returns {string} The camel cased string
  */
 export function toCamelCase(name) {
   return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
