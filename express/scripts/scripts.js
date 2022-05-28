@@ -1180,8 +1180,9 @@ export async function fetchExperimentConfig(experiment) {
 }
 
 /**
- * Replaces main with content from path
+ * Replaces element with content from path
  * @param {string} path
+ * @param {HTMLElement} element
  */
 async function replaceInner(path, element) {
   const plainPath = `${path}.plain.html`;
