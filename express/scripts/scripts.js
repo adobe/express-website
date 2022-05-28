@@ -1130,7 +1130,6 @@ export function getExperiment() {
  * @param {string} experimentid
  * @returns {object} containing the experiment manifest
  */
-
 export async function fetchExperimentConfig(experiment) {
   const path = `/express/experiments/${experiment}/manifest.json`;
   try {
