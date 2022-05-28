@@ -1270,10 +1270,10 @@ async function decorateTesting() {
     }
 
     const experiment = getExperiment();
-    console.log('experiment', experiment);
     const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
 
     if (experiment) {
+      console.log('experiment', experiment);
       const config = await fetchExperimentConfig(experiment);
       console.log(config);
       if (toCamelCase(config.status) === 'active') {
