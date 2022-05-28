@@ -119,11 +119,9 @@ export default function decorate(block) {
 
     const h3 = createTag('h3');
     h3.innerHTML = cells[0].textContent;
-    const p = createTag('p');
-    p.innerHTML = cells[1].textContent;
     const text = createTag('div', { class: 'tip-text' });
     text.append(h3);
-    text.append(p);
+    text.append(cells[1]);
 
     row.innerHTML = '';
     row.append(text);
