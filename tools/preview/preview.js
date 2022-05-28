@@ -18,6 +18,10 @@ import {
   fetchExperimentConfig,
 } from '../../express/scripts/scripts.js';
 
+/**
+ * Create Badge if a Page is enlisted in an Adobe Target test
+ * @return {Object} returns a badge or empty string
+ */
 function createTesting() {
   if (getMetadata('testing')) {
     const div = document.createElement('div');
@@ -28,6 +32,10 @@ function createTesting() {
   return '';
 }
 
+/**
+ * Create Badge if a Page is enlisted in a Helix Experiment
+ * @return {Object} returns a badge or empty string
+ */
 async function createExperiment() {
   const experiment = getMetadata('experiment');
   console.log('preview experiment', experiment);
@@ -109,8 +117,11 @@ async function createExperiment() {
   return '';
 }
 
+/**
+ * Decorates Preview mode badges and overlays
+ * @return {Object} returns a badge or empty string
+ */
 async function decoratePreviewMode() {
-  console.log('decorating preview mode');
   loadCSS('/tools/preview/preview.css');
   const overlay = document.createElement('div');
   overlay.className = 'hlx-preview-overlay';
