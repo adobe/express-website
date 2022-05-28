@@ -1113,7 +1113,6 @@ export function getExperiment() {
 
   return experiment;
 }
-
 /**
  * Gets experiment config from the manifest and transforms it to more
  * easily consumable structure.
