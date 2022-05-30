@@ -271,6 +271,7 @@ export function getIcon(icons, alt, size = 44) {
     'pricingfree',
     'pricingpremium',
     'privacy',
+    'qr-code',
     'remove-background',
     'resize',
     'resize-video',
