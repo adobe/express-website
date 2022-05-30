@@ -169,6 +169,13 @@ loadScript(martechURL, () => {
   digitalData._set('page.pageInfo.pageurl', loc.href);
   digitalData._set('page.pageInfo.namespace', 'express');
 
+  /* set experiment and variant information */
+  if (window.hlx.experiment) {
+    const { experiment } = window.hlx;
+    digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.campaignid', experiment.id);
+    digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.offerid', experiment.selectedVariant);
+  }
+
   digitalData._set('spark.eventData.pageurl', loc.href);
   digitalData._set('spark.eventData.pageReferrer', d.referrer);
   digitalData._set('spark.eventData.pageTitle', d.title);
