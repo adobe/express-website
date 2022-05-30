@@ -4,7 +4,7 @@ main .section-wrapper.banner-container {
 }
 
 main .section-wrapper.banner-light-container {
-  padding: 80px 15px;
+  padding: 80px 15px 0;
 }
 
 main .section-wrapper:first-of-type {
