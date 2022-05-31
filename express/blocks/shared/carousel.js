@@ -69,17 +69,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     moveCarousel(-240);
   });
   window.addEventListener('resize', toggleControls);
-  let isScrolling = false;
-  let scrollTimer = -1;
-  $platform.addEventListener('scroll', () => {
-    if (scrollTimer !== -1) clearTimeout(scrollTimer);
-    isScrolling = true;
-    scrollTimer = window.setTimeout(() => {
-      isScrolling = false;
-    }, 400);
-    toggleControls();
-  });
-
+  
   // Carousel loop functionality (if enabled)
   const infinityScroll = ($children) => {
     const duplicateContent = () => {
@@ -91,29 +81,22 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     for (let i = 0; i < 4; i += 1) {
       duplicateContent();
     }
-    const stopScrolling = () => { // To prevent mobile shakiness
-      $platform.style.overflowX = 'hidden';
-      setTimeout(() => {
-        $platform.style.removeProperty('overflow-x');
-      }, 20);
-    };
     // Start at the center and snap back to center if the user scrolls to the edges
-    const moveToCenterIfScroll = (e) => {
+    const moveToCenterIfScrollToEdge = (e) => {
       const scrollPos = $platform.scrollLeft;
       const maxScroll = $platform.scrollWidth;
       if ((scrollPos > (maxScroll / 5) * 4) || scrollPos < 30) {
         if (e) e.preventDefault();
-        stopScrolling();
         $platform.scrollTo({
           left: ((maxScroll / 5) * 2),
           behavior: 'instant',
         });
       }
     };
-    moveToCenterIfScroll();
+    moveToCenterIfScrollToEdge();
     $platform.addEventListener('scroll', (e) => {
-      moveToCenterIfScroll(e);
-    });
+      moveToCenterIfScrollToEdge(e);
+    }, { passive: false });
   };
   if (infinityScrollEnabled) infinityScroll([...$carouselContent]);
   const initialState = () => {
@@ -145,6 +128,17 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   }
 
   // Hide controls if the user swipes through the carousel
+  let isScrolling = false;
+  let scrollTimer = -1;
+  $platform.addEventListener('scroll', () => {
+    toggleControls();
+    if (scrollTimer !== -1) clearTimeout(scrollTimer);
+    isScrolling = true;
+    scrollTimer = window.setTimeout(() => {
+      isScrolling = false;
+    }, 400);
+  }, { passive: true });
+
   let lastPos = null;
   $platform.addEventListener('touchstart', (e) => {
     lastPos = e;
@@ -156,7 +150,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
         hideControls = true;
       }
     }
-  });
+  }, { passive: true });
   $platform.addEventListener('touched', () => {
     lastPos = null;
   });

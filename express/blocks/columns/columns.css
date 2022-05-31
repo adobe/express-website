@@ -222,10 +222,6 @@ main .columns.columns-marquee .brand.icon {
   display: none;
 }
 
-main .fixed-button.button-container {
-  display: none;
-}
-
 body.no-brand-header main .columns.columns-marquee .brand.icon {
   display: unset;
   height: 32px;
@@ -569,32 +565,6 @@ main .columns.fullsize .has-brand > div p:first-child {
   margin: 0;
 }
 
-main .columns.fullsize > div > div .button-container.fixed-button {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-}
-
-main .fixed-button.button-container {
-  display: block;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding-bottom: 20px;
-  z-index: 2;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-  transform: translateY(101%);
-  transition: transform 1s;
-  pointer-events: none;
-}
-
-main .fixed-button.button-container.shown {
-  transform: none;
-  pointer-events: all;
-  bottom: 0;
-}
-
 main .columns .column {
   padding-left: 32px;
   padding-right: 32px;
@@ -625,32 +595,12 @@ main .columns.fullsize .has-brand > div:not(.column-picture):not(.hero-animation
   padding-top: 16px;
 }
 
-
-body.has-fixed-button .button-container a.accent {
-  display: none;
-}
-
-body.has-fixed-button .button-container a.primaryCTA.accent,
-body.has-fixed-button .button-container.fixed-button a.accent,
-body.has-fixed-button .new-banner-container .button-container a.accent,
-body.has-fixed-button .banner-container .button-container a.accent {
-  display: inline-block;
-}
-
 main .columns.highlight .column.column-picture {
   padding-left: 0px;
   padding-right: 0px;
 }
 
 @media (min-width: 900px) {
-  main .fixed-button.button-container {
-    display: none;
-  }
-
-  body.has-fixed-button .button-container a.accent {
-    display: inline-block;
-  }
-
   body.no-brand-header main .columns.columns-marquee:not(.center):not(.fullsize) .brand.icon {
     padding-left: 0;
   }
@@ -707,12 +657,7 @@ main .columns.highlight .column.column-picture {
   main .columns.fullsize .has-brand > div p:first-child {
     margin: 16px 0;
   }
-
-  main .columns.fullsize > div > div .button-container.fixed-button {
-    margin: 0;
-    display: none;
-  }
-
+  
   main .columns .column {
     padding-left: 32px;
     padding-right: 32px;

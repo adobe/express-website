@@ -160,7 +160,7 @@ a.button:any-link {
 }
 
 a.button.xlarge:any-link {
-  padding: 13px 1.5em 13px 1.5em;
+  padding: 13px 1.5em 14px 1.5em;
   border-radius: 27px;
   font-size: var(--body-font-size-m);
 }
@@ -337,6 +337,36 @@ a.button.dark.reverse:any-link:focus {
   background-color: var(--color-white);
   border-color: var(--color-white);
   color: var(--color-info-accent-hover);
+}
+
+a.button.gradient:any-link,
+a.button.gradient:any-link:hover,
+a.button.gradient:any-link:active,
+a.button.gradient:any-link:focus {
+  color: var(--color-white);
+  border-color: transparent;
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2,#FF993B );
+  background-size: 400% 400%;
+  transition: background-color .3s, color .3s, border .3s;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+}
+
+@-webkit-keyframes buttonGradient {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-moz-keyframes buttonGradient {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes buttonGradient {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
 a.button > svg {
@@ -775,6 +805,11 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
 .lottie {
   width: 32px;
   height: 32px;
+}
+
+/* hide floating button before css loads */
+main .floating-button-wrapper {
+  display: none;
 }
 
 /* Japanese heading balanced word wrap styles */
