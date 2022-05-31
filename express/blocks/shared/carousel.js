@@ -69,7 +69,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     moveCarousel(-240);
   });
   window.addEventListener('resize', toggleControls);
-  
+
   // Carousel loop functionality (if enabled)
   const infinityScroll = ($children) => {
     const duplicateContent = () => {
