@@ -160,7 +160,7 @@ a.button:any-link {
 }
 
 a.button.xlarge:any-link {
-  padding: 13px 1.5em 13px 1.5em;
+  padding: 13px 1.5em 14px 1.5em;
   border-radius: 27px;
   font-size: var(--body-font-size-m);
 }
