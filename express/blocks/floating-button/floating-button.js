@@ -77,7 +77,7 @@ export async function createFloatingButton($a) {
       } else {
         showScrollArrow();
       }
-    }, { passive: false });
+    }, { passive: true });
   }
 }
 
