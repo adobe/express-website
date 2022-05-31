@@ -94,7 +94,6 @@ main .floating-button--scrolled .floating-button-lottie {
   user-select: none;
 }
 
-main .floating-button-wrapper ~ div a.template-list-scrollbutton,
 main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
   display: none;
 }
