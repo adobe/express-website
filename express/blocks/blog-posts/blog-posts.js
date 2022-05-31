@@ -28,6 +28,11 @@ async function fetchBlogIndex() {
   const json = await resp.json();
   const byPath = {};
   json.data.forEach((post) => {
+    if (post.tags) {
+      const tags = JSON.parse(post.tags);
+      tags.push(post.category);
+      post.tags = JSON.stringify(tags);
+    }
     byPath[post.path.split('.')[0]] = post;
   });
   const index = { data: json.data, byPath };

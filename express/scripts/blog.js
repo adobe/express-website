@@ -111,7 +111,9 @@ export default async function decorateBlogPage() {
     const tagString = getMeta('article:tag');
     // eslint-disable-next-line no-unused-vars
     const tags = tagString.split(',');
-    $eyebrow.innerHTML = getMeta('category');
+    const locale = getLocale(window.location);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    $eyebrow.innerHTML = `<a href="${urlPrefix}/express/learn/blog/tags/${toClassName(getMeta('category'))}">${getMeta('category')}</a>`;
     // $eyebrow.innerHTML = tags[0];
     $blogHeader.append($eyebrow);
     $blogHeader.append($h1);
