@@ -315,15 +315,57 @@ loadScript(martechURL, () => {
     return newEventName;
   }
 
+  async function fetchAnalytics() {
+    if (!window.analytics) {
+      window.analytics = {};
+      try {
+        const resp = await fetch('/express/analytics.json');
+        const json = await resp.json();
+        json.data.forEach((row) => {
+          if (!window.analytics[row.Page]) {
+            window.analytics[row.Page] = [];
+          }
+          window.analytics[row.Page].push(row);
+        });
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    return window.analytics;
+  }
+
   function trackButtonClick($a) {
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
     let sparkButtonId;
+    let customPageEvent = false;
     const $templateContainer = $a.closest('.template-list');
-    // let cardPosition;
 
+    if (window.analytics) {
+      const analyticPages = Object.keys(window.analytics);
+
+      analyticPages.forEach((analyticPageTitle) => {
+        if (window.location.pathname.includes(analyticPageTitle)) {
+          const analyticPageEvents = window.analytics[analyticPageTitle];
+
+          analyticPageEvents.forEach((analyticPageEvent) => {
+            const $analyticPageEventSelector = document.querySelector(analyticPageEvent.Selector);
+
+            if ($analyticPageEventSelector === $a) {
+              customPageEvent = analyticPageEvent;
+            }
+          });
+        }
+      });
+    }
+
+    if (customPageEvent) {
+      adobeEventName = customPageEvent.adobeEventName;
+      sparkEventName = customPageEvent.sparkEventName;
+      sparkButtonId = customPageEvent.buttonId;
     // Template button click
-    if ($templateContainer) {
+    } else if ($templateContainer) {
       // This behaviour was moved to the template-list.js
       // This return statement prevents a double binding.
       return;
@@ -420,6 +462,8 @@ loadScript(martechURL, () => {
 
     // for adding branch parameters to branch links
     trackBranchParameters($links);
+
+    fetchAnalytics();
 
     // for tracking all of the links
     $links.forEach(($a) => {
