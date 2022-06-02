@@ -812,7 +812,8 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
 }
 
 /* hide floating button before css loads */
-main .floating-button-wrapper {
+main .floating-button-wrapper,
+main .floating-button {
   display: none;
 }
 
