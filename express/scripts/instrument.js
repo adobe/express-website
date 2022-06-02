@@ -199,6 +199,7 @@ loadScript(martechURL, () => {
   }
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/image/crop')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageCrop');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
