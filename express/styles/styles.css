@@ -339,6 +339,10 @@ a.button.dark.reverse:any-link:focus {
   color: var(--color-info-accent-hover);
 }
 
+a.button.wide {
+  display: block;
+}
+
 a.button > svg {
   float: left;
   display: inline;

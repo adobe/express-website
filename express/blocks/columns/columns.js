@@ -149,6 +149,11 @@ export default function decorate($block) {
     }
   }
 
+  // decorate offer buttons
+  if ($block.classList.contains('offer')) {
+    $block.querySelectorAll('a.button').forEach(($a) => $a.classList.add('large', 'wide'));
+  }
+
   $rows.forEach(($row, rowNum) => {
     const $cells = Array.from($row.children);
     $cells.forEach(($cell, cellNum) => {
