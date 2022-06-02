@@ -199,6 +199,11 @@ loadScript(martechURL, () => {
   }
   if (pathname.includes('/feature/image/resize')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
+  } else if (pathname.includes('/feature/image/crop')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageCrop');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.includes('/feature/image/qr-code-generator')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:qrCodeGenerator');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/image/remove-background')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
@@ -211,6 +216,9 @@ loadScript(martechURL, () => {
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/image/png-to-jpg')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToJPG');
+    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/image/convert/svg')) {
+    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToSVG');
     digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/video/trim')) {
     digitalData._set('spark.eventData.contextualData1', 'quickActionType:trimVideo');
