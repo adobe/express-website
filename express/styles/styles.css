@@ -725,12 +725,16 @@ main .section-wrapper .hero {
   color: initial;
 }
 
-body[data-device="mobile"] main .section-wrapper > div[data-audience="desktop"] {
+body main .section-wrapper > div[data-audience] {
   display: none;
 }
 
-body[data-device="desktop"] main .section-wrapper > div[data-audience="mobile"] {
-  display: none;
+body[data-device="mobile"] main .section-wrapper > div[data-audience="mobile"] {
+  display: block;
+}
+
+body[data-device="desktop"] main .section-wrapper > div[data-audience="desktop"] {
+  display: block;
 }
 
 @media (min-width:900px) {
