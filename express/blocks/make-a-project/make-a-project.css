@@ -17,6 +17,7 @@ main .make-a-project {
 
 main .make-a-project .make-a-project-marquee {
   display: flex;
+  height: 335px;
   flex-direction: column;
   padding: 20px 0;
   text-align: left;
@@ -108,6 +109,10 @@ main .make-a-project .make-a-project-description a.button {
 }
 
 @media (min-width:600px) {
+  main .make-a-project .make-a-project-marquee {
+    height: unset;
+  }
+
   main .make-a-project .make-a-project-marquee > div > * {
     margin: 20px 40px;
   }
