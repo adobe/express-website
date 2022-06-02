@@ -79,6 +79,31 @@ export async function createFloatingButton($a) {
       }
     }, { passive: true });
   }
+
+  // Intersection observer - hide button when scrolled to footer
+  const $footer = document.querySelector('footer');
+  if ($footer) {
+    const hideButtonWhenFooter = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.intersectionRatio > 0) {
+        $floatButtonWrapper.classList.add('floating-button--hidden');
+      } else {
+        $floatButtonWrapper.classList.remove('floating-button--hidden');
+      }
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0,
+    });
+
+    if (document.readyState === 'complete') {
+      hideButtonWhenFooter.observe($footer);
+    } else {
+      window.addEventListener('load', () => {
+        hideButtonWhenFooter.observe($footer);
+      });
+    }
+  }
 }
 
 export default function decorateBlock($block) {
