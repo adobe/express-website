@@ -774,9 +774,9 @@ main .columns.columns-marquee {
   min-height: 650px;
 }
 
-main .floating-button-wrapper {
+/* main .floating-button-wrapper {
   display: none;
-}
+} */
 
 @media (min-width: 1200px) {
   main .template-list-fourcols-container > div,
