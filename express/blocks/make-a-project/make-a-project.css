@@ -11,13 +11,13 @@ main .section-wrapper.make-a-project-container > div {
 main .make-a-project {
   background-color: var(--color-gray-800);
   color: var(--color-white);
+  height: 502px;
   display: flex;
   flex-direction: column;
 }
 
 main .make-a-project .make-a-project-marquee {
   display: flex;
-  height: 502px;
   flex-direction: column;
   padding: 20px 0;
   text-align: left;
