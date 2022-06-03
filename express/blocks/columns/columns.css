@@ -428,15 +428,6 @@ main .columns.highlight .column p {
   font-size: var(--body-font-size-s);
 }
 
-main .columns.offer .column h1,
-main .columns.offer .column h2,
-main .columns.offer .column h3,
-main .columns.offer .column h4,
-main .columns.offer .column h5,
-main .columns.offer .column h6 {
-  text-align: center;
-}
-
 main .columns.offer > div,
 main .columns.offer > div p.button-container {
   padding: 0;
