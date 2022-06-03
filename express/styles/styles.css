@@ -811,6 +811,12 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
 /* hide floating button before css loads */
 main .floating-button-wrapper,
 main .floating-button {
+  position: fixed;
+  display: none;
+}
+/* hide the section-wrapper that ONLY has the floating-button block */
+/* (removes the extra whitespace from padding) */
+[class="section-wrapper floating-button-container"] {
   display: none;
 }
 
