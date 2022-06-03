@@ -731,6 +731,7 @@ body main .section-wrapper > div[data-audience] {
 
 body[data-device="mobile"] main .section-wrapper > div[data-audience="mobile"] {
   display: block;
+  height: 505px;
 }
 
 body[data-device="desktop"] main .section-wrapper > div[data-audience="desktop"] {

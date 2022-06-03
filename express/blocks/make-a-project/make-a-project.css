@@ -9,8 +9,6 @@ main .section-wrapper.make-a-project-container > div {
 }
 
 main .make-a-project {
-  background-color: var(--color-gray-800);
-  color: var(--color-white);
   height: 502px;
   display: flex;
   flex-direction: column;
@@ -21,6 +19,8 @@ main .make-a-project .make-a-project-marquee {
   flex-direction: column;
   padding: 20px 0;
   text-align: left;
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
 }
 
 main .make-a-project .make-a-project-marquee h2,
@@ -95,8 +95,6 @@ main .make-a-project li::before {
 
 main .make-a-project .make-a-project-description {
   padding: 0 30px;
-  background-color: var(--body-background-color);
-  color: var(--body-color);
   text-align: left;
 }
 
