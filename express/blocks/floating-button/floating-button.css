@@ -104,7 +104,7 @@ main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floa
   display: none;
 }
 
-main .floating-button-wrapper:first-of-type + .section-wrapper {
+main .floating-button-wrapper:first-of-type + .section {
   padding-top: 0;
 }
 

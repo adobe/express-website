@@ -168,19 +168,19 @@ main .columns a > p:empty {
   display: none;
 }
 
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h2 {
+main .section.columns-container.steps-container div .steps.block div.step-description h2 {
   font-size: var(--heading-font-size-l);
   line-height: 1.11;
 }
 
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h3,
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h4,
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description h6 {
+main .section.columns-container.steps-container div .steps.block div.step-description h3,
+main .section.columns-container.steps-container div .steps.block div.step-description h4,
+main .section.columns-container.steps-container div .steps.block div.step-description h6 {
   font-size: var(--heading-font-size-s);
   line-height: 1.18;
 }
 
-main .section-wrapper.columns-container.steps-container div .steps.block div.step-description p {
+main .section.columns-container.steps-container div .steps.block div.step-description p {
   font-size: var(--body-font-size-s);
   line-height: 1.28;
 }
@@ -460,16 +460,16 @@ main .columns.highlight .column p {
     align-items: center;
   }
 
-  main .section-wrapper div.columns > div {
+  main .section div.columns > div {
     position: relative;
   }
 
-  main .section-wrapper div.columns > div > div {
+  main .section div.columns > div > div {
     width: 50%;
     box-sizing: border-box;
   }
 
-  main .section-wrapper div.columns > div > div:only-child {
+  main .section div.columns > div > div:only-child {
     width: 100%;
   }
 

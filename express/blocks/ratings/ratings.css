@@ -1,12 +1,12 @@
 main .ratings-container.section-wrapper,
-main .ratings-show-average-container.section-wrapper {
+main .ratings-show-average-container.section {
   background: var(--color-gray-100);
   padding-top: 80px;
   padding-bottom: 0;
 }
 
-main .ratings-container.section-wrapper > div,
-main .ratings-show-average-container.section-wrapper > div {
+main .ratings-container.section > div,
+main .ratings-show-average-container.section > div {
   max-width: 1024px;
 }
 
