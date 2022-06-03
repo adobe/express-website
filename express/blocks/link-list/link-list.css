@@ -9,7 +9,12 @@ main .link-list {
   margin: 40px auto; 
   width: 100%;
   text-align: left;
+}
 
+main .link-list h2,
+main .link-list h3,
+main .link-list h4 {
+  text-align: left;
 }
 
 main .link-list.center {
@@ -18,25 +23,33 @@ main .link-list.center {
 }
 
 main .link-list h3 {
-  text-align: left;
   font-size: var(--heading-font-size-m);
   margin-bottom: 20px;
 }
 
 main .link-list p.button-container {
-  margin: 0;
+  margin: 0 10px;
   line-height: 0;
 }
 
 main .link-list a.button.secondary {
-  margin: 6px 20px 6px 0;
+  margin: 6px 0;
 }
-
 
 @media (min-width: 900px) {
   main .link-list-container > div,
   main .link-list-center-container > div {
     padding: 0 50px;
+  }
+
+  main .link-list {
+    text-align: left;
+  }
+
+  main .link-list h2,
+  main .link-list h3,
+  main .link-list h4 {
+    text-align: left;
   }
 }
 
@@ -44,5 +57,71 @@ main .link-list a.button.secondary {
   main .link-list-container > div,
   main .link-list-center-container > div {
       padding: 0 55px;
+  }
+}
+
+
+/* Carousel styles (Link-list specific) */
+
+/* Remove max-width on mobile breakpoints */
+main .section-wrapper.link-list-container,
+main .section-wrapper.link-list-container > div,
+main .section-wrapper.link-list-container .link-list,
+main .section-wrapper.link-list-container .link-list > div {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .link-list .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+main .link-list h2,
+main .link-list h3,
+main .link-list h4 {
+  padding-left: 32px;
+}
+
+main .link-list .carousel-platform {
+  scroll-padding: 32px;
+}
+
+main .link-list .carousel-platform p.button-container:first-child {
+  margin-left: 32px;
+}
+
+@media (min-width: 900px) {
+  main .link-list .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .section-wrapper.link-list-container > div,
+  main .section-wrapper.link-list-center-container > div {
+    max-width: 1200px;
+  }
+  
+  main .section-wrapper.link-list-container > div, main .link-list-center-container > div {
+    padding: 0 50px;
+  }
+
+  main .link-list h2,
+  main .link-list h3,
+  main .link-list h4 {
+    padding-left: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section-wrapper.link-list-container > div,
+  main .section-wrapper.link-list-center-container > div {
+    padding: 0 55px;
+  }
+
+  main .section-wrapper.link-list-container > div,
+  main .section-wrapper.link-list-center-container > div {
+    max-width: 1200px;
   }
 }
