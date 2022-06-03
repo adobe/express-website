@@ -17,7 +17,7 @@ main .make-a-project {
 
 main .make-a-project .make-a-project-marquee {
   display: flex;
-  height: 335px;
+  height: 502px;
   flex-direction: column;
   padding: 20px 0;
   text-align: left;
