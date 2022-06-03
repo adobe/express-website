@@ -31,6 +31,7 @@ export async function createFloatingButton($a) {
   const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.href === $a.href && a.textContent === $a.textContent);
   sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
 
+  const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
   const $floatButtonWrapper = createTag('div', { class: 'floating-button-wrapper' });
   const $floatButton = createTag('div', { class: 'floating-button' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
@@ -42,6 +43,11 @@ export async function createFloatingButton($a) {
   $floatButton.appendChild($lottieScrollButton);
   $floatButtonWrapper.appendChild($floatButton);
   main.prepend($floatButtonWrapper);
+  if ($floatButtonWrapperOld.parentElement.children.length === 1) {
+    $floatButtonWrapperOld.parentElement.remove();
+  } else {
+    $floatButtonWrapperOld.remove();
+  }
 
   // Floating button scroll/click events
   const $scrollAnchor = document.querySelector('.block.template-list, .block.layouts, .steps-highlight-container') ?? document.querySelector('.section:nth-of-type(3)');
