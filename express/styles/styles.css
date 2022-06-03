@@ -729,8 +729,8 @@ main [data-audience] {
   display: none;
 }
 
-body[data-device="mobile"] main [data-audience="mobile"],
-body[data-device="desktop"] main [data-audience="desktop"] {
+body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"],
+body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"] {
   display: block;
 }
 
