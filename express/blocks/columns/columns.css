@@ -121,7 +121,6 @@ main .columns h2.columns-heading-very-long {
 
 main .columns h3 {
   font-size: var(--heading-font-size-l);
-  font-weight: var(--heading-font-weight);
   line-height: 1.11;
 }
 
