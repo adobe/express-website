@@ -341,6 +341,7 @@ a.button.dark.reverse:any-link:focus {
 
 a.button.wide {
   display: block;
+}
 
 a.button.gradient:any-link,
 a.button.gradient:any-link:hover,
