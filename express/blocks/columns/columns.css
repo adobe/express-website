@@ -121,6 +121,7 @@ main .columns h2.columns-heading-very-long {
 
 main .columns h3 {
   font-size: var(--heading-font-size-l);
+  font-weight: var(--heading-font-weight);
   line-height: 1.11;
 }
 
@@ -425,7 +426,7 @@ main .columns.highlight .column p {
 }
 
 main .columns.offer .column {
-  min-width: 278px;
+  width: 278px;
 }
 
 main .columns.offer .column:not(:first-child) {
@@ -436,12 +437,12 @@ main .columns.offer > div p.button-container {
   margin-bottom: 40px;
 }
 
+/* sub title */
 main .columns.offer h3:not(:first-of-type) {
   font-size: var(--body-font-size-xl);
   font-weight: 600;
   line-height: var(--body-line-height);
   margin: 80px 0 0;
-  /* text-align: left; */
 }
 
 main .columns.offer .columns-offer-icon .icon {
@@ -597,8 +598,13 @@ main .columns .column {
     margin-top: 0;
   }
 
+  main .columns-offer-container > div {
+    max-width: 1100px;
+  }
+
   main .columns.offer > div {
     width: 1100px;
+    margin: 0 auto;   
     flex-direction: row;
     justify-content: space-between;
   }
