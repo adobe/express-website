@@ -140,20 +140,13 @@ main .template-list .template:not(.placeholder) .icon {
   right: 6px;
 }
 
-/* horizontal template-list (carousel) */
+/* horizontal template-list */
 
 main .template-list.horizontal {
   display: block;
-  max-width: 375px;
   margin-left: auto; 
   margin-right: auto;
   min-height: 220px;
-}
-
-main .template-list.horizontal .carousel-container {
-  margin-left: 12px;
-  margin-right: 12px;
-  margin-bottom: 24px;
 }
 
 main .template-list.horizontal .template {
@@ -278,17 +271,6 @@ main .template-list.sixcols .template.placeholder {
   margin: 15px auto;
 }
 
-/* template-list-scrollbutton */
-main .template-list.sixcols .template-list-scrollbutton {
-  padding: 0;
-  position: fixed;
-  bottom: 22px;
-  right: 8px;
-  z-index: 3;
-  width: 60px;
-  height: 60px;
-}
-
 main .template-list .template.placeholder div:nth-of-type(2) {
   padding: 0;
   margin: 0;
@@ -389,11 +371,6 @@ main .template-list.flex-masonry .template.appear {
     width: 145px;
     margin: 21px;
   }
-  
-  /* template-list-scrollbutton */
-  main .template-list.sixcols .template-list-scrollbutton {
-    display: none;
-  }
 
   /* template-list inside columns */
 
@@ -401,18 +378,10 @@ main .template-list.flex-masonry .template.appear {
     margin-top: 0;
     margin-left: 40px;
   }
-
-  /* horizontal template-list (carousel) */
-
-  main .template-list.horizontal {
-    max-width: 800px;
-  }
-
 }
 
 @media (min-width: 1200px) {
-  main .template-list-fourcols-container > div,
-  main .template-list-horizontal-container > div {
+  main .template-list-fourcols-container > div {
     max-width: 1200px;
   }
 
@@ -437,11 +406,134 @@ main .template-list.flex-masonry .template.appear {
     font-size: 0.875rem;
     font-weight: 400;
   }
+}
 
-  /* horizontal template-list (carousel) */
+
+/* Carousel styles (Template-list specific) */
+
+/* hide controls in mobile-breakpoint if they scrolled using drag */
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
+  opacity: 0;
+}
+
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+  pointer-events: none;
+}
+
+/* Remove max-width on mobile breakpoints */
+main .section-wrapper.template-list-horizontal-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .section-wrapper.template-list-horizontal-container > div {
+  max-width: none;
+}
+
+/* re-add max-width on elements that are not carousel */
+main .section-wrapper.template-list-horizontal-container > div > *:not(.template-list.horizontal),
+main .section-wrapper.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
+  max-width: 350px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main .template-list.horizontal .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+main .template-list.horizontal .carousel-platform {
+  scroll-padding: 12px;
+}
+
+@media (min-width: 600px) {
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
+    opacity: unset;
+  }
+
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+    pointer-events: auto;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden,
+  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden {
+    opacity: 0;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
+    pointer-events: none;
+  }
+
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-platform {
+    scroll-snap-type: x mandatory;
+  }
+
+  main .template-list.horizontal .carousel-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 470px;
+    display: block;
+  }
+
+  main .template-list.horizontal .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left {
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-right {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+}
+
+@media (min-width: 900px) {
+  main .template-list.horizontal .carousel-container {
+    margin-left: 12px;
+    margin-right: 12px;
+    max-width: none;
+    display: inline-block;
+  }
+
+  main .section-wrapper.template-list-horizontal-container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  main .section-wrapper.template-list-horizontal-container > div {
+    max-width: 836px;
+  }
+  
+  main .section-wrapper.template-list-horizontal-container > div > *:not(.template-list.horizontal),
+  main .section-wrapper.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
+    max-width: unset;
+  }
+
+  main .template-list.horizontal .carousel-container {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  
+  main .template-list.horizontal {
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section-wrapper.template-list-horizontal-container > div {
+    max-width: 1024px;
+  }
 
   main .template-list.horizontal {
     max-width: 1090px;
   }
-
 }

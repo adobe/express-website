@@ -96,25 +96,19 @@ function trackTemplateClick($a) {
     // try to get the image alternate text
     if ($a.classList.contains('placeholder')) {
       adobeEventName += 'createFromScratch';
-    } else if ($a.classList.contains('template-list-scrollbutton')) {
-      adobeEventName += 'scrollbuttonPressed';
     } else if (alt) {
       adobeEventName += textToName(alt);
     } else {
       adobeEventName += 'Click';
     }
-    if ($a.classList.contains('template-list-scrollbutton')) {
-      sparkEventName = 'landing:scrollbuttonPressed';
-    } else {
-      const w = window.location.href;
+    const w = window.location.href;
 
-      sparkEventName = 'landing:templatePressed';
+    sparkEventName = 'landing:templatePressed';
 
-      if (w.includes('/express-your-fandom')) {
-        const $templates = document.querySelectorAll('a.template');
-        const templateIndex = Array.from($templates).indexOf($a) + 1;
-        sparkEventName += `:${templateIndex}`;
-      }
+    if (w.includes('/express-your-fandom')) {
+      const $templates = document.querySelectorAll('a.template');
+      const templateIndex = Array.from($templates).indexOf($a) + 1;
+      sparkEventName += `:${templateIndex}`;
     }
 
     digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
@@ -569,30 +563,6 @@ export async function decorateTemplateList($block) {
     });
   } else {
     $block.classList.add('template-list-complete');
-  }
-
-  // sixcols mobile button
-  if ($block.classList.contains('sixcols') && !document.querySelector('.template-list-scrollbutton')) {
-    const image = document.createElement('img');
-    // replace image with more permanent solution
-    image.setAttribute('src', '/express/blocks/template-list/scrollbutton.gif');
-
-    const button = document.createElement('a');
-    button.setAttribute('class', 'template-list-scrollbutton');
-    button.appendChild(image);
-    $block.appendChild(button);
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        button.remove();
-        observer.disconnect();
-      }
-    });
-    observer.observe($block);
-
-    button.addEventListener('click', () => {
-      trackTemplateClick(button);
-      $block.scrollIntoView(true);
-    });
   }
 }
 

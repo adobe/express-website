@@ -4,10 +4,12 @@ main .carousel-container {
   position: relative;
   height: auto;
   width: 100%;
+  margin-bottom: 24px;
 }
 
 main .carousel-container .carousel-platform {
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   left: 0;
   height: auto;
   display: flex;
@@ -32,37 +34,29 @@ main .carousel-container .carousel-platform > * {
 }
 
 main .carousel-container .carousel-fader-left {
-  display: none;
+  text-align: left;
+  display: flex;
   position: absolute;
   height: 100%;
   width: 60px;
   align-items: center;
   top: 0;
   left: 0;
-  background: linear-gradient(
-    to left,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  transition: display 0.2s;
+  transition: opacity 0.2s, display 0.2s;
   pointer-events: none;
 }
 
 main .carousel-container .carousel-fader-right {
-  display: none;
+  text-align: left;
+  display: flex;
   position: absolute;
   height: 100%;
-  width: 68px;
+  width: 60px;
   align-items: center;
   top: 0;
   right: 0;
   flex-direction: row-reverse;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  transition: display 0.2s;
+  transition: opacity 0.2s;
   pointer-events: none;
 }
 
@@ -72,11 +66,21 @@ main .carousel-container a.button.carousel-arrow {
   float: left;
   width: 32px;
   height: 32px;
-  margin: 0 10px;
+  margin: 0 7px;
   background: var(--color-white);
   box-shadow: 0 4px 8px 2px rgba(102, 102, 102, 0.1);
   border-radius: 50%;
   pointer-events: auto;
+}
+
+main .link-list .carousel-container .carousel-fader-left.arrow-hidden,
+main .link-list .carousel-container .carousel-fader-right.arrow-hidden {
+  opacity: 0;
+}
+
+main .link-list .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
+main .link-list .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
+  pointer-events: none;
 }
 
 main .carousel-container a.button.carousel-arrow::before {
@@ -101,4 +105,27 @@ main .carousel-container a.button.carousel-arrow-right {
 main .carousel-container a.button.carousel-arrow-right::before {
   margin-left: 9px;
   transform: rotate(45deg);
+}
+
+/* Remove snapping in mobile-breakpoint if they scrolled using drag */
+main .carousel-container.controls-hidden .carousel-platform {
+  scroll-snap-type: none;
+}
+
+@media (min-width: 900px) {  
+  main .carousel-container a.button.carousel-arrow {
+    margin: 0 10px;
+  }
+
+  main .carousel-container .carousel-fader-left {
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .carousel-container .carousel-fader-right {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .carousel-container.controls-hidden .carousel-platform {
+    scroll-snap-type: x mandatory;
+  }
 }
