@@ -257,6 +257,7 @@ export default function decorate($block) {
     });
   });
   addAnimationToggle($block);
+  addHeaderSizing($block);
 
   // decorate offer
   if ($block.classList.contains('offer')) {
