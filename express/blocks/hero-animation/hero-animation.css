@@ -3,7 +3,6 @@ body.no-desktop-brand-header header {
     height: 143px;
 }
 
-
 main .hero-animation.appear {
     opacity: 1;
     height: unset;
@@ -146,6 +145,7 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
     }
 
     main .hero-animation {
+        display: block;
         padding-top: 0;
     }    
 
