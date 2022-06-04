@@ -814,9 +814,9 @@ main .floating-button {
   position: fixed;
   display: none;
 }
-/* hide the section-wrapper that ONLY has the floating-button block */
+/* hide the .section that ONLY has the floating-button block */
 /* (removes the extra whitespace from padding) */
-[class="section-wrapper floating-button-container"] {
+[class=".section floating-button-container"] {
   display: none;
 }
 

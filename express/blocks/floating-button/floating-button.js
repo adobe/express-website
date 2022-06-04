@@ -43,10 +43,13 @@ export async function createFloatingButton($a) {
   $floatButton.appendChild($lottieScrollButton);
   $floatButtonWrapper.appendChild($floatButton);
   main.prepend($floatButtonWrapper);
-  if ($floatButtonWrapperOld.parentElement.children.length === 1) {
-    $floatButtonWrapperOld.parentElement.remove();
-  } else {
-    $floatButtonWrapperOld.remove();
+  if ($floatButtonWrapperOld) {
+    const $parent = $floatButtonWrapperOld.parentElement;
+    if ($parent && $parent.children.length === 1) {
+      $parent.remove();
+    } else {
+      $floatButtonWrapperOld.remove();
+    }
   }
 
   // Floating button scroll/click events

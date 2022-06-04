@@ -1,4 +1,4 @@
-main .ratings-container.section-wrapper,
+main .ratings-container..section,
 main .ratings-show-average-container.section {
   background: var(--color-gray-100);
   padding-top: 80px;

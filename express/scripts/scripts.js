@@ -789,8 +789,9 @@ const blocksWithOptions = [
  * @param {Element} block The block element
  */
 export function decorateBlock(block) {
-  let shortBlockName = block.classList[0];
-  if (shortBlockName) {
+  const blockName = block.classList[0];
+  if (blockName) {
+    let shortBlockName = blockName;
     block.classList.add('block');
     // begin CCX custom block option class handling
     if (shortBlockName !== 'how-to-steps-carousel') {
@@ -809,7 +810,7 @@ export function decorateBlock(block) {
     const blockWrapper = block.parentElement;
     blockWrapper.classList.add(`${shortBlockName}-wrapper`);
     const section = block.closest('.section');
-    if (section) section.classList.add(`${shortBlockName}-container`);
+    if (section) section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
   }
 }
 
@@ -903,6 +904,7 @@ export async function loadBlocks(main) {
     await loadBlock(blocks[i]);
     updateSectionsStatus(main);
   }
+  return blocks;
 }
 
 export function loadScript(url, callback, type) {
@@ -963,7 +965,7 @@ function addPromotion() {
       };
       // insert promotion at the bottom
       if (promos[category]) {
-        const $promoSection = createTag('div', { class: 'section-wrapper' });
+        const $promoSection = createTag('div', { class: '.section' });
         $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));

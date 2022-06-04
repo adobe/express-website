@@ -184,7 +184,7 @@ export default async function decorateBlogPage() {
 
   const pictures = document.querySelectorAll('main div.section > div > picture');
   pictures.forEach((picture) => {
-    const section = picture.closest('.section-wrapper');
+    const section = picture.closest('.section');
     section.classList.add('fullwidth');
   });
   /*
@@ -194,7 +194,7 @@ export default async function decorateBlogPage() {
   }
   */
 
-  const section = createTag('div', { class: 'section-wrapper' });
+  const section = createTag('div', { class: '.section' });
   const block = buildBlock('tags', '');
   block.classList.add('block');
   block.setAttribute('data-block-name', 'tags');
