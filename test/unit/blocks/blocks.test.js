@@ -65,7 +65,7 @@ describe('Block tests', () => {
 
       let block = doc.querySelector('main > div');
       let sectionMode = false;
-      if (block.classList.contains('.section')) {
+      if (block.classList.contains('section')) {
         // input file contains section, look for block inside it
         block = block.querySelector(':scope > div > div');
         sectionMode = true;
