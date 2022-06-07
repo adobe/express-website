@@ -191,4 +191,8 @@ main .premium-plan .premium-plan-card ul {
   main .premium-plan-cards .carousel-container a.button.carousel-arrow {
     display: none;
   }
+
+  main .premium-plan .premium-plan-cards {
+    flex-direction: column;
+  }
 }
