@@ -122,10 +122,9 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
         }
       });
     });
-  } else {
-    initialState();
-    setTimeout(initialState, 2000);
   }
+  initialState();
+  setTimeout(initialState, 2000);
 
   // Hide controls if the user swipes through the carousel
   let isScrolling = false;
