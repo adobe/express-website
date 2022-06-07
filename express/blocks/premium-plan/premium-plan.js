@@ -18,36 +18,62 @@ import { buildCarousel } from '../shared/carousel.js';
 
 export default function decorate($block) {
   if ($block.children.length) {
-    const $banner = $block.children[0];
-    if ($banner) {
-      $banner.classList.add('premium-plan-banner');
-      const $bannerCta = $banner.querySelector('a');
-      if ($bannerCta) {
-        $bannerCta.classList.add('dark', 'reverse');
-        $bannerCta.classList.remove('accent');
+    const $desktopBanner = $block.children[0];
+    if ($desktopBanner) {
+      $desktopBanner.classList.add('premium-plan-banner', 'premium-plan-banner-desktop');
+      const $desktopBannerCta = $desktopBanner.querySelector('a');
+      if ($desktopBannerCta) {
+        $desktopBannerCta.classList.add('dark', 'reverse');
+        $desktopBannerCta.classList.remove('accent');
       }
-      const $img = $banner.querySelector('picture:first-child:last-child');
-      if ($img && $img.parentElement.tagName === 'P') {
+      const $desktopImg = $desktopBanner.querySelector('picture:first-child:last-child');
+      if ($desktopImg && $desktopImg.parentElement.tagName === 'P') {
         // unwrap single picture if wrapped in p tag
-        const $parentDiv = $img.closest('div');
-        const $parentParagraph = $img.parentNode;
-        $parentDiv.insertBefore($img, $parentParagraph);
-        $parentParagraph.remove();
+        const $desktopParentDiv = $desktopImg.closest('div');
+        const $desktopParentParagraph = $desktopImg.parentNode;
+        $desktopParentDiv.insertBefore($desktopImg, $desktopParentParagraph);
+        $desktopParentParagraph.remove();
       }
+      $desktopBanner.children[0].remove();
     }
   }
   if ($block.children.length > 1) {
+    const $mobileBanner = $block.children[1];
+    if ($mobileBanner) {
+      $mobileBanner.classList.add('premium-plan-banner', 'premium-plan-banner-mobile');
+      const $mobileBannerCta = $mobileBanner.querySelector('a');
+      if ($mobileBannerCta) {
+        $mobileBannerCta.classList.add('dark', 'reverse');
+        $mobileBannerCta.classList.remove('accent');
+      }
+      const $mobileImg = $mobileBanner.querySelector('picture:first-child:last-child');
+      if ($mobileImg && $mobileImg.parentElement.tagName === 'P') {
+        // unwrap single picture if wrapped in p tag
+        const $desktopParentDiv = $mobileImg.closest('div');
+        const $desktopParentParagraph = $mobileImg.parentNode;
+        $desktopParentDiv.insertBefore($mobileImg, $desktopParentParagraph);
+        $desktopParentParagraph.remove();
+      }
+      $mobileBanner.children[0].remove();
+    }
+  }
+  if ($block.children.length > 2) {
     const $container = createTag('div', { class: 'premium-plan-cards' });
     const $cards = createTag('div');
     $container.append($cards);
     let failsafe = 20;
-    while ($block.children.length > 1) {
-      const $card = $block.children[1].children[0];
-      if ($card) {
-        $cards.append($card);
-        $card.classList.add('premium-plan-card');
+    while ($block.children.length > 2) {
+      const device = $block.children[2].children[0].textContent;
+      const $card = $block.children[2].children[1];
+
+      if (device === 'Mobile') {
+        $card.classList.add('premium-plan-card-mobile');
+      } else if (device === 'Desktop') {
+        $card.classList.add('premium-plan-card-desktop');
       }
-      $block.children[1].remove();
+      $cards.append($card);
+      $card.classList.add('premium-plan-card');
+      $block.children[2].remove();
       failsafe -= 1;
       if (!failsafe) { // prevent a possible infinite loop.
         break;

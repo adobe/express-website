@@ -10,12 +10,16 @@ main .premium-plan .premium-plan-banner {
     background: var(--gradient-highlight-diagonal);
 }
 
+main .premium-plan .premium-plan-banner-desktop {
+    display: none;
+}
+
 main .premium-plan .premium-plan-banner > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px 60px 20px;
+    padding: 40px 20px 80px 20px;
     max-width: 320px;
 }
 
@@ -46,7 +50,7 @@ main .premium-plan .premium-plan-cards > div {
     justify-content: center;
     align-items: center;
 
-    padding: 0 15px 40px 15px;
+    padding: 0 15px 20px 15px;
     max-width: 375px;
 }
 
@@ -58,6 +62,10 @@ main .premium-plan .premium-plan-card {
     background-color: white;
     border-radius: 20px;
     margin-bottom: 30px;
+}
+
+main .premium-plan .premium-plan-card-desktop {
+    display: none;
 }
 
 main .premium-plan .premium-plan-card p {
@@ -108,6 +116,14 @@ main .premium-plan .premium-plan-card ul {
         border-radius: 15px;
     }
 
+    main .premium-plan .premium-plan-banner-mobile {
+        display: none;
+    }
+
+    main .premium-plan .premium-plan-banner-desktop {
+        display: flex;
+    }
+
     main .premium-plan .premium-plan-banner > div {
         max-width: none;
         width: 100%;
@@ -148,18 +164,31 @@ main .premium-plan .premium-plan-card ul {
         width: 475px;
         border: 2px #E8E8E8 solid;
         margin-right: 20px;
+        min-height: 260px;
+    }
+
+    main .premium-plan .premium-plan-card-desktop {
+        display: flex;
+    }
+
+    main .premium-plan .premium-plan-card-mobile {
+        display: none;
     }
 
     main .premium-plan .premium-plan-card-image {
         position: absolute;
-        top: 50%;
-        right: 40px;
+        top: 45%;
+        right: 30px;
         transform: translateY(-50%);
-        width: 100px;
+        width: 120px;
     }
 
     main .premium-plan .premium-plan-card-image img {
         width: 100%;
+    }
+
+    main .premium-plan .premium-plan-card ul {
+        margin-top: auto;
     }
 }
 
