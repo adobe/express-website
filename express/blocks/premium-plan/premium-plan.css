@@ -1,0 +1,164 @@
+.pricing-columns {
+    display: none!important;
+}
+
+main .premium-plan-container > div {
+    max-width: 100%;
+    padding: 0;
+}
+
+main .premium-plan .premium-plan-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-highlight-diagonal);
+}
+
+main .premium-plan .premium-plan-banner > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px 120px 20px;
+    max-width: 320px;
+}
+
+main .premium-plan .premium-plan-banner img {
+    max-width: 320px;
+}
+
+main .premium-plan .premium-plan-banner h2 {
+    color: white;
+    font-size: var(--heading-font-size-m);
+    line-height: var(--heading-line-height);
+    text-align: left;
+    max-width: 375px;
+}
+
+main .premium-plan .premium-plan-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to top, var(--body-alt-background-color), var(--body-alt-background-color)) no-repeat 0 80px;
+    margin-top: -80px;
+}
+
+main .premium-plan .premium-plan-cards > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0 15px 40px 15px;
+    max-width: 375px;
+}
+
+main .premium-plan .premium-plan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 30px;
+    background-color: white;
+    border-radius: 20px;
+    margin-bottom: 30px;
+}
+
+main .premium-plan .premium-plan-card p {
+    margin: 0;
+    text-align: left;
+    font-size: var(--body-font-size-m);
+    max-width: 280px;
+}
+
+main .premium-plan .premium-plan-card-icon img {
+    width: 40px;
+}
+
+main .premium-plan .premium-plan-card h3 {
+    text-align: left;
+    font-size: var(--heading-font-size-s);
+    margin: 10px 0;
+    max-width: 260px;
+}
+
+main .premium-plan .premium-plan-card-image img {
+    width: 50%;
+    margin: 20px 0;
+}
+
+main .premium-plan .premium-plan-card ul {
+    display: flex;
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+@media (min-width: 900px) {
+    main .premium-plan {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    main .premium-plan .premium-plan-banner {
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        max-width: 1180px;
+        width: 100%;
+        border-radius: 15px;
+    }
+
+    main .premium-plan .premium-plan-banner > div {
+        max-width: none;
+        width: 100%;
+        align-items: flex-start;
+        padding: 40px;
+    }
+
+    main .premium-plan .premium-plan-banner h2 {
+        max-width: 500px;
+    }
+
+    main .premium-plan .premium-plan-banner img {
+        position: absolute;
+        top: -70px;
+        right: 0;
+        max-width: 615px;
+    }
+
+    main .premium-plan .premium-plan-cards {
+        max-width: 1180px;
+        width: 100%;
+        background: none;
+        margin-top: 20px;
+        justify-content: flex-start;
+    }
+
+    main .premium-plan .premium-plan-cards > div {
+        max-width: none;
+        flex-direction: row;
+        padding: 0;
+        justify-content: flex-start;
+    }
+
+    main .premium-plan .premium-plan-card {
+        position: relative;
+        width: 475px;
+        border: 2px #E8E8E8 solid;
+        margin-right: 20px;
+    }
+
+    main .premium-plan .premium-plan-card-image {
+        position: absolute;
+        top: 50%;
+        right: 40px;
+        transform: translateY(-50%);
+        width: 100px;
+    }
+
+    main .premium-plan .premium-plan-card-image img {
+        width: 100%;
+    }
+}

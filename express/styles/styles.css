@@ -34,6 +34,7 @@
   --color-premium: #EBCF2D;
   --gradient-highlight-vertical: linear-gradient(15deg, #7c84fc, #ff4dd2);
   --gradient-highlight-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
+  --gradient-highlight-diagonal: linear-gradient(45deg, #7c84fc, #ff4dd2);
 
   /* body */
   --body-background-color: var(--color-white);
@@ -145,7 +146,7 @@ a.button:any-link {
   padding: 5px 1.2em 6px 1.2em;
   text-align: center;
   font-size: var(--body-font-size-s);
-  font-style: normal; 
+  font-style: normal;
   font-weight: 600;
   line-height: var(--body-line-height);
   cursor: pointer;
@@ -177,7 +178,7 @@ a.button.small:any-link {
 }
 
 a.button:any-link,
-a.button.accent:any-link, 
+a.button.accent:any-link,
 a.button.primaryCTA:any-link {
   color: var(--color-white);
   background-color: var(--color-info-accent);
@@ -199,7 +200,7 @@ a.button.primaryCTA:any-link:active {
 }
 
 a.button:focus,
-a.button.accent:focus, 
+a.button.accent:focus,
 a.button.primaryCTA:focus {
   background-color: var(--color-info-accent-hover);
   border-color: var(--color-info-accent-hover);
@@ -480,7 +481,7 @@ main .section-wrapper:last-of-type {
 
   main .section-wrapper.cards-container {
     background-color: unset;
-  }  
+  }
 }
 
 @media(min-width:1200px) {
@@ -632,9 +633,9 @@ main .hero a.button:any-link {
 @media (min-width:1200px){
   main .hero h1 {
     font-size: var(--heading-font-size-xxl);
-    margin: 0; 
+    margin: 0;
   }
-  
+
   main .hero .columns > div > div {
     margin: 8px;
   }
