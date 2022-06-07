@@ -175,7 +175,7 @@ main .premium-plan .premium-plan-card ul {
 @media (min-width: 1200px) {
     main .premium-plan .premium-plan-banner picture {
         max-width: 580px;
-        top: -70px;
+        top: -90px;
         transform: none;
     }
 }
