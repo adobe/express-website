@@ -11,8 +11,10 @@
  */
 import {
   createTag,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+
+import { buildCarousel } from '../shared/carousel.js';
 
 export default function decorate($block) {
   if ($block.children.length) {
@@ -51,5 +53,6 @@ export default function decorate($block) {
       }
     }
     $block.append($container);
+    buildCarousel('.premium-plan-card', $container);
   }
 }

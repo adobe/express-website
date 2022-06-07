@@ -162,3 +162,16 @@ main .premium-plan .premium-plan-card ul {
         width: 100%;
     }
 }
+
+/* Disable carousel on mobile */
+ 
+@media (max-width: 899px) {
+  main .premium-plan-cards .carousel-container,
+  main .premium-plan-cards .carousel-container .carousel-platform {
+    display: block;
+  }
+
+  main .premium-plan-cards .carousel-container a.button.carousel-arrow {
+    display: none;
+  }
+}
