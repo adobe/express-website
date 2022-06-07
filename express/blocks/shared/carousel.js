@@ -63,10 +63,12 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     toggleControls();
   };
   $arrowLeft.addEventListener('click', () => {
-    moveCarousel(240);
+    const increment = Math.max($platform.offsetWidth / 2, 300);
+    moveCarousel(increment);
   });
   $arrowRight.addEventListener('click', () => {
-    moveCarousel(-240);
+    const increment = Math.max($platform.offsetWidth / 2, 300);
+    moveCarousel(-increment);
   });
   window.addEventListener('resize', toggleControls);
 
