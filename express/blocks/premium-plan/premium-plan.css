@@ -121,11 +121,12 @@ main .premium-plan .premium-plan-card ul {
         max-width: 500px;
     }
 
-    main .premium-plan .premium-plan-banner img {
+    main .premium-plan .premium-plan-banner picture {
         position: absolute;
         top: -70px;
         right: 0;
         max-width: 615px;
+        margin: 0;
     }
 
     main .premium-plan .premium-plan-cards {

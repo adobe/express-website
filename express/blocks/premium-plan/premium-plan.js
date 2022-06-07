@@ -26,6 +26,14 @@ export default function decorate($block) {
         $bannerCta.classList.add('dark', 'reverse');
         $bannerCta.classList.remove('accent');
       }
+      const $img = $banner.querySelector('picture:first-child:last-child');
+      if ($img && $img.parentElement.tagName === 'P') {
+        // unwrap single picture if wrapped in p tag
+        const $parentDiv = $img.closest('div');
+        const $parentParagraph = $img.parentNode;
+        $parentDiv.insertBefore($img, $parentParagraph);
+        $parentParagraph.remove();
+      }
     }
   }
   if ($block.children.length > 1) {
