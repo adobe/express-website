@@ -73,13 +73,13 @@ main .carousel-container a.button.carousel-arrow {
   pointer-events: auto;
 }
 
-main .link-list .carousel-container .carousel-fader-left.arrow-hidden,
-main .link-list .carousel-container .carousel-fader-right.arrow-hidden {
+main .carousel-container .carousel-fader-left.arrow-hidden,
+main .carousel-container .carousel-fader-right.arrow-hidden {
   opacity: 0;
 }
 
-main .link-list .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
-main .link-list .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
+main .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
+main .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
   pointer-events: none;
 }
 

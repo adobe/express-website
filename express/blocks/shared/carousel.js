@@ -63,10 +63,12 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     toggleControls();
   };
   $arrowLeft.addEventListener('click', () => {
-    moveCarousel(240);
+    const increment = Math.max(($platform.offsetWidth / 4) * 3, 300);
+    moveCarousel(increment);
   });
   $arrowRight.addEventListener('click', () => {
-    moveCarousel(-240);
+    const increment = Math.max(($platform.offsetWidth / 4) * 3, 300);
+    moveCarousel(-increment);
   });
   window.addEventListener('resize', toggleControls);
 
@@ -122,10 +124,9 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
         }
       });
     });
-  } else {
-    initialState();
-    setTimeout(initialState, 2000);
   }
+  initialState();
+  setTimeout(initialState, 2000);
 
   // Hide controls if the user swipes through the carousel
   let isScrolling = false;
