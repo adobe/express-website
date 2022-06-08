@@ -1,5 +1,7 @@
 main .section-wrapper.make-a-project-container {
   padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 main .section-wrapper.make-a-project-container > div {
@@ -19,8 +21,17 @@ main .make-a-project .make-a-project-marquee {
   flex-direction: column;
   padding: 20px 0;
   text-align: left;
+}
+
+main .make-a-project.dark .make-a-project-marquee {
   background-color: var(--color-gray-800);
   color: var(--color-white);
+}
+
+main .make-a-project .make-a-project-marquee > div {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 main .make-a-project .make-a-project-marquee h2,
@@ -34,8 +45,25 @@ main .make-a-project .make-a-project-marquee h2 {
   line-height: 1;
 }
 
-main .make-a-project p {
+main .make-a-project p,
+main .make-a-project .make-a-project-description {
   font-size: var(--body-font-size-xl);
+}
+
+main .make-a-project .make-a-project-description {
+  line-height: var(--body-line-height);
+  margin: 32px auto;
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+main .make-a-project .make-a-project-description > p:first-child {
+  margin-top: 0;
+}
+
+main .make-a-project .make-a-project-description > p:first-child {
+  margin-bottom: 0;
 }
 
 main .make-a-project p:first-child .icon {
@@ -47,8 +75,8 @@ main .make-a-project .make-a-project-marquee ul {
   list-style: none;
   padding: 20px 15px;
   display: flex;
-  margin: 20px 0 0 0;
-  overflow-x: scroll;
+  margin: 0;
+  overflow-x: auto;
   max-width: 100vw;
 }
 
@@ -111,16 +139,31 @@ main .make-a-project .make-a-project-description a.button {
     height: unset;
   }
 
-  main .make-a-project .make-a-project-marquee > div > * {
-    margin: 20px 40px;
+  main .make-a-project .make-a-project-marquee .make-a-project-CTA {
+    padding: 0 40px;
+    box-sizing: border-box;
   }
 
-  main .make-a-project .make-a-project-marquee > div > ul {
-    padding-left: 0;
+  main .make-a-project .make-a-project-marquee > div > div > ul {
+    margin: 0;
+    margin-bottom: 20px;
+    padding-left: 40px;
   }
 
   main .make-a-project .make-a-project-description,
   main .make-a-project .make-a-project-description p.button-container {
     text-align: center;
+  }
+
+  main .make-a-project .make-a-project-marquee h2,
+  main .make-a-project .make-a-project-marquee p {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container > div {
+    max-width: 1200px;
   }
 }

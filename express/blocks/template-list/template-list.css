@@ -429,6 +429,8 @@ main .section-wrapper.template-list-horizontal-container {
 }
 
 main .section-wrapper.template-list-horizontal-container > div {
+  padding-left: 0;
+  padding-right: 0;
   max-width: none;
 }
 
