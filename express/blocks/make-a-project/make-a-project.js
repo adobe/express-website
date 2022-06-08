@@ -45,9 +45,11 @@ export default function decorate($block) {
           $link.classList.remove('button');
         });
         const $a = $row.querySelector(':scope a');
-        const $aimg = $a.cloneNode(false);
-        $row.prepend($aimg);
-        $aimg.appendChild($cells[0]);
+        if ($a) {
+          const $aimg = $a.cloneNode(false);
+          $row.prepend($aimg);
+          $aimg.appendChild($cells[0]);
+        }
         const $svgImage = $cells[0].querySelector('svg');
         if ($svgImage) {
           $cells[0].classList.add('make-a-project-item-svg-image');

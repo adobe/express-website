@@ -11,7 +11,7 @@ main .section-wrapper.make-a-project-container > div {
 }
 
 main .make-a-project {
-  height: 502px;
+  max-height: 502px;
   display: flex;
   flex-direction: column;
 }
@@ -168,12 +168,18 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item img {
   height: auto;
 }
 
+main .make-a-project .make-a-project-projectlist .make-a-project-item picture {
+  display: block;
+  overflow: hidden;
+  border-radius: 7px;
+}
+
 main .make-a-project .make-a-project-projectlist .carousel-platform {
   align-items: stretch;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item img {
-  border-radius: 16px;
+  border-radius: 7px;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item:first-child {
