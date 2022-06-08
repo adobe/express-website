@@ -1362,9 +1362,11 @@ export async function fixIcons(block = document) {
         const $block = $picture.closest('.block');
         let size = 44;
         if ($block) {
-          const smallIconBlocks = ['columns'];
           const blockName = $block.getAttribute('data-block-name');
-          if (smallIconBlocks.includes(blockName)) size = 22;
+          // use small icons in .columns (except for .columns.offer)
+          if (blockName === 'columns') {
+            size = $block.classList.contains('offer') ? 44 : 22;
+          }
         }
         $picture.parentElement
           .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
@@ -1743,7 +1745,7 @@ async function wordBreakJapanese() {
   }
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
-  document.querySelectorAll('h1, h2, h3, h4, h5, p:not(.button-container)').forEach((el) => {
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
     parser.applyElement(el);
   });
 

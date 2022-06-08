@@ -424,6 +424,50 @@ main .columns.highlight .column p {
   font-size: var(--body-font-size-s);
 }
 
+main .columns.offer .column {
+  width: 278px;
+}
+
+main .columns.offer .column:not(:first-child) {
+  padding-top: 40px;
+}
+
+main .columns.offer > div p.button-container {
+  margin-bottom: 40px;
+}
+
+/* sub title */
+main .columns.offer h3:not(:first-of-type) {
+  font-size: var(--body-font-size-xl);
+  font-weight: 600;
+  line-height: var(--body-line-height);
+  margin: 80px 0 0;
+}
+
+main .columns.offer .columns-offer-icon .icon {
+  margin-right: 0;
+  float: unset;
+  width: 26px;
+}
+
+main .columns.offer .column .columns-iconlist,
+main .columns.offer .column .columns-iconlist .columns-iconlist-icon > div {
+  width: 100%;
+}
+
+main .columns.offer .column .columns-iconlist .columns-iconlist-icon .icon {
+  width: 44px;
+  height: 44px;
+}
+
+main .columns.offer .column .columns-iconlist .columns-iconlist-description {
+  flex: 1;
+}
+
+main .columns.offer .column .columns-iconlist .columns-iconlist-description p {
+  font-size: var(--body-font-size-m);
+}
+
 @media (min-width: 900px) {
   body.no-brand-header main .columns.columns-marquee .brand.icon {
     position: unset;
@@ -440,8 +484,9 @@ main .columns.highlight .column p {
     padding-top: 0;
   }
 
-  main .columns.top > div {
-    align-items: flex-start;
+  main .columns.top > div,
+  main .columns.offer > div {
+      align-items: flex-start;
   }
 
   main .columns-container > div,
@@ -498,6 +543,20 @@ main .columns .column {
     top: 0;
     object-fit: cover;
   }
+
+  main .columns.offer > div {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  main .columns.offer .column {
+    width: 600px;
+    margin: 0 auto;
+  }
+
+  main .columns.offer > div:first-child {
+    padding-bottom: 0;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -536,6 +595,26 @@ main .columns .column {
 
   main .columns.fullsize + h2 {
     margin-top: 0;
+  }
+
+  main .columns-offer-container > div {
+    max-width: 1100px;
+  }
+
+  main .columns.offer > div {
+    width: 1100px;
+    margin: 0 auto;   
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  main .columns.offer .column {
+    width: 490px;
+    padding: 40px 0;
+  }
+
+  main .columns.offer .column:not(:first-child) {
+    padding-top: 0;
   }
 }
 

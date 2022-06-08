@@ -340,6 +340,10 @@ a.button.dark.reverse:any-link:focus {
   color: var(--color-info-accent-hover);
 }
 
+a.button.wide {
+  display: block;
+}
+
 a.button.gradient:any-link,
 a.button.gradient:any-link:hover,
 a.button.gradient:any-link:active,
@@ -732,7 +736,6 @@ body main .section-wrapper > div[data-audience] {
 
 body[data-device="mobile"] main .section-wrapper > div[data-audience="mobile"] {
   display: block;
-  height: 505px;
 }
 
 body[data-device="desktop"] main .section-wrapper > div[data-audience="desktop"] {
