@@ -98,6 +98,12 @@ main .premium-plan .premium-plan-card ul {
     padding-left: 0;
 }
 
+main .premium-plan .premium-plan-card ul li a svg {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
 @media (min-width: 900px) {
     main .premium-plan {
         display: flex;

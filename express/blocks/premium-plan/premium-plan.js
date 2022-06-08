@@ -11,6 +11,7 @@
  */
 import {
   createTag,
+  getIcon,
   // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -84,6 +85,13 @@ export default function decorate($block) {
       }
       if ($images.length > 1) {
         $images[1].classList.add('premium-plan-card-image');
+      }
+      const $links = $card.querySelectorAll('li a');
+      if ($links) {
+        $links.forEach(($link) => {
+          const iconName = $link.textContent.toLowerCase();
+          $link.innerHTML = getIcon(iconName);
+        });
       }
     }
     $block.append($container);
