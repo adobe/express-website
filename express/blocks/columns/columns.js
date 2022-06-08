@@ -71,9 +71,21 @@ function transformToVideoColumn($cell, $a) {
   }
 }
 
-function decorateIconList($columnCell, rowNum) {
+function decorateIconList($columnCell, rowNum, blockClasses) {
   const icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')]
     .filter(($icon) => !$icon.closest('p').classList.contains('social-links'));
+  // decorate offer icons
+  if (rowNum === 0 && blockClasses.contains('offer')) {
+    const $titleIcon = $columnCell.querySelector('img.icon, svg.icon');
+    const $title = $columnCell.querySelector('h1, h2, h3, h4, h5, h6');
+    if ($title && $titleIcon) {
+      const $titleIconWrapper = createTag('span', { class: 'columns-offer-icon' });
+      $titleIconWrapper.append($titleIcon);
+      $title.prepend($titleIconWrapper);
+    }
+    return;
+  }
+
   if (rowNum === 0
     && icons.length === 1
     && icons[0].closest('p').innerText === ''
@@ -157,7 +169,7 @@ export default function decorate($block) {
     const $cells = Array.from($row.children);
     $cells.forEach(($cell, cellNum) => {
       if ($cell.querySelector('img.icon, svg.icon')) {
-        decorateIconList($cell, rowNum);
+        decorateIconList($cell, rowNum, $block.classList);
       }
 
       if (cellNum === 0 && isNumberedList) {
@@ -233,7 +245,7 @@ export default function decorate($block) {
       $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
 
       $cell.classList.add('column');
-      if ($cell.firstElementChild.tagName === 'PICTURE') {
+      if ($cell.firstElementChild && $cell.firstElementChild.tagName === 'PICTURE') {
         $cell.classList.add('column-picture');
       }
 
@@ -247,4 +259,21 @@ export default function decorate($block) {
   });
   addAnimationToggle($block);
   addHeaderSizing($block);
+
+  // decorate offer
+  if ($block.classList.contains('offer')) {
+    $block.querySelectorAll('a.button').forEach(($a) => $a.classList.add('large', 'wide'));
+    if ($rows.length > 1) {
+      // move all content into first row
+      $rows.forEach(($row, rowNum) => {
+        if (rowNum > 0) {
+          const $cells = Array.from($row.children);
+          $cells.forEach(($cell, cellNum) => {
+            $rows[0].children[cellNum].append(...$cell.children);
+          });
+          $row.remove();
+        }
+      });
+    }
+  }
 }
