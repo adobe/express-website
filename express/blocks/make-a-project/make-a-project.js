@@ -67,20 +67,4 @@ export default function decorate($block) {
     const $CTA = $block.querySelector('.make-a-project-CTA');
     if ($CTA) $CTA.querySelectorAll('a.button').forEach(($button) => $button.classList.add('large'));
   }
-
-  // if ($block.children.length) {
-  //   const $marquee = $block.children[0];
-  //   $marquee.classList.add('make-a-project-marquee');
-  //   // decorate project links
-  //   $marquee.querySelectorAll(':scope ul li a').forEach(($link) => {
-  //     const $icon = $link.previousSibling;
-  //     if ($icon) {
-  //       if ($icon.firstElementChild) {
-  //         // remove title from SVG
-  //         $icon.firstElementChild.remove();
-  //       }
-  //       $link.prepend($icon);
-  //     }
-  //   });
-  // }
 }
