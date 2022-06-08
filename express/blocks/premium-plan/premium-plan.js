@@ -64,7 +64,7 @@ export default function decorate($block) {
     $container.append($cards);
     let failsafe = 20;
     while ($block.children.length > 2) {
-      const device = $block.children[2].children[0].textContent;
+      const device = $block.children[2].children[0].textContent.toLowerCase().trim();
       const $cardDiv = $block.children[2].children[1];
       const $cardLink = $cardDiv.children[0].querySelector('a');
       let $card;
@@ -78,9 +78,9 @@ export default function decorate($block) {
         $card.classList.add('premium-plan-card');
       }
 
-      if (device === 'Mobile') {
+      if (device === 'mobile') {
         $card.classList.add('premium-plan-card-mobile');
-      } else if (device === 'Desktop') {
+      } else if (device === 'desktop') {
         $card.classList.add('premium-plan-card-desktop');
       }
       $cards.append($card);
@@ -99,7 +99,7 @@ export default function decorate($block) {
       const $links = $card.querySelectorAll('li a');
       if ($links) {
         $links.forEach(($link) => {
-          const iconName = $link.textContent.toLowerCase();
+          const iconName = $link.textContent.toLowerCase().trim();
           $link.innerHTML = getIcon(iconName);
         });
       }
