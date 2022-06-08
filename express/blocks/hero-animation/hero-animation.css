@@ -214,7 +214,6 @@ main .hero-animation-wide-container .hero-animation.wide > div {
     z-index: -1;
     object-fit: cover;
     width: 100vw;
-    min-height: unset;
     object-position: 100% 100%;
   }
 
