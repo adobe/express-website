@@ -68,11 +68,17 @@ main .premium-plan .premium-plan-card-desktop {
     display: none;
 }
 
+main .premium-plan .premium-plan-card h3 {
+    color: var(--color-gray-800);
+}
+
 main .premium-plan .premium-plan-card p {
     margin: 0;
     text-align: left;
     font-size: var(--body-font-size-m);
+    font-weight: var(--body-font-weight);
     max-width: 280px;
+    color: var(--color-gray-800);
 }
 
 main .premium-plan .premium-plan-card-icon img {

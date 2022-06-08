@@ -65,7 +65,18 @@ export default function decorate($block) {
     let failsafe = 20;
     while ($block.children.length > 2) {
       const device = $block.children[2].children[0].textContent;
-      const $card = $block.children[2].children[1];
+      const $cardDiv = $block.children[2].children[1];
+      const $cardLink = $cardDiv.children[0].querySelector('a');
+      let $card;
+
+      if ($cardLink) {
+        $card = createTag('a', { class: 'premium-plan-card', href: $cardLink.href });
+        $cardLink.remove();
+        $card.innerHTML = $cardDiv.innerHTML;
+      } else {
+        $card = $cardDiv;
+        $card.classList.add('premium-plan-card');
+      }
 
       if (device === 'Mobile') {
         $card.classList.add('premium-plan-card-mobile');
@@ -73,7 +84,6 @@ export default function decorate($block) {
         $card.classList.add('premium-plan-card-desktop');
       }
       $cards.append($card);
-      $card.classList.add('premium-plan-card');
       $block.children[2].remove();
       failsafe -= 1;
       if (!failsafe) { // prevent a possible infinite loop.
