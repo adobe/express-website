@@ -89,16 +89,18 @@ function createAnimation(animations) {
 }
 
 function adjustLayout($overlay, $attributions, animations, $parent) {
-  $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
-  const scale = window.innerWidth / 1440;
-  if (window.innerWidth > 375 * (1440 / 700)) {
-    $attributions.style.transform = `scale(${scale})`;
-    $attributions.style.top = `${scale * 545}px`;
-    $attributions.style.left = `${scale * 1030}px`;
-  } else {
-    $attributions.style.transform = 'scale(0.4)';
-    $attributions.style.top = '300px';
-    $attributions.style.left = '80px';
+  if (!$parent.closest('.block').classList.contains('wide')) {
+    $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
+    const scale = window.innerWidth / 1440;
+    if (window.innerWidth > 375 * (1440 / 700)) {
+      $attributions.style.transform = `scale(${scale})`;
+      $attributions.style.top = `${scale * 545}px`;
+      $attributions.style.left = `${scale * 1030}px`;
+    } else {
+      $attributions.style.transform = 'scale(0.4)';
+      $attributions.style.top = '300px';
+      $attributions.style.left = '80px';
+    }
   }
 
   const breakpoint = getBreakpoint(animations);

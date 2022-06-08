@@ -184,3 +184,54 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
         max-width: 65%;
     }    
 }
+
+/* wide option */
+
+main .hero-animation-wide-container > div {
+  max-width: unset;
+  padding: 0;
+}
+
+main .hero-animation-wide-container .hero-animation.wide {
+  position: relative;
+  min-height: 375px;
+}
+
+main .hero-animation-wide-container .hero-animation.wide > div {
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 950px) {
+  main .hero-animation-wide-container .hero-animation.wide video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    object-fit: cover;
+    width: 100vw;
+    min-height: unset;
+    object-position: 100% 100%;
+  }
+
+  main .hero-animation-wide-container .hero-animation.wide > div {
+    padding: 40px;
+  }
+}
+
+@media (min-width: 400px) and (max-width: 600px) {
+  main .hero-animation-wide-container .hero-animation.wide video { 
+    object-position: 75% 100%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1450px) {
+  main .hero-animation-wide-container .hero-animation.wide video { 
+    object-position: 70% 100%;
+  }
+}
