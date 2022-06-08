@@ -421,7 +421,7 @@ export function decorateSections($main) {
       wrappers[wrappers.length - 1].append(e);
     });
     wrappers.forEach((wrapper) => section.append(wrapper));
-    section.classList.add('section');
+    section.classList.add('section', 'section-wrapper'); // keep .section-wrapper for compatibility
     section.setAttribute('data-section-status', 'initialized');
 
     /* process section metadata */
