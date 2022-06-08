@@ -276,15 +276,18 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item  .make-a-p
 
 @media (min-width: 900px) {
   main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container {
-    padding-right: 12px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+  
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container .carousel-container {
+    margin-left: 0;
+    margin-right: 0;
   }
 
-  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container > div {
-    max-width: 1240px;
-  }
-
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container > div,
   main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container .template-list.horizontal {
-    max-width: 1240px;
+    max-width: 1280px;
   }
 
   main .make-a-project .make-a-project-projectlist .make-a-project-item {
