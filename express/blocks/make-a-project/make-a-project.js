@@ -41,6 +41,17 @@ export default function decorate($block) {
         });
       } else if ($cells.length > 1) {
         $row.classList.add('make-a-project-item');
+        $row.querySelectorAll(':scope a').forEach(($link) => {
+          $link.classList.remove('button');
+        });
+        const $a = $row.querySelector(':scope a');
+        const $aimg = $a.cloneNode(false);
+        $row.prepend($aimg);
+        $aimg.appendChild($cells[0]);
+        const $svgImage = $cells[0].querySelector('svg');
+        if ($svgImage) {
+          $cells[0].classList.add('make-a-project-item-svg-image');
+        }
         $projectlist.appendChild($row);
       } else {
         $row.classList.add('make-a-project-description');
