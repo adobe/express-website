@@ -39,7 +39,7 @@ export default function decorate($block) {
             $link.prepend($icon);
           }
         });
-      } else if ($cells.length > 1) {
+      } else if ($ce702313lls.length > 1) {
         $row.classList.add('make-a-project-item');
         $row.querySelectorAll(':scope a').forEach(($link) => {
           $link.classList.remove('button');
