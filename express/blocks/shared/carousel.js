@@ -75,10 +75,11 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
       $faderRight.classList.remove('arrow-hidden');
       $faderLeft.classList.remove('arrow-hidden');
     } else {
-      const showLeft = ($platform.scrollLeft > 33);
-      toggleArrow($faderLeft, showLeft);
-      const showRight = !($platform.offsetWidth + $platform.scrollLeft >= $platform.scrollWidth);
-      toggleArrow($faderRight, showRight);
+      const platformScrollLeft = $platform.scrollLeft;
+      const left = (platformScrollLeft > 33);
+      toggleArrow($faderLeft, left);
+      const right = !($platform.offsetWidth + platformScrollLeft >= ($platform.scrollWidth - 33));
+      toggleArrow($faderRight, right);
     }
     if (hideControls) {
       $container.classList.add('controls-hidden');

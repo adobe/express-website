@@ -163,8 +163,8 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item .button-co
 main .make-a-project .make-a-project-projectlist .make-a-project-item > div,
 main .make-a-project .make-a-project-projectlist .make-a-project-item picture,
 main .make-a-project .make-a-project-projectlist .make-a-project-item img {
-  max-height: 200px;
-  max-width: 200px;
+  max-height: 175px;
+  max-width: 175px;
   width: auto;
   height: auto;
 }
@@ -292,7 +292,7 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item  .make-a-p
   }
 
   main .make-a-project .make-a-project-projectlist .make-a-project-item {
-    margin: 0 28px;
+    margin: 0 32px;
   }
 
   main .make-a-project .make-a-project-marquee h2 {
@@ -330,4 +330,9 @@ main .hero-animation-wide-container .hero-animation-wrapper {
 
 main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper {
   background: linear-gradient(var(--color-gray-100), transparent);
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .carousel-container .carousel-fader-right,
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .carousel-container .carousel-fader-left {
+  background: transparent;
 }
