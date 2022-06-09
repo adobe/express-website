@@ -84,6 +84,12 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
       $container.classList.add('controls-hidden');
     }
   };
+  let x = 0;
+  const refreshArrows = setInterval(() => {
+    toggleControls();
+    x += 1;
+    if (x > 15) clearInterval(refreshArrows);
+  }, 200);
 
   // Scroll the carousel by clicking on the controls
   const moveCarousel = (increment) => {

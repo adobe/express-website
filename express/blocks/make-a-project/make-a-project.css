@@ -153,6 +153,7 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item:first-chil
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item .button-container {
   margin-top: 12px;
+  padding-bottom: 16px;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item .button-container a {
