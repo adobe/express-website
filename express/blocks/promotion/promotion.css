@@ -1,4 +1,4 @@
-main .section-wrapper.promotion-container {
+main .section.promotion-container {
   margin-top: 120px;
   padding-top: 0;
   margin-bottom: 120px;
@@ -27,7 +27,7 @@ main .promotion .promotion-content {
   text-align: left;
 }
 
-main .section-wrapper .promotion {
+main .section .promotion {
   margin-bottom: 120px;
 }
 
@@ -36,20 +36,20 @@ main .promotion .promotion-content h3 {
   text-align: left;
 }
 
-main .section-wrapper .promotion .promotion-content p.button-container {
+main .section .promotion .promotion-content p.button-container {
   text-align: left;
 }
 
-main .section-wrapper .promotion .promotion-content p.button-container a {
+main .section .promotion .promotion-content p.button-container a {
   margin: 0;
 }
 
-main .section-wrapper .promotion h2 {
+main .section .promotion h2 {
   margin-top: 0;
 }
 
 @media (min-width: 900px) {
-  main .section-wrapper.promotion-container > div {
+  main .section.promotion-container > div {
     max-width: 800px;
   }
 
@@ -64,7 +64,7 @@ main .section-wrapper .promotion h2 {
 }
 
 @media (min-width: 1200px) {
-  main .section-wrapper.promotion-container > div {
+  main .section.promotion-container > div {
     max-width: 1000px;
   }
 

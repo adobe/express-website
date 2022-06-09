@@ -423,20 +423,19 @@ main .template-list.horizontal .carousel-container.controls-hidden .carousel-fad
 }
 
 /* Remove max-width on mobile breakpoints */
-main .section-wrapper.template-list-horizontal-container {
+main .section.template-list-horizontal-container {
   padding-left: 0;
   padding-right: 0;
 }
 
-main .section-wrapper.template-list-horizontal-container > div {
+main .section.template-list-horizontal-container > div {
   padding-left: 0;
   padding-right: 0;
-  max-width: none;
 }
 
 /* re-add max-width on elements that are not carousel */
-main .section-wrapper.template-list-horizontal-container > div > *:not(.template-list.horizontal),
-main .section-wrapper.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
+main .section.template-list-horizontal-container > div > *:not(.template-list.horizontal),
+main .section.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
   max-width: 350px;
   padding-left: 15px;
   padding-right: 15px;
@@ -506,17 +505,17 @@ main .template-list.horizontal .carousel-platform {
     display: inline-block;
   }
 
-  main .section-wrapper.template-list-horizontal-container {
+  main .section.template-list-horizontal-container {
     padding-left: 32px;
     padding-right: 32px;
   }
 
-  main .section-wrapper.template-list-horizontal-container > div {
+  main .section.template-list-horizontal-container > div {
     max-width: 836px;
   }
   
-  main .section-wrapper.template-list-horizontal-container > div > *:not(.template-list.horizontal),
-  main .section-wrapper.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
+  main .section.template-list-horizontal-container > div > *:not(.template-list.horizontal),
+  main .section.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
     max-width: unset;
   }
 
@@ -531,7 +530,7 @@ main .template-list.horizontal .carousel-platform {
 }
 
 @media (min-width: 1200px) {
-  main .section-wrapper.template-list-horizontal-container > div {
+  main .section.template-list-horizontal-container > div {
     max-width: 1024px;
   }
 

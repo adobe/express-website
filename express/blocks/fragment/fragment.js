@@ -28,9 +28,9 @@ async function decorateFragment($block) {
   const img = $main.querySelector('img');
   img.setAttribute('loading', 'lazy');
   decorateMain($main);
-  const loadedBlocks = loadBlocks($main);
+  const loadedBlocks = await loadBlocks($main);
   await Promise.all(loadedBlocks);
-  const $section = $block.closest('.section-wrapper');
+  const $section = $block.closest('.section');
   $section.parentNode.replaceChild($main, $section);
 }
 

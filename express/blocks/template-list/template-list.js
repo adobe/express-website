@@ -370,7 +370,7 @@ export async function decorateTemplateList($block) {
 
     const $blueprint = await fetchBlueprint(window.location.pathname);
 
-    const $bpBlock = $blueprint.querySelectorAll('div[class^="template-list"]')[i];
+    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
     if ($bpBlock) {
       $block.innerHTML = $bpBlock.innerHTML;
     } else {

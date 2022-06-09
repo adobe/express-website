@@ -1,10 +1,10 @@
-main .section-wrapper.make-a-project-container {
+main .section.make-a-project-container {
   padding-top: 0;
   padding-left: 0;
   padding-right: 0;
 }
 
-main .section-wrapper.make-a-project-container > div {
+main .section.make-a-project-container > div {
   margin: 0;
   padding: 0;
   max-width: unset;
