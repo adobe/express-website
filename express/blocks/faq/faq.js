@@ -45,7 +45,7 @@ function decorateFAQBlocks($block) {
   });
 
   // find previous h2 and move it in the FAQ
-  const section = $block.closest('.section-wrapper');
+  const section = $block.closest('.section');
   if (section && section.previousElementSibling) {
     const previousSection = section.previousElementSibling;
     const h2 = previousSection.querySelector('div > h2:last-of-type');

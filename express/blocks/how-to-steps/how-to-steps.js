@@ -19,7 +19,7 @@ import {
 
 export default function decorate($block, name, doc) {
   const $howto = $block;
-  const $heading = $howto.previousElementSibling;
+  const $heading = $howto.closest('.section').querySelector('h2, h3, h4');
   const $rows = Array.from($howto.children);
 
   const includeSchema = !$block.classList.contains('noschema');
@@ -27,7 +27,7 @@ export default function decorate($block, name, doc) {
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
-    name: $heading.textContent,
+    name: ($heading && $heading.textContent) || document.title,
     step: [],
   };
 
