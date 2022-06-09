@@ -281,5 +281,6 @@ main .hero-animation-wide-container .hero-animation.wide video {
 @media (min-width: 1450px) {
   main .hero-animation-wide-container .hero-animation.wide video {
     object-fit: contain;
+    object-position: center 100%;
   }
 }
