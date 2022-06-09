@@ -546,27 +546,31 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  if ($block.classList.contains('horizontal')) {
-    /* carousel */
-    buildCarousel(':scope > .template', $block, true);
-  } else if (rows > 6 || $block.classList.contains('sixcols')) {
-    /* flex masonry */
-    // console.log(`masonry-rows: ${rows}`);
-    const cells = Array.from($block.children);
-    $block.classList.remove('masonry');
-    $block.classList.add('flex-masonry');
+  if (!$block.classList.contains('horizontal')) {
+    if (rows > 6 || $block.classList.contains('sixcols')) {
+      /* flex masonry */
+      // console.log(`masonry-rows: ${rows}`);
+      const cells = Array.from($block.children);
+      $block.classList.remove('masonry');
+      $block.classList.add('flex-masonry');
 
-    const masonry = new Masonry($block, cells);
-    masonry.draw();
-    window.addEventListener('resize', () => {
+      const masonry = new Masonry($block, cells);
       masonry.draw();
-    });
-  } else {
-    $block.classList.add('template-list-complete');
+      window.addEventListener('resize', () => {
+        masonry.draw();
+      });
+    } else {
+      $block.classList.add('template-list-complete');
+    }
   }
 }
 
 export default async function decorate($block) {
   await decorateTemplateList($block);
-  addAnimationToggle($block);
+  if ($block.classList.contains('horizontal')) {
+    /* carousel */
+    buildCarousel(':scope > .template', $block, true);
+  } else {
+    addAnimationToggle($block);
+  }
 }
