@@ -59,6 +59,6 @@ export default function decorate($block) {
       $block.append($col);
     });
     $block.classList.add('two-column');
-    $block.closest('div.section-wrapper').classList.add('icon-list-two-column-container');
+    $block.closest('div.section').classList.add('icon-list-two-column-container');
   }
 }

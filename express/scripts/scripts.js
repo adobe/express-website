@@ -403,28 +403,60 @@ export function readBlockConfig($block) {
   return config;
 }
 
-function wrapSections($sections) {
-  $sections.forEach(($div) => {
-    if ($div.textContent.trim() === '' && !$div.firstElementChild) {
-      // remove empty sections (neither text nor child elements)
-      $div.remove();
-    } else if (!$div.id) {
-      const $wrapper = createTag('div', { class: 'section-wrapper' });
-      $div.parentNode.appendChild($wrapper);
-      $wrapper.appendChild($div);
-    }
+/**
+ * Decorates all sections in a container element.
+ * @param {Element} $main The container element
+ */
+export function decorateSections($main) {
+  $main.querySelectorAll(':scope > div').forEach((section) => {
+    const wrappers = [];
+    let defaultContent = false;
+    [...section.children].forEach((e) => {
+      if (e.tagName === 'DIV' || !defaultContent) {
+        const wrapper = document.createElement('div');
+        wrappers.push(wrapper);
+        defaultContent = e.tagName !== 'DIV';
+        if (defaultContent) wrapper.classList.add('default-content-wrapper');
+      }
+      wrappers[wrappers.length - 1].append(e);
+    });
+    wrappers.forEach((wrapper) => section.append(wrapper));
+    section.classList.add('section', 'section-wrapper'); // keep .section-wrapper for compatibility
+    section.setAttribute('data-section-status', 'initialized');
+
     /* process section metadata */
-    const sectionMeta = $div.querySelector('div.section-metadata');
+    const sectionMeta = section.querySelector('div.section-metadata');
     if (sectionMeta) {
       const meta = readBlockConfig(sectionMeta);
       const keys = Object.keys(meta);
       keys.forEach((key) => {
-        if (key === 'style') $div.classList.add(toClassName(meta.style));
-        else $div.dataset[key] = meta[key].toLowerCase();
+        if (key === 'style') section.classList.add(toClassName(meta.style));
+        else section.dataset[key] = meta[key];
       });
       sectionMeta.remove();
     }
   });
+}
+
+/**
+ * Updates all section status in a container element.
+ * @param {Element} main The container element
+ */
+export function updateSectionsStatus(main) {
+  const sections = [...main.querySelectorAll(':scope > div.section')];
+  for (let i = 0; i < sections.length; i += 1) {
+    const section = sections[i];
+    const status = section.getAttribute('data-section-status');
+    if (status !== 'loaded') {
+      const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+      if (loadingBlock) {
+        section.setAttribute('data-section-status', 'loading');
+        break;
+      } else {
+        section.setAttribute('data-section-status', 'loaded');
+      }
+    }
+  }
 }
 
 export function getLocale(url) {
@@ -731,39 +763,70 @@ function resolveFragments() {
     });
 }
 
-export function decorateBlocks($main) {
-  $main.querySelectorAll('div.section-wrapper > div > div').forEach(($block) => {
-    const classes = Array.from($block.classList.values());
-    let blockName = classes[0];
-    if (!blockName) return;
-    const $section = $block.closest('.section-wrapper');
-    if ($section) {
-      $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
-    }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns', 'ratings'];
+const blocksWithOptions = [
+  'checker-board',
+  'template-list',
+  'steps',
+  'cards',
+  'quotes',
+  'page-list',
+  'link-list',
+  'hero-animation',
+  'columns',
+  'show-section-only',
+  'image-list',
+  'feature-list',
+  'icon-list',
+  'table-of-contents',
+  'how-to-steps',
+  'banner',
+  'pricing-columns',
+  'ratings',
+];
 
-    if (blockName !== 'how-to-steps-carousel') {
+/**
+ * Decorates a block.
+ * @param {Element} block The block element
+ */
+export function decorateBlock(block) {
+  const blockName = block.classList[0];
+  if (blockName) {
+    let shortBlockName = blockName;
+    block.classList.add('block');
+    // begin CCX custom block option class handling
+    if (shortBlockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
-        if (blockName.startsWith(`${b}-`)) {
-          const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-          blockName = b;
-          $block.classList.add(b);
-          $block.classList.add(...options);
+        if (shortBlockName.startsWith(`${b}-`)) {
+          const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+          shortBlockName = b;
+          block.classList.add(b);
+          block.classList.add(...options);
         }
       });
     }
-    $block.classList.add('block');
-    $block.setAttribute('data-block-name', blockName);
-    $block.setAttribute('data-block-status', 'initialized');
-  });
+    // end CCX custom block option class handling
+    block.setAttribute('data-block-name', shortBlockName);
+    block.setAttribute('data-block-status', 'initialized');
+    const blockWrapper = block.parentElement;
+    blockWrapper.classList.add(`${shortBlockName}-wrapper`);
+    const section = block.closest('.section');
+    if (section) section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
+  }
+}
 
-  sampleRUM.observe($main.querySelectorAll('div[data-block-name]'));
+/**
+ * Decorates all blocks in a container element.
+ * @param {Element} main The container element
+ */
+export function decorateBlocks(main) {
+  main
+    .querySelectorAll('div.section > div > div')
+    .forEach((block) => decorateBlock(block));
 }
 
 function decorateMarqueeColumns($main) {
   // flag first columns block in first section block as marquee
-  const $firstColumnsBlock = $main.querySelector('.section-wrapper:first-of-type .columns:first-of-type');
+  const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
   if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
   }
@@ -814,6 +877,7 @@ export async function loadBlock(block, eager = false) {
               await mod.default(block, blockName, document, eager);
             }
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.log(`failed to load module for ${blockName}`, err);
           }
           resolve();
@@ -821,15 +885,26 @@ export async function loadBlock(block, eager = false) {
       });
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(`failed to load block ${blockName}`, err);
     }
     block.setAttribute('data-block-status', 'loaded');
   }
 }
-export function loadBlocks($main) {
-  const blockPromises = [...$main.querySelectorAll('div.section-wrapper > div > .block')]
-    .map(($block) => loadBlock($block));
-  return blockPromises;
+
+/**
+ * Loads JS and CSS for all blocks in a container element.
+ * @param {Element} main The container element
+ */
+export async function loadBlocks(main) {
+  updateSectionsStatus(main);
+  const blocks = [...main.querySelectorAll('div.block')];
+  for (let i = 0; i < blocks.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await loadBlock(blocks[i]);
+    updateSectionsStatus(main);
+  }
+  return blocks;
 }
 
 export function loadScript(url, callback, type) {
@@ -842,34 +917,6 @@ export function loadScript(url, callback, type) {
   $script.onload = callback;
   return $script;
 }
-
-// async function loadLazyFooter() {
-//   const resp = await fetch('/lazy-footer.plain.html');
-//   const inner = await resp.text();
-//   const $footer = document.querySelector('footer');
-//   $footer.innerHTML = inner;
-//   $footer.querySelectorAll('a').forEach(($a) => {
-//     const url = new URL($a.href);
-//     if (url.hostname === 'spark.adobe.com') {
-//       const slash = url.pathname.endsWith('/') ? 1 : 0;
-//       $a.href = url.pathname.substr(0, url.pathname.length - slash);
-//     }
-//   });
-//   wrapSections('footer>div');
-//   addDivClasses($footer, 'footer > div', ['dark', 'grey', 'grey']);
-//   const $div = createTag('div', { class: 'hidden' });
-//   const $dark = document.querySelector('footer .dark>div');
-
-//   Array.from($dark.children).forEach(($e, i) => {
-//     if (i) $div.append($e);
-//   });
-
-//   $dark.append($div);
-
-//   $dark.addEventListener('click', () => {
-//     $div.classList.toggle('hidden');
-//   });
-// }
 
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
@@ -918,7 +965,7 @@ function addPromotion() {
       };
       // insert promotion at the bottom
       if (promos[category]) {
-        const $promoSection = createTag('div', { class: 'section-wrapper' });
+        const $promoSection = createTag('div', { class: '.section' });
         $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));
@@ -964,7 +1011,7 @@ function decoratePageStyle() {
     loadCSS('/express/styles/blog.css');
   } else {
     // eslint-disable-next-line no-lonely-if
-    if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+    if ($h1 && !$h1.closest('.section > div > div ')) {
       const $heroPicture = $h1.parentElement.querySelector('picture');
       let $heroSection;
       const $main = document.querySelector('main');
@@ -978,9 +1025,9 @@ function decoratePageStyle() {
         $div.append($h1);
         $main.prepend($heroSection);
       } else {
-        $heroSection = $h1.closest('.section-wrapper');
+        $heroSection = $h1.closest('.section');
         $heroSection.classList.add('hero');
-        $heroSection.classList.remove('section-wrapper');
+        $heroSection.classList.remove('section');
       }
       if ($heroPicture) {
         if (!isBlog) {
@@ -1025,7 +1072,7 @@ export function decorateButtons(block = document) {
     }
     $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
-    const $block = $a.closest('div.section-wrapper > div > div');
+    const $block = $a.closest('div.section > div > div');
     let blockName;
     if ($block) {
       blockName = $block.className;
@@ -1688,7 +1735,7 @@ function decoratePictures(main) {
 
 export async function decorateMain($main) {
   splitSections($main);
-  wrapSections($main.querySelectorAll(':scope > div'));
+  decorateSections($main);
   decorateButtons($main);
   decorateBlocks($main);
   decorateMarqueeColumns($main);
@@ -1838,6 +1885,7 @@ async function loadLazy() {
   if (!window.hlx.lighthouse) loadMartech();
 
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
+  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
 }
 
 /**

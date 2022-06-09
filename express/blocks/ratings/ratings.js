@@ -356,7 +356,7 @@ export default function decorate($block) {
     const $stars = getCurrentRatingStars();
     $headingWrapper.appendChild($stars);
     $block.appendChild($headingWrapper);
-    const $section = $block.closest('.section-wrapper');
+    const $section = $block.closest('.section');
     const $form = createTag('form');
     $block.appendChild($form);
     const $slider = createTag('div', { class: 'slider' });
