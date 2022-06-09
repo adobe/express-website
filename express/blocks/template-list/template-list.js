@@ -237,7 +237,8 @@ class Masonry {
       column.outerHeight += +$cell.style.height.split('px')[0] + 20;
     }
 
-    $cell.querySelector(':scope > div:nth-of-type(2)').classList.add('button-container');
+    const $btnC = $cell.querySelector(':scope > div:nth-of-type(2)')
+    if ($btnC) $btnC.classList.add('button-container');
 
     /* set tab index and event listeners */
     if (this.cells[0] === $cell) {
