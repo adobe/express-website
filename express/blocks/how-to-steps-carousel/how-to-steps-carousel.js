@@ -58,7 +58,7 @@ function activate(block, target) {
       if (imgHeight < panelHeight) {
         container.classList.add('no-cover');
       } else {
-        picture.style.height = `${panelHeight}px`;
+        picture.style.height = `${panelHeight || imgHeight}px`;
       }
     }
 
