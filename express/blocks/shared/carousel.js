@@ -16,6 +16,31 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+// Wait for all media to load
+function waitForMediaToLoad($parent) {
+  const media = [...$parent.querySelectorAll('img, video')];
+  return new Promise((resolve) => {
+    if (!media.length) resolve();
+    let mediaLoaded = 0;
+    const mediaLoadedIncrement = () => {
+      mediaLoaded += 1;
+      if (media.length === mediaLoaded) {
+        resolve();
+      }
+    };
+    media.forEach(($media) => {
+      if ($media.tagName.toUpperCase() === 'VIDEO' && $media.readyState < 3) {
+        $media.addEventListener('loadeddata', mediaLoadedIncrement, false);
+      } else if ($media.tagName.toUpperCase() === 'IMG' && !($media.complete && $media.naturalHeight !== 0)) {
+        $media.addEventListener('load', mediaLoadedIncrement);
+      } else {
+        // this media has already loaded
+        mediaLoadedIncrement();
+      }
+    });
+  });
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEnabled = false) {
   // Load CSS
@@ -46,87 +71,87 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     }
   };
   const toggleControls = () => {
-    if (!infinityScrollEnabled) {
-      const showLeft = ($platform.scrollLeft > 33);
-      toggleArrow($faderLeft, showLeft);
-      const showRight = !($platform.offsetWidth + $platform.scrollLeft >= $platform.scrollWidth);
-      toggleArrow($faderRight, showRight);
+    if ($platform.classList.contains('infinity-scroll-loaded')) {
+      $faderRight.classList.remove('arrow-hidden');
+      $faderLeft.classList.remove('arrow-hidden');
+    } else {
+      const platformScrollLeft = $platform.scrollLeft;
+      const left = (platformScrollLeft > 33);
+      toggleArrow($faderLeft, left);
+      const right = !($platform.offsetWidth + platformScrollLeft >= ($platform.scrollWidth - 33));
+      toggleArrow($faderRight, right);
     }
     if (hideControls) {
       $container.classList.add('controls-hidden');
     }
   };
+  let x = 0;
+  const refreshArrows = setInterval(() => {
+    toggleControls();
+    x += 1;
+    if (x > 15) clearInterval(refreshArrows);
+  }, 200);
 
   // Scroll the carousel by clicking on the controls
   const moveCarousel = (increment) => {
     $platform.scrollLeft -= increment;
     toggleControls();
   };
-  $arrowLeft.addEventListener('click', () => {
+  $faderLeft.addEventListener('click', () => {
     const increment = Math.max(($platform.offsetWidth / 4) * 3, 300);
     moveCarousel(increment);
   });
-  $arrowRight.addEventListener('click', () => {
+  $faderRight.addEventListener('click', () => {
     const increment = Math.max(($platform.offsetWidth / 4) * 3, 300);
     moveCarousel(-increment);
   });
   window.addEventListener('resize', toggleControls);
 
   // Carousel loop functionality (if enabled)
+  const moveToCenterIfNearTheEdge = (e = null) => {
+    // Start at the center and snap back to center if the user scrolls to the edges
+    const scrollPos = $platform.scrollLeft;
+    const maxScroll = $platform.scrollWidth;
+    if ((scrollPos > (maxScroll / 5) * 4) || scrollPos < 30) {
+      if (e) e.preventDefault();
+      $platform.scrollTo({
+        left: ((maxScroll / 5) * 2),
+        behavior: 'instant',
+      });
+    }
+  };
+
   const infinityScroll = ($children) => {
     const duplicateContent = () => {
       $children.forEach(($child) => {
         $platform.append($child.cloneNode(true));
       });
     };
-    // Duplicate children 5 times to simulate smooth scrolling
+    // Duplicate children to simulate smooth scrolling
     for (let i = 0; i < 4; i += 1) {
       duplicateContent();
     }
-    // Start at the center and snap back to center if the user scrolls to the edges
-    const moveToCenterIfScrollToEdge = (e) => {
-      const scrollPos = $platform.scrollLeft;
-      const maxScroll = $platform.scrollWidth;
-      if ((scrollPos > (maxScroll / 5) * 4) || scrollPos < 30) {
-        if (e) e.preventDefault();
-        $platform.scrollTo({
-          left: ((maxScroll / 5) * 2),
-          behavior: 'instant',
-        });
-      }
-    };
-    moveToCenterIfScrollToEdge();
     $platform.addEventListener('scroll', (e) => {
-      moveToCenterIfScrollToEdge(e);
+      moveToCenterIfNearTheEdge(e);
     }, { passive: false });
+
+    waitForMediaToLoad($platform).then(() => {
+      moveToCenterIfNearTheEdge();
+      $platform.classList.add('infinity-scroll-loaded');
+      toggleControls();
+    });
   };
-  if (infinityScrollEnabled) infinityScroll([...$carouselContent]);
+
   const initialState = () => {
     if (infinityScrollEnabled) {
-      $platform.scrollTo({
-        left: (($platform.scrollWidth / 5) * 2),
-        behavior: 'smooth',
-      });
+      infinityScroll([...$carouselContent]);
     }
     toggleControls();
   };
 
-  // Carousel with media: wait for media to load before toggling controls and infinityScroll
-  const media = [...$parent.querySelectorAll('img, video')];
-  if (media.length) {
-    let mediaLoaded = 0;
-    media.forEach(($media) => {
-      $media.addEventListener('load', () => {
-        mediaLoaded += 1;
-        if (media.length === mediaLoaded) {
-          initialState();
-          setTimeout(initialState, 2000);
-        }
-      });
-    });
-  }
-  initialState();
-  setTimeout(initialState, 2000);
+  waitForMediaToLoad($platform).then(() => {
+    initialState();
+  });
 
   // Hide controls if the user swipes through the carousel
   let isScrolling = false;
