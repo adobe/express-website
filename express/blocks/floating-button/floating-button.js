@@ -63,11 +63,11 @@ export async function createFloatingButton($a) {
       clicked = true;
       window.scrollTo({ top: $scrollAnchor.offsetTop, behavior: 'smooth' });
       const checkIfScrollToIsFinished = setInterval(() => {
-        if ($scrollAnchor.offsetTop === window.pageYOffset) {
+        if ($scrollAnchor.offsetTop <= window.pageYOffset) {
           clicked = false;
           clearInterval(checkIfScrollToIsFinished);
         }
-      }, 25);
+      }, 200);
       hideScrollArrow();
     });
     window.addEventListener('scroll', () => {
