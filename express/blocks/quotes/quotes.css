@@ -67,46 +67,46 @@ main .quotes .quote .author .summary p {
   line-height: 1.2;
 }
 
-main .section-wrapper.quotes-container,
-main .section-wrapper.quotes-highlight-container,
-main .section-wrapper.quotes-dark-container {
+main .section.quotes-container,
+main .section.quotes-highlight-container,
+main .section.quotes-dark-container {
   margin-top: 40px;
   padding: 40px 0;
 }
 
-main .section-wrapper.quotes-container {
+main .section.quotes-container {
   background: var(--color-white);
 }
 
-main .section-wrapper.quotes-highlight-container {
+main .section.quotes-highlight-container {
   background: var(--gradient-highlight-vertical);
 }
 
-main .section-wrapper.quotes-dark-container {
+main .section.quotes-dark-container {
   background-color: var(--color-black);
 }
 
-main .section-wrapper.quotes-inverted-container .quote {
+main .section.quotes-inverted-container .quote {
   background-color: var(--color-black);
   color: var(--color-white);
 }
 
 
-main .section-wrapper.quotes-container h2,
-main .section-wrapper.quotes-container h3,
-main .section-wrapper.quotes-container h4,
-main .section-wrapper.quotes-container h5 {
+main .section.quotes-container h2,
+main .section.quotes-container h3,
+main .section.quotes-container h4,
+main .section.quotes-container h5 {
   color: var(--color-black);
 }
 
-main .section-wrapper.quotes-highlight-container h2,
-main .section-wrapper.quotes-highlight-container h3,
-main .section-wrapper.quotes-highlight-container h4,
-main .section-wrapper.quotes-highlight-container h5,
-main .section-wrapper.quotes-dark-container h2,
-main .section-wrapper.quotes-dark-container h3,
-main .section-wrapper.quotes-dark-container h4,
-main .section-wrapper.quotes-dark-container h5 {
+main .section.quotes-highlight-container h2,
+main .section.quotes-highlight-container h3,
+main .section.quotes-highlight-container h4,
+main .section.quotes-highlight-container h5,
+main .section.quotes-dark-container h2,
+main .section.quotes-dark-container h3,
+main .section.quotes-dark-container h4,
+main .section.quotes-dark-container h5 {
   color: var(--color-white);
 }
 
@@ -135,9 +135,9 @@ main .section-wrapper.quotes-dark-container h5 {
     max-width: 1024px;
   }
 
-  main .section-wrapper.quotes-container,
-  main .section-wrapper.quotes-highlight-container,
-  main .section-wrapper.quotes-dark-container {
+  main .section.quotes-container,
+  main .section.quotes-highlight-container,
+  main .section.quotes-dark-container {
     padding: 80px 0;
   }
 }

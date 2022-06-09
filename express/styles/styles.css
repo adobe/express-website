@@ -433,15 +433,15 @@ main img {
   max-width: 100%;
 }
 
-main .section-wrapper {
+main .section {
   padding-top: 40px;
 }
 
-main .section-wrapper:first-of-type {
+main .section:first-of-type {
   padding-top: 0;
 }
 
-main .section-wrapper:last-of-type {
+main .section:last-of-type {
   margin-bottom: 0;
 }
 
@@ -478,17 +478,17 @@ main .section-wrapper:last-of-type {
 @media (min-width:900px) {
 
   main h5 + p,
-  main .section-wrapper p.button-container {
+  main .section p.button-container {
     text-align: unset;
   }
 
-  main .section-wrapper.cards-container {
+  main .section.cards-container {
     background-color: unset;
   }  
 }
 
 @media(min-width:1200px) {
-  main .section-wrapper h1 {
+  main .section h1 {
     font-size: var(--heading-font-size-l);
   }
 }
@@ -506,7 +506,7 @@ main .hero.hero-noimage {
   padding-bottom: 0;
 }
 
-main .hero.hero-noimage + .section-wrapper {
+main .hero.hero-noimage + .section {
   padding-top: 0;
 }
 
@@ -646,62 +646,62 @@ main .hero a.button:any-link {
 
 /* make page : default content */
 
-main .section-wrapper {
+main .section {
   padding-top: 60px;
 }
 
-main .section-wrapper:first-of-type {
+main .section:first-of-type {
   padding-top: 120px;
 }
 
-main .section-wrapper:first-of-type {
+main .section:first-of-type {
   padding: 0;
 }
 
-main .section-wrapper > div {
+main .section > div {
   margin: auto;
   max-width: 375px;
   padding: 0 32px;
 }
 
-main .section-wrapper > div:empty {
+main .section > div:empty {
   padding: 0;
 }
 
-main .section-wrapper h1,
-main .section-wrapper h2,
-main .section-wrapper h3,
-main .section-wrapper h4,
-main .section-wrapper h5 {
+main .section h1,
+main .section h2,
+main .section h3,
+main .section h4,
+main .section h5 {
   margin: 0;
 }
 
-main .section-wrapper > div > h2 {
+main .section > div > h2 {
   margin-top: 80px
 }
 
 
-main .section-wrapper * + h2 {
+main .section * + h2 {
   margin-top: 120px;
 }
 
-main .section-wrapper > div > h3  {
+main .section > div > h3  {
   margin-top: 64px;
 }
 
-main .section-wrapper > div > h3:first-child  {
+main .section > div > h3:first-child  {
   margin-top: 0px;
 }
 
-main .section-wrapper * + h2 {
+main .section * + h2 {
     margin-top: 64px;
 }
 
-main .section-wrapper * + h4 {
+main .section * + h4 {
   margin-top: 56px;
 }
 
-main .section-wrapper h1 + h5 {
+main .section h1 + h5 {
   font-size: 20px;
   line-height: 28px;
   font-weight: normal;
@@ -709,46 +709,43 @@ main .section-wrapper h1 + h5 {
   margin-bottom: 16px;
 }
 
-main .section-wrapper h5 + p {
+main .section h5 + p {
   font-size: 16px;
   text-align: center;
   margin: 0;
 }
 
-main .section-wrapper p {
+main .section p {
     margin: 32px 0;
 }
 
-main .section-wrapper p.button-container {
+main .section p.button-container {
   text-align: center;
   margin-top: 16px;
   margin-bottom: 0;
 }
 
-main .section-wrapper .hero {
+main .section .hero {
   color: initial;
 }
 
-body main .section-wrapper > div[data-audience] {
+main [data-audience] {
   display: none;
 }
 
-body[data-device="mobile"] main .section-wrapper > div[data-audience="mobile"] {
-  display: block;
-}
-
-body[data-device="desktop"] main .section-wrapper > div[data-audience="desktop"] {
+body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"],
+body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"] {
   display: block;
 }
 
 @media (min-width:900px) {
-  main .section-wrapper > div {
+  main .section > div {
     max-width: 830px;
   }
 }
 
 @media (min-width:1200px) {
-  main .section-wrapper > div {
+  main .section > div {
     max-width: 1024px;
   }
 }
@@ -821,13 +818,19 @@ main .floating-button {
   position: fixed;
   display: none;
 }
-/* hide the section-wrapper that ONLY has the floating-button block */
+/* hide the .section that ONLY has the floating-button block */
 /* (removes the extra whitespace from padding) */
-[class="section-wrapper floating-button-container"] {
+[class=".section floating-button-container"] {
   display: none;
 }
 
 /* Japanese heading balanced word wrap styles */
 wbr.wbr-off {
+  display: none;
+}
+
+/* progressive section appearance */
+main .section[data-section-status='loading'],
+main .section[data-section-status='initialized'] {
   display: none;
 }

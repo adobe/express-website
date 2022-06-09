@@ -52,40 +52,40 @@ main .steps .step-description {
   width: 100%;
 }
 
-main .section-wrapper.steps-dark-container,
-main .section-wrapper.steps-highlight-container,
-main .section-wrapper.steps-container {
+main .section.steps-dark-container,
+main .section.steps-highlight-container,
+main .section.steps-container {
   margin-top: 80px;
 }
 
-main .section-wrapper.steps-dark-container,
-main .section-wrapper.steps-highlight-container {
+main .section.steps-dark-container,
+main .section.steps-highlight-container {
   padding: 120px 0;
 }
 
-main .section-wrapper.steps-dark-container {
+main .section.steps-dark-container {
   background-color: var(--color-black);
 }
 
-main .section-wrapper.steps-dark-container > *,
-main .section-wrapper.steps-highlight-container > * {
+main .section.steps-dark-container > *,
+main .section.steps-highlight-container > * {
     color: var(--color-white);
 }
 
-main .section-wrapper.steps-dark-container div > h2:first-of-type,
-main .section-wrapper.steps-highlight-container > div > h2:first-of-type {
+main .section.steps-dark-container div > h2:first-of-type,
+main .section.steps-highlight-container > div > h2:first-of-type {
     margin-top: 0;
 }
 
-main .section-wrapper.steps-dark-container .steps > div {
+main .section.steps-dark-container .steps > div {
   background-color: var(--color-gray-700);
 }
 
-main .section-wrapper.steps-highlight-container {
+main .section.steps-highlight-container {
   background: var(--gradient-highlight-vertical);
 }
 
-main .section-wrapper.steps-highlight-container .steps > div {
+main .section.steps-highlight-container .steps > div {
   background-color: var(--color-white);
   color: var(--color-gray-800);
 }
@@ -97,13 +97,13 @@ main .steps .icon {
 }
 
 @media (min-width: 900px) {
-  main .section-wrapper.steps-dark-container,
-  main .section-wrapper.steps-highlight-container {
+  main .section.steps-dark-container,
+  main .section.steps-highlight-container {
     padding: 80px 0;
   }
-  main .section-wrapper.steps-container > div,
-  main .section-wrapper.steps-dark-container > div,
-  main .section-wrapper.steps-highlight-container > div {
+  main .section.steps-container > div,
+  main .section.steps-dark-container > div,
+  main .section.steps-highlight-container > div {
     max-width: 950px;
   }
   main .steps {
@@ -119,8 +119,8 @@ main .steps .icon {
 }
 
 @media (min-width: 1200px) {
-  main .section-wrapper.steps-dark-container > div,
-  main .section-wrapper.steps-container > div {
+  main .section.steps-dark-container > div,
+  main .section.steps-container > div {
     max-width: 1024px;
   }
 }
