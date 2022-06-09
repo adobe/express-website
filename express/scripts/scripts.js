@@ -231,6 +231,7 @@ export function getIcon(icons, alt, size = 44) {
   const symbols = [
     'adobefonts',
     'adobe-stock',
+    'android',
     'animation',
     'blank',
     'brand',
@@ -247,6 +248,7 @@ export function getIcon(icons, alt, size = 44) {
     'convert',
     'convert-png-jpg',
     'cursor-browser',
+    'desktop',
     'desktop-round',
     'download',
     'elements',
@@ -255,6 +257,7 @@ export function getIcon(icons, alt, size = 44) {
     'incredibly-easy',
     'instagram',
     'image',
+    'ios',
     'libraries',
     'library',
     'linkedin',
