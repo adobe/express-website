@@ -30,6 +30,8 @@ const w = window;
 const d = document;
 const loc = w.location;
 const { pathname } = loc;
+const usp = new URLSearchParams(window.location.search);
+const martech = usp.get('martech');
 
 w.marketingtech = {
   adobe: {
@@ -51,6 +53,24 @@ let martechURL = 'https://www.adobe.com/marketingtech/main.min.js';
 
 if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
   martechURL = 'https://www.adobe.com/marketingtech/main.stage.min.js';
+}
+
+// alloy feature flag
+if (
+  (
+    martech === 'alloy'
+    && window.spark
+    && window.spark.hostname === 'www.stage.adobe.com'
+  )
+  || (
+    martech === 'alloy-qa'
+  )
+) {
+  martechURL = 'https://www.adobe.com/marketingtech/main.standard.qa.js';
+} else if (
+  martech === 'alloy'
+) {
+  martechURL = 'https://www.adobe.com/marketingtech/main.standard.min.js';
 }
 
 loadScript(martechURL, () => {
