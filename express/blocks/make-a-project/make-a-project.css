@@ -197,7 +197,6 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item picture {
 main .make-a-project .make-a-project-projectlist .make-a-project-item > div:first-child > div:first-child,
 main .make-a-project .make-a-project-projectlist .make-a-project-item > div:first-child > a > div:first-child {
   overflow: hidden;
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
   border-radius: 10px;
   margin-bottom: 12px;
 }
