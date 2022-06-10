@@ -75,8 +75,8 @@ if (useAlloy) {
       audienceManager: true,
     },
   };
-  w.targetGlobalSettings = w.targetGlobalSettings || {};
-  w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
+  // w.targetGlobalSettings = w.targetGlobalSettings || {};
+  // w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
 } else {
   w.marketingtech = {
     adobe: {
