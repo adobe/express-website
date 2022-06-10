@@ -108,12 +108,19 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   window.addEventListener('resize', toggleControls);
 
   // Carousel loop functionality (if enabled)
+  const stopScrolling = () => { // To prevent safari shakiness
+    $platform.style.overflowX = 'hidden';
+    setTimeout(() => {
+      $platform.style.removeProperty('overflow-x');
+    }, 20);
+  };
   const moveToCenterIfNearTheEdge = (e = null) => {
     // Start at the center and snap back to center if the user scrolls to the edges
     const scrollPos = $platform.scrollLeft;
     const maxScroll = $platform.scrollWidth;
     if ((scrollPos > (maxScroll / 5) * 4) || scrollPos < 30) {
       if (e) e.preventDefault();
+      stopScrolling();
       $platform.scrollTo({
         left: ((maxScroll / 5) * 2),
         behavior: 'instant',
