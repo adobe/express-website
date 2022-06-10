@@ -230,6 +230,7 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-pr
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  transition: none;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon:not(:empty) {
