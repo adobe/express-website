@@ -33,48 +33,87 @@ const { pathname } = loc;
 const usp = new URLSearchParams(window.location.search);
 const martech = usp.get('martech');
 
-w.marketingtech = {
-  adobe: {
-    launch: {
-      property: 'global',
-      environment: 'production',
-    },
-    analytics: {
-      additionalAccounts: 'adbemmarvelweb.prod, adbadobesparkprod',
-    },
-    target: checkTesting(),
-    audienceManager: true,
-  },
-};
-w.targetGlobalSettings = w.targetGlobalSettings || {};
-w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
-
 let martechURL = 'https://www.adobe.com/marketingtech/main.min.js';
-
 if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
   martechURL = 'https://www.adobe.com/marketingtech/main.stage.min.js';
 }
 
 // alloy feature flag
+let useAlloy = false;
 if (
   (
     martech === 'alloy'
     && window.spark
     && window.spark.hostname === 'www.stage.adobe.com'
   )
-  || (
-    martech === 'alloy-qa'
-  )
+  || martech === 'alloy-qa'
 ) {
+  useAlloy = true;
   martechURL = 'https://www.adobe.com/marketingtech/main.standard.qa.js';
-} else if (
-  martech === 'alloy'
-) {
+} else if (martech === 'alloy') {
+  useAlloy = true;
   martechURL = 'https://www.adobe.com/marketingtech/main.standard.min.js';
+}
+
+if (useAlloy) {
+  w.marketingtech = {
+    adobe: {
+      launch: {
+        url: 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-2c94beadc94f-development.js',
+      },
+      alloy: {
+        edgeConfigId: '46815e4c-db87-4b73-907e-ee6e7db1c9e7:dev',
+      },
+      target: checkTesting(),
+      audienceManager: true,
+    },
+  };
+  w.targetGlobalSettings = w.targetGlobalSettings || {};
+  w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
+} else {
+  w.marketingtech = {
+    adobe: {
+      launch: {
+        property: 'global',
+        environment: 'production',
+      },
+      analytics: {
+        additionalAccounts: 'adbemmarvelweb.prod, adbadobesparkprod',
+      },
+      target: checkTesting(),
+      audienceManager: true,
+    },
+  };
+  w.targetGlobalSettings = w.targetGlobalSettings || {};
+  w.targetGlobalSettings.bodyHidingEnabled = checkTesting();
 }
 
 loadScript(martechURL, () => {
   /* eslint-disable no-underscore-dangle */
+
+  const set = (obj, path, value) => {
+    const segs = path.split('.');
+    let temp = obj;
+    let i = 0;
+    const il = segs.length - 1;
+    // get to the path
+    // eslint-disable-next-line no-plusplus
+    for (; i < il; i++) {
+      const seg = segs[i];
+      temp[seg] = temp[seg] || {};
+      temp = temp[seg];
+    }
+    // set the value
+    temp[segs[i]] = value;
+    return obj;
+  };
+
+  function urlPathToName(text) {
+    const splits = text.toLowerCase().split('-');
+    const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
+    const pathName = camelCase.replace('Jpg', 'JPG').replace('Png', 'PNG').replace('Gif', 'GIF').replace('Mp4', 'MP4');
+    return (pathName);
+  }
 
   //------------------------------------------------------------------------------------
   // gathering the data
@@ -170,113 +209,208 @@ loadScript(martechURL, () => {
   // set some global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
-  digitalData._set('page.pageInfo.pageName', pageName);
-  digitalData._set('page.pageInfo.language', language);
-  digitalData._set('page.pageInfo.siteSection', 'adobe.com:express');
-  digitalData._set('page.pageInfo.category', category);
+  if (useAlloy) {
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.page.pageInfo.pageName', pageName);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.page.pageInfo.language', language);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.page.pageInfo.siteSection', 'adobe.com:express');
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.page.pageInfo.category', category);
+  } else {
+    digitalData._set('page.pageInfo.pageName', pageName);
+    digitalData._set('page.pageInfo.language', language);
+    digitalData._set('page.pageInfo.siteSection', 'adobe.com:express');
+    digitalData._set('page.pageInfo.category', category);
+  }
 
   //------------------------------------------------------------------------------------
   // spark specific global and persistent data layer properties
   //------------------------------------------------------------------------------------
 
-  function urlPathToName(text) {
-    const splits = text.toLowerCase().split('-');
-    const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
-    const pathName = camelCase.replace('Jpg', 'JPG').replace('Png', 'PNG').replace('Gif', 'GIF').replace('Mp4', 'MP4');
-    return (pathName);
+  if (useAlloy) {
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.page.pageInfo.pageurl', loc.href);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.page.pageInfo.namespace', 'express');
+  } else {
+    digitalData._set('page.pageInfo.pageurl', loc.href);
+    digitalData._set('page.pageInfo.namespace', 'express');
   }
-
-  digitalData._set('page.pageInfo.pageurl', loc.href);
-  digitalData._set('page.pageInfo.namespace', 'express');
 
   /* set experiment and variant information */
   if (window.hlx.experiment) {
     const { experiment } = window.hlx;
-    digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.campaignid', experiment.id);
-    digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.offerid', experiment.selectedVariant);
+    if (useAlloy) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.adobe.experienceCloud.target.info.primarytest.testinfo.campaignid', experiment.id);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.adobe.experienceCloud.target.info.primarytest.testinfo.offerid', experiment.selectedVariant);
+    } else {
+      digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.campaignid', experiment.id);
+      digitalData._set('adobe.experienceCloud.target.info.primarytest.testinfo.offerid', experiment.selectedVariant);
+    }
   }
 
-  digitalData._set('spark.eventData.pageurl', loc.href);
-  digitalData._set('spark.eventData.pageReferrer', d.referrer);
-  digitalData._set('spark.eventData.pageTitle', d.title);
-  digitalData._set('spark.eventData.landingPageType', sparkLandingPageType);
-  digitalData._set('spark.eventData.landingPageReferrer', d.referrer);
-  digitalData._set('spark.eventData.landingPageUrl', loc.href);
-  digitalData._set('spark.eventData.userType', sparkUserType);
-  digitalData._set('spark.eventData.premiumEntitled', '');
-  digitalData._set('spark.eventData.displayedLanguage', language);
-  digitalData._set('spark.eventData.deviceLanguage', navigator.language);
-  digitalData._set('spark.eventData.pagename', pageName);
-  digitalData._set('spark.eventData.platformName', 'web');
-  if (category) {
-    digitalData._set('spark.eventData.contextualData3', `category:${category}`);
-  }
+  if (useAlloy) {
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.pageurl', loc.href);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.pageReferrer', d.referrer);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.pageTitle', d.title);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.landingPageType', sparkLandingPageType);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.landingPageReferrer', d.referrer);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.landingPageUrl', loc.href);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.userType', sparkUserType);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.premiumEntitled', '');
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.displayedLanguage', language);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.deviceLanguage', navigator.language);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.pagename', pageName);
+    set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.platformName', 'web');
+    if (category) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData3', `category:${category}`);
+    }
 
-  if (pathname.includes('/tools/')) {
-    const sparkContextualData = urlPathToName(pathname.split('/').pop());
-    digitalData._set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  }
-  if (pathname.includes('/feature/image/resize')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/image/crop')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageCrop');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/image/qr-code-generator')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:qrCodeGenerator');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/image/remove-background')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/image/transparent-background')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/image/jpg-to-png')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToPNG');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/image/png-to-jpg')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToJPG');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/image/convert/svg')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToSVG');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/video/trim')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:trimVideo');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/video/resize')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:resizeVideo');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/video/crop')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:cropVideo');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/feature/video/video-to-gif')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/change-speed')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:changeVideoSpeed');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/merge')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:mergeVideo');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/convert/mp4-to-gif')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/convert/mp4')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/convert/gif-to-mp4')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/convert/mov-to-mp4')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/convert/wmv-to-mp4')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.endsWith('/feature/video/reverse')) {
-    digitalData._set('spark.eventData.contextualData1', 'quickActionType:reverseVideo');
-    digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    if (pathname.includes('/tools/')) {
+      const sparkContextualData = urlPathToName(pathname.split('/').pop());
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    }
+    if (pathname.includes('/feature/image/resize')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:imageResize');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/crop')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:imageCrop');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/qr-code-generator')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:qrCodeGenerator');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/remove-background')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:removeBackground');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/transparent-background')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:removeBackground');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/jpg-to-png')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToPNG');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/png-to-jpg')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToJPG');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/image/convert/svg')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToSVG');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/trim')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:trimVideo');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/resize')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:resizeVideo');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/crop')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:cropVideo');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/video-to-gif')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/change-speed')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:changeVideoSpeed');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/merge')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:mergeVideo');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/mp4-to-gif')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/mp4')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/gif-to-mp4')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/mov-to-mp4')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/wmv-to-mp4')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/reverse')) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData1', 'quickActionType:reverseVideo');
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.spark.eventData.contextualData2', 'actionLocation:seo');
+    }
+  } else {
+    digitalData._set('spark.eventData.pageurl', loc.href);
+    digitalData._set('spark.eventData.pageReferrer', d.referrer);
+    digitalData._set('spark.eventData.pageTitle', d.title);
+    digitalData._set('spark.eventData.landingPageType', sparkLandingPageType);
+    digitalData._set('spark.eventData.landingPageReferrer', d.referrer);
+    digitalData._set('spark.eventData.landingPageUrl', loc.href);
+    digitalData._set('spark.eventData.userType', sparkUserType);
+    digitalData._set('spark.eventData.premiumEntitled', '');
+    digitalData._set('spark.eventData.displayedLanguage', language);
+    digitalData._set('spark.eventData.deviceLanguage', navigator.language);
+    digitalData._set('spark.eventData.pagename', pageName);
+    digitalData._set('spark.eventData.platformName', 'web');
+    if (category) {
+      digitalData._set('spark.eventData.contextualData3', `category:${category}`);
+    }
+
+    if (pathname.includes('/tools/')) {
+      const sparkContextualData = urlPathToName(pathname.split('/').pop());
+      digitalData._set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    }
+    if (pathname.includes('/feature/image/resize')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageResize');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/crop')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:imageCrop');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/qr-code-generator')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:qrCodeGenerator');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/remove-background')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/transparent-background')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:removeBackground');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/jpg-to-png')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToPNG');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/image/png-to-jpg')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToJPG');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/image/convert/svg')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToSVG');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/trim')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:trimVideo');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/resize')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:resizeVideo');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/crop')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:cropVideo');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.includes('/feature/video/video-to-gif')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/change-speed')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:changeVideoSpeed');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/merge')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:mergeVideo');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/mp4-to-gif')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/mp4')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/gif-to-mp4')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/mov-to-mp4')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/convert/wmv-to-mp4')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    } else if (pathname.endsWith('/feature/video/reverse')) {
+      digitalData._set('spark.eventData.contextualData1', 'quickActionType:reverseVideo');
+      digitalData._set('spark.eventData.contextualData2', 'actionLocation:seo');
+    }
   }
 
   //------------------------------------------------------------------------------------
@@ -284,39 +418,150 @@ loadScript(martechURL, () => {
   //------------------------------------------------------------------------------------
 
   // Fire the viewedPage event
-  digitalData._set('primaryEvent.eventInfo.eventName', 'viewedPage');
-  digitalData._set('spark.eventData.eventName', 'viewedPage');
-  digitalData._set('spark.eventData.sendTimestamp', new Date().getTime());
+  if (useAlloy) {
+    _satellite.track('event', {
+      eventType: 'web.webinteraction.linkClicks',
+      xdm: {},
+      data: {
+        web: {
+          webInteraction: {
+            name: 'viewedPage',
+            linkClicks: {
+              value: 1,
+            },
+            type: 'other',
+          },
+        },
+        _adobe_corpnew: {
+          digitalData: {
+            primaryEvent: {
+              eventInfo: {
+                eventName: 'viewedPage',
+              },
+            },
+            spark: {
+              eventData: {
+                eventName: 'viewedPage',
+                sendTimestamp: new Date().getTime(),
+              },
+            },
+          },
+        },
+      },
+    });
+  } else {
+    digitalData._set('primaryEvent.eventInfo.eventName', 'viewedPage');
+    digitalData._set('spark.eventData.eventName', 'viewedPage');
+    digitalData._set('spark.eventData.sendTimestamp', new Date().getTime());
 
-  _satellite.track('event', {
-    digitalData: digitalData._snapshot(),
-  });
+    _satellite.track('event', {
+      digitalData: digitalData._snapshot(),
+    });
+
+    digitalData._delete('primaryEvent.eventInfo.eventName');
+    digitalData._delete('spark.eventData.eventName');
+    digitalData._delete('spark.eventData.sendTimestamp');
+  }
 
   // Fire the landing:viewedPage event
-  digitalData._set('primaryEvent.eventInfo.eventName', 'landing:viewedPage');
-  digitalData._set('spark.eventData.eventName', 'landing:viewedPage');
+  if (useAlloy) {
+    _satellite.track('event', {
+      eventType: 'web.webinteraction.linkClicks',
+      xdm: {},
+      data: {
+        web: {
+          webInteraction: {
+            name: 'landing:viewedPage',
+            linkClicks: {
+              value: 1,
+            },
+            type: 'other',
+          },
+        },
+        _adobe_corpnew: {
+          digitalData: {
+            primaryEvent: {
+              eventInfo: {
+                eventName: 'landing:viewedPage',
+              },
+            },
+            spark: {
+              eventData: {
+                eventName: 'landing:viewedPage',
+                sendTimestamp: new Date().getTime(),
+              },
+            },
+          },
+        },
+      },
+    });
+  } else {
+    digitalData._set('primaryEvent.eventInfo.eventName', 'landing:viewedPage');
+    digitalData._set('spark.eventData.eventName', 'landing:viewedPage');
+    digitalData._set('spark.eventData.sendTimestamp', new Date().getTime());
 
-  _satellite.track('event', {
-    digitalData: digitalData._snapshot(),
-  });
+    _satellite.track('event', {
+      digitalData: digitalData._snapshot(),
+    });
+
+    digitalData._delete('primaryEvent.eventInfo.eventName');
+    digitalData._delete('spark.eventData.eventName');
+    digitalData._delete('spark.eventData.sendTimestamp');
+  }
 
   // Fire the displayPurchasePanel event if it is the pricing site
   if (
     sparkLandingPageType === 'pricing'
       && sparkTouchpoint
   ) {
-    digitalData._set('primaryEvent.eventInfo.eventName', 'displayPurchasePanel');
-    digitalData._set('spark.eventData.eventName', 'displayPurchasePanel');
-    digitalData._set('spark.eventData.trigger', sparkTouchpoint);
+    if (useAlloy) {
+      _satellite.track('event', {
+        eventType: 'web.webinteraction.linkClicks',
+        xdm: {},
+        data: {
+          web: {
+            webInteraction: {
+              name: 'displayPurchasePanel',
+              linkClicks: {
+                value: 1,
+              },
+              type: 'other',
+            },
+          },
+          _adobe_corpnew: {
+            digitalData: {
+              primaryEvent: {
+                eventInfo: {
+                  eventName: 'displayPurchasePanel',
+                },
+              },
+              spark: {
+                eventData: {
+                  eventName: 'displayPurchasePanel',
+                  trigger: sparkTouchpoint,
+                  sendTimestamp: new Date().getTime(),
+                },
+              },
+            },
+          },
+        },
+      });
+    } else {
+      digitalData._set('primaryEvent.eventInfo.eventName', 'displayPurchasePanel');
+      digitalData._set('spark.eventData.eventName', 'displayPurchasePanel');
+      digitalData._set('spark.eventData.sendTimestamp', new Date().getTime());
+      digitalData._set('spark.eventData.trigger', sparkTouchpoint);
 
-    _satellite.track('event', {
-      digitalData: digitalData._snapshot(),
-    });
+      _satellite.track('event', {
+        digitalData: digitalData._snapshot(),
+      });
+
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      digitalData._delete('spark.eventData.eventName');
+      digitalData._delete('spark.eventData.sendTimestamp');
+      digitalData._delete('spark.eventData.trigger');
+    }
   }
-
-  digitalData._delete('primaryEvent.eventInfo.eventName');
-  digitalData._delete('spark.eventData.eventName');
-  digitalData._delete('spark.eventData.sendTimestamp');
 
   function textToName(text) {
     const splits = text.toLowerCase().split(' ');
@@ -407,19 +652,54 @@ loadScript(martechURL, () => {
       sparkEventName = 'landing:ctaPressed';
     }
 
-    digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-    digitalData._set('spark.eventData.eventName', sparkEventName);
+    if (useAlloy) {
+      _satellite.track('event', {
+        eventType: 'web.webinteraction.linkClicks',
+        xdm: {},
+        data: {
+          web: {
+            webInteraction: {
+              name: adobeEventName,
+              linkClicks: {
+                value: 1,
+              },
+              type: 'other',
+            },
+          },
+          _adobe_corpnew: {
+            digitalData: {
+              primaryEvent: {
+                eventInfo: {
+                  eventName: adobeEventName,
+                },
+              },
+              spark: {
+                eventData: {
+                  eventName: sparkEventName,
+                  trigger: sparkTouchpoint,
+                  buttonId: sparkButtonId || '',
+                  sendTimestamp: new Date().getTime(),
+                },
+              },
+            },
+          },
+        },
+      });
+    } else {
+      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+      digitalData._set('spark.eventData.eventName', sparkEventName);
 
-    if (sparkButtonId) {
-      digitalData._set('spark.eventData.buttonId', sparkButtonId);
+      if (sparkButtonId) {
+        digitalData._set('spark.eventData.buttonId', sparkButtonId);
+      }
+
+      _satellite.track('event', {
+        digitalData: digitalData._snapshot(),
+      });
+
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      digitalData._delete('spark.eventData.eventName');
     }
-
-    _satellite.track('event', {
-      digitalData: digitalData._snapshot(),
-    });
-
-    digitalData._delete('primaryEvent.eventInfo.eventName');
-    digitalData._delete('spark.eventData.eventName');
   }
 
   function trackVideoAnalytics($video, parameters) {
@@ -434,14 +714,25 @@ loadScript(martechURL, () => {
       videoMediaType,
     } = parameters;
 
-    digitalData._set('video.videoInfo.videoName', videoName);
-    digitalData._set('video.videoInfo.videoId', videoId);
-    digitalData._set('video.videoInfo.videoLength', videoLength);
-    digitalData._set('video.videoInfo.product', product);
-    digitalData._set('video.videoInfo.videoCategory', videoCategory);
-    digitalData._set('video.videoInfo.videoDescription', videoDescription);
-    digitalData._set('video.videoInfo.videoPlayer', videoPlayer);
-    digitalData._set('video.videoInfo.videoMediaType', videoMediaType);
+    if (useAlloy) {
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoName', videoName);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoId', videoId);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoLength', videoLength);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.product', product);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoCategory', videoCategory);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoDescription', videoDescription);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoPlayer', videoPlayer);
+      set(w.alloy_all, 'data._adobe_corpnew.digitalData.video.videoInfo.videoMediaType', videoMediaType);
+    } else {
+      digitalData._set('video.videoInfo.videoName', videoName);
+      digitalData._set('video.videoInfo.videoId', videoId);
+      digitalData._set('video.videoInfo.videoLength', videoLength);
+      digitalData._set('video.videoInfo.product', product);
+      digitalData._set('video.videoInfo.videoCategory', videoCategory);
+      digitalData._set('video.videoInfo.videoDescription', videoDescription);
+      digitalData._set('video.videoInfo.videoPlayer', videoPlayer);
+      digitalData._set('video.videoInfo.videoMediaType', videoMediaType);
+    }
   }
 
   function decorateAnalyticsEvents() {
@@ -471,15 +762,48 @@ loadScript(martechURL, () => {
         const adobeEventName = 'adobe.com:express:cta:startYourFreeTrial:close';
         const sparkEventName = adobeEventName;
 
-        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-        digitalData._set('spark.eventData.eventName', sparkEventName);
+        if (useAlloy) {
+          _satellite.track('event', {
+            eventType: 'web.webinteraction.linkClicks',
+            xdm: {},
+            data: {
+              web: {
+                webInteraction: {
+                  name: adobeEventName,
+                  linkClicks: {
+                    value: 1,
+                  },
+                  type: 'other',
+                },
+              },
+              _adobe_corpnew: {
+                digitalData: {
+                  primaryEvent: {
+                    eventInfo: {
+                      eventName: adobeEventName,
+                    },
+                  },
+                  spark: {
+                    eventData: {
+                      eventName: sparkEventName,
+                      sendTimestamp: new Date().getTime(),
+                    },
+                  },
+                },
+              },
+            },
+          });
+        } else {
+          digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+          digitalData._set('spark.eventData.eventName', sparkEventName);
 
-        _satellite.track('event', {
-          digitalData: digitalData._snapshot(),
-        });
+          _satellite.track('event', {
+            digitalData: digitalData._snapshot(),
+          });
 
-        digitalData._delete('primaryEvent.eventInfo.eventName');
-        digitalData._delete('spark.eventData.eventName');
+          digitalData._delete('primaryEvent.eventInfo.eventName');
+          digitalData._delete('spark.eventData.eventName');
+        }
       });
     }
 
@@ -490,15 +814,48 @@ loadScript(martechURL, () => {
         const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
         const sparkEventName = 'pricing:commitmentTypeSelected';
 
-        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-        digitalData._set('spark.eventData.eventName', sparkEventName);
+        if (useAlloy) {
+          _satellite.track('event', {
+            eventType: 'web.webinteraction.linkClicks',
+            xdm: {},
+            data: {
+              web: {
+                webInteraction: {
+                  name: adobeEventName,
+                  linkClicks: {
+                    value: 1,
+                  },
+                  type: 'other',
+                },
+              },
+              _adobe_corpnew: {
+                digitalData: {
+                  primaryEvent: {
+                    eventInfo: {
+                      eventName: adobeEventName,
+                    },
+                  },
+                  spark: {
+                    eventData: {
+                      eventName: sparkEventName,
+                      sendTimestamp: new Date().getTime(),
+                    },
+                  },
+                },
+              },
+            },
+          });
+        } else {
+          digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+          digitalData._set('spark.eventData.eventName', sparkEventName);
 
-        _satellite.track('event', {
-          digitalData: digitalData._snapshot(),
-        });
+          _satellite.track('event', {
+            digitalData: digitalData._snapshot(),
+          });
 
-        digitalData._delete('primaryEvent.eventInfo.eventName');
-        digitalData._delete('spark.eventData.eventName');
+          digitalData._delete('primaryEvent.eventInfo.eventName');
+          digitalData._delete('spark.eventData.eventName');
+        }
       });
     }
 
@@ -514,15 +871,49 @@ loadScript(martechURL, () => {
 
         $parent.addEventListener('click', (e) => {
           e.stopPropagation();
-          digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-          digitalData._set('spark.eventData.eventName', sparkEventName);
 
-          _satellite.track('event', {
-            digitalData: digitalData._snapshot(),
-          });
+          if (useAlloy) {
+            _satellite.track('event', {
+              eventType: 'web.webinteraction.linkClicks',
+              xdm: {},
+              data: {
+                web: {
+                  webInteraction: {
+                    name: adobeEventName,
+                    linkClicks: {
+                      value: 1,
+                    },
+                    type: 'other',
+                  },
+                },
+                _adobe_corpnew: {
+                  digitalData: {
+                    primaryEvent: {
+                      eventInfo: {
+                        eventName: adobeEventName,
+                      },
+                    },
+                    spark: {
+                      eventData: {
+                        eventName: sparkEventName,
+                        sendTimestamp: new Date().getTime(),
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          } else {
+            digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+            digitalData._set('spark.eventData.eventName', sparkEventName);
 
-          digitalData._delete('primaryEvent.eventInfo.eventName');
-          digitalData._delete('spark.eventData.eventName');
+            _satellite.track('event', {
+              digitalData: digitalData._snapshot(),
+            });
+
+            digitalData._delete('primaryEvent.eventInfo.eventName');
+            digitalData._delete('spark.eventData.eventName');
+          }
         });
       });
     }
@@ -564,12 +955,48 @@ loadScript(martechURL, () => {
           audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
           segments.push(RETURNING_VISITOR_SEGMENT_ID);
 
-          digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
-          digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
+          if (useAlloy) {
+            _satellite.track('event', {
+              eventType: 'web.webinteraction.linkClicks',
+              xdm: {},
+              data: {
+                web: {
+                  webInteraction: {
+                    name: 'pricingModalUserInSegment',
+                    linkClicks: {
+                      value: 1,
+                    },
+                    type: 'other',
+                  },
+                },
+                _adobe_corpnew: {
+                  digitalData: {
+                    primaryEvent: {
+                      eventInfo: {
+                        eventName: 'pricingModalUserInSegment',
+                      },
+                    },
+                    spark: {
+                      eventData: {
+                        eventName: 'pricingModalUserInSegment',
+                        sendTimestamp: new Date().getTime(),
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          } else {
+            digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
+            digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
 
-          _satellite.track('event', {
-            digitalData: digitalData._snapshot(),
-          });
+            _satellite.track('event', {
+              digitalData: digitalData._snapshot(),
+            });
+
+            digitalData._delete('primaryEvent.eventInfo.eventName');
+            digitalData._delete('spark.eventData.eventName');
+          }
         }
 
         if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
@@ -582,6 +1009,7 @@ loadScript(martechURL, () => {
         document.dispatchEvent(new Event('context_loaded'));
       };
 
+      // TODO: What the heck is this?  This needs to be behind one trust and cmp
       loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
     }
   }
