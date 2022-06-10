@@ -178,13 +178,19 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item img {
   max-width: 168px;
 }
 
+main .make-a-project .make-a-project-projectlist .make-a-project-item img {
+  width: auto;
+  height: auto;
+}
+
 main .make-a-project .make-a-project-projectlist .make-a-project-item picture,
 main .make-a-project .make-a-project-projectlist .make-a-project-item-svg-image {
   display: block;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item picture {
-  line-height: 0;
+  display: flex;
+  align-items: flex-end;
   overflow: hidden;
 }
 
