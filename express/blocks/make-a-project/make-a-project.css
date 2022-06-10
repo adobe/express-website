@@ -199,6 +199,8 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item > div:firs
   overflow: hidden;
   border-radius: 10px;
   margin-bottom: 12px;
+  position: relative;
+  z-index: 0;
 }
 
 main .make-a-project .make-a-project-projectlist .carousel-platform {
