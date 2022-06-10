@@ -41,18 +41,29 @@ export default function decorate($block) {
         });
       } else if ($cells.length > 1) {
         $row.classList.add('make-a-project-item');
-        $row.querySelectorAll(':scope a').forEach(($link) => {
+        $row.querySelectorAll('a').forEach(($link) => {
           $link.classList.remove('button');
         });
-        const $a = $row.querySelector(':scope a');
+        const $pictureContainer = $cells[0];
+        const $linkContainer = $cells[1];
+        const $iconSvgContainer = $cells[2];
+        if ($iconSvgContainer) $iconSvgContainer.classList.add('make-a-project-icon');
+        const $numbersContainer = $cells[3];
+        if ($numbersContainer) $numbersContainer.classList.add('make-a-project-numbers');
+        const $a = $linkContainer.querySelector(':scope a');
         if ($a) {
-          const $aimg = $a.cloneNode(false);
-          $row.prepend($aimg);
-          $aimg.appendChild($cells[0]);
+          $linkContainer.classList.remove('button-container');
+          if ($iconSvgContainer) $a.prepend($iconSvgContainer);
+          if ($numbersContainer) $a.appendChild($numbersContainer);
+          $a.prepend($pictureContainer);
+        } else {
+          if ($iconSvgContainer) $linkContainer.prepend($iconSvgContainer);
+          if ($numbersContainer) $linkContainer.appendChild($numbersContainer);
+          $linkContainer.prepend($pictureContainer);
         }
-        const $svgImage = $cells[0].querySelector('svg');
-        if ($svgImage) {
-          $cells[0].classList.add('make-a-project-item-svg-image');
+        const $svgImageInsteadOfPicture = $pictureContainer.querySelector('svg');
+        if ($svgImageInsteadOfPicture) {
+          $pictureContainer.classList.add('make-a-project-item-svg-image');
         }
         $projectlist.appendChild($row);
       } else {
