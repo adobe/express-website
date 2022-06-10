@@ -62,7 +62,14 @@ if (useAlloy) {
         url: 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-2c94beadc94f-development.js',
       },
       alloy: {
-        edgeConfigId: '46815e4c-db87-4b73-907e-ee6e7db1c9e7:dev',
+        edgeConfigId: (
+          (
+            (window.spark && window.spark.hostname === 'www.stage.adobe.com')
+            || martech === 'alloy-qa'
+          )
+            ? 'b2e000b1-98ab-4ade-8c4f-5823d84cf015:stage'
+            : 'b2e000b1-98ab-4ade-8c4f-5823d84cf015'
+        ),
       },
       target: checkTesting(),
       audienceManager: true,
