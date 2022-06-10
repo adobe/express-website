@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global digitalData */
+/* global digitalData _satellite */
 
 import {
   createTag,
@@ -71,4 +71,8 @@ export default function decorate($block) {
   console.log('faq 2');
   // eslint-disable-next-line no-underscore-dangle
   digitalData._set('primaryEvent.eventInfo.eventName', 'adobe:express:experiment:ccx0059:challenger-2');
+  _satellite.track('event', {
+    // eslint-disable-next-line no-underscore-dangle
+    digitalData: digitalData._snapshot(),
+  });
 }
