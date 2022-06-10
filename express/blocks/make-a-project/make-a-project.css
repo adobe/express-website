@@ -199,10 +199,6 @@ main .make-a-project .make-a-project-projectlist .carousel-platform {
   align-items: stretch;
 }
 
-main .make-a-project .make-a-project-projectlist .make-a-project-item img {
-  border-radius: 10px;
-}
-
 main .make-a-project .make-a-project-projectlist .make-a-project-item:first-child {
   padding-left: 12px;
 }
