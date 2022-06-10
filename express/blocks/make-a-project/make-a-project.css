@@ -249,11 +249,14 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-pr
   color: white;
 }
 
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon img,
 main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon svg {
-  min-width: 20px;
-  max-width: 30px;
-  min-height: 20px;
-  max-height: 30px;
+  object-fit: contain;
+  height: 24px;
+  width: 24px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon svg {
   /* fallback for svg icons that don't have fill="currentColor" */
   filter: invert(100%) sepia(8%) saturate(7468%) hue-rotate(290deg) brightness(109%) contrast(109%);
 }
