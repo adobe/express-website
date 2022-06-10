@@ -217,6 +217,21 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-pr
   right: -20px;
 }
 
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon > div {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon > div svg,
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon > div img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon:not(:empty) {
   background: var(--color-black);
   color: white;
@@ -224,10 +239,6 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-pr
   height: 50px;
   width: 50px;
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-numbers {

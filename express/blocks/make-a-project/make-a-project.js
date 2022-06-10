@@ -47,17 +47,22 @@ export default function decorate($block) {
         const $pictureContainer = $cells[0];
         const $linkContainer = $cells[1];
         const $iconSvgContainer = $cells[2];
-        if ($iconSvgContainer) $iconSvgContainer.classList.add('make-a-project-icon');
+        const icon = $iconSvgContainer.querySelector('img, svg');
+        let $iconDiv = null;
+        if (icon) {
+          $iconDiv = createTag('div', { class: 'make-a-project-icon' });
+          $iconDiv.appendChild($iconSvgContainer);
+        }
         const $numbersContainer = $cells[3];
         if ($numbersContainer) $numbersContainer.classList.add('make-a-project-numbers');
         const $a = $linkContainer.querySelector(':scope a');
         if ($a) {
           $linkContainer.classList.remove('button-container');
-          if ($iconSvgContainer) $a.prepend($iconSvgContainer);
+          if (icon) $a.prepend($iconDiv);
           if ($numbersContainer) $a.appendChild($numbersContainer);
           $a.prepend($pictureContainer);
         } else {
-          if ($iconSvgContainer) $linkContainer.prepend($iconSvgContainer);
+          if (icon) $linkContainer.prepend($iconDiv);
           if ($numbersContainer) $linkContainer.appendChild($numbersContainer);
           $linkContainer.prepend($pictureContainer);
         }
