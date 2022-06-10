@@ -287,12 +287,12 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item  .make-a-p
   filter: invert(27%) sepia(7%) saturate(3%) hue-rotate(356deg) brightness(97%) contrast(92%);
 }
 
-main .make-a-project .make-a-project-projectlist .make-a-project-item img {
+main .make-a-project .make-a-project-projectlist .make-a-project-item picture {
   transition: transform 0.3s ease-in-out;
 }
 
 @media (min-width: 600px) {
-  main .make-a-project .make-a-project-projectlist .make-a-project-item:hover img {
+  main .make-a-project .make-a-project-projectlist .make-a-project-item:hover picture {
     transform: scale(1.05);
   }
   
