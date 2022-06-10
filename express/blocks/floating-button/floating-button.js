@@ -39,6 +39,9 @@ export async function createFloatingButton($a) {
   fetchPlaceholders().then((placeholders) => {
     $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
   });
+  $floatButtonLink.addEventListener('click', (e) => { e.preventDefault() });
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
+  document.dispatchEvent(linksPopulated);
   $floatButton.appendChild($floatButtonLink);
   $floatButton.appendChild($lottieScrollButton);
   $floatButtonWrapper.appendChild($floatButton);
