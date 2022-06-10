@@ -205,7 +205,6 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-pr
   position: absolute;
   top: 130px;
   right: -20px;
-  pointer-events: none;
 }
 
 main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon:not(:empty) {
