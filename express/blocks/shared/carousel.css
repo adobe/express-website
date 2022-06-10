@@ -80,6 +80,7 @@ main .carousel-container a.button.carousel-arrow {
 main .carousel-container .carousel-fader-left.arrow-hidden,
 main .carousel-container .carousel-fader-right.arrow-hidden {
   opacity: 0;
+  pointer-events: none;
 }
 
 main .carousel-container img,

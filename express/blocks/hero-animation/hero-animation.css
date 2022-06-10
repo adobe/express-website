@@ -205,6 +205,7 @@ main .hero-animation-wide-container .hero-animation.wide .icon {
 
 main .hero-animation-wide-container .hero-animation.wide p {
   font-size: var(--body-font-size-m);
+  margin: 12px 0;
 }
 
 main .hero-animation-wide-container .hero-animation.wide h1 {
@@ -249,6 +250,10 @@ main .hero-animation-wide-container .hero-animation.wide video {
     box-sizing: border-box;
   }
 
+  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay {
+    max-width: 550px;
+  }
+
   main .hero-animation-wide-container .hero-animation.wide video {
     height: 100%;
   }
@@ -266,9 +271,30 @@ main .hero-animation-wide-container .hero-animation.wide video {
   }
 }
 
+main .hero-animation .hero-shadow {
+  display: none;
+}
+
+@media (min-width: 950px) {
+  main .hero-animation .hero-shadow {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-15%, -2px);
+    z-index: 2;
+  }
+}
+
 @media (min-width: 600px) and (max-width: 1450px) {
   main .hero-animation-wide-container .hero-animation.wide video { 
     object-position: 50% 100%;
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1250px) {
+  main .hero-animation .hero-shadow {
+    transform: translate(-5%, -5px);
   }
 }
 
@@ -282,5 +308,9 @@ main .hero-animation-wide-container .hero-animation.wide video {
   main .hero-animation-wide-container .hero-animation.wide video {
     object-fit: contain;
     object-position: center 100%;
+  }
+  
+  main .hero-animation .hero-shadow {
+    transform: translate(-15%, -2px);
   }
 }

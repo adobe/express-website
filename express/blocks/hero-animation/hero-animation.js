@@ -161,6 +161,7 @@ export default async function decorate($block) {
     let rowType = 'content';
     if (animationBreakPointSettings.map((e) => e.typeHint).includes(typeHint)) rowType = 'animation';
     if (typeHint.startsWith('00:')) rowType = 'timecode';
+    if (typeHint.startsWith('shadow')) rowType = 'shadow';
 
     // content row
     if (rowType === 'animation') {
@@ -259,6 +260,12 @@ export default async function decorate($block) {
       });
       attributions.push(attribution);
       $attributions.append($div);
+    }
+
+    // timecode animations
+    if (rowType === 'shadow') {
+      $div.children[0].remove();
+      $div.classList.add('hero-shadow');
     }
   });
   const button = $block.querySelector('.button');
