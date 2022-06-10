@@ -343,9 +343,6 @@ loadScript(martechURL, () => {
     } else if ($a.parentElement.classList.contains('floating-button')) {
       adobeEventName = `${adobeEventName}floatingButton:ctaPressed`;
       sparkEventName = 'landing:floatingButtonPressed';
-    } else if ($a.classList.contains('floating-button-lottie')) {
-      adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
-      sparkEventName = 'landing:floatingButtonScrollPressed';
     } else if ($a.closest('.faq')) {
       adobeEventName = appendLinkText(`${adobeEventName}faq:`, $a);
       sparkEventName = 'landing:faqPressed';
