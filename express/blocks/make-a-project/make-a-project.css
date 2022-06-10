@@ -409,8 +409,8 @@ main .hero-animation-wide-container .hero-animation-wrapper {
 }
 
 main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper {
-  background: -webkit-linear-gradient(0deg, var(--color-gray-100) 0%, rgba(255,255,255,0) 100%);
-  background: linear-gradient(0deg, var(--color-gray-100) 0%, rgba(255,255,255,0) 100%);
+  background: -webkit-linear-gradient(180deg, var(--color-gray-100) 0%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(180deg, var(--color-gray-100) 0%, rgba(255,255,255,0) 100%);
 }
 
 main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .carousel-container .carousel-fader-right {
