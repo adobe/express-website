@@ -851,7 +851,7 @@ export function scrollToHash() {
           block: 'start',
           behavior: 'smooth',
         });
-      }, 200);
+      }, 500);
     }
   }
 }
