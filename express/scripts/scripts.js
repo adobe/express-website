@@ -846,7 +846,12 @@ export function scrollToHash() {
   if (hash) {
     const elem = document.querySelector(hash);
     if (elem) {
-      elem.scrollIntoView(true);
+      setTimeout(() => {
+        elem.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth',
+        });
+      }, 200);
     }
   }
 }
