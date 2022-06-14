@@ -118,3 +118,19 @@ main .block.puf .puf-card .puf-card-bottom h6 {
 main .puf .puf-right {
     width: 375px;
 }
+
+@media (min-width: 900px) {
+  main .puf.block .carousel-container {
+    max-width: none;
+  }
+
+  main .block.puf .puf-card-container {
+    display: block;
+    width: auto;
+    padding: 0 16px;
+  }
+
+  main .block.puf .carousel-platform {
+    margin: 0 auto;
+  }
+}
