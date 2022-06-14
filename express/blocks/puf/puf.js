@@ -183,6 +183,8 @@ async function selectPlan($card, planUrl, sendAnalyticEvent) {
     $pricingCta.href = buildUrl(plan.url, plan.country, plan.language);
     $pricingCta.dataset.planUrl = planUrl;
     $pricingCta.id = plan.stringId;
+
+    $pricingCta.parentNode.insertBefore($pricingHeader, $pricingCta);
   }
 
   if (sendAnalyticEvent) {
