@@ -1,0 +1,104 @@
+main .puf-container > div {
+    max-width: none;
+}
+
+main .puf.block .carousel-platform {
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+main .block.puf {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+main .block.puf p {
+    margin: 0;
+}
+
+main .block.puf .puf-card-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+main .block.puf .puf-card {
+    border: 1px #F8F8F8 solid;
+    box-shadow: 0 0 20px #0000001A;
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 40px 30px;
+    margin: 20px 0;
+    width: 375px;
+}
+
+main .block.puf .puf-card .puf-card-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+main .block.puf .puf-card .puf-card-top h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--heading-font-size-l);
+    line-height: var(--heading-line-height);
+}
+
+main .block.puf .puf-card .puf-card-top h3 svg {
+    margin-right: 20px;
+}
+
+main .block.puf .puf-card .puf-card-top a {
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main .block.puf .puf-card .puf-card-top p {
+    font-size: var(--body-font-size-m);
+    margin-bottom: 20px;
+}
+
+main .block.puf .puf-left {
+
+}
+
+main .block.puf .puf-card .puf-card-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+main .block.puf .puf-card .puf-card-bottom h3 {
+    font-size: var(--body-font-size-l);
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+main .block.puf .puf-card .puf-card-bottom p {
+    font-size: var(--body-font-size-m);
+    margin-bottom: 40px;
+}
+
+main .block.puf .puf-card .puf-card-bottom svg {
+    display: none;
+}
+
+main .block.puf .puf-card .puf-card-bottom h6 {
+    font-weight: var(--body-font-weight);
+    font-size: var(--body-font-size-s);
+    margin: 0;
+}
+
+main .puf .puf-right {
+    width: 375px;
+}
