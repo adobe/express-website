@@ -4,7 +4,22 @@ main .puf-container > div {
 
 main .puf.block .carousel-platform {
     align-items: flex-start;
-    justify-content: space-between;
+}
+
+main .puf.block .carousel-container {
+    overflow: hidden;
+    transition: max-height 0.3s;
+    max-width: 600px;
+}
+
+main .puf.block .carousel-container .carousel-fader-left,
+main .puf.block .carousel-container .carousel-fader-right {
+    align-items: flex-start;
+}
+
+main .puf.block .carousel-container a.button.carousel-arrow {
+    margin-top: calc(100vh / 2);
+    position: sticky;
 }
 
 main .block.puf {
@@ -120,17 +135,18 @@ main .puf .puf-right {
 }
 
 @media (min-width: 900px) {
-  main .puf.block .carousel-container {
-    max-width: none;
-  }
+    main .puf.block .carousel-container {
+        max-width: none;
+        max-height: none !important;
+    }
 
-  main .block.puf .puf-card-container {
-    display: block;
-    width: auto;
-    padding: 0 16px;
-  }
+    main .block.puf .puf-card-container {
+        display: block;
+        width: auto;
+        padding: 0 16px;
+    }
 
-  main .block.puf .carousel-platform {
-    margin: 0 auto;
-  }
+    main .block.puf .carousel-platform {
+        margin: 0 auto;
+    }
 }

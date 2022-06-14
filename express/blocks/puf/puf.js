@@ -220,7 +220,6 @@ function decorateCard($block, cardClass) {
   }
   $header.parentNode.insertBefore($cardCta, $header.nextSibling);
 
-
   const $plans = $cardTop.querySelectorAll('li a');
 
   if ($plans.length) {
@@ -233,6 +232,21 @@ function decorateCard($block, cardClass) {
   return $cardContainer;
 }
 
+function updateHeightPUFCarousel($block, $leftCard, $rightCard) {
+  const $carouselPlatform = $block.querySelector('.carousel-platform');
+  const $carouselContainer = $block.querySelector('.carousel-container');
+  setTimeout(() => {
+    $carouselContainer.style.maxHeight = `${40 + $leftCard.offsetHeight}px`;
+  }, 1000);
+  $carouselPlatform.addEventListener('scroll', () => {
+    if ($carouselPlatform.scrollLeft < ($carouselPlatform.scrollWidth / 4)) {
+      $carouselContainer.style.maxHeight = `${40 + $leftCard.offsetHeight}px`;
+    } else {
+      $carouselContainer.style.maxHeight = `${40 + $rightCard.offsetHeight}px`;
+    }
+  });
+}
+
 export default function decorate($block) {
   const $leftCard = decorateCard($block, 'puf-left');
   const $rightCard = decorateCard($block, 'puf-right');
@@ -243,4 +257,5 @@ export default function decorate($block) {
   $block.append($rightCard);
 
   buildCarousel('.puf-card-container', $block);
+  updateHeightPUFCarousel($block, $leftCard, $rightCard);
 }
