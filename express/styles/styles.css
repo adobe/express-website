@@ -405,8 +405,32 @@ main h1 {
   font-size: var(--heading-font-size-xxl);
 }
 
+main h1.heading-long {
+  font-size: var(--heading-font-size-xl);
+}
+
+main h1.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+main h1.heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
 main h2 {
   font-size: var(--heading-font-size-l);
+}
+
+main h2.heading-long {
+  font-size: var(--heading-font-size-m);
+}
+
+main h2.heading-very-long {
+  font-size: var(--heading-font-size-m);
+}
+
+main h2.heading-x-long {
+  font-size: var(--heading-font-size-m);
 }
 
 main h3 {

@@ -113,9 +113,17 @@ main .columns h2.columns-heading-very-long {
   font-size: var(--heading-font-size-l);
 }
 
+main .columns h2.columns-heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
 @media (min-width: 1200px) {
   main .columns h2.columns-heading-very-long {
     font-size: var(--heading-font-size-xl);
+  }
+
+  main .columns h2.columns-heading-x-long {
+    font-size: var(--heading-font-size-l);
   }
 }
 
