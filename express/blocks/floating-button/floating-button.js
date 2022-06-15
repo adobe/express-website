@@ -74,11 +74,11 @@ export async function createFloatingButton($a) {
       clicked = true;
       window.scrollTo({ top: $scrollAnchor.offsetTop, behavior: 'smooth' });
       const checkIfScrollToIsFinished = setInterval(() => {
-        if ($scrollAnchor.offsetTop === window.pageYOffset) {
+        if ($scrollAnchor.offsetTop <= window.pageYOffset) {
           clicked = false;
           clearInterval(checkIfScrollToIsFinished);
         }
-      }, 25);
+      }, 200);
       hideScrollArrow();
     });
     window.addEventListener('scroll', () => {
@@ -96,14 +96,14 @@ export async function createFloatingButton($a) {
   if ($footer) {
     const hideButtonWhenFooter = new IntersectionObserver((entries) => {
       const entry = entries[0];
-      if (entry.intersectionRatio > 0) {
+      if (entry.intersectionRatio > 0 || entry.isIntersecting) {
         $floatButtonWrapper.classList.add('floating-button--hidden');
       } else {
         $floatButtonWrapper.classList.remove('floating-button--hidden');
       }
     }, {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '32px',
       threshold: 0,
     });
 

@@ -429,7 +429,8 @@ main .section.template-list-horizontal-container {
 }
 
 main .section.template-list-horizontal-container > div {
-  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* re-add max-width on elements that are not carousel */
