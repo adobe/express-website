@@ -276,4 +276,11 @@ export default function decorate($block) {
       });
     }
   }
+
+  // invert buttons in regular columns inside columns-highlight-container
+  if ($block.closest('.section.columns-highlight-container') && !$block.classList.contains('highlight')) {
+    $block.querySelectorAll('a.button').forEach(($button) => {
+      $button.classList.add('dark');
+    });
+  }
 }
