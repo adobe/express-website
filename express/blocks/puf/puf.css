@@ -37,6 +37,7 @@ main .block.puf .puf-card-container {
     width: 100%;
     display: flex;
     justify-content: center;
+    margin: 20px 0;
 }
 
 main .block.puf .puf-card {
@@ -45,7 +46,6 @@ main .block.puf .puf-card {
     border-radius: 20px;
     box-sizing: border-box;
     padding: 40px 30px;
-    margin: 20px 0;
     width: 325px;
 }
 
@@ -67,13 +67,13 @@ main .block.puf .puf-card .puf-card-top h3 {
 
 main .block.puf .puf-card .puf-card-top h2 {
     display: flex;
-    font-size: var(--heading-font-size-l);
+    font-size: var(--heading-font-size-m);
     font-weight: var(--heading-font-weight);
     margin: 20px 0 0 0;
 }
 
 main .block.puf .puf-card .puf-card-top h2 strong {
-    font-size: var(--heading-font-size-xxl);
+    font-size: var(--heading-font-size-xl);
     font-weight: 800;
 }
 
@@ -127,7 +127,7 @@ main .block.puf .puf-card .puf-card-bottom svg {
 main .block.puf .puf-card .puf-card-bottom h6 {
     font-weight: var(--body-font-weight);
     font-size: var(--body-font-size-s);
-    margin: 0;
+    margin: 0 0 40px 0;
 }
 
 main .puf .puf-right {

@@ -10,7 +10,11 @@
  * governing permissions and limitations under the License.
  */
 import {
-  createTag, getHelixEnv, getOffer,
+  addPublishDependencies,
+  createTag,
+  fetchPlaceholders,
+  getHelixEnv,
+  getOffer,
   // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -162,7 +166,9 @@ async function fetchPlan(planUrl) {
       plan.vatInfo = offer.vatInfo;
       plan.language = offer.lang;
       plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d\s,.+]+/g);
-      plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.rawPrice[0]}</strong>`);
+      plan.prefix = offer.prefix ?? '';
+      plan.suffix = offer.suffix ?? '';
+      plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.prefix}${plan.rawPrice[0]}${plan.suffix}</strong>`);
     }
 
     window.pricingPlans[planUrl] = plan;
@@ -232,11 +238,11 @@ function decorateCard($block, cardClass) {
   return $cardContainer;
 }
 
-function updateHeightPUFCarousel($block, $leftCard, $rightCard) {
+function updatePUFCarousel($block, $leftCard, $rightCard) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
   const $carouselContainer = $block.querySelector('.carousel-container');
   setTimeout(() => {
-    $carouselContainer.style.maxHeight = `${40 + $leftCard.offsetHeight}px`;
+    $carouselPlatform.scrollLeft = $carouselPlatform.offsetWidth;
   }, 1000);
   $carouselPlatform.addEventListener('scroll', () => {
     if ($carouselPlatform.scrollLeft < ($carouselPlatform.scrollWidth / 4)) {
@@ -257,5 +263,6 @@ export default function decorate($block) {
   $block.append($rightCard);
 
   buildCarousel('.puf-card-container', $block);
-  updateHeightPUFCarousel($block, $leftCard, $rightCard);
+  updatePUFCarousel($block, $leftCard, $rightCard);
+  addPublishDependencies('/express/system/offers-new.json');
 }
