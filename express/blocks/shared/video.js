@@ -33,6 +33,37 @@ async function fetchVideoAnalytics() {
   return window.videoAnalytics;
 }
 
+async function getVideoAnalytic($video) {
+  const videoAnalytics = await fetchVideoAnalytics();
+  let videoAnalytic;
+
+  videoAnalytics.forEach((analytic) => {
+    if (window.location.pathname.includes(analytic.Page)) {
+      const filenames = analytic.Filenames ? analytic.Filenames.split('\n') : [];
+
+      filenames.forEach((filename) => {
+        if ($video.currentSrc.includes(filename)) {
+          videoAnalytic = {
+            video: $video,
+            parameters: {
+              videoName: analytic.videoName ?? null,
+              videoId: analytic.videoId ?? null,
+              videoLength: $video.duration,
+              product: 'Adobe Express',
+              videoCategory: 'default',
+              videoDescription: analytic.videoDescription ?? null,
+              videoPlayer: 'html5-video',
+              videoMediaType: 'VOD',
+            },
+          };
+        }
+      });
+    }
+  });
+
+  return videoAnalytic;
+}
+
 async function fetchVideoPromotions() {
   if (!window.videoPromotions) {
     window.videoPromotions = {};
@@ -82,6 +113,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
     $video.addEventListener('loadeddata', async () => {
       // check for video promotion
       const videoPromos = await fetchVideoPromotions();
+      const videoAnalytic = await getVideoAnalytic($video);
       const promoName = videoPromos[primaryUrl];
       if (typeof promoName === 'string') {
         $element.insertAdjacentHTML('beforeend', `<div class="promotion block" data-block-name="promotion">${promoName}</div>`);
@@ -92,39 +124,18 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
         $PromoClose.addEventListener('click', () => {
           // eslint-disable-next-line no-use-before-define
           hideVideoModal(true);
+
+          if (videoAnalytic) {
+            const linksPopulated = new CustomEvent('videoclosed', { detail: videoAnalytic });
+            document.dispatchEvent(linksPopulated);
+          }
         });
         window.videoPromotions[primaryUrl] = $promo;
       }
 
-      const videoAnalytics = await fetchVideoAnalytics();
-
-      if (videoAnalytics.length) {
-        videoAnalytics.forEach((analytic) => {
-          if (window.location.pathname.includes(analytic.Page)) {
-            const filenames = analytic.Filenames ? analytic.Filenames.split('\n') : [];
-
-            filenames.forEach((filename) => {
-              if ($video.currentSrc.includes(filename)) {
-                const information = {
-                  video: $video,
-                  parameters: {
-                    videoName: analytic.videoName ?? null,
-                    videoId: analytic.videoId ?? null,
-                    videoLength: $video.duration,
-                    product: 'Adobe Express',
-                    videoCategory: 'default',
-                    videoDescription: analytic.videoDescription ?? null,
-                    videoPlayer: 'html5-video',
-                    videoMediaType: 'VOD',
-                  },
-                };
-
-                const videoLoaded = new CustomEvent('videoloaded', { detail: information });
-                document.dispatchEvent(videoLoaded);
-              }
-            });
-          }
-        });
+      if (videoAnalytic) {
+        const videoLoaded = new CustomEvent('videoloaded', { detail: videoAnalytic });
+        document.dispatchEvent(videoLoaded);
       }
 
       $video.play();
@@ -133,16 +144,29 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
       // hide player and show promotion
       showVideoPromotion($video, primaryUrl);
     });
+
+    const $videoClose = $element.appendChild(createTag('div', { class: 'close' }));
+    $videoClose.addEventListener('click', async () => {
+      const videoAnalytic = await getVideoAnalytic($video);
+
+      // eslint-disable-next-line no-use-before-define
+      hideVideoModal(true);
+
+      if (videoAnalytic) {
+        const linksPopulated = new CustomEvent('videoclosed', { detail: videoAnalytic });
+        document.dispatchEvent(linksPopulated);
+      }
+    });
   } else {
     // iframe 3rd party player
     $element.innerHTML = `<iframe src="${primaryUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="${title}"></iframe>`;
+    const $videoClose = $element.appendChild(createTag('div', { class: 'close' }));
+    $videoClose.addEventListener('click', () => {
+      // eslint-disable-next-line no-use-before-define
+      hideVideoModal(true);
+    });
   }
   $element.classList.add(playerType);
-  const $videoClose = $element.appendChild(createTag('div', { class: 'close' }));
-  $videoClose.addEventListener('click', () => {
-    // eslint-disable-next-line no-use-before-define
-    hideVideoModal(true);
-  });
 }
 
 export function isVideoLink(url) {
@@ -171,16 +195,39 @@ export function displayVideoModal(url = [], title, push) {
   if (canPlayInline) {
     const $overlay = createTag('div', { class: 'video-overlay' });
     const $video = createTag('div', { class: 'video-overlay-video', id: 'video-overlay-video' });
+
     $overlay.appendChild($video);
-    $overlay.addEventListener('click', () => {
+    $overlay.addEventListener('click', async () => {
       hideVideoModal(true);
+
+      const $videoElement = $video.querySelector('video');
+
+      if ($videoElement) {
+        const videoAnalytic = await getVideoAnalytic($videoElement);
+
+        if (videoAnalytic) {
+          const linksPopulated = new CustomEvent('videoclosed', { detail: videoAnalytic });
+          document.dispatchEvent(linksPopulated);
+        }
+      }
     });
     $video.addEventListener('click', (evt) => {
       evt.stopPropagation();
     });
-    window.onkeyup = ({ key }) => {
+    window.onkeyup = async ({ key }) => {
       if (key === 'Escape') {
         hideVideoModal(true);
+
+        const $videoElement = $video.querySelector('video');
+
+        if ($videoElement) {
+          const videoAnalytic = await getVideoAnalytic($videoElement);
+
+          if (videoAnalytic) {
+            const linksPopulated = new CustomEvent('videoclosed', { detail: videoAnalytic });
+            document.dispatchEvent(linksPopulated);
+          }
+        }
       }
     };
     if (push) {
