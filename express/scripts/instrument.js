@@ -526,6 +526,22 @@ loadScript(martechURL, () => {
     document.addEventListener('videoloaded', (e) => {
       trackVideoAnalytics(e.detail.video, e.detail.parameters);
     });
+
+    document.addEventListener('videoclosed', (e) => {
+      console.log(e.detail);
+      const adobeEventName = `adobe.com:express:cta:learn:columns:${e.detail.parameters.videoId}:videoClosed`;
+      const sparkEventName = 'landing:videoClosed';
+
+      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+      digitalData._set('spark.eventData.eventName', sparkEventName);
+
+      _satellite.track('event', {
+        digitalData: digitalData._snapshot(),
+      });
+
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      digitalData._delete('spark.eventData.eventName');
+    });
   }
 
   decorateAnalyticsEvents();
