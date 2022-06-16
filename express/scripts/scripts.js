@@ -426,9 +426,9 @@ function addHeaderSizing($block) {
   // because JP characters are larger and JP sentences are longer
   const sizes = getLocale(window.location) === 'jp'
     ? [
-      { name: 'long', threshold: 10 },
-      { name: 'very-long', threshold: 12 },
-      { name: 'x-long', threshold: 16 },
+      { name: 'long', threshold: 8 },
+      { name: 'very-long', threshold: 11 },
+      { name: 'x-long', threshold: 15 },
     ]
     : [
       { name: 'long', threshold: 30 },
