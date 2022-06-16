@@ -102,7 +102,7 @@ function getMimeType(src) {
   return `video/${src.split('.').pop()}`;
 }
 
-function playInlineVideo($element, vidUrls = [], playerType, title) {
+function playInlineVideo($element, vidUrls = [], playerType, title, ts) {
   const [primaryUrl] = vidUrls;
   if (!primaryUrl) return;
   if (playerType === 'html5') {
@@ -110,6 +110,11 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
     const videoHTML = `<video controls playsinline>${sources}</video>`;
     $element.innerHTML = videoHTML;
     const $video = $element.querySelector('video');
+    $video.addEventListener('loadeddata', async () => {
+      if (ts) {
+        $video.currentTime = ts;
+      }
+    });
     $video.addEventListener('loadeddata', async () => {
       // check for video promotion
       const videoPromos = await fetchVideoPromotions();
@@ -172,7 +177,7 @@ function playInlineVideo($element, vidUrls = [], playerType, title) {
 export function isVideoLink(url) {
   return url.includes('youtu')
     || url.includes('vimeo')
-    || /.*\/media_.*(mp4|webm|m3u8)$/.test(url);
+    || /.*\/media_.*(mp4|webm|m3u8)$/.test(new URL(url).pathname);
 }
 
 export function hideVideoModal(push) {
@@ -238,6 +243,7 @@ export function displayVideoModal(url = [], title, push) {
     $main.append($overlay);
 
     let vidType = 'default';
+    let ts = 0;
     if (primaryUrl.includes('youtu')) {
       vidType = 'youtube';
       const yturl = new URL(primaryUrl);
@@ -252,10 +258,15 @@ export function displayVideoModal(url = [], title, push) {
       vidUrls = [`https://player.vimeo.com/video/${vid}?app_id=122963&autoplay=1`];
     } else if (primaryUrl.includes('/media_')) {
       vidType = 'html5';
-      // local video url(s), remove origin
+      const { hash } = new URL(vidUrls[0]);
+      if (hash.startsWith('#t=')) {
+        ts = parseInt(hash.substring(3), 10);
+        if (Number.isNaN(ts)) ts = 0;
+      }
+      // local video url(s), remove origin, extract timestamp
       vidUrls = vidUrls.map((vidUrl) => new URL(vidUrl).pathname);
     }
-    playInlineVideo($video, vidUrls, vidType, title);
+    playInlineVideo($video, vidUrls, vidType, title, ts);
   } else {
     // redirect to first video url
     [window.location.href] = vidUrls;
