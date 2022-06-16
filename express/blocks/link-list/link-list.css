@@ -106,12 +106,6 @@ main .link-list .carousel-platform p.button-container:first-child {
   main .section.link-list-container > div, main .link-list-center-container > div {
     padding: 0 50px;
   }
-
-  main .link-list h2,
-  main .link-list h3,
-  main .link-list h4 {
-    padding-left: 0;
-  }
 }
 
 @media (min-width: 1200px) {

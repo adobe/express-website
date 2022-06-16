@@ -609,6 +609,12 @@ loadScript(martechURL, () => {
       // This return statement prevents a double binding.
       return;
       // Button in the FAQ
+    } else if ($a.classList.contains('floating-button-lottie')) {
+      adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
+      sparkEventName = 'landing:floatingButtonScrollPressed';
+    } else if ($a.parentElement.classList.contains('floating-button')) {
+      adobeEventName = `${adobeEventName}floatingButton:ctaPressed`;
+      sparkEventName = 'landing:floatingButtonPressed';
     } else if ($a.closest('.faq')) {
       adobeEventName = appendLinkText(`${adobeEventName}faq:`, $a);
       sparkEventName = 'landing:faqPressed';
@@ -937,6 +943,22 @@ loadScript(martechURL, () => {
     // tracking videos loaded asynchronously.
     document.addEventListener('videoloaded', (e) => {
       trackVideoAnalytics(e.detail.video, e.detail.parameters);
+    });
+
+    document.addEventListener('videoclosed', (e) => {
+      console.log(e.detail);
+      const adobeEventName = `adobe.com:express:cta:learn:columns:${e.detail.parameters.videoId}:videoClosed`;
+      const sparkEventName = 'landing:videoClosed';
+
+      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+      digitalData._set('spark.eventData.eventName', sparkEventName);
+
+      _satellite.track('event', {
+        digitalData: digitalData._snapshot(),
+      });
+
+      digitalData._delete('primaryEvent.eventInfo.eventName');
+      digitalData._delete('spark.eventData.eventName');
     });
   }
 
