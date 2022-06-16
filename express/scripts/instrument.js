@@ -427,9 +427,9 @@ loadScript(martechURL, () => {
   // Fire the viewedPage event
   if (useAlloy) {
     _satellite.track('event', {
-      eventType: 'web.webinteraction.linkClicks',
       xdm: {},
       data: {
+        eventType: 'web.webinteraction.linkClicks',
         web: {
           webInteraction: {
             name: 'viewedPage',
@@ -473,9 +473,9 @@ loadScript(martechURL, () => {
   // Fire the landing:viewedPage event
   if (useAlloy) {
     _satellite.track('event', {
-      eventType: 'web.webinteraction.linkClicks',
       xdm: {},
       data: {
+        eventType: 'web.webinteraction.linkClicks',
         web: {
           webInteraction: {
             name: 'landing:viewedPage',
@@ -523,9 +523,9 @@ loadScript(martechURL, () => {
   ) {
     if (useAlloy) {
       _satellite.track('event', {
-        eventType: 'web.webinteraction.linkClicks',
         xdm: {},
         data: {
+          eventType: 'web.webinteraction.linkClicks',
           web: {
             webInteraction: {
               name: 'displayPurchasePanel',
@@ -661,9 +661,9 @@ loadScript(martechURL, () => {
 
     if (useAlloy) {
       _satellite.track('event', {
-        eventType: 'web.webinteraction.linkClicks',
         xdm: {},
         data: {
+          eventType: 'web.webinteraction.linkClicks',
           web: {
             webInteraction: {
               name: adobeEventName,
@@ -771,9 +771,9 @@ loadScript(martechURL, () => {
 
         if (useAlloy) {
           _satellite.track('event', {
-            eventType: 'web.webinteraction.linkClicks',
             xdm: {},
             data: {
+              eventType: 'web.webinteraction.linkClicks',
               web: {
                 webInteraction: {
                   name: adobeEventName,
@@ -823,9 +823,9 @@ loadScript(martechURL, () => {
 
         if (useAlloy) {
           _satellite.track('event', {
-            eventType: 'web.webinteraction.linkClicks',
             xdm: {},
             data: {
+              eventType: 'web.webinteraction.linkClicks',
               web: {
                 webInteraction: {
                   name: adobeEventName,
@@ -881,9 +881,9 @@ loadScript(martechURL, () => {
 
           if (useAlloy) {
             _satellite.track('event', {
-              eventType: 'web.webinteraction.linkClicks',
               xdm: {},
               data: {
+                eventType: 'web.webinteraction.linkClicks',
                 web: {
                   webInteraction: {
                     name: adobeEventName,
@@ -964,9 +964,9 @@ loadScript(martechURL, () => {
 
           if (useAlloy) {
             _satellite.track('event', {
-              eventType: 'web.webinteraction.linkClicks',
               xdm: {},
               data: {
+                eventType: 'web.webinteraction.linkClicks',
                 web: {
                   webInteraction: {
                     name: 'pricingModalUserInSegment',
