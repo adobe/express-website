@@ -113,17 +113,35 @@ main .columns h2.columns-heading-very-long {
   font-size: var(--heading-font-size-l);
 }
 
-main .columns h2.columns-heading-x-long {
-  font-size: var(--heading-font-size-m);
-}
-
 @media (min-width: 1200px) {
   main .columns h2.columns-heading-very-long {
     font-size: var(--heading-font-size-xl);
   }
+}
 
-  main .columns h2.columns-heading-x-long {
+:lang(ja) main .columns h2.columns-heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .columns h2.columns-heading-very-long {
+  font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) main .columns h2.columns-heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
+@media (min-width: 1200px) {
+  :lang(ja) main .columns h2.columns-heading-long {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-very-long {
     font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-x-long {
+    font-size: var(--heading-font-size-m);
   }
 }
 
