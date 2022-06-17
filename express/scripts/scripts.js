@@ -1760,7 +1760,10 @@ const usp = new URLSearchParams(window.location.search);
 window.spark = {};
 window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const useAlloy = usp.get('martech').includes('alloy');
+const useAlloy = (
+  usp.has('martech') && 
+  usp.get('martech').includes('alloy')
+);
 
 function unhideBody() {
   try {
