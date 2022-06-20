@@ -158,7 +158,7 @@ export default async function decorate($block) {
   if ($block.classList.contains('shadow')) {
     const shadowDiv = createTag('div');
     shadowDiv.innerHTML = '<div>shadow</div>';
-    $block.prepend(shadowDiv);
+    $block.appendChild(shadowDiv);
   }
   if ($block.classList.contains('wide')) {
     $block.closest('.section-wrapper').classList.add('hero-animation-wide-container');
