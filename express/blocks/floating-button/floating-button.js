@@ -115,6 +115,8 @@ export async function createFloatingButton($a) {
       });
     }
   }
+
+  return $floatButtonWrapper;
 }
 
 export default function decorateBlock($block) {
