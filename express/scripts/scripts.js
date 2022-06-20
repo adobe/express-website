@@ -477,7 +477,7 @@ export async function getOffer(offerId, countryOverride) {
 
   if (offerId !== 'FREE0') {
     const upperCountry = country.toUpperCase();
-    const resp = await fetch(`https://bps-il.adobe.io/offers/${offerId}?country=${upperCountry}&api_key=AdobeDotComMiniPlansService&service_providers=PRICING`);
+    const resp = await fetch(`https://bps-il.adobe.io/offers/${offerId}?country=${upperCountry}&api_key=wcms-acom-express-pricing-prod&service_providers=PRICING`);
     const json = await resp.json();
     offer = json[0].pricing.prices[0].price_details.display_rules;
     offer.vatInfo = vatInfos[country] || '';
