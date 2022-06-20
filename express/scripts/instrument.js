@@ -41,11 +41,7 @@ if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
 // alloy feature flag
 let useAlloy = false;
 if (
-  (
-    martech === 'alloy'
-    && window.spark
-    && window.spark.hostname === 'www.stage.adobe.com'
-  )
+  (window.spark && window.spark.hostname === 'www.stage.adobe.com')
   || martech === 'alloy-qa'
 ) {
   useAlloy = true;
@@ -100,9 +96,9 @@ loadScript(martechURL, () => {
 
   const set = (path, value) => {
     if (useAlloy) {
-      let obj = w.alloy_all;
-      path = 'data._adobe_corpnew.digitalData.' + path;
-      const segs = path.split('.');
+      const obj = w.alloy_all;
+      const newPath = `data._adobe_corpnew.digitalData.${path}`;
+      const segs = newPath.split('.');
       let temp = obj;
       let i = 0;
       const il = segs.length - 1;
@@ -117,7 +113,7 @@ loadScript(martechURL, () => {
       temp[segs[i]] = value;
       return obj;
     } else {
-      digitalData._set(path, value);
+      return digitalData._set(path, value);
     }
   };
 

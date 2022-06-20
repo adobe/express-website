@@ -1761,8 +1761,11 @@ window.spark = {};
 window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
 const useAlloy = (
-  usp.has('martech') && 
-  usp.get('martech').includes('alloy')
+  window.spark.hostname === 'www.stage.adobe.com'
+  || (
+    usp.has('martech')
+    && usp.get('martech').includes('alloy')
+  )
 );
 
 function unhideBody() {
