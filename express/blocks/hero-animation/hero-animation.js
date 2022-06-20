@@ -189,7 +189,7 @@ export default async function decorate($block) {
 
       animations[typeHint] = {
         source,
-        poster: optimizedPosterSrc,
+        poster: optimizedPosterSrc || '',
         title: ($poster && $poster.getAttribute('alt')) || '',
         params: videoParameters,
       };
