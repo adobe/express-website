@@ -275,13 +275,17 @@ main .hero-animation .hero-shadow {
   display: none;
 }
 
+main .hero-animation .hero-shadow picture {
+  display: flex;
+}
+
 @media (min-width: 950px) {
   main .hero-animation .hero-shadow {
-    display: block;
+    display: flex;
     position: absolute;
     top: 100%;
     left: 50%;
-    transform: translate(-15%, -2px);
+    transform: translateX(-15%);
     z-index: 2;
   }
 }
@@ -294,7 +298,7 @@ main .hero-animation .hero-shadow {
 
 @media (min-width: 950px) and (max-width: 1250px) {
   main .hero-animation .hero-shadow {
-    transform: translate(-5%, -5px);
+    transform: translateX(-5%);
   }
 }
 

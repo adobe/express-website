@@ -152,10 +152,18 @@ function transformToVideoLink($cell, $a) {
 }
 
 export default async function decorate($block) {
-  const $rows = [...$block.children];
   const attributions = [];
   const $attributions = createTag('div', { class: 'hero-animation-attributions' });
   const animations = {};
+  if ($block.classList.contains('shadow')) {
+    const shadowDiv = createTag('div');
+    shadowDiv.innerHTML = '<div>shadow</div>';
+    $block.appendChild(shadowDiv);
+  }
+  if ($block.classList.contains('wide')) {
+    $block.closest('.section-wrapper').classList.add('hero-animation-wide-container');
+  }
+  const $rows = [...$block.children];
   $rows.forEach(($div) => {
     const typeHint = $div.children[0].textContent.trim().toLowerCase();
     let rowType = 'content';
@@ -264,10 +272,15 @@ export default async function decorate($block) {
       $attributions.append($div);
     }
 
-    // timecode animations
     if (rowType === 'shadow') {
-      $div.children[0].remove();
-      $div.classList.add('hero-shadow');
+      if (!$block.querySelector('.hero-shadow')) {
+        const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+        $div.innerHTML = '';
+        $div.appendChild(shadow);
+        $div.classList.add('hero-shadow');
+      } else {
+        $div.remove();
+      }
     }
   });
   const button = $block.querySelector('.button');
