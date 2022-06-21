@@ -19,6 +19,7 @@ import {
   getLocale,
   getIconElement,
   addFreePlanWidget,
+  addHeaderSizing,
 } from '../../scripts/scripts.js';
 
 import {
@@ -123,40 +124,6 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
     });
     if ($iconList.children.length > 0) $columnCell.appendChild($iconList);
   }
-}
-
-function getJapaneseTextCharacterCount(text) {
-  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
-  const matches = text.matchAll(headingEngCharsRegEx);
-  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
-  const jtext = text.replaceAll(headingEngCharsRegEx, '');
-  const jCnt = jtext.length;
-  return eCnt * 0.57 + jCnt;
-}
-
-function addHeaderSizing($block) {
-  const headings = $block.querySelectorAll('h1, h2');
-  // Each threshold of JP should be smaller than other languages
-  // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 8 },
-      { name: 'very-long', threshold: 11 },
-      { name: 'x-long', threshold: 15 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
-  headings.forEach((h) => {
-    const length = getLocale(window.location) === 'jp'
-      ? getJapaneseTextCharacterCount(h.textContent)
-      : h.textContent.length;
-    sizes.forEach((size) => {
-      if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
-    });
-  });
 }
 
 export default function decorate($block) {
@@ -270,7 +237,7 @@ export default function decorate($block) {
     });
   });
   addAnimationToggle($block);
-  addHeaderSizing($block);
+  addHeaderSizing($block, 'columns-heading');
 
   // decorate offer
   if ($block.classList.contains('offer')) {

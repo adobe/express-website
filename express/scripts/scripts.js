@@ -403,49 +403,6 @@ export function readBlockConfig($block) {
   return config;
 }
 
-export function getLocale(url) {
-  const locale = url.pathname.split('/')[1];
-  if (/^[a-z]{2}$/.test(locale)) {
-    return locale;
-  }
-  return 'us';
-}
-
-function getJapaneseTextCharacterCount(text) {
-  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
-  const matches = text.matchAll(headingEngCharsRegEx);
-  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
-  const jtext = text.replaceAll(headingEngCharsRegEx, '');
-  const jCnt = jtext.length;
-  return eCnt * 0.57 + jCnt;
-}
-
-function addHeaderSizing($block) {
-  const headings = $block.querySelectorAll('h1, h2');
-  // Each threshold of JP should be smaller than other languages
-  // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 8 },
-      { name: 'very-long', threshold: 11 },
-      { name: 'x-long', threshold: 15 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
-  headings.forEach((h) => {
-    const length = getLocale(window.location) === 'jp'
-      ? getJapaneseTextCharacterCount(h.textContent)
-      : h.textContent.length;
-    // const { length } = h.textContent;
-    sizes.forEach((size) => {
-      if (length >= size.threshold) h.classList.add(`heading-${size.name}`);
-    });
-  });
-}
-
 /**
  * Decorates all sections in a container element.
  * @param {Element} $main The container element
@@ -483,8 +440,6 @@ export function decorateSections($main) {
       });
       sectionMeta.remove();
     }
-
-    addHeaderSizing(section);
   });
 }
 
@@ -507,6 +462,14 @@ export function updateSectionsStatus(main) {
       }
     }
   }
+}
+
+export function getLocale(url) {
+  const locale = url.pathname.split('/')[1];
+  if (/^[a-z]{2}$/.test(locale)) {
+    return locale;
+  }
+  return 'us';
 }
 
 function getCookie(cname) {
@@ -2081,6 +2044,41 @@ export function trackBranchParameters($links) {
       }
     });
   }
+}
+
+function getJapaneseTextCharacterCount(text) {
+  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
+  const matches = text.matchAll(headingEngCharsRegEx);
+  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
+  const jtext = text.replaceAll(headingEngCharsRegEx, '');
+  const jCnt = jtext.length;
+  return eCnt * 0.57 + jCnt;
+}
+
+export function addHeaderSizing($block, classPrefix = 'heading') {
+  const headings = $block.querySelectorAll('h1, h2');
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 8 },
+      { name: 'very-long', threshold: 11 },
+      { name: 'x-long', threshold: 15 },
+    ]
+    : [
+      { name: 'long', threshold: 30 },
+      { name: 'very-long', threshold: 40 },
+      { name: 'x-long', threshold: 50 },
+    ];
+  headings.forEach((h) => {
+    const length = getLocale(window.location) === 'jp'
+      ? getJapaneseTextCharacterCount(h.textContent)
+      : h.textContent.length;
+    // const { length } = h.textContent;
+    sizes.forEach((size) => {
+      if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
+    });
+  });
 }
 
 if (window.name.includes('performance')) registerPerformanceLogger();
