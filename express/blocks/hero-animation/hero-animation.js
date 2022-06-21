@@ -89,16 +89,18 @@ function createAnimation(animations) {
 }
 
 function adjustLayout($overlay, $attributions, animations, $parent) {
-  $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
-  const scale = window.innerWidth / 1440;
-  if (window.innerWidth > 375 * (1440 / 700)) {
-    $attributions.style.transform = `scale(${scale})`;
-    $attributions.style.top = `${scale * 545}px`;
-    $attributions.style.left = `${scale * 1030}px`;
-  } else {
-    $attributions.style.transform = 'scale(0.4)';
-    $attributions.style.top = '300px';
-    $attributions.style.left = '80px';
+  if (!$parent.closest('.block').classList.contains('wide')) {
+    $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
+    const scale = window.innerWidth / 1440;
+    if (window.innerWidth > 375 * (1440 / 700)) {
+      $attributions.style.transform = `scale(${scale})`;
+      $attributions.style.top = `${scale * 545}px`;
+      $attributions.style.left = `${scale * 1030}px`;
+    } else {
+      $attributions.style.transform = 'scale(0.4)';
+      $attributions.style.top = '300px';
+      $attributions.style.left = '80px';
+    }
   }
 
   const breakpoint = getBreakpoint(animations);
@@ -150,15 +152,24 @@ function transformToVideoLink($cell, $a) {
 }
 
 export default async function decorate($block) {
-  const $rows = [...$block.children];
   const attributions = [];
   const $attributions = createTag('div', { class: 'hero-animation-attributions' });
   const animations = {};
+  if ($block.classList.contains('shadow')) {
+    const shadowDiv = createTag('div');
+    shadowDiv.innerHTML = '<div>shadow</div>';
+    $block.appendChild(shadowDiv);
+  }
+  if ($block.classList.contains('wide')) {
+    $block.closest('.section-wrapper').classList.add('hero-animation-wide-container');
+  }
+  const $rows = [...$block.children];
   $rows.forEach(($div) => {
     const typeHint = $div.children[0].textContent.trim().toLowerCase();
     let rowType = 'content';
     if (animationBreakPointSettings.map((e) => e.typeHint).includes(typeHint)) rowType = 'animation';
     if (typeHint.startsWith('00:')) rowType = 'timecode';
+    if (typeHint.startsWith('shadow')) rowType = 'shadow';
 
     // content row
     if (rowType === 'animation') {
@@ -175,17 +186,19 @@ export default async function decorate($block) {
         const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
         source = `./media_${id}.mp4`;
       }
-
-      const srcURL = new URL($poster.src);
-      const srcUSP = new URLSearchParams(srcURL.search);
-      srcUSP.set('format', 'webply');
-      srcUSP.set('width', typeHint === 'desktop' ? 2000 : 750);
-      const optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
+      let optimizedPosterSrc;
+      if ($poster) {
+        const srcURL = new URL($poster.src);
+        const srcUSP = new URLSearchParams(srcURL.search);
+        srcUSP.set('format', 'webply');
+        srcUSP.set('width', typeHint === 'desktop' ? 2000 : 750);
+        optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
+      }
 
       animations[typeHint] = {
         source,
-        poster: optimizedPosterSrc,
-        title: $poster.getAttribute('alt') || '',
+        poster: optimizedPosterSrc || '',
+        title: ($poster && $poster.getAttribute('alt')) || '',
         params: videoParameters,
       };
 
@@ -257,6 +270,17 @@ export default async function decorate($block) {
       });
       attributions.push(attribution);
       $attributions.append($div);
+    }
+
+    if (rowType === 'shadow') {
+      if (!$block.querySelector('.hero-shadow')) {
+        const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+        $div.innerHTML = '';
+        $div.appendChild(shadow);
+        $div.classList.add('hero-shadow');
+      } else {
+        $div.remove();
+      }
     }
   });
   const button = $block.querySelector('.button');
