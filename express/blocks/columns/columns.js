@@ -147,6 +147,31 @@ function addHeaderSizing($block) {
   });
 }
 
+async function quickActionFloatingButton($a) {
+  await createFloatingButton($a).then(($floatingButton) => {
+    $floatingButton.classList.add('floating-button--desktop');
+    const hideButtonWhenAboveTheFold = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.intersectionRatio > 0 || entry.isIntersecting) {
+        $floatingButton.classList.add('floating-button--above-the-fold');
+      } else {
+        $floatingButton.classList.remove('floating-button--above-the-fold');
+      }
+    }, {
+      root: null,
+      rootMargin: '-300px 0px -40px 0px',
+      threshold: 0,
+    });
+    if (document.readyState === 'complete') {
+      hideButtonWhenAboveTheFold.observe($a);
+    } else {
+      window.addEventListener('load', () => {
+        hideButtonWhenAboveTheFold.observe($a);
+      });
+    }
+  });
+}
+
 export default function decorate($block) {
   const $rows = Array.from($block.children);
 
@@ -227,7 +252,7 @@ export default function decorate($block) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
-          createFloatingButton($a);
+          quickActionFloatingButton($a);
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }

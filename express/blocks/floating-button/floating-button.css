@@ -113,8 +113,24 @@ main .floating-button-wrapper:first-of-type + .section {
     display: none;
   }
 
+  main .floating-button-wrapper.floating-button--desktop {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+  main .floating-button-wrapper.floating-button--desktop.floating-button--above-the-fold {
+    bottom: -151px;
+    opacity: 0.9;
+  }
+
   main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
     display: inline-block;
+  }
+
+  main .floating-button--desktop ~ .section > .default-content-wrapper a.button.same-as-floating-button-CTA {
+    display: none;
   }
 }
 
