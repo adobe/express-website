@@ -16,7 +16,6 @@ import {
   transformLinkToAnimation,
   addAnimationToggle,
   toClassName,
-  getLocale,
   getIconElement,
   addFreePlanWidget,
   addHeaderSizing,
