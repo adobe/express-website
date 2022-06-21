@@ -975,7 +975,8 @@ function addPromotion() {
       };
       // insert promotion at the bottom
       if (promos[category]) {
-        const $promoSection = createTag('div', { class: '.section' });
+        const $promoSection = createTag('div', { class: 'section' });
+        $promoSection.setAttribute('data-section-status', 'initialized');
         $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));
@@ -1481,7 +1482,6 @@ export function normalizeHeadings(block, allowedHeadings) {
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
-
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }

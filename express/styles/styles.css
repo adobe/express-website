@@ -433,6 +433,10 @@ main img {
   max-width: 100%;
 }
 
+main video {
+  max-width: 100%;
+}
+
 main .section {
   padding-top: 40px;
 }

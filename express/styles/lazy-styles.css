@@ -138,10 +138,6 @@ main .list ol li::before {
   }
 
 
-main video {
-  max-width: 100%;
-}
-
 main .video-overlay {
   position: fixed;
   top: 0;
