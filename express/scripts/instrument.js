@@ -499,6 +499,7 @@ loadScript(martechURL, () => {
     let sparkEventName;
     let sparkButtonId;
     const $templateContainer = $a.closest('.template-list');
+    const $tutorialContainer = $a.closest('.tutorial-card');
     // let cardPosition;
 
     // Template button click
@@ -507,6 +508,10 @@ loadScript(martechURL, () => {
       // This return statement prevents a double binding.
       return;
       // Button in the FAQ
+    } else if ($tutorialContainer) {
+      const videoName = textToName($a.querySelector('h3').textContent);
+      adobeEventName = `${adobeEventName}tutorials:${videoName}:tutorialPressed`;
+      sparkEventName = 'landing:tutorialPressed';
     } else if ($a.classList.contains('floating-button-lottie')) {
       adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
       sparkEventName = 'landing:floatingButtonScrollPressed';
@@ -833,7 +838,6 @@ loadScript(martechURL, () => {
     });
 
     document.addEventListener('videoclosed', (e) => {
-      console.log(e.detail);
       const adobeEventName = `adobe.com:express:cta:learn:columns:${e.detail.parameters.videoId}:videoClosed`;
       const sparkEventName = 'landing:videoClosed';
 
