@@ -178,17 +178,19 @@ export default async function decorate($block) {
         const id = url.hostname.includes('hlx.blob.core') ? url.pathname.split('/')[2] : url.pathname.split('media_')[1].split('.')[0];
         source = `./media_${id}.mp4`;
       }
-
-      const srcURL = new URL($poster.src);
-      const srcUSP = new URLSearchParams(srcURL.search);
-      srcUSP.set('format', 'webply');
-      srcUSP.set('width', typeHint === 'desktop' ? 2000 : 750);
-      const optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
+      let optimizedPosterSrc;
+      if ($poster) {
+        const srcURL = new URL($poster.src);
+        const srcUSP = new URLSearchParams(srcURL.search);
+        srcUSP.set('format', 'webply');
+        srcUSP.set('width', typeHint === 'desktop' ? 2000 : 750);
+        optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
+      }
 
       animations[typeHint] = {
         source,
-        poster: optimizedPosterSrc,
-        title: $poster.getAttribute('alt') || '',
+        poster: optimizedPosterSrc || '',
+        title: ($poster && $poster.getAttribute('alt')) || '',
         params: videoParameters,
       };
 
