@@ -124,7 +124,7 @@ main .columns h2.columns-heading-very-long {
 }
 
 :lang(ja) main .columns h2.columns-heading-very-long {
-  font-size: var(--heading-font-size-m);
+  font-size: var(--heading-font-size-l);
 }
 
 :lang(ja) main .columns h2.columns-heading-x-long {
@@ -135,19 +135,15 @@ main .columns h2.columns-heading-very-long {
   :lang(ja) main .columns h2.columns-heading-long {
     font-size: var(--heading-font-size-xl);
   }
-
-  :lang(ja) main .columns h2.columns-heading-very-long {
-    font-size: var(--heading-font-size-l);
-  }
-
-  :lang(ja) main .columns h2.columns-heading-x-long {
-    font-size: var(--heading-font-size-m);
-  }
 }
 
 @media (max-width: 600px) {
   :lang(ja) main .columns h2 {
     font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-very-long {
+    font-size: var(--heading-font-size-m);
   }
 }
 

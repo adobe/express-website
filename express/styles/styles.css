@@ -414,7 +414,7 @@ main h1 {
 }
 
 :lang(ja) main h1.heading-x-long {
-  font-size: var(--heading-font-size-m);
+  font-size: var(--heading-font-size-l);
 }
 
 main h2 {
@@ -422,11 +422,17 @@ main h2 {
 }
 
 :lang(ja) main h2.heading-long {
-  font-size: var(--heading-font-size-m);
+  font-size: var(--heading-font-size-l);
 }
 
 :lang(ja) main h2.heading-very-long {
-  font-size: var(--heading-font-size-m);
+  font-size: var(--heading-font-size-l);
+}
+
+@media (max-width: 600px) {
+  :lang(ja) main h2.heading-very-long {
+    font-size: var(--heading-font-size-m);
+  }
 }
 
 :lang(ja) main h2.heading-x-long {

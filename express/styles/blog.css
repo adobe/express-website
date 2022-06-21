@@ -62,9 +62,6 @@
   
   .blog main .hero .blog-header h1 {
     text-align: left;
-  }
-  
-  not:lang(ja).blog main .hero .blog-header h1 {
     font-size: var(--heading-font-size-l);
   }
   
@@ -119,13 +116,14 @@
   }
   
   .blog main .section h3 {
+    font-size: 36px;
     line-height: 40px;
     margin-top: 64px;
     text-align: left;
   }
   
-  not:lang(ja).blog main .section h3 {
-    font-size: 36px;
+  :lang(ja).blog main .section h3 {
+    font-size: var(--heading-font-size-m);
   }
   
   .blog main .section h4 {
