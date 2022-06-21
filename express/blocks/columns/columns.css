@@ -145,6 +145,12 @@ main .columns h2.columns-heading-very-long {
   }
 }
 
+@media (max-width: 600px) {
+  :lang(ja) main .columns h2 {
+    font-size: var(--heading-font-size-l);
+  }
+}
+
 main .columns h3 {
   font-size: var(--heading-font-size-l);
   line-height: 1.11;
