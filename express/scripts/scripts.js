@@ -1756,23 +1756,43 @@ export async function decorateMain($main) {
   makeRelativeLinks($main);
 }
 
+const usp = new URLSearchParams(window.location.search);
 window.spark = {};
+window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const hostparam = new URLSearchParams(window.location.search).get('hostname');
-window.spark.hostname = hostparam || window.location.hostname;
+const useAlloy = (
+  window.spark.hostname === 'www.stage.adobe.com'
+  || (
+    usp.has('martech')
+    && usp.get('martech').includes('alloy')
+  )
+);
 
-function unhideBody(id) {
+function unhideBody() {
   try {
+    const id = (
+      useAlloy
+        ? 'alloy-prehiding'
+        : 'at-body-style'
+    );
     document.head.removeChild(document.getElementById(id));
   } catch (e) {
     // nothing
   }
 }
 
-function hideBody(id) {
+function hideBody() {
   const style = document.createElement('style');
-  style.id = id;
-  style.textContent = 'body{visibility: hidden !important}';
+  style.id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  style.innerHTML = (
+    useAlloy
+      ? '.personalization-container{opacity:0.01 !important}'
+      : 'body{visibility: hidden !important}'
+  );
 
   try {
     document.head.appendChild(style);
@@ -1846,12 +1866,15 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      const target = checkTesting();
+      let target = checkTesting();
+      if (useAlloy) {
+        document.querySelector('body').classList.add('personalization-container');
+        target = true;
+      }
       if (target) {
-        const bodyHideStyleId = 'at-body-style';
-        hideBody(bodyHideStyleId);
+        hideBody();
         setTimeout(() => {
-          unhideBody(bodyHideStyleId);
+          unhideBody();
         }, 3000);
       }
     }
