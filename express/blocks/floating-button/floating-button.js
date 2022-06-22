@@ -154,7 +154,7 @@ export default function decorateBlock($block) {
   const $a = $block.querySelector('a.button');
   createFloatingButton($a);
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
-  const emptySections = sections.filter((section) => section.childElementCount === 0);
+  const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('floating-button-wrapper')));
   emptySections.forEach((emptySection) => {
     emptySection.remove();
   });
