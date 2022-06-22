@@ -509,16 +509,19 @@ loadScript(martechURL, () => {
       const $img = $cardContainer && $cardContainer.querySelector('img');
       const alt = $img && $img.getAttribute('alt');
 
+      sparkEventName = 'landing:templatePressed';
+
       // try to get the image alternate text
-      if ($a.classList.contains('placeholder')) {
+      if ($a.classList.contains('template-title-link')) {
+        adobeEventName += 'viewAll';
+        sparkEventName = 'landing:templateViewAllPressed';
+      } else if ($a.classList.contains('placeholder')) {
         adobeEventName += 'createFromScratch';
       } else if (alt) {
         adobeEventName += textToName(alt);
       } else {
         adobeEventName += 'Click';
       }
-
-      sparkEventName = 'landing:templatePressed';
 
       if (w.location.href.includes('/express-your-fandom')) {
         const $templates = document.querySelectorAll('a.template');
