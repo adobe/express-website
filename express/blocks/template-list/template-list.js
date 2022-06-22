@@ -309,6 +309,7 @@ export async function decorateTemplateList($block) {
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
           const $img = $tmplt.querySelector('img');
+          $img.setAttribute('loading', 'eager');
           const $video = createTag('video', {
             playsinline: '',
             autoplay: '',
