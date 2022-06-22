@@ -143,6 +143,11 @@ main .floating-button-wrapper:first-of-type + .section {
     pointer-events: none;
     user-select: none;
   }
+
+  main .floating-button-wrapper.floating-button--hidden {
+    bottom: -151px;
+    opacity: 0.9;
+  }
 }
 
 @media screen and (max-width: 350px) {
