@@ -28,7 +28,7 @@ export async function createFloatingButton($a) {
   $floatButtonLink.classList.add('button', 'gradient', 'xlarge');
 
   // Hide CTAs on the page that are duplicates of the Floating CTA (in mobile/tablet)
-  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.textContent === $a.textContent);
+  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.textContent === $a.textContent || a.href === $a.href);
   sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
