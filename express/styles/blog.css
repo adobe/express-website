@@ -122,10 +122,6 @@
     text-align: left;
   }
   
-  :lang(ja).blog main .section h3 {
-    font-size: var(--heading-font-size-m);
-  }
-  
   .blog main .section h4 {
     text-align: left;
   }
@@ -182,3 +178,7 @@
     }
 }
   
+/* Japanese font sizing styles */
+:lang(ja).blog main .section h3 {
+  font-size: var(--heading-font-size-m);
+}

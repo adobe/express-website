@@ -405,38 +405,8 @@ main h1 {
   font-size: var(--heading-font-size-xxl);
 }
 
-:lang(ja) main h1.heading-long {
-  font-size: var(--heading-font-size-xl);
-}
-
-:lang(ja) main h1.heading-very-long {
-  font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main h1.heading-x-long {
-  font-size: var(--heading-font-size-l);
-}
-
 main h2 {
   font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main h2.heading-long {
-  font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main h2.heading-very-long {
-  font-size: var(--heading-font-size-l);
-}
-
-@media (max-width: 600px) {
-  :lang(ja) main h2.heading-very-long {
-    font-size: var(--heading-font-size-m);
-  }
-}
-
-:lang(ja) main h2.heading-x-long {
-  font-size: var(--heading-font-size-m);
 }
 
 main h3 {
@@ -936,4 +906,35 @@ wbr.wbr-off {
 main .section[data-section-status='loading'],
 main .section[data-section-status='initialized'] {
   display: none;
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main h1.heading-long {
+  font-size: var(--heading-font-size-xl);
+}
+
+:lang(ja) main h1.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h1.heading-x-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+@media (max-width: 600px) {
+  :lang(ja) main h2.heading-very-long {
+    font-size: var(--heading-font-size-m);
+  }
+}
+
+:lang(ja) main h2.heading-x-long {
+  font-size: var(--heading-font-size-m);
 }

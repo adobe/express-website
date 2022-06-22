@@ -119,34 +119,6 @@ main .columns h2.columns-heading-very-long {
   }
 }
 
-:lang(ja) main .columns h2.columns-heading-long {
-  font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main .columns h2.columns-heading-very-long {
-  font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main .columns h2.columns-heading-x-long {
-  font-size: var(--heading-font-size-m);
-}
-
-@media (min-width: 1200px) {
-  :lang(ja) main .columns h2.columns-heading-long {
-    font-size: var(--heading-font-size-xl);
-  }
-}
-
-@media (max-width: 600px) {
-  :lang(ja) main .columns h2 {
-    font-size: var(--heading-font-size-l);
-  }
-
-  :lang(ja) main .columns h2.columns-heading-very-long {
-    font-size: var(--heading-font-size-m);
-  }
-}
-
 main .columns h3 {
   font-size: var(--heading-font-size-l);
   line-height: 1.11;
@@ -777,5 +749,34 @@ main .columns.highlight .column.column-picture {
 
   main .columns .column:nth-child(2):not(.column-picture):not(.hero-animation-overlay) {
     padding-left: 16px;
+  }
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main .columns h2.columns-heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .columns h2.columns-heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .columns h2.columns-heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
+@media (min-width: 1200px) {
+  :lang(ja) main .columns h2.columns-heading-long {
+    font-size: var(--heading-font-size-xl);
+  }
+}
+
+@media (max-width: 600px) {
+  :lang(ja) main .columns h2 {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-very-long {
+    font-size: var(--heading-font-size-m);
   }
 }

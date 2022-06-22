@@ -106,22 +106,6 @@ main .hero-animation h1 {
   margin: 0 0 8px 0;
 }
 
-:lang(ja) main .hero-animation h1 {
-    font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main .hero-animation h1.heading-long {
-  font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main .hero-animation h1.heading-very-long {
-  font-size: var(--heading-font-size-m);
-}
-
-:lang(ja) main .hero-animation h1.heading-x-long {
-  font-size: var(--heading-font-size-m);
-}
-
 main .hero-animation .icon-adobe-creative-cloud-express {
   margin-top: 13px;
   height: 33px;
@@ -199,6 +183,23 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
   main .hero-animation-dark-container > div {
     max-width: 65%;
   }   
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main .hero-animation h1 {
+    font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-long {
+    font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-very-long {
+    font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) main .hero-animation h1.heading-x-long {
+    font-size: var(--heading-font-size-m);
 }
 
 
