@@ -504,12 +504,9 @@ loadScript(martechURL, () => {
     // Template button click
     if ($templateContainer) {
       adobeEventName += 'template:';
-
-      const $cardContainer = $a.closest('.template-list > div');
-      const $img = $cardContainer && $cardContainer.querySelector('img');
-      const alt = $img && $img.getAttribute('alt');
-
       sparkEventName = 'landing:templatePressed';
+
+      const $img = $a.querySelector('img');
 
       // try to get the image alternate text
       if ($a.classList.contains('template-title-link')) {
@@ -517,8 +514,8 @@ loadScript(martechURL, () => {
         sparkEventName = 'landing:templateViewAllPressed';
       } else if ($a.classList.contains('placeholder')) {
         adobeEventName += 'createFromScratch';
-      } else if (alt) {
-        adobeEventName += textToName(alt);
+      } else if ($img && $img.alt) {
+        adobeEventName += textToName($img.alt);
       } else {
         adobeEventName += 'Click';
       }
