@@ -71,12 +71,6 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
   return picture;
 }
 
-function textToName(text) {
-  const splits = text.toLowerCase().split(' ');
-  const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
-  return (camelCase);
-}
-
 async function fetchBlueprint(pathname) {
   if (window.spark.$blueprint) {
     return (window.spark.$blueprint);
