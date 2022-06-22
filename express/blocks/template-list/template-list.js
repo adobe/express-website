@@ -304,7 +304,7 @@ export default async function decorate($block) {
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
     /* carousel */
-    await buildCarousel(':scope > .template', $block, true);
+    buildCarousel(':scope > .template', $block, true);
   } else {
     addAnimationToggle($block);
   }
