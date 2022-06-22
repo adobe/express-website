@@ -32,7 +32,7 @@ export async function createFloatingButton($a) {
   sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
-  const $floatButtonWrapper = createTag('div', { class: 'floating-button-wrapper' });
+  const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper floating-button--no-transition' });
   const $floatButton = createTag('div', { class: 'floating-button' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
   $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
@@ -125,8 +125,10 @@ export async function createFloatingButton($a) {
       const entry = entries[0];
       if (entry.boundingClientRect.top > window.innerHeight - 40) {
         $floatButtonWrapper.classList.remove('floating-button--below-the-fold');
+        $floatButtonWrapper.classList.remove('floating-button--no-transition');
       } else {
         $floatButtonWrapper.classList.add('floating-button--below-the-fold');
+        $floatButtonWrapper.classList.remove('floating-button--no-transition');
       }
       if (entry.intersectionRatio > 0 || entry.isIntersecting) {
         $floatButtonWrapper.classList.add('floating-button--intersecting');
@@ -145,6 +147,8 @@ export async function createFloatingButton($a) {
         hideButtonWhenIntersecting.observe($heroCTA);
       });
     }
+  } else {
+    $floatButtonWrapper.classList.remove('floating-button--no-transition');
   }
 
   return $floatButtonWrapper;

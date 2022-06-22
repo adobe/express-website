@@ -28,6 +28,10 @@ main .floating-button-wrapper {
   transition: bottom 0.6s ease-out, opacity 0.6s ease-out;
 }
 
+main .floating-button-wrapper.floating-button--no-transition {
+  transition: none;
+}
+
 main .floating-button-wrapper.floating-button--hidden {
   bottom: -151px;
   opacity: 0.9;
