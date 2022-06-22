@@ -404,6 +404,46 @@ export function readBlockConfig($block) {
 }
 
 /**
+ * Decorates all sections in a container element.
+ * @param {Element} $main The container element
+ */
+export function decorateSections($main) {
+  $main.querySelectorAll(':scope > div').forEach((section) => {
+    const wrappers = [];
+    let defaultContent = false;
+    [...section.children].forEach((e) => {
+      if (e.tagName === 'DIV' || !defaultContent) {
+        const wrapper = document.createElement('div');
+        wrappers.push(wrapper);
+        defaultContent = e.tagName !== 'DIV';
+        if (defaultContent) wrapper.classList.add('default-content-wrapper');
+      }
+      wrappers[wrappers.length - 1].append(e);
+    });
+    wrappers.forEach((wrapper) => section.append(wrapper));
+    section.classList.add('section', 'section-wrapper'); // keep .section-wrapper for compatibility
+    section.setAttribute('data-section-status', 'initialized');
+
+    /* process section metadata */
+    const sectionMeta = section.querySelector('div.section-metadata');
+    if (sectionMeta) {
+      const meta = readBlockConfig(sectionMeta);
+      const keys = Object.keys(meta);
+      keys.forEach((key) => {
+        if (key === 'style') {
+          section.classList.add(toClassName(meta.style));
+        } else if (key === 'anchor') {
+          section.id = toClassName(meta.anchor);
+        } else {
+          section.dataset[key] = meta[key];
+        }
+      });
+      sectionMeta.remove();
+    }
+  });
+}
+
+/**
  * Updates all section status in a container element.
  * @param {Element} main The container element
  */
@@ -430,85 +470,6 @@ export function getLocale(url) {
     return locale;
   }
   return 'us';
-}
-
-function getJapaneseTextCharacterCount(text) {
-  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
-  const matches = text.matchAll(headingEngCharsRegEx);
-  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
-  const jtext = text.replaceAll(headingEngCharsRegEx, '');
-  const jCnt = jtext.length;
-  return eCnt * 0.57 + jCnt;
-}
-
-export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1, h2') {
-  const headings = $block.querySelectorAll(selector);
-  // Each threshold of JP should be smaller than other languages
-  // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 8 },
-      { name: 'very-long', threshold: 11 },
-      { name: 'x-long', threshold: 15 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
-  headings.forEach((h) => {
-    const length = getLocale(window.location) === 'jp'
-      ? getJapaneseTextCharacterCount(h.textContent)
-      : h.textContent.length;
-    // const { length } = h.textContent;
-    sizes.forEach((size) => {
-      if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
-    });
-  });
-}
-
-/**
- * Decorates all sections in a container element.
- * @param {Element} $main The container element
- */
-export function decorateSections($main) {
-  $main.querySelectorAll(':scope > div').forEach((section) => {
-    const wrappers = [];
-    let defaultContent = false;
-    [...section.children].forEach((e) => {
-      if (e.tagName === 'DIV' || !defaultContent) {
-        const wrapper = document.createElement('div');
-        wrappers.push(wrapper);
-        defaultContent = e.tagName !== 'DIV';
-        if (defaultContent) wrapper.classList.add('default-content-wrapper');
-      }
-      wrappers[wrappers.length - 1].append(e);
-      const isBlog = document.body.classList.contains('blog');
-      if (getLocale(window.location) === 'jp' && !isBlog && defaultContent) {
-        addHeaderSizing(wrappers[wrappers.length - 1], undefined, 'h1, :first-child:is(h2), :not(h1) ~ :is(h2)');
-      }
-    });
-    wrappers.forEach((wrapper) => section.append(wrapper));
-    section.classList.add('section', 'section-wrapper'); // keep .section-wrapper for compatibility
-    section.setAttribute('data-section-status', 'initialized');
-
-    /* process section metadata */
-    const sectionMeta = section.querySelector('div.section-metadata');
-    if (sectionMeta) {
-      const meta = readBlockConfig(sectionMeta);
-      const keys = Object.keys(meta);
-      keys.forEach((key) => {
-        if (key === 'style') {
-          section.classList.add(toClassName(meta.style));
-        } else if (key === 'anchor') {
-          section.id = toClassName(meta.anchor);
-        } else {
-          section.dataset[key] = meta[key];
-        }
-      });
-      sectionMeta.remove();
-    }
-  });
 }
 
 function getCookie(cname) {
@@ -1881,6 +1842,48 @@ async function wordBreakJapanese() {
   });
 }
 
+function getJapaneseTextCharacterCount(text) {
+  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
+  const matches = text.matchAll(headingEngCharsRegEx);
+  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
+  const jtext = text.replaceAll(headingEngCharsRegEx, '');
+  const jCnt = jtext.length;
+  return eCnt * 0.57 + jCnt;
+}
+
+export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1, h2') {
+  const headings = $block.querySelectorAll(selector);
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 8 },
+      { name: 'very-long', threshold: 11 },
+      { name: 'x-long', threshold: 15 },
+    ]
+    : [
+      { name: 'long', threshold: 30 },
+      { name: 'very-long', threshold: 40 },
+      { name: 'x-long', threshold: 50 },
+    ];
+  headings.forEach((h) => {
+    const length = getLocale(window.location) === 'jp'
+      ? getJapaneseTextCharacterCount(h.textContent)
+      : h.textContent.length;
+    sizes.forEach((size) => {
+      if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
+    });
+  });
+}
+
+function addJapaneseSectionHeaderSizing() {
+  if (getLocale(window.location) === 'jp') {
+    document.querySelectorAll('body:not(.blog) .section .default-content-wrapper').forEach((el) => {
+      addHeaderSizing(el);
+    });
+  }
+}
+
 /**
  * loads everything needed to get to LCP.
  */
@@ -1893,6 +1896,7 @@ async function loadEager() {
     await decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
+    addJapaneseSectionHeaderSizing();
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
