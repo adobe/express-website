@@ -122,15 +122,15 @@ export async function createFloatingButton($a) {
   const $heroCTA = $hero.querySelector('a.button.same-as-floating-button-CTA');
   if ($heroCTA) {
     const hideButtonWhenIntersecting = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      if (entry.boundingClientRect.top > window.innerHeight - 40) {
+      const $e = entries[0];
+      if ($e.boundingClientRect.top > window.innerHeight - 40 || $e.boundingClientRect.top === 0 ) {
         $floatButtonWrapper.classList.remove('floating-button--below-the-fold');
-        $floatButtonWrapper.classList.remove('floating-button--no-transition');
+        $floatButtonWrapper.classList.add('floating-button--above-the-fold');
       } else {
         $floatButtonWrapper.classList.add('floating-button--below-the-fold');
-        $floatButtonWrapper.classList.remove('floating-button--no-transition');
+        $floatButtonWrapper.classList.remove('floating-button--above-the-fold');
       }
-      if (entry.intersectionRatio > 0 || entry.isIntersecting) {
+      if ($e.intersectionRatio > 0 || $e.isIntersecting) {
         $floatButtonWrapper.classList.add('floating-button--intersecting');
       } else {
         $floatButtonWrapper.classList.remove('floating-button--intersecting');
@@ -148,7 +148,7 @@ export async function createFloatingButton($a) {
       });
     }
   } else {
-    $floatButtonWrapper.classList.remove('floating-button--no-transition');
+    $floatButtonWrapper.classList.add('floating-button--above-the-fold');
   }
 
   return $floatButtonWrapper;
