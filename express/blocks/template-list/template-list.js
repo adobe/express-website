@@ -222,8 +222,7 @@ export async function decorateTemplateList($block) {
 
   $block.querySelectorAll(':scope picture > img').forEach(($img) => {
     const { src, alt } = $img;
-    const eager = $block.classList.contains('horizontal');
-    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, eager, breakpoints));
+    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
   });
 
   // find the edit link and turn the template DIV into the A
