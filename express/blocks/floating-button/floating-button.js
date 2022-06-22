@@ -32,7 +32,7 @@ export async function createFloatingButton($a) {
   sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
-  const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper floating-button--no-transition' });
+  const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper' });
   const $floatButton = createTag('div', { class: 'floating-button' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
   $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
@@ -123,7 +123,7 @@ export async function createFloatingButton($a) {
   if ($heroCTA) {
     const hideButtonWhenIntersecting = new IntersectionObserver((entries) => {
       const $e = entries[0];
-      if ($e.boundingClientRect.top > window.innerHeight - 40 || $e.boundingClientRect.top === 0 ) {
+      if ($e.boundingClientRect.top > window.innerHeight - 40 || $e.boundingClientRect.top === 0) {
         $floatButtonWrapper.classList.remove('floating-button--below-the-fold');
         $floatButtonWrapper.classList.add('floating-button--above-the-fold');
       } else {
