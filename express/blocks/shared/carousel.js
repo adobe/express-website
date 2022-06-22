@@ -131,7 +131,19 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   const infinityScroll = ($children) => {
     const duplicateContent = () => {
       $children.forEach(($child) => {
-        $platform.append($child.cloneNode(true));
+        const $duplicate = $child.cloneNode(true);
+        const $duplicateLinks = $duplicate.querySelectorAll('a');
+        $platform.append($duplicate);
+
+        if ($duplicate.tagName.toLowerCase() === 'a') {
+          const linksPopulated = new CustomEvent('linkspopulated', { detail: [$duplicate] });
+          document.dispatchEvent(linksPopulated);
+        }
+
+        if ($duplicateLinks) {
+          const linksPopulated = new CustomEvent('linkspopulated', { detail: $duplicateLinks });
+          document.dispatchEvent(linksPopulated);
+        }
       });
     };
     // Duplicate children to simulate smooth scrolling
