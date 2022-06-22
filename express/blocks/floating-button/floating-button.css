@@ -109,28 +109,27 @@ main .floating-button-wrapper:first-of-type + .section {
 }
 
 @media screen and (min-width: 900px) {
-  main .floating-button-wrapper {
-    display: none;
-  }
-
-  main .floating-button-wrapper.floating-button--desktop {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-  }
-
-  main .floating-button-wrapper.floating-button--desktop.floating-button--above-the-fold {
-    bottom: -151px;
-    opacity: 0.9;
-  }
-
   main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
     display: inline-block;
   }
 
-  main .floating-button--desktop ~ .section > .default-content-wrapper a.button.same-as-floating-button-CTA {
-    display: none;
+  main .floating-button--below-the-fold .floating-button {
+    background-color: rgba(0,0,0,0);
+  }
+
+  main .floating-button--below-the-fold .floating-button a.button:any-link {
+    margin-right: 0;
+    min-width: 250px;
+  }
+
+  main .floating-button--below-the-fold .floating-button-lottie {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  main .floating-button-wrapper.floating-button--intersecting:not(.floating-button--clicked) {
+    bottom: -151px;
+    opacity: 0.9;
   }
 }
 

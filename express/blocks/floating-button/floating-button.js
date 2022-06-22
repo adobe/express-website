@@ -28,7 +28,7 @@ export async function createFloatingButton($a) {
   $floatButtonLink.classList.add('button', 'gradient', 'xlarge');
 
   // Hide CTAs on the page that are duplicates of the Floating CTA (in mobile/tablet)
-  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.href === $a.href && a.textContent === $a.textContent);
+  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.textContent === $a.textContent);
   sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
@@ -72,10 +72,12 @@ export async function createFloatingButton($a) {
     let clicked = false;
     $lottieScrollButton.addEventListener('click', () => {
       clicked = true;
+      $floatButtonWrapper.classList.add('floating-button--clicked');
       window.scrollTo({ top: $scrollAnchor.offsetTop, behavior: 'smooth' });
       const checkIfScrollToIsFinished = setInterval(() => {
         if ($scrollAnchor.offsetTop <= window.pageYOffset) {
           clicked = false;
+          $floatButtonWrapper.classList.remove('floating-button--clicked');
           clearInterval(checkIfScrollToIsFinished);
         }
       }, 200);
@@ -116,11 +118,44 @@ export async function createFloatingButton($a) {
     }
   }
 
+  const $hero = document.querySelector('div.section');
+  const $heroCTA = $hero.querySelector('a.button.same-as-floating-button-CTA');
+  if ($heroCTA) {
+    const hideButtonWhenIntersecting = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.boundingClientRect.top > window.innerHeight - 40) {
+        $floatButtonWrapper.classList.remove('floating-button--below-the-fold');
+      } else {
+        $floatButtonWrapper.classList.add('floating-button--below-the-fold');
+      }
+      if (entry.intersectionRatio > 0 || entry.isIntersecting) {
+        $floatButtonWrapper.classList.add('floating-button--intersecting');
+      } else {
+        $floatButtonWrapper.classList.remove('floating-button--intersecting');
+      }
+    }, {
+      root: null,
+      rootMargin: '-200px 0px -40px 0px',
+      threshold: 0,
+    });
+    if (document.readyState === 'complete') {
+      hideButtonWhenIntersecting.observe($heroCTA);
+    } else {
+      window.addEventListener('load', () => {
+        hideButtonWhenIntersecting.observe($heroCTA);
+      });
+    }
+  }
+
   return $floatButtonWrapper;
 }
 
 export default function decorateBlock($block) {
   const $a = $block.querySelector('a.button');
   createFloatingButton($a);
-  $block.remove();
+  const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
+  const emptySections = sections.filter((section) => section.childElementCount === 0);
+  emptySections.forEach((emptySection) => {
+    emptySection.remove();
+  });
 }
