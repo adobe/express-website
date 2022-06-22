@@ -929,12 +929,20 @@ main .section[data-section-status='initialized'] {
   font-size: var(--heading-font-size-l);
 }
 
+:lang(ja) main h2.heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
 @media (max-width: 600px) {
+  :lang(ja) main h2.heading-long {
+    font-size: var(--heading-font-size-l);
+  }
+
   :lang(ja) main h2.heading-very-long {
     font-size: var(--heading-font-size-m);
   }
-}
 
-:lang(ja) main h2.heading-x-long {
-  font-size: var(--heading-font-size-m);
+  :lang(ja) main h2.heading-x-long {
+    font-size: var(--heading-font-size-m);
+  }
 }
