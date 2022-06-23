@@ -71,60 +71,6 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
   return picture;
 }
 
-function textToName(text) {
-  const splits = text.toLowerCase().split(' ');
-  const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
-  return (camelCase);
-}
-
-function trackTemplateClick($a) {
-  /* eslint-disable no-underscore-dangle */
-  /* global digitalData _satellite */
-  let adobeEventName = 'adobe.com:express:cta:';
-  let sparkEventName;
-  const $templateContainer = $a.closest('.template-list');
-  let $cardContainer;
-  let $img;
-  let alt;
-
-  // Template button click
-  if ($templateContainer) {
-    adobeEventName += 'template:';
-
-    $cardContainer = $a.closest('.template-list > div');
-    $img = $cardContainer && $cardContainer.querySelector('img');
-    alt = $img && $img.getAttribute('alt');
-
-    // try to get the image alternate text
-    if ($a.classList.contains('placeholder')) {
-      adobeEventName += 'createFromScratch';
-    } else if (alt) {
-      adobeEventName += textToName(alt);
-    } else {
-      adobeEventName += 'Click';
-    }
-    const w = window.location.href;
-
-    sparkEventName = 'landing:templatePressed';
-
-    if (w.includes('/express-your-fandom')) {
-      const $templates = document.querySelectorAll('a.template');
-      const templateIndex = Array.from($templates).indexOf($a) + 1;
-      sparkEventName += `:${templateIndex}`;
-    }
-
-    digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-    digitalData._set('spark.eventData.eventName', sparkEventName);
-
-    _satellite.track('event', {
-      digitalData: digitalData._snapshot(),
-    });
-
-    digitalData._delete('primaryEvent.eventInfo.eventName');
-    digitalData._delete('spark.eventData.eventName');
-  }
-}
-
 async function fetchBlueprint(pathname) {
   if (window.spark.$blueprint) {
     return (window.spark.$blueprint);
@@ -248,10 +194,6 @@ export async function decorateTemplateList($block) {
       $tmplt = $a;
       $block.append($a);
 
-      $a.addEventListener('click', () => {
-        trackTemplateClick($a);
-      });
-
       // convert A to SPAN
       const $newLink = createTag('span', { class: 'template-link' });
       $newLink.append($link.textContent);
@@ -351,6 +293,10 @@ export async function decorateTemplateList($block) {
       $block.classList.add('template-list-complete');
     }
   }
+
+  const $templateLinks = $block.querySelectorAll('a.template');
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
+  document.dispatchEvent(linksPopulated);
 }
 
 export default async function decorate($block) {

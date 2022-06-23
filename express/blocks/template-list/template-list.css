@@ -175,7 +175,7 @@ main .template-list.sixcols .template {
 }
 
 main .template-list .template:not(.placeholder) > div:first-of-type {
-  /*overflow: hidden*/;
+  overflow: hidden;
   border-radius: 7px;
   line-height: 0;
 }

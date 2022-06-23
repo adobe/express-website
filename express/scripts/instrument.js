@@ -63,7 +63,7 @@ if (useAlloy) {
             (window.spark && window.spark.hostname === 'www.stage.adobe.com')
             || martech === 'alloy-qa'
           )
-            ? 'b2e000b1-98ab-4ade-8c4f-5823d84cf015:stage'
+            ? '0f6221fd-db23-4376-8ad7-8dc7c799032f'
             : 'b2e000b1-98ab-4ade-8c4f-5823d84cf015'
         ),
       },
@@ -310,6 +310,9 @@ loadScript(martechURL, () => {
   } else if (pathname.endsWith('/feature/video/convert/mov-to-mp4')) {
     set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/video-to-gif')) {
+    set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+    set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.endsWith('/feature/video/convert/wmv-to-mp4')) {
     set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
@@ -501,12 +504,30 @@ loadScript(martechURL, () => {
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
     // let cardPosition;
-
     // Template button click
     if ($templateContainer) {
-      // This behaviour was moved to the template-list.js
-      // This return statement prevents a double binding.
-      return;
+      adobeEventName += 'template:';
+      sparkEventName = 'landing:templatePressed';
+
+      const $img = $a.querySelector('img');
+
+      // try to get the image alternate text
+      if ($a.classList.contains('template-title-link')) {
+        adobeEventName += 'viewAll';
+        sparkEventName = 'landing:templateViewAllPressed';
+      } else if ($a.classList.contains('placeholder')) {
+        adobeEventName += 'createFromScratch';
+      } else if ($img && $img.alt) {
+        adobeEventName += textToName($img.alt);
+      } else {
+        adobeEventName += 'Click';
+      }
+
+      if (w.location.href.includes('/express-your-fandom')) {
+        const $templates = document.querySelectorAll('a.template');
+        const templateIndex = Array.from($templates).indexOf($a) + 1;
+        sparkEventName += `:${templateIndex}`;
+      }
       // Button in the FAQ
     } else if ($tutorialContainer) {
       const videoName = textToName($a.querySelector('h3').textContent);
@@ -841,15 +862,48 @@ loadScript(martechURL, () => {
       const adobeEventName = `adobe.com:express:cta:learn:columns:${e.detail.parameters.videoId}:videoClosed`;
       const sparkEventName = 'landing:videoClosed';
 
-      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-      digitalData._set('spark.eventData.eventName', sparkEventName);
+      if (useAlloy) {
+        _satellite.track('event', {
+          xdm: {},
+          data: {
+            eventType: 'web.webinteraction.linkClicks',
+            web: {
+              webInteraction: {
+                name: adobeEventName,
+                linkClicks: {
+                  value: 1,
+                },
+                type: 'other',
+              },
+            },
+            _adobe_corpnew: {
+              digitalData: {
+                primaryEvent: {
+                  eventInfo: {
+                    eventName: adobeEventName,
+                  },
+                },
+                spark: {
+                  eventData: {
+                    eventName: sparkEventName,
+                    sendTimestamp: new Date().getTime(),
+                  },
+                },
+              },
+            },
+          },
+        });
+      } else {
+        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+        digitalData._set('spark.eventData.eventName', sparkEventName);
 
-      _satellite.track('event', {
-        digitalData: digitalData._snapshot(),
-      });
+        _satellite.track('event', {
+          digitalData: digitalData._snapshot(),
+        });
 
-      digitalData._delete('primaryEvent.eventInfo.eventName');
-      digitalData._delete('spark.eventData.eventName');
+        digitalData._delete('primaryEvent.eventInfo.eventName');
+        digitalData._delete('spark.eventData.eventName');
+      }
     });
   }
 
