@@ -137,7 +137,7 @@ export async function createFloatingButton($a) {
       }
     }, {
       root: null,
-      rootMargin: '-200px 0px -40px 0px',
+      rootMargin: '-40px 0px -40px 0px',
       threshold: 0,
     });
     if (document.readyState === 'complete') {
