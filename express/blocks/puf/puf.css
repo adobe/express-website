@@ -73,8 +73,9 @@ main .block.puf .puf-card .puf-card-top h2 {
 }
 
 main .block.puf .puf-card .puf-card-top h2 strong {
-    font-size: var(--heading-font-size-xl);
+    font-size: var(--heading-font-size-xxl);
     font-weight: 800;
+    margin-top: -10px;
 }
 
 main .block.puf .puf-card .puf-card-top h2.jpy strong {
@@ -82,7 +83,9 @@ main .block.puf .puf-card .puf-card-top h2.jpy strong {
 }
 
 main .block.puf .puf-card .puf-card-top h3 svg {
-    margin-right: 20px;
+    margin-right: 10px;
+    width: 32px;
+    height: 32px;
 }
 
 main .block.puf .puf-card .puf-card-top a {
@@ -135,6 +138,9 @@ main .puf .puf-right {
 }
 
 @media (min-width: 900px) {
+    main .puf.block {
+        margin-bottom: 100px;
+    }
     main .puf.block .carousel-container {
         max-width: none;
         max-height: none !important;
@@ -143,10 +149,79 @@ main .puf .puf-right {
     main .block.puf .puf-card-container {
         display: block;
         width: auto;
-        padding: 0 16px;
+        padding: 30px 0 0 0;
     }
 
     main .block.puf .carousel-platform {
         margin: 0 auto;
+    }
+
+    main .block.puf .puf-card {
+        position: relative;
+        width: 610px;
+        margin: 0;
+        padding: 40px 60px;
+    }
+
+    main .block.puf .puf-card.puf-left {
+        border-radius: 20px 0 0 20px;
+        box-shadow: none;
+        border-top: 1px #E5E5E5 solid;
+        border-left: 1px #E5E5E5 solid;
+        border-bottom: 1px #E5E5E5 solid;
+        border-right: none;
+        margin-left: 20px;
+        min-height: 1200px;
+    }
+
+    main .block.puf .puf-card.puf-right {
+        border-radius: 0 0 20px 20px;
+        margin-right: 20px;
+        min-height: 1260px;
+    }
+
+    main .block.puf .puf-card .puf-card-banner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: -50px;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background-color: #EBCF2D;
+        border-radius: 20px 20px 0 0;
+    }
+
+    main .block.puf .puf-card .puf-card-top {
+        justify-content: flex-start;
+        min-height: 320px;
+    }
+
+    main .block.puf .puf-card .puf-card-top p {
+        text-align: left;
+    }
+
+    main .block.puf .puf-card .puf-card-bottom {
+        align-items: flex-start;
+    }
+
+    main .block.puf .puf-card .puf-card-bottom p {
+        display: flex;
+        align-items: center;
+        margin-bottom: 24px;
+        text-align: left;
+        font-size: 18px;
+    }
+
+    main .block.puf .puf-card .puf-card-bottom h6 {
+        text-align: left;
+    }
+
+    main .block.puf .puf-card .puf-card-bottom svg {
+        display: inline-block;
+        margin-right: 16px;
+        width: 44px;
+        height: 44px;
     }
 }

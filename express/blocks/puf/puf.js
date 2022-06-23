@@ -12,7 +12,6 @@
 import {
   addPublishDependencies,
   createTag,
-  fetchPlaceholders,
   getHelixEnv,
   getOffer,
   // eslint-disable-next-line import/no-unresolved
@@ -90,6 +89,8 @@ function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
   const url = new URL(window.location.href);
   const sparkTouchpoint = url.searchParams.get('touchpointName');
 
+  /* eslint-disable no-underscore-dangle */
+  /* global digitalData _satellite */
   digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
   digitalData._set('spark.eventData.eventName', sparkEventName);
   digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
@@ -203,15 +204,26 @@ async function selectPlan($card, planUrl, sendAnalyticEvent) {
 function decorateCard($block, cardClass) {
   const $cardContainer = createTag('div', { class: 'puf-card-container' });
   const $card = createTag('div', { class: `puf-card ${cardClass}` });
-  const $cardTop = $block.children[0].children[0];
-  const $cardBottom = $block.children[1].children[0];
-  const $cardCta = createTag('a', { class: 'button large reverse' });
+  const $cardBanner = $block.children[0].children[0];
+  const $cardTop = $block.children[1].children[0];
+  const $cardBottom = $block.children[2].children[0];
+  const $cardCta = createTag('a', { class: 'button large' });
 
+  if (cardClass === 'puf-left') {
+    $cardCta.classList.add('reverse');
+  }
+
+  $cardBanner.classList.add('puf-card-banner');
   $cardTop.classList.add('puf-card-top');
   $cardBottom.classList.add('puf-card-bottom');
 
+  $card.append($cardBanner);
   $card.append($cardTop);
   $card.append($cardBottom);
+
+  if (!$cardBanner.textContent) {
+    $cardBanner.style.display = 'none';
+  }
 
   const $svg = $cardTop.querySelector('svg');
   const $header = $cardTop.querySelector('h3');
