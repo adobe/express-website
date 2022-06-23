@@ -310,6 +310,9 @@ loadScript(martechURL, () => {
   } else if (pathname.endsWith('/feature/video/convert/mov-to-mp4')) {
     set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
+  } else if (pathname.endsWith('/feature/video/convert/video-to-gif')) {
+    set('spark.eventData.contextualData1', 'quickActionType:convertToGIF');
+    set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.endsWith('/feature/video/convert/wmv-to-mp4')) {
     set('spark.eventData.contextualData1', 'quickActionType:convertToMP4');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
