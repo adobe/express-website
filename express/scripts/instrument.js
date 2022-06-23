@@ -501,12 +501,30 @@ loadScript(martechURL, () => {
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
     // let cardPosition;
-
     // Template button click
     if ($templateContainer) {
-      // This behaviour was moved to the template-list.js
-      // This return statement prevents a double binding.
-      return;
+      adobeEventName += 'template:';
+      sparkEventName = 'landing:templatePressed';
+
+      const $img = $a.querySelector('img');
+
+      // try to get the image alternate text
+      if ($a.classList.contains('template-title-link')) {
+        adobeEventName += 'viewAll';
+        sparkEventName = 'landing:templateViewAllPressed';
+      } else if ($a.classList.contains('placeholder')) {
+        adobeEventName += 'createFromScratch';
+      } else if ($img && $img.alt) {
+        adobeEventName += textToName($img.alt);
+      } else {
+        adobeEventName += 'Click';
+      }
+
+      if (w.location.href.includes('/express-your-fandom')) {
+        const $templates = document.querySelectorAll('a.template');
+        const templateIndex = Array.from($templates).indexOf($a) + 1;
+        sparkEventName += `:${templateIndex}`;
+      }
       // Button in the FAQ
     } else if ($tutorialContainer) {
       const videoName = textToName($a.querySelector('h3').textContent);
