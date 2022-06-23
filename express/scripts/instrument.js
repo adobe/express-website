@@ -63,7 +63,7 @@ if (useAlloy) {
             (window.spark && window.spark.hostname === 'www.stage.adobe.com')
             || martech === 'alloy-qa'
           )
-            ? 'b2e000b1-98ab-4ade-8c4f-5823d84cf015:stage'
+            ? '0f6221fd-db23-4376-8ad7-8dc7c799032f'
             : 'b2e000b1-98ab-4ade-8c4f-5823d84cf015'
         ),
       },
@@ -862,15 +862,48 @@ loadScript(martechURL, () => {
       const adobeEventName = `adobe.com:express:cta:learn:columns:${e.detail.parameters.videoId}:videoClosed`;
       const sparkEventName = 'landing:videoClosed';
 
-      digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-      digitalData._set('spark.eventData.eventName', sparkEventName);
+      if (useAlloy) {
+        _satellite.track('event', {
+          xdm: {},
+          data: {
+            eventType: 'web.webinteraction.linkClicks',
+            web: {
+              webInteraction: {
+                name: adobeEventName,
+                linkClicks: {
+                  value: 1,
+                },
+                type: 'other',
+              },
+            },
+            _adobe_corpnew: {
+              digitalData: {
+                primaryEvent: {
+                  eventInfo: {
+                    eventName: adobeEventName,
+                  },
+                },
+                spark: {
+                  eventData: {
+                    eventName: sparkEventName,
+                    sendTimestamp: new Date().getTime(),
+                  },
+                },
+              },
+            },
+          },
+        });
+      } else {
+        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+        digitalData._set('spark.eventData.eventName', sparkEventName);
 
-      _satellite.track('event', {
-        digitalData: digitalData._snapshot(),
-      });
+        _satellite.track('event', {
+          digitalData: digitalData._snapshot(),
+        });
 
-      digitalData._delete('primaryEvent.eventInfo.eventName');
-      digitalData._delete('spark.eventData.eventName');
+        digitalData._delete('primaryEvent.eventInfo.eventName');
+        digitalData._delete('spark.eventData.eventName');
+      }
     });
   }
 
