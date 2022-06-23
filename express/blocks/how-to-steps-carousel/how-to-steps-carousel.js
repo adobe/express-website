@@ -58,7 +58,7 @@ function activate(block, target) {
       if (imgHeight < panelHeight) {
         container.classList.add('no-cover');
       } else {
-        picture.style.height = `${panelHeight}px`;
+        picture.style.height = `${panelHeight || imgHeight}px`;
       }
     }
 
@@ -97,10 +97,26 @@ export default function decorate(block) {
   const document = block.ownerDocument;
 
   // move first image of container outside of div for styling
-  const picture = block.parentElement.querySelector('picture');
+  const section = block.closest('.section');
+  const picture = section.querySelector('picture');
   const parent = picture.parentElement;
-  block.parentElement.before(picture);
+  section.prepend(picture);
   parent.remove();
+
+  // join wrappers together
+  section.querySelectorAll('.default-content-wrapper').forEach((wrapper, i) => {
+    if (i === 0) {
+      // add block to first wrapper
+      const blockWrapper = block.parentElement;
+      wrapper.append(block);
+      wrapper.className = '';
+      blockWrapper.remove();
+    } else if (i >= 1) {
+      // add children from rest of wrappers to first wrapper
+      wrapper.previousSibling.append(...wrapper.children);
+      wrapper.remove();
+    }
+  });
 
   const howto = block;
   const rows = Array.from(howto.children);
@@ -119,11 +135,9 @@ export default function decorate(block) {
 
     const h3 = createTag('h3');
     h3.innerHTML = cells[0].textContent;
-    const p = createTag('p');
-    p.innerHTML = cells[1].textContent;
     const text = createTag('div', { class: 'tip-text' });
     text.append(h3);
-    text.append(p);
+    text.append(cells[1]);
 
     row.innerHTML = '';
     row.append(text);

@@ -41,6 +41,8 @@ function createTutorialCard(title, url, time, $picture) {
   });
   $card.appendChild($cardTop);
   $card.appendChild($cardBottom);
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: [$card] });
+  document.dispatchEvent(linksPopulated);
   return ($card);
 }
 

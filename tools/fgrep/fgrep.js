@@ -63,7 +63,7 @@ function updateStatus() {
 }
 
 async function fgrep(pathname, pattern) {
-  const resp = await fetch(pathname);
+  const resp = await fetch(pathname, { redirect: 'manual' });
   const text = await resp.text();
   let found = false;
   if (text.indexOf(pattern) >= 0) {

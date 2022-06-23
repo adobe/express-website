@@ -11,6 +11,8 @@
  */
 /* eslint-disable no-console */
 
+window.RUM_GENERATION = 'ccx-gen-3';
+
 /**
  * log RUM if part of the sample.
  * @param {string} checkpoint identifies the checkpoint in funnel
@@ -34,32 +36,94 @@ export function sampleRUM(checkpoint, data = {}) {
     const { random, weight, id } = window.hlx.rum;
     if (random && (random * weight < 1)) {
       const sendPing = () => {
-        // eslint-disable-next-line object-curly-newline
-        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: 'ccx-gen2', checkpoint, ...data });
-        const url = `https://rum.hlx3.page/.rum/${weight}`;
+        // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
+        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: window.RUM_GENERATION, checkpoint, ...data });
+        const url = `https://rum.hlx.page/.rum/${weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
       };
       sendPing();
       // special case CWV
       if (checkpoint === 'cwv') {
-        // eslint-disable-next-line import/no-unresolved
-        import('https://unpkg.com/web-vitals?module').then((mod) => {
+        // use classic script to avoid CORS issues
+        const script = document.createElement('script');
+        script.src = 'https://rum.hlx.page/.rum/web-vitals/dist/web-vitals.iife.js';
+        script.onload = () => {
           const storeCWV = (measurement) => {
             data.cwv = {};
             data.cwv[measurement.name] = measurement.value;
             sendPing();
           };
-          mod.getCLS(storeCWV);
-          mod.getFID(storeCWV);
-          mod.getLCP(storeCWV);
-        });
+          // When loading `web-vitals` using a classic script, all the public
+          // methods can be found on the `webVitals` global namespace.
+          window.webVitals.getCLS(storeCWV);
+          window.webVitals.getFID(storeCWV);
+          window.webVitals.getLCP(storeCWV);
+        };
+        document.head.appendChild(script);
       }
     }
   } catch (e) {
     // something went wrong
   }
 }
+
+sampleRUM.mediaobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting)
+    .forEach((entry) => {
+      sampleRUM.mediaobserver.unobserve(entry.target); // observe only once
+      const target = sampleRUM.targetselector(entry.target);
+      const source = sampleRUM.sourceselector(entry.target);
+      sampleRUM('viewmedia', { target, source });
+    });
+}, { threshold: 0.25 }) : { observe: () => { } };
+
+sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting)
+    .forEach((entry) => {
+      sampleRUM.blockobserver.unobserve(entry.target); // observe only once
+      const target = sampleRUM.targetselector(entry.target);
+      const source = sampleRUM.sourceselector(entry.target);
+      sampleRUM('viewblock', { target, source });
+    });
+}, { threshold: 0.25 }) : { observe: () => { } };
+
+sampleRUM.observe = ((elements) => {
+  elements.forEach((element) => {
+    if (element.tagName.toLowerCase() === 'img'
+      || element.tagName.toLowerCase() === 'video'
+      || element.tagName.toLowerCase() === 'audio'
+      || element.tagName.toLowerCase() === 'iframe') {
+      sampleRUM.mediaobserver.observe(element);
+    } else {
+      sampleRUM.blockobserver.observe(element);
+    }
+  });
+});
+
+sampleRUM.sourceselector = (element) => {
+  if (element === document.body || element === document.documentElement || !element) {
+    return undefined;
+  }
+  if (element.id) {
+    return `#${element.id}`;
+  }
+  if (element.getAttribute('data-block-name')) {
+    return `.${element.getAttribute('data-block-name')}`;
+  }
+  return sampleRUM.sourceselector(element.parentElement);
+};
+
+sampleRUM.targetselector = (element) => {
+  let value = element.getAttribute('href') || element.currentSrc || element.getAttribute('src');
+  if (value && value.startsWith('https://')) {
+    // resolve relative links
+    value = new URL(value, window.location).href;
+  }
+  return value;
+};
 
 sampleRUM('top');
 window.addEventListener('load', () => sampleRUM('load'));
@@ -103,7 +167,7 @@ export function getMeta(name) {
     const nameAttr = $m.getAttribute('name');
     const propertyAttr = $m.getAttribute('property');
     return ((nameAttr && nameLower === nameAttr.toLowerCase())
-    || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+      || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
   });
   if ($metas[0]) value = $metas[0].getAttribute('content');
   return value;
@@ -198,6 +262,7 @@ export function getIcon(icons, alt, size = 44) {
     'mergevideo',
     'mobile-round',
     'muteaudio',
+    'palette',
     'photos',
     'photoeffects',
     'pinterest',
@@ -206,6 +271,7 @@ export function getIcon(icons, alt, size = 44) {
     'pricingfree',
     'pricingpremium',
     'privacy',
+    'qr-code',
     'remove-background',
     'resize',
     'resize-video',
@@ -306,17 +372,96 @@ export function linkImage($elem) {
   }
 }
 
-function wrapSections($sections) {
-  $sections.forEach(($div) => {
-    if ($div.textContent.trim() === '' && !$div.firstElementChild) {
-      // remove empty sections (neither text nor child elements)
-      $div.remove();
-    } else if (!$div.id) {
-      const $wrapper = createTag('div', { class: 'section-wrapper' });
-      $div.parentNode.appendChild($wrapper);
-      $wrapper.appendChild($div);
+export function readBlockConfig($block) {
+  const config = {};
+  $block.querySelectorAll(':scope>div').forEach(($row) => {
+    if ($row.children) {
+      const $cols = [...$row.children];
+      if ($cols[1]) {
+        const $value = $cols[1];
+        const name = toClassName($cols[0].textContent);
+        let value = '';
+        if ($value.querySelector('a')) {
+          const $as = [...$value.querySelectorAll('a')];
+          if ($as.length === 1) {
+            value = $as[0].href;
+          } else {
+            value = $as.map(($a) => $a.href);
+          }
+        } else if ($value.querySelector('p')) {
+          const $ps = [...$value.querySelectorAll('p')];
+          if ($ps.length === 1) {
+            value = $ps[0].textContent;
+          } else {
+            value = $ps.map(($p) => $p.textContent);
+          }
+        } else value = $row.children[1].textContent;
+        config[name] = value;
+      }
     }
   });
+  return config;
+}
+
+/**
+ * Decorates all sections in a container element.
+ * @param {Element} $main The container element
+ */
+export function decorateSections($main) {
+  $main.querySelectorAll(':scope > div').forEach((section) => {
+    const wrappers = [];
+    let defaultContent = false;
+    [...section.children].forEach((e) => {
+      if (e.tagName === 'DIV' || !defaultContent) {
+        const wrapper = document.createElement('div');
+        wrappers.push(wrapper);
+        defaultContent = e.tagName !== 'DIV';
+        if (defaultContent) wrapper.classList.add('default-content-wrapper');
+      }
+      wrappers[wrappers.length - 1].append(e);
+    });
+    wrappers.forEach((wrapper) => section.append(wrapper));
+    section.classList.add('section', 'section-wrapper'); // keep .section-wrapper for compatibility
+    section.setAttribute('data-section-status', 'initialized');
+
+    /* process section metadata */
+    const sectionMeta = section.querySelector('div.section-metadata');
+    if (sectionMeta) {
+      const meta = readBlockConfig(sectionMeta);
+      const keys = Object.keys(meta);
+      keys.forEach((key) => {
+        if (key === 'style') {
+          section.classList.add(toClassName(meta.style));
+        } else if (key === 'anchor') {
+          section.id = toClassName(meta.anchor);
+        } else {
+          section.dataset[key] = meta[key];
+        }
+      });
+      sectionMeta.remove();
+    }
+  });
+}
+
+/**
+ * Updates all section status in a container element.
+ * @param {Element} main The container element
+ */
+export function updateSectionsStatus(main) {
+  const sections = [...main.querySelectorAll(':scope > div.section')];
+  for (let i = 0; i < sections.length; i += 1) {
+    const section = sections[i];
+    const status = section.getAttribute('data-section-status');
+    if (status !== 'loaded') {
+      const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+      if (loadingBlock) {
+        section.setAttribute('data-section-status', 'loading');
+        break;
+      } else {
+        section.setAttribute('data-section-status', 'loaded');
+      }
+    }
+  }
 }
 
 export function getLocale(url) {
@@ -623,39 +768,91 @@ function resolveFragments() {
     });
 }
 
-export function decorateBlocks($main) {
-  $main.querySelectorAll('div.section-wrapper > div > div').forEach(($block) => {
-    const classes = Array.from($block.classList.values());
-    let blockName = classes[0];
-    if (!blockName) return;
-    const $section = $block.closest('.section-wrapper');
-    if ($section) {
-      $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
-    }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns', 'ratings'];
+const blocksWithOptions = [
+  'checker-board',
+  'template-list',
+  'steps',
+  'cards',
+  'quotes',
+  'page-list',
+  'link-list',
+  'hero-animation',
+  'columns',
+  'show-section-only',
+  'image-list',
+  'feature-list',
+  'icon-list',
+  'table-of-contents',
+  'how-to-steps',
+  'banner',
+  'pricing-columns',
+  'ratings',
+];
 
-    if (blockName !== 'how-to-steps-carousel') {
+/**
+ * Decorates a block.
+ * @param {Element} block The block element
+ */
+export function decorateBlock(block) {
+  const blockName = block.classList[0];
+  if (blockName) {
+    let shortBlockName = blockName;
+    block.classList.add('block');
+    // begin CCX custom block option class handling
+    if (shortBlockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
-        if (blockName.startsWith(`${b}-`)) {
-          const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-          blockName = b;
-          $block.classList.add(b);
-          $block.classList.add(...options);
+        if (shortBlockName.startsWith(`${b}-`)) {
+          const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+          shortBlockName = b;
+          block.classList.add(b);
+          block.classList.add(...options);
         }
       });
     }
-    $block.classList.add('block');
-    $block.setAttribute('data-block-name', blockName);
-    $block.setAttribute('data-block-status', 'initialized');
-  });
+    // end CCX custom block option class handling
+    block.setAttribute('data-block-name', shortBlockName);
+    block.setAttribute('data-block-status', 'initialized');
+    const blockWrapper = block.parentElement;
+    blockWrapper.classList.add(`${shortBlockName}-wrapper`);
+    const section = block.closest('.section');
+    if (section) section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
+  }
+}
+
+/**
+ * Decorates all blocks in a container element.
+ * @param {Element} main The container element
+ */
+export function decorateBlocks(main) {
+  main
+    .querySelectorAll('div.section > div > div')
+    .forEach((block) => decorateBlock(block));
 }
 
 function decorateMarqueeColumns($main) {
   // flag first columns block in first section block as marquee
-  const $firstColumnsBlock = $main.querySelector('.section-wrapper:first-of-type .columns:first-of-type');
+  const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
   if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
+  }
+}
+
+/**
+ * scroll to hash
+ */
+
+export function scrollToHash() {
+  const { hash } = window.location;
+  if (hash) {
+    const elem = document.querySelector(hash);
+    if (elem) {
+      setTimeout(() => {
+        elem.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth',
+        });
+      }, 500);
+    }
   }
 }
 
@@ -667,18 +864,30 @@ export async function loadBlock(block, eager = false) {
   if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
+    let cssPath = `/express/blocks/${blockName}/${blockName}.css`;
+    let jsPath = `/express/blocks/${blockName}/${blockName}.js`;
+
+    if (window.hlx.experiment && window.hlx.experiment.run) {
+      const { experiment } = window.hlx;
+      if (experiment.blocks.includes(blockName)) {
+        cssPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.css`;
+        jsPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.js`;
+      }
+    }
+
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(cssPath, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(jsPath);
             if (mod.default) {
               await mod.default(block, blockName, document, eager);
             }
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.log(`failed to load module for ${blockName}`, err);
           }
           resolve();
@@ -686,15 +895,26 @@ export async function loadBlock(block, eager = false) {
       });
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(`failed to load block ${blockName}`, err);
     }
     block.setAttribute('data-block-status', 'loaded');
   }
 }
-export function loadBlocks($main) {
-  const blockPromises = [...$main.querySelectorAll('div.section-wrapper > div > .block')]
-    .map(($block) => loadBlock($block));
-  return blockPromises;
+
+/**
+ * Loads JS and CSS for all blocks in a container element.
+ * @param {Element} main The container element
+ */
+export async function loadBlocks(main) {
+  updateSectionsStatus(main);
+  const blocks = [...main.querySelectorAll('div.block')];
+  for (let i = 0; i < blocks.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await loadBlock(blocks[i]);
+    updateSectionsStatus(main);
+  }
+  return blocks;
 }
 
 export function loadScript(url, callback, type) {
@@ -706,65 +926,6 @@ export function loadScript(url, callback, type) {
   $head.append($script);
   $script.onload = callback;
   return $script;
-}
-
-// async function loadLazyFooter() {
-//   const resp = await fetch('/lazy-footer.plain.html');
-//   const inner = await resp.text();
-//   const $footer = document.querySelector('footer');
-//   $footer.innerHTML = inner;
-//   $footer.querySelectorAll('a').forEach(($a) => {
-//     const url = new URL($a.href);
-//     if (url.hostname === 'spark.adobe.com') {
-//       const slash = url.pathname.endsWith('/') ? 1 : 0;
-//       $a.href = url.pathname.substr(0, url.pathname.length - slash);
-//     }
-//   });
-//   wrapSections('footer>div');
-//   addDivClasses($footer, 'footer > div', ['dark', 'grey', 'grey']);
-//   const $div = createTag('div', { class: 'hidden' });
-//   const $dark = document.querySelector('footer .dark>div');
-
-//   Array.from($dark.children).forEach(($e, i) => {
-//     if (i) $div.append($e);
-//   });
-
-//   $dark.append($div);
-
-//   $dark.addEventListener('click', () => {
-//     $div.classList.toggle('hidden');
-//   });
-// }
-
-export function readBlockConfig($block) {
-  const config = {};
-  $block.querySelectorAll(':scope>div').forEach(($row) => {
-    if ($row.children) {
-      const $cols = [...$row.children];
-      if ($cols[1]) {
-        const $value = $cols[1];
-        const name = toClassName($cols[0].textContent);
-        let value = '';
-        if ($value.querySelector('a')) {
-          const $as = [...$value.querySelectorAll('a')];
-          if ($as.length === 1) {
-            value = $as[0].href;
-          } else {
-            value = $as.map(($a) => $a.href);
-          }
-        } else if ($value.querySelector('p')) {
-          const $ps = [...$value.querySelectorAll('p')];
-          if ($ps.length === 1) {
-            value = $ps[0].textContent;
-          } else {
-            value = $ps.map(($p) => $p.textContent);
-          }
-        } else value = $row.children[1].textContent;
-        config[name] = value;
-      }
-    }
-  });
-  return config;
 }
 
 export function getMetadata(name) {
@@ -814,7 +975,7 @@ function addPromotion() {
       };
       // insert promotion at the bottom
       if (promos[category]) {
-        const $promoSection = createTag('div', { class: 'section-wrapper' });
+        const $promoSection = createTag('div', { class: '.section' });
         $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));
@@ -860,7 +1021,7 @@ function decoratePageStyle() {
     loadCSS('/express/styles/blog.css');
   } else {
     // eslint-disable-next-line no-lonely-if
-    if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+    if ($h1 && !$h1.closest('.section > div > div ')) {
       const $heroPicture = $h1.parentElement.querySelector('picture');
       let $heroSection;
       const $main = document.querySelector('main');
@@ -874,9 +1035,9 @@ function decoratePageStyle() {
         $div.append($h1);
         $main.prepend($heroSection);
       } else {
-        $heroSection = $h1.closest('.section-wrapper');
+        $heroSection = $h1.closest('.section');
         $heroSection.classList.add('hero');
-        $heroSection.classList.remove('section-wrapper');
+        $heroSection.classList.remove('section');
       }
       if ($heroPicture) {
         if (!isBlog) {
@@ -914,9 +1075,14 @@ export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
     const originalHref = $a.href;
+    if ($a.children.length > 0) {
+      // We can use this to eliminate styling so only text
+      // propagates to buttons.
+      $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
+    }
     $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
-    const $block = $a.closest('div.section-wrapper > div > div');
+    const $block = $a.closest('div.section > div > div');
     let blockName;
     if ($block) {
       blockName = $block.className;
@@ -933,12 +1099,12 @@ export function decorateButtons(block = document) {
           $up.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
         }
@@ -979,78 +1145,247 @@ export function checkTesting() {
   return (getMeta('testing').toLowerCase() === 'on');
 }
 
-async function decorateTesting() {
-  let runTest = true;
-  // let reason = '';
-  const usp = new URLSearchParams(window.location.search);
-  const martech = usp.get('martech');
-  if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-    // eslint-disable-next-line no-console
-    console.log('rushing martech');
-    loadScript('/express/scripts/instrument.js', null, 'module');
-  }
+/**
+ * Sanitizes a string and turns it into camel case.
+ * @param {*} name The unsanitized string
+ * @returns {string} The camel cased string
+ */
+export function toCamelCase(name) {
+  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
 
-  if (!window.location.host.includes('adobe.com')) {
-    runTest = false;
+/**
+ * Gets the experiment name, if any for the page based on env, useragent, queyr params
+ * @returns {string} experimentid
+ */
+export function getExperiment() {
+  let experiment = getMeta('experiment').toLowerCase();
+
+  if (!window.location.host.includes('adobe.com') && !window.location.host.includes('.hlx.live')) {
+    experiment = '';
     // reason = 'not prod host';
   }
   if (window.location.hash) {
-    runTest = false;
+    experiment = '';
     // reason = 'suppressed by #';
   }
-  if (window.location.search === '?test') {
-    runTest = true;
-  }
+
   if (navigator.userAgent.match(/bot|crawl|spider/i)) {
-    runTest = false;
+    experiment = '';
     // reason = 'bot detected';
   }
 
-  if (runTest) {
-    let $testTable;
-    document.querySelectorAll('table th').forEach(($th) => {
-      if ($th.textContent.toLowerCase().trim() === 'a/b test') {
-        $testTable = $th.closest('table');
-      }
+  const usp = new URLSearchParams(window.location.search);
+  if (usp.has('experiment')) {
+    [experiment] = usp.get('experiment').split('/');
+  }
+
+  return experiment;
+}
+/**
+ * Gets experiment config from the manifest and transforms it to more
+ * easily consumable structure.
+ *
+ * the manifest consists of two sheets "settings" and "experiences"
+ *
+ * "settings" is applicable to the entire test and contains information
+ * like "Audience", "Status" or "Blocks".
+ *
+ * "experience" hosts the experiences in columns, consisting of:
+ * a "Percentage Split", "Label" and a set of "Pages".
+ *
+ *
+ * @param {string} experimentid
+ * @returns {object} containing the experiment manifest
+ */
+export async function fetchExperimentConfig(experiment) {
+  const path = `/express/experiments/${experiment}/manifest.json`;
+  try {
+    const config = {};
+    const resp = await fetch(path);
+    const json = await resp.json();
+    json.settings.data.forEach((line) => {
+      const key = toCamelCase(line.Name);
+      let value = line.Value;
+      if (key === 'blocks') value = value.split(',').map((e) => e.trim().toLowerCase());
+      config[key] = value;
+    });
+    config.id = experiment;
+
+    const variants = {};
+    let variantNames = Object.keys(json.experiences.data[0]);
+    variantNames.shift();
+    variantNames = variantNames.map((vn) => toCamelCase(vn));
+    variantNames.forEach((variantName) => {
+      variants[variantName] = {};
     });
 
-    const testSetup = [];
+    let lastKey = 'default';
 
-    if ($testTable) {
-      $testTable.querySelectorAll('tr').forEach(($row) => {
-        const $name = $row.children[0];
-        const $percentage = $row.children[1];
-        const $a = $name.querySelector('a');
-        if ($a) {
-          const url = new URL($a.href);
-          testSetup.push({
-            url: url.pathname,
-            traffic: parseFloat($percentage.textContent) / 100.0,
-          });
+    json.experiences.data.forEach((line) => {
+      let key = toCamelCase(line.Name);
+      if (!key) key = lastKey;
+      lastKey = key;
+      const vns = Object.keys(line);
+      vns.shift();
+      vns.forEach((vn) => {
+        const camelVN = toCamelCase(vn);
+        if (key === 'pages') {
+          variants[camelVN][key] = variants[camelVN][key] || [];
+          variants[camelVN][key].push(new URL(line[vn]).pathname);
+        } else {
+          variants[camelVN][key] = line[vn];
         }
       });
-    }
-
-    let test = Math.random();
-    let selectedUrl = '';
-    testSetup.forEach((e) => {
-      if (test >= 0 && test < e.traffic) {
-        selectedUrl = e.url;
-      }
-      test -= e.traffic;
     });
+    config.variants = variants;
+    config.variantNames = variantNames;
+    console.log(config);
+    return config;
+  } catch (e) {
+    console.log(`error loading experiment manifest: ${path}`, e);
+  }
+  return null;
+}
 
-    if (selectedUrl) {
-      // eslint-disable-next-line no-console
-      console.log(selectedUrl);
-      const plainUrl = `${selectedUrl.replace('.html', '')}.plain.html`;
-      const resp = await fetch(plainUrl);
-      const html = await resp.text();
-      document.querySelector('main').innerHTML = html;
+/**
+ * Replaces element with content from path
+ * @param {string} path
+ * @param {HTMLElement} element
+ */
+async function replaceInner(path, element) {
+  const plainPath = `${path}.plain.html`;
+  try {
+    const resp = await fetch(plainPath);
+    const html = await resp.text();
+    element.innerHTML = html;
+  } catch (e) {
+    console.log(`error loading experiment content: ${plainPath}`, e);
+  }
+  return null;
+}
+
+/**
+ * this is an extensible stub to take on audience mappings
+ * @param {string} audience
+ * @return {boolean} is member of this audience
+ */
+
+function checkExperimentAudience(audience) {
+  if (audience === 'mobile') {
+    return window.innerWidth < 600;
+  }
+  if (audience === 'desktop') {
+    return window.innerWidth > 600;
+  }
+  return true;
+}
+
+/**
+ * gets the variant id that this visitor has been assigned to if any
+ * @param {string} experimentId
+ * @return {string} assigned variant or empty string if none set
+ */
+
+function getLastExperimentVariant(experimentId) {
+  console.log('get last experiment', experimentId);
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  if (experimentsStr) {
+    const experiments = JSON.parse(experimentsStr);
+    if (experiments[experimentId]) {
+      return experiments[experimentId].variant;
     }
-  } else {
-    // eslint-disable-next-line no-console
-    // console.log(`Test is not run => ${reason}`);
+  }
+  return '';
+}
+
+/**
+ * sets/updates the variant id that is assigned to this visitor,
+ * also cleans up old variant ids
+ * @param {string} experimentId
+ * @param {variant} variant
+ */
+
+function setLastExperimentVariant(experimentId, variant) {
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  const experiments = experimentsStr ? JSON.parse(experimentsStr) : {};
+
+  const now = new Date();
+  const expKeys = Object.keys(experiments);
+  expKeys.forEach((key) => {
+    const date = new Date(experiments[key].date);
+    if (now - date > (1000 * 86400 * 30)) {
+      delete experiments[key];
+    }
+  });
+  const [date] = now.toISOString().split('T');
+
+  experiments[experimentId] = { variant, date };
+  localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
+}
+
+/**
+ * checks if a test is active on this page and if so executes the test
+ */
+async function decorateTesting() {
+  try {
+    // let reason = '';
+    const usp = new URLSearchParams(window.location.search);
+    const martech = usp.get('martech');
+    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+      // eslint-disable-next-line no-console
+      console.log('rushing martech');
+      loadScript('/express/scripts/instrument.js', null, 'module');
+    }
+
+    const experiment = getExperiment();
+    const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
+
+    if (experiment) {
+      console.log('experiment', experiment);
+      const config = await fetchExperimentConfig(experiment);
+      console.log(config);
+      if (toCamelCase(config.status) === 'active') {
+        config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
+        console.log('run', config.run, config.audience);
+
+        window.hlx = window.hlx || {};
+        window.hlx.experiment = config;
+        if (config.run && config.content) {
+          const forced = forcedVariant || getLastExperimentVariant(config.id);
+          if (forced && config.variantNames.includes(forced)) {
+            config.selectedVariant = forced;
+          } else {
+            let random = Math.random();
+            let i = config.variantNames.length;
+            while (random > 0 && i > 0) {
+              i -= 1;
+              console.log(random, i);
+              random -= +config.variants[config.variantNames[i]].percentageSplit;
+            }
+            config.selectedVariant = config.variantNames[i];
+          }
+          setLastExperimentVariant(config.id, config.selectedVariant);
+          sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
+          console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          if (config.selectedVariant !== 'control') {
+            const currentPath = window.location.pathname;
+            const pageIndex = config.variants.control.pages.indexOf(currentPath);
+            if (pageIndex >= 0) {
+              const page = config.variants[config.selectedVariant].pages[pageIndex];
+              if (page) {
+                const experimentPath = new URL(page, window.location.href).pathname.split('.')[0];
+                if (experimentPath && experimentPath !== currentPath) {
+                  await replaceInner(experimentPath, document.querySelector('main'));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log('error testing', e);
   }
 }
 
@@ -1084,9 +1419,11 @@ export async function fixIcons(block = document) {
         const $block = $picture.closest('.block');
         let size = 44;
         if ($block) {
-          const smallIconBlocks = ['columns'];
           const blockName = $block.getAttribute('data-block-name');
-          if (smallIconBlocks.includes(blockName)) size = 22;
+          // use small icons in .columns (except for .columns.offer)
+          if (blockName === 'columns') {
+            size = $block.classList.contains('offer') ? 44 : 22;
+          }
         }
         $picture.parentElement
           .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
@@ -1161,6 +1498,7 @@ function setTheme() {
     $body.classList.add(themeClass);
     if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
+  $body.dataset.device = navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop';
 }
 
 function decorateLinkedPictures($main) {
@@ -1407,7 +1745,7 @@ function decoratePictures(main) {
 
 export async function decorateMain($main) {
   splitSections($main);
-  wrapSections($main.querySelectorAll(':scope > div'));
+  decorateSections($main);
   decorateButtons($main);
   decorateBlocks($main);
   decorateMarqueeColumns($main);
@@ -1418,67 +1756,48 @@ export async function decorateMain($main) {
   makeRelativeLinks($main);
 }
 
+const usp = new URLSearchParams(window.location.search);
 window.spark = {};
+window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const hostparam = new URLSearchParams(window.location.search).get('hostname');
-window.spark.hostname = hostparam || window.location.hostname;
+const useAlloy = (
+  window.spark.hostname === 'www.stage.adobe.com'
+  || (
+    usp.has('martech')
+    && usp.get('martech').includes('alloy')
+  )
+);
 
-function unhideBody(id) {
+function unhideBody() {
   try {
+    const id = (
+      useAlloy
+        ? 'alloy-prehiding'
+        : 'at-body-style'
+    );
     document.head.removeChild(document.getElementById(id));
   } catch (e) {
     // nothing
   }
 }
 
-function hideBody(id) {
+function hideBody() {
   const style = document.createElement('style');
-  style.id = id;
-  style.textContent = 'body{visibility: hidden !important}';
+  style.id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  style.innerHTML = (
+    useAlloy
+      ? '.personalization-container{opacity:0.01 !important}'
+      : 'body{visibility: hidden !important}'
+  );
 
   try {
     document.head.appendChild(style);
   } catch (e) {
     // nothing
-  }
-}
-
-/**
- * Generates the intersection observer (after the blocks are finished loading)
- * to make sure that the fixed button is visible on page load if the
- * title is too long to show the PrimaryCTA
- */
-function generateFixedButton() {
-  if (document.body.classList.contains('has-fixed-button')) {
-    const $primaryCTA = document.querySelector('.primaryCTA');
-    const $floatButton = document.querySelector('.fixed-button');
-    const $banner = document.querySelector('.banner-container');
-    const $ratings = document.querySelector('.ratings-container');
-
-    const hideFixedButtonWhenInView = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      if (entry.intersectionRatio > 0) {
-        $floatButton.classList.remove('shown');
-      } else {
-        $floatButton.classList.add('shown');
-      }
-    }, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0,
-    });
-
-    if (document.readyState === 'complete') {
-      hideFixedButtonWhenInView.observe($primaryCTA);
-      if ($banner) hideFixedButtonWhenInView.observe($banner);
-      if ($ratings) hideFixedButtonWhenInView.observe($ratings);
-    } else {
-      window.addEventListener('load', () => {
-        hideFixedButtonWhenInView.observe($primaryCTA);
-        if ($banner) hideFixedButtonWhenInView.observe($banner);
-        if ($ratings) hideFixedButtonWhenInView.observe($ratings);
-      });
-    }
   }
 }
 
@@ -1503,8 +1822,23 @@ async function wordBreakJapanese() {
   }
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
-  document.querySelectorAll('h1, h2, h3, h4, h5, p:not(.button-container)').forEach((el) => {
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
     parser.applyElement(el);
+  });
+
+  const BalancedWordWrapper = (await import('./bw2.js')).default;
+  const bw2 = new BalancedWordWrapper();
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    // apply balanced word wrap to headings
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => {
+        bw2.applyElement(el);
+      });
+    } else {
+      window.setTimeout(() => {
+        bw2.applyElement(el);
+      }, 1000);
+    }
   });
 }
 
@@ -1529,16 +1863,18 @@ async function loadEager() {
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
 
-    generateFixedButton();
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      const target = checkTesting();
+      let target = checkTesting();
+      if (useAlloy) {
+        document.querySelector('body').classList.add('personalization-container');
+        target = true;
+      }
       if (target) {
-        const bodyHideStyleId = 'at-body-style';
-        hideBody(bodyHideStyleId);
+        hideBody();
         setTimeout(() => {
-          unhideBody(bodyHideStyleId);
+          unhideBody();
         }, 3000);
       }
     }
@@ -1546,6 +1882,7 @@ async function loadEager() {
     const lcpCandidate = document.querySelector('main img');
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
+        lcpCandidate.setAttribute('loading', 'eager');
         lcpCandidate.addEventListener('load', () => resolve());
         lcpCandidate.addEventListener('error', () => resolve());
       } else {
@@ -1553,6 +1890,14 @@ async function loadEager() {
       }
     });
   }
+}
+
+function removeMetadata() {
+  document.head.querySelectorAll('meta').forEach((meta) => {
+    if (meta.content && meta.content.includes('--none--')) {
+      meta.remove();
+    }
+  });
 }
 
 /**
@@ -1566,10 +1911,15 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
+  scrollToHash();
   resolveFragments();
   addPromotion();
+  removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
+
+  sampleRUM.observe(document.querySelectorAll('main picture > img'));
+  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
 }
 
 /**
@@ -1583,6 +1933,9 @@ async function decoratePage() {
   await loadEager();
   loadLazy();
   loadGnav();
+  if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === ('localhost')) {
+    import('../../tools/preview/preview.js');
+  }
 }
 
 if (!window.hlx.init && !window.isTestEnv) {

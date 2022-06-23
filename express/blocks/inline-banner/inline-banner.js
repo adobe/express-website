@@ -17,7 +17,7 @@ import {
 
 export default function decorate($block) {
   normalizeHeadings($block, ['h2', 'h3', 'h4']);
-  const $section = $block.closest('main .section-wrapper');
+  const $section = $block.closest('main .section');
   if ($section
     && ($section.className.includes('dark') || $section.className.includes('highlight'))) {
     // force inverted style

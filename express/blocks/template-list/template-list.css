@@ -140,99 +140,13 @@ main .template-list .template:not(.placeholder) .icon {
   right: 6px;
 }
 
-/* horizontal template-list (carousel) */
+/* horizontal template-list */
 
 main .template-list.horizontal {
   display: block;
-  overflow: hidden;
-  max-width: 375px;
   margin-left: auto; 
   margin-right: auto;
   min-height: 220px;
-}
-
-main .template-list.horizontal .carousel-container {
-  display: inline-block;
-  position: relative;
-  height: 220px;
-  width: 100%;
-  align-items: center;
-}
-
-main .template-list.horizontal .carousel-platform {
-  position: absolute;
-  width: fit-content;
-  height: 220px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  left: 0;
-  transition: left 0.4s;
-}
-
-main .template-list.horizontal .carousel-fader-left {
-  display: none;
-  position: absolute;
-  height: 220px;
-  width: 60px;
-  left: 0;
-  background: linear-gradient(
-    to left,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  transition: display 0.2s;
-}
-
-main .template-list.horizontal .carousel-fader-right {
-  display: none;
-  position: absolute;
-  height: 220px;
-  width: 68px;
-  right: 0;
-  float: right;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  transition: display 0.2s;
-}
-
-main .template-list.horizontal a.button.carousel-arrow {
-  cursor: pointer;
-  display: block;
-  float: left;
-  width: 32px;
-  height: 32px;
-  margin: 84px 10px;
-  background: var(--color-white);
-  box-shadow: 0 4px 8px 2px rgba(102, 102, 102, 0.1);
-  border-radius: 50%;
-}
-
-main .template-list.horizontal a.button.carousel-arrow::before {
-  content: '';
-  position: absolute;
-  margin-top: 11px;
-  width: 8px;
-  height: 8px;
-  border-top: solid 2px var(--color-gray-700);
-  border-right: solid 2px var(--color-gray-700);
-}
-
-main .template-list.horizontal a.button.carousel-arrow-left::before {
-  margin-left: 13px;
-  transform: rotate(-135deg);
-}
-
-main .template-list.horizontal a.button.carousel-arrow-right {
-  float: right;
-}
-
-main .template-list.horizontal a.button.carousel-arrow-right::before {
-  margin-left: 9px;
-  transform: rotate(45deg);
 }
 
 main .template-list.horizontal .template {
@@ -240,6 +154,7 @@ main .template-list.horizontal .template {
   width: max-content;
   margin-left: 12px;
   margin-right: 12px;
+  margin-bottom: 0;
 }
 
 main .template-list.horizontal .template img,
@@ -260,7 +175,7 @@ main .template-list.sixcols .template {
 }
 
 main .template-list .template:not(.placeholder) > div:first-of-type {
-  overflow: hidden;
+  /*overflow: hidden*/;
   border-radius: 7px;
   line-height: 0;
 }
@@ -354,17 +269,6 @@ main .template-list .template.placeholder {
 main .template-list.sixcols .template.placeholder {
   width: 145px;
   margin: 15px auto;
-}
-
-/* template-list-scrollbutton */
-main .template-list.sixcols .template-list-scrollbutton {
-  padding: 0;
-  position: fixed;
-  bottom: 22px;
-  right: 8px;
-  z-index: 3;
-  width: 60px;
-  height: 60px;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
@@ -467,11 +371,6 @@ main .template-list.flex-masonry .template.appear {
     width: 145px;
     margin: 21px;
   }
-  
-  /* template-list-scrollbutton */
-  main .template-list.sixcols .template-list-scrollbutton {
-    display: none;
-  }
 
   /* template-list inside columns */
 
@@ -479,18 +378,10 @@ main .template-list.flex-masonry .template.appear {
     margin-top: 0;
     margin-left: 40px;
   }
-
-  /* horizontal template-list (carousel) */
-
-  main .template-list.horizontal {
-    max-width: 800px;
-  }
-
 }
 
 @media (min-width: 1200px) {
-  main .template-list-fourcols-container > div,
-  main .template-list-horizontal-container > div {
+  main .template-list-fourcols-container > div {
     max-width: 1200px;
   }
 
@@ -515,11 +406,135 @@ main .template-list.flex-masonry .template.appear {
     font-size: 0.875rem;
     font-weight: 400;
   }
+}
 
-  /* horizontal template-list (carousel) */
+
+/* Carousel styles (Template-list specific) */
+
+/* hide controls in mobile-breakpoint if they scrolled using drag */
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
+  opacity: 0;
+}
+
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+  pointer-events: none;
+}
+
+/* Remove max-width on mobile breakpoints */
+main .section.template-list-horizontal-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .section.template-list-horizontal-container > div {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* re-add max-width on elements that are not carousel */
+main .section.template-list-horizontal-container > div > *:not(.template-list.horizontal),
+main .section.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
+  max-width: 350px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main .template-list.horizontal .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+main .template-list.horizontal .carousel-platform {
+  scroll-padding: 12px;
+}
+
+@media (min-width: 600px) {
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
+    opacity: unset;
+  }
+
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+    pointer-events: auto;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden,
+  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden {
+    opacity: 0;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
+    pointer-events: none;
+  }
+
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-platform {
+    scroll-snap-type: x mandatory;
+  }
+
+  main .template-list.horizontal .carousel-container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 470px;
+    display: block;
+  }
+
+  main .template-list.horizontal .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-left {
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .template-list.horizontal .carousel-container .carousel-fader-right {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+}
+
+@media (min-width: 900px) {
+  main .template-list.horizontal .carousel-container {
+    margin-left: 12px;
+    margin-right: 12px;
+    max-width: none;
+    display: inline-block;
+  }
+
+  main .section.template-list-horizontal-container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  main .section.template-list-horizontal-container > div {
+    max-width: 836px;
+  }
+  
+  main .section.template-list-horizontal-container > div > *:not(.template-list.horizontal),
+  main .section.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
+    max-width: unset;
+  }
+
+  main .template-list.horizontal .carousel-container {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  
+  main .template-list.horizontal {
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section.template-list-horizontal-container > div {
+    max-width: 1024px;
+  }
 
   main .template-list.horizontal {
     max-width: 1090px;
   }
-
 }

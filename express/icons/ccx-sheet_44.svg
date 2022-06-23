@@ -336,6 +336,111 @@
         <path id="Path_127593" data-name="Path 127593" d="M8.56,29H16.5a1.5,1.5,0,0,0,0-3H8.56A5.5,5.5,0,0,1,3,20.57v-.79l6.55-6.55a.72.72,0,0,1,1,0v0l9,8.35a1.49,1.49,0,0,0,2,0l4.9-4.53a.49.49,0,0,1,.53-.06l3.5,2.64a1.5,1.5,0,0,0,2.1-.3,1.48,1.48,0,0,0,.3-.9v-10A8.5,8.5,0,0,0,24.44,0H8.56A8.5,8.5,0,0,0,0,8.43V20.57A8.5,8.5,0,0,0,8.56,29ZM3,8.43A5.5,5.5,0,0,1,8.56,3H24.44A5.5,5.5,0,0,1,30,8.43v7.05l-1.18-.89-.12-.09a3.52,3.52,0,0,0-4.11.34l-3.94,3.64-8-7.37a3.71,3.71,0,0,0-5.23,0L3,15.54Z"/>
       </g>
     </symbol>
+    <symbol id="palette44" data-name="palette44" viewBox="0 0 40 40">
+      <g id="Group_310438" data-name="Group 310438" transform="translate(-587 -903)">
+        <rect id="Rectangle_220386" data-name="Rectangle 220386" width="40" height="40" transform="translate(587 903)" fill="rgba(255,255,255,0)"/>
+        <g id="ICONS" transform="translate(588 903.001)">
+          <ellipse id="Ellipse_24604" data-name="Ellipse 24604" cx="2.727" cy="2.778" rx="2.727" ry="2.778" transform="translate(23.634 9.091)"/>
+          <path id="Path_125915" data-name="Path 125915" d="M33.947,21.528a11.453,11.453,0,0,0,0-16.771A18.138,18.138,0,0,0,21.4,0,22.488,22.488,0,0,0,6.1,6.182a19.18,19.18,0,0,0,0,28.064A21.647,21.647,0,0,0,21.025,40,20.987,20.987,0,0,0,35.43,34.543a4.772,4.772,0,0,0,1.454-3.454,5.172,5.172,0,0,0-1.4-3.678h0a5.623,5.623,0,0,0-3.138-1.349c-.7-.122-.751-.182-1.062-.474a.938.938,0,0,1,0-1.513ZM28.76,28.214a4.972,4.972,0,0,0,2.992,1.434,3.116,3.116,0,0,1,1.158.34,1.6,1.6,0,0,1,.333,1.051,1.256,1.256,0,0,1-.315.86A17.42,17.42,0,0,1,20.89,36.361,18.18,18.18,0,0,1,8.6,31.612a15.544,15.544,0,0,1,0-22.785A18.812,18.812,0,0,1,21.4,3.637,14.517,14.517,0,0,1,31.451,7.4a7.817,7.817,0,0,1,0,11.49l-2.68,2.545a4.554,4.554,0,0,0,0,6.777Z" transform="translate(0 0)"/>
+          <ellipse id="Ellipse_24605" data-name="Ellipse 24605" cx="2.727" cy="2.778" rx="2.727" ry="2.778" transform="translate(7.272 12.727)"/>
+          <ellipse id="Ellipse_24606" data-name="Ellipse 24606" cx="2.727" cy="2.778" rx="2.727" ry="2.778" transform="translate(14.544 7.273)"/>
+          <ellipse id="Ellipse_24607" data-name="Ellipse 24607" cx="2.727" cy="2.778" rx="2.727" ry="2.778" transform="translate(7.272 21.817)"/>
+          <ellipse id="Ellipse_24608" data-name="Ellipse 24608" cx="2.727" cy="2.778" rx="2.727" ry="2.778" transform="translate(14.544 27.271)"/>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="qr-code44" viewBox="0 0 36 36">
+      <g id="Group_315296" data-name="Group 315296" transform="translate(23713 23012)">
+        <rect id="Rectangle_302299" data-name="Rectangle 302299" width="36" height="36" transform="translate(-23713 -23012)"/>
+        <g id="Group_315295" data-name="Group 315295" transform="translate(42 -46)">
+          <rect id="Rectangle_302312" data-name="Rectangle 302312" width="3" height="3" transform="translate(-23728 -22945)" fill="#fff"/>
+          <rect id="Rectangle_302313" data-name="Rectangle 302313" width="3" height="3" transform="translate(-23731 -22945)" fill="#fff"/>
+          <rect id="Rectangle_302314" data-name="Rectangle 302314" width="3" height="3" transform="translate(-23728 -22942)" fill="#fff"/>
+          <rect id="Rectangle_302315" data-name="Rectangle 302315" width="3" height="3" transform="translate(-23734 -22942)" fill="#fff"/>
+          <rect id="Rectangle_302316" data-name="Rectangle 302316" width="3" height="3" transform="translate(-23737 -22945)" fill="#fff"/>
+          <rect id="Rectangle_302322" data-name="Rectangle 302322" width="3" height="3" transform="translate(-23752 -22942)" fill="#fff"/>
+          <rect id="Rectangle_302323" data-name="Rectangle 302323" width="3" height="3" transform="translate(-23752 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302324" data-name="Rectangle 302324" width="3" height="3" transform="translate(-23746 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302325" data-name="Rectangle 302325" width="3" height="3" transform="translate(-23740 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302326" data-name="Rectangle 302326" width="3" height="3" transform="translate(-23737 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302327" data-name="Rectangle 302327" width="3" height="3" transform="translate(-23737 -22936)" fill="#fff"/>
+          <rect id="Rectangle_302328" data-name="Rectangle 302328" width="3" height="3" transform="translate(-23740 -22936)" fill="#fff"/>
+          <rect id="Rectangle_302329" data-name="Rectangle 302329" width="3" height="3" transform="translate(-23728 -22936)" fill="#fff"/>
+          <rect id="Rectangle_302330" data-name="Rectangle 302330" width="3" height="3" transform="translate(-23725 -22936)" fill="#fff"/>
+          <rect id="Rectangle_302331" data-name="Rectangle 302331" width="3" height="3" transform="translate(-23725 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302332" data-name="Rectangle 302332" width="3" height="3" transform="translate(-23728 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302333" data-name="Rectangle 302333" width="3" height="3" transform="translate(-23731 -22939)" fill="#fff"/>
+          <rect id="Rectangle_302334" data-name="Rectangle 302334" width="3" height="3" transform="translate(-23752 -22936)" fill="#fff"/>
+          <rect id="Rectangle_302335" data-name="Rectangle 302335" width="3" height="3" transform="translate(-23749 -22942)" fill="#fff"/>
+          <rect id="Rectangle_302336" data-name="Rectangle 302336" width="3" height="3" transform="translate(-23749 -22936)" fill="#fff"/>
+          <rect id="Rectangle_302337" data-name="Rectangle 302337" width="3" height="3" transform="translate(-23746 -22942)" fill="#fff"/>
+          <rect id="Rectangle_302338" data-name="Rectangle 302338" width="3" height="3" transform="translate(-23746 -22936)" fill="#fff"/>
+          <g id="Group_315291" data-name="Group 315291">
+            <rect id="Rectangle_302303" data-name="Rectangle 302303" width="9" height="9" transform="translate(-23731 -22963)" fill="#fff"/>
+            <rect id="Rectangle_302309" data-name="Rectangle 302309" width="3" height="3" transform="translate(-23728 -22951)" fill="#fff"/>
+            <rect id="Rectangle_302310" data-name="Rectangle 302310" width="3" height="3" transform="translate(-23725 -22951)" fill="#fff"/>
+            <rect id="Rectangle_302311" data-name="Rectangle 302311" width="3" height="3" transform="translate(-23725 -22948)" fill="#fff"/>
+          </g>
+          <g id="Group_315294" data-name="Group 315294">
+            <rect id="Rectangle_302307" data-name="Rectangle 302307" width="3" height="3" transform="translate(-23737 -22954)" fill="#fff"/>
+            <rect id="Rectangle_302308" data-name="Rectangle 302308" width="3" height="3" transform="translate(-23734 -22951)" fill="#fff"/>
+            <g id="Group_315293" data-name="Group 315293">
+              <rect id="Rectangle_302302" data-name="Rectangle 302302" width="9" height="9" transform="translate(-23752 -22963)" fill="#fff"/>
+              <g id="Group_315292" data-name="Group 315292">
+                <rect id="Rectangle_302317" data-name="Rectangle 302317" width="3" height="3" transform="translate(-23737 -22948)" fill="#fff"/>
+                <rect id="Rectangle_302318" data-name="Rectangle 302318" width="3" height="3" transform="translate(-23740 -22948)" fill="#fff"/>
+                <rect id="Rectangle_302319" data-name="Rectangle 302319" width="3" height="3" transform="translate(-23746 -22948)" fill="#fff"/>
+                <rect id="Rectangle_302320" data-name="Rectangle 302320" width="3" height="3" transform="translate(-23749 -22948)" fill="#fff"/>
+                <rect id="Rectangle_302321" data-name="Rectangle 302321" width="3" height="3" transform="translate(-23752 -22948)" fill="#fff"/>
+                <rect id="Rectangle_302339" data-name="Rectangle 302339" width="3" height="3" transform="translate(-23746 -22951)" fill="#fff"/>
+                <rect id="Rectangle_302340" data-name="Rectangle 302340" width="3" height="3" transform="translate(-23749 -22951)" fill="#fff"/>
+              </g>
+              <rect id="Rectangle_302304" data-name="Rectangle 302304" width="3" height="3" transform="translate(-23740 -22963)" fill="#fff"/>
+              <rect id="Rectangle_302305" data-name="Rectangle 302305" width="3" height="3" transform="translate(-23740 -22960)" fill="#fff"/>
+              <rect id="Rectangle_302306" data-name="Rectangle 302306" width="3" height="3" transform="translate(-23740 -22957)" fill="#fff"/>
+              <rect id="Rectangle_302341" data-name="Rectangle 302341" width="3" height="3" transform="translate(-23737 -22963)" fill="#fff"/>
+            </g>
+            <rect id="Rectangle_302342" data-name="Rectangle 302342" width="3" height="3" transform="translate(-23749 -22960)"/>
+            <rect id="Rectangle_302343" data-name="Rectangle 302343" width="3" height="3" transform="translate(-23728 -22960)"/>
+          </g>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="desktop44" viewBox="0 0 40 40">
+      <g id="Ellipse_25205" data-name="Ellipse 25205" fill="#fff" stroke="#d6d6d6" stroke-width="2">
+        <circle cx="20" cy="20" r="20" stroke="none"/>
+        <circle cx="20" cy="20" r="19" fill="none"/>
+      </g>
+      <g id="SLmock_Desktop_18_N" transform="translate(11 11)">
+        <g id="SMOCK">
+          <rect id="Canvas" width="18" height="18" fill="rgba(255,19,220,0)"/>
+        </g>
+        <g id="ICONS">
+          <path id="Path_127662" data-name="Path 127662" d="M13,0H5A5.006,5.006,0,0,0,0,5V9a5.006,5.006,0,0,0,5,5H8v2H7a1,1,0,0,0,0,2h4a1,1,0,0,0,0-2H10V14h3a5.006,5.006,0,0,0,5-5V5a5.006,5.006,0,0,0-5-5Zm3,9a3,3,0,0,1-3,3H5A3,3,0,0,1,2,9V5A3,3,0,0,1,5,2h8a3,3,0,0,1,3,3Z"/>
+        </g>
+      </g>
+    </symbol>
+    <symbol id="ios44" viewBox="0 0 40 40">
+      <g id="Ellipse_24904" data-name="Ellipse 24904" fill="#fff" stroke="#d6d6d6" stroke-width="2">
+        <circle cx="20" cy="20" r="20" stroke="none"/>
+        <circle cx="20" cy="20" r="19" fill="none"/>
+      </g>
+      <path id="Apple_logo_black" d="M13.489,19.207a2.7,2.7,0,0,1-3.247.372,4.113,4.113,0,0,0-3.417,0c-1.513.653-2.316.463-3.228-.372C-1.548,13.91-.788,5.841,5.059,5.538c1.418.076,2.411.784,3.247.843,1.242-.253,2.43-.976,3.759-.881a4.579,4.579,0,0,1,3.588,1.893,4.173,4.173,0,0,0,.511,7.518,10.672,10.672,0,0,1-2.677,4.31ZM8.192,5.481A4.322,4.322,0,0,1,12.141,1C12.443,3.715,9.673,5.746,8.192,5.481Z" transform="translate(11.836 8.515)" fill="#444"/>
+    </symbol>
+    <symbol id="android44" viewBox="0 0 40 40">
+      <g id="Ellipse_25206" data-name="Ellipse 25206" fill="#fff" stroke="#d6d6d6" stroke-width="2">
+        <circle cx="20" cy="20" r="20" stroke="none"/>
+        <circle cx="20" cy="20" r="19" fill="none"/>
+      </g>
+      <g id="android-logo" transform="translate(12.319 10.922)">
+        <g id="Group_294961" data-name="Group 294961">
+          <path id="Path_129783" data-name="Path 129783" d="M43.668,179.141a1.084,1.084,0,0,0-.8.327,1.071,1.071,0,0,0-.327.785v4.691a1.117,1.117,0,0,0,1.124,1.124,1.067,1.067,0,0,0,.791-.327,1.094,1.094,0,0,0,.322-.8v-4.691a1.117,1.117,0,0,0-1.113-1.113Z" transform="translate(-42.544 -173.261)" fill="#444"/>
+          <path id="Path_129784" data-name="Path 129784" d="M130.178,1.669,130.953.24A.144.144,0,0,0,130.9.022a.151.151,0,0,0-.218.065l-.785,1.44a5.472,5.472,0,0,0-4.386,0l-.785-1.44a.151.151,0,0,0-.218-.065.143.143,0,0,0-.054.218l.775,1.429a4.783,4.783,0,0,0-1.876,1.675,4.23,4.23,0,0,0-.7,2.351h10.091a4.231,4.231,0,0,0-.7-2.351A4.8,4.8,0,0,0,130.178,1.669ZM125.7,3.747a.409.409,0,0,1-.3.126.39.39,0,0,1-.294-.126.435.435,0,0,1,0-.6.392.392,0,0,1,.294-.125.424.424,0,0,1,.3.725Zm4.6,0a.391.391,0,0,1-.294.126.425.425,0,0,1,0-.851.392.392,0,0,1,.294.125.435.435,0,0,1,0,.6Z" transform="translate(-120.022 0)" fill="#444"/>
+          <path id="Path_129785" data-name="Path 129785" d="M123.971,192.716a1.191,1.191,0,0,0,1.2,1.2h.807l.011,2.477a1.084,1.084,0,0,0,.327.8,1.071,1.071,0,0,0,.785.327,1.117,1.117,0,0,0,1.124-1.124v-2.476h1.505v2.476a1.124,1.124,0,1,0,2.247,0v-2.476h.818a1.191,1.191,0,0,0,1.189-1.2V185.45H123.971Z" transform="translate(-121.298 -179.363)" fill="#444"/>
+          <path id="Path_129786" data-name="Path 129786" d="M443.489,179.141a1.081,1.081,0,0,0-.785.322,1.067,1.067,0,0,0-.327.791v4.691a1.083,1.083,0,0,0,.327.8,1.071,1.071,0,0,0,.785.327,1.117,1.117,0,0,0,1.124-1.124v-4.691a1.067,1.067,0,0,0-.327-.791A1.094,1.094,0,0,0,443.489,179.141Z" transform="translate(-429.252 -173.261)" fill="#444"/>
+        </g>
+      </g>
+    </symbol>
   </defs>
   <g id="Sprite">
     <use width="100" height="100" transform="translate(287.28 -28.91)" xlink:href="#mobile-round44"/>
@@ -889,5 +994,7 @@
     <use width="31.09" height="35.75" transform="translate(1379.4 1.56)" xlink:href="#tiktok44"/>
     <use width="36.97" height="38.81" transform="translate(1786.35 2.09)" xlink:href="#calendar44"/>
     <use width="41" height="41" transform="translate(1833.26 2)" xlink:href="#crop-image44"/>
+    <use width="40" height="40" transform="translate(1833.26 63)" xlink:href="#palette44"/>
+    <use width="40" height="40" transform="translate(1833.26 120)" xlink:href="#qr-code44"/>
   </g>
 </svg>
