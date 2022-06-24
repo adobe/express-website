@@ -12,6 +12,7 @@
 
 import {
   addAnimationToggle,
+  addFreePlanWidget,
   createTag,
   toClassName,
 // eslint-disable-next-line import/no-unresolved
@@ -242,6 +243,7 @@ export default async function decorate($block) {
       if (videoLink) {
         transformToVideoLink($div, videoLink);
       }
+      addFreePlanWidget($div.children[0]);
     }
 
     // timecode animations

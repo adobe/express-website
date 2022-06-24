@@ -1900,6 +1900,19 @@ function removeMetadata() {
   });
 }
 
+export async function addFreePlanWidget(elem) {
+  if (elem && getMetadata('show-free-plan')) {
+    const placeholders = await fetchPlaceholders();
+    const widget = createTag('div', { class: 'free-plan-widget' });
+    widget.innerHTML = `<ul>
+      <li>${placeholders['free-plan-check-1']}</li>
+      <li>${placeholders['free-plan-check-2']}</li>
+    </ul>
+    <p>${placeholders['free-plan-description']}</p>`;
+    elem.append(widget);
+  }
+}
+
 /**
  * loads everything that doesn't need to be delayed.
  */

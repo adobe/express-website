@@ -11,7 +11,6 @@ main .section.make-a-project-container > div {
 }
 
 main .make-a-project {
-  max-height: 502px;
   display: flex;
   flex-direction: column;
 }
@@ -457,4 +456,13 @@ main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wr
 
 main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .make-a-project-item:nth-child(7) img {
   max-height: 158px;
+}
+
+/* free plan widget */
+main .make-a-project .free-plan-widget {
+  background-color: var(--color-white);
+}
+
+main .make-a-project .free-plan-widget > p {
+  display: none;
 }

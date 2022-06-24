@@ -775,6 +775,63 @@ main .columns.columns-marquee {
   min-height: 650px;
 }
 
+/* free plan widget */
+main .block .free-plan-widget {
+  background-color: var(--color-gray-100);
+  border-radius: 10px;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+main .block .free-plan-widget > ul {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+}
+
+main .block .free-plan-widget > ul > li {
+  display: flex;
+  flex-direction: row;
+  max-width: unset;
+  padding: 10px 0;
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+}
+
+main .block .free-plan-widget > ul > li::before {
+  content: " ";
+  background: green;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  float: none;
+  margin: 1px 6px 0 0;
+}
+
+main .section .free-plan-widget > p {
+  font-size: var(--body-font-size-s);
+  margin: 0;
+}
+
+@media (min-width: 600px) {
+  main .block .free-plan-widget {
+    max-width: 498px;
+    margin: 40px auto 0;
+    padding: 20px;
+  }  
+
+  main .block .free-plan-widget > ul {
+    justify-content: center;
+    flex-direction: row;
+  }
+
+  main .block .free-plan-widget > ul > li {
+    padding: 10px;
+    font-size: var(--body-font-size-l);
+  }
+}
+
 @media (min-width: 1200px) {
   main .template-list-fourcols-container > div,
   main .template-list-horizontal-container > div {
