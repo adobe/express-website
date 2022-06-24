@@ -782,6 +782,7 @@ main .block .free-plan-widget {
   border-radius: 10px;
   margin: 20px 0 0;
   padding: 20px;
+  width: 322px;
 }
 
 main .block .free-plan-widget > ul {
@@ -820,7 +821,7 @@ main .section .free-plan-widget > p {
 
 @media (min-width: 600px) {
   main .block .free-plan-widget {
-    max-width: 498px;
+    width: 498px;
     margin: 40px auto 0;
   }  
 
