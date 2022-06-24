@@ -461,6 +461,12 @@ main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wr
 /* free plan widget */
 main .make-a-project .free-plan-widget {
   background-color: var(--color-white);
+  margin: 0;
+  padding: 10px 0;
+}
+
+main .make-a-project .free-plan-widget > ul {
+  align-items: unset;
 }
 
 main .make-a-project .free-plan-widget > p {
