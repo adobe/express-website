@@ -931,7 +931,7 @@ export function loadScript(url, callback, type) {
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
-  return $meta && $meta.content;
+  return ($meta && $meta.content) || '';
 }
 
 /**
@@ -1901,7 +1901,7 @@ function removeMetadata() {
 }
 
 export async function addFreePlanWidget(elem) {
-  if (elem && getMetadata('show-free-plan')) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
     const widget = createTag('div', { class: 'free-plan-widget' });
     widget.innerHTML = `<ul>
