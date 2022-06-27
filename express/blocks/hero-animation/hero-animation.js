@@ -286,7 +286,7 @@ export default async function decorate($block) {
     }
   });
   const button = $block.querySelector('.button');
-  if (button) button.classList.add('large');
+  if (button) button.classList.add('xlarge');
 
   $block.append($attributions);
   addAnimationToggle($block);
