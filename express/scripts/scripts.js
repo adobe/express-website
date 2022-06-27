@@ -869,9 +869,15 @@ export async function loadBlock(block, eager = false) {
 
     if (window.hlx.experiment && window.hlx.experiment.run) {
       const { experiment } = window.hlx;
-      if (experiment.blocks.includes(blockName)) {
-        cssPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.css`;
-        jsPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.js`;
+      if (experiment.selectedVariant !== 'control') {
+        const { control } = experiment.variants;
+        if (control && control.blocks && control.blocks.includes(blockName)) {
+          const blockIndex = control.blocks.indexOf(blockName);
+          const variant = experiment.variants[experiment.selectedVariant];
+          const blockPath = variant.blocks[blockIndex];
+          cssPath = `/express/experiments/${experiment.id}/${blockPath}/${blockName}.css`;
+          jsPath = `/express/experiments/${experiment.id}/${blockPath}/${blockName}.js`;
+        }
       }
     }
 
@@ -1159,7 +1165,7 @@ export function toCamelCase(name) {
  * @returns {string} experimentid
  */
 export function getExperiment() {
-  let experiment = getMeta('experiment').toLowerCase();
+  let experiment = toClassName(getMeta('experiment'));
 
   if (!window.location.host.includes('adobe.com') && !window.location.host.includes('.hlx.live')) {
     experiment = '';
@@ -1206,9 +1212,7 @@ export async function fetchExperimentConfig(experiment) {
     const json = await resp.json();
     json.settings.data.forEach((line) => {
       const key = toCamelCase(line.Name);
-      let value = line.Value;
-      if (key === 'blocks') value = value.split(',').map((e) => e.trim().toLowerCase());
-      config[key] = value;
+      config[key] = line.Value;
     });
     config.id = experiment;
 
@@ -1230,9 +1234,10 @@ export async function fetchExperimentConfig(experiment) {
       vns.shift();
       vns.forEach((vn) => {
         const camelVN = toCamelCase(vn);
-        if (key === 'pages') {
+        if (key === 'pages' || key === 'blocks') {
           variants[camelVN][key] = variants[camelVN][key] || [];
-          variants[camelVN][key].push(new URL(line[vn]).pathname);
+          if (key === 'pages') variants[camelVN][key].push(new URL(line[vn]).pathname);
+          else variants[camelVN][key].push(line[vn]);
         } else {
           variants[camelVN][key] = line[vn];
         }
@@ -1345,13 +1350,13 @@ async function decorateTesting() {
       console.log('experiment', experiment);
       const config = await fetchExperimentConfig(experiment);
       console.log(config);
-      if (toCamelCase(config.status) === 'active') {
+      if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
-        if (config.run && config.content) {
+        if (config.run) {
           const forced = forcedVariant || getLastExperimentVariant(config.id);
           if (forced && config.variantNames.includes(forced)) {
             config.selectedVariant = forced;

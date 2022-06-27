@@ -69,8 +69,8 @@ async function createExperiment() {
     div.classList.add(`hlx-experiment-status-${toClassName(config.status)}`);
     div.innerHTML = `Experiment: ${config.id} <span class="hlx-open"></span>
       <div class="hlx-popup hlx-hidden">
-        <h4>${config.testName}</h4>
-        <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.blocks.join(',')}</div>
+        <h4>${config.experimentName}</h4>
+        <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.variants.control.blocks.join(',')}</div>
         <div class="hlx-variants"></div>
       </div>`;
     console.log(config.id);
