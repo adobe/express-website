@@ -784,14 +784,15 @@ main .block .button-container.free-plan-container {
 }
 
 main .block .button-container.free-plan-container a.button {
-  max-height: 24px; 
+  max-height: 24px;
+  margin-right: 24px !important;
 }
 
 main .block .free-plan-widget {
   box-sizing: border-box;
   background-color: var(--color-gray-100);
   border-radius: 20px;
-  margin: 0 0 0 24px;
+  margin: 32px auto;
   padding: 16px 24px;
   width: fit-content;
   display: flex;
@@ -823,6 +824,16 @@ main .block .free-plan-widget .icon.icon-check {
   fill: var(--color-white);
   width: 8px;
   max-height: 8px;
+}
+
+@media (min-width:900px) {
+  main .block .button-container.free-plan-container .free-plan-widget {
+    margin: 0;
+  }
+
+  main .block .free-plan-widget {
+    margin: 0 auto;
+  }
 }
 
 @media (min-width: 1200px) {
