@@ -327,5 +327,5 @@ main .block .button-container.free-plan-container {
 
 main .hero-animation.wide .free-plan-widget {
   margin: 0;
-  background-color: var(--color-white);
+  background-color: transparent;
 }
