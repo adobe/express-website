@@ -279,7 +279,8 @@ export default function decorate($block) {
   }
 
   // add free plan widget to first columns block on every page
-  if (document.querySelector('main .columns') === $block) {
+  if (document.querySelector('main .columns') === $block
+    && document.querySelector('main .block') === $block) {
     addFreePlanWidget($block.querySelector('.button-container')
       || $block.querySelector(':scope .column:not(.hero-animation-overlay,.columns-picture)'));
   }

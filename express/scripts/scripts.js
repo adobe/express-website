@@ -1901,7 +1901,7 @@ function removeMetadata() {
 }
 
 export async function addFreePlanWidget(elem) {
-  if (!window.spark.freePlan && elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
     const checkmark = getIcon('check', '', 22);
     const widget = createTag('div', { class: 'free-plan-widget' });
@@ -1911,7 +1911,7 @@ export async function addFreePlanWidget(elem) {
     `;
     elem.append(widget);
     elem.classList.add('free-plan-container');
-    window.spark.freePlan = true;
+    console.log(elem.tagName, elem.offsetParent, getComputedStyle(elem).display);
   }
 }
 
