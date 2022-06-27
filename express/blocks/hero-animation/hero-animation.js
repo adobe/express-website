@@ -243,7 +243,7 @@ export default async function decorate($block) {
       if (videoLink) {
         transformToVideoLink($div, videoLink);
       }
-      addFreePlanWidget($div.children[0]);
+      addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
     }
 
     // timecode animations
