@@ -931,7 +931,7 @@ export function loadScript(url, callback, type) {
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
-  return $meta && $meta.content;
+  return ($meta && $meta.content) || '';
 }
 
 /**
@@ -1898,6 +1898,21 @@ function removeMetadata() {
       meta.remove();
     }
   });
+}
+
+export async function addFreePlanWidget(elem) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+    const placeholders = await fetchPlaceholders();
+    const checkmark = getIcon('check', '', 22);
+    const widget = createTag('div', { class: 'free-plan-widget' });
+    widget.innerHTML = `
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+    `;
+    elem.append(widget);
+    elem.classList.add('free-plan-container');
+    console.log(elem.tagName, elem.offsetParent, getComputedStyle(elem).display);
+  }
 }
 
 /**

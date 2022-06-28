@@ -318,3 +318,14 @@ main .hero-animation .hero-shadow picture {
     transform: translate(-15%, -2px);
   }
 }
+
+/* free plan widget */
+
+main .block .button-container.free-plan-container {
+  justify-content: left;
+}
+
+main .hero-animation.wide .free-plan-widget {
+  margin: 0;
+  background-color: transparent;
+}
