@@ -270,6 +270,7 @@ export function getIcon(icons, alt, size = 44) {
     'photoeffects',
     'pinterest',
     'play',
+    'premium',
     'premium-templates',
     'pricingfree',
     'pricingpremium',
