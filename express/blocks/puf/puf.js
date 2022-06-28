@@ -183,15 +183,13 @@ async function selectPlan($card, planUrl, sendAnalyticEvent) {
 
   if (plan) {
     const $pricingCta = $card.querySelector('.puf-card-top a');
-    const $pricingHeader = createTag('h2', { class: 'puf-pricing-header' });
+    const $pricingHeader = $card.querySelector('.puf-pricing-header');
 
     $pricingHeader.innerHTML = plan.formatted;
     $pricingHeader.classList.add(plan.currency.toLowerCase());
     $pricingCta.href = buildUrl(plan.url, plan.country, plan.language);
     $pricingCta.dataset.planUrl = planUrl;
     $pricingCta.id = plan.stringId;
-
-    $pricingCta.parentNode.insertBefore($pricingHeader, $pricingCta);
   }
 
   if (sendAnalyticEvent) {
@@ -201,13 +199,52 @@ async function selectPlan($card, planUrl, sendAnalyticEvent) {
   }
 }
 
+function displayPlans($card, $plans) {
+  const $planContainer = $card.querySelector('.puf-card-plans');
+  const $switch = createTag('label', { class: 'puf-card-switch' });
+  const $checkbox = createTag('input', { type: 'checkbox', class: 'puf-card-checkbox' });
+  const $slider = createTag('span', { class: 'puf-card-slider' });
+  const $defaultPlan = createTag('span', { class: 'strong' });
+  const $secondPlan = createTag('span');
+  const defaultPlan = $plans[0].textContent;
+  const secondPlan = $plans[1].textContent;
+
+  $defaultPlan.textContent = defaultPlan;
+  $secondPlan.textContent = secondPlan;
+
+  $planContainer.append($defaultPlan);
+  $planContainer.append($switch);
+  $switch.append($checkbox);
+  $switch.append($slider);
+  $planContainer.append($secondPlan);
+
+  $checkbox.addEventListener('change', () => {
+    if ($checkbox.checked) {
+      $defaultPlan.classList.remove('strong');
+      $secondPlan.classList.add('strong');
+      selectPlan($card, $plans[1].href, true);
+    } else {
+      $defaultPlan.classList.add('strong');
+      $secondPlan.classList.remove('strong');
+      selectPlan($card, $plans[0].href, true);
+    }
+  });
+
+  return $planContainer;
+}
+
 function decorateCard($block, cardClass) {
   const $cardContainer = createTag('div', { class: 'puf-card-container' });
   const $card = createTag('div', { class: `puf-card ${cardClass}` });
   const $cardBanner = $block.children[0].children[0];
   const $cardTop = $block.children[1].children[0];
   const $cardBottom = $block.children[2].children[0];
+  const $cardHeader = $cardTop.querySelector('h3');
+  const $cardHeaderSvg = $cardTop.querySelector('svg');
+  const $cardPricingHeader = createTag('h2', { class: 'puf-pricing-header' });
+  const $cardPlansContainer = createTag('div', { class: 'puf-card-plans' });
   const $cardCta = createTag('a', { class: 'button large' });
+  const $plans = $cardTop.querySelectorAll('li a');
 
   if (cardClass === 'puf-left') {
     $cardCta.classList.add('reverse');
@@ -221,13 +258,26 @@ function decorateCard($block, cardClass) {
   $card.append($cardTop);
   $card.append($cardBottom);
 
+  $cardTop.prepend($cardCta);
+  $cardTop.prepend($cardPlansContainer);
+  $cardTop.prepend($cardPricingHeader);
+  $cardTop.prepend($cardHeader);
+
   if (!$cardBanner.textContent) {
     $cardBanner.style.display = 'none';
   }
 
-  const $svg = $cardTop.querySelector('svg');
-  const $header = $cardTop.querySelector('h3');
-  $header.prepend($svg);
+  $cardHeader.prepend($cardHeaderSvg);
+
+  if ($plans.length) {
+    selectPlan($card, $plans[0].href, false);
+
+    if ($plans.length > 1) {
+      displayPlans($card, $plans);
+    }
+  }
+
+  $cardTop.querySelector('ul').remove();
 
   const $ctaTextContainer = $cardTop.querySelector('strong');
   if ($ctaTextContainer) {
@@ -235,14 +285,6 @@ function decorateCard($block, cardClass) {
     $ctaTextContainer.parentNode.remove();
   } else {
     $cardCta.textContent = 'Start your trial';
-  }
-  $header.parentNode.insertBefore($cardCta, $header.nextSibling);
-
-  const $plans = $cardTop.querySelectorAll('li a');
-
-  if ($plans.length) {
-    selectPlan($card, $plans[0].href);
-    $cardTop.querySelector('ul').remove();
   }
 
   $cardContainer.append($card);
