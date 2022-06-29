@@ -264,7 +264,7 @@ function decorateCard($block, cardClass) {
   const plans = buildPlans($plans);
 
   if (cardClass === 'puf-left') {
-    $cardCta.classList.add('reverse');
+    $cardCta.classList.add('reverse accent');
   }
 
   $cardBanner.classList.add('puf-card-banner');
