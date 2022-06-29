@@ -104,15 +104,24 @@ main .block.puf .puf-card .puf-card-top .puf-card-plans {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0 20px 0;
+    margin: 20px auto;
 }
 
-main .block.puf .puf-card .puf-card-top .puf-card-plans > span {
-    width: 60px;
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div {
+    color: #5C5CE0;
+    text-align: right;
 }
 
-main .block.puf .puf-card .puf-card-top .puf-card-plans span.strong {
-    font-weight: 800;
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div span {
+    color: #242424;
+}
+
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong {
+    font-weight: 600;
+}
+
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div:first-child:not(.strong) {
+    padding-left: 6px;
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-switch {
