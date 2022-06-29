@@ -107,12 +107,17 @@ main .block.puf .puf-card .puf-card-top .puf-card-plans {
     margin: 20px 0 20px 0;
 }
 
-main .block.puf .puf-card .puf-card-top .puf-card-plans > span {
-    width: 60px;
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div {
+    min-width: 60px;
+    color: #5C5CE0;
 }
 
-main .block.puf .puf-card .puf-card-top .puf-card-plans span.strong {
-    font-weight: 800;
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div span {
+    color: #242424;
+}
+
+main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong {
+    font-weight: 600;
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-switch {

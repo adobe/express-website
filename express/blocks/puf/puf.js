@@ -199,18 +199,16 @@ async function selectPlan($card, planUrl, sendAnalyticEvent) {
   }
 }
 
-function displayPlans($card, $plans) {
+function displayPlans($card, plans) {
   const $planContainer = $card.querySelector('.puf-card-plans');
   const $switch = createTag('label', { class: 'puf-card-switch' });
   const $checkbox = createTag('input', { type: 'checkbox', class: 'puf-card-checkbox' });
   const $slider = createTag('span', { class: 'puf-card-slider' });
-  const $defaultPlan = createTag('span', { class: 'strong' });
-  const $secondPlan = createTag('span');
-  const defaultPlan = $plans[0].textContent;
-  const secondPlan = $plans[1].textContent;
+  const $defaultPlan = createTag('div', { class: 'strong' });
+  const $secondPlan = createTag('div');
 
-  $defaultPlan.textContent = defaultPlan;
-  $secondPlan.textContent = secondPlan;
+  $defaultPlan.innerHTML = plans[0].text.replace(plans[0].plan, `<span>${plans[0].plan}</span>`);
+  $secondPlan.innerHTML = plans[1].text.replace(plans[1].plan, `<span>${plans[1].plan}</span>`);
 
   $planContainer.append($defaultPlan);
   $planContainer.append($switch);
@@ -222,15 +220,33 @@ function displayPlans($card, $plans) {
     if ($checkbox.checked) {
       $defaultPlan.classList.remove('strong');
       $secondPlan.classList.add('strong');
-      selectPlan($card, $plans[1].href, true);
+      selectPlan($card, plans[1].url, true);
     } else {
       $defaultPlan.classList.add('strong');
       $secondPlan.classList.remove('strong');
-      selectPlan($card, $plans[0].href, true);
+      selectPlan($card, plans[0].url, true);
     }
   });
 
   return $planContainer;
+}
+
+function buildPlans($plans) {
+  const plans = [];
+
+  $plans.forEach(($plan) => {
+    const $planLink = $plan.querySelector('a');
+
+    if ($planLink) {
+      plans.push({
+        url: $planLink.href,
+        plan: $planLink.textContent,
+        text: $plan.textContent,
+      });
+    }
+  });
+
+  return plans;
 }
 
 function decorateCard($block, cardClass) {
@@ -244,7 +260,8 @@ function decorateCard($block, cardClass) {
   const $cardPricingHeader = createTag('h2', { class: 'puf-pricing-header' });
   const $cardPlansContainer = createTag('div', { class: 'puf-card-plans' });
   const $cardCta = createTag('a', { class: 'button large' });
-  const $plans = $cardTop.querySelectorAll('li a');
+  const $plans = $cardTop.querySelectorAll('li');
+  const plans = buildPlans($plans);
 
   if (cardClass === 'puf-left') {
     $cardCta.classList.add('reverse');
@@ -269,11 +286,11 @@ function decorateCard($block, cardClass) {
 
   $cardHeader.prepend($cardHeaderSvg);
 
-  if ($plans.length) {
-    selectPlan($card, $plans[0].href, false);
+  if (plans.length) {
+    selectPlan($card, plans[0].url, false);
 
-    if ($plans.length > 1) {
-      displayPlans($card, $plans);
+    if (plans.length > 1) {
+      displayPlans($card, plans);
     }
   }
 
