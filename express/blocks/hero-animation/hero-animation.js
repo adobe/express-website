@@ -289,8 +289,6 @@ export default async function decorate($block) {
   if (button) button.classList.add('xlarge');
 
   $block.append($attributions);
-  if ($block.classList.includes('wide')) {
-    addAnimationToggle($block);
-  }
+  addAnimationToggle($block);
   $block.classList.add('appear');
 }
