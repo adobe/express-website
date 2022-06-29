@@ -15,7 +15,7 @@ import {
   loadCSS,
   toClassName,
   getMetadata,
-  fetchExperimentConfig,
+  getExperimentConfig,
   checkTesting,
 } from '../../express/scripts/scripts.js';
 
@@ -38,10 +38,11 @@ function createTesting() {
  * @return {Object} returns a badge or empty string
  */
 async function createExperiment() {
-  const experiment = getMetadata('experiment');
+  const selectedVariant = (window.hlx && window.hlx.experiment && window.hlx.experiment.selectedVariant) ? window.hlx.experiment.selectedVariant : 'control';
+  const experiment = toClassName(getMetadata('experiment'));
   console.log('preview experiment', experiment);
   if (experiment) {
-    const config = await fetchExperimentConfig(experiment);
+    const config = await getExperimentConfig(experiment);
     const createVariant = (variantName) => {
       const variant = config.variants[variantName];
       const split = +variant.percentageSplit
@@ -53,7 +54,7 @@ async function createExperiment() {
       // this will retain other query params such as ?rum=on
       experimentURL.searchParams.set('experiment', `${experiment}/${variantName}`);
 
-      div.className = 'hlx-variant';
+      div.className = `hlx-variant${selectedVariant === variantName ? ' hlx-variant-selected' : ' '}`;
       div.innerHTML = `<div>
       <h5>${variantName}</h5>
         <p>${variant.label}</p>

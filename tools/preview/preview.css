@@ -53,7 +53,7 @@
     bottom: 64px;
     right: 0;
     background-color: #444;
-    padding: 32px;
+    padding: 16px;
     min-width: 300px;
     border-radius: 16px;
     box-shadow: 0 0 10px #000;
@@ -109,6 +109,12 @@
 .hlx-variant {
     margin: 16px 0;
     display: flex;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.hlx-variant-selected {
+    background-color: #666;
 }
 
 .hlx-variant > div {

@@ -1189,8 +1189,8 @@ export function getExperiment() {
   return experiment;
 }
 /**
- * Gets experiment config from the manifest and transforms it to more
- * easily consumable structure.
+ * Gets experiment config from the manifest or the instant experiement
+ * metdata and transforms it to more easily consumable structure.
  *
  * the manifest consists of two sheets "settings" and "experiences"
  *
@@ -1201,56 +1201,88 @@ export function getExperiment() {
  * a "Percentage Split", "Label" and a set of "Pages".
  *
  *
- * @param {string} experimentid
+ * @param {string} experimentId
  * @returns {object} containing the experiment manifest
  */
-export async function fetchExperimentConfig(experiment) {
-  const path = `/express/experiments/${experiment}/manifest.json`;
-  try {
-    const config = {};
-    const resp = await fetch(path);
-    const json = await resp.json();
-    json.settings.data.forEach((line) => {
-      const key = toCamelCase(line.Name);
-      config[key] = line.Value;
+export async function getExperimentConfig(experimentId) {
+  const instantExperiment = getMeta('instant-experiment');
+  if (instantExperiment) {
+    const config = {
+      experimentName: `Instant Experiment: ${experimentId}`,
+      audience: '',
+      status: 'Active',
+      id: experimentId,
+      variants: {},
+      variantNames: [],
+    };
+
+    const pages = instantExperiment.split(',').map((p) => new URL(p.trim()).pathname);
+    const evenSplit = 1 / (pages.length + 1);
+
+    config.variantNames.push('control');
+    config.variants.control = {
+      percentageSplit: '',
+      pages: [window.location.pathname],
+      blocks: [],
+      label: 'Control',
+    };
+
+    pages.forEach((page, i) => {
+      const vname = `challenger-${i + 1}`;
+      config.variantNames.push(vname);
+      config.variants[vname] = {
+        percentageSplit: `${evenSplit}`,
+        pages: [page],
+        label: `Challenger ${i + 1}`,
+      };
     });
-    config.id = experiment;
 
-    const variants = {};
-    let variantNames = Object.keys(json.experiences.data[0]);
-    variantNames.shift();
-    variantNames = variantNames.map((vn) => toCamelCase(vn));
-    variantNames.forEach((variantName) => {
-      variants[variantName] = {};
-    });
-
-    let lastKey = 'default';
-
-    json.experiences.data.forEach((line) => {
-      let key = toCamelCase(line.Name);
-      if (!key) key = lastKey;
-      lastKey = key;
-      const vns = Object.keys(line);
-      vns.shift();
-      vns.forEach((vn) => {
-        const camelVN = toCamelCase(vn);
-        if (key === 'pages' || key === 'blocks') {
-          variants[camelVN][key] = variants[camelVN][key] || [];
-          if (key === 'pages') variants[camelVN][key].push(new URL(line[vn]).pathname);
-          else variants[camelVN][key].push(line[vn]);
-        } else {
-          variants[camelVN][key] = line[vn];
-        }
+    return (config);
+  } else {
+    const path = `/express/experiments/${experimentId}/manifest.json`;
+    try {
+      const config = {};
+      const resp = await fetch(path);
+      const json = await resp.json();
+      json.settings.data.forEach((line) => {
+        const key = toCamelCase(line.Name);
+        config[key] = line.Value;
       });
-    });
-    config.variants = variants;
-    config.variantNames = variantNames;
-    console.log(config);
-    return config;
-  } catch (e) {
-    console.log(`error loading experiment manifest: ${path}`, e);
+      config.id = experimentId;
+      const variants = {};
+      let variantNames = Object.keys(json.experiences.data[0]);
+      variantNames.shift();
+      variantNames = variantNames.map((vn) => toCamelCase(vn));
+      variantNames.forEach((variantName) => {
+        variants[variantName] = {};
+      });
+      let lastKey = 'default';
+      json.experiences.data.forEach((line) => {
+        let key = toCamelCase(line.Name);
+        if (!key) key = lastKey;
+        lastKey = key;
+        const vns = Object.keys(line);
+        vns.shift();
+        vns.forEach((vn) => {
+          const camelVN = toCamelCase(vn);
+          if (key === 'pages' || key === 'blocks') {
+            variants[camelVN][key] = variants[camelVN][key] || [];
+            if (key === 'pages') variants[camelVN][key].push(new URL(line[vn]).pathname);
+            else variants[camelVN][key].push(line[vn]);
+          } else {
+            variants[camelVN][key] = line[vn];
+          }
+        });
+      });
+      config.variants = variants;
+      config.variantNames = variantNames;
+      console.log(config);
+      return config;
+    } catch (e) {
+      console.log(`error loading experiment manifest: ${path}`, e);
+    }
+    return null;
   }
-  return null;
 }
 
 /**
@@ -1348,7 +1380,7 @@ async function decorateTesting() {
 
     if (experiment) {
       console.log('experiment', experiment);
-      const config = await fetchExperimentConfig(experiment);
+      const config = await getExperimentConfig(experiment);
       console.log(config);
       if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
@@ -1376,6 +1408,7 @@ async function decorateTesting() {
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
+            console.log(pageIndex, config.variants.control.pages, currentPath);
             if (pageIndex >= 0) {
               const page = config.variants[config.selectedVariant].pages[pageIndex];
               if (page) {
