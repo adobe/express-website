@@ -35,7 +35,7 @@ function humanFileSize(bytes, si = false, dp = 1) {
     u += 1;
   } while (Math.round(Math.abs(numBytes) * r) / r >= thresh && u < units.length - 1);
 
-  return `${numBytes.toFixed(dp)}${units[u]}`;
+  return `${numBytes.toFixed(dp)} ${units[u]}`;
 }
 
 async function loadSitemap(sitemapURL) {
