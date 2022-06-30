@@ -117,11 +117,8 @@ main .block.puf .puf-card .puf-card-top .puf-card-plans > div span {
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong {
-    font-weight: 600;
-}
-
-main .block.puf .puf-card .puf-card-top .puf-card-plans > div:first-child:not(.strong) {
-    padding-left: 6px;
+    -webkit-text-stroke-width: .6px;
+    -webkit-text-stroke-color: black;
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-switch {
