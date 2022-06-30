@@ -35,7 +35,7 @@ function humanFileSize(bytes, si = false, dp = 1) {
     u += 1;
   } while (Math.round(Math.abs(numBytes) * r) / r >= thresh && u < units.length - 1);
 
-  return `${numBytes.toFixed(dp)} ${units[u]}`;
+  return `${numBytes.toFixed(dp)}${units[u]}`;
 }
 
 async function loadSitemap(sitemapURL) {
@@ -117,6 +117,19 @@ function displayResult(result) {
   }
 }
 
+function exportResults() {
+  const exp = [...document.querySelectorAll('#results > p')]
+    .map((res) => res.querySelector('a:first-of-type').getAttribute('href'))
+    .join('\n');
+  const blob = new Blob([exp], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.getElementById('exportLink');
+  a.href = url;
+  a.download = 'fgrep-export.txt';
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
 async function fgrepNextFile(queue, pattern) {
   const path = queue.shift();
   if (path) {
@@ -156,6 +169,7 @@ export async function run() {
     [pattern, connections] = pattern.split(' -c ');
   }
   fgrepFiles(sitemap, pattern, +connections, resultDisplay);
+  localStorage.setItem('pattern', pattern);
 }
 
 const runButton = document.getElementById('run');
@@ -164,9 +178,13 @@ runButton.addEventListener('click', () => {
 });
 
 const input = document.getElementById('input');
+input.value = localStorage.getItem('pattern') || '';
 input.focus();
+input.setAttribute('autocomplete', 'on');
 input.addEventListener('keyup', (event) => {
   if (event.keyCode === 13) {
     runButton.click();
   }
 });
+
+document.getElementById('export').addEventListener('click', exportResults);
