@@ -261,6 +261,7 @@ function decorateCard($block, cardClass) {
   const $cardPlansContainer = createTag('div', { class: 'puf-card-plans' });
   const $cardCta = createTag('a', { class: 'button large' });
   const $plans = $cardTop.querySelectorAll('li');
+  const $listItems = $cardBottom.querySelectorAll('svg');
   const plans = buildPlans($plans);
 
   if (cardClass === 'puf-left') {
@@ -305,6 +306,12 @@ function decorateCard($block, cardClass) {
   }
 
   $cardContainer.append($card);
+
+  if ($listItems) {
+    $listItems.forEach(($listItem) => {
+      $listItem.parentNode.classList.add('puf-list-item');
+    });
+  }
 
   return $cardContainer;
 }
