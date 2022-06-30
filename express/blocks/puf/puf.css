@@ -278,6 +278,10 @@ main .puf .puf-right {
         text-align: left;
     }
 
+    main .block.puf .puf-card .puf-card-top p:last-child {
+        min-height: 75px;
+    }
+
     main .block.puf .puf-card .puf-card-top .puf-card-plans {
         min-height: 40px;
     }

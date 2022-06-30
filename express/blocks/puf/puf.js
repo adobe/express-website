@@ -342,9 +342,6 @@ function updatePUFCarousel($block, $leftCard, $rightCard) {
     } else {
       atTheEdge = false;
     }
-    scrollIfNotAlreadyScrolling();
-  });
-  $ptfm.addEventListener('touched', () => {
     if (!atTheEdge) {
       scrollIfNotAlreadyScrolling();
     }

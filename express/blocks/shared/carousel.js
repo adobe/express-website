@@ -145,11 +145,6 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     lastPos = e;
   });
   $platform.addEventListener('touchmove', (e) => {
-    if (isScrolling) {
-      $platform.classList.add('platform-touch-scrolling');
-    } else {
-      $platform.classList.remove('platform-touch-scrolling');
-    }
     if (lastPos && !e.target.classList.contains('carousel-arrow')) {
       const relativePosX = e.touches[0].pageX - lastPos.touches[0].pageX;
       if ((relativePosX > 30 || relativePosX < -30) && isScrolling) {
