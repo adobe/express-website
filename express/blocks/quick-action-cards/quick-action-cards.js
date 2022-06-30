@@ -55,7 +55,7 @@ export default function decorate($block) {
     if ($top && $top.tagName === 'P') {
       $top = $top.previousElementSibling;
     }
-    if (!['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes($top.tagName)) {
+    if ($top && !['H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes($top.tagName)) {
       $top = $block;
     }
     const $seeMore = document.createElement('a');
