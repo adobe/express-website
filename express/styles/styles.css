@@ -795,7 +795,7 @@ main .block .free-plan-widget {
   box-sizing: border-box;
   background-color: var(--color-gray-100);
   border-radius: 20px;
-  margin: 32px auto;
+  margin: 32px 0;
   padding: 16px 24px;
   width: fit-content;
   display: flex;
@@ -803,6 +803,10 @@ main .block .free-plan-widget {
   font-size: var(--body-font-size-m);
   font-weight: 400;
   white-space: nowrap;
+}
+
+main .block.center .free-plan-widget {
+  margin: 32px auto;
 }
 
 main .block .free-plan-widget > div {
@@ -834,7 +838,7 @@ main .block .free-plan-widget .icon.icon-checkmark {
     margin: 0;
   }
 
-  main .block .free-plan-widget {
+  main .block.center .free-plan-widget {
     margin: 0 auto;
   }
 }
