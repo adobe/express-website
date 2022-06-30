@@ -315,11 +315,38 @@ function updatePUFCarousel($block, $leftCard, $rightCard) {
   setTimeout(() => {
     $carouselPlatform.scrollLeft = $carouselPlatform.offsetWidth;
   }, 1000);
-  $carouselPlatform.addEventListener('scroll', () => {
-    if ($carouselPlatform.scrollLeft < ($carouselPlatform.scrollWidth / 4)) {
+  const $ptfm = $carouselPlatform;
+  let atTheEdge;
+  let alreadyScrolling;
+  const scrollIfNotAlreadyScrolling = () => {
+    if (!alreadyScrolling) {
+      alreadyScrolling = true;
+      const scroll = ($ptfm.scrollLeft < ($ptfm.scrollWidth / 4)) ? $ptfm.scrollWidth : 0;
+      $ptfm.scrollTo({ left: scroll, behavior: 'smooth' });
+      const checkIfScrollToIsFinished = setInterval(() => {
+        if (atTheEdge) {
+          alreadyScrolling = false;
+          clearInterval(checkIfScrollToIsFinished);
+        }
+      }, 25);
+    }
+  };
+  $ptfm.addEventListener('scroll', () => {
+    if ($ptfm.scrollLeft < ($ptfm.scrollWidth / 4)) {
       $carouselContainer.style.maxHeight = `${40 + $leftCard.offsetHeight}px`;
     } else {
       $carouselContainer.style.maxHeight = `${40 + $rightCard.offsetHeight}px`;
+    }
+    if ($ptfm.offsetWidth + $ptfm.scrollLeft >= $ptfm.scrollWidth || $ptfm.scrollLeft === 0) {
+      atTheEdge = true;
+    } else {
+      atTheEdge = false;
+    }
+    scrollIfNotAlreadyScrolling();
+  });
+  $ptfm.addEventListener('touched', () => {
+    if (!atTheEdge) {
+      scrollIfNotAlreadyScrolling();
     }
   });
 }
