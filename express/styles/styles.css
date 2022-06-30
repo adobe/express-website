@@ -779,8 +779,11 @@ main .columns.columns-marquee {
 main .block .button-container.free-plan-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
+}
+
+main .block.center .button-container.free-plan-container {
+  justify-content: center;
 }
 
 main .block .button-container.free-plan-container a.button {
@@ -817,7 +820,7 @@ main .block .free-plan-widget > div > div:first-child {
   border-radius: 50%;
 }
 
-main .block .free-plan-widget .icon.icon-check {
+main .block .free-plan-widget .icon.icon-checkmark {
   position: absolute;
   top: 3px;
   left: 3px;

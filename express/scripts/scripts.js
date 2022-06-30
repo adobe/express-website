@@ -1903,7 +1903,7 @@ function removeMetadata() {
 export async function addFreePlanWidget(elem) {
   if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
-    const checkmark = getIcon('check', '', 22);
+    const checkmark = getIcon('checkmark');
     const widget = createTag('div', { class: 'free-plan-widget' });
     widget.innerHTML = `
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
