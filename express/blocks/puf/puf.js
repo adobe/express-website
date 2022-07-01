@@ -347,7 +347,6 @@ function updatePUFCarousel($block) {
         changeSlide(1);
       }
     });
-    // Swipe Up / Down / Left / Right
     let initialX = null;
     let initialY = null;
     const startTouch = (e) => {
