@@ -40,8 +40,48 @@ function displayPopup(e) {
     e.preventDefault();
     e.target.removeEventListener('click', displayPopup);
     document.querySelector('.pricing-modal-container').style.display = 'flex';
+    const usp = new URLSearchParams(window.location.search);
+    const useAlloy = (
+      window.location.hostname === 'www.stage.adobe.com'
+      || (
+        usp.has('martech')
+        && usp.get('martech').includes('alloy')
+      )
+    );
 
-    if (window.digitalData && window._satellite) {
+    if (useAlloy) {
+      const { _satellite } = window;
+      _satellite.track('event', {
+        xdm: {},
+        data: {
+          eventType: 'web.webinteraction.linkClicks',
+          web: {
+            webInteraction: {
+              name: 'pricingModalDisplayed',
+              linkClicks: {
+                value: 1,
+              },
+              type: 'other',
+            },
+          },
+          _adobe_corpnew: {
+            digitalData: {
+              primaryEvent: {
+                eventInfo: {
+                  eventName: 'pricingModalDisplayed',
+                },
+              },
+              spark: {
+                eventData: {
+                  eventName: 'pricingModalDisplayed',
+                  sendTimestamp: new Date().getTime(),
+                },
+              },
+            },
+          },
+        },
+      });
+    } else if (window.digitalData && window._satellite) {
       const { digitalData, _satellite } = window;
       digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalDisplayed');
       digitalData._set('spark.eventData.eventName', 'pricingModalDisplayed');
