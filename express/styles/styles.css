@@ -776,6 +776,74 @@ main .columns.columns-marquee {
   min-height: 650px;
 }
 
+/* free plan widget */
+main .block .button-container.free-plan-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+main .block.center .button-container.free-plan-container {
+  justify-content: center;
+}
+
+main .block .button-container.free-plan-container a.button {
+  max-height: 24px;
+  margin-right: 24px !important;
+}
+
+main .block .free-plan-widget {
+  box-sizing: border-box;
+  background-color: var(--color-gray-100);
+  border-radius: 20px;
+  margin: 32px 0;
+  padding: 16px 24px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+main .block.center .free-plan-widget {
+  margin: 32px auto;
+}
+
+main .block .free-plan-widget > div {
+  display: flex;
+  flex-direction: row;
+}
+
+main .block .free-plan-widget > div > div:first-child {
+  position: relative;
+  margin-top: 5px;
+  margin-right: 6px;
+  width: 14px;
+  height: 14px;
+  background: #33AB84;
+  border-radius: 50%;
+}
+
+main .block .free-plan-widget .icon.icon-checkmark {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  fill: var(--color-white);
+  width: 8px;
+  max-height: 8px;
+}
+
+@media (min-width:900px) {
+  main .block .button-container.free-plan-container .free-plan-widget {
+    margin: 0;
+  }
+
+  main .block.center .free-plan-widget {
+    margin: 0 auto;
+  }
+}
+
 @media (min-width: 1200px) {
   main .template-list-fourcols-container > div,
   main .template-list-horizontal-container > div {
@@ -811,6 +879,11 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
 .lottie {
   width: 32px;
   height: 32px;
+}
+
+/* hide promotion block until loaded */
+main .promotion {
+  display: none;
 }
 
 /* hide floating button before css loads */

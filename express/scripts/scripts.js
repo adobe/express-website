@@ -434,8 +434,13 @@ export function decorateSections($main) {
       const meta = readBlockConfig(sectionMeta);
       const keys = Object.keys(meta);
       keys.forEach((key) => {
-        if (key === 'style') section.classList.add(toClassName(meta.style));
-        else section.dataset[key] = meta[key];
+        if (key === 'style') {
+          section.classList.add(toClassName(meta.style));
+        } else if (key === 'anchor') {
+          section.id = toClassName(meta.anchor);
+        } else {
+          section.dataset[key] = meta[key];
+        }
       });
       sectionMeta.remove();
     }
@@ -849,7 +854,12 @@ export function scrollToHash() {
   if (hash) {
     const elem = document.querySelector(hash);
     if (elem) {
-      elem.scrollIntoView(true);
+      setTimeout(() => {
+        elem.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth',
+        });
+      }, 500);
     }
   }
 }
@@ -929,7 +939,7 @@ export function loadScript(url, callback, type) {
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
-  return $meta && $meta.content;
+  return ($meta && $meta.content) || '';
 }
 
 /**
@@ -973,7 +983,7 @@ function addPromotion() {
       };
       // insert promotion at the bottom
       if (promos[category]) {
-        const $promoSection = createTag('div', { class: '.section' });
+        const $promoSection = createTag('div', { class: 'section' });
         $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));
@@ -1754,23 +1764,43 @@ export async function decorateMain($main) {
   makeRelativeLinks($main);
 }
 
+const usp = new URLSearchParams(window.location.search);
 window.spark = {};
+window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const hostparam = new URLSearchParams(window.location.search).get('hostname');
-window.spark.hostname = hostparam || window.location.hostname;
+const useAlloy = (
+  window.spark.hostname === 'www.stage.adobe.com'
+  || (
+    usp.has('martech')
+    && usp.get('martech').includes('alloy')
+  )
+);
 
-function unhideBody(id) {
+function unhideBody() {
   try {
+    const id = (
+      useAlloy
+        ? 'alloy-prehiding'
+        : 'at-body-style'
+    );
     document.head.removeChild(document.getElementById(id));
   } catch (e) {
     // nothing
   }
 }
 
-function hideBody(id) {
+function hideBody() {
   const style = document.createElement('style');
-  style.id = id;
-  style.textContent = 'body{visibility: hidden !important}';
+  style.id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  style.innerHTML = (
+    useAlloy
+      ? '.personalization-container{opacity:0.01 !important}'
+      : 'body{visibility: hidden !important}'
+  );
 
   try {
     document.head.appendChild(style);
@@ -1844,12 +1874,15 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      const target = checkTesting();
+      let target = checkTesting();
+      if (useAlloy) {
+        document.querySelector('body').classList.add('personalization-container');
+        target = true;
+      }
       if (target) {
-        const bodyHideStyleId = 'at-body-style';
-        hideBody(bodyHideStyleId);
+        hideBody();
         setTimeout(() => {
-          unhideBody(bodyHideStyleId);
+          unhideBody();
         }, 3000);
       }
     }
@@ -1873,6 +1906,21 @@ function removeMetadata() {
       meta.remove();
     }
   });
+}
+
+export async function addFreePlanWidget(elem) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+    const placeholders = await fetchPlaceholders();
+    const checkmark = getIcon('checkmark');
+    const widget = createTag('div', { class: 'free-plan-widget' });
+    widget.innerHTML = `
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+    `;
+    elem.append(widget);
+    elem.classList.add('free-plan-container');
+    console.log(elem.tagName, elem.offsetParent, getComputedStyle(elem).display);
+  }
 }
 
 /**

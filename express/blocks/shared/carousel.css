@@ -1,4 +1,3 @@
-
 main .carousel-container {
   display: inline-block;
   position: relative;
@@ -22,9 +21,12 @@ main .carousel-container .carousel-platform {
   scrollbar-width: none;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
+  max-height: 500px;
+  padding-bottom: 6px;
 }
 
-main .carousel-container .carousel-platform::-webkit-scrollbar {
+main .carousel-container:not(.controls-hidden) .carousel-platform::-webkit-scrollbar,
+main .carousel-container .carousel-platform.infinity-scroll-loaded::-webkit-scrollbar {
   display: none;
 }
 
@@ -43,7 +45,8 @@ main .carousel-container .carousel-fader-left {
   top: 0;
   left: 0;
   transition: opacity 0.2s, display 0.2s;
-  pointer-events: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 main .carousel-container .carousel-fader-right {
@@ -57,7 +60,8 @@ main .carousel-container .carousel-fader-right {
   right: 0;
   flex-direction: row-reverse;
   transition: opacity 0.2s;
-  pointer-events: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 main .carousel-container a.button.carousel-arrow {
@@ -76,6 +80,12 @@ main .carousel-container a.button.carousel-arrow {
 main .carousel-container .carousel-fader-left.arrow-hidden,
 main .carousel-container .carousel-fader-right.arrow-hidden {
   opacity: 0;
+  pointer-events: none;
+}
+
+main .carousel-container img,
+main .carousel-container video {
+  pointer-events: none;
 }
 
 main .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
@@ -113,6 +123,10 @@ main .carousel-container.controls-hidden .carousel-platform {
 }
 
 @media (min-width: 900px) {  
+  main .carousel-container .carousel-platform::-webkit-scrollbar {
+    display: none;
+  }
+
   main .carousel-container a.button.carousel-arrow {
     margin: 0 10px;
   }

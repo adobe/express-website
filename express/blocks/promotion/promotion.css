@@ -4,6 +4,10 @@ main .section.promotion-container {
   margin-bottom: 120px;
 }
 
+main .promotion[data-block-status="loaded"] {
+  display: block;
+}
+
 main .promotion .promotion-wrapper {
   border: 1px solid var(--color-gray-300);
   border-radius: 8px;
