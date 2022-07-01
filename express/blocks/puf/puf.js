@@ -365,11 +365,11 @@ function updatePUFCarousel($block) {
           changeSlide(1);
         } else {
           changeSlide(0);
-        };
+        }
+        e.preventDefault();
       }
       initialX = null;
       initialY = null;
-      e.preventDefault();
     };
     $block.addEventListener('touchstart', startTouch, false);
     $block.addEventListener('touchmove', moveTouch, false);
