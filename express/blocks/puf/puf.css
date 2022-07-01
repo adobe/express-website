@@ -41,7 +41,7 @@ main .block.puf .puf-card-container {
 }
 
 main .block.puf .puf-card {
-    border: 1px #F8F8F8 solid;
+    border: 1px var(--color-gray-100) solid;
     box-shadow: 0 0 20px #0000001A;
     border-radius: 20px;
     box-sizing: border-box;
@@ -108,21 +108,21 @@ main .block.puf .puf-card .puf-card-top .puf-card-plans {
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div {
-    color: #5C5CE0;
+    color: var(--color-info-accent);
     text-align: right;
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div span {
-    color: #242424;
+    color: var(--color-gray-800);
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong {
     -webkit-text-stroke-width: .6px;
-    -webkit-text-stroke-color: #5C5CE0;
+    -webkit-text-stroke-color: var(--color-info-accent);
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong span {
-  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-color: var(--color-gray-800);
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-switch {
@@ -146,7 +146,7 @@ main .block.puf .puf-card .puf-card-top .puf-card-slider {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #5C5CE0;
+    background-color: var(--color-info-accent);
     -webkit-transition: .4s;
     transition: .4s;
     border-radius: 34px;
@@ -166,7 +166,7 @@ main .block.puf .puf-card .puf-card-top .puf-card-slider::before {
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-switch input:checked + .puf-card-slider {
-    background-color: #5C5CE0;
+    background-color: var(--color-info-accent);
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-switch input:focus + .puf-card-slider {
@@ -266,7 +266,7 @@ main .puf .puf-right {
         left: 0;
         width: 100%;
         height: 50px;
-        background-color: #EBCF2D;
+        background-color: var(--color-premium);
         border-radius: 20px 20px 0 0;
     }
 
@@ -327,7 +327,7 @@ main .puf .puf-right {
         transform: translateY(-50%);
         width: 13px;
         height: 11.5px;
-        background-color: #5C5CE0;
+        background-color: var(--color-info-accent);
         -webkit-mask-image: url('/express/blocks/puf/check.svg');
         mask-image: url('/express/blocks/puf/check.svg');
         -webkit-mask-repeat: no-repeat;
