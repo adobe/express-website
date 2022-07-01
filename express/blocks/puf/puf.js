@@ -340,13 +340,39 @@ function updatePUFCarousel($block) {
     };
     $leftArrow.addEventListener('click', () => changeSlide(0));
     $rightArrow.addEventListener('click', () => changeSlide(1));
-    document.addEventListener('keyup', (e) => {
+    $block.addEventListener('keyup', (e) => {
       if (e.key === 'ArrowLeft') {
         changeSlide(0);
       } else if (e.key === 'ArrowRight') {
         changeSlide(1);
       }
     });
+    // Swipe Up / Down / Left / Right
+    let initialX = null;
+    let initialY = null;
+    const startTouch = (e) => {
+      initialX = e.touches[0].clientX;
+      initialY = e.touches[0].clientY;
+    };
+    const moveTouch = (e) => {
+      if (initialX === null || initialY === null) return;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const diffX = initialX - currentX;
+      const diffY = initialY - currentY;
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          changeSlide(1);
+        } else {
+          changeSlide(0);
+        };
+      }
+      initialX = null;
+      initialY = null;
+      e.preventDefault();
+    };
+    $block.addEventListener('touchstart', startTouch, false);
+    $block.addEventListener('touchmove', moveTouch, false);
   };
   const waitForCardsToLoad = setInterval(() => {
     if (!$leftCard && !$rightCard) {
