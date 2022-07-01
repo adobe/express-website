@@ -670,7 +670,7 @@ export async function getOffer(offerId, countryOverride) {
   if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
 
   if (offer) {
-    console.log(offer);
+    // console.log(offer);
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
@@ -680,7 +680,15 @@ export async function getOffer(offerId, countryOverride) {
     const suffix = offer.suf;
 
     return {
-      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo, prefix, suffix,
+      country,
+      currency,
+      unitPrice,
+      unitPriceCurrencyFormatted,
+      commerceURL,
+      lang,
+      vatInfo,
+      prefix,
+      suffix,
     };
   }
   return {};
