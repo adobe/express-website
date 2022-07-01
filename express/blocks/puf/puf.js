@@ -261,6 +261,7 @@ function decorateCard($block, cardClass) {
   const $cardPlansContainer = createTag('div', { class: 'puf-card-plans' });
   const $cardCta = createTag('a', { class: 'button large' });
   const $plans = $cardTop.querySelectorAll('li');
+  const $listItems = $cardBottom.querySelectorAll('svg');
   const plans = buildPlans($plans);
 
   if (cardClass === 'puf-left') {
@@ -306,22 +307,81 @@ function decorateCard($block, cardClass) {
 
   $cardContainer.append($card);
 
+  if ($listItems) {
+    $listItems.forEach(($listItem) => {
+      $listItem.parentNode.classList.add('puf-list-item');
+    });
+  }
+
   return $cardContainer;
 }
 
-function updatePUFCarousel($block, $leftCard, $rightCard) {
-  const $carouselPlatform = $block.querySelector('.carousel-platform');
+function updatePUFCarousel($block) {
   const $carouselContainer = $block.querySelector('.carousel-container');
-  setTimeout(() => {
+  const $carouselPlatform = $block.querySelector('.carousel-platform');
+  let $leftCard = $block.querySelector('.puf-left');
+  let $rightCard = $block.querySelector('.puf-right');
+  $carouselContainer.classList.add('slide-2-selected');
+  const slideFunctionality = () => {
     $carouselPlatform.scrollLeft = $carouselPlatform.offsetWidth;
-  }, 1000);
-  $carouselPlatform.addEventListener('scroll', () => {
-    if ($carouselPlatform.scrollLeft < ($carouselPlatform.scrollWidth / 4)) {
-      $carouselContainer.style.maxHeight = `${40 + $leftCard.offsetHeight}px`;
+    $carouselContainer.style.minHeight = `${$rightCard.clientHeight + 40}px`;
+    const $rightArrow = $carouselContainer.querySelector('.carousel-fader-right');
+    const $leftArrow = $carouselContainer.querySelector('.carousel-fader-left');
+    const changeSlide = (index) => {
+      if (index === 0) {
+        $carouselContainer.classList.add('slide-1-selected');
+        $carouselContainer.classList.remove('slide-2-selected');
+        $carouselContainer.style.minHeight = `${$leftCard.clientHeight + 40}px`;
+      } else {
+        $carouselContainer.classList.remove('slide-1-selected');
+        $carouselContainer.classList.add('slide-2-selected');
+        $carouselContainer.style.minHeight = `${$rightCard.clientHeight + 40}px`;
+      }
+    };
+    $leftArrow.addEventListener('click', () => changeSlide(0));
+    $rightArrow.addEventListener('click', () => changeSlide(1));
+    $block.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft') {
+        changeSlide(0);
+      } else if (e.key === 'ArrowRight') {
+        changeSlide(1);
+      }
+    });
+    let initialX = null;
+    let initialY = null;
+    const startTouch = (e) => {
+      initialX = e.touches[0].clientX;
+      initialY = e.touches[0].clientY;
+    };
+    const moveTouch = (e) => {
+      if (initialX === null || initialY === null) return;
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const diffX = initialX - currentX;
+      const diffY = initialY - currentY;
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          changeSlide(1);
+        } else {
+          changeSlide(0);
+        }
+        e.preventDefault();
+      }
+      initialX = null;
+      initialY = null;
+    };
+    $block.addEventListener('touchstart', startTouch, false);
+    $block.addEventListener('touchmove', moveTouch, false);
+  };
+  const waitForCardsToLoad = setInterval(() => {
+    if (!$leftCard && !$rightCard) {
+      $leftCard = $block.querySelector('.puf-left');
+      $rightCard = $block.querySelector('.puf-right');
     } else {
-      $carouselContainer.style.maxHeight = `${40 + $rightCard.offsetHeight}px`;
+      clearInterval(waitForCardsToLoad);
+      slideFunctionality();
     }
-  });
+  }, 200);
 }
 
 export default function decorate($block) {
@@ -334,6 +394,6 @@ export default function decorate($block) {
   $block.append($rightCard);
 
   buildCarousel('.puf-card-container', $block);
-  updatePUFCarousel($block, $leftCard, $rightCard);
+  updatePUFCarousel($block);
   addPublishDependencies('/express/system/offers-new.json');
 }
