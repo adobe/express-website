@@ -1927,7 +1927,6 @@ export async function addFreePlanWidget(elem) {
     `;
     elem.append(widget);
     elem.classList.add('free-plan-container');
-    console.log(elem.tagName, elem.offsetParent, getComputedStyle(elem).display);
   }
 }
 
