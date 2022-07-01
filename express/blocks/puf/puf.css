@@ -330,6 +330,7 @@ main .puf .puf-right {
         -webkit-mask-image: url('/express/blocks/puf/check.svg');
         mask-image: url('/express/blocks/puf/check.svg');
         -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
         -webkit-mask-size: contain;
         mask-repeat: no-repeat;
         mask-position: center;
