@@ -446,6 +446,10 @@ main .section:last-of-type {
   margin-bottom: 0;
 }
 
+main .section:last-of-type > .default-content-wrapper {
+  padding-bottom: 40px;  
+}
+
 @media (min-width:600px) {
 
   main h2 {
@@ -649,14 +653,6 @@ main .hero a.button:any-link {
 
 main .section {
   padding-top: 60px;
-}
-
-main .section:first-of-type {
-  padding-top: 120px;
-}
-
-main .section:first-of-type {
-  padding: 0;
 }
 
 main .section > div {
