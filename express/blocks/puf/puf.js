@@ -316,43 +316,47 @@ function decorateCard($block, cardClass) {
   return $cardContainer;
 }
 
-function updatePUFCarousel($block, $leftCard, $rightCard) {
-  const $carouselPlatform = $block.querySelector('.carousel-platform');
+function updatePUFCarousel($block) {
   const $carouselContainer = $block.querySelector('.carousel-container');
-  setTimeout(() => {
+  const $carouselPlatform = $block.querySelector('.carousel-platform');
+  let $leftCard = $block.querySelector('.puf-left');
+  let $rightCard = $block.querySelector('.puf-right');
+  $carouselContainer.classList.add('slide-2-selected');
+  const slideFunctionality = () => {
     $carouselPlatform.scrollLeft = $carouselPlatform.offsetWidth;
-  }, 1000);
-  const $ptfm = $carouselPlatform;
-  let atTheEdge;
-  let alreadyScrolling;
-  const scrollIfNotAlreadyScrolling = () => {
-    if (!alreadyScrolling) {
-      alreadyScrolling = true;
-      const scroll = ($ptfm.scrollLeft < ($ptfm.scrollWidth / 4)) ? $ptfm.scrollWidth : 0;
-      $ptfm.scrollTo({ left: scroll, behavior: 'smooth' });
-      const checkIfScrollToIsFinished = setInterval(() => {
-        if (atTheEdge) {
-          alreadyScrolling = false;
-          clearInterval(checkIfScrollToIsFinished);
-        }
-      }, 25);
-    }
+    $carouselContainer.style.minHeight = `${$rightCard.clientHeight + 40}px`;
+    const $rightArrow = $carouselContainer.querySelector('.carousel-fader-right');
+    const $leftArrow = $carouselContainer.querySelector('.carousel-fader-left');
+    const changeSlide = (index) => {
+      if (index === 0) {
+        $carouselContainer.classList.add('slide-1-selected');
+        $carouselContainer.classList.remove('slide-2-selected');
+        $carouselContainer.style.minHeight = `${$leftCard.clientHeight + 40}px`;
+      } else {
+        $carouselContainer.classList.remove('slide-1-selected');
+        $carouselContainer.classList.add('slide-2-selected');
+        $carouselContainer.style.minHeight = `${$rightCard.clientHeight + 40}px`;
+      }
+    };
+    $leftArrow.addEventListener('click', () => changeSlide(0));
+    $rightArrow.addEventListener('click', () => changeSlide(1));
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft') {
+        changeSlide(0);
+      } else if (e.key === 'ArrowRight') {
+        changeSlide(1);
+      }
+    });
   };
-  $ptfm.addEventListener('scroll', () => {
-    if ($ptfm.scrollLeft < ($ptfm.scrollWidth / 4)) {
-      $carouselContainer.style.maxHeight = `${40 + $leftCard.offsetHeight}px`;
+  const waitForCardsToLoad = setInterval(() => {
+    if (!$leftCard && !$rightCard) {
+      $leftCard = $block.querySelector('.puf-left');
+      $rightCard = $block.querySelector('.puf-right');
     } else {
-      $carouselContainer.style.maxHeight = `${40 + $rightCard.offsetHeight}px`;
+      clearInterval(waitForCardsToLoad);
+      slideFunctionality();
     }
-    if ($ptfm.offsetWidth + $ptfm.scrollLeft >= $ptfm.scrollWidth || $ptfm.scrollLeft === 0) {
-      atTheEdge = true;
-    } else {
-      atTheEdge = false;
-    }
-    if (!atTheEdge) {
-      scrollIfNotAlreadyScrolling();
-    }
-  });
+  }, 200);
 }
 
 export default function decorate($block) {
@@ -365,6 +369,6 @@ export default function decorate($block) {
   $block.append($rightCard);
 
   buildCarousel('.puf-card-container', $block);
-  updatePUFCarousel($block, $leftCard, $rightCard);
+  updatePUFCarousel($block);
   addPublishDependencies('/express/system/offers-new.json');
 }

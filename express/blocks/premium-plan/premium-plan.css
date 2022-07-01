@@ -51,6 +51,7 @@ main .premium-plan .premium-plan-cards > div {
     align-items: center;
 
     padding: 0 15px 20px 15px;
+    box-sizing: border-box;
     max-width: 375px;
 }
 
