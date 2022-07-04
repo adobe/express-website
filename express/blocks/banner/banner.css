@@ -1,14 +1,10 @@
 main .section.banner-container {
   background-color: var(--color-info-accent);
-  padding: 80px 15px;
 }
 
+main .section.banner-container,
 main .section.banner-light-container {
-  padding: 80px 15px 0;
-}
-
-main .section:first-of-type {
-  padding-top: 0;
+  padding: 80px 15px;
 }
 
 main .section.banner-container > div {

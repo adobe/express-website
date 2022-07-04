@@ -31,6 +31,7 @@ module.exports = (config) => {
       '/blocks': '/base/test/unit/blocks',
       '/express/testing.json': '/base/test/unit/mocks/express/testing.json',
       '/express/system/offers.json': '/base/test/unit/mocks/express/system/offers.json',
+      '/express/system/offers-new.json': '/base/test/unit/mocks/express/system/offers.json',
       '/media/': '/base/test/unit/mocks/express/media/',
       '/media_a496779a307c49d99dad2eb20205607d59ea5b17a.mp4': '/base/test/unit/mocks/express/media/video.mp4',
     },
