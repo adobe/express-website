@@ -6,7 +6,7 @@
   "pushDownSelector": "#feds-header",
   "plugins": [
     {
-      "id": 'metadata',
+      "id": "metadata",
       "title": "Meta Data Inspector",
       "url": "https://main--express-website--adobe.hlx.page/tools/metadata/inspector.html",
       "environments": [ "edit" ],
