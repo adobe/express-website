@@ -20,6 +20,6 @@
       "environments": [ "edit" ],
       "exclude_paths": [ "/**" ],
       "include_paths": [ "**.docx**" ]
-    },
+    }
   ]
 }
