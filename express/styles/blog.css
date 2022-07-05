@@ -178,3 +178,7 @@
     }
 }
   
+/* Japanese font sizing styles */
+:lang(ja).blog main .section h3 {
+  font-size: var(--heading-font-size-m);
+}

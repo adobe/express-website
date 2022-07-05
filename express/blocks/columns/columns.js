@@ -16,9 +16,9 @@ import {
   transformLinkToAnimation,
   addAnimationToggle,
   toClassName,
-  getLocale,
   getIconElement,
   addFreePlanWidget,
+  addHeaderSizing,
 } from '../../scripts/scripts.js';
 
 import {
@@ -123,29 +123,6 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
     });
     if ($iconList.children.length > 0) $columnCell.appendChild($iconList);
   }
-}
-
-function addHeaderSizing($block) {
-  const headings = $block.querySelectorAll('h1, h2');
-  // Each threshold of JP should be smaller than other languages
-  // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 12 },
-      { name: 'very-long', threshold: 18 },
-      { name: 'x-long', threshold: 24 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
-  headings.forEach((h) => {
-    const { length } = h.textContent;
-    sizes.forEach((size) => {
-      if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
-    });
-  });
 }
 
 export default function decorate($block) {
@@ -259,7 +236,7 @@ export default function decorate($block) {
     });
   });
   addAnimationToggle($block);
-  addHeaderSizing($block);
+  addHeaderSizing($block, 'columns-heading');
 
   // decorate offer
   if ($block.classList.contains('offer')) {

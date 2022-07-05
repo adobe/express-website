@@ -1859,6 +1859,70 @@ async function wordBreakJapanese() {
 }
 
 /**
+ * Calculate a relatively more accurate "character count" for mixed Japanese
+ * + English texts, for the purpose of heading auto font sizing.
+ *
+ * The rationale is that English characters are usually narrower than Japanese
+ * ones. Hence each English character (and space character) is multiplied by an
+ * coefficient before being added to the total character count. The current
+ * coefficient value, 0.57, is an empirical value from some tests.
+ */
+function getJapaneseTextCharacterCount(text) {
+  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
+  const matches = text.matchAll(headingEngCharsRegEx);
+  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
+  const jtext = text.replaceAll(headingEngCharsRegEx, '');
+  const jCnt = jtext.length;
+  return eCnt * 0.57 + jCnt;
+}
+
+/**
+ * Add dynamic font sizing CSS class names to headings
+ *
+ * The CSS class names are determined by character counts.
+ * @param {Element} $block The container element
+ * @param {string} classPrefix Prefix in CSS class names before "-long", "-very-long", "-x-long".
+ * Default is "heading".
+ * @param {string} selector CSS selector to select the target heading tags. Default is "h1, h2".
+ */
+export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1, h2') {
+  const headings = $block.querySelectorAll(selector);
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 8 },
+      { name: 'very-long', threshold: 11 },
+      { name: 'x-long', threshold: 15 },
+    ]
+    : [
+      { name: 'long', threshold: 30 },
+      { name: 'very-long', threshold: 40 },
+      { name: 'x-long', threshold: 50 },
+    ];
+  headings.forEach((h) => {
+    const length = getLocale(window.location) === 'jp'
+      ? getJapaneseTextCharacterCount(h.textContent)
+      : h.textContent.length;
+    sizes.forEach((size) => {
+      if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
+    });
+  });
+}
+
+/**
+ * Call `addHeaderSizing` on default content blocks in all section blocks
+ * in all Japanese pages except blog pages.
+ */
+function addJapaneseSectionHeaderSizing() {
+  if (getLocale(window.location) === 'jp') {
+    document.querySelectorAll('body:not(.blog) .section .default-content-wrapper').forEach((el) => {
+      addHeaderSizing(el);
+    });
+  }
+}
+
+/**
  * loads everything needed to get to LCP.
  */
 async function loadEager() {
@@ -1870,6 +1934,7 @@ async function loadEager() {
     await decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
+    addJapaneseSectionHeaderSizing();
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
