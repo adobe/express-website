@@ -56,11 +56,6 @@ main .columns p.powered-by {
   line-height: 1.2;
 }
 
-main .columns p.legal-copy {
-  font-size: var(--body-font-size-xs);
-  line-height: 1.5;
-}
-
 main .columns p.button-container {
   margin: 0;
   margin-top: 40px;

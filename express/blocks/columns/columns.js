@@ -175,14 +175,6 @@ export default function decorate($block) {
         $parentDiv.insertBefore($pics[0], $parentParagraph);
       }
 
-      // legal copy
-      $cell.querySelectorAll(':scope p').forEach(($p) => {
-        const pText = $p.textContent.trim();
-        if (['*', '†'].includes(pText.charAt(0))) {
-          $p.classList.add('legal-copy');
-        }
-      });
-
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
       if ($a) {
