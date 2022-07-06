@@ -1923,6 +1923,20 @@ function addJapaneseSectionHeaderSizing() {
 }
 
 /**
+ * Detects legal copy based on a * or † prefix and applies a smaller font size.
+ * @param {HTMLMainElement} main The main element
+ */
+function decorateLegalCopy(main) {
+  const legalCopyPrefixes = ['*', '†'];
+  main.querySelectorAll('p').forEach(($p) => {
+    const pText = $p.textContent.trim()?.charAt(0);
+    if (pText && legalCopyPrefixes.includes(pText)) {
+      $p.classList.add('legal-copy');
+    }
+  });
+}
+
+/**
  * loads everything needed to get to LCP.
  */
 async function loadEager() {
@@ -1934,6 +1948,7 @@ async function loadEager() {
     await decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
+    decorateLegalCopy(main);
     addJapaneseSectionHeaderSizing();
     displayEnv();
     displayOldLinkWarning();
