@@ -1929,7 +1929,7 @@ function addJapaneseSectionHeaderSizing() {
 function decorateLegalCopy(main) {
   const legalCopyPrefixes = ['*', '†'];
   main.querySelectorAll('p').forEach(($p) => {
-    const pText = $p.textContent.trim()?.charAt(0);
+    const pText = $p.textContent.trim() ? $p.textContent.trim().charAt(0) : '';
     if (pText && legalCopyPrefixes.includes(pText)) {
       $p.classList.add('legal-copy');
     }
