@@ -24,14 +24,21 @@ export default function decorate($block) {
         $toggle.classList.add('active');
       }
 
-      $toggle.addEventListener('click', (e) => {
-        $sections.forEach(($section) => {
-          if ($section.dataset.toggle === $toggle.textContent) {
-            $section.style.display = 'block';
-          } else {
-            $section.style.display = 'none';
-          }
-        });
+      $toggle.addEventListener('click', () => {
+        const $currentlyActive = $block.querySelector('li.active');
+
+        if ($currentlyActive !== $toggle) {
+          $currentlyActive.classList.remove('active');
+          $toggle.classList.add('active');
+
+          $sections.forEach(($section) => {
+            if ($section.dataset.toggle === $toggle.textContent) {
+              $section.style.display = 'block';
+            } else {
+              $section.style.display = 'none';
+            }
+          });
+        }
       });
     });
   }
