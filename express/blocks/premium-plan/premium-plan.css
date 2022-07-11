@@ -235,6 +235,7 @@ main .premium-plan .premium-plan-card ul li a svg {
   main .premium-plan-cards .carousel-container,
   main .premium-plan-cards .carousel-container .carousel-platform {
     display: block;
+    max-height: unset;
   }
 
   main .premium-plan-cards .carousel-container a.button.carousel-arrow {
