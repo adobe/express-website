@@ -25,7 +25,7 @@ function getWidth() {
 
 function enableMouseAnimation($block) {
   const $slides = $block.querySelectorAll('.choose-your-path-slide ');
-  const $images = $block.querySelectorAll('.choose-your-path-slide-image img');
+  const $images = $block.querySelectorAll('.choose-your-path-slide-image');
 
   document.addEventListener('mousemove', (e) => {
     const maxWidth = getWidth();
