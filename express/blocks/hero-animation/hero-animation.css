@@ -338,8 +338,20 @@ main .hero-animation .hero-shadow picture {
 
 /* free plan widget */
 
-main .block .button-container.free-plan-container {
+main .hero-animation .button-container.free-plan-container {
   justify-content: left;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+main .hero-animation .button-container.free-plan-container .free-plan-widget {
+  margin-top: 40px;
+  color: var(--body-color);
+}
+
+main .hero-animation.wide .button-container.free-plan-container {
+  flex-direction: row;
+  align-items: center;
 }
 
 main .hero-animation.wide .free-plan-widget {
