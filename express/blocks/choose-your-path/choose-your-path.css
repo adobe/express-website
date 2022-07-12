@@ -9,6 +9,7 @@ main .choose-your-path {
     top: 0;
     left: 0;
     z-index: 1000;
+    cursor: pointer;
 }
 
 main .choose-your-path .choose-your-path-slide {
@@ -33,11 +34,6 @@ main .choose-your-path .choose-your-path-slide div {
     justify-content: center;
 }
 
-main .choose-your-path .choose-your-path-slide:first-child div {
-    padding-top: 70px;
-    color: white;
-}
-
 main .choose-your-path .choose-your-path-slide .choose-your-path-slide-background img {
     position: absolute;
     top: 0;
@@ -49,23 +45,23 @@ main .choose-your-path .choose-your-path-slide .choose-your-path-slide-backgroun
 
 main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title {
     position: absolute;
-    top: 70px;
+    top: 80px;
     left: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 30px;
+    font-weight: 600;
     transform: translateX(-50%);
 }
 
-main .choose-your-path .choose-your-path-slide h3 {
+main .choose-your-path .choose-your-path-slide h1 {
     position: absolute;
-    top: 130px;
+    top: 140px;
     left: 50%;
-    font-size: 24px;
-    font-weight: bolder;
-    width: 460px;
+    font-size: 28px;
+    font-weight: 900;
+    width: 490px;
     margin: 0;
     transform: translateX(-50%);
 }
@@ -88,11 +84,20 @@ main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title img
 }
 
 main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    top: 300px;
+    top: 310px;
+    width: 100%;
     left: 50%;
-    width: 50vw;
-    height: 45vh;
-    transform: translateX(-50%) scale(1, 1);
+    transform: translateX(-50%) scale(1.2);
     will-change: transform;
+    overflow: visible;
+}
+
+main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img {
+    height: 40vh;
+    object-fit: cover;
+    overflow: visible;
 }

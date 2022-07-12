@@ -34,10 +34,10 @@ function enableMouseAnimation($block) {
     const mousePosition = mousePercentage - 50;
     const leftWidth = 50 - (mousePosition / 4);
     const rightWidth = 100 - leftWidth;
-    const leftImageScale = 1 - (mousePosition / 1500);
-    const rightImageScale = 1 + (mousePosition / 1500);
-    let leftBrightness = 100 - (mousePercentage / 2);
-    let rightBrightness = 100 - ((100 - mousePercentage) / 2);
+    let leftImageScale = 1.2 - (mousePosition / 2000);
+    let rightImageScale = 1.2 + (mousePosition / 2000);
+    let leftBrightness = 100 - ((mousePercentage - 50) / 1.5);
+    let rightBrightness = 100 - ((50 - mousePercentage) / 1.5);
 
     if (leftBrightness > 100) {
       leftBrightness = 100;
@@ -45,6 +45,14 @@ function enableMouseAnimation($block) {
 
     if (rightBrightness > 100) {
       rightBrightness = 100;
+    }
+
+    if (leftImageScale < 1) {
+      leftImageScale = 1;
+    }
+
+    if (rightImageScale < 1) {
+      rightImageScale = 1;
     }
 
     $slides[0].style.width = `${leftWidth}%`;
@@ -57,14 +65,13 @@ function enableMouseAnimation($block) {
 }
 
 export default function decorate($block) {
-  const $slides = Array.from($block.children[0].children);
+  const $rows = Array.from($block.children);
+  const $slides = [];
+
   $block.innerHTML = '';
 
-  $slides.forEach(($slideContents) => {
-    const $link = $slideContents.children[0].querySelector('a');
-    const $header = $slideContents.children[1];
-    const $background = $header.querySelector('picture');
-    const $image = $slideContents.children[4].querySelector('picture');
+  Array.from($rows[0].children).forEach(($linkContainer) => {
+    const $link = $linkContainer.querySelector('a');
     let $slide;
 
     if ($link) {
@@ -74,15 +81,25 @@ export default function decorate($block) {
       $slide = createTag('div', { class: 'choose-your-path-slide' });
     }
 
-    $header.classList.add('choose-your-path-slide-title');
+    $slides.push($slide);
+  });
+
+  Array.from($rows[1].children).forEach(($backgroundContainer, index) => {
+    const $background = $backgroundContainer.querySelector('picture');
     $background.classList.add('choose-your-path-slide-background');
+    $slides[index].append($background);
+  });
+
+  Array.from($rows[2].children).forEach(($copyContainer, index) => {
+    const $header = $copyContainer.children[0];
+    const $image = $copyContainer.children[2].querySelector('picture');
+
+    $header.classList.add('choose-your-path-slide-title');
     $image.classList.add('choose-your-path-slide-image');
     $image.parentNode.remove();
-    $slideContents.append($image);
-
-    $slide.append($background);
-    $slide.append($slideContents);
-    $block.append($slide);
+    $slides[index].append($copyContainer);
+    $slides[index].append($image);
+    $block.append($slides[index]);
   });
 
   enableMouseAnimation($block);
