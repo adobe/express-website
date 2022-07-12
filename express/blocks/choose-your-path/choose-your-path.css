@@ -22,7 +22,6 @@ main .choose-your-path .choose-your-path-slide {
     color: black;
     will-change: width, filter;
     user-select: none;
-    overflow: hidden;
 }
 
 main .choose-your-path .choose-your-path-slide div {
@@ -31,7 +30,6 @@ main .choose-your-path .choose-your-path-slide div {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
 }
 
 main .choose-your-path .choose-your-path-slide:first-child div {
@@ -90,10 +88,12 @@ main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title img
 
 main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img {
     position: absolute;
-    top: 270px;
+    top: 300px;
     left: 50%;
-    min-width: 600px;
-    width: 600px;
+    height: 45vh;
     transform: translateX(-50%) scale(1, 1);
     will-change: transform;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
 }

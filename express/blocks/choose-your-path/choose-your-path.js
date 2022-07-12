@@ -34,8 +34,8 @@ function enableMouseAnimation($block) {
     const mousePosition = mousePercentage - 50;
     const leftWidth = 50 - (mousePosition / 4);
     const rightWidth = 100 - leftWidth;
-    const leftImageScale = 1 - (mousePosition / 2000);
-    const rightImageScale = 1 + (mousePosition / 2000);
+    const leftImageScale = 1 - (mousePosition / 1500);
+    const rightImageScale = 1 + (mousePosition / 1500);
     let leftBrightness = 100 - (mousePercentage / 2);
     let rightBrightness = 100 - ((100 - mousePercentage) / 2);
 
