@@ -65,14 +65,23 @@ async function createExperiment() {
       return (div);
     };
 
+    const manifestButton = config.manifest ? `<div class="hlx-button"><a href="${config.manifest}">Manifest</a></div>` : '';
+
     const div = document.createElement('div');
     div.className = 'hlx-experiment hlx-badge';
     div.classList.add(`hlx-experiment-status-${toClassName(config.status)}`);
     div.innerHTML = `Experiment: ${config.id} <span class="hlx-open"></span>
       <div class="hlx-popup hlx-hidden">
-        <h4>${config.experimentName}</h4>
-        <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.variants.control.blocks.join(',')}</div>
-        <div class="hlx-variants"></div>
+      <div class="hlx-popup-header">
+        <div>
+          <h4>${config.experimentName}</h4>
+          <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.variants.control.blocks.join(',')}</div>
+        </div>
+        <div>
+        ${manifestButton}
+        </div>
+      </div>
+      <div class="hlx-variants"></div>
       </div>`;
     console.log(config.id);
     const popup = div.querySelector('.hlx-popup');

@@ -1253,6 +1253,7 @@ export async function getExperimentConfig(experimentId) {
         config[key] = line.Value;
       });
       config.id = experimentId;
+      config.manifest = path;
       const variants = {};
       let variantNames = Object.keys(json.experiences.data[0]);
       variantNames.shift();
