@@ -1942,6 +1942,15 @@ function decorateLegalCopy(main) {
   });
 }
 
+async function loadAdobeCleanHanTypekit() {
+  const supportedLocales = [ 'jp', 'cn', 'tw', 'kr' ];
+  const locale = getLocale(window.location);
+  if (supportedLocales.includes(locale)) {
+    const loadTypekit = (await import('./load-typekit.js')).default;
+    loadTypekit(locale);
+  }
+}
+
 /**
  * loads everything needed to get to LCP.
  */
@@ -2027,6 +2036,7 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
+  await loadAdobeCleanHanTypekit();
   scrollToHash();
   resolveFragments();
   addPromotion();
