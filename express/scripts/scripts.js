@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-console */
+/* global Typekit */
 
 window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
@@ -2089,12 +2090,59 @@ function decorateLegalCopy(main) {
   });
 }
 
-async function loadAdobeCleanHanTypekit() {
+/**
+ *  Load Adobe Clean Han font family for supported locale pages.
+ *  Typekit IDs of each locale are consistent with corresponding home pages on adobe.com.
+ */
+function loadAdobeCleanHanTypekit() {
+  const KIT_IDS = {
+    jp: 'dvg6awq',
+    kr: 'qjs5sfm',
+    cn: 'puu3xkp',
+    tw: 'jay0ecd',
+  };
+
+  function loadTypekit(d, locale) {
+    const config = {
+      kitId: KIT_IDS[locale],
+      scriptTimeout: 3000,
+      async: true,
+    };
+    const h = d.documentElement;
+    const t = setTimeout(() => {
+      h.className = `${h.className.replace(/\bwf-loading\b/g, '')} wf-inactive`;
+    }, config.scriptTimeout);
+    const tk = d.createElement('script');
+    let f = false;
+    const s = d.getElementsByTagName('script')[0];
+    let a;
+    h.className += ' wf-loading';
+    tk.src = `https://use.typekit.net/${config.kitId}.js`;
+    tk.async = true;
+    tk.defer = true;
+    function onReady() {
+      a = this.readyState;
+      if (f) return;
+      if (a && a !== 'complete' && a !== 'loaded') return;
+      f = true;
+      clearTimeout(t);
+      try {
+        Typekit.load(config);
+      } catch (e) {
+        //
+      }
+    }
+    tk.onload = onReady;
+    tk.onreadystatechange = onReady;
+    s.parentNode.insertBefore(tk, s);
+  }
+
   const supportedLocales = ['jp', 'cn', 'tw', 'kr'];
   const locale = getLocale(window.location);
   if (supportedLocales.includes(locale)) {
-    const loadTypekit = (await import('./load-typekit.js')).default;
-    loadTypekit(locale);
+    setTimeout(() => {
+      loadTypekit(document, locale);
+    }, 3000);
   }
 }
 
@@ -2211,7 +2259,7 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
-  await loadAdobeCleanHanTypekit();
+  loadAdobeCleanHanTypekit();
   scrollToHash();
   resolveFragments();
   addPromotion();
