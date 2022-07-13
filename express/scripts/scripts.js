@@ -2090,7 +2090,7 @@ function decorateLegalCopy(main) {
 }
 
 async function loadAdobeCleanHanTypekit() {
-  const supportedLocales = [ 'jp', 'cn', 'tw', 'kr' ];
+  const supportedLocales = ['jp', 'cn', 'tw', 'kr'];
   const locale = getLocale(window.location);
   if (supportedLocales.includes(locale)) {
     const loadTypekit = (await import('./load-typekit.js')).default;
