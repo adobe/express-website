@@ -41,16 +41,16 @@ async function checkContent(homeUrl) {
     .then(() => console.log('Verifying pricing page...'))
     // wait for the page to fully load
     .then(() => $browser.sleep(TIMEOUT))
-    // check free button
-    .then(() => $browser.findElements($driver.By.css('.pricing-columns-cta.button')))
-    .then((buttons) => buttons[0].getAttribute('href'))
-    .then((freeUrl) => assert.equal(new URL(freeUrl).origin, 'https://express.adobe.com', `Unexpected free button URL: ${freeUrl}`))
-    .then(() => console.log('Free button OK'))
     // check buy button
-    .then(() => $browser.findElements($driver.By.css('.pricing-columns-cta.button')))
-    .then((buttons) => buttons[1].getAttribute('href'))
+    .then(() => $browser.findElements($driver.By.css('main a.button')))
+    .then((buttons) => buttons[0].getAttribute('href'))
     .then((buyUrl) => assert.equal(new URL(buyUrl).origin, 'https://commerce.adobe.com', `Unexpected buy button URL: ${buyUrl}`))
     .then(() => console.log('Buy button OK'))
+    // // check free button
+    // .then(() => $browser.findElements($driver.By.css('main a.button.reverse')))
+    // .then((buttons) => buttons[0].getAttribute('href'))
+    // .then((freeUrl) => assert.equal(new URL(freeUrl).origin, 'https://express.adobe.com', `Unexpected free button URL: ${freeUrl}`))
+    // .then(() => console.log('Free button OK'))
     .then(() => console.log('Pricing page successfully verified.'))
     .catch((e) => {
       assert.fail(`Verification failed: ${e.message}`);
