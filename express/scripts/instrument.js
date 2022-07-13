@@ -503,6 +503,7 @@ loadScript(martechURL, () => {
     let sparkButtonId;
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
+    const $contentToggleContainer = $a.closest('.content-toggle');
     // let cardPosition;
     // Template button click
     if ($templateContainer) {
@@ -533,6 +534,10 @@ loadScript(martechURL, () => {
       const videoName = textToName($a.querySelector('h3').textContent);
       adobeEventName = `${adobeEventName}tutorials:${videoName}:tutorialPressed`;
       sparkEventName = 'landing:tutorialPressed';
+    } else if ($contentToggleContainer) {
+      const toggleName = textToName($a.textContent);
+      adobeEventName = `${adobeEventName}contentToggle:${toggleName}:buttonPressed`;
+      sparkEventName = 'landing:contentToggleButtonPressed';
     } else if ($a.classList.contains('floating-button-lottie')) {
       adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
       sparkEventName = 'landing:floatingButtonScrollPressed';
@@ -678,6 +683,13 @@ loadScript(martechURL, () => {
     d.querySelectorAll('main .faq-accordion').forEach(($a) => {
       $a.addEventListener('click', () => {
         trackButtonClick($a);
+      });
+    });
+
+    // for tracking the content toggle buttons
+    d.querySelectorAll('main .content-toggle button').forEach(($button) => {
+      $button.addEventListener('click', () => {
+        trackButtonClick($button);
       });
     });
 
@@ -846,6 +858,7 @@ loadScript(martechURL, () => {
 
     // Tracking any link or links that is added after page loaded.
     document.addEventListener('linkspopulated', (e) => {
+      console.log('Links populated');
       e.detail.forEach(($link) => {
         $link.addEventListener('click', () => {
           trackButtonClick($link);

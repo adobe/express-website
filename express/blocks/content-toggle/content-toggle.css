@@ -1,11 +1,11 @@
-main .content-toggle ul {
+main .content-toggle {
     display: inline-block;
     background-color: var(--color-gray-200);
     border-radius: 25px;
     padding: 6px;
 }
 
-main .content-toggle ul li {
+main .content-toggle button {
     list-style-type: none;
     display: inline-block;
     border-radius: 25px;
@@ -16,20 +16,21 @@ main .content-toggle ul li {
     transition: .2s background-color ease;
     cursor: pointer;
     user-select: none;
+    border: none;
 }
 
-main .content-toggle ul li:hover {
+main .content-toggle button:hover {
     background-color: var(--color-gray-300);
 }
 
-main .content-toggle ul li.active {
+main .content-toggle button.active {
     background-color: white;
 }
 
-main .content-toggle ul li:first-child {
+main .content-toggle button:first-child {
     margin: 0 5px 0 0;
 }
 
-main .content-toggle ul li:last-child {
+main .content-toggle button:last-child {
     margin: 0 0 0 5px;
 }

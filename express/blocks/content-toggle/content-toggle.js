@@ -16,32 +16,39 @@ import {
 
 export default function decorate($block) {
   const $sections = document.querySelectorAll('[data-toggle]');
-  const $toggles = $block.querySelectorAll('li');
+  const $toggleContainer = $block.querySelector('ul');
 
-  if ($toggles) {
-    $toggles.forEach(($toggle, index) => {
-      if (index === 0) {
-        $toggle.classList.add('active');
+  $block.innerHTML = '';
+
+  Array.from($toggleContainer.children).forEach(($toggle, index) => {
+    const $button = createTag('button');
+    const section = $toggle.textContent;
+
+    $button.textContent = $toggle.textContent;
+
+    $button.addEventListener('click', () => {
+      const $activeButton = $block.querySelector('button.active');
+
+      if ($activeButton !== $toggle) {
+        $activeButton.classList.remove('active');
+        $button.classList.add('active');
+
+        $sections.forEach(($section) => {
+          if (section === $section.dataset.toggle) {
+            $section.style.display = 'block';
+          } else {
+            $section.style.display = 'none';
+          }
+        });
       }
-
-      $toggle.addEventListener('click', () => {
-        const $currentlyActive = $block.querySelector('li.active');
-
-        if ($currentlyActive !== $toggle) {
-          $currentlyActive.classList.remove('active');
-          $toggle.classList.add('active');
-
-          $sections.forEach(($section) => {
-            if ($section.dataset.toggle === $toggle.textContent) {
-              $section.style.display = 'block';
-            } else {
-              $section.style.display = 'none';
-            }
-          });
-        }
-      });
     });
-  }
+
+    if (index === 0) {
+      $button.classList.add('active');
+    }
+
+    $block.append($button);
+  });
 
   if ($sections) {
     $sections.forEach(($section, index) => {
