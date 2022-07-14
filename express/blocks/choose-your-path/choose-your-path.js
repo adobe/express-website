@@ -29,38 +29,41 @@ function enableMouseAnimation($block) {
 
   document.addEventListener('mousemove', (e) => {
     const maxWidth = getWidth();
-    // eslint-disable-next-line no-mixed-operators
-    const mousePercentage = (e.clientX * 100 / maxWidth).toFixed(2);
-    const mousePosition = mousePercentage - 50;
-    const leftWidth = 50 - (mousePosition / 4);
-    const rightWidth = 100 - leftWidth;
-    let leftImageScale = 1.2 - (mousePosition / 2000);
-    let rightImageScale = 1.2 + (mousePosition / 2000);
-    let leftBrightness = 100 - ((mousePercentage - 50) / 1.5);
-    let rightBrightness = 100 - ((50 - mousePercentage) / 1.5);
 
-    if (leftBrightness > 100) {
-      leftBrightness = 100;
+    if (maxWidth > 600) {
+      // eslint-disable-next-line no-mixed-operators
+      const mousePercentage = (e.clientX * 100 / maxWidth).toFixed(2);
+      const mousePosition = mousePercentage - 50;
+      const leftWidth = 50 - (mousePosition / 4);
+      const rightWidth = 100 - leftWidth;
+      let leftImageScale = 1.2 - (mousePosition / 2000);
+      let rightImageScale = 1.2 + (mousePosition / 2000);
+      let leftBrightness = 100 - ((mousePercentage - 50) / 1.5);
+      let rightBrightness = 100 - ((50 - mousePercentage) / 1.5);
+
+      if (leftBrightness > 100) {
+        leftBrightness = 100;
+      }
+
+      if (rightBrightness > 100) {
+        rightBrightness = 100;
+      }
+
+      if (leftImageScale < 1) {
+        leftImageScale = 1;
+      }
+
+      if (rightImageScale < 1) {
+        rightImageScale = 1;
+      }
+
+      $slides[0].style.width = `${leftWidth}%`;
+      $slides[1].style.width = `${rightWidth}%`;
+      $slides[0].style.filter = `brightness(${leftBrightness}%)`;
+      $slides[1].style.filter = `brightness(${rightBrightness}%)`;
+      $images[0].style.transform = `scale(${leftImageScale})`;
+      $images[1].style.transform = `scale(${rightImageScale})`;
     }
-
-    if (rightBrightness > 100) {
-      rightBrightness = 100;
-    }
-
-    if (leftImageScale < 1) {
-      leftImageScale = 1;
-    }
-
-    if (rightImageScale < 1) {
-      rightImageScale = 1;
-    }
-
-    $slides[0].style.width = `${leftWidth}%`;
-    $slides[1].style.width = `${rightWidth}%`;
-    $slides[0].style.filter = `brightness(${leftBrightness}%)`;
-    $slides[1].style.filter = `brightness(${rightBrightness}%)`;
-    $images[0].style.transform = `translateX(-50%) scale(${leftImageScale})`;
-    $images[1].style.transform = `translateX(-50%) scale(${rightImageScale})`;
   });
 }
 
@@ -68,6 +71,7 @@ export default function decorate($block) {
   const $rows = Array.from($block.children);
   const $slides = [];
 
+  document.body.classList.add('no-scroll');
   $block.innerHTML = '';
 
   Array.from($rows[0].children).forEach(($linkContainer) => {
@@ -79,6 +83,10 @@ export default function decorate($block) {
       $link.parentNode.remove();
     } else {
       $slide = createTag('div', { class: 'choose-your-path-slide' });
+      $slide.addEventListener('click', () => {
+        $block.remove();
+        document.body.classList.remove('no-scroll');
+      });
     }
 
     $slides.push($slide);
@@ -97,8 +105,8 @@ export default function decorate($block) {
     $header.classList.add('choose-your-path-slide-title');
     $image.classList.add('choose-your-path-slide-image');
     $image.parentNode.remove();
+    $copyContainer.append($image);
     $slides[index].append($copyContainer);
-    $slides[index].append($image);
     $block.append($slides[index]);
   });
 
