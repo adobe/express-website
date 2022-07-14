@@ -1795,7 +1795,16 @@ function unhideBody() {
 }
 
 function hideBody() {
-  const style = document.createElement('style');
+  const id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  let style = document.getElementById(id);
+  if (style) {
+    return;
+  }
+  style = document.createElement('style');
   style.id = (
     useAlloy
       ? 'alloy-prehiding'
