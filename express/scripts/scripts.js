@@ -1968,10 +1968,10 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      let target = checkTesting();
+      const target = checkTesting();
       if (useAlloy) {
         document.querySelector('body').classList.add('personalization-container');
-        target = true;
+        // target = true;
       }
       if (target) {
         hideBody();
