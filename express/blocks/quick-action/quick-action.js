@@ -24,5 +24,5 @@ export default function decorate(block) {
   block.innerHTML = `<div id="quick-task-container"></div>
   <cclqt-sign-up-modal id="qt-sign-up-modal"></cclqt-sign-up-modal>
   <cclqt-done-modal id="qt-done-modal"></cclqt-done-modal>`;
-  loadScript('https://express-stage.adobe.com/static/platform-shell/standalone-host-app-1fecd562.js');
+  loadScript('https://express-stage.adobe.com/static/platform-shell/standalone-host-app-1590e26b.js');
 }
