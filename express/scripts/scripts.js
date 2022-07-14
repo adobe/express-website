@@ -1776,12 +1776,9 @@ const usp = new URLSearchParams(window.location.search);
 window.spark = {};
 window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const useAlloy = (
-  window.spark.hostname === 'www.stage.adobe.com'
-  || (
-    usp.has('martech')
-    && usp.get('martech').includes('alloy')
-  )
+const useAlloy = !(
+  usp.has('martech')
+  && usp.get('martech') === 'legacy'
 );
 
 function unhideBody() {

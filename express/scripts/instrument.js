@@ -33,29 +33,40 @@ const { pathname } = loc;
 const usp = new URLSearchParams(window.location.search);
 const martech = usp.get('martech');
 
-let martechURL = 'https://www.adobe.com/marketingtech/main.min.js';
-if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
-  martechURL = 'https://www.adobe.com/marketingtech/main.stage.min.js';
-}
-
 // alloy feature flag
-let useAlloy = false;
-if (
-  (window.spark && window.spark.hostname === 'www.stage.adobe.com')
-  || martech === 'alloy-qa'
-) {
+let useAlloy;
+let martechURL;
+if (martech === 'legacy') {
+  useAlloy = false;
+  if (window.spark && window.spark.hostname === 'www.stage.adobe.com') {
+    martechURL = 'https://www.adobe.com/marketingtech/main.stage.min.js';
+  } else {
+    martechURL = 'https://www.adobe.com/marketingtech/main.min.js';
+  }
+} else {
   useAlloy = true;
-  martechURL = 'https://www.adobe.com/marketingtech/main.standard.qa.js';
-} else if (martech === 'alloy') {
-  useAlloy = true;
-  martechURL = 'https://www.adobe.com/marketingtech/main.standard.min.js';
+  if (
+    (window.spark && window.spark.hostname === 'www.stage.adobe.com')
+    || martech === 'alloy-qa'
+  ) {
+    martechURL = 'https://www.adobe.com/marketingtech/main.standard.qa.js';
+  } else {
+    martechURL = 'https://www.adobe.com/marketingtech/main.standard.min.js';
+  }
 }
 
 if (useAlloy) {
   w.marketingtech = {
     adobe: {
       launch: {
-        url: 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-2c94beadc94f-development.js',
+        url: (
+          (
+            (window.spark && window.spark.hostname === 'www.stage.adobe.com')
+            || martech === 'alloy-qa'
+          )
+            ? 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-2c94beadc94f-development.js'
+            : 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-5dd5dd2177e6.min.js'
+        ),
       },
       alloy: {
         edgeConfigId: (
@@ -856,6 +867,7 @@ loadScript(martechURL, () => {
     // tracking videos loaded asynchronously.
     document.addEventListener('videoloaded', (e) => {
       trackVideoAnalytics(e.detail.video, e.detail.parameters);
+      _satellite.track('videoloaded');
     });
 
     document.addEventListener('videoclosed', (e) => {
