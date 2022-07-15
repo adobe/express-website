@@ -1029,26 +1029,27 @@ function loadAdobeCleanHanTypekit() {
     tw: 'jay0ecd',
   };
 
-  function loadTypekit(d, locale) {
+  function loadTypekit($el, locale) {
     const config = {
       kitId: KIT_IDS[locale],
       scriptTimeout: 3000,
       async: true,
     };
-    const h = d.documentElement;
-    const t = setTimeout(() => {
-      h.className = `${h.className.replace(/\bwf-loading\b/g, '')} wf-inactive`;
+    const $root = $el.documentElement;
+    const timeout = setTimeout(() => {
+      $root.classList.remove('wf-loading');
+      $root.classList.add('wf-inactive');
     }, config.scriptTimeout);
-    let f = false;
-    let a;
-    h.className += ' wf-loading';
+    let loaded = false;
+    let state;
+    $root.classList.add('wf-loading');
     const scriptSrc = `https://use.typekit.net/${config.kitId}.js`;
     function onReady() {
-      a = this.readyState;
-      if (f) return;
-      if (a && a !== 'complete' && a !== 'loaded') return;
-      f = true;
-      clearTimeout(t);
+      state = this.readyState;
+      if (loaded) return;
+      if (state && state !== 'complete' && state !== 'loaded') return;
+      loaded = true;
+      clearTimeout(timeout);
       try {
         Typekit.load(config);
       } catch (e) {
