@@ -11,6 +11,7 @@ main .choose-your-path {
     left: 0;
     z-index: 1000;
     cursor: pointer;
+    transition: .5s opacity ease;
 }
 
 main .choose-your-path .choose-your-path-slide {

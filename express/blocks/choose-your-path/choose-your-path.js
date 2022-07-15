@@ -102,7 +102,10 @@ export default function decorate($block) {
     } else {
       $slide = createTag('div', { class: 'choose-your-path-slide' });
       $slide.addEventListener('click', () => {
-        $block.remove();
+        $block.style.opacity = '0';
+        setTimeout(() => {
+          $block.remove();
+        }, 510);
         document.body.classList.remove('no-scroll');
       });
     }
