@@ -1017,6 +1017,53 @@ function addPromotion() {
   }
 }
 
+/**
+ *  Load Adobe Clean Han font family for supported locale pages.
+ *  Typekit IDs of each locale are consistent with corresponding home pages on adobe.com.
+ */
+function loadAdobeCleanHanTypekit() {
+  const KIT_IDS = {
+    jp: 'dvg6awq',
+    kr: 'qjs5sfm',
+    cn: 'puu3xkp',
+    tw: 'jay0ecd',
+  };
+
+  function loadTypekit(d, locale) {
+    const config = {
+      kitId: KIT_IDS[locale],
+      scriptTimeout: 3000,
+      async: true,
+    };
+    const h = d.documentElement;
+    const t = setTimeout(() => {
+      h.className = `${h.className.replace(/\bwf-loading\b/g, '')} wf-inactive`;
+    }, config.scriptTimeout);
+    let f = false;
+    let a;
+    h.className += ' wf-loading';
+    const scriptSrc = `https://use.typekit.net/${config.kitId}.js`;
+    function onReady() {
+      a = this.readyState;
+      if (f) return;
+      if (a && a !== 'complete' && a !== 'loaded') return;
+      f = true;
+      clearTimeout(t);
+      try {
+        Typekit.load(config);
+      } catch (e) {
+        //
+      }
+    }
+    loadScript(scriptSrc, onReady);
+  }
+
+  const locale = getLocale(window.location);
+  if (Object.keys(KIT_IDS).includes(locale)) {
+    loadTypekit(document, locale);
+  }
+}
+
 function loadMartech() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
@@ -1025,6 +1072,7 @@ function loadMartech() {
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
+  loadAdobeCleanHanTypekit();
 }
 
 function loadGnav() {
@@ -2091,62 +2139,6 @@ function decorateLegalCopy(main) {
 }
 
 /**
- *  Load Adobe Clean Han font family for supported locale pages.
- *  Typekit IDs of each locale are consistent with corresponding home pages on adobe.com.
- */
-function loadAdobeCleanHanTypekit() {
-  const KIT_IDS = {
-    jp: 'dvg6awq',
-    kr: 'qjs5sfm',
-    cn: 'puu3xkp',
-    tw: 'jay0ecd',
-  };
-
-  function loadTypekit(d, locale) {
-    const config = {
-      kitId: KIT_IDS[locale],
-      scriptTimeout: 3000,
-      async: true,
-    };
-    const h = d.documentElement;
-    const t = setTimeout(() => {
-      h.className = `${h.className.replace(/\bwf-loading\b/g, '')} wf-inactive`;
-    }, config.scriptTimeout);
-    const tk = d.createElement('script');
-    let f = false;
-    const s = d.getElementsByTagName('script')[0];
-    let a;
-    h.className += ' wf-loading';
-    tk.src = `https://use.typekit.net/${config.kitId}.js`;
-    tk.async = true;
-    tk.defer = true;
-    function onReady() {
-      a = this.readyState;
-      if (f) return;
-      if (a && a !== 'complete' && a !== 'loaded') return;
-      f = true;
-      clearTimeout(t);
-      try {
-        Typekit.load(config);
-      } catch (e) {
-        //
-      }
-    }
-    tk.onload = onReady;
-    tk.onreadystatechange = onReady;
-    s.parentNode.insertBefore(tk, s);
-  }
-
-  const supportedLocales = ['jp', 'cn', 'tw', 'kr'];
-  const locale = getLocale(window.location);
-  if (supportedLocales.includes(locale)) {
-    setTimeout(() => {
-      loadTypekit(document, locale);
-    }, 3000);
-  }
-}
-
-/**
  * loads everything needed to get to LCP.
  */
 async function loadEager() {
@@ -2259,7 +2251,6 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
-  loadAdobeCleanHanTypekit();
   scrollToHash();
   resolveFragments();
   addPromotion();
