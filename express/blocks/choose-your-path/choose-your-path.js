@@ -65,6 +65,24 @@ function enableMouseAnimation($block) {
       $images[1].style.transform = `scale(${rightImageScale})`;
     }
   });
+
+  window.addEventListener('resize', () => {
+    const maxWidth = getWidth();
+
+    if (maxWidth <= 600) {
+      $slides[0].style.width = '100%';
+      $slides[1].style.width = '100%';
+      $slides[0].style.filter = 'brightness(100%)';
+      $slides[1].style.filter = 'brightness(100%)';
+      $images[0].style.transform = 'scale(1)';
+      $images[1].style.transform = 'scale(1)';
+    } else {
+      $slides[0].style.width = '50%';
+      $slides[1].style.width = '50%';
+      $images[0].style.transform = 'scale(1.2)';
+      $images[1].style.transform = 'scale(1.2)';
+    }
+  });
 }
 
 export default function decorate($block) {
