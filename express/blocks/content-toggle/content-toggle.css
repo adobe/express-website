@@ -3,16 +3,22 @@ main .content-toggle-wrapper {
     padding: 0!important;
 }
 
+main [data-toggle] {
+    background-color: #F8F8F8;
+}
+
 main .content-toggle {
     display: inline-block;
     background-color: #EDEDED;
     border-radius: 25px;
     padding: 6px;
+    margin-bottom: 40px;
 }
 
 main .content-toggle button {
     list-style-type: none;
     display: inline-block;
+    background-color: #EDEDED;
     border-radius: 25px;
     padding: 10px 18px;
     font-size: 13px;
@@ -30,7 +36,21 @@ main .content-toggle button:hover {
 }
 
 main .content-toggle button.active {
+    position: relative;
     background-color: white;
+}
+
+main .content-toggle button.active::after {
+    position: absolute;
+    content: '';
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-color: #F8F8F8;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    bottom: -80px;
+    z-index: -1;
 }
 
 main .content-toggle button:first-child {
