@@ -15,7 +15,7 @@ import {
   loadCSS,
   toClassName,
   getMetadata,
-  fetchExperimentConfig,
+  getExperimentConfig,
   checkTesting,
 } from '../../express/scripts/scripts.js';
 
@@ -38,10 +38,11 @@ function createTesting() {
  * @return {Object} returns a badge or empty string
  */
 async function createExperiment() {
-  const experiment = getMetadata('experiment');
+  const selectedVariant = (window.hlx && window.hlx.experiment && window.hlx.experiment.selectedVariant) ? window.hlx.experiment.selectedVariant : 'control';
+  const experiment = toClassName(getMetadata('experiment'));
   console.log('preview experiment', experiment);
   if (experiment) {
-    const config = await fetchExperimentConfig(experiment);
+    const config = await getExperimentConfig(experiment);
     const createVariant = (variantName) => {
       const variant = config.variants[variantName];
       const split = +variant.percentageSplit
@@ -53,7 +54,7 @@ async function createExperiment() {
       // this will retain other query params such as ?rum=on
       experimentURL.searchParams.set('experiment', `${experiment}/${variantName}`);
 
-      div.className = 'hlx-variant';
+      div.className = `hlx-variant${selectedVariant === variantName ? ' hlx-variant-selected' : ' '}`;
       div.innerHTML = `<div>
       <h5>${variantName}</h5>
         <p>${variant.label}</p>
@@ -64,14 +65,23 @@ async function createExperiment() {
       return (div);
     };
 
+    const manifestButton = config.manifest ? `<div class="hlx-button"><a href="${config.manifest}">Manifest</a></div>` : '';
+
     const div = document.createElement('div');
     div.className = 'hlx-experiment hlx-badge';
     div.classList.add(`hlx-experiment-status-${toClassName(config.status)}`);
     div.innerHTML = `Experiment: ${config.id} <span class="hlx-open"></span>
       <div class="hlx-popup hlx-hidden">
-        <h4>${config.testName}</h4>
-        <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.blocks.join(',')}</div>
-        <div class="hlx-variants"></div>
+      <div class="hlx-popup-header">
+        <div>
+          <h4>${config.experimentName}</h4>
+          <div class="hlx-details">${config.status}, ${config.audience}, Blocks: ${config.variants.control.blocks.join(',')}</div>
+        </div>
+        <div>
+        ${manifestButton}
+        </div>
+      </div>
+      <div class="hlx-variants"></div>
       </div>`;
     console.log(config.id);
     const popup = div.querySelector('.hlx-popup');
