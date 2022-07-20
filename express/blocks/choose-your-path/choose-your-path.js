@@ -59,8 +59,8 @@ function enableMouseAnimation($block) {
 
       $slides[0].style.width = `${leftWidth}%`;
       $slides[1].style.width = `${rightWidth}%`;
-      $slides[0].style.filter = `brightness(${leftBrightness}%)`;
-      $slides[1].style.filter = `brightness(${rightBrightness}%)`;
+      // $slides[0].style.filter = `brightness(${leftBrightness}%)`;
+      // $slides[1].style.filter = `brightness(${rightBrightness}%)`;
       $images[0].style.transform = `scale(${leftImageScale})`;
       $images[1].style.transform = `scale(${rightImageScale})`;
     }
@@ -98,17 +98,20 @@ export default function decorate($block) {
 
     if ($link) {
       $slide = createTag('a', { href: $link.href, class: 'choose-your-path-slide' });
+      $slide.target = '_blank';
+      $slide.rel = 'noopener';
       $link.parentNode.remove();
     } else {
       $slide = createTag('div', { class: 'choose-your-path-slide' });
-      $slide.addEventListener('click', () => {
-        $block.style.opacity = '0';
-        setTimeout(() => {
-          $block.remove();
-        }, 510);
-        document.body.classList.remove('no-scroll');
-      });
     }
+
+    $slide.addEventListener('click', () => {
+      $block.style.opacity = '0';
+      setTimeout(() => {
+        $block.remove();
+      }, 510);
+      document.body.classList.remove('no-scroll');
+    });
 
     $slides.push($slide);
   });
