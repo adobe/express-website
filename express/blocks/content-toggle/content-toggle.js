@@ -28,6 +28,8 @@ export default function decorate($block) {
 
     $button.addEventListener('click', () => {
       const $activeButton = $block.querySelector('button.active');
+      const blockPosition = $block.getBoundingClientRect().top;
+      const offsetPosition = blockPosition + window.scrollY - 80;
 
       if ($activeButton !== $toggle) {
         $activeButton.classList.remove('active');
@@ -39,6 +41,11 @@ export default function decorate($block) {
           } else {
             $section.style.display = 'none';
           }
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
         });
       }
     });
