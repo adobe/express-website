@@ -515,6 +515,7 @@ loadScript(martechURL, () => {
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
     const $contentToggleContainer = $a.closest('.content-toggle');
+    const $chooseYourPathContainer = $a.closest('.choose-your-path');
     // let cardPosition;
     // Template button click
     if ($templateContainer) {
@@ -545,6 +546,12 @@ loadScript(martechURL, () => {
       const videoName = textToName($a.querySelector('h3').textContent);
       adobeEventName = `${adobeEventName}tutorials:${videoName}:tutorialPressed`;
       sparkEventName = 'landing:tutorialPressed';
+    } else if ($chooseYourPathContainer) {
+      const $slideTitle = $a.querySelector('.choose-your-path-slide-title');
+      const slideName = $slideTitle ? textToName($slideTitle.textContent) : 'slide';
+
+      adobeEventName = `${adobeEventName}chooseYourPath:${slideName}:slidePressed`;
+      sparkEventName = 'landing:chooseYourPathSlidePressed';
     } else if ($contentToggleContainer) {
       const toggleName = textToName($a.textContent);
       adobeEventName = `${adobeEventName}contentToggle:${toggleName}:buttonPressed`;
@@ -701,6 +708,13 @@ loadScript(martechURL, () => {
     d.querySelectorAll('main .content-toggle button').forEach(($button) => {
       $button.addEventListener('click', () => {
         trackButtonClick($button);
+      });
+    });
+
+    // for tracking the choose your path links
+    d.querySelectorAll('main .choose-your-path div.choose-your-path-slide').forEach(($slide) => {
+      $slide.addEventListener('click', () => {
+        trackButtonClick($slide);
       });
     });
 
