@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-console */
+/* global Typekit */
 
 window.RUM_GENERATION = 'ccx-gen-3';
 
@@ -1000,6 +1001,54 @@ function addPromotion() {
   }
 }
 
+/**
+ *  Load Adobe Clean Han font family for supported locale pages.
+ *  Typekit IDs of each locale are consistent with corresponding home pages on adobe.com.
+ */
+function loadAdobeCleanHanTypekit() {
+  const KIT_IDS = {
+    jp: 'dvg6awq',
+    kr: 'qjs5sfm',
+    cn: 'puu3xkp',
+    tw: 'jay0ecd',
+  };
+
+  function loadTypekit($el, locale) {
+    const config = {
+      kitId: KIT_IDS[locale],
+      scriptTimeout: 3000,
+      async: true,
+    };
+    const $root = $el.documentElement;
+    const timeout = setTimeout(() => {
+      $root.classList.remove('wf-loading');
+      $root.classList.add('wf-inactive');
+    }, config.scriptTimeout);
+    let loaded = false;
+    let state;
+    $root.classList.add('wf-loading');
+    const scriptSrc = `https://use.typekit.net/${config.kitId}.js`;
+    function onReady() {
+      state = this.readyState;
+      if (loaded) return;
+      if (state && state !== 'complete' && state !== 'loaded') return;
+      loaded = true;
+      clearTimeout(timeout);
+      try {
+        Typekit.load(config);
+      } catch (e) {
+        //
+      }
+    }
+    loadScript(scriptSrc, onReady);
+  }
+
+  const locale = getLocale(window.location);
+  if (Object.keys(KIT_IDS).includes(locale)) {
+    loadTypekit(document, locale);
+  }
+}
+
 function loadMartech() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
@@ -1008,6 +1057,7 @@ function loadMartech() {
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
+  loadAdobeCleanHanTypekit();
 }
 
 function loadGnav() {
