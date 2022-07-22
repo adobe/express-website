@@ -59,8 +59,8 @@ function enableMouseAnimation($block) {
 
       $slides[0].style.width = `${leftWidth}%`;
       $slides[1].style.width = `${rightWidth}%`;
-      // $slides[0].style.filter = `brightness(${leftBrightness}%)`;
-      // $slides[1].style.filter = `brightness(${rightBrightness}%)`;
+      $slides[0].style.filter = `brightness(${leftBrightness}%)`;
+      $slides[1].style.filter = `brightness(${rightBrightness}%)`;
       $images[0].style.transform = `scale(${leftImageScale})`;
       $images[1].style.transform = `scale(${rightImageScale})`;
     }
