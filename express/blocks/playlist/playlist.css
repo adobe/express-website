@@ -1,3 +1,8 @@
-main .playlist .playlist-container {
+main .playlist-container {
   background-color: var(--body-alt-background-color);
+}
+
+main .playlist-container h2#sessions {
+  margin-top: 0;
+  text-align: left;
 }
