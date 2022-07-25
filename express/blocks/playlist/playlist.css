@@ -1,8 +1,97 @@
 main .playlist-container {
-  background-color: var(--body-alt-background-color);
+    background-color: var(--body-alt-background-color);
 }
 
 main .playlist-container h2#sessions {
-  margin-top: 0;
+    margin-top: 16px;
+    margin-bottom: 32px;
+    text-align: left;
+    font-size: 45px;
+    line-height: 50px;
+}
+
+main .playlist-container .thumbnails-container {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+main .playlist-container .thumbnails-container picture {
+    margin-bottom: 12px;
+    border-radius: 12px;
+    display: block;
+    overflow: hidden;
+}
+
+main .playlist-container .thumbnails-container picture img {
+    min-width: 200px;
+    height: 120px;
+    display: block;
+    object-fit: cover;
+}
+
+main .playlist-container .thumbnails-container .session-title {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+main .playlist-container .thumbnails-container .session-description {
+    margin-top: 0;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+main .playlist-container .video-player {
+    padding: 56px 40px;
+    border-radius: 24px;
+    background-color: var(--body-background-color);
+}
+
+main .playlist-container .video-player__inline-player__wrapper {
+    height: 236px;
+    min-width: 388px;
+    border-radius: 16px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+main .playlist-container .video-player__inline-player__overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+main .playlist-container .video-player__inline-player {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--color-black);
+}
+
+main .playlist-container .video-player__session-number {
+    font-size: 22px;
+    line-height: 28px;
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+main .playlist-container .video-player__session-title {
+  font-size: 36px;
+  line-height: 36px;
   text-align: left;
+  margin: 0 0 40px;
+}
+
+main .playlist-container .video-player__body {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
 }
