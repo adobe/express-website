@@ -181,11 +181,12 @@ main .playlist-container .video-player__buttons {
 }
 main .playlist-container .video-player__buttons .video-player__button-previous {
     display: flex;
-    align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    height: 40px;
-    width: 40px;
+    align-items: center;
+    border-radius: 100px;
+    padding: 12px;
+    height: 14px;
+    width: 14px;
     background-color: var(--color-gray-200);
     cursor: pointer;
     transition: background-color .3s;
