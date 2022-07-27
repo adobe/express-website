@@ -105,8 +105,8 @@ function enableMouseAnimation($block) {
   $mouseRightAnimation.append($mouseRightContainer);
   $mouseLeftAnimation.append($mouseLeftLottie);
   $mouseRightAnimation.append($mouseRightLottie);
-  document.body.append($mouseLeftAnimation);
-  document.body.append($mouseRightAnimation);
+  $block.append($mouseLeftAnimation);
+  $block.append($mouseRightAnimation);
 
   document.addEventListener('mousemove', (e) => {
     setTimeout(() => {
