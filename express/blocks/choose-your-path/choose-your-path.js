@@ -11,7 +11,10 @@
  */
 
 // eslint-disable-next-line import/no-unresolved
-import { createTag } from '../../scripts/scripts.js';
+import {
+  createTag,
+  getLottie,
+} from '../../scripts/scripts.js';
 
 function getWidth() {
   return Math.max(
@@ -21,6 +24,10 @@ function getWidth() {
     document.documentElement.offsetWidth,
     document.documentElement.clientWidth,
   );
+}
+
+function getHeight() {
+  return window.screen.height;
 }
 
 function enableMouseAnimation($block) {
@@ -82,6 +89,59 @@ function enableMouseAnimation($block) {
       $images[0].style.transform = 'scale(1.2)';
       $images[1].style.transform = 'scale(1.2)';
     }
+  });
+
+  const $mouseLeftAnimation = createTag('div', { class: 'choose-your-path-mouse choose-your-path-mouse-left hidden' });
+  const $mouseLeftContainer = createTag('div', { class: 'choose-your-path-mouse-container' });
+  const $mouseRightAnimation = createTag('div', { class: 'choose-your-path-mouse choose-your-path-mouse-right hidden' });
+  const $mouseLeftLottie = createTag('div', { class: 'choose-your-path-mouse-lottie' });
+  const $mouseRightContainer = createTag('div', { class: 'choose-your-path-mouse-container' });
+  const $mouseRightLottie = createTag('div', { class: 'choose-your-path-mouse-lottie' });
+  $mouseLeftContainer.textContent = 'See what you can do with Creative Cloud';
+  $mouseRightContainer.textContent = 'Make a new project with Adobe Express';
+  $mouseLeftLottie.innerHTML = getLottie('mouse-arrow', '/express/blocks/choose-your-path/mouse-arrow.json');
+  $mouseRightLottie.innerHTML = getLottie('mouse-arrow', '/express/blocks/choose-your-path/mouse-arrow.json');
+  $mouseLeftAnimation.append($mouseLeftContainer);
+  $mouseRightAnimation.append($mouseRightContainer);
+  $mouseLeftAnimation.append($mouseLeftLottie);
+  $mouseRightAnimation.append($mouseRightLottie);
+  document.body.append($mouseLeftAnimation);
+  document.body.append($mouseRightAnimation);
+
+  document.addEventListener('mousemove', (e) => {
+    setTimeout(() => {
+      const maxWidth = getWidth();
+      const maxHeight = getHeight();
+
+      $mouseLeftAnimation.style.left = `${e.pageX - 60}px`;
+      $mouseLeftAnimation.style.top = `${e.pageY - 160}px`;
+      $mouseRightAnimation.style.left = `${e.pageX - 60}px`;
+      $mouseRightAnimation.style.top = `${e.pageY - 160}px`;
+
+      if (!$mouseLeftAnimation.classList.contains('small') && e.pageY < maxHeight / 5) {
+        $mouseLeftAnimation.classList.add('small');
+        $mouseLeftContainer.classList.add('hidden');
+        $mouseRightAnimation.classList.add('small');
+        $mouseRightContainer.classList.add('hidden');
+        $slides[0].classList.add('no-mouse');
+        $slides[1].classList.add('no-mouse');
+      } else if ($mouseLeftAnimation.classList.contains('small') && e.pageY >= maxHeight / 5) {
+        $mouseLeftAnimation.classList.remove('small');
+        $mouseLeftContainer.classList.remove('hidden');
+        $mouseRightAnimation.classList.remove('small');
+        $mouseRightContainer.classList.remove('hidden');
+        $slides[0].classList.remove('no-mouse');
+        $slides[1].classList.remove('no-mouse');
+      }
+
+      if (!$mouseLeftAnimation.classList.contains('hidden') && e.pageX > maxWidth / 2) {
+        $mouseLeftAnimation.classList.add('hidden');
+        $mouseRightAnimation.classList.remove('hidden');
+      } else if ($mouseLeftAnimation.classList.contains('hidden') && e.pageX <= maxWidth / 2) {
+        $mouseLeftAnimation.classList.remove('hidden');
+        $mouseRightAnimation.classList.add('hidden');
+      }
+    }, 100);
   });
 }
 
