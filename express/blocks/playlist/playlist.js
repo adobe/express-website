@@ -21,28 +21,21 @@ function updateClickableList(clickables, targetIndex) {
   clickables[targetIndex].classList.add('active');
 }
 
-function loadVideoPlayer(payload, videoIndex, sessionIndex) {
+function toggleSessionState($block, $session) {
+  $block.querySelector('.session.active').classList.remove('active');
+  $session.classList.add('active');
+}
+
+
+function loadVideo(payload, videoIndex, sessionIndex) {
   // In this function, replace the current video with a new one or load the first video.
   payload.$videoPlayerMenu.innerHTML = '';
   payload.$inlinePlayerWrapper.innerHTML = '';
   const videoArr = payload.sessions[sessionIndex].videos;
   const currentVideo = videoArr[videoIndex];
-  const $playerOverlay = createTag('div', { class: 'video-player__inline-player__overlay' });
-  const $inlinePlayer = createTag('video', {
-    class: 'video-player__inline-player', preload: 'metadata', controls: true, playsInline: true, controlsList: 'nodownload',
-  });
-  const $inlinePlayerPlayButton = createTag('a', { class: 'video-player__inline-player__play-button' });
-  $inlinePlayerPlayButton.textContent = 'Play';
-  const $inlinePlayerIcon = createTag('img', { class: 'video-player__inline-player__play-icon' });
-  const $inlinePlayerDuration = createTag('div', { class: 'video-player__inline-player__duration' });
-  payload.$inlinePlayerWrapper.append($playerOverlay, $inlinePlayer);
-  $playerOverlay.append(getIconElement('play', 44), $inlinePlayerPlayButton, $inlinePlayerIcon, $inlinePlayerDuration);
+
   $playerOverlay.style.backgroundImage = `url('${currentVideo.thumbnail}')`;
-  $playerOverlay.style.zIndex = 1;
-  $playerOverlay.addEventListener('click', () => {
-    $playerOverlay.style.zIndex = 0;
-    $inlinePlayer.play();
-  });
+
   for (let i = 0; i < currentVideo.files.length; i += 1) {
     const file = currentVideo.files[i];
     $inlinePlayer.append(createTag('source', { src: file.href, type: `video/${file.type}` }));
@@ -51,49 +44,11 @@ function loadVideoPlayer(payload, videoIndex, sessionIndex) {
   $inlinePlayer.classList.add('hidden');
   $inlinePlayerDuration.textContent = currentVideo.duration;
 
-  const $videoTitle = createTag('h3', { class: 'video-player__video-title' });
-  $videoTitle.textContent = currentVideo.title;
-  const $navButtons = createTag('div', { class: 'video-player__buttons' });
-  const $buttonPrevious = createTag('a', { class: 'video-player__button-previous' });
-  $buttonPrevious.textContent = '<';
-  $buttonPrevious.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (videoIndex > 0) {
-      loadVideoPlayer(payload, videoIndex - 1, sessionIndex);
-    } else if (videoIndex === 0 && sessionIndex > 0) {
-      // eslint-disable-next-line no-use-before-define
-      loadSession(payload, sessionIndex - 1);
-      const targetSession = payload.sessions[sessionIndex - 1];
-      loadVideoPlayer(payload, targetSession.videos.length - 1, sessionIndex - 1);
-    } else {
-      // eslint-disable-next-line no-use-before-define
-      loadSession(payload, payload.sessions.length - 1);
-      const targetSession = payload.sessions[payload.sessions.length - 1];
-      loadVideoPlayer(payload, targetSession.videos.length - 1, payload.sessions.length - 1);
-    }
-  });
-  const $buttonNext = createTag('a', { class: 'video-player__button-next button accent', href: '#' });
-  $buttonNext.textContent = 'Next clip';
-  $buttonNext.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (videoIndex < videoArr.length - 1) {
-      loadVideoPlayer(payload, videoIndex + 1, sessionIndex);
-    } else if (videoIndex === videoArr.length - 1 && sessionIndex < payload.sessions.length - 1) {
-      // eslint-disable-next-line no-use-before-define
-      loadSession(payload, sessionIndex + 1);
-    } else {
-      // eslint-disable-next-line no-use-before-define
-      loadSession(payload, 0);
-    }
-  });
-  const $videoListWrapper = createTag('div', { class: 'video-player__video-list-wrapper' });
-  const $videoListHeading = createTag('p', { class: 'video-player__video-list-heading' });
-  $videoListHeading.textContent = `${payload.sessions[sessionIndex].title} Clips`;
-  const $videoList = createTag('ul', { class: 'video-player__video-list' });
 
-  $navButtons.append($buttonPrevious, $buttonNext);
-  $videoListWrapper.append($videoListHeading, $videoList);
-  payload.$videoPlayerMenu.append($videoTitle, $navButtons, $videoListWrapper);
+  $videoTitle.textContent = currentVideo.title;
+
+
+  $videoListHeading.textContent = `${payload.sessions[sessionIndex].title} Clips`;
 
   for (let i = 0; i < videoArr.length; i += 1) {
     const $videoButton = createTag('li', { class: 'video-button' });
@@ -112,23 +67,121 @@ function loadVideoPlayer(payload, videoIndex, sessionIndex) {
   updateClickableList($menuButtons, videoIndex);
 }
 
-function loadSession(payload, sessionIndex) {
+function loadSession($block, sessions, sessionIndex) {
   // In this function, replace the current section with a new one.
-  payload.$videoPlayer.innerHTML = '';
+  const $sessions = $block.querySelectorAll('.session');
 
-  const $sessionBlocks = payload.$block.querySelectorAll('.session-block');
-  updateClickableList($sessionBlocks, sessionIndex);
+  $sessionNum.textContent = payload.sessions[sessionIndex].title;
+
+  $sessionTitle.textContent = payload.sessions[sessionIndex].description;
+
+
+  loadVideo(payload, 0, sessionIndex);
+}
+
+function loadList($block, sessions) {
+
+}
+
+function decorateSessionsCarousel($block, sessions) {
+  const $thumbnailsContainer = createTag('div', { class: 'thumbnails-container' });
+  $block.append($thumbnailsContainer);
+
+  sessions.forEach((session) => {
+    const $session = createTag('div', { class: 'session' });
+    $thumbnailsContainer.append($session);
+    const $sessionThumbnail = session.thumbnail;
+    const $sessionTitle = createTag('h5', { class: 'session-title' });
+    $sessionTitle.textContent = session.title;
+    const $sessionDescription = createTag('h4', { class: 'session-description' });
+    $sessionDescription.textContent = session.description;
+    $session.append($sessionThumbnail, $sessionTitle, $sessionDescription);
+    $session.addEventListener('click', () => {
+      // load the chosen session
+      // loadSession(payload, i);
+
+      // toggle session active state
+      toggleSessionState($block, $session);
+    });
+  });
+
+  buildCarousel('.session', $thumbnailsContainer);
+}
+
+function decorateVideoPlayerSection($block, sessions) {
+  const $videoPlayer = createTag('div', { class: 'video-player' });
   const $videoPlayerHeadings = createTag('div', { class: 'video-player__headings' });
   const $sessionNum = createTag('h4', { class: 'video-player__session-number' });
-  $sessionNum.textContent = payload.sessions[sessionIndex].title;
   const $sessionTitle = createTag('h2', { class: 'video-player__session-title' });
-  $sessionTitle.textContent = payload.sessions[sessionIndex].description;
-  $videoPlayerHeadings.append($sessionNum, $sessionTitle);
-  payload.$videoPlayer.append($videoPlayerHeadings);
   const $videoPlayerBody = createTag('div', { class: 'video-player__body' });
-  $videoPlayerBody.append(payload.$inlinePlayerWrapper, payload.$videoPlayerMenu);
-  payload.$videoPlayer.append($videoPlayerBody);
-  loadVideoPlayer(payload, 0, sessionIndex);
+  $videoPlayerHeadings.append($sessionNum, $sessionTitle);
+  $videoPlayer.append($videoPlayerHeadings, $videoPlayerBody);
+  $block.append($videoPlayer);
+}
+
+function decorateInlineVideoPlayer($block, sessions) {
+  const $inlinePlayerWrapper = createTag('div', { class: 'video-player__inline-player__wrapper' });
+  const $playerOverlay = createTag('div', { class: 'video-player__inline-player__overlay' });
+  const $inlinePlayer = createTag('video', {
+    class: 'video-player__inline-player', preload: 'metadata', controls: true, playsInline: true, controlsList: 'nodownload',
+  });
+  const $inlinePlayerPlayButton = createTag('a', { class: 'video-player__inline-player__play-button' });
+  $inlinePlayerPlayButton.textContent = 'Play';
+  const $inlinePlayerIcon = createTag('img', { class: 'video-player__inline-player__play-icon' });
+  const $inlinePlayerDuration = createTag('div', { class: 'video-player__inline-player__duration' });
+  $playerOverlay.append(getIconElement('play', 44), $inlinePlayerPlayButton, $inlinePlayerIcon, $inlinePlayerDuration);
+  $playerOverlay.style.zIndex = 1;
+  $inlinePlayerWrapper.append($playerOverlay, $inlinePlayer);
+  const $videoPlayerBody = $block.querySelector('.video-player__body');
+  $videoPlayerBody.append($inlinePlayerWrapper);
+  $block.querySelector('.video-player').append($videoPlayerBody);
+  $playerOverlay.addEventListener('click', () => {
+    $playerOverlay.style.zIndex = 0;
+    $inlinePlayer.play();
+  });
+}
+
+function decorateVideoPlayerMenu($block, sessions) {
+  const $videoPlayerMenu = createTag('div', { class: 'video-player__menu' });
+  const $videoTitle = createTag('h3', { class: 'video-player__video-title' });
+  const $navButtons = createTag('div', { class: 'video-player__buttons' });
+  const $buttonPrevious = createTag('a', { class: 'video-player__button-previous' });
+  $buttonPrevious.textContent = '<';
+  const $buttonNext = createTag('a', { class: 'video-player__button-next button accent', href: '#' });
+  $buttonNext.textContent = 'Next clip';
+  const $videoListWrapper = createTag('div', { class: 'video-player__video-list-wrapper' });
+  const $videoListHeading = createTag('p', { class: 'video-player__video-list-heading' });
+  const $videoList = createTag('ul', { class: 'video-player__video-list' });
+
+  $navButtons.append($buttonPrevious, $buttonNext);
+  $videoListWrapper.append($videoListHeading, $videoList);
+  $videoPlayerMenu.append($videoTitle, $navButtons, $videoListWrapper);
+  const $videoPlayerBody = $block.querySelector('.video-player__body');
+  $videoPlayerBody.append($videoPlayerMenu);
+  $buttonPrevious.addEventListener('click', (e) => {
+    e.preventDefault();
+    // if (videoIndex > 0) {
+    //   loadVideo(payload, videoIndex - 1, sessionIndex);
+    // } else if (videoIndex === 0 && sessionIndex > 0) {
+    //   loadSession(payload, sessionIndex - 1);
+    //   const targetSession = payload.sessions[sessionIndex - 1];
+    //   loadVideo(payload, targetSession.videos.length - 1, sessionIndex - 1);
+    // } else {
+    //   loadSession(payload, payload.sessions.length - 1);
+    //   const targetSession = payload.sessions[payload.sessions.length - 1];
+    //   loadVideo(payload, targetSession.videos.length - 1, payload.sessions.length - 1);
+    // }
+  });
+  $buttonNext.addEventListener('click', (e) => {
+    e.preventDefault();
+    // if (videoIndex < videoArr.length - 1) {
+    //   loadVideo(payload, videoIndex + 1, sessionIndex);
+    // } else if (videoIndex === videoArr.length - 1 && sessionIndex < payload.sessions.length - 1) {
+    //   loadSession(payload, sessionIndex + 1);
+    // } else {
+    //   loadSession(payload, 0);
+    // }
+  });
 }
 
 export default function decorate($block) {
@@ -167,41 +220,16 @@ export default function decorate($block) {
   $block.innerHTML = '';
 
   // Rebuild the whole block properly.
-  const $thumbnailsContainer = createTag('div', { class: 'thumbnails-container' });
-  const $videoPlayer = createTag('div', { class: 'video-player' });
-  const $inlinePlayerWrapper = createTag('div', { class: 'video-player__inline-player__wrapper' });
-  const $videoPlayerMenu = createTag('div', { class: 'video-player__menu' });
-  $block.append($thumbnailsContainer);
-
-  const payload = {
-    $block,
-    $videoPlayer,
-    $inlinePlayerWrapper,
-    sessions,
-    $videoPlayerMenu,
-  };
-
-  for (let i = 0; i < sessions.length; i += 1) {
-    const $sessionBlock = createTag('div', { class: 'session-block' });
-    $thumbnailsContainer.append($sessionBlock);
-
-    const $sessionThumbnail = sessions[i].thumbnail;
-    const $sessionTitle = createTag('h5', { class: 'session-title' });
-    $sessionTitle.textContent = sessions[i].title;
-    const $sessionDescription = createTag('h4', { class: 'session-description' });
-    $sessionDescription.textContent = sessions[i].description;
-    $sessionBlock.append($sessionThumbnail, $sessionTitle, $sessionDescription);
-    $sessionBlock.addEventListener('click', () => {
-      loadSession(payload, i);
-    });
-  }
-  $block.append($videoPlayer);
-  buildCarousel('.session-block', $thumbnailsContainer);
+  decorateSessionsCarousel($block, sessions);
+  decorateVideoPlayerSection($block, sessions);
+  decorateInlineVideoPlayer($block, sessions);
+  decorateVideoPlayerMenu($block, sessions);
 
   // Load the latest section and video.
-  loadSession(payload, sessions.length - 1);
-  const $carousel = $thumbnailsContainer.querySelector('.carousel-platform');
-  setTimeout(() => {
-    $carousel.scrollLeft = $carousel.scrollWidth;
-  }, 10);
+  loadSession($block, sessions, sessions.length - 1);
+
+  // const $carousel = $thumbnailsContainer.querySelector('.carousel-platform');
+  // setTimeout(() => {
+  //   $carousel.scrollLeft = $carousel.scrollWidth;
+  // }, 10);
 }

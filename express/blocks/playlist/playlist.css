@@ -22,17 +22,17 @@ main .playlist-container .thumbnails-container {
     margin-left: -8px;
     margin-right: -8px;
 }
-main .playlist-container .thumbnails-container .session-block {
+main .playlist-container .thumbnails-container .session {
     cursor: pointer;
     margin-top: 4px;
     padding: 0 12px;
 }
-main .playlist-container .thumbnails-container .session-block.active *,
-main .playlist-container .thumbnails-container .session-block:hover * {
+main .playlist-container .thumbnails-container .session.active *,
+main .playlist-container .thumbnails-container .session:hover * {
     font-weight: 800;
 }
-main .playlist-container .thumbnails-container .session-block.active picture,
-main .playlist-container .thumbnails-container .session-block:hover picture {
+main .playlist-container .thumbnails-container .session.active picture,
+main .playlist-container .thumbnails-container .session:hover picture {
     border: 2px solid var(--color-black);
     padding: 2px;
     margin: -4px -4px 8px;
@@ -254,7 +254,7 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
         margin-left: 40px;
         margin-right: 40px;
     }
-    main .playlist-container .thumbnails-container .session-block {
+    main .playlist-container .thumbnails-container .session {
         padding: 0 4px;
         margin-right: 20px;
     }
