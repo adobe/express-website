@@ -15,21 +15,18 @@ import { createTag, getIconElement } from '../../scripts/scripts.js';
 import { buildCarousel } from '../shared/carousel.js';
 
 function toggleSessionState($block, $session) {
-  $block.querySelector('.session.active')
-    .classList
-    .remove('active');
+  $block.querySelector('.session.active').classList.remove('active');
   $session.classList.add('active');
 }
 
 function toggleVideoButtonState($block, $videoButton) {
-  $block.querySelector('.video-button.active')
-    .classList
-    .remove('active');
+  $block.querySelector('.video-button.active').classList.remove('active');
   $videoButton.classList.add('active');
 }
 
 function scrollSessionIntoView($block, payload) {
   const $carousel = $block.querySelector('.carousel-platform');
+
   setTimeout(() => {
     $carousel.scrollLeft = payload.sessionIndex * 208;
   }, 100);
@@ -67,6 +64,7 @@ function loadVideo($block, payload) {
 
 function loadList($block, payload) {
   const $list = $block.querySelector('.video-player__video-list');
+
   if ($list) {
     $list.innerHTML = '';
     const videoArr = payload.sessions[payload.sessionIndex].videos;
@@ -107,19 +105,56 @@ function loadSession($block, payload) {
   }
 }
 
+function loadPreviousVideo($block, payload) {
+  if (payload.videoIndex > 0) {
+    payload.videoIndex -= 1;
+  } else if (payload.videoIndex === 0 && payload.sessionIndex > 0) {
+    payload.sessionIndex -= 1;
+    loadSession($block, payload);
+    payload.videoIndex = payload.sessions[payload.sessionIndex].videos.length - 1;
+  } else {
+    payload.sessionIndex = payload.sessions.length - 1;
+    loadSession($block, payload);
+    payload.videoIndex = payload.sessions[payload.sessionIndex].videos.length - 1;
+  }
+
+  loadVideo($block, payload);
+}
+
+function loadNextVideo($block, payload) {
+  const currentVideos = payload.sessions[payload.sessionIndex].videos;
+  const maxVideos = currentVideos.length - 1;
+  const maxSessions = payload.sessions.length - 1;
+
+  if (payload.videoIndex < maxVideos) {
+    payload.videoIndex += 1;
+    loadVideo($block, payload);
+  } else if (payload.videoIndex === maxVideos && payload.sessionIndex < maxSessions) {
+    payload.sessionIndex += 1;
+    payload.videoIndex = 0;
+    loadSession($block, payload);
+  } else {
+    payload.sessionIndex = 0;
+    payload.videoIndex = 0;
+    loadSession($block, payload);
+  }
+}
+
 function decorateSessionsCarousel($block, payload) {
   const $thumbnailsContainer = createTag('div', { class: 'thumbnails-container' });
   $block.append($thumbnailsContainer);
 
   payload.sessions.forEach((session, index) => {
     const $session = createTag('div', { class: 'session' });
-    $thumbnailsContainer.append($session);
     const $sessionThumbnail = session.thumbnail;
     const $sessionTitle = createTag('h5', { class: 'session-title' });
-    $sessionTitle.textContent = session.title;
     const $sessionDescription = createTag('h4', { class: 'session-description' });
+
+    $thumbnailsContainer.append($session);
+    $sessionTitle.textContent = session.title;
     $sessionDescription.textContent = session.description;
     $session.append($sessionThumbnail, $sessionTitle, $sessionDescription);
+
     $session.addEventListener('click', () => {
       payload.sessionIndex = index;
       loadSession($block, payload);
@@ -136,6 +171,7 @@ function decorateVideoPlayerSection($block) {
   const $sessionNum = createTag('h4', { class: 'video-player__session-number' });
   const $sessionTitle = createTag('h2', { class: 'video-player__session-title' });
   const $videoPlayerBody = createTag('div', { class: 'video-player__body' });
+
   $videoPlayerHeadings.append($sessionNum, $sessionTitle);
   $videoPlayer.append($videoPlayerHeadings, $videoPlayerBody);
   $block.append($videoPlayer);
@@ -152,84 +188,52 @@ function decorateInlineVideoPlayer($block) {
     controlsList: 'nodownload',
   });
   const $inlinePlayerPlayButton = createTag('a', { class: 'video-player__inline-player__play-button' });
-  $inlinePlayerPlayButton.textContent = 'Play';
   const $inlinePlayerIcon = createTag('img', { class: 'video-player__inline-player__play-icon' });
   const $inlinePlayerDuration = createTag('div', { class: 'video-player__inline-player__duration' });
+  const $videoPlayerBody = $block.querySelector('.video-player__body');
+
+  $inlinePlayerPlayButton.textContent = 'Play';
   $playerOverlay.append(getIconElement('play', 44), $inlinePlayerPlayButton, $inlinePlayerIcon, $inlinePlayerDuration);
   $playerOverlay.style.zIndex = 1;
   $inlinePlayerWrapper.append($playerOverlay, $inlinePlayer);
-  const $videoPlayerBody = $block.querySelector('.video-player__body');
+
   $videoPlayerBody.append($inlinePlayerWrapper);
-  $block.querySelector('.video-player')
-    .append($videoPlayerBody);
+  $block.querySelector('.video-player').append($videoPlayerBody);
+
   $playerOverlay.addEventListener('click', () => {
     $playerOverlay.style.zIndex = 0;
     $inlinePlayer.play();
   });
 }
 
-function decorateVideoPlayerMenu($block) {
+function decorateVideoPlayerMenu($block, payload) {
   const $videoPlayerMenu = createTag('div', { class: 'video-player__menu' });
   const $videoTitle = createTag('h3', { class: 'video-player__video-title' });
   const $navButtons = createTag('div', { class: 'video-player__buttons' });
-  const $buttonPrevious = createTag('a', {
-    class: 'video-player__button-previous',
-    href: '#',
-  });
-  const $buttonPreviousImg = createTag('img', {
-    class: 'video-player__button-previous__img',
-    src: '/express/icons/adobe-express-video-previous.svg',
-  });
-  const $buttonNext = createTag('a', {
-    class: 'video-player__button-next button accent',
-    href: '#',
-  });
-  $buttonNext.textContent = 'Next clip';
+  const $buttonPrevious = createTag('a', { class: 'video-player__button-previous', href: '#' });
+  const $buttonPreviousImg = createTag('img', { class: 'video-player__button-previous__img', src: '/express/icons/adobe-express-video-previous.svg' });
+  const $buttonNext = createTag('a', { class: 'video-player__button-next button accent', href: '#' });
   const $videoListWrapper = createTag('div', { class: 'video-player__video-list-wrapper' });
   const $videoListHeading = createTag('p', { class: 'video-player__video-list-heading' });
   const $videoList = createTag('ul', { class: 'video-player__video-list' });
+  const $videoPlayerBody = $block.querySelector('.video-player__body');
 
+  $buttonNext.textContent = 'Next clip';
   $buttonPrevious.append($buttonPreviousImg);
   $navButtons.append($buttonPrevious, $buttonNext);
   $videoListWrapper.append($videoListHeading, $videoList);
   $videoPlayerMenu.append($videoTitle, $navButtons, $videoListWrapper);
-  const $videoPlayerBody = $block.querySelector('.video-player__body');
   $videoPlayerBody.append($videoPlayerMenu);
-}
 
-function loadPreviousVideo($block, payload) {
-  const currentVideos = payload.sessions[payload.sessionIndex].videos;
-  if (payload.videoIndex > 0) {
-    payload.videoIndex -= 1;
-    loadVideo($block, payload);
-  } else if (payload.videoIndex === 0 && payload.sessionIndex > 0) {
-    payload.sessionIndex -= 1;
-    loadSession($block, payload);
-    payload.videoIndex = currentVideos.length - 1;
-    loadVideo($block, payload);
-  } else {
-    payload.sessionIndex = payload.sessions.length - 1;
-    loadSession($block, payload);
-    payload.videoIndex = currentVideos.length - 1;
-    loadVideo($block, payload);
-  }
-}
+  $buttonPrevious.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadPreviousVideo($block, payload);
+  });
 
-function loadNextVideo($block, payload) {
-  const currentVideos = payload.sessions[payload.sessionIndex].videos;
-  if (payload.videoIndex < currentVideos.length - 1) {
-    payload.videoIndex += 1;
-    loadVideo($block, payload);
-  } else if (payload.videoIndex === currentVideos.length - 1
-    && payload.sessionIndex < payload.sessions.length - 1) {
-    payload.sessionIndex += 1;
-    payload.videoIndex = 0;
-    loadSession($block, payload);
-  } else {
-    payload.sessionIndex = 0;
-    payload.videoIndex = 0;
-    loadSession($block, payload);
-  }
+  $buttonNext.addEventListener('click', (e) => {
+    e.preventDefault();
+    loadNextVideo($block, payload);
+  });
 }
 
 export default function decorate($block) {
@@ -239,41 +243,39 @@ export default function decorate($block) {
     sessions: [],
   };
 
-  let sessionIndex = -1;
+  Array.from($block.children).forEach(($row) => {
+    const $sessionTitle = $row.querySelector('h3');
+    const $videos = $row.querySelectorAll('a');
 
-  Array.from($block.children)
-    .forEach(($row) => {
-      const $sessionTitle = $row.querySelector('h3');
-      const $videos = $row.querySelectorAll('a');
-      if ($sessionTitle) {
-        const $sessionThumbnail = $row.querySelector('picture');
-        const $sessionDescription = $row.querySelector('h2');
-        sessionIndex += 1;
+    if ($sessionTitle) {
+      const $sessionThumbnail = $row.querySelector('picture');
+      const $sessionDescription = $row.querySelector('h2');
 
-        payload.sessions.push({
-          title: $sessionTitle.textContent,
-          description: $sessionDescription.textContent,
-          thumbnail: $sessionThumbnail,
-          videos: [],
-        });
-      }
+      payload.sessions.push({
+        title: $sessionTitle.textContent,
+        description: $sessionDescription.textContent,
+        thumbnail: $sessionThumbnail,
+        videos: [],
+      });
+    }
 
-      if ($videos.length > 0) {
-        const $videosThumbnail = $row.querySelector('picture');
-        const $nodes = $row.querySelectorAll('div>div');
-        const $videoDuration = $nodes[$nodes.length - 1].textContent;
-        payload.sessions[sessionIndex].videos.push({
-          title: $videos[0].textContent,
-          files: Array.from($videos, (a) => ({
-            href: a.href,
-            type: a.href.split('.')
-              .pop(),
-          })),
-          thumbnail: $videosThumbnail.querySelector('img').src,
-          duration: $videoDuration,
-        });
-      }
-    });
+    if ($videos.length > 0) {
+      const $videosThumbnail = $row.querySelector('picture');
+      const $nodes = $row.querySelectorAll('div>div');
+      const $videoDuration = $nodes[$nodes.length - 1].textContent;
+      payload.sessions[payload.sessions.length - 1].videos.push({
+        title: $videos[0].textContent,
+        files: Array.from($videos, (a) => ({
+          href: a.href,
+          type: a.href.split('.')
+            .pop(),
+        })),
+        thumbnail: $videosThumbnail.querySelector('img').src,
+        duration: $videoDuration,
+      });
+    }
+  });
+
   payload.sessionIndex = payload.sessions.length - 1;
   $block.innerHTML = '';
 
@@ -281,19 +283,8 @@ export default function decorate($block) {
   decorateSessionsCarousel($block, payload);
   decorateVideoPlayerSection($block);
   decorateInlineVideoPlayer($block);
-  decorateVideoPlayerMenu($block);
+  decorateVideoPlayerMenu($block, payload);
 
   // Load the latest section and video.
   loadSession($block, payload);
-
-  const $buttonPrevious = $block.querySelector('.video-player__button-previous');
-  const $buttonNext = $block.querySelector('.video-player__button-next');
-  $buttonPrevious.addEventListener('click', (e) => {
-    e.preventDefault();
-    loadPreviousVideo($block, payload);
-  });
-  $buttonNext.addEventListener('click', (e) => {
-    e.preventDefault();
-    loadNextVideo($block, payload);
-  });
 }
