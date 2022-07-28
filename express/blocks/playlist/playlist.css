@@ -69,7 +69,7 @@ main .playlist-container .video-player {
     max-width: 327px;
     margin: auto;
 }
-main .playlist-container .video-player__inline-player__wrapper {
+main .playlist-container .video-player-inline-player-wrapper {
     height: 197px;
     min-width: 100%;
     max-width: 327px;
@@ -78,7 +78,7 @@ main .playlist-container .video-player__inline-player__wrapper {
     overflow: hidden;
     position: relative;
 }
-main .playlist-container .video-player__inline-player__overlay {
+main .playlist-container .video-player-inline-player-overlay {
     position: absolute;
     left: 0;
     top: 0;
@@ -88,7 +88,7 @@ main .playlist-container .video-player__inline-player__overlay {
     background-position: center;
     cursor: pointer;
 }
-main .playlist-container .video-player__inline-player__overlay::after {
+main .playlist-container .video-player-inline-player-overlay::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -97,7 +97,7 @@ main .playlist-container .video-player__inline-player__overlay::after {
     width: 100%;
     background-image: linear-gradient(#ffffff00, #90909025, #000000a0);
 }
-main .playlist-container .video-player__inline-player__overlay:hover::after {
+main .playlist-container .video-player-inline-player-overlay:hover::after {
     content: '';
     position: absolute;
     top: 0;
@@ -107,10 +107,10 @@ main .playlist-container .video-player__inline-player__overlay:hover::after {
     background-color: #000000;
     opacity: 50%;
 }
-main .playlist-container .video-player__inline-player__overlay:hover .video-player__inline-player__play-button {
+main .playlist-container .video-player-inline-player-overlay:hover .video-player-inline-player-play-button {
     display: unset;
 }
-main .playlist-container .video-player__inline-player {
+main .playlist-container .video-player-inline-player {
     position: absolute;
     left: 0;
     top: 0;
@@ -118,7 +118,7 @@ main .playlist-container .video-player__inline-player {
     width: 100%;
     background-color: var(--color-black);
 }
-main .playlist-container .video-player__inline-player__play-button {
+main .playlist-container .video-player-inline-player-play-button {
     position: absolute;
     padding: 10px 20px;
     left: 50%;
@@ -129,7 +129,7 @@ main .playlist-container .video-player__inline-player__play-button {
     z-index: 10;
     display: none;
 }
-main .playlist-container .video-player__inline-player__duration {
+main .playlist-container .video-player-inline-player-duration {
     position: absolute;
     font-size: 11px;
     right: 12px;
@@ -140,7 +140,7 @@ main .playlist-container .video-player__inline-player__duration {
     color: #ffffff;
     z-index: 10;
 }
-main .playlist-container .video-player__inline-player__overlay svg {
+main .playlist-container .video-player-inline-player-overlay svg {
     position: absolute;
     left: 12px;
     bottom: 12px;
@@ -149,37 +149,37 @@ main .playlist-container .video-player__inline-player__overlay svg {
     height: 32px;
     z-index: 10;
 }
-main .playlist-container .video-player__session-number {
+main .playlist-container .video-player-session-number {
     font-size: 22px;
     line-height: 28px;
     text-align: left;
     margin-bottom: 8px;
 }
-main .playlist-container .video-player__session-title {
+main .playlist-container .video-player-session-title {
     font-size: 28px;
     line-height: 30px;
     text-align: left;
     margin: 0 0 40px;
 }
-main .playlist-container .video-player__body {
+main .playlist-container .video-player-body {
     display: flex;
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
 }
-main .playlist-container .video-player__video-title {
+main .playlist-container .video-player-video-title {
     font-size: 28px;
     line-height: 32px;
     margin-bottom: 14px;
     text-align: left;
 }
-main .playlist-container .video-player__buttons {
+main .playlist-container .video-player-buttons {
     display: flex;
     gap: 8px;
     align-items: center;
     margin-bottom: 14px;
 }
-main .playlist-container .video-player__buttons .video-player__button-previous {
+main .playlist-container .video-player-buttons .video-player-button-previous {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -191,23 +191,23 @@ main .playlist-container .video-player__buttons .video-player__button-previous {
     cursor: pointer;
     transition: background-color .3s;
 }
-main .playlist-container .video-player__buttons .video-player__button-previous:hover {
+main .playlist-container .video-player-buttons .video-player-button-previous:hover {
     background-color: var(--color-gray-300);
 }
-main .playlist-container .video-player__video-list-wrapper {
+main .playlist-container .video-player-video-list-wrapper {
     text-align: left;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list-heading {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list-heading {
     font-size: 18px;
     line-height: 24px;
     margin: 0 0 8px;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button {
     position: relative;
     padding: 8px 12px;
     background-color: var(--color-white);
@@ -218,18 +218,18 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
     flex-wrap: wrap;
     border-radius: 6px;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button.active,
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button:hover {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button.active,
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button:hover {
     background-color: #EDEDED;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button.active .video-button__title,
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button:hover .video-button__title {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button.active .video-button-title,
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button:hover .video-button-title {
     font-weight: 800;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button svg {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button svg {
     height: 24px;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button__title {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button-title {
     max-width: calc(100% - 68px);
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -238,7 +238,7 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
     line-height: 24px;
     font-weight: 700;
 }
-main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button__duration {
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button-duration {
     font-size: 16px;
     line-height: 24px;
 }
@@ -263,28 +263,28 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
         padding: 0 4px;
         margin-right: 20px;
     }
-    main .playlist-container .video-player__session-number {
+    main .playlist-container .video-player-session-number {
         margin-bottom: 6px;
     }
-    main .playlist-container .video-player__session-title {
+    main .playlist-container .video-player-session-title {
         font-size: 36px;
         line-height: 40px;
     }
-    main .playlist-container .video-player__video-title {
+    main .playlist-container .video-player-video-title {
         font-size: 28px;
         line-height: 32px;
         margin-bottom: 14px;
         text-align: left;
     }
-    main .playlist-container .video-player__body {
+    main .playlist-container .video-player-body {
         flex-direction: row;
         gap: 24px;
     }
-    main .playlist-container .video-player__inline-player__wrapper {
+    main .playlist-container .video-player-inline-player-wrapper {
         min-width: 388px;
         height: 235px;
     }
-    main .playlist-container .video-player__inline-player__duration {
+    main .playlist-container .video-player-inline-player-duration {
         font-size: 14px;
         line-height: 21px;
         padding: 3px 7px;
@@ -293,7 +293,7 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
         padding: 56px 40px;
         max-width: 740px;
     }
-    main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button {
+    main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button {
         width: 304px;
     }
 }
@@ -314,28 +314,28 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
         margin-left: 40px;
         margin-right: 40px;
     }
-    main .playlist-container .video-player__session-number {
+    main .playlist-container .video-player-session-number {
         margin-bottom: 3px;
     }
-    main .playlist-container .video-player__session-title {
+    main .playlist-container .video-player-session-title {
         font-size: 36px;
         line-height: 56px;
     }
-    main .playlist-container .video-player__video-title {
+    main .playlist-container .video-player-video-title {
         font-size: 28px;
         line-height: 32px;
         margin-bottom: 14px;
         text-align: left;
     }
-    main .playlist-container .video-player__body {
+    main .playlist-container .video-player-body {
         flex-direction: row;
         gap: 24px;
     }
-    main .playlist-container .video-player__inline-player__wrapper {
+    main .playlist-container .video-player-inline-player-wrapper {
         min-width: 670px;
         height: 408px;
     }
-    main .playlist-container .video-player__inline-player__duration {
+    main .playlist-container .video-player-inline-player-duration {
         font-size: 14px;
         line-height: 21px;
         padding: 4px 9px;
