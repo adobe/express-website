@@ -230,6 +230,10 @@ main .playlist-container .video-player__video-list-wrapper .video-player__video-
     height: 24px;
 }
 main .playlist-container .video-player__video-list-wrapper .video-player__video-list .video-button__title {
+    max-width: calc(100% - 68px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     font-size: 16px;
     line-height: 24px;
     font-weight: 700;

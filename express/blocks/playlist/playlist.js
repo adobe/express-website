@@ -28,78 +28,91 @@ function toggleVideoButtonState($block, $videoButton) {
   $videoButton.classList.add('active');
 }
 
-function loadVideo($block, sessions, videoIndex, sessionIndex) {
+function scrollSessionIntoView($block, payload) {
+  const $carousel = $block.querySelector('.carousel-platform');
+  setTimeout(() => {
+    $carousel.scrollLeft = payload.sessionIndex * 208;
+  }, 100);
+}
+
+function loadVideo($block, payload) {
   // In this function, replace the current video with a new one or load the first video.
   const $videoTitle = $block.querySelector('.video-player__video-title');
   const $playerOverlay = $block.querySelector('.video-player__inline-player__overlay');
   const $inlinePlayer = $block.querySelector('.video-player__inline-player');
   const $inlinePlayerDuration = $block.querySelector('.video-player__inline-player__duration');
-  const currentVideo = sessions[sessionIndex].videos[videoIndex];
-  const $videoButton = $block.querySelectorAll('.video-button')[videoIndex];
+  const currentVideo = payload.sessions[payload.sessionIndex].videos[payload.videoIndex];
+  const $videoButton = $block.querySelectorAll('.video-button')[payload.videoIndex];
 
-  $inlinePlayer.innerHTML = '';
-  $playerOverlay.style.zIndex = 1;
-  $playerOverlay.style.backgroundImage = `url('${currentVideo.thumbnail}')`;
+  if ($inlinePlayer) {
+    $inlinePlayer.innerHTML = '';
+    $playerOverlay.style.zIndex = 1;
+    $playerOverlay.style.backgroundImage = `url('${currentVideo.thumbnail}')`;
 
-  for (let i = 0; i < currentVideo.files.length; i += 1) {
-    const file = currentVideo.files[i];
-    $inlinePlayer.append(createTag('source', {
-      src: file.href,
-      type: `video/${file.type}`,
-    }));
-  }
-
-  $inlinePlayer.load();
-  $inlinePlayerDuration.textContent = currentVideo.duration;
-
-  $videoTitle.textContent = currentVideo.title;
-  toggleVideoButtonState($block, $videoButton);
-}
-
-function loadList($block, sessions, sessionIndex) {
-  const $list = $block.querySelector('.video-player__video-list');
-  $list.innerHTML = '';
-  const videoArr = sessions[sessionIndex].videos;
-  videoArr.forEach((video, index) => {
-    const $videoButton = createTag('li', { class: 'video-button' });
-    if (index === 0) {
-      $videoButton.classList.add('active');
+    for (let i = 0; i < currentVideo.files.length; i += 1) {
+      const file = currentVideo.files[i];
+      $inlinePlayer.append(createTag('source', {
+        src: file.href,
+        type: `video/${file.type}`,
+      }));
     }
-    $videoButton.dataset.index = String(index);
-    const $videoButtonTitle = createTag('span', { class: 'video-button__title' });
-    $videoButtonTitle.textContent = video.title;
-    const $videoButtonDuration = createTag('span', { class: 'video-button__duration' });
-    $videoButtonDuration.textContent = video.duration;
-    $videoButton.append(getIconElement('play', 44), $videoButtonTitle, $videoButtonDuration);
-    $list.append($videoButton);
 
-    $videoButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      loadVideo($block, sessions, index, sessionIndex);
-    });
-  });
+    $inlinePlayer.load();
+    $inlinePlayerDuration.textContent = currentVideo.duration;
+
+    $videoTitle.textContent = currentVideo.title;
+    toggleVideoButtonState($block, $videoButton);
+  }
 }
 
-function loadSession($block, sessions, sessionIndex) {
+function loadList($block, payload) {
+  const $list = $block.querySelector('.video-player__video-list');
+  if ($list) {
+    $list.innerHTML = '';
+    const videoArr = payload.sessions[payload.sessionIndex].videos;
+    videoArr.forEach((video, index) => {
+      const $videoButton = createTag('li', { class: 'video-button' });
+      if (index === 0) {
+        $videoButton.classList.add('active');
+      }
+      const $videoButtonTitle = createTag('span', { class: 'video-button__title' });
+      $videoButtonTitle.textContent = video.title;
+      const $videoButtonDuration = createTag('span', { class: 'video-button__duration' });
+      $videoButtonDuration.textContent = video.duration;
+      $videoButton.append(getIconElement('play', 44), $videoButtonTitle, $videoButtonDuration);
+      $list.append($videoButton);
+
+      $videoButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        payload.videoIndex = index;
+        loadVideo($block, payload);
+      });
+    });
+  }
+}
+
+function loadSession($block, payload) {
   // In this function, replace the current section with a new one.
   const $videoListHeading = $block.querySelector('.video-player__video-list-heading');
-  $block.querySelector('.video-player__session-number').textContent = sessions[sessionIndex].title;
-  $block.querySelector('.video-player__session-title').textContent = sessions[sessionIndex].description;
-  $videoListHeading.textContent = `${sessions[sessionIndex].title} Clips`;
-  loadList($block, sessions, sessionIndex);
-  loadVideo($block, sessions, 0, sessionIndex);
+  if ($videoListHeading) {
+    $block.querySelector('.video-player__session-number').textContent = payload.sessions[payload.sessionIndex].title;
+    $block.querySelector('.video-player__session-title').textContent = payload.sessions[payload.sessionIndex].description;
+    $videoListHeading.textContent = `${payload.sessions[payload.sessionIndex].title} Clips`;
+    loadList($block, payload);
+    loadVideo($block, payload);
 
-  const $sessions = $block.querySelectorAll('.session');
-  toggleSessionState($block, $sessions[sessionIndex]);
+    const $sessions = $block.querySelectorAll('.session');
+    toggleSessionState($block, $sessions[payload.sessionIndex]);
+    scrollSessionIntoView($block, payload);
+  }
 }
 
-function decorateSessionsCarousel($block, sessions) {
+function decorateSessionsCarousel($block, payload) {
   const $thumbnailsContainer = createTag('div', { class: 'thumbnails-container' });
   $block.append($thumbnailsContainer);
 
-  sessions.forEach((session, index) => {
+  payload.sessions.forEach((session, index) => {
     const $session = createTag('div', { class: 'session' });
-    $session.dataset.index = index;
     $thumbnailsContainer.append($session);
     const $sessionThumbnail = session.thumbnail;
     const $sessionTitle = createTag('h5', { class: 'session-title' });
@@ -108,12 +121,13 @@ function decorateSessionsCarousel($block, sessions) {
     $sessionDescription.textContent = session.description;
     $session.append($sessionThumbnail, $sessionTitle, $sessionDescription);
     $session.addEventListener('click', () => {
-      loadSession($block, sessions, index);
+      payload.sessionIndex = index;
+      loadSession($block, payload);
     });
   });
 
   buildCarousel('.session', $thumbnailsContainer);
-  $block.querySelectorAll('.session')[sessions.length - 1].classList.add('active');
+  $block.querySelectorAll('.session')[payload.sessionIndex].classList.add('active');
 }
 
 function decorateVideoPlayerSection($block) {
@@ -183,37 +197,48 @@ function decorateVideoPlayerMenu($block) {
   $videoPlayerBody.append($videoPlayerMenu);
 }
 
-function loadPreviousVideo($block, sessions) {
-  const sessionIndex = parseInt($block.querySelector('.session.active').dataset.index, 10);
-  const videoIndex = parseInt($block.querySelector('.video-button.active').dataset.index, 10);
-  if (videoIndex > 0) {
-    loadVideo($block, sessions, videoIndex - 1, sessionIndex);
-  } else if (videoIndex === 0 && sessionIndex > 0) {
-    loadSession($block, sessions, sessionIndex - 1);
-    const targetSession = sessions[sessionIndex - 1];
-    loadVideo($block, sessions, targetSession.videos.length - 1, sessionIndex - 1);
+function loadPreviousVideo($block, payload) {
+  const currentVideos = payload.sessions[payload.sessionIndex].videos;
+  if (payload.videoIndex > 0) {
+    payload.videoIndex -= 1;
+    loadVideo($block, payload);
+  } else if (payload.videoIndex === 0 && payload.sessionIndex > 0) {
+    payload.sessionIndex -= 1;
+    loadSession($block, payload);
+    payload.videoIndex = currentVideos.length - 1;
+    loadVideo($block, payload);
   } else {
-    loadSession($block, sessions, sessions.length - 1);
-    const targetSession = sessions[sessions.length - 1];
-    loadVideo($block, sessions, targetSession.videos.length - 1, sessions.length - 1);
+    payload.sessionIndex = payload.sessions.length - 1;
+    loadSession($block, payload);
+    payload.videoIndex = currentVideos.length - 1;
+    loadVideo($block, payload);
   }
 }
 
-function loadNextVideo($block, sessions) {
-  const sessionIndex = parseInt($block.querySelector('.session.active').dataset.index, 10);
-  const videoIndex = parseInt($block.querySelector('.video-button.active').dataset.index, 10);
-  const $videos = $block.querySelectorAll('.video-button');
-  if (videoIndex < $videos.length - 1) {
-    loadVideo($block, sessions, videoIndex + 1, sessionIndex);
-  } else if (videoIndex === $videos.length - 1 && sessionIndex < sessions.length - 1) {
-    loadSession($block, sessions, sessionIndex + 1);
+function loadNextVideo($block, payload) {
+  const currentVideos = payload.sessions[payload.sessionIndex].videos;
+  if (payload.videoIndex < currentVideos.length - 1) {
+    payload.videoIndex += 1;
+    loadVideo($block, payload);
+  } else if (payload.videoIndex === currentVideos.length - 1
+    && payload.sessionIndex < payload.sessions.length - 1) {
+    payload.sessionIndex += 1;
+    payload.videoIndex = 0;
+    loadSession($block, payload);
   } else {
-    loadSession($block, sessions, 0);
+    payload.sessionIndex = 0;
+    payload.videoIndex = 0;
+    loadSession($block, payload);
   }
 }
 
 export default function decorate($block) {
-  const sessions = [];
+  const payload = {
+    sessionIndex: 0,
+    videoIndex: 0,
+    sessions: [],
+  };
+
   let sessionIndex = -1;
 
   Array.from($block.children)
@@ -225,7 +250,7 @@ export default function decorate($block) {
         const $sessionDescription = $row.querySelector('h2');
         sessionIndex += 1;
 
-        sessions.push({
+        payload.sessions.push({
           title: $sessionTitle.textContent,
           description: $sessionDescription.textContent,
           thumbnail: $sessionThumbnail,
@@ -237,8 +262,7 @@ export default function decorate($block) {
         const $videosThumbnail = $row.querySelector('picture');
         const $nodes = $row.querySelectorAll('div>div');
         const $videoDuration = $nodes[$nodes.length - 1].textContent;
-        sessions[sessionIndex].videos.push({
-          index: sessionIndex,
+        payload.sessions[sessionIndex].videos.push({
           title: $videos[0].textContent,
           files: Array.from($videos, (a) => ({
             href: a.href,
@@ -250,26 +274,26 @@ export default function decorate($block) {
         });
       }
     });
-
+  payload.sessionIndex = payload.sessions.length - 1;
   $block.innerHTML = '';
 
   // Rebuild the whole block properly.
-  decorateSessionsCarousel($block, sessions);
-  decorateVideoPlayerSection($block, sessions);
-  decorateInlineVideoPlayer($block, sessions);
-  decorateVideoPlayerMenu($block, sessions);
+  decorateSessionsCarousel($block, payload);
+  decorateVideoPlayerSection($block);
+  decorateInlineVideoPlayer($block);
+  decorateVideoPlayerMenu($block);
 
   // Load the latest section and video.
-  loadSession($block, sessions, sessions.length - 1);
+  loadSession($block, payload);
 
   const $buttonPrevious = $block.querySelector('.video-player__button-previous');
   const $buttonNext = $block.querySelector('.video-player__button-next');
   $buttonPrevious.addEventListener('click', (e) => {
     e.preventDefault();
-    loadPreviousVideo($block, sessions);
+    loadPreviousVideo($block, payload);
   });
   $buttonNext.addEventListener('click', (e) => {
     e.preventDefault();
-    loadNextVideo($block, sessions);
+    loadNextVideo($block, payload);
   });
 }
