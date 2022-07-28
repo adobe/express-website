@@ -18,11 +18,11 @@ export default function decorate(block) {
   window.qtWebViewScheme = 'false';
   window.qtColorTheme = '';
   // eslint-disable-next-line no-underscore-dangle
-  window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express.adobe.com/express-apps/quick-actions-api' };
+  window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express-stage.adobe.com/express-apps/quick-actions-api' };
   // eslint-disable-next-line no-underscore-dangle
   window._sparkImsOnReadyCalled = true;
   block.innerHTML = `<div id="quick-task-container"></div>
   <cclqt-sign-up-modal id="qt-sign-up-modal"></cclqt-sign-up-modal>
   <cclqt-done-modal id="qt-done-modal"></cclqt-done-modal>`;
-  loadScript('https://express.adobe.com/static/platform-shell/standalone-host-app-1590e26b.js');
+  loadScript('https://project-marvel-marvel-12256-cci.fracture.adobeprojectm.com/static/platform-shell/standalone-host-app-dae691af.js');
 }
