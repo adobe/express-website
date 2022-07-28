@@ -1482,9 +1482,9 @@ function loadIMS() {
     client_id: 'MarvelWeb3',
     scope: 'AdobeID,openid',
     locale: getLocale(window.location),
-    environment: 'stage',
+    environment: 'prod',
   };
-  loadScript('https://auth-stg1.services.adobe.com/imslib/imslib.min.js');
+  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
 }
 
 function loadFEDS() {

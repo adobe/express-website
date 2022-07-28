@@ -131,7 +131,7 @@ function loadIMS() {
     scope: 'AdobeID,openid',
     locale,
   };
-  loadScript('https://auth-stg1.services.adobe.com/imslib/imslib.min.js');
+  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
 }
 
 function loadFEDS() {
