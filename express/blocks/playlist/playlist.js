@@ -34,10 +34,10 @@ function scrollSessionIntoView($block, payload) {
 
 function loadVideo($block, payload) {
   // In this function, replace the current video with a new one or load the first video.
-  const $videoTitle = $block.querySelector('.video-player__video-title');
-  const $playerOverlay = $block.querySelector('.video-player__inline-player__overlay');
-  const $inlinePlayer = $block.querySelector('.video-player__inline-player');
-  const $inlinePlayerDuration = $block.querySelector('.video-player__inline-player__duration');
+  const $videoTitle = $block.querySelector('.video-player-video-title');
+  const $playerOverlay = $block.querySelector('.video-player-inline-player-overlay');
+  const $inlinePlayer = $block.querySelector('.video-player-inline-player');
+  const $inlinePlayerDuration = $block.querySelector('.video-player-inline-player-duration');
   const currentVideo = payload.sessions[payload.sessionIndex].videos[payload.videoIndex];
   const $videoButton = $block.querySelectorAll('.video-button')[payload.videoIndex];
 
@@ -63,22 +63,24 @@ function loadVideo($block, payload) {
 }
 
 function loadList($block, payload) {
-  const $list = $block.querySelector('.video-player__video-list');
+  const $list = $block.querySelector('.video-player-video-list');
 
   if ($list) {
     $list.innerHTML = '';
     const videoArr = payload.sessions[payload.sessionIndex].videos;
+
     videoArr.forEach((video, index) => {
       const $videoButton = createTag('li', { class: 'video-button' });
-      if (index === 0) {
-        $videoButton.classList.add('active');
-      }
-      const $videoButtonTitle = createTag('span', { class: 'video-button__title' });
+      const $videoButtonTitle = createTag('span', { class: 'video-button-title' });
+      const $videoButtonDuration = createTag('span', { class: 'video-button-duration' });
+
       $videoButtonTitle.textContent = video.title;
-      const $videoButtonDuration = createTag('span', { class: 'video-button__duration' });
       $videoButtonDuration.textContent = video.duration;
       $videoButton.append(getIconElement('play', 44), $videoButtonTitle, $videoButtonDuration);
       $list.append($videoButton);
+      if (index === 0) {
+        $videoButton.classList.add('active');
+      }
 
       $videoButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -91,10 +93,11 @@ function loadList($block, payload) {
 
 function loadSession($block, payload) {
   // In this function, replace the current section with a new one.
-  const $videoListHeading = $block.querySelector('.video-player__video-list-heading');
+  const $videoListHeading = $block.querySelector('.video-player-video-list-heading');
+
   if ($videoListHeading) {
-    $block.querySelector('.video-player__session-number').textContent = payload.sessions[payload.sessionIndex].title;
-    $block.querySelector('.video-player__session-title').textContent = payload.sessions[payload.sessionIndex].description;
+    $block.querySelector('.video-player-session-number').textContent = payload.sessions[payload.sessionIndex].title;
+    $block.querySelector('.video-player-session-title').textContent = payload.sessions[payload.sessionIndex].description;
     $videoListHeading.textContent = `${payload.sessions[payload.sessionIndex].title} Clips`;
     loadList($block, payload);
     loadVideo($block, payload);
@@ -167,10 +170,10 @@ function decorateSessionsCarousel($block, payload) {
 
 function decorateVideoPlayerSection($block) {
   const $videoPlayer = createTag('div', { class: 'video-player' });
-  const $videoPlayerHeadings = createTag('div', { class: 'video-player__headings' });
-  const $sessionNum = createTag('h4', { class: 'video-player__session-number' });
-  const $sessionTitle = createTag('h2', { class: 'video-player__session-title' });
-  const $videoPlayerBody = createTag('div', { class: 'video-player__body' });
+  const $videoPlayerHeadings = createTag('div', { class: 'video-player-headings' });
+  const $sessionNum = createTag('h4', { class: 'video-player-session-number' });
+  const $sessionTitle = createTag('h2', { class: 'video-player-session-title' });
+  const $videoPlayerBody = createTag('div', { class: 'video-player-body' });
 
   $videoPlayerHeadings.append($sessionNum, $sessionTitle);
   $videoPlayer.append($videoPlayerHeadings, $videoPlayerBody);
@@ -178,19 +181,19 @@ function decorateVideoPlayerSection($block) {
 }
 
 function decorateInlineVideoPlayer($block) {
-  const $inlinePlayerWrapper = createTag('div', { class: 'video-player__inline-player__wrapper' });
-  const $playerOverlay = createTag('div', { class: 'video-player__inline-player__overlay' });
+  const $inlinePlayerWrapper = createTag('div', { class: 'video-player-inline-player-wrapper' });
+  const $playerOverlay = createTag('div', { class: 'video-player-inline-player-overlay' });
   const $inlinePlayer = createTag('video', {
-    class: 'video-player__inline-player',
+    class: 'video-player-inline-player',
     preload: 'metadata',
     controls: true,
     playsInline: true,
     controlsList: 'nodownload',
   });
-  const $inlinePlayerPlayButton = createTag('a', { class: 'video-player__inline-player__play-button' });
-  const $inlinePlayerIcon = createTag('img', { class: 'video-player__inline-player__play-icon' });
-  const $inlinePlayerDuration = createTag('div', { class: 'video-player__inline-player__duration' });
-  const $videoPlayerBody = $block.querySelector('.video-player__body');
+  const $inlinePlayerPlayButton = createTag('a', { class: 'video-player-inline-player-play-button' });
+  const $inlinePlayerIcon = createTag('img', { class: 'video-player-inline-player-play-icon' });
+  const $inlinePlayerDuration = createTag('div', { class: 'video-player-inline-player-duration' });
+  const $videoPlayerBody = $block.querySelector('.video-player-body');
 
   $inlinePlayerPlayButton.textContent = 'Play';
   $playerOverlay.append(getIconElement('play', 44), $inlinePlayerPlayButton, $inlinePlayerIcon, $inlinePlayerDuration);
@@ -207,16 +210,16 @@ function decorateInlineVideoPlayer($block) {
 }
 
 function decorateVideoPlayerMenu($block, payload) {
-  const $videoPlayerMenu = createTag('div', { class: 'video-player__menu' });
-  const $videoTitle = createTag('h3', { class: 'video-player__video-title' });
-  const $navButtons = createTag('div', { class: 'video-player__buttons' });
-  const $buttonPrevious = createTag('a', { class: 'video-player__button-previous', href: '#' });
-  const $buttonPreviousImg = createTag('img', { class: 'video-player__button-previous__img', src: '/express/icons/adobe-express-video-previous.svg' });
-  const $buttonNext = createTag('a', { class: 'video-player__button-next button accent', href: '#' });
-  const $videoListWrapper = createTag('div', { class: 'video-player__video-list-wrapper' });
-  const $videoListHeading = createTag('p', { class: 'video-player__video-list-heading' });
-  const $videoList = createTag('ul', { class: 'video-player__video-list' });
-  const $videoPlayerBody = $block.querySelector('.video-player__body');
+  const $videoPlayerMenu = createTag('div', { class: 'video-player-menu' });
+  const $videoTitle = createTag('h3', { class: 'video-player-video-title' });
+  const $navButtons = createTag('div', { class: 'video-player-buttons' });
+  const $buttonPrevious = createTag('a', { class: 'video-player-button-previous', href: '#' });
+  const $buttonPreviousImg = createTag('img', { class: 'video-player-button-previous-img', src: '/express/icons/adobe-express-video-previous.svg' });
+  const $buttonNext = createTag('a', { class: 'video-player-button-next button accent', href: '#' });
+  const $videoListWrapper = createTag('div', { class: 'video-player-video-list-wrapper' });
+  const $videoListHeading = createTag('p', { class: 'video-player-video-list-heading' });
+  const $videoList = createTag('ul', { class: 'video-player-video-list' });
+  const $videoPlayerBody = $block.querySelector('.video-player-body');
 
   $buttonNext.textContent = 'Next clip';
   $buttonPrevious.append($buttonPreviousImg);
