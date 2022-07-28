@@ -949,7 +949,7 @@ loadScript(martechURL, () => {
 
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
   const ENABLE_RATE_ACTION_AUDIENCE = 'enableRatingAction';
-  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
+  const RETURNING_VISITOR_SEGMENT_ID = 23153796;
   const USED_ACTION_SEGMENT_ID = 24241150;
 
   Context.set('audiences', []);
