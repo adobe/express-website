@@ -116,6 +116,7 @@ main .playlist-container .video-player-inline-player {
     top: 0;
     height: 100%;
     width: 100%;
+    border-radius: 16px;
     background-color: var(--color-black);
 }
 main .playlist-container .video-player-inline-player-play-button {
