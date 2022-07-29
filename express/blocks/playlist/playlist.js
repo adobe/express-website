@@ -94,6 +94,7 @@ function loadList($block, payload) {
 function loadSession($block, payload) {
   // In this function, replace the current section with a new one.
   const $videoListHeading = $block.querySelector('.video-player-video-list-heading');
+  payload.videoIndex = 0;
 
   if ($videoListHeading) {
     $block.querySelector('.video-player-session-number').textContent = payload.sessions[payload.sessionIndex].title;
@@ -111,6 +112,7 @@ function loadSession($block, payload) {
 function loadPreviousVideo($block, payload) {
   if (payload.videoIndex > 0) {
     payload.videoIndex -= 1;
+    loadVideo($block, payload);
   } else if (payload.videoIndex === 0 && payload.sessionIndex > 0) {
     payload.sessionIndex -= 1;
     loadSession($block, payload);
@@ -120,7 +122,6 @@ function loadPreviousVideo($block, payload) {
     loadSession($block, payload);
     payload.videoIndex = payload.sessions[payload.sessionIndex].videos.length - 1;
   }
-
   loadVideo($block, payload);
 }
 
