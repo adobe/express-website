@@ -2136,8 +2136,6 @@ export function trackBranchParameters($links) {
             urlParams.set('~customer_placement', 'Google%20AdWords');
           }
 
-          if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
-            urlParams.set('~keyword', sKwcidParameters[8]);
           if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
             urlParams.set('~keyword', sKwcIdParameters[8]);
           }
