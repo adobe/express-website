@@ -2109,10 +2109,13 @@ export function trackBranchParameters($links) {
 
   const sdid = rootUrlParameters.get('sdid');
   const mv = rootUrlParameters.get('mv');
-  const sKwcid = rootUrlParameters.get('s_kwcid');
+  const sKwcId = rootUrlParameters.get('s_kwcid');
   const efId = rootUrlParameters.get('ef_id');
+  const promoId = rootUrlParameters.get('promoid');
+  const trackingId = rootUrlParameters.get('trackingid');
+  const cgen = rootUrlParameters.get('cgen');
 
-  if (sdid || mv || sKwcid || efId) {
+  if (sdid || mv || sKwcId || efId || promoId || trackingId || cgen) {
     $links.forEach(($a) => {
       if ($a.href && $a.href.match('adobesparkpost.app.link')) {
         const buttonUrl = new URL($a.href);
@@ -2126,16 +2129,28 @@ export function trackBranchParameters($links) {
           urlParams.set('~customer_campaign', mv);
         }
 
-        if (sKwcid) {
-          const sKwcidParameters = sKwcid.split('!');
+        if (sKwcId) {
+          const sKwcIdParameters = sKwcId.split('!');
 
-          if (typeof sKwcidParameters[2] !== 'undefined' && sKwcidParameters[2] === '3') {
+          if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
             urlParams.set('~customer_placement', 'Google%20AdWords');
-          } // Missing Facebook.
-
-          if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
-            urlParams.set('~keyword', sKwcidParameters[8]);
           }
+
+          if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+            urlParams.set('~keyword', sKwcIdParameters[8]);
+          }
+        }
+
+        if (promoId) {
+          urlParams.set('~ad_id', promoId);
+        }
+
+        if (trackingId) {
+          urlParams.set('~keyword_id', trackingId);
+        }
+
+        if (cgen) {
+          urlParams.set('~customer_keyword', cgen);
         }
 
         urlParams.set('~feature', 'paid%20advertising');
