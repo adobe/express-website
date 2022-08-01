@@ -276,6 +276,7 @@ main .playlist-container .video-player-video-list-wrapper .video-player-video-li
         line-height: 32px;
         margin-bottom: 14px;
         text-align: left;
+        min-height: 64px;
     }
     main .playlist-container .video-player-body {
         flex-direction: row;

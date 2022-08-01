@@ -14,6 +14,11 @@
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 import { buildCarousel } from '../shared/carousel.js';
 
+function startVideo(player, overlay) {
+  overlay.style.zIndex = 0;
+  player.play();
+}
+
 function toggleSessionState($block, $session) {
   $block.querySelector('.session.active').classList.remove('active');
   $session.classList.add('active');
@@ -181,7 +186,7 @@ function decorateVideoPlayerSection($block) {
   $block.append($videoPlayer);
 }
 
-function decorateInlineVideoPlayer($block) {
+function decorateInlineVideoPlayer($block, payload) {
   const $inlinePlayerWrapper = createTag('div', { class: 'video-player-inline-player-wrapper' });
   const $playerOverlay = createTag('div', { class: 'video-player-inline-player-overlay' });
   const $inlinePlayer = createTag('video', {
@@ -205,8 +210,14 @@ function decorateInlineVideoPlayer($block) {
   $block.querySelector('.video-player').append($videoPlayerBody);
 
   $playerOverlay.addEventListener('click', () => {
-    $playerOverlay.style.zIndex = 0;
-    $inlinePlayer.play();
+    startVideo($inlinePlayer, $playerOverlay);
+  });
+
+  $inlinePlayer.addEventListener('ended', () => {
+    if (payload.videoIndex !== payload.sessions[payload.sessionIndex].videos.length - 1) {
+      loadNextVideo($block, payload);
+      startVideo($inlinePlayer, $playerOverlay);
+    }
   });
 }
 
@@ -286,7 +297,7 @@ export default function decorate($block) {
   // Rebuild the whole block properly.
   decorateSessionsCarousel($block, payload);
   decorateVideoPlayerSection($block);
-  decorateInlineVideoPlayer($block);
+  decorateInlineVideoPlayer($block, payload);
   decorateVideoPlayerMenu($block, payload);
 
   // Load the latest section and video.
