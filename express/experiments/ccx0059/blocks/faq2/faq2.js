@@ -68,6 +68,7 @@ export default function decorate($block) {
   $block.classList.add('faq');
   $block.closest('.section').classList.add('faq-container');
   decorateFAQBlocks($block);
+  // eslint-disable-next-line no-console
   console.log('faq 2');
   const usp = new URLSearchParams(window.location.search);
   const useAlloy = (
