@@ -118,7 +118,7 @@ main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img
     }
 
     main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img {
-        height: 380px;
+        height: 50vh;
         object-fit: cover;
     }
 }
