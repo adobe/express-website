@@ -130,6 +130,7 @@ function loadIMS() {
     client_id: 'MarvelWeb3',
     scope: 'AdobeID,openid',
     locale,
+    environment: 'stg1',
   };
   loadScript('https://auth-stg1.services.adobe.com/imslib/imslib.min.js');
 }
