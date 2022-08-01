@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-console */
-/* global digitalData _satellite __satelliteLoadedCallback */
+/* global digitalData _satellite __satelliteLoadedCallback alloy */
 
 import {
   loadScript,
@@ -949,80 +949,88 @@ loadScript(martechURL, () => {
 
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
   const ENABLE_RATE_ACTION_AUDIENCE = 'enableRatingAction';
-  const RETURNING_VISITOR_SEGMENT_ID = '23153796';
+  const RETURNING_VISITOR_SEGMENT_ID = 23153796;
   const USED_ACTION_SEGMENT_ID = 24241150;
 
   Context.set('audiences', []);
   Context.set('segments', []);
 
   function getAudiences() {
-    const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
-    const ecid = visitorId ? visitorId.getMarketingCloudVisitorID() : null;
+    const getSegments = (ecid) => {
+      if (ecid) {
+        w.setAudienceManagerSegments = (json) => {
+          if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
+            const audiences = Context.get('audiences');
+            const segments = Context.get('segments');
+            audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
+            segments.push(RETURNING_VISITOR_SEGMENT_ID);
 
-    if (ecid) {
-      w.setAudienceManagerSegments = (json) => {
-        if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
-          const audiences = Context.get('audiences');
-          const segments = Context.get('segments');
-          audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
-          segments.push(RETURNING_VISITOR_SEGMENT_ID);
-
-          if (useAlloy) {
-            _satellite.track('event', {
-              xdm: {},
-              data: {
-                eventType: 'web.webinteraction.linkClicks',
-                web: {
-                  webInteraction: {
-                    name: 'pricingModalUserInSegment',
-                    linkClicks: {
-                      value: 1,
-                    },
-                    type: 'other',
-                  },
-                },
-                _adobe_corpnew: {
-                  digitalData: {
-                    primaryEvent: {
-                      eventInfo: {
-                        eventName: 'pricingModalUserInSegment',
+            if (useAlloy) {
+              _satellite.track('event', {
+                xdm: {},
+                data: {
+                  eventType: 'web.webinteraction.linkClicks',
+                  web: {
+                    webInteraction: {
+                      name: 'pricingModalUserInSegment',
+                      linkClicks: {
+                        value: 1,
                       },
-                    },
-                    spark: {
-                      eventData: {
-                        eventName: 'pricingModalUserInSegment',
-                        sendTimestamp: new Date().getTime(),
-                      },
+                      type: 'other',
                     },
                   },
+                  _adobe_corpnew: {
+                    digitalData: {
+                      primaryEvent: {
+                        eventInfo: {
+                          eventName: 'pricingModalUserInSegment',
+                        },
+                      },
+                      spark: {
+                        eventData: {
+                          eventName: 'pricingModalUserInSegment',
+                          sendTimestamp: new Date().getTime(),
+                        },
+                      },
+                    },
+                  },
                 },
-              },
-            });
-          } else {
-            digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
-            digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
+              });
+            } else {
+              digitalData._set('primaryEvent.eventInfo.eventName', 'pricingModalUserInSegment');
+              digitalData._set('spark.eventData.eventName', 'pricingModalUserInSegment');
 
-            _satellite.track('event', {
-              digitalData: digitalData._snapshot(),
-            });
+              _satellite.track('event', {
+                digitalData: digitalData._snapshot(),
+              });
 
-            digitalData._delete('primaryEvent.eventInfo.eventName');
-            digitalData._delete('spark.eventData.eventName');
+              digitalData._delete('primaryEvent.eventInfo.eventName');
+              digitalData._delete('spark.eventData.eventName');
+            }
           }
-        }
 
-        if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
-          const audiences = Context.get('audiences');
-          const segments = Context.get('segments');
-          audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
-          segments.push(USED_ACTION_SEGMENT_ID);
-        }
+          if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
+            const audiences = Context.get('audiences');
+            const segments = Context.get('segments');
+            audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
+            segments.push(USED_ACTION_SEGMENT_ID);
+          }
 
-        document.dispatchEvent(new Event('context_loaded'));
-      };
+          document.dispatchEvent(new Event('context_loaded'));
+        };
+        // TODO: What the heck is this?  This needs to be behind one trust and cmp
+        loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
+      }
+    };
 
-      // TODO: What the heck is this?  This needs to be behind one trust and cmp
-      loadScript(`https://adobe.demdex.net/event?d_dst=1&d_rtbd=json&d_cb=setAudienceManagerSegments&d_cts=2&d_mid=${ecid}`);
+    if (useAlloy) {
+      alloy('getIdentity')
+        .then((data) => getSegments(data?.identity?.ECID));
+    } else {
+      const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
+      getSegments(
+        visitorId ? visitorId.getMarketingCloudVisitorID() : null,
+      );
     }
   }
 
