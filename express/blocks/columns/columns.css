@@ -56,11 +56,6 @@ main .columns p.powered-by {
   line-height: 1.2;
 }
 
-main .columns p.legal-copy {
-  font-size: var(--body-font-size-xs);
-  line-height: 1.5;
-}
-
 main .columns p.button-container {
   margin: 0;
   margin-top: 40px;
@@ -749,5 +744,84 @@ main .columns.highlight .column.column-picture {
 
   main .columns .column:nth-child(2):not(.column-picture):not(.hero-animation-overlay) {
     padding-left: 16px;
+  }
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main .columns h2.columns-heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .columns h2.columns-heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .columns h2.columns-heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
+@media (min-width: 1200px) {
+  :lang(ja) main .columns h1{
+    font-size: var(--heading-font-size-xxl);
+  }
+
+  :lang(ja) main .columns h1.columns-heading-long {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  :lang(ja) main .columns h1.columns-heading-very-long {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  :lang(ja) main .columns h1.columns-heading-x-long {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-long {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-very-long {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-x-long {
+    font-size: var(--heading-font-size-m);
+  }
+}
+
+@media (max-width: 600px) {
+  :lang(ja) main .columns h2 {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-long {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-very-long {
+    font-size: var(--heading-font-size-m);
+  }
+
+  :lang(ja) main .columns h2.columns-heading-x-long {
+    font-size: var(--heading-font-size-m);
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1200px) {
+  :lang(ja) main .columns h1{
+    font-size: var(--heading-font-size-xl);
+  }
+
+  :lang(ja) main .columns h1.columns-heading-long {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  :lang(ja) main .columns h1.columns-heading-very-long {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main .columns h1.columns-heading-x-long {
+    font-size: var(--heading-font-size-m);
   }
 }

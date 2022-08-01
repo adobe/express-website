@@ -34,6 +34,7 @@
   --color-premium: #EBCF2D;
   --gradient-highlight-vertical: linear-gradient(15deg, #7c84fc, #ff4dd2);
   --gradient-highlight-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
+  --gradient-highlight-diagonal: linear-gradient(45deg, #7c84fc, #ff4dd2);
 
   /* body */
   --body-background-color: var(--color-white);
@@ -145,7 +146,7 @@ a.button:any-link {
   padding: 5px 1.2em 6px 1.2em;
   text-align: center;
   font-size: var(--body-font-size-s);
-  font-style: normal; 
+  font-style: normal;
   font-weight: 600;
   line-height: var(--body-line-height);
   cursor: pointer;
@@ -177,7 +178,7 @@ a.button.small:any-link {
 }
 
 a.button:any-link,
-a.button.accent:any-link, 
+a.button.accent:any-link,
 a.button.primaryCTA:any-link {
   color: var(--color-white);
   background-color: var(--color-info-accent);
@@ -199,7 +200,7 @@ a.button.primaryCTA:any-link:active {
 }
 
 a.button:focus,
-a.button.accent:focus, 
+a.button.accent:focus,
 a.button.primaryCTA:focus {
   background-color: var(--color-info-accent-hover);
   border-color: var(--color-info-accent-hover);
@@ -445,6 +446,10 @@ main .section:last-of-type {
   margin-bottom: 0;
 }
 
+main .section:last-of-type > .default-content-wrapper {
+  padding-bottom: 40px;  
+}
+
 @media (min-width:600px) {
 
   main h2 {
@@ -484,7 +489,7 @@ main .section:last-of-type {
 
   main .section.cards-container {
     background-color: unset;
-  }  
+  }
 }
 
 @media(min-width:1200px) {
@@ -601,6 +606,10 @@ main .hero a.button:any-link {
   border-radius: 22px;
 }
 
+main .section div .block p.legal-copy {
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
+}
 
 @media (min-width:600px) {
   main .hero h5 {
@@ -636,9 +645,9 @@ main .hero a.button:any-link {
 @media (min-width:1200px){
   main .hero h1 {
     font-size: var(--heading-font-size-xxl);
-    margin: 0; 
+    margin: 0;
   }
-  
+
   main .hero .columns > div > div {
     margin: 8px;
   }
@@ -648,14 +657,6 @@ main .hero a.button:any-link {
 
 main .section {
   padding-top: 60px;
-}
-
-main .section:first-of-type {
-  padding-top: 120px;
-}
-
-main .section:first-of-type {
-  padding: 0;
 }
 
 main .section > div {
@@ -775,6 +776,74 @@ main .columns.columns-marquee {
   min-height: 650px;
 }
 
+/* free plan widget */
+main .block .button-container.free-plan-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+main .block.center .button-container.free-plan-container {
+  justify-content: center;
+}
+
+main .block .button-container.free-plan-container a.button {
+  max-height: 24px;
+  margin-right: 24px !important;
+}
+
+main .block .free-plan-widget {
+  box-sizing: border-box;
+  background-color: var(--color-gray-100);
+  border-radius: 20px;
+  margin: 32px 0;
+  padding: 16px 24px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+main .block.center .free-plan-widget {
+  margin: 32px auto;
+}
+
+main .block .free-plan-widget > div {
+  display: flex;
+  flex-direction: row;
+}
+
+main .block .free-plan-widget > div > div:first-child {
+  position: relative;
+  margin-top: 5px;
+  margin-right: 6px;
+  width: 14px;
+  height: 14px;
+  background: #33AB84;
+  border-radius: 50%;
+}
+
+main .block .free-plan-widget .icon.icon-checkmark {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  fill: var(--color-white);
+  width: 8px;
+  max-height: 8px;
+}
+
+@media (min-width:900px) {
+  main .block .button-container.free-plan-container .free-plan-widget {
+    margin: 0;
+  }
+
+  main .block.center .free-plan-widget {
+    margin: 0 auto;
+  }
+}
+
 @media (min-width: 1200px) {
   main .template-list-fourcols-container > div,
   main .template-list-horizontal-container > div {
@@ -838,4 +907,43 @@ wbr.wbr-off {
 main .section[data-section-status='loading'],
 main .section[data-section-status='initialized'] {
   display: none;
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main h1.heading-long {
+  font-size: var(--heading-font-size-xl);
+}
+
+:lang(ja) main h1.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h1.heading-x-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
+@media (max-width: 600px) {
+  :lang(ja) main h2.heading-long {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main h2.heading-very-long {
+    font-size: var(--heading-font-size-m);
+  }
+
+  :lang(ja) main h2.heading-x-long {
+    font-size: var(--heading-font-size-m);
+  }
 }

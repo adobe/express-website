@@ -12,6 +12,7 @@
 
 import {
   createTag,
+  addFreePlanWidget,
 } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
@@ -73,6 +74,7 @@ export default function decorate($block) {
         $projectlist.appendChild($row);
       } else {
         $row.classList.add('make-a-project-description');
+        addFreePlanWidget($row.firstElementChild);
       }
     });
     if ($projectlist.children.length) {

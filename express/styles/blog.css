@@ -32,6 +32,7 @@
     font-size: 16px;
     line-height: 20px;
     font-size: var(--body-font-size-s);
+    text-transform: capitalize;
   }
   
   .blog main .hero .blog-header .author {
@@ -178,3 +179,7 @@
     }
 }
   
+/* Japanese font sizing styles */
+:lang(ja).blog main .section h3 {
+  font-size: var(--heading-font-size-m);
+}

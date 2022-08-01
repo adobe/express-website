@@ -90,31 +90,79 @@ export function buildUrl(optionUrl, country, language) {
 function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
   const url = new URL(window.location.href);
   const sparkTouchpoint = url.searchParams.get('touchpointName');
+  const useAlloy = (
+    window.location.hostname === 'www.stage.adobe.com'
+    || (
+      url.searchParams.has('martech')
+      && url.searchParams.get('martech').includes('alloy')
+    )
+  );
 
-  digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-  digitalData._set('spark.eventData.eventName', sparkEventName);
-  digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
-  digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
-  digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
-  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData14', 'quantity:1');
-  digitalData._set('spark.eventData.trigger', sparkTouchpoint);
+  if (useAlloy) {
+    _satellite.track('event', {
+      xdm: {},
+      data: {
+        eventType: 'web.webinteraction.linkClicks',
+        web: {
+          webInteraction: {
+            name: adobeEventName,
+            linkClicks: {
+              value: 1,
+            },
+            type: 'other',
+          },
+        },
+        _adobe_corpnew: {
+          digitalData: {
+            primaryEvent: {
+              eventInfo: {
+                eventName: adobeEventName,
+              },
+            },
+            spark: {
+              eventData: {
+                eventName: sparkEventName,
+                trigger: sparkTouchpoint,
+                sendTimestamp: new Date().getTime(),
+                contextualData4: `billingFrequency:${plan.frequency}`,
+                contextualData6: `commitmentType:${plan.frequency}`,
+                contextualData7: `currencyCode:${plan.currency}`,
+                contextualData9: `offerId:${plan.offerId}`,
+                contextualData10: `price:${plan.price}`,
+                contextualData12: `productName:${plan.name} - ${plan.frequency}`,
+                contextualData14: 'quantity:1',
+              },
+            },
+          },
+        },
+      },
+    });
+  } else {
+    digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+    digitalData._set('spark.eventData.eventName', sparkEventName);
+    digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
+    digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
+    digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
+    digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
+    digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
+    digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
+    digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+    digitalData._set('spark.eventData.trigger', sparkTouchpoint);
 
-  _satellite.track('event', {
-    digitalData: digitalData._snapshot(),
-  });
+    _satellite.track('event', {
+      digitalData: digitalData._snapshot(),
+    });
 
-  digitalData._delete('primaryEvent.eventInfo.eventName');
-  digitalData._delete('spark.eventData.eventName');
-  digitalData._delete('spark.eventData.contextualData4');
-  digitalData._delete('spark.eventData.contextualData6');
-  digitalData._delete('spark.eventData.contextualData7');
-  digitalData._delete('spark.eventData.contextualData9');
-  digitalData._delete('spark.eventData.contextualData10');
-  digitalData._delete('spark.eventData.contextualData12');
-  digitalData._delete('spark.eventData.contextualData14');
+    digitalData._delete('primaryEvent.eventInfo.eventName');
+    digitalData._delete('spark.eventData.eventName');
+    digitalData._delete('spark.eventData.contextualData4');
+    digitalData._delete('spark.eventData.contextualData6');
+    digitalData._delete('spark.eventData.contextualData7');
+    digitalData._delete('spark.eventData.contextualData9');
+    digitalData._delete('spark.eventData.contextualData10');
+    digitalData._delete('spark.eventData.contextualData12');
+    digitalData._delete('spark.eventData.contextualData14');
+  }
 }
 
 function decorateIconList($column) {

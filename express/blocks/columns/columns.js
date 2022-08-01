@@ -16,8 +16,9 @@ import {
   transformLinkToAnimation,
   addAnimationToggle,
   toClassName,
-  getLocale,
   getIconElement,
+  addFreePlanWidget,
+  addHeaderSizing,
 } from '../../scripts/scripts.js';
 
 import {
@@ -124,29 +125,6 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
   }
 }
 
-function addHeaderSizing($block) {
-  const headings = $block.querySelectorAll('h1, h2');
-  // Each threshold of JP should be smaller than other languages
-  // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 12 },
-      { name: 'very-long', threshold: 18 },
-      { name: 'x-long', threshold: 24 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
-  headings.forEach((h) => {
-    const { length } = h.textContent;
-    sizes.forEach((size) => {
-      if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
-    });
-  });
-}
-
 export default function decorate($block) {
   const $rows = Array.from($block.children);
 
@@ -196,14 +174,6 @@ export default function decorate($block) {
         const $parentParagraph = $pics[0].parentNode;
         $parentDiv.insertBefore($pics[0], $parentParagraph);
       }
-
-      // legal copy
-      $cell.querySelectorAll(':scope p').forEach(($p) => {
-        const pText = $p.textContent.trim();
-        if (['*', '†'].includes(pText.charAt(0))) {
-          $p.classList.add('legal-copy');
-        }
-      });
 
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
@@ -258,7 +228,7 @@ export default function decorate($block) {
     });
   });
   addAnimationToggle($block);
-  addHeaderSizing($block);
+  addHeaderSizing($block, 'columns-heading');
 
   // decorate offer
   if ($block.classList.contains('offer')) {
@@ -275,6 +245,13 @@ export default function decorate($block) {
         }
       });
     }
+  }
+
+  // add free plan widget to first columns block on every page
+  if (document.querySelector('main .columns') === $block
+    && document.querySelector('main .block') === $block) {
+    addFreePlanWidget($block.querySelector('.button-container')
+      || $block.querySelector(':scope .column:not(.hero-animation-overlay,.columns-picture)'));
   }
 
   // invert buttons in regular columns inside columns-highlight-container

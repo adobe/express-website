@@ -69,10 +69,52 @@ export default function decorate($block) {
   $block.classList.add('faq');
   decorateFAQBlocks($block);
   console.log('faq 1');
-  // eslint-disable-next-line no-underscore-dangle
-  digitalData._set('primaryEvent.eventInfo.eventName', 'adobe:express:experiment:ccx0059:challenger-1');
-  _satellite.track('event', {
+  const usp = new URLSearchParams(window.location.search);
+  const useAlloy = (
+    window.location.hostname === 'www.stage.adobe.com'
+    || (
+      usp.has('martech')
+      && usp.get('martech').includes('alloy')
+    )
+  );
+
+  if (useAlloy) {
+    _satellite.track('event', {
+      xdm: {},
+      data: {
+        eventType: 'web.webinteraction.linkClicks',
+        web: {
+          webInteraction: {
+            name: 'adobe:express:experiment:ccx0059:challenger-1',
+            linkClicks: {
+              value: 1,
+            },
+            type: 'other',
+          },
+        },
+        _adobe_corpnew: {
+          digitalData: {
+            primaryEvent: {
+              eventInfo: {
+                eventName: 'adobe:express:experiment:ccx0059:challenger-1',
+              },
+            },
+            spark: {
+              eventData: {
+                eventName: 'adobe:express:experiment:ccx0059:challenger-1',
+                sendTimestamp: new Date().getTime(),
+              },
+            },
+          },
+        },
+      },
+    });
+  } else {
     // eslint-disable-next-line no-underscore-dangle
-    digitalData: digitalData._snapshot(),
-  });
+    digitalData._set('primaryEvent.eventInfo.eventName', 'adobe:express:experiment:ccx0059:challenger-1');
+    _satellite.track('event', {
+      // eslint-disable-next-line no-underscore-dangle
+      digitalData: digitalData._snapshot(),
+    });
+  }
 }

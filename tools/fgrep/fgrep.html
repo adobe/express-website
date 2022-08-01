@@ -33,6 +33,20 @@ a.edit::before {
   content: '[edit]';
 }
 
+#controls {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+#input {
+  flex-grow: 1;
+}
+
+#exportLink {
+  display: none;
+}
+
 #results p {
     margin: 0;
 }
@@ -46,9 +60,9 @@ input {
 
 button {
     vertical-align: top;
-    margin-left: -58px;
+    margin-right: 4px;
     margin-top: 4px;
-    width: 55px;
+    width: fit-content;
     height: 30px;
     display: inline-block;
     background-color: #222;
@@ -60,7 +74,12 @@ button {
 </style>
     </head>
     <body>
-        <input id="input" type="text" placeholder="class=&quot;card"><button id="run">run</button>
+        <div id="controls">
+          <input id="input" type="text" placeholder="class=&quot;card">
+          <button id="run">run</button>
+          <button id="export">export</button>
+          <a id="exportLink"></a>
+        </div>
         <pre>
         <div id="status"></div>
         <div id="results">

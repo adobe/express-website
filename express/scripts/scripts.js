@@ -235,6 +235,7 @@ export function getIcon(icons, alt, size = 44) {
   const symbols = [
     'adobefonts',
     'adobe-stock',
+    'android',
     'animation',
     'blank',
     'brand',
@@ -251,6 +252,7 @@ export function getIcon(icons, alt, size = 44) {
     'convert',
     'convert-png-jpg',
     'cursor-browser',
+    'desktop',
     'desktop-round',
     'download',
     'elements',
@@ -259,6 +261,7 @@ export function getIcon(icons, alt, size = 44) {
     'incredibly-easy',
     'instagram',
     'image',
+    'ios',
     'libraries',
     'library',
     'linkedin',
@@ -271,6 +274,7 @@ export function getIcon(icons, alt, size = 44) {
     'photoeffects',
     'pinterest',
     'play',
+    'premium',
     'premium-templates',
     'pricingfree',
     'pricingpremium',
@@ -663,20 +667,32 @@ export async function getOffer(offerId, countryOverride) {
     country = 'us';
     currency = 'USD';
   }
-  const resp = await fetch('/express/system/offers.json');
+  const resp = await fetch('/express/system/offers-new.json');
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
   let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
   if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
 
   if (offer) {
+    // console.log(offer);
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
     const vatInfo = offer.vat;
+    const prefix = offer.pre;
+    const suffix = offer.suf;
+
     return {
-      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo,
+      country,
+      currency,
+      unitPrice,
+      unitPriceCurrencyFormatted,
+      commerceURL,
+      lang,
+      vatInfo,
+      prefix,
+      suffix,
     };
   }
   return {};
@@ -941,7 +957,7 @@ export function loadScript(url, callback, type) {
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
-  return $meta && $meta.content;
+  return ($meta && $meta.content) || '';
 }
 
 /**
@@ -1803,12 +1819,9 @@ const usp = new URLSearchParams(window.location.search);
 window.spark = {};
 window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const useAlloy = (
-  window.spark.hostname === 'www.stage.adobe.com'
-  || (
-    usp.has('martech')
-    && usp.get('martech').includes('alloy')
-  )
+const useAlloy = !(
+  usp.has('martech')
+  && usp.get('martech') === 'legacy'
 );
 
 function unhideBody() {
@@ -1825,7 +1838,16 @@ function unhideBody() {
 }
 
 function hideBody() {
-  const style = document.createElement('style');
+  const id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  let style = document.getElementById(id);
+  if (style) {
+    return;
+  }
+  style = document.createElement('style');
   style.id = (
     useAlloy
       ? 'alloy-prehiding'
@@ -1886,6 +1908,84 @@ async function wordBreakJapanese() {
 }
 
 /**
+ * Calculate a relatively more accurate "character count" for mixed Japanese
+ * + English texts, for the purpose of heading auto font sizing.
+ *
+ * The rationale is that English characters are usually narrower than Japanese
+ * ones. Hence each English character (and space character) is multiplied by an
+ * coefficient before being added to the total character count. The current
+ * coefficient value, 0.57, is an empirical value from some tests.
+ */
+function getJapaneseTextCharacterCount(text) {
+  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
+  const matches = text.matchAll(headingEngCharsRegEx);
+  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
+  const jtext = text.replaceAll(headingEngCharsRegEx, '');
+  const jCnt = jtext.length;
+  return eCnt * 0.57 + jCnt;
+}
+
+/**
+ * Add dynamic font sizing CSS class names to headings
+ *
+ * The CSS class names are determined by character counts.
+ * @param {Element} $block The container element
+ * @param {string} classPrefix Prefix in CSS class names before "-long", "-very-long", "-x-long".
+ * Default is "heading".
+ * @param {string} selector CSS selector to select the target heading tags. Default is "h1, h2".
+ */
+export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1, h2') {
+  const headings = $block.querySelectorAll(selector);
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 8 },
+      { name: 'very-long', threshold: 11 },
+      { name: 'x-long', threshold: 15 },
+    ]
+    : [
+      { name: 'long', threshold: 30 },
+      { name: 'very-long', threshold: 40 },
+      { name: 'x-long', threshold: 50 },
+    ];
+  headings.forEach((h) => {
+    const length = getLocale(window.location) === 'jp'
+      ? getJapaneseTextCharacterCount(h.textContent)
+      : h.textContent.length;
+    sizes.forEach((size) => {
+      if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
+    });
+  });
+}
+
+/**
+ * Call `addHeaderSizing` on default content blocks in all section blocks
+ * in all Japanese pages except blog pages.
+ */
+function addJapaneseSectionHeaderSizing() {
+  if (getLocale(window.location) === 'jp') {
+    document.querySelectorAll('body:not(.blog) .section .default-content-wrapper').forEach((el) => {
+      addHeaderSizing(el);
+    });
+  }
+}
+
+/**
+ * Detects legal copy based on a * or † prefix and applies a smaller font size.
+ * @param {HTMLMainElement} main The main element
+ */
+function decorateLegalCopy(main) {
+  const legalCopyPrefixes = ['*', '†'];
+  main.querySelectorAll('p').forEach(($p) => {
+    const pText = $p.textContent.trim() ? $p.textContent.trim().charAt(0) : '';
+    if (pText && legalCopyPrefixes.includes(pText)) {
+      $p.classList.add('legal-copy');
+    }
+  });
+}
+
+/**
  * loads everything needed to get to LCP.
  */
 async function loadEager() {
@@ -1897,6 +1997,8 @@ async function loadEager() {
     await decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
+    decorateLegalCopy(main);
+    addJapaneseSectionHeaderSizing();
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
@@ -1909,10 +2011,10 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      let target = checkTesting();
+      const target = checkTesting();
       if (useAlloy) {
         document.querySelector('body').classList.add('personalization-container');
-        target = true;
+        // target = true;
       }
       if (target) {
         hideBody();
@@ -1941,6 +2043,20 @@ function removeMetadata() {
       meta.remove();
     }
   });
+}
+
+export async function addFreePlanWidget(elem) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+    const placeholders = await fetchPlaceholders();
+    const checkmark = getIcon('checkmark');
+    const widget = createTag('div', { class: 'free-plan-widget' });
+    widget.innerHTML = `
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+    `;
+    elem.append(widget);
+    elem.classList.add('free-plan-container');
+  }
 }
 
 /**
@@ -2046,10 +2162,13 @@ export function trackBranchParameters($links) {
 
   const sdid = rootUrlParameters.get('sdid');
   const mv = rootUrlParameters.get('mv');
-  const sKwcid = rootUrlParameters.get('s_kwcid');
+  const sKwcId = rootUrlParameters.get('s_kwcid');
   const efId = rootUrlParameters.get('ef_id');
+  const promoId = rootUrlParameters.get('promoid');
+  const trackingId = rootUrlParameters.get('trackingid');
+  const cgen = rootUrlParameters.get('cgen');
 
-  if (sdid || mv || sKwcid || efId) {
+  if (sdid || mv || sKwcId || efId || promoId || trackingId || cgen) {
     $links.forEach(($a) => {
       if ($a.href && $a.href.match('adobesparkpost.app.link')) {
         const buttonUrl = new URL($a.href);
@@ -2063,16 +2182,28 @@ export function trackBranchParameters($links) {
           urlParams.set('~customer_campaign', mv);
         }
 
-        if (sKwcid) {
-          const sKwcidParameters = sKwcid.split('!');
+        if (sKwcId) {
+          const sKwcIdParameters = sKwcId.split('!');
 
-          if (typeof sKwcidParameters[2] !== 'undefined' && sKwcidParameters[2] === '3') {
+          if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
             urlParams.set('~customer_placement', 'Google%20AdWords');
-          } // Missing Facebook.
-
-          if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
-            urlParams.set('~keyword', sKwcidParameters[8]);
           }
+
+          if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+            urlParams.set('~keyword', sKwcIdParameters[8]);
+          }
+        }
+
+        if (promoId) {
+          urlParams.set('~ad_id', promoId);
+        }
+
+        if (trackingId) {
+          urlParams.set('~keyword_id', trackingId);
+        }
+
+        if (cgen) {
+          urlParams.set('~customer_keyword', cgen);
         }
 
         urlParams.set('~feature', 'paid%20advertising');

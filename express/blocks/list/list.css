@@ -26,6 +26,10 @@ main .list .item-text {
     line-height: 1.4;
 }
 
+main li, p {
+  line-height: 200%
+}
+
 @media (min-width: 900px) {
   main .list {
    max-width: 600px;

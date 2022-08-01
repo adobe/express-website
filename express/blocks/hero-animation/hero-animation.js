@@ -12,8 +12,11 @@
 
 import {
   addAnimationToggle,
+  addFreePlanWidget,
   createTag,
   toClassName,
+  getLocale,
+  addHeaderSizing,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -242,6 +245,7 @@ export default async function decorate($block) {
       if (videoLink) {
         transformToVideoLink($div, videoLink);
       }
+      addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
     }
 
     // timecode animations
@@ -284,9 +288,14 @@ export default async function decorate($block) {
     }
   });
   const button = $block.querySelector('.button');
-  if (button) button.classList.add('large');
+  if (button) button.classList.add('xlarge');
 
   $block.append($attributions);
-  addAnimationToggle($block);
+  if ($block.classList.contains('wide')) {
+    addAnimationToggle($block);
+  }
+  if (getLocale(window.location) === 'jp') {
+    addHeaderSizing($block);
+  }
   $block.classList.add('appear');
 }

@@ -155,7 +155,7 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
   }
 
   main .hero-animation .hero-animation-overlay {
-    width: 290px;
+    width: 512xpx;
     justify-content: center;
     margin: unset;
     padding: 0;
@@ -183,6 +183,23 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
   main .hero-animation-dark-container > div {
     max-width: 65%;
   }   
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main .hero-animation h1 {
+    font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-long {
+    font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-very-long {
+    font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) main .hero-animation h1.heading-x-long {
+    font-size: var(--heading-font-size-m);
 }
 
 
@@ -317,4 +334,27 @@ main .hero-animation .hero-shadow picture {
   main .hero-animation .hero-shadow {
     transform: translate(-15%, -2px);
   }
+}
+
+/* free plan widget */
+
+main .hero-animation .button-container.free-plan-container {
+  justify-content: left;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+main .hero-animation .button-container.free-plan-container .free-plan-widget {
+  margin-top: 40px;
+  color: var(--body-color);
+}
+
+main .hero-animation.wide .button-container.free-plan-container {
+  flex-direction: row;
+  align-items: center;
+}
+
+main .hero-animation.wide .free-plan-widget {
+  margin: 0;
+  background-color: transparent;
 }
