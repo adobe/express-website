@@ -18,7 +18,7 @@ export default function decorate(block) {
   window.qtWebViewScheme = 'false';
   window.qtColorTheme = '';
   // eslint-disable-next-line no-underscore-dangle
-  window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express-stage.adobe.com/express-apps/quick-actions-api' };
+  window._prjtmrvlsetup = { quickActionRegistryUrl: 'https://express.adobe.com/express-apps/quick-actions-api' };
   // eslint-disable-next-line no-underscore-dangle
   window._sparkImsOnReadyCalled = true;
   block.innerHTML = `<div id="quick-task-container"></div>
