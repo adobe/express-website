@@ -128,7 +128,7 @@ w.fedsConfig = {
 function loadIMS() {
   w.adobeid = {
     client_id: 'MarvelWeb3',
-    scope: 'AdobeID,openid',
+    scope: 'AdobeID,openid,creative_sdk,gnav,sao.spark,additional_info.projectedProductContext,tk_platform,tk_platform_refresh_user,tk_platform_sync,creative_cloud,ab.manage,sao.typekit,mps,read_organizations,stk.a.k12_access.cru,stk.a.limited_license.cru,DCAPI,sao.ACOM_CLOUD_STORAGE',
     locale,
     environment: 'stg1',
   };
