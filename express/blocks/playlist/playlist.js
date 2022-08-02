@@ -217,6 +217,8 @@ function decorateInlineVideoPlayer($block, payload) {
     if (payload.videoIndex !== payload.sessions[payload.sessionIndex].videos.length - 1) {
       loadNextVideo($block, payload);
       startVideo($inlinePlayer, $playerOverlay);
+    } else if (window.innerHeight === $inlinePlayer.offsetHeight) {
+      document.exitFullscreen();
     }
   });
 }
