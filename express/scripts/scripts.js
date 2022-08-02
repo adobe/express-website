@@ -1482,9 +1482,9 @@ function loadIMS() {
     client_id: 'MarvelWeb3',
     scope: 'AdobeID,openid,creative_sdk,gnav,sao.spark,additional_info.projectedProductContext,tk_platform,tk_platform_refresh_user,tk_platform_sync,creative_cloud,ab.manage,sao.typekit,mps,read_organizations,stk.a.k12_access.cru,stk.a.limited_license.cru,DCAPI,sao.ACOM_CLOUD_STORAGE',
     locale: getLocale(window.location),
-    environment: 'stg1',
+    environment: 'prod',
   };
-  loadScript('auth-stg1.services.adobe.com/imslib/imslib.min.js');
+  loadScript('auth.services.adobe.com/imslib/imslib.min.js');
 }
 
 function loadFEDS() {
