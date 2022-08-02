@@ -180,46 +180,50 @@ export function getLottie(name, src, loop = true, autoplay = true, control = fal
 
 // Lazy-load lottie player if you scroll to the block.
 export function lazyLoadLottiePlayer($block = null) {
-  const loadLottiePlayer = () => {
-    if (window['lottie-player']) return;
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
-    script.src = '/express/scripts/lottie-player.1.5.6.js';
-    document.head.appendChild(script);
-    window['lottie-player'] = true;
-  };
-  if ($block) {
-    const addIntersectionObserver = (block) => {
-      const observer = (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting) {
-          if (entry.intersectionRatio >= 0.25) {
-            loadLottiePlayer();
-          }
-        }
-      };
-      const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: [0.0, 0.25],
-      };
-      const intersectionObserver = new IntersectionObserver(observer, options);
-      intersectionObserver.observe(block);
+  const usp = new URLSearchParams(window.location.search);
+  const lottie = usp.get('lottie');
+  if (lottie !== 'off') {
+    const loadLottiePlayer = () => {
+      if (window['lottie-player']) return;
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = '/express/scripts/lottie-player.1.5.6.js';
+      document.head.appendChild(script);
+      window['lottie-player'] = true;
     };
-    if (document.readyState === 'complete') {
-      addIntersectionObserver($block);
+    if ($block) {
+      const addIntersectionObserver = (block) => {
+        const observer = (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting) {
+            if (entry.intersectionRatio >= 0.25) {
+              loadLottiePlayer();
+            }
+          }
+        };
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: [0.0, 0.25],
+        };
+        const intersectionObserver = new IntersectionObserver(observer, options);
+        intersectionObserver.observe(block);
+      };
+      if (document.readyState === 'complete') {
+        addIntersectionObserver($block);
+      } else {
+        window.addEventListener('load', () => {
+          addIntersectionObserver($block);
+        });
+      }
+    } else if (document.readyState === 'complete') {
+      loadLottiePlayer();
     } else {
       window.addEventListener('load', () => {
-        addIntersectionObserver($block);
+        loadLottiePlayer();
       });
     }
-  } else if (document.readyState === 'complete') {
-    loadLottiePlayer();
-  } else {
-    window.addEventListener('load', () => {
-      loadLottiePlayer();
-    });
   }
 }
 
@@ -885,9 +889,15 @@ export async function loadBlock(block, eager = false) {
 
     if (window.hlx.experiment && window.hlx.experiment.run) {
       const { experiment } = window.hlx;
-      if (experiment.blocks.includes(blockName)) {
-        cssPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.css`;
-        jsPath = `/express/experiments/${experiment.id}/blocks/${blockName}/${blockName}.js`;
+      if (experiment.selectedVariant !== 'control') {
+        const { control } = experiment.variants;
+        if (control && control.blocks && control.blocks.includes(blockName)) {
+          const blockIndex = control.blocks.indexOf(blockName);
+          const variant = experiment.variants[experiment.selectedVariant];
+          const blockPath = variant.blocks[blockIndex];
+          cssPath = `/express/experiments/${experiment.id}/${blockPath}/${blockName}.css`;
+          jsPath = `/express/experiments/${experiment.id}/${blockPath}/${blockName}.js`;
+        }
       }
     }
 
@@ -1175,7 +1185,7 @@ export function toCamelCase(name) {
  * @returns {string} experimentid
  */
 export function getExperiment() {
-  let experiment = getMeta('experiment').toLowerCase();
+  let experiment = toClassName(getMeta('experiment'));
 
   if (!window.location.host.includes('adobe.com') && !window.location.host.includes('.hlx.live')) {
     experiment = '';
@@ -1199,8 +1209,8 @@ export function getExperiment() {
   return experiment;
 }
 /**
- * Gets experiment config from the manifest and transforms it to more
- * easily consumable structure.
+ * Gets experiment config from the manifest or the instant experiement
+ * metdata and transforms it to more easily consumable structure.
  *
  * the manifest consists of two sheets "settings" and "experiences"
  *
@@ -1211,57 +1221,89 @@ export function getExperiment() {
  * a "Percentage Split", "Label" and a set of "Pages".
  *
  *
- * @param {string} experimentid
+ * @param {string} experimentId
  * @returns {object} containing the experiment manifest
  */
-export async function fetchExperimentConfig(experiment) {
-  const path = `/express/experiments/${experiment}/manifest.json`;
-  try {
-    const config = {};
-    const resp = await fetch(path);
-    const json = await resp.json();
-    json.settings.data.forEach((line) => {
-      const key = toCamelCase(line.Name);
-      let value = line.Value;
-      if (key === 'blocks') value = value.split(',').map((e) => e.trim().toLowerCase());
-      config[key] = value;
+export async function getExperimentConfig(experimentId) {
+  const instantExperiment = getMeta('instant-experiment');
+  if (instantExperiment) {
+    const config = {
+      experimentName: `Instant Experiment: ${experimentId}`,
+      audience: '',
+      status: 'Active',
+      id: experimentId,
+      variants: {},
+      variantNames: [],
+    };
+
+    const pages = instantExperiment.split(',').map((p) => new URL(p.trim()).pathname);
+    const evenSplit = 1 / (pages.length + 1);
+
+    config.variantNames.push('control');
+    config.variants.control = {
+      percentageSplit: '',
+      pages: [window.location.pathname],
+      blocks: [],
+      label: 'Control',
+    };
+
+    pages.forEach((page, i) => {
+      const vname = `challenger-${i + 1}`;
+      config.variantNames.push(vname);
+      config.variants[vname] = {
+        percentageSplit: `${evenSplit}`,
+        pages: [page],
+        label: `Challenger ${i + 1}`,
+      };
     });
-    config.id = experiment;
 
-    const variants = {};
-    let variantNames = Object.keys(json.experiences.data[0]);
-    variantNames.shift();
-    variantNames = variantNames.map((vn) => toCamelCase(vn));
-    variantNames.forEach((variantName) => {
-      variants[variantName] = {};
-    });
-
-    let lastKey = 'default';
-
-    json.experiences.data.forEach((line) => {
-      let key = toCamelCase(line.Name);
-      if (!key) key = lastKey;
-      lastKey = key;
-      const vns = Object.keys(line);
-      vns.shift();
-      vns.forEach((vn) => {
-        const camelVN = toCamelCase(vn);
-        if (key === 'pages') {
-          variants[camelVN][key] = variants[camelVN][key] || [];
-          variants[camelVN][key].push(new URL(line[vn]).pathname);
-        } else {
-          variants[camelVN][key] = line[vn];
-        }
+    return (config);
+  } else {
+    const path = `/express/experiments/${experimentId}/manifest.json`;
+    try {
+      const config = {};
+      const resp = await fetch(path);
+      const json = await resp.json();
+      json.settings.data.forEach((line) => {
+        const key = toCamelCase(line.Name);
+        config[key] = line.Value;
       });
-    });
-    config.variants = variants;
-    config.variantNames = variantNames;
-    console.log(config);
-    return config;
-  } catch (e) {
-    console.log(`error loading experiment manifest: ${path}`, e);
+      config.id = experimentId;
+      config.manifest = path;
+      const variants = {};
+      let variantNames = Object.keys(json.experiences.data[0]);
+      variantNames.shift();
+      variantNames = variantNames.map((vn) => toCamelCase(vn));
+      variantNames.forEach((variantName) => {
+        variants[variantName] = {};
+      });
+      let lastKey = 'default';
+      json.experiences.data.forEach((line) => {
+        let key = toCamelCase(line.Name);
+        if (!key) key = lastKey;
+        lastKey = key;
+        const vns = Object.keys(line);
+        vns.shift();
+        vns.forEach((vn) => {
+          const camelVN = toCamelCase(vn);
+          if (key === 'pages' || key === 'blocks') {
+            variants[camelVN][key] = variants[camelVN][key] || [];
+            if (key === 'pages') variants[camelVN][key].push(new URL(line[vn]).pathname);
+            else variants[camelVN][key].push(line[vn]);
+          } else {
+            variants[camelVN][key] = line[vn];
+          }
+        });
+      });
+      config.variants = variants;
+      config.variantNames = variantNames;
+      console.log(config);
+      return config;
+    } catch (e) {
+      console.log(`error loading experiment manifest: ${path}`, e);
+    }
+    return null;
   }
-  return null;
 }
 
 /**
@@ -1359,15 +1401,15 @@ async function decorateTesting() {
 
     if (experiment) {
       console.log('experiment', experiment);
-      const config = await fetchExperimentConfig(experiment);
+      const config = await getExperimentConfig(experiment);
       console.log(config);
-      if (toCamelCase(config.status) === 'active') {
+      if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
-        if (config.run && config.content) {
+        if (config.run) {
           const forced = forcedVariant || getLastExperimentVariant(config.id);
           if (forced && config.variantNames.includes(forced)) {
             config.selectedVariant = forced;
@@ -1387,6 +1429,7 @@ async function decorateTesting() {
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
+            console.log(pageIndex, config.variants.control.pages, currentPath);
             if (pageIndex >= 0) {
               const page = config.variants[config.selectedVariant].pages[pageIndex];
               if (page) {
@@ -1968,10 +2011,10 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      let target = checkTesting();
+      const target = checkTesting();
       if (useAlloy) {
         document.querySelector('body').classList.add('personalization-container');
-        target = true;
+        // target = true;
       }
       if (target) {
         hideBody();
@@ -2090,6 +2133,16 @@ function registerPerformanceLogger() {
     });
     pols.observe({ type: 'layout-shift', buffered: true });
 
+    const polt = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        // Log the entry and all associated details.
+        stamp(JSON.stringify(entry));
+      }
+    });
+
+    // Start listening for `longtask` entries to be dispatched.
+    polt.observe({ type: 'longtask', buffered: true });
+
     const pores = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       entries.forEach((entry) => {
@@ -2109,10 +2162,13 @@ export function trackBranchParameters($links) {
 
   const sdid = rootUrlParameters.get('sdid');
   const mv = rootUrlParameters.get('mv');
-  const sKwcid = rootUrlParameters.get('s_kwcid');
+  const sKwcId = rootUrlParameters.get('s_kwcid');
   const efId = rootUrlParameters.get('ef_id');
+  const promoId = rootUrlParameters.get('promoid');
+  const trackingId = rootUrlParameters.get('trackingid');
+  const cgen = rootUrlParameters.get('cgen');
 
-  if (sdid || mv || sKwcid || efId) {
+  if (sdid || mv || sKwcId || efId || promoId || trackingId || cgen) {
     $links.forEach(($a) => {
       if ($a.href && $a.href.match('adobesparkpost.app.link')) {
         const buttonUrl = new URL($a.href);
@@ -2126,16 +2182,28 @@ export function trackBranchParameters($links) {
           urlParams.set('~customer_campaign', mv);
         }
 
-        if (sKwcid) {
-          const sKwcidParameters = sKwcid.split('!');
+        if (sKwcId) {
+          const sKwcIdParameters = sKwcId.split('!');
 
-          if (typeof sKwcidParameters[2] !== 'undefined' && sKwcidParameters[2] === '3') {
+          if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
             urlParams.set('~customer_placement', 'Google%20AdWords');
-          } // Missing Facebook.
-
-          if (typeof sKwcidParameters[8] !== 'undefined' && sKwcidParameters[8] !== '') {
-            urlParams.set('~keyword', sKwcidParameters[8]);
           }
+
+          if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+            urlParams.set('~keyword', sKwcIdParameters[8]);
+          }
+        }
+
+        if (promoId) {
+          urlParams.set('~ad_id', promoId);
+        }
+
+        if (trackingId) {
+          urlParams.set('~keyword_id', trackingId);
+        }
+
+        if (cgen) {
+          urlParams.set('~customer_keyword', cgen);
         }
 
         urlParams.set('~feature', 'paid%20advertising');
