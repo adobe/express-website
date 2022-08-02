@@ -244,6 +244,11 @@ main .playlist-container .video-player-video-list-wrapper .video-player-video-li
     line-height: 24px;
 }
 
+main .playlist-container .carousel-container a.button.carousel-arrow {
+    position: absolute;
+    top: 25%;
+}
+
 @media (min-width: 900px) {
     main .playlist-container .default-content-wrapper {
         max-width: 830px;
@@ -297,6 +302,10 @@ main .playlist-container .video-player-video-list-wrapper .video-player-video-li
     }
     main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button {
         width: 304px;
+    }
+    main .playlist-container .carousel-container a.button.carousel-arrow {
+        position: unset;
+        top: unset;
     }
 }
 
