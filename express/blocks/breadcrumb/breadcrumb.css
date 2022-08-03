@@ -1,0 +1,18 @@
+main .breadcrumb-container {
+    margin: 1rem 0;
+    padding: 0;
+}
+
+main .breadcrumb-container .breadcrumb-wrapper {
+    max-width: none;
+    text-align: left;
+}
+
+main .breadcrumb-container a {
+    font-weight: 400;
+    color: var(--color-black);
+}
+
+main .breadcrumb-container a.current-crumb {
+    opacity: 0.5;
+}
