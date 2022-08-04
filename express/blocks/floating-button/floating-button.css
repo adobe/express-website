@@ -28,7 +28,7 @@ main .floating-button-wrapper {
   height: 150px;
 }
 
-main .floating-button-wrapper.floating-button--above-banner {
+body.branch-banner-is-active .floating-button-wrapper {
   height: calc(150px + 76px);
 }
 
@@ -52,7 +52,7 @@ main .floating-button {
   margin-bottom: 24px;
 }
 
-main .floating-button-wrapper.floating-button--above-banner .floating-button {
+body.branch-banner-is-active .floating-button-wrapper .floating-button {
   margin-bottom: calc(24px + 76px);
 }
 
@@ -123,18 +123,17 @@ main .floating-button-wrapper:first-of-type + .section {
 
 @media screen and (min-width: 900px) {
   /* reset above-banner styles */
-  main .floating-button-wrapper.floating-button--above-banner .floating-button {
+  body.branch-banner-is-active #branch-banner-iframe {
+    display: none;
+  }
+  body.branch-banner-is-active .floating-button-wrapper .floating-button {
     margin-bottom: 24px;
   }
-  main .floating-button-wrapper.floating-button--above-banner {
+  body.branch-banner-is-active .floating-button-wrapper {
     height: 150px;
-  }
-  #branch-banner-iframe {
-    display: none;
   }
 
   /* set desktop below/above the fold styles */
-
   main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
     display: inline-block;
   }
