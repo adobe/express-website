@@ -1568,6 +1568,15 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
+function buildAutoBlocks($main) {
+  // Load the branch.io banner autoblock...
+  if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
+    const branchio = buildBlock('branch-io', '');
+    $main.querySelector(':scope > div:last-of-type').append(branchio);
+    loadBlock(branchio);
+  }
+}
+
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
@@ -1834,6 +1843,7 @@ function decoratePictures(main) {
 }
 
 export async function decorateMain($main) {
+  buildAutoBlocks($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
@@ -2100,11 +2110,6 @@ async function loadLazy() {
   sampleRUM('lcp');
 
   loadBlocks(main);
-  if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
-    const banner = buildBlock('branch-io', '');
-    main.append(banner);
-    loadBlock(banner);
-  }
   loadCSS('/express/styles/lazy-styles.css');
   scrollToHash();
   resolveFragments();
