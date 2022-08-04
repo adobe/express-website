@@ -1573,7 +1573,6 @@ function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
     const branchio = buildBlock('branch-io', '');
     $main.querySelector(':scope > div:last-of-type').append(branchio);
-    loadBlock(branchio);
   }
 }
 
