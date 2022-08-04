@@ -28,6 +28,10 @@ main .floating-button-wrapper {
   transition: bottom 0.6s ease-out, opacity 0.6s ease-out;
 }
 
+main .floating-button.floating-button--above-banner {
+  height: 200px;
+}
+
 main .floating-button-wrapper.floating-button--hidden {
   bottom: -151px;
   opacity: 0.9;
@@ -40,7 +44,7 @@ main .floating-button {
   position: relative;
   border-radius: 100px;
   background-color: var(--color-gray-200);
-  transition: background-color .3s, padding .3s;
+  transition: background-color .3s, padding .3s, margin-bottom .3s;
   z-index: 2;
   max-width: 100%;
   pointer-events: auto;

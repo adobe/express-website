@@ -2070,6 +2070,7 @@ async function addBannerToPage() {
   // eslint-disable-next-line
   branch.init('key_live_ikqc03rxCzFIX8gq8i2nBddbquai90pm', function(err, _data) {
     if (err && (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page'))) console.log(err);
+    console.log(_data);
   });
   // eslint-disable-next-line
   if (!branch.data['has_app']) return;
