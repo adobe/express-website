@@ -151,6 +151,20 @@ export async function createFloatingButton($a) {
     $floatButtonWrapper.classList.add('floating-button--above-the-fold');
   }
 
+  const $branchBanner = document.getElementById('branch-banner-iframe');
+  const checkForBanner = () => {
+    if (document.getElementById('branch-banner-iframe')) {
+      $floatButtonWrapper.classList.add('floating-button--branch-banner');
+      $floatButtonWrapper.style.bottom = $branchBanner.offsetHeight;
+    } else {
+      $floatButtonWrapper.style.removeProperty('bottom');
+    }
+  };
+  checkForBanner();
+  $branchBanner.addEventListener('click', () => {
+    checkForBanner();
+  });
+
   return $floatButtonWrapper;
 }
 
