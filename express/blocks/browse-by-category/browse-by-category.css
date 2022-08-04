@@ -1,13 +1,17 @@
+main .browse-by-category-container {
+    padding-bottom: 24px;
+}
 main .browse-by-category-container .browse-by-category-wrapper {
     padding: 0;
+    max-width: none;
 }
 
 main .browse-by-category-container .browse-by-category-heading-section {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 28px;
+    padding-right: 28px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
@@ -115,6 +119,12 @@ main .browse-by-category-container .browse-by-category-category-title {
 @media (min-width: 900px) {
     main .browse-by-category-container .browse-by-category-heading-section {
         flex-direction: row;
+        padding: 0;
+    }
+
+    main .browse-by-category-container .browse-by-category-wrapper {
+        padding: 0 28px;
+        max-width: none;
     }
 }
 

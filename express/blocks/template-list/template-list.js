@@ -277,7 +277,7 @@ export async function decorateTemplateList($block) {
   }
 
   if (!$block.classList.contains('horizontal')) {
-    if (rows > 6 || $block.classList.contains('sixcols')) {
+    if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
       // console.log(`masonry-rows: ${rows}`);
       const cells = Array.from($block.children);

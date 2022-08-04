@@ -36,7 +36,7 @@ export class Masonry {
   // set up fresh grid if necessary
   setupColumns() {
     let result = 1;
-    const colWidth = this.$block.classList.contains('sixcols') ? 175 : 264;
+    const colWidth = this.$block.classList.contains('sixcols') || this.$block.classList.contains('fullwidth') ? 175 : 264;
     const width = this.$block.offsetWidth;
     if (!width) {
       return 0;

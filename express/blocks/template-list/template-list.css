@@ -1,3 +1,22 @@
+main .template-list-horizontal-fullwidth-container {
+  padding-top: 0;
+}
+
+main .template-list-fullwidth-container > div {
+  max-width: none;
+  padding: 0;
+}
+
+main .template-list-fullwidth-container > .default-content-wrapper {
+  padding: 0 15px;
+}
+
+main .template-list-fullwidth-container .default-content-wrapper h2,
+main .template-list-fullwidth-container .default-content-wrapper p {
+  margin: 0;
+  text-align: left;
+}
+
 main .template-list.template-list-complete {
   min-height: unset;
 }
@@ -12,13 +31,15 @@ main .template-list {
   text-align: left;
 }
 
-main .template-list.sixcols {
+main .template-list.sixcols,
+main .template-list.fullwidth {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
 }
 
-main .template-list.sixcols > .masonry-col {
+main .template-list.sixcols > .masonry-col,
+main .template-list.fullwidth > .masonry-col {
   max-width: 175px;
 }
 
@@ -30,7 +51,7 @@ main .template-list .template-title > div {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  align-items: left;
+  align-items: flex-start;
 }
 
 main .template-list .template-title > div > * {
@@ -141,10 +162,23 @@ main .template-list .template:not(.placeholder) .icon {
 }
 
 /* horizontal template-list */
+main .template-list-horizontal-fullwidth-container > div {
+  max-width: none;
+  padding: 0;
+}
 
 main .template-list.horizontal {
   display: block;
-  margin-left: auto; 
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 220px;
+}
+
+main .template-list.horizontal.fullwidth {
+  max-width: none;
+  padding: 0 16px;
+  display: block;
+  margin-left: auto;
   margin-right: auto;
   min-height: 220px;
 }
@@ -163,11 +197,17 @@ main .template-list.horizontal .template video {
   width: auto;
 }
 
+main .template-list.horizontal h4 {
+  font-size: 22px;
+  line-height: 26px;
+}
+
 main .template-list.horizontal .template:not(.placeholder) .template-link {
   display: none;
 }
 
-main .template-list.sixcols .template {
+main .template-list.sixcols .template,
+main .template-list.fullwidth .template {
   position: relative;
   display: inline-flex;
   width: 165px;
@@ -183,7 +223,9 @@ main .template-list .template:not(.placeholder) > div:first-of-type {
 main .template-list.horizontal .template:not(.placeholder) picture > img,
 main .template-list.horizontal .template:not(.placeholder) video,
 main .template-list.sixcols .template:not(.placeholder) picture > img,
-main .template-list.sixcols .template:not(.placeholder) video {
+main .template-list.sixcols .template:not(.placeholder) video,
+main .template-list.fullwidth .template:not(.placeholder) picture > img,
+main .template-list.fullwidth .template:not(.placeholder) video {
   transition: transform .3s ease-in-out;
   will-change: transform;
 }
@@ -191,12 +233,15 @@ main .template-list.sixcols .template:not(.placeholder) video {
 main .template-list.horizontal .template:hover:not(.placeholder) picture > img,
 main .template-list.horizontal .template:hover:not(.placeholder) video,
 main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
-main .template-list.sixcols .template:hover:not(.placeholder) video {
+main .template-list.sixcols .template:hover:not(.placeholder) video,
+main .template-list.fullwidth .template:hover:not(.placeholder) picture > img,
+main .template-list.fullwidth .template:hover:not(.placeholder) video {
   transform: scale(1.1);
 }
 
 main .template-list.horizontal .template:not(.placeholder) .button-container,
-main .template-list.sixcols .template:not(.placeholder) .button-container {
+main .template-list.sixcols .template:not(.placeholder) .button-container,
+main .template-list.fullwidth .template:not(.placeholder) .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -212,7 +257,8 @@ main .template-list.sixcols .template:not(.placeholder) .button-container {
 }
 
 main .template-list.horizontal .template:not(.placeholder) .template-link,
-main .template-list.sixcols .template:not(.placeholder) .template-link {
+main .template-list.sixcols .template:not(.placeholder) .template-link,
+main .template-list.fullwidth .template:not(.placeholder) .template-link {
   opacity: 0;
   transition: opacity .4s ease-in-out .2s;
   will-change: opacity;
@@ -222,18 +268,21 @@ main .template-list.sixcols .template:not(.placeholder) .template-link {
 main .template-list.horizontal .template:hover:not(.placeholder) .button-container,
 main .template-list.horizontal .template:hover:not(.placeholder) .template-link,
 main .template-list.sixcols .template:hover:not(.placeholder) .button-container,
-main .template-list.sixcols .template:hover:not(.placeholder) .template-link {
+main .template-list.sixcols .template:hover:not(.placeholder) .template-link,
+main .template-list.fullwidth .template:hover:not(.placeholder) .button-container,
+main .template-list.fullwidth .template:hover:not(.placeholder) .template-link {
   opacity: 1;
 }
 
 main .template-list.horizontal .template:not(.placeholder) .template-link,
-main .template-list.sixcols .template:not(.placeholder) .template-link {
+main .template-list.sixcols .template:not(.placeholder) .template-link,
+main .template-list.fullwidth .template:not(.placeholder) .template-link {
   text-decoration: none;
   border-radius: 18px;
   padding: 5px 1.2em 6px 1.2em;
   text-align: center;
   font-size: var(--body-font-size-s);
-  font-style: normal; 
+  font-style: normal;
   font-weight: 600;
   line-height: var(--body-line-height);
   cursor: pointer;
@@ -248,7 +297,8 @@ main .template-list.sixcols .template:not(.placeholder) .template-link {
 }
 
 main .template-list.horizontal .template:not(.placeholder) .template-link::after,
-main .template-list.sixcols .template:not(.placeholder) .template-link::after {
+main .template-list.sixcols .template:not(.placeholder) .template-link::after,
+main .template-list.fullwidth .template:not(.placeholder) .template-link::after {
   display: none;
 }
 
@@ -266,13 +316,13 @@ main .template-list .template.placeholder {
   padding: 0;
 }
 
-main .template-list.sixcols .template.placeholder {
+main .template-list.sixcols .template.placeholder,
+main .template-list.fullwidth .template.placeholder {
   width: 145px;
   margin: 15px auto;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
-  padding: 0;
   margin: 0;
   position: absolute;
   padding: 0 20px;
@@ -340,7 +390,14 @@ main .template-list.flex-masonry .template.appear {
     max-width: 748px;
   }
 
-  main .template-list.sixcols > .masonry-col {
+  main .template-list-fullwidth-container > div,
+  main .template-list-fullwidth-container > .default-content-wrapper {
+    max-width: none;
+    padding: 0 28px;
+  }
+
+  main .template-list.sixcols > .masonry-col,
+  main .template-list.fullwidth > .masonry-col {
     max-width: 187px;
   }
 
@@ -353,21 +410,24 @@ main .template-list.flex-masonry .template.appear {
     text-align: left;
   }
 
-  main .template-list.sixcols > .masonry-col {
+  main .template-list.sixcols > .masonry-col,
+  main .template-list.fullwidth > .masonry-col {
     max-width: 187px;
   }
-  
+
   main .template-list .template {
     width: 240px;
     margin-left: 20px;
     margin-right: 20px;
   }
 
-  main .template-list.sixcols .template:not(.placeholder) {
+  main .template-list.sixcols .template:not(.placeholder),
+  main .template-list.fullwidth .template:not(.placeholder) {
     margin: 11px 11px 9px 11px; /* make up for 4px height overlap in first child div */
   }
 
-  main .template-list.sixcols .template.placeholder {
+  main .template-list.sixcols .template.placeholder,
+  main .template-list.fullwidth .template.placeholder {
     width: 145px;
     margin: 21px;
   }
@@ -387,6 +447,10 @@ main .template-list.flex-masonry .template.appear {
 
   main .template-list-sixcols-container > div {
     max-width: 1122px;
+  }
+
+  main .template-list-fullwidth-container > div {
+    max-width: none;
   }
 
   /* template-list inside columns */
@@ -484,6 +548,12 @@ main .template-list.horizontal .carousel-platform {
     display: block;
   }
 
+  main .template-list.horizontal.fullwidth .carousel-container {
+    margin: 0 12px 20px 12px;
+    max-width: none;
+    display: block;
+  }
+
   main .template-list.horizontal .carousel-platform {
     scroll-padding: 0;
   }
@@ -492,8 +562,18 @@ main .template-list.horizontal .carousel-platform {
     background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
   }
 
+  main .template-list.horizontal.fullwidth .carousel-container .carousel-fader-left {
+    width: 150px;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
   main .template-list.horizontal .carousel-container .carousel-fader-right {
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  }
+
+  main .template-list.horizontal.fullwidth .carousel-container .carousel-fader-left {
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    width: 150px;
   }
 }
 
@@ -513,7 +593,7 @@ main .template-list.horizontal .carousel-platform {
   main .section.template-list-horizontal-container > div {
     max-width: 836px;
   }
-  
+
   main .section.template-list-horizontal-container > div > *:not(.template-list.horizontal),
   main .section.template-list-horizontal-container > div > .template-list.horizontal > *:not(.carousel-container) {
     max-width: unset;
@@ -523,7 +603,7 @@ main .template-list.horizontal .carousel-platform {
     margin-left: 12px;
     margin-right: 12px;
   }
-  
+
   main .template-list.horizontal {
     max-width: 800px;
   }
@@ -532,6 +612,11 @@ main .template-list.horizontal .carousel-platform {
 @media (min-width: 1200px) {
   main .section.template-list-horizontal-container > div {
     max-width: 1024px;
+  }
+
+  main .template-list.horizontal.fullwidth,
+  main .section.template-list-horizontal-fullwidth-container > div {
+    max-width: none;
   }
 
   main .template-list.horizontal {
