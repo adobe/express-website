@@ -881,7 +881,7 @@ export function scrollToHash() {
  * @param {string} blockName name of the block
  * @param {any} content two dimensional array or string or object of content
  */
- export function buildBlock(blockName, content) {
+export function buildBlock(blockName, content) {
   const table = Array.isArray(content) ? content : [[content]];
   const blockEl = document.createElement('div');
   // build image block nested div structure
@@ -974,11 +974,12 @@ export async function loadBlocks(main) {
   return blocks;
 }
 
-export function loadScript(url, callback, type, defer = false) {
+export function loadScript(url, callback, type) {
   const $head = document.querySelector('head');
   const $script = createTag('script', { src: url });
-  if (type) $script.setAttribute('type', type);
-  if (defer) $script.setAttribute('defer', true);
+  if (type) {
+    $script.setAttribute('type', type);
+  }
   $head.append($script);
   $script.onload = callback;
   return $script;
@@ -2104,7 +2105,7 @@ async function loadLazy() {
   resolveFragments();
   addPromotion();
 
-  if (!['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
     const banner = buildBlock('branch-io', '');
     main.appendChild(banner);
   }
