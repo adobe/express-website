@@ -2108,6 +2108,7 @@ async function loadLazy() {
   if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
     const banner = buildBlock('branch-io', '');
     main.append(banner);
+    loadBlock(banner);
   }
 
   removeMetadata();
