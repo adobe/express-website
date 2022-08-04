@@ -1,0 +1,228 @@
+body.no-scroll {
+    overflow: hidden;
+}
+
+main .choose-your-path {
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    cursor: pointer;
+    transition: .5s opacity ease;
+}
+
+main .choose-your-path .choose-your-path-slide {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 50vh;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    will-change: width, filter;
+    user-select: none;
+    overflow: hidden;
+}
+
+main .choose-your-path .choose-your-path-slide > div {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+}
+
+main .choose-your-path .choose-your-path-slide .choose-your-path-slide-background img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 50vh;
+    width: 100%;
+}
+
+main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+main .choose-your-path .choose-your-path-slide h1 {
+    font-size: 20px;
+    font-weight: 900;
+    width: 360px;
+    margin-top: 10px;
+}
+
+main .choose-your-path .choose-your-path-slide p {
+    font-weight: var(--body-font-weight);
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    width: 400px;
+}
+
+main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title img {
+    margin-right: 15px;
+    width: 36px;
+    height: 36px;
+}
+
+main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image {
+    margin-top: 40px;
+}
+
+main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img {
+    height: 160px;
+}
+
+@media (min-width: 600px) {
+    main .choose-your-path {
+        flex-direction: row;
+    }
+
+    main .choose-your-path .choose-your-path-slide {
+        width: 50%;
+        height: 100vh;
+    }
+
+    main .choose-your-path .choose-your-path-slide.no-mouse {
+        cursor: none;
+    }
+
+    main .choose-your-path .choose-your-path-slide .choose-your-path-slide-background img {
+        height: 100vh;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title {
+        font-size: 30px;
+    }
+
+    main .choose-your-path .choose-your-path-slide .choose-your-path-slide-title img {
+        width: 45px;
+        height: 45px;
+    }
+
+    main .choose-your-path .choose-your-path-slide h1 {
+        font-size: 28px;
+        width: 490px;
+        margin: 0;
+    }
+
+    main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image {
+        margin-top: 80px;
+        transform: scale(1.2);
+    }
+
+    main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img {
+        height: 50vh;
+        object-fit: cover;
+    }
+
+    .choose-your-path-mouse {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: '';
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        z-index: 1000;
+        background: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
+        background-size: 400% 400%;
+        opacity: .95;
+        -webkit-animation: AnimationName 45s ease infinite;
+        -moz-animation: AnimationName 45s ease infinite;
+        animation: AnimationName 45s ease infinite;
+        transition: .05s background ease-in-out;
+    }
+
+    .choose-your-path-mouse {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        left: 0;
+        content: '';
+        width: 200px;
+        height: 200px;
+        border-radius: 100vh;
+        z-index: 1000;
+        opacity: .95;
+        -webkit-animation: AnimationName 45s ease infinite;
+        -moz-animation: AnimationName 45s ease infinite;
+        animation: AnimationName 45s ease infinite;
+        pointer-events: none;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 28px;
+        padding: 0 20px;
+        box-sizing: border-box;
+        will-change: top, left, background, opacity;
+    }
+
+    .choose-your-path-mouse-left {
+        background: url(/express/blocks/choose-your-path/left-mouse-gradient.jpg) 50% 50%;
+        background-size: cover;
+    }
+
+    .choose-your-path-mouse-right {
+        background: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
+        background-size: 400% 400%;
+    }
+
+    .choose-your-path-mouse.hidden {
+        opacity: 0;
+    }
+
+    .choose-your-path-mouse.small {
+        background: black;
+        animation: TopMouseAnimation .4s;
+        animation-fill-mode: forwards;
+    }
+
+    .choose-your-path-mouse-container.hidden {
+        opacity: 0;
+    }
+
+    .choose-your-path-mouse-lottie .lottie {
+        margin-top: 10px;
+        transform: rotate(90deg) scale(2);
+    }
+}
+
+@-webkit-keyframes TopMouseAnimation {
+    0%{
+    }
+    100%{
+        transform: scale(0.1);
+        padding: 0;
+    }
+}
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:0 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0 50%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:0 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0 50%}
+}
+@keyframes AnimationName {
+    0%{background-position:0 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0 50%}
+}

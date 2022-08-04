@@ -12,7 +12,6 @@ main .blog-posts-container > div {
 
 .blog main .blog-posts-container > div > h2, main .blog-posts-container div.blog-posts-decoration {
   max-width: 280px;
-  margin: auto;
 }
 
 main .blog-posts-container  div.blog-posts-decoration {
