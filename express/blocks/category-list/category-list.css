@@ -1,127 +1,139 @@
-main .category-list-container .category-list-wrapper {
-    padding: 0;
+main .category-list-container {
+  padding: 18px 28px;
+}
+main .category-list-container > div,
+main .category-list-center-container > div {
+  max-width: 1200px;
 }
 
-main .category-list-container .category-list-heading-section {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
+main .category-list-container .category-list-center-container .carousel-platform {
+  padding-top: 6px;
 }
 
-main .category-list-container .category-list-heading-section .category-list-heading {
-    text-align: left;
-    font-size: 28px;
-    line-height: 30px;
+main .category-list-container .carousel-container a.button.carousel-arrow {
+  transform: translateY(-10px);
 }
 
-main .category-list-container .category-list-heading-section .category-list-link-wrapper {
-    margin: 8px 0 0;
+main .category-list {
+  display: block;
+  overflow: hidden;
+  margin: auto;
+  text-align: left;
+  padding: 30px 28px 40px 28px;
+  background-color: var(--color-gray-100);
+  border-radius: 20px;
 }
 
-main .category-list-container .category-list-link {
-    font-size: 16px;
-    line-height: 22px;
-    display: flex;
-    padding: 0;
-    white-space: nowrap;
-    width: max-content;
+main .category-list h2,
+main .category-list h3,
+main .category-list h4 {
+  text-align: left;
 }
 
-main .category-list-container .category-list-link::after {
-    display: flex;
-    width: 6px;
-    height: 6px;
-    border-top-width: 0;
-    border-left-width: 0;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
-    border-style: solid;
-    border-color: var(--color-info-accent);
-    transform-origin: 75% 75%;
-    transform: rotate( -45deg );
-    content: "";
-    margin-top: 5px;
-    margin-left: 5px;
-    margin-right: 2.25px;
+main .category-list.center {
+  width: fit-content;
+  max-width: 100%;
 }
 
-main .category-list-container .category-list-category {
-    position: relative;
-    display: flex;
-    gap: 8px;
-    flex-direction: column;
-    align-items: center;
-    min-width: 123px;
-    min-height: 148px;
-    margin: 0;
-    padding: 10px 8px 0 8px;
+main .category-list h3 {
+  font-size: var(--heading-font-size-m);
+  margin-bottom: 20px;
 }
 
-main .category-list-container .category-list-category-anchor {
-    position: absolute;
-    height: 100%;
-    width: 100%;
+main .category-list p.button-container {
+  margin: 0 5px 12px;
+  line-height: 0;
 }
 
-main .category-list-container .category-list-category-anchor:hover ~ .category-list-category-image-wrapper {
-    transform: scale(1.1);
+main .category-list p.button-container.current {
+  pointer-events: none;
 }
 
-main .category-list-container .category-list-category-image-wrapper {
-    background-color: var(--color-gray-200);
-    min-height: 90px;
-    width: 148px;
-    border-radius: 90px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    transition: transform 0.2s ease-in-out;
+main .category-list p.button-container.current > a {
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border-color: var(--color-black);
 }
 
-
-main .category-list-container .category-list-category-image-wrapper img {
-    display: block;
-    object-fit: cover;
-    width: 80px;
-    height: 80px;
-    transform: matrix(1, -0.07, 0.07, 1, 0, 0);
-    box-shadow: 0 0 6px #0000001F;
-    border-radius: 8px;
-    opacity: 1;
+main .category-list a.button.secondary {
+  margin: 6px 0;
 }
 
-main .category-list-container .category-list-category-image-wrapper .category-list-category-image-shadow {
-    position: absolute;
-    width: 76px;
-    height: 76px;
-    transform: matrix(0.97, -0.22, 0.22, 0.97, -6, 0);
-    background: var(--color-gray-300) 0 0 no-repeat padding-box;
-    border-radius: 10px;
-    opacity: 1;
+main .category-list p.seo-paragraph {
+  font-size: 14px;
+  line-height: 21px;
+  margin: 0 0 21px;
 }
 
-main .category-list-container .category-list-category-title {
-    margin: 0;
-    font-size: 18px;
-    line-height: 24px;
-    font-weight: 700;
+main .category-list .carousel-container .carousel-fader-left {
+  width: 150px;
+  background: linear-gradient(to left, rgba(248, 248, 248, 0), rgba(248, 248, 248, 1));
+}
+main .category-list .carousel-container .carousel-fader-right {
+  width: 150px;
+  background: linear-gradient(to right, rgba(248, 248, 248, 0), rgba(248, 248, 248, 1));
 }
 
 @media (min-width: 900px) {
-    main .category-list-container .category-list-heading-section {
-        flex-direction: row;
-    }
+  main .category-list-container > div,
+  main .category-list-center-container > div {
+    padding: 0 50px;
+  }
+
+  main .category-list {
+    text-align: left;
+  }
+
+  main .category-list h2,
+  main .category-list h3,
+  main .category-list h4 {
+    text-align: left;
+  }
 }
 
 @media (min-width: 1200px) {
-    main .category-list-container .category-list-wrapper {
-        padding: 0 28px;
-        max-width: none;
-    }
+  main .category-list-container > div,
+  main .category-list-center-container > div {
+      padding: 0 55px;
+  }
+}
+
+
+/* Carousel styles (Link-list specific) */
+
+/* Remove max-width on mobile breakpoints */
+main .section.category-list-container,
+main .section.category-list-container > div,
+main .section.category-list-container .category-list > div {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .category-list-container .category-list-wrapper {
+  margin: 40px 28px;
+}
+
+main .category-list .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+
+@media (min-width: 900px) {
+  main .category-list .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .section.category-list-container > div, main .category-list-center-container > div {
+    padding: 0 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section.category-list-container > div,
+  main .section.category-list-center-container > div {
+    padding: 0 55px;
+  }
 }

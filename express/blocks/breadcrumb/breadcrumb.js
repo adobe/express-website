@@ -24,7 +24,7 @@ function capitalizeFirstLetter(string) {
 
 export function decorateBreadcrumb($block) {
   const pathArray = Array.from(window.location.pathname.split('/')).splice(1);
-  let previousCrumb = window.location.host;
+  let previousCrumb = '';
   const urlArray = pathArray.map((path) => {
     previousCrumb = `${previousCrumb}/${path}`;
     return previousCrumb;
@@ -39,8 +39,10 @@ export function decorateBreadcrumb($block) {
     const $crumb = createTag('a', { href: urlArray[index] });
     if (index === paths.length - 1) {
       $crumb.classList.add('current-crumb');
+      $crumb.textContent = `${linkText}`;
+    } else {
+      $crumb.textContent = `${linkText} / `;
     }
-    $crumb.textContent = `${linkText} / `;
     $block.append($crumb);
   });
 }
