@@ -947,7 +947,7 @@ export function loadScript(url, callback, type, defer = false) {
   const $head = document.querySelector('head');
   const $script = createTag('script', { src: url });
   if (type) $script.setAttribute('type', type);
-  if (defer) $script.setAttribute('defer');
+  if (defer) $script.setAttribute('defer', true);
   $head.append($script);
   $script.onload = callback;
   return $script;
