@@ -2100,17 +2100,15 @@ async function loadLazy() {
   sampleRUM('lcp');
 
   loadBlocks(main);
-  loadCSS('/express/styles/lazy-styles.css');
-  scrollToHash();
-  resolveFragments();
-  addPromotion();
-
   if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
     const banner = buildBlock('branch-io', '');
     main.append(banner);
     loadBlock(banner);
   }
-
+  loadCSS('/express/styles/lazy-styles.css');
+  scrollToHash();
+  resolveFragments();
+  addPromotion();
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
