@@ -1,0 +1,358 @@
+main .playlist-container {
+    background-color: var(--body-alt-background-color);
+    padding: 40px 8px;
+}
+main .playlist-container .default-content-wrapper {
+    max-width: none;
+    padding: 0 16px;
+}
+main .playlist-container h2#sessions {
+    margin-top: 12px;
+    margin-bottom: 16px;
+    text-align: left;
+    font-size: 36px;
+    line-height: 34px;
+}
+main .playlist-container .playlist-wrapper {
+    padding: 0;
+    max-width: none;
+}
+main .playlist-container .thumbnails-container {
+    display: flex;
+    margin-left: -8px;
+    margin-right: -8px;
+}
+main .playlist-container .thumbnails-container .session {
+    cursor: pointer;
+    margin-top: 4px;
+    padding: 0 12px;
+}
+main .playlist-container .thumbnails-container .session.active *,
+main .playlist-container .thumbnails-container .session:hover * {
+    font-weight: 800;
+}
+main .playlist-container .thumbnails-container .session.active picture,
+main .playlist-container .thumbnails-container .session:hover picture {
+    border: 2px solid var(--color-black);
+    padding: 2px;
+    margin: -4px -4px 8px;
+}
+main .playlist-container .thumbnails-container picture {
+    margin-bottom: 12px;
+    border-radius: 12px;
+    display: block;
+    overflow: hidden;
+}
+main .playlist-container .thumbnails-container picture img {
+    min-width: 200px;
+    height: 120px;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+}
+main .playlist-container .thumbnails-container .session-title {
+    text-align: left;
+    font-size: 14px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+main .playlist-container .thumbnails-container .session-description {
+    margin-top: 0;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 700;
+}
+main .playlist-container .video-player {
+    padding: 40px 16px;
+    border-radius: 24px;
+    background-color: var(--body-background-color);
+    max-width: 327px;
+    margin: auto;
+}
+main .playlist-container .video-player-inline-player-wrapper {
+    height: 197px;
+    min-width: 100%;
+    max-width: 327px;
+    border-radius: 16px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+main .playlist-container .video-player-inline-player-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+}
+main .playlist-container .video-player-inline-player-overlay::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 200px;
+    width: 100%;
+    background-image: linear-gradient(#ffffff00, #90909025, #000000a0);
+}
+main .playlist-container .video-player-inline-player-overlay:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+    opacity: 50%;
+}
+main .playlist-container .video-player-inline-player-overlay:hover .video-player-inline-player-play-button {
+    display: unset;
+}
+main .playlist-container .video-player-inline-player {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 16px;
+    background-color: var(--color-black);
+}
+main .playlist-container .video-player-inline-player-play-button {
+    position: absolute;
+    padding: 10px 20px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--color-white);
+    border-radius: 100px;
+    z-index: 10;
+    display: none;
+}
+main .playlist-container .video-player-inline-player-duration {
+    position: absolute;
+    font-size: 11px;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 12px;
+    border: 2px solid #ffffff;
+    border-radius: 100px;
+    color: #ffffff;
+    z-index: 10;
+}
+main .playlist-container .video-player-inline-player-overlay svg {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    fill: var(--color-white);
+    width: 32px;
+    height: 32px;
+    z-index: 10;
+}
+main .playlist-container .video-player-session-number {
+    font-size: 22px;
+    line-height: 28px;
+    text-align: left;
+    margin-bottom: 8px;
+}
+main .playlist-container .video-player-session-title {
+    font-size: 28px;
+    line-height: 30px;
+    text-align: left;
+    margin: 0 0 40px;
+}
+main .playlist-container .video-player-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+}
+main .playlist-container .video-player-video-title {
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+main .playlist-container .video-player-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+main .playlist-container .video-player-buttons .video-player-button-previous {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    padding: 12px;
+    height: 14px;
+    width: 14px;
+    background-color: var(--color-gray-200);
+    cursor: pointer;
+    transition: background-color .3s;
+}
+main .playlist-container .video-player-buttons .video-player-button-previous:hover {
+    background-color: var(--color-gray-300);
+}
+main .playlist-container .video-player-video-list-wrapper {
+    text-align: left;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list-heading {
+    font-size: 18px;
+    line-height: 24px;
+    margin: 0 0 8px;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button {
+    position: relative;
+    padding: 8px 12px;
+    background-color: var(--color-white);
+    display: flex;
+    gap: 8px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+    border-radius: 6px;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button.active,
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button:hover {
+    background-color: #EDEDED;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button.active .video-button-title,
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button:hover .video-button-title {
+    font-weight: 800;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button svg {
+    height: 24px;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button-title {
+    max-width: calc(100% - 68px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 700;
+}
+main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button-duration {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+main .playlist-container .carousel-container a.button.carousel-arrow {
+    position: absolute;
+    top: 25%;
+}
+
+@media (min-width: 900px) {
+    main .playlist-container .default-content-wrapper {
+        max-width: 830px;
+        padding: 0 24px;
+    }
+    main .playlist-container .playlist-wrapper {
+        position: relative;
+        max-width: 830px;
+    }
+    main .playlist-container h2#sessions {
+        margin: 0 40px 32px;
+    }
+    main .playlist-container .thumbnails-container {
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+    main .playlist-container .thumbnails-container .session {
+        padding: 0 4px;
+        margin-right: 20px;
+    }
+    main .playlist-container .video-player-session-number {
+        margin-bottom: 6px;
+    }
+    main .playlist-container .video-player-session-title {
+        font-size: 36px;
+        line-height: 40px;
+    }
+    main .playlist-container .video-player-video-title {
+        font-size: 28px;
+        line-height: 32px;
+        margin-bottom: 14px;
+        text-align: left;
+        min-height: 64px;
+    }
+    main .playlist-container .video-player-body {
+        flex-direction: row;
+        gap: 24px;
+    }
+    main .playlist-container .video-player-inline-player-wrapper {
+        min-width: 388px;
+        height: 235px;
+    }
+    main .playlist-container .video-player-inline-player-duration {
+        font-size: 14px;
+        line-height: 21px;
+        padding: 3px 7px;
+    }
+    main .playlist-container .video-player {
+        padding: 56px 40px;
+        max-width: 740px;
+    }
+    main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button {
+        width: 304px;
+    }
+    main .playlist-container .carousel-container a.button.carousel-arrow {
+        position: unset;
+        top: unset;
+    }
+}
+
+@media (min-width: 1200px) {
+    main .playlist-container .default-content-wrapper {
+        max-width: 1120px;
+        padding: 0 24px;
+    }
+    main .playlist-container .playlist-wrapper {
+        position: relative;
+        max-width: 1120px;
+    }
+    main .playlist-container h2#sessions {
+        margin: 0 40px 32px;
+    }
+    main .playlist-container .thumbnails-container {
+        margin-left: 40px;
+        margin-right: 40px;
+    }
+    main .playlist-container .video-player-session-number {
+        margin-bottom: 3px;
+    }
+    main .playlist-container .video-player-session-title {
+        font-size: 36px;
+        line-height: 56px;
+    }
+    main .playlist-container .video-player-video-title {
+        font-size: 28px;
+        line-height: 32px;
+        margin-bottom: 14px;
+        text-align: left;
+    }
+    main .playlist-container .video-player-body {
+        flex-direction: row;
+        gap: 24px;
+    }
+    main .playlist-container .video-player-inline-player-wrapper {
+        min-width: 670px;
+        height: 408px;
+    }
+    main .playlist-container .video-player-inline-player-duration {
+        font-size: 14px;
+        line-height: 21px;
+        padding: 4px 9px;
+    }
+    main .playlist-container .video-player {
+        padding: 56px 40px;
+        max-width: 1024px;
+    }
+}
