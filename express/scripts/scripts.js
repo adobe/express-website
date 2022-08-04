@@ -2064,20 +2064,25 @@ export async function addFreePlanWidget(elem) {
  */
 async function addBannerToPage() {
   if (!['yes', 'true'].includes(getMetadata('show-banner').toLowerCase())) return;
+
   // eslint-disable-next-line
   (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener applyCode autoAppIndex banner closeBanner closeJourney creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setBranchViewData setIdentity track validateCode trackCommerceEvent logEvent disableTracking".split(" "), 0);
   // eslint-disable-next-line
-  await branch.init('key_live_ikqc03rxCzFIX8gq8i2nBddbquai90pm');
-  const $branchBanner = document.getElementById('branch-banner-iframe');
-  if (!$branchBanner) return;
+  branch.init('key_live_ikqc03rxCzFIX8gq8i2nBddbquai90pm', function(err, _data) {
+    if (err && (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page'))) console.log(err);
+  });
+  // eslint-disable-next-line
+  if (!branch.data['has_app']) return;
 
   // Check for floating button
   const checkForFloatingButton = () => {
     const $floatButtonWrapper = document.querySelector('.floating-button-wrapper');
-    if ($branchBanner && $floatButtonWrapper) {
-      $floatButtonWrapper.style.bottom = $branchBanner.offsetHeight;
-    } else {
-      $floatButtonWrapper.style.removeProperty('bottom');
+    $floatButtonWrapper.classList.add('floating-button--above-banner');
+    if ($floatButtonWrapper) {
+      // eslint-disable-next-line
+      branch.addEventListener('didCloseJourney', () => {
+        $floatButtonWrapper.classList.remove('floating-button--above-banner');
+      });
     }
   };
   if (document.readyState === 'complete') {
@@ -2087,9 +2092,6 @@ async function addBannerToPage() {
       checkForFloatingButton();
     });
   }
-  $branchBanner.addEventListener('click', () => {
-    checkForFloatingButton();
-  });
 }
 
 /**
