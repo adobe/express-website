@@ -2061,7 +2061,7 @@ export async function addFreePlanWidget(elem) {
 async function handleMetadata(metadata, type, args) {
   if (!['yes', 'true', 'on'].includes(getMetadata(metadata).toLowerCase())) return;
   if (type === 'script') {
-    loadScript(args.url, args.type, undefined, args.defer);
+    loadScript(args.url, args.type, args.callback, args.defer);
   } else if (type === 'block') {
     loadBlock(args.block);
   }
@@ -2083,7 +2083,7 @@ async function loadLazy() {
   addPromotion();
   handleMetadata('show-banner', 'script', {
     url: '/express/scripts/branch-io.js',
-    type: 'javascript',
+    type: 'text/javascript',
     defer: true,
   });
   removeMetadata();
