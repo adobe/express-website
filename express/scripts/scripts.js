@@ -2058,12 +2058,12 @@ export async function addFreePlanWidget(elem) {
   }
 }
 
-async function handleMetadata(metadata, type, data) {
+async function handleMetadata(metadata, type, args) {
   if (!['yes', 'true', 'on'].includes(getMetadata(metadata).toLowerCase())) return;
   if (type === 'script') {
-    loadScript(data);
+    loadScript(args.url, args.type, undefined, args.defer);
   } else if (type === 'block') {
-    loadBlock(data);
+    loadBlock(args.block);
   }
 }
 
@@ -2081,7 +2081,11 @@ async function loadLazy() {
   scrollToHash();
   resolveFragments();
   addPromotion();
-  handleMetadata('show-banner', 'script', '/express/scripts/branch-io.js');
+  handleMetadata('show-banner', 'script', {
+    url: '/express/scripts/branch-io.js',
+    type: 'javascript',
+    defer: true,
+  });
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
