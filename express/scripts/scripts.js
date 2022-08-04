@@ -877,6 +877,37 @@ export function scrollToHash() {
 }
 
 /**
+ * Builds a block DOM Element from a two dimensional array
+ * @param {string} blockName name of the block
+ * @param {any} content two dimensional array or string or object of content
+ */
+ export function buildBlock(blockName, content) {
+  const table = Array.isArray(content) ? content : [[content]];
+  const blockEl = document.createElement('div');
+  // build image block nested div structure
+  blockEl.classList.add(blockName);
+  table.forEach((row) => {
+    const rowEl = document.createElement('div');
+    row.forEach((col) => {
+      const colEl = document.createElement('div');
+      const vals = col.elems ? col.elems : [col];
+      vals.forEach((val) => {
+        if (val) {
+          if (typeof val === 'string') {
+            colEl.innerHTML += val;
+          } else {
+            colEl.appendChild(val);
+          }
+        }
+      });
+      rowEl.appendChild(colEl);
+    });
+    blockEl.appendChild(rowEl);
+  });
+  return (blockEl);
+}
+
+/**
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
@@ -2058,15 +2089,6 @@ export async function addFreePlanWidget(elem) {
   }
 }
 
-async function handleMetadata(metadata, type, args) {
-  if (!['yes', 'true', 'on'].includes(getMetadata(metadata).toLowerCase())) return;
-  if (type === 'script') {
-    loadScript(args.url, args.type, args.callback, args.defer);
-  } else if (type === 'block') {
-    loadBlock(args.block);
-  }
-}
-
 /**
  * loads everything that doesn't need to be delayed.
  */
@@ -2081,11 +2103,12 @@ async function loadLazy() {
   scrollToHash();
   resolveFragments();
   addPromotion();
-  handleMetadata('show-banner', 'script', {
-    url: '/express/scripts/branch-io.js',
-    type: 'text/javascript',
-    defer: true,
-  });
+
+  if (!['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
+    const banner = buildBlock('branch-io', '');
+    main.appendChild(banner);
+  }
+
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
