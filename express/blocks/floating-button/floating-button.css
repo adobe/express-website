@@ -6,7 +6,6 @@ main .floating-button-wrapper {
   right: auto;
   z-index: 2;
   width: 100%;
-  height: 150px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -25,14 +24,16 @@ main .floating-button-wrapper {
   pointer-events: none;
   background: -webkit-linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
-  transition: bottom 0.6s ease-out, opacity 0.6s ease-out;
+  transition: bottom 0.6s ease-out, opacity 0.6s ease-out, height 0.6s ease-out;
+  height: 150px;
 }
 
-main .floating-button.floating-button--above-banner {
-  height: 200px;
+main .floating-button-wrapper.floating-button--above-banner {
+  height: calc(150px + 76px);
 }
 
 main .floating-button-wrapper.floating-button--hidden {
+  height: 150px;
   bottom: -151px;
   opacity: 0.9;
 }
@@ -44,10 +45,18 @@ main .floating-button {
   position: relative;
   border-radius: 100px;
   background-color: var(--color-gray-200);
-  transition: background-color .3s, padding .3s, margin-bottom .3s;
+  transition: background-color .3s, padding .3s, margin-bottom 0.6s ease-out;
   z-index: 2;
   max-width: 100%;
   pointer-events: auto;
+  margin-bottom: 24px;
+}
+
+main .floating-button-wrapper.floating-button--above-banner .floating-button {
+  margin-bottom: calc(24px + 76px);
+}
+
+main .floating-button-wrapper.floating-button--hidden .floating-button {
   margin-bottom: 24px;
 }
 
@@ -113,6 +122,19 @@ main .floating-button-wrapper:first-of-type + .section {
 }
 
 @media screen and (min-width: 900px) {
+  /* reset above-banner styles */
+  main .floating-button-wrapper.floating-button--above-banner .floating-button {
+    margin-bottom: 24px;
+  }
+  main .floating-button-wrapper.floating-button--above-banner {
+    height: 150px;
+  }
+  #branch-banner-iframe {
+    display: none;
+  }
+
+  /* set desktop below/above the fold styles */
+
   main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
     display: inline-block;
   }
