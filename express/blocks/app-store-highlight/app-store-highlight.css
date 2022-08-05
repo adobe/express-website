@@ -62,5 +62,7 @@ main .app-store-highlight-container .icon.icon-apple-store {
 }
 
 @media (min-width:900px) {
-
+  main .app-store-highlight-container .app-store-highlight-wrapper {
+    max-width: none;
+  }
 }

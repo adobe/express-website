@@ -131,15 +131,10 @@ function initScrollAnimation($block) {
     }
 
     if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
-
       const totalScroll = $cards.scrollWidth - window.innerWidth;
       $cards.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
     }
   });
-
-  $cards.addEventListener('scroll', () => {
-    console.log($cards.scrollLeft);
-  })
 }
 
 export default function decorate($block) {
