@@ -128,7 +128,6 @@ function displayResult(result) {
       p.append(occurence);
     }));
     resultDisplay.appendChild(p);
-    done.here;
   }
 }
 
