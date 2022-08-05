@@ -76,10 +76,12 @@ main .category-list p.seo-paragraph {
 main .category-list .carousel-container .carousel-fader-left {
   width: 150px;
   background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  pointer-events: none;
 }
 main .category-list .carousel-container .carousel-fader-right {
   width: 150px;
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  pointer-events: none;
 }
 
 @media (min-width: 900px) {
