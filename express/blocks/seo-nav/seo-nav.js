@@ -19,9 +19,6 @@ export default function decorate(block) {
   if (links.length) {
     links.forEach((p) => {
       const link = p.querySelector('a');
-      if (link.pathname === window.location.pathname) {
-        p.classList.add('current');
-      }
       link.classList.add('small', 'secondary', 'fill');
       link.classList.remove('accent');
     });
