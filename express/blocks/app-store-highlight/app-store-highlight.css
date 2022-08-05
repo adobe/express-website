@@ -1,58 +1,66 @@
-main .section.banner-container {
-  background-color: var(--color-info-accent);
-}
-
-main .section.banner-container,
-main .section.banner-light-container {
-  padding: 80px 15px;
-}
-
-main .section.banner-container > div {
-  padding: 0;
-}
-
-main .banner {
-  padding: 0;
-  margin: 0 auto;
+main .app-store-highlight-container {
+  padding: 40px 0;
+  background-color: var(--color-black);
   color: var(--color-white);
 }
 
-main .banner.light {
-  color: var(--color-black);
+main .app-store-highlight-container .content-wrapper {
+  transform: scale(1.2);
 }
 
-main .banner h2, main .banner h3 {
-  color: var(--color-white);
+main .app-store-highlight-container .heading {
+  font-size: 36px;
+  line-height: 46px;
+  margin-bottom: 8px;
 }
 
-main .banner h2 {
-  margin-top: 0;
+main .app-store-highlight-container .sub-heading {
+  font-size: 12px;
+  line-height: 18px;
+  margin: 0 0 16px;
 }
 
-main .banner.light h2, main .banner.light h3 {
-  color: var(--color-black);
+main .app-store-highlight-container .rating-stars {
+  font-size: 12px;
+  line-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-main .banner a:any-link {
-  color: var(--color-white);
+main .app-store-highlight-container .rating-stars svg {
+  color: var(--color-premium);
 }
 
-main .banner.light a:any-link {
-  color: var(--color-black);
+main .app-store-highlight-container .rating-stars .rating-votes {
+  margin-left: 4px;
 }
 
-main .banner .icon {
-  height: 72px;
-  width: 72px;
+main .app-store-highlight-container .cards {
+  /*scroll-behavior: smooth;*/
+  display: flex;
+  gap: 12px;
+  padding: 53px 32px;
+  overflow: auto;
+  margin: 0 -32px;
 }
 
-main .banner.multi-button .button-container {
-  display: inline-block;
+main .app-store-highlight-container .cards .card {
+  min-height: 338px;
+  min-width: 156px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+main .app-store-highlight-container .cards .card img {
+  object-fit: cover;
+  height: 100%;
+}
+
+main .app-store-highlight-container .icon.icon-apple-store {
+  height: 63px;
 }
 
 @media (min-width:900px) {
-  main .section.banner-container {
-    padding-left: 56px;
-    padding-right: 56px;
-  }
+
 }

@@ -49,49 +49,51 @@ function decorateContent($block, payload) {
   $contentWrapper.append($heading, $subHeading, $ratingWrapper);
   $block.append($contentWrapper);
 
-  fetch(`https://www.adobe.com/reviews-api/ccx${payload.ratingSheet}.json`)
-    .then((response) => response.json())
-    .then((response) => {
-      let ratingTotal;
-      let ratingAverage;
-      if (response.data[0].Average) {
-        ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
-      }
+  if (payload.showRating) {
+    fetch(`https://www.adobe.com/reviews-api/ccx${payload.ratingSheet}.json`)
+      .then((response) => response.json())
+      .then((response) => {
+        let ratingTotal;
+        let ratingAverage;
+        if (response.data[0].Average) {
+          ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
+        }
 
-      if (response.data[0].Total) {
-        ratingTotal = parseFloat(response.data[0].Total);
-      }
+        if (response.data[0].Total) {
+          ratingTotal = parseFloat(response.data[0].Total);
+        }
 
-      if (ratingAverage && ratingTotal) {
-        const star = getIcon('star');
-        const starHalf = getIcon('star-half');
-        const starEmpty = getIcon('star-empty');
-        const $stars = createTag('span', { class: 'rating-stars' });
-        let rating = ratingAverage ?? 5;
-        rating = Math.round(rating * 10) / 10; // round nearest decimal point
-        const ratingAmount = ratingTotal ?? 0;
-        const ratingRoundedHalf = Math.round(rating * 2) / 2;
-        const filledStars = Math.floor(ratingRoundedHalf);
-        const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
-        const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
-        $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)} `;
-        const $votes = createTag('span', { class: 'rating-votes' });
-        $votes.innerHTML = `<strong>${rating}</strong> • ${ratingAmount} Ratings`;
-        $stars.appendChild($votes);
-        $ratingWrapper.append($stars);
-      }
-    });
+        if (ratingAverage && ratingTotal) {
+          const star = getIcon('star');
+          const starHalf = getIcon('star-half');
+          const starEmpty = getIcon('star-empty');
+          const $stars = createTag('span', { class: 'rating-stars' });
+          let rating = ratingAverage ?? 5;
+          rating = Math.round(rating * 10) / 10; // round nearest decimal point
+          const ratingAmount = ratingTotal ?? 0;
+          const ratingRoundedHalf = Math.round(rating * 2) / 2;
+          const filledStars = Math.floor(ratingRoundedHalf);
+          const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
+          const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
+          $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)} `;
+          const $votes = createTag('span', { class: 'rating-votes' });
+          $votes.textContent = `${rating} • ${ratingAmount} Ratings`;
+          $stars.appendChild($votes);
+          $ratingWrapper.append($stars);
+        }
+      });
+  }
 }
 
 function decorateGallery($block, payload) {
-  const $gallery = createTag('div', { class: 'images-container' });
+  const $gallery = createTag('div', { class: 'cards' });
   payload.images.forEach((image) => {
-    const $previewContainer = createTag('div', { class: 'preview-container' });
+    const $previewContainer = createTag('div', { class: 'card' });
     $previewContainer.append(image);
     $gallery.append($previewContainer);
   });
 
-  const $previewContainer = createTag('div', { class: 'preview-container' });
+  const $previewContainer = createTag('div', { class: 'card' });
   $previewContainer.append(createTag('video', {
     src: payload.screenDemo, autoplay: true, loop: true, muted: true,
   }));
@@ -114,13 +116,39 @@ function decorateAppStoreIcon($block, payload) {
   }
 }
 
+function initScrollAnimation($block) {
+  const $contentWrapper = $block.querySelector('.content-wrapper');
+  const $cards = $block.querySelector('.cards');
+
+  $contentWrapper.style.transform = 'scale(1.2)';
+  document.addEventListener('scroll', () => {
+    const blockPosition = $block.getBoundingClientRect();
+    const blockInViewPercent = (1 - blockPosition.top / blockPosition.height) * 100;
+    const blockTopToEdge = Math.round((blockPosition.top / window.innerHeight) * 100);
+
+    if (blockTopToEdge <= 100 && blockTopToEdge >= 30) {
+      $contentWrapper.style.transform = `scale(${1 + ((blockTopToEdge - 30) * (0.2 / 70))})`;
+    }
+
+    if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
+
+      const totalScroll = $cards.scrollWidth - window.innerWidth;
+      $cards.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
+    }
+  });
+
+  $cards.addEventListener('scroll', () => {
+    console.log($cards.scrollLeft);
+  })
+}
+
 export default function decorate($block) {
   const payload = {
     userAgent: getMobileOperatingSystem(),
     heading: '',
     copy: '',
     ratingSheet: '',
-    showRating: 0,
+    showRating: false,
     ratingScore: 0,
     ratingCount: '',
     images: [],
@@ -140,30 +168,26 @@ export default function decorate($block) {
         payload.other.push($divs);
         break;
       case 'Heading':
-        if (getMobileOperatingSystem() === 'iOS') {
+        if (payload.userAgent === 'iOS') {
           payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iOS');
         }
-        if (getMobileOperatingSystem() === 'Android') {
+        if (payload.userAgent === 'Android') {
           payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'Android');
         }
         break;
       case 'Copy':
-        if (getMobileOperatingSystem() === 'iOS') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
+        if (payload.userAgent === 'iOS') {
+          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
         }
-        if (getMobileOperatingSystem() === 'Android') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
+        if (payload.userAgent === 'Android') {
+          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
         }
         break;
       case 'Rating Sheet':
         payload.ratingSheet = $divs[1].textContent;
         break;
       case 'Show Rating?':
-        if ($divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true') {
-          payload.showRating = 1;
-        } else {
-          payload.showRating = 0;
-        }
+        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
         break;
       case 'Rating Score':
         payload.ratingScore = parseFloat($divs[1].textContent);
@@ -189,4 +213,6 @@ export default function decorate($block) {
   decorateContent($block, payload);
   decorateGallery($block, payload);
   decorateAppStoreIcon($block, payload);
+
+  initScrollAnimation($block);
 }
