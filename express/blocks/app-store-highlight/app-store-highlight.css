@@ -1,0 +1,58 @@
+main .section.banner-container {
+  background-color: var(--color-info-accent);
+}
+
+main .section.banner-container,
+main .section.banner-light-container {
+  padding: 80px 15px;
+}
+
+main .section.banner-container > div {
+  padding: 0;
+}
+
+main .banner {
+  padding: 0;
+  margin: 0 auto;
+  color: var(--color-white);
+}
+
+main .banner.light {
+  color: var(--color-black);
+}
+
+main .banner h2, main .banner h3 {
+  color: var(--color-white);
+}
+
+main .banner h2 {
+  margin-top: 0;
+}
+
+main .banner.light h2, main .banner.light h3 {
+  color: var(--color-black);
+}
+
+main .banner a:any-link {
+  color: var(--color-white);
+}
+
+main .banner.light a:any-link {
+  color: var(--color-black);
+}
+
+main .banner .icon {
+  height: 72px;
+  width: 72px;
+}
+
+main .banner.multi-button .button-container {
+  display: inline-block;
+}
+
+@media (min-width:900px) {
+  main .section.banner-container {
+    padding-left: 56px;
+    padding-right: 56px;
+  }
+}
