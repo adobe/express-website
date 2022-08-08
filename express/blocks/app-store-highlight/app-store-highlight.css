@@ -20,6 +20,17 @@ main .app-store-highlight-container .sub-heading {
   margin: 0 0 16px;
 }
 
+main .app-store-highlight-container .rating-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+main .app-store-highlight-container .rating-wrapper .icon-editor-choice {
+  width: 115px;
+}
+
 main .app-store-highlight-container .rating-stars {
   font-size: 12px;
   line-height: 18px;

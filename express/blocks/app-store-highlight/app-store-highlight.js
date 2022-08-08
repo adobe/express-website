@@ -80,6 +80,11 @@ function decorateContent($block, payload) {
           $votes.textContent = `${rating} • ${ratingAmount} Ratings`;
           $stars.appendChild($votes);
           $ratingWrapper.append($stars);
+
+          if (payload.userAgent === 'iOS') {
+            const $editorChoice = createTag('img', { class: 'icon-editor-choice', src: '/express/icons/editor-choice.png', alt: 'editor-choice' });
+            $ratingWrapper.append($editorChoice);
+          }
         }
       });
   }
