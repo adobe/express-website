@@ -16,9 +16,7 @@ import {
 } from '../../scripts/scripts.js';
 
 function capitalizeFirstLetter(string) {
-  const words = string.split(' ').map((word) => {
-    return word[0].toUpperCase() + word.substring(1);
-  });
+  const words = string.split(' ').map((word) => word[0].toUpperCase() + word.substring(1));
   return words.join(' ');
 }
 
