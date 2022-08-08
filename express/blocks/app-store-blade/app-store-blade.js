@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIcon } from '../../scripts/scripts.js';
+import { createTag, getIcon, getIconElement } from '../../scripts/scripts.js';
 
 /**
  * Determine the mobile operating system.
@@ -21,9 +21,12 @@ import { createTag, getIcon } from '../../scripts/scripts.js';
 
 function buildTamplateTitle($block) {
   const $heading = $block.querySelector('.heading');
-  console.log($heading.textContent);
   $heading.innerHTML = $heading.innerHTML.replace('{{', '<span>');
   $heading.innerHTML = $heading.innerHTML.replace('}}', '</span>');
+}
+
+function handleClipboard($block) {
+
 }
 
 function decorateBlade($block, payload) {
@@ -37,12 +40,28 @@ function decorateBlade($block, payload) {
 
   $heading.textContent = payload.heading;
   for (let i = 0; i < payload.copyParagraphs.length; i += 1) {
-    $copyWrapper.append(payload.copyParagraphs[i]);
+    const paragraph = payload.copyParagraphs[i];
+    $copyWrapper.append(paragraph);
+    if (i === 0) {
+      paragraph.classList.add('heading-small');
+    }
+
+    if (paragraph.querySelector('a')) {
+      paragraph.classList.add('or-to-link');
+      paragraph.append(getIconElement('copy'));
+      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
+      $clipboardTag.textContent = 'Copied to clipboard';
+      paragraph.append($clipboardTag);
+
+      paragraph.addEventListener('click', () => {
+        handleClipboard();
+      });
+    }
   }
 
+  $badgesWrapper.append(getIconElement('apple-store'), getIconElement('google-store'));
   $bodyContentWrapper.append($copyWrapper, $badgesWrapper, $ratingWrapper);
   $body.append(payload.QRCode, $bodyContentWrapper);
-
   $mainContainer.append($heading, $body, payload.image);
   $block.append($mainContainer);
 
@@ -90,7 +109,6 @@ export default function decorate($block) {
   const payload = {
     heading: '',
     copyParagraphs: [],
-    orToUrl: '',
     ratingSheet: '',
     showRating: false,
     ratingScore: 0,
@@ -116,12 +134,6 @@ export default function decorate($block) {
         break;
       case 'Copy':
         payload.copyParagraphs = $divs[1].querySelectorAll('p');
-        for (let i = 0; i < payload.copyParagraphs.length; i += 1) {
-          const orToLink = payload.copyParagraphs[i].querySelector('a');
-          if (orToLink) {
-            payload.orToUrl = orToLink.href;
-          }
-        }
         break;
       case 'Rating Sheet':
         payload.ratingSheet = $divs[1].textContent;
@@ -135,9 +147,11 @@ export default function decorate($block) {
         break;
       case 'Image':
         payload.image = $divs[1].querySelector('picture');
+        payload.image.classList.add('foreground-image');
         break;
       case 'QR Code':
         payload.QRCode = $divs[1].querySelector('picture');
+        payload.QRCode.classList.add('qr-code');
         break;
       case 'iOS Badge Link':
         payload.badgeLinks.ios = $divs[1].textContent;
