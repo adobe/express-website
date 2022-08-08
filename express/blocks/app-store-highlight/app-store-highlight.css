@@ -59,7 +59,7 @@ main .app-store-highlight-container .cards {
 main .app-store-highlight-container .cards .card {
   position: relative;
   height: 338px;
-  width: 156px;
+  min-width: 156px;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -67,6 +67,7 @@ main .app-store-highlight-container .cards .card {
 main .app-store-highlight-container .cards .card img {
   object-fit: cover;
   height: 100%;
+  width: 100%;
 }
 
 main .app-store-highlight-container .icon.icon-apple-store {
