@@ -169,12 +169,15 @@ export default function decorate($block) {
         if (payload.userAgent === 'Android') {
           payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'Android');
         }
+        if (payload.userAgent === 'unknown') {
+          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
+        }
         break;
       case 'Copy':
         if (payload.userAgent === 'iOS') {
           payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
         }
-        if (payload.userAgent === 'Android') {
+        if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
           payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
         }
         break;
