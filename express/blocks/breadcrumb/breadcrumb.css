@@ -16,3 +16,8 @@ main .breadcrumb-container a {
 main .breadcrumb-container a.current-crumb {
     opacity: 0.5;
 }
+
+main .breadcrumb-container + .hero-animation-wide-container {
+    padding-top: 0;
+    background-color: var(--color-gray-100);
+}
