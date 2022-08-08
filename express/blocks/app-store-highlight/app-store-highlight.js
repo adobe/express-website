@@ -213,9 +213,12 @@ export default function decorate($block) {
 
   $block.innerHTML = '';
 
-  decorateContent($block, payload);
-  decorateGallery($block, payload);
-  decorateAppStoreIcon($block, payload);
-
-  initScrollAnimation($block);
+  if (payload.userAgent !== 'unknown') {
+    decorateContent($block, payload);
+    decorateGallery($block, payload);
+    decorateAppStoreIcon($block, payload);
+    initScrollAnimation($block);
+  } else {
+    $block.parentElement.parentElement.style.display = 'none';
+  }
 }
