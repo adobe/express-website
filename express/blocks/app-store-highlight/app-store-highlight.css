@@ -58,8 +58,8 @@ main .app-store-highlight-container .cards {
 
 main .app-store-highlight-container .cards .card {
   position: relative;
-  min-height: 338px;
-  min-width: 156px;
+  height: 338px;
+  width: 156px;
   border-radius: 10px;
   overflow: hidden;
 }
