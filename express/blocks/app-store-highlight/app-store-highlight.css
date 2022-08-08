@@ -62,8 +62,12 @@ main .app-store-highlight-container .icon.icon-apple-store {
   height: 63px;
 }
 
-@media (min-width:900px) {
-  main .app-store-highlight-container .app-store-highlight-wrapper {
-    max-width: none;
+main .app-store-highlight-container .app-store-highlight-wrapper {
+  max-width: none;
+}
+
+@media (min-width:1200px) {
+  main .app-store-highlight-container {
+    display: none;
   }
 }
