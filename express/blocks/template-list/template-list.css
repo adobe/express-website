@@ -214,6 +214,10 @@ main .template-list.fullwidth .template {
   margin: 5px;
 }
 
+main .template-list.horizontal.fullwidth .template {
+  width: auto;
+}
+
 main .template-list .template:not(.placeholder) > div:first-of-type {
   overflow: hidden;
   border-radius: 7px;
