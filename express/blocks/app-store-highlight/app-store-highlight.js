@@ -18,6 +18,7 @@ import { createTag, getIcon, getIconElement } from '../../scripts/scripts.js';
  *
  * @returns {String}
  */
+
 function getMobileOperatingSystem() {
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -37,6 +38,35 @@ function getMobileOperatingSystem() {
   return 'unknown';
 }
 
+function getUrlExtension(url) {
+  return url.split(/[#?]/)[0].split('.').pop().trim();
+}
+
+function decorateRatings($block, payload) {
+  const $ratingWrapper = $block.querySelector('.rating-wrapper');
+
+  if (payload.showRating) {
+    const star = getIcon('star');
+    const starHalf = getIcon('star-half');
+    const starEmpty = getIcon('star-empty');
+    const $stars = createTag('span', { class: 'rating-stars' });
+    const ratingRoundedHalf = Math.round(payload.ratingScore * 2) / 2;
+    const filledStars = Math.floor(ratingRoundedHalf);
+    const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
+    const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
+    $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)} `;
+    const $votes = createTag('span', { class: 'rating-votes' });
+    $votes.textContent = `${payload.ratingScore} • ${payload.ratingCount} Ratings`;
+    $stars.appendChild($votes);
+    const $editorChoice = createTag('img', { class: 'icon-editor-choice', src: '/express/icons/editor-choice.png', alt: 'editor-choice' });
+
+    $ratingWrapper.append($stars);
+    if (payload.userAgent === 'iOS') {
+      $ratingWrapper.append($editorChoice);
+    }
+  }
+}
+
 function decorateContent($block, payload) {
   const $contentWrapper = createTag('div', { class: 'content-wrapper' });
   const $heading = createTag('h3', { class: 'heading' });
@@ -49,45 +79,7 @@ function decorateContent($block, payload) {
   $contentWrapper.append($heading, $subHeading, $ratingWrapper);
   $block.append($contentWrapper);
 
-  if (payload.showRating) {
-    fetch(`https://www.adobe.com/reviews-api/ccx${payload.ratingSheet}.json`)
-      .then((response) => response.json())
-      .then((response) => {
-        let ratingTotal;
-        let ratingAverage;
-        if (response.data[0].Average) {
-          ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
-        }
-
-        if (response.data[0].Total) {
-          ratingTotal = parseFloat(response.data[0].Total);
-        }
-
-        if (ratingAverage && ratingTotal) {
-          const star = getIcon('star');
-          const starHalf = getIcon('star-half');
-          const starEmpty = getIcon('star-empty');
-          const $stars = createTag('span', { class: 'rating-stars' });
-          let rating = ratingAverage ?? 5;
-          rating = Math.round(rating * 10) / 10; // round nearest decimal point
-          const ratingAmount = ratingTotal ?? 0;
-          const ratingRoundedHalf = Math.round(rating * 2) / 2;
-          const filledStars = Math.floor(ratingRoundedHalf);
-          const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
-          const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
-          $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)} `;
-          const $votes = createTag('span', { class: 'rating-votes' });
-          $votes.textContent = `${rating} • ${ratingAmount} Ratings`;
-          $stars.appendChild($votes);
-          $ratingWrapper.append($stars);
-
-          if (payload.userAgent === 'iOS') {
-            const $editorChoice = createTag('img', { class: 'icon-editor-choice', src: '/express/icons/editor-choice.png', alt: 'editor-choice' });
-            $ratingWrapper.append($editorChoice);
-          }
-        }
-      });
-  }
+  decorateRatings($block, payload);
 }
 
 function decorateGallery($block, payload) {
@@ -100,7 +92,12 @@ function decorateGallery($block, payload) {
 
   const $previewContainer = createTag('div', { class: 'card' });
   $previewContainer.append(createTag('video', {
-    src: payload.screenDemo, autoplay: true, loop: true, muted: true,
+    type: `video/${getUrlExtension(payload.screenDemo)}`,
+    src: payload.screenDemo,
+    autoplay: true,
+    loop: true,
+    muted: true,
+    playsInline: true,
   }));
   $gallery.append($previewContainer);
 
@@ -142,7 +139,7 @@ function initScrollAnimation($block) {
   });
 }
 
-export default function decorate($block) {
+export default async function decorate($block) {
   const payload = {
     userAgent: getMobileOperatingSystem(),
     heading: '',
@@ -161,64 +158,58 @@ export default function decorate($block) {
     other: [],
   };
 
-  Array.from($block.children).forEach(($row) => {
-    const $divs = $row.querySelectorAll('div');
-    switch ($divs[0].textContent) {
-      default:
-        payload.other.push($divs);
-        break;
-      case 'Heading':
-        if (payload.userAgent === 'iOS') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iOS');
-        }
-        if (payload.userAgent === 'Android') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'Android');
-        }
-        if (payload.userAgent === 'unknown') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
-        }
-        break;
-      case 'Copy':
-        if (payload.userAgent === 'iOS') {
-          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
-        }
-        if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
-          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
-        }
-        break;
-      case 'Rating Sheet':
-        payload.ratingSheet = $divs[1].textContent;
-        break;
-      case 'Show Rating?':
-        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
-        break;
-      case 'Rating Score':
-        payload.ratingScore = parseFloat($divs[1].textContent);
-        payload.ratingCount = $divs[3].textContent;
-        break;
-      case 'Images':
-        payload.images = $divs[1].querySelectorAll('picture');
-        break;
-      case 'Screen Demo':
-        payload.screenDemo = $divs[1].textContent;
-        break;
-      case 'iOS Badge Link':
-        payload.badgeLinks.ios = $divs[1].textContent;
-        break;
-      case 'Android Badge Link':
-        payload.badgeLinks.android = $divs[1].textContent;
-        break;
-    }
-  });
+  Array.from($block.children)
+    .forEach(($row) => {
+      const $divs = $row.querySelectorAll('div');
+      switch ($divs[0].textContent) {
+        default:
+          payload.other.push($divs);
+          break;
+        case 'Heading':
+          if (payload.userAgent === 'iOS') {
+            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iOS');
+          }
+          if (payload.userAgent === 'Android') {
+            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'Android');
+          }
+          if (payload.userAgent === 'unknown') {
+            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
+          }
+          break;
+        case 'Copy':
+          if (payload.userAgent === 'iOS') {
+            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
+          }
+          if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
+          }
+          break;
+        case 'Show Rating?':
+          payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
+          break;
+        case 'Rating Score':
+          payload.ratingScore = parseFloat($divs[1].textContent);
+          payload.ratingCount = $divs[3].textContent;
+          break;
+        case 'Images':
+          payload.images = $divs[1].querySelectorAll('picture');
+          break;
+        case 'Screen Demo':
+          payload.screenDemo = $divs[1].textContent;
+          break;
+        case 'iOS Badge Link':
+          payload.badgeLinks.ios = $divs[1].textContent;
+          break;
+        case 'Android Badge Link':
+          payload.badgeLinks.android = $divs[1].textContent;
+          break;
+      }
+    });
 
   $block.innerHTML = '';
 
-  if (payload.userAgent !== 'unknown') {
-    decorateContent($block, payload);
-    decorateGallery($block, payload);
-    decorateAppStoreIcon($block, payload);
-    initScrollAnimation($block);
-  } else {
-    $block.parentElement.parentElement.style.display = 'none';
-  }
+  decorateContent($block, payload);
+  decorateGallery($block, payload);
+  decorateAppStoreIcon($block, payload);
+  initScrollAnimation($block);
 }
