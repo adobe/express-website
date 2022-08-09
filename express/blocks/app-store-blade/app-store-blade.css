@@ -1,7 +1,3 @@
-main .app-store-blade-container {
-    display: none;
-}
-
 main .app-store-blade-container .app-store-blade {
     background-color: var(--color-brand-title);
     color: var(--color-white);
@@ -146,7 +142,7 @@ main .app-store-blade-container .main-container .rating-wrapper .rating-stars sv
 }
 
 main .app-store-blade-container .main-container .rating-wrapper .rating-stars span {
-    margin-left: 12px;
+    margin-left: 6px;
 }
 
 main .app-store-blade-container .main-container .foreground-image img {
@@ -158,10 +154,4 @@ main .app-store-blade-container .main-container .foreground-image img {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-}
-
-@media(min-width: 1200px) {
-    main .app-store-blade-container {
-        display: unset;
-    }
 }

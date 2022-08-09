@@ -34,6 +34,28 @@ function handleClipboard($block) {
   $orToLink.classList.toggle('copied');
 }
 
+function decorateRatings($block, payload) {
+  const $ratingWrapper = $block.querySelector('.rating-wrapper');
+
+  if (payload.showRating) {
+    const star = getIcon('star');
+    const starHalf = getIcon('star-half');
+    const starEmpty = getIcon('star-empty');
+    const $stars = createTag('span', { class: 'rating-stars' });
+    const ratingRoundedHalf = Math.round(payload.ratingScore * 2) / 2;
+    const filledStars = Math.floor(ratingRoundedHalf);
+    const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
+    const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
+    $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)} `;
+    const $votes = createTag('span', { class: 'rating-votes' });
+    $votes.textContent = `${payload.ratingScore} • ${payload.ratingCount} Ratings`;
+    $stars.appendChild($votes);
+    const $editorChoice = createTag('img', { class: 'icon-editor-choice', src: '/express/icons/editor-choice.png', alt: 'editor-choice' });
+    $ratingWrapper.append($editorChoice);
+    $ratingWrapper.append($stars);
+  }
+}
+
 function decorateBlade($block, payload) {
   const $mainContainer = createTag('div', { class: 'main-container' });
   const $heading = createTag('h3', { class: 'heading' });
@@ -72,49 +94,13 @@ function decorateBlade($block, payload) {
 
   buildTamplateTitle($block);
 
-  if (payload.showRating) {
-    fetch(`https://www.adobe.com/reviews-api/ccx${payload.ratingSheet}.json`)
-      .then((response) => response.json())
-      .then((response) => {
-        let ratingTotal;
-        let ratingAverage;
-        if (response.data[0].Average) {
-          ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
-        }
-
-        if (response.data[0].Total) {
-          ratingTotal = parseFloat(response.data[0].Total);
-        }
-
-        if (ratingAverage && ratingTotal) {
-          const star = getIcon('star');
-          const starHalf = getIcon('star-half');
-          const starEmpty = getIcon('star-empty');
-          const $stars = createTag('span', { class: 'rating-stars' });
-          let rating = ratingAverage ?? 5;
-          rating = Math.round(rating * 10) / 10; // round nearest decimal point
-          const ratingAmount = ratingTotal ?? 0;
-          const ratingRoundedHalf = Math.round(rating * 2) / 2;
-          const filledStars = Math.floor(ratingRoundedHalf);
-          const halfStars = (filledStars === ratingRoundedHalf) ? 0 : 1;
-          const emptyStars = (halfStars === 1) ? 4 - filledStars : 5 - filledStars;
-          $stars.innerHTML = `${star.repeat(filledStars)}${starHalf.repeat(halfStars)}${starEmpty.repeat(emptyStars)} `;
-          const $votes = createTag('span', { class: 'rating-votes' });
-          $votes.textContent = `${rating} • ${ratingAmount} Ratings`;
-          $stars.appendChild($votes);
-          const $editorChoice = createTag('img', { class: 'icon-editor-choice', src: '/express/icons/editor-choice.png', alt: 'editor-choice' });
-          $ratingWrapper.append($editorChoice);
-          $ratingWrapper.append($stars);
-        }
-      });
-  }
+  decorateRatings($block, payload);
 }
 
 export default function decorate($block) {
   const payload = {
     heading: '',
     copyParagraphs: [],
-    ratingSheet: '',
     showRating: false,
     ratingScore: 0,
     ratingCount: '',
@@ -139,9 +125,6 @@ export default function decorate($block) {
         break;
       case 'Copy':
         payload.copyParagraphs = $divs[1].querySelectorAll('p');
-        break;
-      case 'Rating Sheet':
-        payload.ratingSheet = $divs[1].textContent;
         break;
       case 'Show Rating?':
         payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
