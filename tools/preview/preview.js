@@ -94,7 +94,7 @@ async function createExperiment() {
       // the query is a bit slow, so I'm only fetching the results when the popup is opened
       const resultsURL = new URL('https://helix-pages.anywhere.run/helix-services/run-query@v2/rum-experiments');
       resultsURL.searchParams.set('experiment', experiment);
-      if (window.hlx.sidekickConfig?.host) {
+      if (window.hlx.sidekickConfig && window.hlx.sidekickConfig.host) {
         // restrict results to the production host, this also reduces query cost
         resultsURL.searchParams.set('domain', window.hlx.sidekickConfig.host);
       }

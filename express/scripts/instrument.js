@@ -959,7 +959,7 @@ loadScript(martechURL, () => {
     const getSegments = (ecid) => {
       if (ecid) {
         w.setAudienceManagerSegments = (json) => {
-          if (json?.segments?.includes(RETURNING_VISITOR_SEGMENT_ID)) {
+          if (json && json.segments && json.segments.includes(RETURNING_VISITOR_SEGMENT_ID)) {
             const audiences = Context.get('audiences');
             const segments = Context.get('segments');
             audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
@@ -1009,7 +1009,7 @@ loadScript(martechURL, () => {
             }
           }
 
-          if (json?.segments?.includes(USED_ACTION_SEGMENT_ID)) {
+          if (json && json.segments && json.segments.includes(USED_ACTION_SEGMENT_ID)) {
             const audiences = Context.get('audiences');
             const segments = Context.get('segments');
             audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
@@ -1025,7 +1025,7 @@ loadScript(martechURL, () => {
 
     if (useAlloy) {
       alloy('getIdentity')
-        .then((data) => getSegments(data?.identity?.ECID));
+        .then((data) => getSegments(data && data.identity ? data.identity.ECID : null));
     } else {
       const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
       getSegments(
