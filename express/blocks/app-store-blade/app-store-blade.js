@@ -26,7 +26,12 @@ function buildTamplateTitle($block) {
 }
 
 function handleClipboard($block) {
-
+  const $orToLink = $block.querySelector('.or-to-link');
+  const $innerAnchor = $orToLink.querySelector('a');
+  if (!$orToLink.classList.contains('copied')) {
+    navigator.clipboard.writeText($innerAnchor.href);
+  }
+  $orToLink.classList.toggle('copied');
 }
 
 function decorateBlade($block, payload) {
@@ -48,13 +53,13 @@ function decorateBlade($block, payload) {
 
     if (paragraph.querySelector('a')) {
       paragraph.classList.add('or-to-link');
-      paragraph.append(getIconElement('copy'));
+      paragraph.append(getIconElement('clone-solid'));
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
       $clipboardTag.textContent = 'Copied to clipboard';
       paragraph.append($clipboardTag);
 
       paragraph.addEventListener('click', () => {
-        handleClipboard();
+        handleClipboard($block);
       });
     }
   }
@@ -161,8 +166,6 @@ export default function decorate($block) {
         break;
     }
   });
-
-  console.log($block, payload);
 
   $block.innerHTML = '';
 
