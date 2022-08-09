@@ -1,6 +1,11 @@
 main .browse-by-category-container {
     padding-bottom: 24px;
 }
+
+main .browse-by-category-container .browse-by-category {
+    max-width: max-content;
+}
+
 main .browse-by-category-container .browse-by-category-wrapper {
     padding: 0;
     max-width: none;
