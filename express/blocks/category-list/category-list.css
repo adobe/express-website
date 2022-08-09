@@ -78,6 +78,7 @@ main .category-list .carousel-container .carousel-fader-left {
   background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
   pointer-events: none;
 }
+
 main .category-list .carousel-container .carousel-fader-right {
   width: 150px;
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
@@ -108,7 +109,6 @@ main .category-list .carousel-container .carousel-fader-right {
   }
 }
 
-
 /* Carousel styles (Link-list specific) */
 
 /* Remove max-width on mobile breakpoints */
@@ -124,7 +124,6 @@ main .category-list .carousel-container {
   margin-right: 0;
   margin-bottom: 0;
 }
-
 
 @media (min-width: 900px) {
   main .category-list .carousel-platform {

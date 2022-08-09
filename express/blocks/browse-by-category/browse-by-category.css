@@ -86,7 +86,6 @@ main .browse-by-category-container .browse-by-category-category-image-wrapper {
     pointer-events: none;
 }
 
-
 main .browse-by-category-container .browse-by-category-category-image-wrapper img {
     display: block;
     object-fit: cover;

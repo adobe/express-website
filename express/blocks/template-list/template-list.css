@@ -179,8 +179,6 @@ main .template-list.horizontal.fullwidth {
   padding: 0 16px;
   display: block;
   margin-left: auto;
-  margin-right: auto;
-  min-height: 220px;
 }
 
 main .template-list.horizontal .template {

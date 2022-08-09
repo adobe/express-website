@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -11,9 +11,13 @@
  */
 /* eslint-disable import/named, import/extensions */
 
-import {
-  createTag,
-} from '../../scripts/scripts.js';
+import { createTag, fetchPlaceholders } from '../../scripts/scripts.js';
+
+let placeholders;
+
+fetchPlaceholders().then((p) => {
+  placeholders = p;
+});
 
 function capitalizeFirstLetter(string) {
   const words = string.split(' ').map((word) => word[0].toUpperCase() + word.substring(1));
@@ -27,13 +31,13 @@ export function decorateBreadcrumb($block) {
     previousCrumb = `${previousCrumb}/${path}`;
     return previousCrumb;
   });
-  const $homeCrumb = createTag('a', { href: `${urlArray[0]}` });
-  $homeCrumb.textContent = 'Home / ';
-  $block.append($homeCrumb);
-  urlArray.shift();
-  pathArray.shift();
+
   pathArray.forEach((path, index, paths) => {
-    const linkText = capitalizeFirstLetter(path.replace('-', ' '));
+    let crumb;
+    if (placeholders[path]) {
+      crumb = placeholders[path];
+    }
+    const linkText = capitalizeFirstLetter(crumb || path.replace('-', ' '));
     const $crumb = createTag('a', { href: urlArray[index] });
     if (index === paths.length - 1) {
       $crumb.classList.add('current-crumb');
