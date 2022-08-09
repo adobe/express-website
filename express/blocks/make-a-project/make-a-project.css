@@ -461,3 +461,8 @@ main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wr
 main .make-a-project .free-plan-widget {
   margin: 32px auto -64px;
 }
+
+/* add padding if make a project isn't the first block */
+main .default-content-wrapper + .make-a-project-wrapper > .make-a-project {
+  padding-top: 40px;
+}
