@@ -15,16 +15,50 @@ import {
 } from '../../scripts/scripts.js';
 
 const imageFiles = [
-  './01-Adobe-AdobeExpress-iPhone55-Splash-Screen_AdobeExpress-1242x2208-en_US.jpg',
-  './02-Adobe-AdobeExpress-iPhone55-Splash-Screen_AdobeExpress-1242x2208-en_US.jpg',
-  './03-Adobe-AdobeExpress-iPhone55-Templates-1242x2208-EN-US.jpg',
-  './04-Adobe-AdobeExpress-iPhone55-Stock-1242x2208-EN-US.jpg',
-  './05-Adobe-AdobeExpress-iPhone55-Animate-1242x2208-EN-US.jpg',
-  './06-Adobe-AdobeExpress-iPhone55-Effects-1242x2208-EN-US.jpg',
-  './07-Adobe-AdobeExpress-iPhone55-Text-1242x2208-EN-US.jpg',
-  './08-Adobe-AdobeExpress-iPhone55-Brand-1242x2208-EN-US.jpg',
-  './09-Adobe-AdobeExpress-iPhone55-Resize-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/01-Adobe-AdobeExpress-iPhone55-Splash-Screen_AdobeExpress-1242x2208-en_US.jpg',
+  'express/blocks/app-store-highlight/standard-images/02-Adobe-AdobeExpress-iPhone55-Splash-Screen_AdobeExpress-1242x2208-en_US.jpg',
+  'express/blocks/app-store-highlight/standard-images/03-Adobe-AdobeExpress-iPhone55-Templates-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/04-Adobe-AdobeExpress-iPhone55-Stock-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/05-Adobe-AdobeExpress-iPhone55-Animate-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/06-Adobe-AdobeExpress-iPhone55-Effects-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/07-Adobe-AdobeExpress-iPhone55-Text-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/08-Adobe-AdobeExpress-iPhone55-Brand-1242x2208-EN-US.jpg',
+  'express/blocks/app-store-highlight/standard-images/09-Adobe-AdobeExpress-iPhone55-Resize-1242x2208-EN-US.jpg',
 ];
+
+function createStandardImage(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+  const url = new URL(src, window.location.origin);
+  const picture = document.createElement('picture');
+  const { pathname } = url;
+  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
+
+  // webp
+  breakpoints.forEach((br) => {
+    const source = document.createElement('source');
+    if (br.media) source.setAttribute('media', br.media);
+    source.setAttribute('type', 'image/webp');
+    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+    picture.appendChild(source);
+  });
+
+  // fallback
+  breakpoints.forEach((br, i) => {
+    if (i < breakpoints.length - 1) {
+      const source = document.createElement('source');
+      if (br.media) source.setAttribute('media', br.media);
+      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      picture.appendChild(source);
+    } else {
+      const img = document.createElement('img');
+      img.setAttribute('loading', eager ? 'eager' : 'lazy');
+      img.setAttribute('alt', alt);
+      picture.appendChild(img);
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+    }
+  });
+
+  return picture;
+}
 
 function buildStandardPayload($block, payload) {
   // load default heading
@@ -44,7 +78,7 @@ function buildStandardPayload($block, payload) {
   // load ratings score
   payload.ratingScore = getMetadata('app-rating-score');
   payload.ratingCount = getMetadata('app-rating-count');
-  payload.images = imageFiles.map((imageUrl) => createOptimizedPicture(imageUrl));
+  payload.images = imageFiles.map((imageUrl) => createStandardImage(imageUrl));
 }
 
 function buildPayloadFromBlock($block, payload) {
