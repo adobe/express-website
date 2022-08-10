@@ -77,7 +77,6 @@ main .app-store-blade-container .main-container .copy-wrapper .or-to-link img {
     margin-left: 8px;
     height: 20px;
     width: 20px;
-    background-color: white;
 }
 
 main .app-store-blade-container .main-container .copy-wrapper .or-to-link.copied {
@@ -147,11 +146,17 @@ main .app-store-blade-container .main-container .rating-wrapper .rating-stars sp
 
 main .app-store-blade-container .main-container .foreground-image img {
     position: absolute;
+    filter: brightness(0.4);
+    transition: filter 0.2s ease-in-out;
     top: 0;
     right: 0;
-    width: 50%;
-    max-width: 580px;
     height: 100%;
     object-fit: cover;
     z-index: 0;
+}
+
+@media (min-width: 1200px) {
+    main .app-store-blade-container .main-container .foreground-image img {
+        filter: unset;
+    }
 }

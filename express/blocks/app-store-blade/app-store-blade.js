@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIcon, getIconElement } from '../../scripts/scripts.js';
+import {
+  createTag, getIcon, getIconElement, getMetadata,
+} from '../../scripts/scripts.js';
 
 /**
  * Determine the mobile operating system.
@@ -18,6 +20,95 @@ import { createTag, getIcon, getIconElement } from '../../scripts/scripts.js';
  *
  * @returns {String}
  */
+
+function createStandardImage(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+  const url = new URL(src, window.location.origin);
+  const picture = document.createElement('picture');
+  const { pathname } = url;
+  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
+
+  // webp
+  breakpoints.forEach((br) => {
+    const source = document.createElement('source');
+    if (br.media) source.setAttribute('media', br.media);
+    source.setAttribute('type', 'image/webp');
+    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+    picture.appendChild(source);
+  });
+
+  // fallback
+  breakpoints.forEach((br, i) => {
+    if (i < breakpoints.length - 1) {
+      const source = document.createElement('source');
+      if (br.media) source.setAttribute('media', br.media);
+      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      picture.appendChild(source);
+    } else {
+      const img = document.createElement('img');
+      img.setAttribute('loading', eager ? 'eager' : 'lazy');
+      img.setAttribute('alt', alt);
+      picture.appendChild(img);
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+    }
+  });
+
+  return picture;
+}
+
+function buildStandardPayload($block, payload) {
+  const $subHeading = createTag('p');
+  const $copy = createTag('p');
+  const $orToLink = createTag('a', { href: 'bit.ly/3uWjWJC' });
+
+  payload.heading = 'Create on the go with the Adobe Express app';
+  $subHeading.textContent = 'Scan QR code to download';
+  $copy.textContent = 'Or, go to ';
+  $orToLink.textContent = 'bit.ly/3uWjWJC';
+  $copy.append($orToLink);
+  payload.copyParagraphs.push($subHeading, $copy);
+  payload.ratingScore = getMetadata('app-rating-score');
+  payload.ratingCount = getMetadata('app-rating-count');
+  payload.image = createStandardImage('express/blocks/app-store-blade/generic-foreground-image.png');
+  payload.image.classList.add('foreground-image');
+  payload.QRCode = createStandardImage('express/blocks/app-store-blade/qr-code.png');
+  payload.QRCode.classList.add('qr-code');
+  payload.badgeLink = 'https://adobesparkpost.app.link/d9EzZEpk4rb';
+}
+
+function buildPayloadFromBlock($block, payload) {
+  Array.from($block.children).forEach(($row) => {
+    const $divs = $row.querySelectorAll('div');
+    switch ($divs[0].textContent) {
+      default:
+        payload.other.push($divs);
+        break;
+      case 'Heading':
+        payload.heading = $divs[1].textContent;
+        break;
+      case 'Copy':
+        payload.copyParagraphs = $divs[1].querySelectorAll('p');
+        break;
+      case 'Show Rating?':
+        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
+        break;
+      case 'Rating Score':
+        payload.ratingScore = parseFloat($divs[1].textContent);
+        payload.ratingCount = $divs[3].textContent;
+        break;
+      case 'Image':
+        payload.image = $divs[1].querySelector('picture');
+        payload.image.classList.add('foreground-image');
+        break;
+      case 'QR Code':
+        payload.QRCode = $divs[1].querySelector('picture');
+        payload.QRCode.classList.add('qr-code');
+        break;
+      case 'Badge Link':
+        payload.badgeLink = $divs[1].textContent;
+        break;
+    }
+  });
+}
 
 function buildTamplateTitle($block) {
   const $heading = $block.querySelector('.heading');
@@ -75,7 +166,7 @@ function decorateBlade($block, payload) {
 
     if (paragraph.querySelector('a')) {
       paragraph.classList.add('or-to-link');
-      paragraph.append(getIconElement('clone-solid'));
+      paragraph.append(getIconElement('copy'));
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
       $clipboardTag.textContent = 'Copied to clipboard';
       paragraph.append($clipboardTag);
@@ -101,7 +192,7 @@ export default function decorate($block) {
   const payload = {
     heading: '',
     copyParagraphs: [],
-    showRating: false,
+    showRating: true,
     ratingScore: 0,
     ratingCount: '',
     image: '',
@@ -114,41 +205,11 @@ export default function decorate($block) {
     other: [],
   };
 
-  Array.from($block.children).forEach(($row) => {
-    const $divs = $row.querySelectorAll('div');
-    switch ($divs[0].textContent) {
-      default:
-        payload.other.push($divs);
-        break;
-      case 'Heading':
-        payload.heading = $divs[1].textContent;
-        break;
-      case 'Copy':
-        payload.copyParagraphs = $divs[1].querySelectorAll('p');
-        break;
-      case 'Show Rating?':
-        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
-        break;
-      case 'Rating Score':
-        payload.ratingScore = parseFloat($divs[1].textContent);
-        payload.ratingCount = $divs[3].textContent;
-        break;
-      case 'Image':
-        payload.image = $divs[1].querySelector('picture');
-        payload.image.classList.add('foreground-image');
-        break;
-      case 'QR Code':
-        payload.QRCode = $divs[1].querySelector('picture');
-        payload.QRCode.classList.add('qr-code');
-        break;
-      case 'iOS Badge Link':
-        payload.badgeLinks.ios = $divs[1].textContent;
-        break;
-      case 'Android Badge Link':
-        payload.badgeLinks.android = $divs[1].textContent;
-        break;
-    }
-  });
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    buildStandardPayload($block, payload);
+  } else {
+    buildPayloadFromBlock($block, payload);
+  }
 
   $block.innerHTML = '';
 
