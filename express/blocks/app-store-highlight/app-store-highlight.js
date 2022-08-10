@@ -10,14 +10,86 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIcon, getIconElement } from '../../scripts/scripts.js';
+import {
+  createTag, getIcon, getIconElement, getMetadata, createOptimizedPicture, getMeta
+} from '../../scripts/scripts.js';
 
-/**
- * Determine the mobile operating system.
- * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
- *
- * @returns {String}
- */
+const imageFiles = [
+  './01-Adobe-AdobeExpress-iPhone55-Splash-Screen_AdobeExpress-1242x2208-en_US.jpg',
+  './02-Adobe-AdobeExpress-iPhone55-Splash-Screen_AdobeExpress-1242x2208-en_US.jpg',
+  './03-Adobe-AdobeExpress-iPhone55-Templates-1242x2208-EN-US.jpg',
+  './04-Adobe-AdobeExpress-iPhone55-Stock-1242x2208-EN-US.jpg',
+  './05-Adobe-AdobeExpress-iPhone55-Animate-1242x2208-EN-US.jpg',
+  './06-Adobe-AdobeExpress-iPhone55-Effects-1242x2208-EN-US.jpg',
+  './07-Adobe-AdobeExpress-iPhone55-Text-1242x2208-EN-US.jpg',
+  './08-Adobe-AdobeExpress-iPhone55-Brand-1242x2208-EN-US.jpg',
+  './09-Adobe-AdobeExpress-iPhone55-Resize-1242x2208-EN-US.jpg',
+];
+
+function buildStandardPayload($block, payload) {
+  // load default heading
+  if (payload.userAgent === 'iOS' || payload.userAgent === 'Android') {
+    payload.heading = `Express is on ${payload.userAgent}.`;
+  }
+  if (payload.userAgent === 'unknown') {
+    payload.heading = 'Express is on your mobile devices.';
+  }
+  // load default copy
+  if (payload.userAgent === 'iOS') {
+    payload.copy = 'Install the Adobe Express app on your iPad or iPhone';
+  }
+  if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+    payload.copy = 'Install the Adobe Express app on your phone or tablet';
+  }
+  // load ratings score
+  payload.ratingScore = getMetadata('app-rating-score');
+  payload.ratingCount = getMetadata('app-rating-count');
+  payload.images = imageFiles.map((imageUrl) => createOptimizedPicture(imageUrl));
+}
+
+function buildPayloadFromBlock($block, payload) {
+  Array.from($block.children)
+    .forEach(($row) => {
+      const $divs = $row.querySelectorAll('div');
+      switch ($divs[0].textContent) {
+        default:
+          payload.other.push($divs);
+          break;
+        case 'Heading':
+          if (payload.userAgent === 'iOS' || payload.userAgent === 'Android') {
+            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', payload.userAgent);
+          }
+          if (payload.userAgent === 'unknown') {
+            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
+          }
+          break;
+        case 'Copy':
+          if (payload.userAgent === 'iOS') {
+            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
+          }
+          if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
+          }
+          break;
+        case 'Show Rating?':
+          payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
+          break;
+        case 'Rating Score':
+          payload.ratingScore = parseFloat($divs[1].textContent);
+          payload.ratingCount = $divs[3].textContent;
+          break;
+        case 'Images':
+          payload.images = $divs[1].querySelectorAll('picture');
+          break;
+        case 'Screen Demo':
+          payload.screenDemo = $divs[1].textContent;
+          break;
+        case 'Badge Link':
+          payload.badgeLink = $divs[1].textContent;
+          break;
+      }
+    });
+}
 
 function getMobileOperatingSystem() {
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -105,17 +177,16 @@ function decorateGallery($block, payload) {
 }
 
 function decorateAppStoreIcon($block, payload) {
+  const $iconWrapper = createTag('a', { href: payload.badgeLink });
+
   if (payload.userAgent === 'iOS') {
-    const $iconWrapper = createTag('a', { href: payload.badgeLinks.ios });
     $iconWrapper.append(getIconElement('apple-store'));
-    $block.append($iconWrapper);
+  }
+  if (payload.userAgent === 'Android') {
+    $iconWrapper.append(getIconElement('google-store'));
   }
 
-  if (payload.userAgent === 'Android') {
-    const $iconWrapper = createTag('a', { href: payload.badgeLinks.android });
-    $iconWrapper.append(getIconElement('google-store'));
-    $block.append($iconWrapper);
-  }
+  $block.append($iconWrapper);
 }
 
 function initScrollAnimation($block) {
@@ -144,67 +215,21 @@ export default async function decorate($block) {
     userAgent: getMobileOperatingSystem(),
     heading: '',
     copy: '',
-    ratingSheet: '',
-    showRating: false,
+    showRating: true,
     ratingScore: 0,
     ratingCount: '',
     images: [],
-    screenDemo: '',
-    badgeLinks: {
-      ios: '',
-      android: '',
-    },
+    screenDemo: 'https://main--express-website--adobe.hlx3.page/media_1160add6fb9f21ff1d3e9a402a6eafeb6360654be.mp4',
+    badgeLink: 'https://adobesparkpost.app.link/d9EzZEpk4rb',
     // other contains unwanted elements authored by mistake;
     other: [],
   };
 
-  Array.from($block.children)
-    .forEach(($row) => {
-      const $divs = $row.querySelectorAll('div');
-      switch ($divs[0].textContent) {
-        default:
-          payload.other.push($divs);
-          break;
-        case 'Heading':
-          if (payload.userAgent === 'iOS') {
-            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iOS');
-          }
-          if (payload.userAgent === 'Android') {
-            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'Android');
-          }
-          if (payload.userAgent === 'unknown') {
-            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
-          }
-          break;
-        case 'Copy':
-          if (payload.userAgent === 'iOS') {
-            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
-          }
-          if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
-            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
-          }
-          break;
-        case 'Show Rating?':
-          payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
-          break;
-        case 'Rating Score':
-          payload.ratingScore = parseFloat($divs[1].textContent);
-          payload.ratingCount = $divs[3].textContent;
-          break;
-        case 'Images':
-          payload.images = $divs[1].querySelectorAll('picture');
-          break;
-        case 'Screen Demo':
-          payload.screenDemo = $divs[1].textContent;
-          break;
-        case 'iOS Badge Link':
-          payload.badgeLinks.ios = $divs[1].textContent;
-          break;
-        case 'Android Badge Link':
-          payload.badgeLinks.android = $divs[1].textContent;
-          break;
-      }
-    });
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    buildStandardPayload($block, payload);
+  } else {
+    buildPayloadFromBlock($block, payload);
+  }
 
   $block.innerHTML = '';
 
