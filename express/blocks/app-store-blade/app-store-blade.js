@@ -70,7 +70,7 @@ function buildStandardPayload($block, payload) {
   payload.ratingCount = getMetadata('app-rating-count');
   payload.image = createStandardImage('express/blocks/app-store-blade/generic-foreground-image.png');
   payload.image.classList.add('foreground-image');
-  payload.QRCode = createStandardImage('express/blocks/app-store-blade/qr-code.png');
+  payload.QRCode = createStandardImage('express/blocks/app-store-blade/mobileappsblade_jdi_standard.png');
   payload.QRCode.classList.add('qr-code');
   payload.badgeLink = 'https://adobesparkpost.app.link/d9EzZEpk4rb';
 }
