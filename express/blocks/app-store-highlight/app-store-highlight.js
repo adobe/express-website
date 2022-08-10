@@ -63,10 +63,10 @@ function createStandardImage(src, alt = '', eager = false, breakpoints = [{ medi
 function buildStandardPayload($block, payload) {
   // load default heading
   if (payload.userAgent === 'iOS' || payload.userAgent === 'Android') {
-    payload.heading = `Express is on ${payload.userAgent}.`;
+    payload.heading = `Express it on ${payload.userAgent}.`;
   }
   if (payload.userAgent === 'unknown') {
-    payload.heading = 'Express is on your mobile devices.';
+    payload.heading = 'Express it on your mobile devices.';
   }
   // load default copy
   if (payload.userAgent === 'iOS') {
