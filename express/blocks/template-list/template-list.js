@@ -12,23 +12,54 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  getLocale,
-  createTag,
-  linkImage,
-  addSearchQueryToHref,
-  getIconElement,
-  toClassName,
-  decorateMain,
   addAnimationToggle,
+  addSearchQueryToHref,
+  createTag,
+  decorateMain,
+  getIconElement,
+  getLocale,
+  linkImage,
+  toClassName,
 } from '../../scripts/scripts.js';
-import {
-  Masonry,
-} from '../shared/masonry.js';
+import { Masonry } from '../shared/masonry.js';
 
-import {
-  buildCarousel,
-  // eslint-disable-next-line import/no-unresolved
-} from '../shared/carousel.js';
+import { buildCarousel } from '../shared/carousel.js';
+
+function fetchTemplates() {
+  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount')
+    // eslint-disable-next-line no-underscore-dangle
+    .then((response) => response.json()).then((response) => response._embedded.results);
+}
+
+async function normalizeFetchedTemplates() {
+  const templateFetched = await fetchTemplates();
+  const renditionParams = {
+    format: 'jpg',
+    dimension: 'width',
+    size: 240,
+  };
+  return templateFetched.map((template) => {
+    const $template = createTag('div');
+    const $pictureWrapper = createTag('div');
+
+    ['format', 'dimension', 'size'].forEach((param) => {
+      template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+    });
+    const $picture = createTag('img', { src: template.rendition.href });
+    const $buttonWrapper = createTag('div', { class: 'button-container' });
+    const $button = createTag('a', {
+      href: template.branchURL,
+      title: 'Edit this template',
+      class: 'button accent',
+    });
+
+    $button.textContent = 'Edit this template';
+    $pictureWrapper.append($picture);
+    $buttonWrapper.append($button);
+    $template.append($pictureWrapper, $buttonWrapper);
+    return $template;
+  });
+}
 
 /**
  * Returns a picture element with webp and fallbacks
@@ -143,7 +174,10 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  const templates = Array.from($block.children);
+  $block.innerHTML = '';
+
+  const templates = await normalizeFetchedTemplates();
+  // const templates = Array.from($block.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
     const $titleRow = templates.shift();
