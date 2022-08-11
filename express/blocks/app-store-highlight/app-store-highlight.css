@@ -54,6 +54,12 @@ main .app-store-highlight-container .cards {
   padding: 53px 32px;
   overflow: auto;
   margin: 0 -32px;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+main .app-store-highlight-container .cards::-webkit-scrollbar {
+  display: none;
 }
 
 main .app-store-highlight-container .cards .card {
