@@ -1,0 +1,162 @@
+main .app-store-blade-container .app-store-blade {
+    background-color: var(--color-brand-title);
+    color: var(--color-white);
+    max-width: 1200px;
+    border-radius: 24px;
+    margin: 40px auto;
+    overflow: hidden;
+}
+
+main .app-store-blade-container .app-store-blade-wrapper {
+    max-width: none;
+}
+
+main .app-store-blade-container .main-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 433px;
+    justify-content: space-between;
+}
+
+main .app-store-blade-container .main-container .heading {
+    text-align: left;
+    font-size: 45px;
+    line-height: 49px;
+    padding: 56px 48px;
+    max-width: 586px;
+    z-index: 1;
+}
+
+main .app-store-blade-container .main-container .heading span {
+    background: linear-gradient(95deg, #F24939, #F8BD3F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+main .app-store-blade-container .main-container .body {
+    display: flex;
+    width: 680px;
+    max-height: 167px;
+    text-align: left;
+    padding: 0 48px 56px;
+    z-index: 1;
+}
+
+main .app-store-blade-container .main-container .qr-code img {
+    object-fit: contain;
+    height: 100%;
+    padding-right: 24px;
+    display: block;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper p {
+    margin: 0;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .heading-small {
+    font-size: 22px;
+    line-height: 27px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    width: max-content;
+    transition: font-size 0.2s ease-in-out;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link img {
+    margin-left: 8px;
+    height: 20px;
+    width: 20px;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link.copied {
+    font-size: 18px;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link a {
+    font-weight: 700;
+    color: var(--color-white);
+    pointer-events: none;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link .clipboard-tag {
+    background-color: #268e6c;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    position: absolute;
+    right: -100%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: right 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link.copied .clipboard-tag {
+    right: -62%;
+    opacity: 1;
+}
+
+main .app-store-blade-container .main-container .badges-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+main .app-store-blade-container .main-container .badges-wrapper img {
+    height: 40px;
+    margin: 0;
+}
+
+main .app-store-blade-container .main-container .rating-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+main .app-store-blade-container .main-container .rating-wrapper .icon-editor-choice {
+    width: 124px;
+    height: 30px;
+    margin-right: 16px;
+    object-fit: contain;
+}
+
+main .app-store-blade-container .main-container .rating-wrapper .rating-stars {
+    display: flex;
+    align-items: center;
+}
+
+main .app-store-blade-container .main-container .rating-wrapper .rating-stars svg {
+    color: var(--color-premium);
+    height: 13px;
+}
+
+main .app-store-blade-container .main-container .rating-wrapper .rating-stars span {
+    margin-left: 6px;
+}
+
+main .app-store-blade-container .main-container .foreground-image img {
+    position: absolute;
+    filter: brightness(0.4);
+    transition: filter 0.2s ease-in-out;
+    top: 0;
+    right: 0;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+@media (min-width: 1200px) {
+    main .app-store-blade-container .main-container .foreground-image img {
+        filter: unset;
+    }
+}
