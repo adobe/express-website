@@ -267,7 +267,7 @@ export default async function decorate($block) {
     other: [],
   };
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length === 1) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length <= 0) {
     buildStandardPayload($block, payload);
   } else {
     buildPayloadFromBlock($block, payload);
