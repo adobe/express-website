@@ -11,7 +11,7 @@
  */
 
 import {
-  createTag, getIcon, getIconElement, getMetadata, createOptimizedPicture, getMeta
+  createTag, getIcon, getIconElement, getMetadata,
 } from '../../scripts/scripts.js';
 
 const imageFiles = [
@@ -68,16 +68,18 @@ function buildStandardPayload($block, payload) {
   if (payload.userAgent === 'unknown') {
     payload.heading = 'Express it on your mobile devices.';
   }
-  // load default copy
+  // load default content
   if (payload.userAgent === 'iOS') {
+    payload.ratingScore = getMetadata('apple-store-rating-score');
+    payload.ratingCount = getMetadata('apple-store-rating-count');
     payload.copy = 'Install the Adobe Express app on your iPad or iPhone';
   }
   if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+    payload.ratingScore = getMetadata('google-store-rating-score');
+    payload.ratingCount = getMetadata('google-store-rating-count');
     payload.copy = 'Install the Adobe Express app on your phone or tablet';
   }
-  // load ratings score
-  payload.ratingScore = getMetadata('app-rating-score');
-  payload.ratingCount = getMetadata('app-rating-count');
+
   payload.images = imageFiles.map((imageUrl) => createStandardImage(imageUrl));
 }
 
@@ -109,8 +111,14 @@ function buildPayloadFromBlock($block, payload) {
           payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
           break;
         case 'Rating Score':
-          payload.ratingScore = parseFloat($divs[1].textContent);
-          payload.ratingCount = $divs[3].textContent;
+          if (payload.userAgent === 'iOS') {
+            payload.ratingScore = getMetadata('apple-store-rating-score');
+            payload.ratingCount = getMetadata('apple-store-rating-count');
+          }
+          if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+            payload.ratingScore = getMetadata('google-store-rating-score');
+            payload.ratingCount = getMetadata('google-store-rating-count');
+          }
           break;
         case 'Images':
           payload.images = $divs[1].querySelectorAll('picture');
@@ -211,7 +219,7 @@ function decorateGallery($block, payload) {
 }
 
 function decorateAppStoreIcon($block, payload) {
-  const $iconWrapper = createTag('a', { href: payload.badgeLink });
+  const $iconWrapper = createTag('a', { href: payload.badgeLink, class: 'badge' });
 
   if (payload.userAgent === 'iOS') {
     $iconWrapper.append(getIconElement('apple-store'));
@@ -259,7 +267,7 @@ export default async function decorate($block) {
     other: [],
   };
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length === 1) {
     buildStandardPayload($block, payload);
   } else {
     buildPayloadFromBlock($block, payload);
