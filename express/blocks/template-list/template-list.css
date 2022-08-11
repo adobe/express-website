@@ -381,6 +381,9 @@ main .template-list.flex-masonry .template.appear {
   opacity: 1;
 }
 
+main .template-list-fullwidth-container .load-more-button {
+}
+
 @media (min-width: 900px) {
   main .template-list-container > div,
   main .template-list-fourcols-container > div,

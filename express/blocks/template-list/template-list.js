@@ -17,7 +17,7 @@ import {
   createTag,
   decorateMain,
   getIconElement,
-  getLocale,
+  getLocale, getMetadata,
   linkImage,
   toClassName,
 } from '../../scripts/scripts.js';
@@ -25,8 +25,10 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
+let position = 0;
+
 function fetchTemplates() {
-  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&type=free')
+  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&premium=false&locales=en')
     // eslint-disable-next-line no-underscore-dangle
     .then((response) => response.json()).then((response) => response._embedded.results);
 }
@@ -174,10 +176,14 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  $block.innerHTML = '';
+  let templates;
 
-  const templates = await normalizeFetchedTemplates();
-  // const templates = Array.from($block.children);
+  if (['yes', 'true', 'on'].includes(getMetadata('api-powered-grid').toLowerCase())) {
+    $block.innerHTML = '';
+    templates = await normalizeFetchedTemplates();
+  } else {
+    templates = Array.from($block.children);
+  }
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
     const $titleRow = templates.shift();
@@ -333,6 +339,16 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
+function decorateLoadMoreButton($block) {
+  const buttonDiv = $block.parentElement.parentElement.querySelector('p:last-of-type');
+  buttonDiv.classList.add('load-more-button');
+
+  buttonDiv.addEventListener('click',
+    async () => {
+      await decorateTemplateList($block);
+    });
+}
+
 export default async function decorate($block) {
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
@@ -340,5 +356,9 @@ export default async function decorate($block) {
     buildCarousel(':scope > .template', $block, true);
   } else {
     addAnimationToggle($block);
+  }
+
+  if (['yes', 'true', 'on'].includes(getMetadata('api-powered-grid').toLowerCase())) {
+    decorateLoadMoreButton($block);
   }
 }
