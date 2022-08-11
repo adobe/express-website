@@ -66,8 +66,6 @@ function buildStandardPayload($block, payload) {
   $orToLink.textContent = 'bit.ly/3uWjWJC';
   $copy.append($orToLink);
   payload.copyParagraphs.push($subHeading, $copy);
-  payload.ratingScore = getMetadata('app-rating-score');
-  payload.ratingCount = getMetadata('app-rating-count');
   payload.image = createStandardImage('express/blocks/app-store-blade/generic-foreground-image.png');
   payload.image.classList.add('foreground-image');
   payload.QRCode = createStandardImage('express/blocks/app-store-blade/mobileappsblade_jdi_standard.png');
@@ -90,10 +88,6 @@ function buildPayloadFromBlock($block, payload) {
         break;
       case 'Show Rating?':
         payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
-        break;
-      case 'Rating Score':
-        payload.ratingScore = parseFloat($divs[1].textContent);
-        payload.ratingCount = $divs[3].textContent;
         break;
       case 'Image':
         payload.image = $divs[1].querySelector('picture');
@@ -193,8 +187,8 @@ export default function decorate($block) {
     heading: '',
     copyParagraphs: [],
     showRating: true,
-    ratingScore: 0,
-    ratingCount: '',
+    ratingScore: getMetadata('apple-store-rating-score'),
+    ratingCount: getMetadata('apple-store-rating-count'),
     image: '',
     QRCode: '',
     badgeLinks: {
@@ -205,7 +199,7 @@ export default function decorate($block) {
     other: [],
   };
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length <= 0) {
     buildStandardPayload($block, payload);
   } else {
     buildPayloadFromBlock($block, payload);
