@@ -26,7 +26,7 @@ import { Masonry } from '../shared/masonry.js';
 import { buildCarousel } from '../shared/carousel.js';
 
 function fetchTemplates() {
-  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount')
+  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&type=free')
     // eslint-disable-next-line no-underscore-dangle
     .then((response) => response.json()).then((response) => response._embedded.results);
 }
