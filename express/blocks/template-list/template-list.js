@@ -27,15 +27,15 @@ import { buildCarousel } from '../shared/carousel.js';
 
 let templatesHolder = [];
 
-function fetchTemplates() {
-  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&sort=mostremixed&type=free&locale=en&limit=70&offset=0')
+function fetchTemplates(offset) {
+  return fetch(`https://www.adobe.com/cc-express-search-api?q=flyer&sort=mostremixed&type=free&locale=en&limit=70&offset=${offset}`)
   // return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&premium=false&locales=en&limit=70')
     // eslint-disable-next-line no-underscore-dangle
     .then((response) => response.json()).then((response) => response._embedded.results);
 }
 
 async function normalizeFetchedTemplates() {
-  const templateFetched = await fetchTemplates();
+  const templateFetched = await fetchTemplates(templatesHolder.length - 1);
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
