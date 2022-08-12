@@ -352,8 +352,8 @@ function decorateLoadMoreButton($block, $loadMore) {
 
   $loadMoreButton.addEventListener('click',
     async () => {
-      $block.innerHTML = '';
-      await decorateTemplateList($block);
+      await decorateTemplateList($block)
+        .then($block.innerHTML = '');
       if ($block.classList.contains('horizontal')) {
         /* carousel */
         buildCarousel(':scope > .template', $block, true);
