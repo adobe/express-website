@@ -17,7 +17,7 @@ import {
   createTag,
   decorateMain,
   getIconElement,
-  getLocale, getMetadata,
+  getLocale,
   linkImage,
   toClassName,
 } from '../../scripts/scripts.js';
@@ -25,10 +25,11 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-let position = 0;
+let templatesHolder = [];
 
 function fetchTemplates() {
-  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&premium=false&locales=en')
+  return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&sort=mostremixed&type=free&locale=en&limit=70&offset=0')
+  // return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&premium=false&locales=en&limit=70')
     // eslint-disable-next-line no-underscore-dangle
     .then((response) => response.json()).then((response) => response._embedded.results);
 }
@@ -47,7 +48,10 @@ async function normalizeFetchedTemplates() {
     ['format', 'dimension', 'size'].forEach((param) => {
       template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
     });
-    const $picture = createTag('img', { src: template.rendition.href });
+    const $picture = createTag('img', {
+      src: template.rendition.href,
+      alt: template.title,
+    });
     const $buttonWrapper = createTag('div', { class: 'button-container' });
     const $button = createTag('a', {
       href: template.branchURL,
@@ -56,9 +60,10 @@ async function normalizeFetchedTemplates() {
     });
 
     $button.textContent = 'Edit this template';
-    $pictureWrapper.append($picture);
-    $buttonWrapper.append($button);
-    $template.append($pictureWrapper, $buttonWrapper);
+    $pictureWrapper.insertAdjacentElement('beforeend', $picture);
+    $buttonWrapper.insertAdjacentElement('beforeend', $button);
+    $template.insertAdjacentElement('beforeend', $pictureWrapper);
+    $template.insertAdjacentElement('beforeend', $buttonWrapper);
     return $template;
   });
 }
@@ -121,6 +126,14 @@ async function fetchBlueprint(pathname) {
 }
 
 export async function decorateTemplateList($block) {
+  if ($block.classList.contains('apipowered')) {
+    templatesHolder = templatesHolder.concat(await normalizeFetchedTemplates());
+    templatesHolder.forEach((template) => {
+      const clone = template.cloneNode(true);
+      $block.append(clone);
+    });
+  }
+
   let rows = $block.children.length;
   const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
@@ -176,15 +189,8 @@ export async function decorateTemplateList($block) {
     }
   }
 
-  let templates;
+  const templates = Array.from($block.children);
 
-  if (['yes', 'true', 'on'].includes(getMetadata('api-powered-grid').toLowerCase())) {
-    $block.innerHTML = '';
-    templates = await normalizeFetchedTemplates();
-  } else {
-    templates = Array.from($block.children);
-  }
-  // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
@@ -339,17 +345,50 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
-function decorateLoadMoreButton($block) {
-  const buttonDiv = $block.parentElement.parentElement.querySelector('p:last-of-type');
-  buttonDiv.classList.add('load-more-button');
+function decorateLoadMoreButton($block, $loadMore) {
+  $block.insertAdjacentElement('afterend', $loadMore);
+  const $loadMoreButton = $loadMore.querySelector('.load-more-button');
+  $loadMoreButton.textContent = '+';
 
-  buttonDiv.addEventListener('click',
+  $loadMoreButton.addEventListener('click',
     async () => {
+      $block.innerHTML = '';
       await decorateTemplateList($block);
+      if ($block.classList.contains('horizontal')) {
+        /* carousel */
+        buildCarousel(':scope > .template', $block, true);
+      } else {
+        addAnimationToggle($block);
+      }
     });
 }
 
+function cacheLoadMoreButton($block) {
+  const $loadMoreDiv = createTag('div', { class: 'load-more' });
+  const $loadMoreButton = createTag('button', { class: 'load-more-button' });
+  const $loadMoreText = createTag('p', { class: 'load-more-text' });
+  $loadMoreDiv.append($loadMoreButton, $loadMoreText);
+  if (!$block.querySelector(':scope > div:last-of-type').querySelector('img')) {
+    $loadMoreText.textContent = $block.querySelector(':scope > div:last-of-type').textContent;
+  } else {
+    $loadMoreText.textContent = 'Load more';
+  }
+  $block.querySelector(':scope > div:last-of-type').remove();
+  return $loadMoreDiv;
+}
+
+function cacheCreateTemplate($block) {
+  templatesHolder.push($block.children[0]);
+  $block.children[0].remove();
+}
+
 export default async function decorate($block) {
+  let $loadMore;
+  if ($block.classList.contains('apipowered')) {
+    cacheCreateTemplate($block);
+    $loadMore = cacheLoadMoreButton($block);
+  }
+
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
     /* carousel */
@@ -358,7 +397,7 @@ export default async function decorate($block) {
     addAnimationToggle($block);
   }
 
-  if (['yes', 'true', 'on'].includes(getMetadata('api-powered-grid').toLowerCase())) {
-    decorateLoadMoreButton($block);
+  if ($block.classList.contains('apipowered')) {
+    decorateLoadMoreButton($block, $loadMore);
   }
 }

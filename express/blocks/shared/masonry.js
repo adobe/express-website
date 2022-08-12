@@ -58,7 +58,6 @@ export class Masonry {
     if (colWidth === 185) {
       this.columnWidth = colWidth - 10;
     }
-    // this.columnWidth = colWidth - (colWidth === 175 ? 10 : 4); // padding/margin adjustment
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
@@ -114,7 +113,7 @@ export class Masonry {
     let mediaWidth = 0;
     let calculatedHeight = 0;
 
-    const img = $cell.querySelector('picture > img');
+    const img = $cell.querySelector('img');
     if (img) {
       mediaHeight = img.naturalHeight;
       mediaWidth = img.naturalWidth;
@@ -207,11 +206,11 @@ export class Masonry {
     while (workList.length > 0) {
       for (let i = 0; i < 5 && i < workList.length; i += 1) {
         const $cell = workList[i];
-        const $image = $cell.querySelector(':scope picture > img');
+        const $image = $cell.querySelector(':scope > img');
         if ($image) $image.setAttribute('loading', 'eager');
       }
       const $cell = workList[0];
-      const $image = $cell.querySelector(':scope picture > img');
+      const $image = $cell.querySelector(':scope > img');
       if ($image && !$image.complete) {
         // continue when image is loaded
         $image.addEventListener('load', () => {
