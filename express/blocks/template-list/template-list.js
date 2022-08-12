@@ -325,7 +325,6 @@ export async function decorateTemplateList($block) {
   if (!$block.classList.contains('horizontal')) {
     if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
-      // console.log(`masonry-rows: ${rows}`);
       const cells = Array.from($block.children);
       $block.classList.remove('masonry');
       $block.classList.add('flex-masonry');
@@ -352,6 +351,7 @@ function decorateLoadMoreButton($block, $loadMore) {
 
   $loadMoreButton.addEventListener('click',
     async () => {
+      const scrollPosition = window.scrollY;
       await decorateTemplateList($block)
         .then($block.innerHTML = '');
       if ($block.classList.contains('horizontal')) {
@@ -360,6 +360,11 @@ function decorateLoadMoreButton($block, $loadMore) {
       } else {
         addAnimationToggle($block);
       }
+      window.scrollTo({
+        top: scrollPosition,
+        left: 0,
+        behavior: 'smooth',
+      });
     });
 }
 
