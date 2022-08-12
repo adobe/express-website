@@ -226,21 +226,21 @@ main .template-list .template:not(.placeholder) > div:first-of-type {
   line-height: 0;
 }
 
-main .template-list.horizontal .template:not(.placeholder) picture > img,
+main .template-list.horizontal .template:not(.placeholder) img,
 main .template-list.horizontal .template:not(.placeholder) video,
-main .template-list.sixcols .template:not(.placeholder) picture > img,
+main .template-list.sixcols .template:not(.placeholder) img,
 main .template-list.sixcols .template:not(.placeholder) video,
-main .template-list.fullwidth .template:not(.placeholder) picture > img,
+main .template-list.fullwidth .template:not(.placeholder) img,
 main .template-list.fullwidth .template:not(.placeholder) video {
   transition: transform .3s ease-in-out;
   will-change: transform;
 }
 
-main .template-list.horizontal .template:hover:not(.placeholder) picture > img,
+main .template-list.horizontal .template:hover:not(.placeholder) img,
 main .template-list.horizontal .template:hover:not(.placeholder) video,
-main .template-list.sixcols .template:hover:not(.placeholder) picture > img,
+main .template-list.sixcols .template:hover:not(.placeholder) img,
 main .template-list.sixcols .template:hover:not(.placeholder) video,
-main .template-list.fullwidth .template:hover:not(.placeholder) picture > img,
+main .template-list.fullwidth .template:hover:not(.placeholder) img,
 main .template-list.fullwidth .template:hover:not(.placeholder) video {
   transform: scale(1.1);
 }
