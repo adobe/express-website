@@ -3,20 +3,20 @@ main .template-list-horizontal-fullwidth-container {
 }
 
 main .template-list-fullwidth-container > div,
-main .template-list-fullwidth--apipowered-container > div {
+main .template-list-fullwidth-apipowered-container > div {
   max-width: none;
   padding: 0;
 }
 
 main .template-list-fullwidth-container > .default-content-wrapper,
-main .template-list-fullwidth--apipowered-container > .default-content-wrapper {
+main .template-list-fullwidth-apipowered-container > .default-content-wrapper {
   padding: 0 15px;
 }
 
 main .template-list-fullwidth-container .default-content-wrapper h2,
 main .template-list-fullwidth-container .default-content-wrapper p,
-main .template-list-fullwidth--apipowered-container .default-content-wrapper h2,
-main .template-list-fullwidth--apipowered-container .default-content-wrapper p {
+main .template-list-fullwidth-apipowered-container .default-content-wrapper h2,
+main .template-list-fullwidth-apipowered-container .default-content-wrapper p {
   margin: 0;
   text-align: left;
 }
@@ -385,11 +385,11 @@ main .template-list.flex-masonry .template.appear {
   opacity: 1;
 }
 
-main .template-list-fullwidth--apipowered-container .template-list-wrapper {
+main .template-list-fullwidth-apipowered-container .template-list-wrapper {
   position: relative;
 }
 
-main .template-list-fullwidth--apipowered-container .load-more {
+main .template-list-fullwidth-apipowered-container .load-more {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -403,7 +403,7 @@ main .template-list-fullwidth--apipowered-container .load-more {
   background: linear-gradient(#ffffff00, #ffffff, #ffffff);
 }
 
-main .template-list-fullwidth--apipowered-container .load-more-button {
+main .template-list-fullwidth-apipowered-container .load-more-button {
   width: 88px;
   cursor: pointer;
   background: linear-gradient(45deg, #e263f2, #f36979);
@@ -414,11 +414,11 @@ main .template-list-fullwidth--apipowered-container .load-more-button {
   transition: filter 0.2s;
 }
 
-main .template-list-fullwidth--apipowered-container .load-more-button:hover {
+main .template-list-fullwidth-apipowered-container .load-more-button:hover {
   filter: brightness(0.95);
 }
 
-main .template-list-fullwidth--apipowered-container .load-more-text {
+main .template-list-fullwidth-apipowered-container .load-more-text {
   margin-top: 8px;
   font-weight: 700;
   font-size: 18px;
@@ -437,8 +437,8 @@ main .template-list-fullwidth--apipowered-container .load-more-text {
 
   main .template-list-fullwidth-container > div,
   main .template-list-fullwidth-container > .default-content-wrapper,
-  main .template-list-fullwidth--apipowered-container > div,
-  main .template-list-fullwidth--apipowered-container > .default-content-wrapper {
+  main .template-list-fullwidth-apipowered-container > div,
+  main .template-list-fullwidth-apipowered-container > .default-content-wrapper {
     max-width: none;
     padding: 0 28px;
   }
@@ -497,7 +497,7 @@ main .template-list-fullwidth--apipowered-container .load-more-text {
   }
 
   main .template-list-fullwidth-container > div,
-  main .template-list-fullwidth--apipowered-container > div{
+  main .template-list-fullwidth-apipowered-container > div{
     max-width: none;
   }
 

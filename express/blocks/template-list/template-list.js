@@ -15,7 +15,7 @@ import {
   addAnimationToggle,
   addSearchQueryToHref,
   createTag,
-  decorateMain,
+  decorateMain, fetchPlaceholders,
   getIconElement,
   getLocale,
   linkImage,
@@ -25,17 +25,20 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-let templatesHolder = [];
+const queryCache = {
+  templates: [],
+  queryString: '',
+};
 
-function fetchTemplates(offset) {
-  return fetch(`https://www.adobe.com/cc-express-search-api?q=flyer&sort=mostremixed&type=free&locale=en&limit=70&offset=${offset}`)
-  // return fetch('https://www.adobe.com/cc-express-search-api?q=flyer&schema=template&orderBy=-remixCount&premium=false&locales=en&limit=70')
+function fetchTemplates(queryString, offset) {
+  // return fetch(`https://www.adobe.com/cc-express-search-api?q=${queryString}&schema=template&sort=mostremixed&type=free&locale=en&limit=70&offset=${offset}`)
+  return fetch(`https://www.adobe.com/cc-express-search-api?q=${queryString}&schema=template&orderBy=-remixCount&premium=false&locales=en&limit=70&offset=${offset}`)
     // eslint-disable-next-line no-underscore-dangle
     .then((response) => response.json()).then((response) => response._embedded.results);
 }
 
-async function normalizeFetchedTemplates() {
-  const templateFetched = await fetchTemplates(templatesHolder.length - 1);
+async function normalizeFetchedTemplates(queryString) {
+  const templateFetched = await fetchTemplates(queryString, queryCache.templates.length - 1);
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
@@ -127,8 +130,12 @@ async function fetchBlueprint(pathname) {
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
-    templatesHolder = templatesHolder.concat(await normalizeFetchedTemplates());
-    templatesHolder.forEach((template) => {
+    if ($block.children[0].querySelectorAll('div')[0].textContent === 'Search query') {
+      queryCache.queryString = $block.children[0].querySelectorAll('div')[1].textContent;
+    }
+    const { templates, queryString } = queryCache;
+    queryCache.templates = templates.concat(await normalizeFetchedTemplates(queryString));
+    queryCache.templates.forEach((template) => {
       const clone = template.cloneNode(true);
       $block.append(clone);
     });
@@ -344,22 +351,27 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
-function decorateLoadMoreButton($block, $loadMore) {
-  $block.insertAdjacentElement('afterend', $loadMore);
-  const $loadMoreButton = $loadMore.querySelector('.load-more-button');
+// function decorateNewTamplates($block) {
+//
+// }
+
+function decorateLoadMoreButton($block) {
+  const $loadMoreDiv = createTag('div', { class: 'load-more' });
+  const $loadMoreButton = createTag('button', { class: 'load-more-button' });
+  const $loadMoreText = createTag('p', { class: 'load-more-text' });
+  $loadMoreDiv.append($loadMoreButton, $loadMoreText);
+  fetchPlaceholders().then((placeholders) => {
+    $loadMoreText.textContent = placeholders['load-more'];
+  });
+  $block.insertAdjacentElement('afterend', $loadMoreDiv);
   $loadMoreButton.textContent = '+';
 
   $loadMoreButton.addEventListener('click',
     async () => {
       const scrollPosition = window.scrollY;
+      // decorateNewTamplates($block);
       await decorateTemplateList($block)
         .then($block.innerHTML = '');
-      if ($block.classList.contains('horizontal')) {
-        /* carousel */
-        buildCarousel(':scope > .template', $block, true);
-      } else {
-        addAnimationToggle($block);
-      }
       window.scrollTo({
         top: scrollPosition,
         left: 0,
@@ -368,30 +380,14 @@ function decorateLoadMoreButton($block, $loadMore) {
     });
 }
 
-function cacheLoadMoreButton($block) {
-  const $loadMoreDiv = createTag('div', { class: 'load-more' });
-  const $loadMoreButton = createTag('button', { class: 'load-more-button' });
-  const $loadMoreText = createTag('p', { class: 'load-more-text' });
-  $loadMoreDiv.append($loadMoreButton, $loadMoreText);
-  if (!$block.querySelector(':scope > div:last-of-type').querySelector('img')) {
-    $loadMoreText.textContent = $block.querySelector(':scope > div:last-of-type').textContent;
-  } else {
-    $loadMoreText.textContent = 'Load more';
-  }
-  $block.querySelector(':scope > div:last-of-type').remove();
-  return $loadMoreDiv;
-}
-
-function cacheCreateTemplate($block) {
-  templatesHolder.push($block.children[0]);
-  $block.children[0].remove();
+function cacheCreatedTemplate($block) {
+  queryCache.templates.push($block.children[$block.children.length - 1]);
+  $block.children[$block.children.length - 1].remove();
 }
 
 export default async function decorate($block) {
-  let $loadMore;
   if ($block.classList.contains('apipowered')) {
-    cacheCreateTemplate($block);
-    $loadMore = cacheLoadMoreButton($block);
+    cacheCreatedTemplate($block);
   }
 
   await decorateTemplateList($block);
@@ -403,6 +399,6 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('apipowered')) {
-    decorateLoadMoreButton($block, $loadMore);
+    decorateLoadMoreButton($block);
   }
 }
