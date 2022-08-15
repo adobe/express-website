@@ -25,9 +25,10 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-const queryCache = {
+const cache = {
   templates: [],
   queryString: '',
+  masonry: undefined,
 };
 
 function fetchTemplates(queryString, offset) {
@@ -38,7 +39,7 @@ function fetchTemplates(queryString, offset) {
 }
 
 async function normalizeFetchedTemplates(queryString) {
-  const templateFetched = await fetchTemplates(queryString, queryCache.templates.length - 1);
+  const templateFetched = await fetchTemplates(queryString, cache.templates.length - 1);
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
@@ -128,14 +129,112 @@ async function fetchBlueprint(pathname) {
   return ($main);
 }
 
+function populateTemplates($block, templates) {
+  for (let $tmplt of templates) {
+    const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
+    const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
+    const $link = $linkContainer.querySelector(':scope a');
+    if ($link) {
+      const $a = createTag('a', {
+        href: $link.href ? addSearchQueryToHref($link.href) : '#',
+      });
+
+      $a.append(...$tmplt.childNodes);
+      $tmplt.remove();
+      $tmplt = $a;
+      $block.append($a);
+
+      // convert A to SPAN
+      const $newLink = createTag('span', { class: 'template-link' });
+      $newLink.append($link.textContent);
+
+      $linkContainer.innerHTML = '';
+      $linkContainer.append($newLink);
+    }
+
+    if ($tmplt.children.length === 3) {
+      // look for for options in last cell
+      const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
+      const option = $overlayCell.textContent.trim();
+      if (option) {
+        if (isPlaceholder) {
+          // add aspect ratio to template
+          const sep = option.includes(':') ? ':' : 'x';
+          const ratios = option.split(sep).map((e) => +e);
+          const width = $block.classList.contains('sixcols') ? 165 : 200;
+          if (ratios[1]) {
+            const height = (ratios[1] / ratios[0]) * width;
+            $tmplt.style = `height: ${height - 21}px`;
+            if (width / height > 1.3) {
+              $tmplt.classList.add('wide');
+            }
+          }
+        } else {
+          // add icon to 1st cell
+          const $icon = getIconElement(toClassName(option));
+          $icon.setAttribute('title', option);
+          $tmplt.children[0].append($icon);
+        }
+      }
+      $overlayCell.remove();
+    }
+
+    if (!$tmplt.querySelectorAll(':scope > div > *').length) {
+      // remove empty row
+      $tmplt.remove();
+    }
+    $tmplt.classList.add('template');
+
+    // wrap "linked images" with link
+    const $imgLink = $tmplt.querySelector(':scope > div:first-of-type a');
+    if ($imgLink) {
+      const $parent = $imgLink.closest('div');
+      if (!$imgLink.href.includes('.mp4')) {
+        linkImage($parent);
+      } else {
+        let videoLink = $imgLink.href;
+        if (videoLink.includes('/media_')) {
+          videoLink = `./media_${videoLink.split('/media_')[1]}`;
+        }
+        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
+        const $picture = $tmplt.querySelector('picture');
+        if ($picture) {
+          const $img = $tmplt.querySelector('img');
+          const $video = createTag('video', {
+            playsinline: '',
+            autoplay: '',
+            loop: '',
+            muted: '',
+            poster: $img.getAttribute('src'),
+            title: $img.getAttribute('alt'),
+          });
+          $video.append(createTag('source', {
+            src: videoLink,
+            type: 'video/mp4',
+          }));
+          $parent.replaceChild($video, $picture);
+          $imgLink.remove();
+          $video.addEventListener('canplay', () => {
+            $video.muted = true;
+            $video.play();
+          });
+        }
+      }
+    }
+    if (isPlaceholder) {
+      $tmplt.classList.add('placeholder');
+    }
+  }
+}
+
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
     if ($block.children[0].querySelectorAll('div')[0].textContent === 'Search query') {
-      queryCache.queryString = $block.children[0].querySelectorAll('div')[1].textContent;
+      cache.queryString = $block.children[0].querySelectorAll('div')[1].textContent;
     }
-    const { templates, queryString } = queryCache;
-    queryCache.templates = templates.concat(await normalizeFetchedTemplates(queryString));
-    queryCache.templates.forEach((template) => {
+    const { templates, queryString } = cache;
+    cache.templates = templates.concat(await normalizeFetchedTemplates(queryString));
+    cache.templates.forEach((template) => {
       const clone = template.cloneNode(true);
       $block.append(clone);
     });
@@ -233,102 +332,8 @@ export async function decorateTemplateList($block) {
   //       +- "Edit this template"
   //
   // make copy of children to avoid modifying list while looping
-  for (let $tmplt of templates) {
-    const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
-    const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
-    const $link = $linkContainer.querySelector(':scope a');
-    if ($link) {
-      const $a = createTag('a', {
-        href: $link.href ? addSearchQueryToHref($link.href) : '#',
-      });
 
-      $a.append(...$tmplt.childNodes);
-      $tmplt.remove();
-      $tmplt = $a;
-      $block.append($a);
-
-      // convert A to SPAN
-      const $newLink = createTag('span', { class: 'template-link' });
-      $newLink.append($link.textContent);
-
-      $linkContainer.innerHTML = '';
-      $linkContainer.append($newLink);
-    }
-
-    if ($tmplt.children.length === 3) {
-      // look for for options in last cell
-      const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
-      const option = $overlayCell.textContent.trim();
-      if (option) {
-        if (isPlaceholder) {
-          // add aspect ratio to template
-          const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep).map((e) => +e);
-          const width = $block.classList.contains('sixcols') ? 165 : 200;
-          if (ratios[1]) {
-            const height = (ratios[1] / ratios[0]) * width;
-            $tmplt.style = `height: ${height - 21}px`;
-            if (width / height > 1.3) {
-              $tmplt.classList.add('wide');
-            }
-          }
-        } else {
-          // add icon to 1st cell
-          const $icon = getIconElement(toClassName(option));
-          $icon.setAttribute('title', option);
-          $tmplt.children[0].append($icon);
-        }
-      }
-      $overlayCell.remove();
-    }
-
-    if (!$tmplt.querySelectorAll(':scope > div > *').length) {
-      // remove empty row
-      $tmplt.remove();
-    }
-    $tmplt.classList.add('template');
-
-    // wrap "linked images" with link
-    const $imgLink = $tmplt.querySelector(':scope > div:first-of-type a');
-    if ($imgLink) {
-      const $parent = $imgLink.closest('div');
-      if (!$imgLink.href.includes('.mp4')) {
-        linkImage($parent);
-      } else {
-        let videoLink = $imgLink.href;
-        if (videoLink.includes('/media_')) {
-          videoLink = `./media_${videoLink.split('/media_')[1]}`;
-        }
-        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
-        const $picture = $tmplt.querySelector('picture');
-        if ($picture) {
-          const $img = $tmplt.querySelector('img');
-          const $video = createTag('video', {
-            playsinline: '',
-            autoplay: '',
-            loop: '',
-            muted: '',
-            poster: $img.getAttribute('src'),
-            title: $img.getAttribute('alt'),
-          });
-          $video.append(createTag('source', {
-            src: videoLink,
-            type: 'video/mp4',
-          }));
-          $parent.replaceChild($video, $picture);
-          $imgLink.remove();
-          $video.addEventListener('canplay', () => {
-            $video.muted = true;
-            $video.play();
-          });
-        }
-      }
-    }
-    if (isPlaceholder) {
-      $tmplt.classList.add('placeholder');
-    }
-  }
-
+  populateTemplates($block, templates);
   if (!$block.classList.contains('horizontal')) {
     if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
@@ -337,6 +342,7 @@ export async function decorateTemplateList($block) {
       $block.classList.add('flex-masonry');
 
       const masonry = new Masonry($block, cells);
+      cache.masonry = masonry;
       masonry.draw();
       window.addEventListener('resize', () => {
         masonry.draw();
@@ -351,9 +357,21 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
-// function decorateNewTamplates($block) {
-//
-// }
+async function decorateNewTamplates($block) {
+  const { templates, queryString, masonry } = cache;
+  const newTemplates = await normalizeFetchedTemplates(queryString);
+
+  cache.templates = templates.concat(newTemplates);
+  populateTemplates($block, newTemplates);
+  newTemplates.forEach((template) => {
+    const clone = template.cloneNode(true);
+    $block.append(clone);
+  });
+
+  const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
+  masonry.cells = masonry.cells.concat(newCells);
+  masonry.draw(newCells);
+}
 
 function decorateLoadMoreButton($block) {
   const $loadMoreDiv = createTag('div', { class: 'load-more' });
@@ -366,22 +384,21 @@ function decorateLoadMoreButton($block) {
   $block.insertAdjacentElement('afterend', $loadMoreDiv);
   $loadMoreButton.textContent = '+';
 
-  $loadMoreButton.addEventListener('click',
-    async () => {
-      const scrollPosition = window.scrollY;
-      // decorateNewTamplates($block);
-      await decorateTemplateList($block)
-        .then($block.innerHTML = '');
-      window.scrollTo({
-        top: scrollPosition,
-        left: 0,
-        behavior: 'smooth',
-      });
+  $loadMoreButton.addEventListener('click', async () => {
+    $loadMoreButton.classList.add('disabled');
+    const scrollPosition = window.scrollY;
+    await decorateNewTamplates($block);
+    window.scrollTo({
+      top: scrollPosition,
+      left: 0,
+      behavior: 'smooth',
     });
+    $loadMoreButton.classList.remove('disabled');
+  });
 }
 
 function cacheCreatedTemplate($block) {
-  queryCache.templates.push($block.children[$block.children.length - 1]);
+  cache.templates.push($block.children[$block.children.length - 1]);
   $block.children[$block.children.length - 1].remove();
 }
 

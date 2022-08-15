@@ -418,6 +418,11 @@ main .template-list-fullwidth-apipowered-container .load-more-button:hover {
   filter: brightness(0.95);
 }
 
+main .template-list-fullwidth-apipowered-container .load-more-button.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 main .template-list-fullwidth-apipowered-container .load-more-text {
   margin-top: 8px;
   font-weight: 700;
