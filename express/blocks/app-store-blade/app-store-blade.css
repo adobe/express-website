@@ -45,6 +45,7 @@ main .app-store-blade-container .main-container .body {
 
 main .app-store-blade-container .main-container .qr-code img {
     object-fit: contain;
+    max-width: 167px;
     height: 100%;
     padding-right: 24px;
     display: block;
@@ -84,6 +85,7 @@ main .app-store-blade-container .main-container .copy-wrapper .or-to-link.copied
 }
 
 main .app-store-blade-container .main-container .copy-wrapper .or-to-link a {
+    margin-left: 4px;
     font-weight: 700;
     color: var(--color-white);
     pointer-events: none;
