@@ -58,12 +58,12 @@ function createStandardImage(src, alt = '', eager = false, breakpoints = [{ medi
 function buildStandardPayload($block, payload) {
   const $subHeading = createTag('p');
   const $copy = createTag('p');
-  const $orToLink = createTag('a', { href: 'bit.ly/3uWjWJC' });
+  const $orToLink = createTag('a', { href: 'bit.ly/3zWOkVU' });
 
   payload.heading = 'Create on the go with the Adobe Express app.';
   $subHeading.textContent = 'Scan QR code to download';
   $copy.textContent = 'Or, go to ';
-  $orToLink.textContent = 'bit.ly/3uWjWJC';
+  $orToLink.textContent = 'bit.ly/3zWOkVU';
   $copy.append($orToLink);
   payload.copyParagraphs.push($subHeading, $copy);
   payload.image = createStandardImage('express/blocks/app-store-blade/generic-foreground-image.png');
