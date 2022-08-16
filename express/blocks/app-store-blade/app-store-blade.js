@@ -11,7 +11,7 @@
  */
 
 import {
-  createTag, getIcon, getIconElement, getMetadata,
+  createTag, fetchPlaceholders, getIcon, getIconElement, getMetadata,
 } from '../../scripts/scripts.js';
 
 /**
@@ -60,7 +60,7 @@ function buildStandardPayload($block, payload) {
   const $copy = createTag('p');
   const $orToLink = createTag('a', { href: 'bit.ly/3uWjWJC' });
 
-  payload.heading = 'Create on the go with the Adobe Express app';
+  payload.heading = 'Create on the go with the Adobe Express app.';
   $subHeading.textContent = 'Scan QR code to download';
   $copy.textContent = 'Or, go to ';
   $orToLink.textContent = 'bit.ly/3uWjWJC';
@@ -70,7 +70,7 @@ function buildStandardPayload($block, payload) {
   payload.image.classList.add('foreground-image');
   payload.QRCode = createStandardImage('express/blocks/app-store-blade/mobileappsblade_jdi_standard.png');
   payload.QRCode.classList.add('qr-code');
-  payload.badgeLink = 'https://adobesparkpost.app.link/d9EzZEpk4rb';
+  payload.badgeLink = 'https://adobesparkpost.app.link/eOBwLjVLpsb';
 }
 
 function buildPayloadFromBlock($block, payload) {
@@ -149,6 +149,10 @@ function decorateBlade($block, payload) {
   const $copyWrapper = createTag('div', { class: 'copy-wrapper' });
   const $badgesWrapper = createTag('div', { class: 'badges-wrapper' });
   const $ratingWrapper = createTag('div', { class: 'rating-wrapper' });
+  const appleStoreLink = createTag('a', { href: payload.badgeLink });
+  const googleStoreLink = createTag('a', { href: payload.badgeLink });
+  appleStoreLink.append(getIconElement('apple-store'));
+  googleStoreLink.append(getIconElement('google-store'));
 
   $heading.textContent = payload.heading;
   for (let i = 0; i < payload.copyParagraphs.length; i += 1) {
@@ -162,7 +166,10 @@ function decorateBlade($block, payload) {
       paragraph.classList.add('or-to-link');
       paragraph.append(getIconElement('copy'));
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      $clipboardTag.textContent = 'Copied to clipboard';
+      fetchPlaceholders().then((placeholders) => {
+        $clipboardTag.textContent = placeholders['tag-copied'];
+      });
+
       paragraph.append($clipboardTag);
 
       paragraph.addEventListener('click', () => {
@@ -171,7 +178,7 @@ function decorateBlade($block, payload) {
     }
   }
 
-  $badgesWrapper.append(getIconElement('apple-store'), getIconElement('google-store'));
+  $badgesWrapper.append(appleStoreLink, googleStoreLink);
   $bodyContentWrapper.append($copyWrapper, $badgesWrapper, $ratingWrapper);
   $body.append(payload.QRCode, $bodyContentWrapper);
   $mainContainer.append($heading, $body, payload.image);
@@ -191,10 +198,7 @@ export default function decorate($block) {
     ratingCount: getMetadata('apple-store-rating-count'),
     image: '',
     QRCode: '',
-    badgeLinks: {
-      ios: '',
-      android: '',
-    },
+    badgeLink: '',
     // other contains unwanted elements authored by mistake;
     other: [],
   };
