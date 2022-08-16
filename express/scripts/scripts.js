@@ -1017,54 +1017,6 @@ function addPromotion() {
   }
 }
 
-/**
- *  Load Adobe Clean Han font family for supported locale pages.
- *  Typekit IDs of each locale are consistent with corresponding home pages on adobe.com.
- */
-function loadAdobeCleanHanTypekit() {
-  const KIT_IDS = {
-    jp: 'dvg6awq',
-    kr: 'qjs5sfm',
-    cn: 'puu3xkp',
-    tw: 'jay0ecd',
-  };
-
-  function loadTypekit($el, locale) {
-    const config = {
-      kitId: KIT_IDS[locale],
-      scriptTimeout: 3000,
-      async: true,
-    };
-    const $root = $el.documentElement;
-    const timeout = setTimeout(() => {
-      $root.classList.remove('wf-loading');
-      $root.classList.add('wf-inactive');
-    }, config.scriptTimeout);
-    let loaded = false;
-    let state;
-    $root.classList.add('wf-loading');
-    const scriptSrc = `https://use.typekit.net/${config.kitId}.js`;
-    function onReady() {
-      state = this.readyState;
-      if (loaded) return;
-      if (state && state !== 'complete' && state !== 'loaded') return;
-      loaded = true;
-      clearTimeout(timeout);
-      try {
-        Typekit.load(config);
-      } catch (e) {
-        //
-      }
-    }
-    loadScript(scriptSrc, onReady);
-  }
-
-  const locale = getLocale(window.location);
-  if (Object.keys(KIT_IDS).includes(locale)) {
-    loadTypekit(document, locale);
-  }
-}
-
 function loadMartech() {
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
@@ -1073,7 +1025,6 @@ function loadMartech() {
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
-  loadAdobeCleanHanTypekit();
 }
 
 function loadGnav() {
@@ -2242,6 +2193,67 @@ export async function addFreePlanWidget(elem) {
 }
 
 /**
+ * A gently modified version of the dynamic subsetting loader from Adobe Fonts
+ * @param {string} kitId Typekit ID
+ * @param {HTMLElement} $el HTML element to add the fonts to, default to document
+ */
+function dynamicTypekit(kitId, $el = document) {
+  const config = {
+    kitId,
+    scriptTimeout: 3000,
+    async: true,
+  };
+  const $root = $el.documentElement;
+  const timeout = setTimeout(() => {
+    $root.classList.remove('wf-loading');
+    $root.classList.add('wf-inactive');
+  }, config.scriptTimeout);
+  let loaded = false;
+  let state;
+  $root.classList.add('wf-loading');
+  const scriptSrc = `https://use.typekit.net/${config.kitId}.js`;
+  function onReady() {
+    state = this.readyState;
+    if (loaded) return;
+    if (state && state !== 'complete' && state !== 'loaded') return;
+    loaded = true;
+    clearTimeout(timeout);
+    try {
+      Typekit.load(config);
+    } catch (e) {
+      //
+    }
+  }
+  loadScript(scriptSrc, onReady);
+}
+
+/**
+ * Set the fonts of the page.
+ *
+ * Determines if the font should be a classic CSS integration
+ * or if it should be a JS integration (dynamic subsetting) for CJK.
+ *
+ * @param {string} locale the locale details
+ */
+function loadFonts(locale) {
+  const TK_IDS = {
+    default: { tk: '/express/styles/adobe-clean.css' },
+    jp: { tk: 'dvg6awq' },
+    kr: { tk: 'qjs5sfm' },
+    cn: { tk: 'puu3xkp' },
+    tw: { tk: 'jay0ecd' },
+  };
+  const tkObj = Object.keys(TK_IDS).includes(locale) ? TK_IDS[locale] : TK_IDS.default;
+
+  const tkSplit = tkObj.tk.split('.');
+  if (tkSplit[1] === 'css') {
+    loadCSS(tkObj.tk);
+  } else {
+    dynamicTypekit(tkObj.tk);
+  }
+}
+
+/**
  * loads everything that doesn't need to be delayed.
  */
 async function loadLazy() {
@@ -2252,6 +2264,7 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
+  loadFonts(getLocale(window.location));
   scrollToHash();
   resolveFragments();
   addPromotion();
