@@ -48,7 +48,6 @@ main .app-store-highlight-container .rating-stars .rating-votes {
 }
 
 main .app-store-highlight-container .cards {
-  /*scroll-behavior: smooth;*/
   display: flex;
   gap: 12px;
   padding: 53px 32px;
