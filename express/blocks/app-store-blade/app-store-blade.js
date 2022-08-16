@@ -114,7 +114,7 @@ function handleClipboard($block) {
   const $orToLink = $block.querySelector('.or-to-link');
   const $innerAnchor = $orToLink.querySelector('a');
   if (!$orToLink.classList.contains('copied')) {
-    navigator.clipboard.writeText($innerAnchor.href);
+    navigator.clipboard.writeText($innerAnchor.textContent);
   }
   $orToLink.classList.toggle('copied');
 }
