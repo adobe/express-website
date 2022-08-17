@@ -1,0 +1,83 @@
+main .app-store-highlight-container {
+  padding: 40px 0;
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+main .app-store-highlight-container .content-wrapper {
+  transform: scale(1.2);
+}
+
+main .app-store-highlight-container .heading {
+  font-size: 36px;
+  line-height: 46px;
+  margin-bottom: 8px;
+}
+
+main .app-store-highlight-container .sub-heading {
+  font-size: 12px;
+  line-height: 18px;
+  margin: 0 0 16px;
+}
+
+main .app-store-highlight-container .rating-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+main .app-store-highlight-container .rating-wrapper .icon-editor-choice {
+  width: 115px;
+}
+
+main .app-store-highlight-container .rating-stars {
+  font-size: 12px;
+  line-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main .app-store-highlight-container .rating-stars svg {
+  color: var(--color-premium);
+}
+
+main .app-store-highlight-container .rating-stars .rating-votes {
+  margin-left: 4px;
+}
+
+main .app-store-highlight-container .cards {
+  display: flex;
+  gap: 12px;
+  padding: 53px 32px;
+  overflow: auto;
+  margin: 0 -32px;
+  scrollbar-width: none;  /* Firefox */
+}
+
+main .app-store-highlight-container .cards::-webkit-scrollbar {
+  display: none;
+}
+
+main .app-store-highlight-container .cards .card {
+  position: relative;
+  height: 338px;
+  min-width: 190px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+main .app-store-highlight-container .cards .card img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+main .app-store-highlight-container .icon.icon-apple-store {
+  height: 63px;
+}
+
+main .app-store-highlight-container .app-store-highlight-wrapper {
+  max-width: none;
+}
