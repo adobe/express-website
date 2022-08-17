@@ -189,13 +189,13 @@ function decorateBlade($block, payload) {
   decorateRatings($block, payload);
 }
 
-export default function decorate($block) {
+export default async function decorate($block) {
   const payload = {
     heading: '',
     copyParagraphs: [],
     showRating: true,
-    ratingScore: getMetadata('apple-store-rating-score'),
-    ratingCount: getMetadata('apple-store-rating-count'),
+    ratingScore: '',
+    ratingCount: '',
     image: '',
     QRCode: '',
     badgeLink: '',
@@ -203,7 +203,14 @@ export default function decorate($block) {
     other: [],
   };
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length <= 0) {
+  await fetchPlaceholders()
+    .then((placeholders) => {
+      payload.ratingScore = placeholders['apple-store-rating-score'];
+      payload.ratingCount = placeholders['apple-store-rating-count'];
+    });
+
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks')
+    .toLowerCase()) && $block.children.length <= 0) {
     buildStandardPayload($block, payload);
   } else {
     buildPayloadFromBlock($block, payload);
