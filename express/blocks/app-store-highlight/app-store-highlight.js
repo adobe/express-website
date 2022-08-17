@@ -11,7 +11,7 @@
  */
 
 import {
-  createTag, getIcon, getIconElement, getMetadata,
+  createTag, fetchPlaceholders, getIcon, getIconElement, getMetadata,
 } from '../../scripts/scripts.js';
 
 const imageFiles = [
@@ -68,69 +68,47 @@ function buildStandardPayload($block, payload) {
   if (payload.userAgent === 'unknown') {
     payload.heading = 'Express it on your mobile devices.';
   }
-  // load default content
-  if (payload.userAgent === 'iOS') {
-    payload.ratingScore = getMetadata('apple-store-rating-score');
-    payload.ratingCount = getMetadata('apple-store-rating-count');
-    payload.copy = 'Install the Adobe Express app on your iPad or iPhone';
-  }
-  if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
-    payload.ratingScore = getMetadata('google-store-rating-score');
-    payload.ratingCount = getMetadata('google-store-rating-count');
-    payload.copy = 'Install the Adobe Express app on your phone or tablet';
-  }
 
   payload.images = imageFiles.map((imageUrl) => createStandardImage(imageUrl));
 }
 
 function buildPayloadFromBlock($block, payload) {
-  Array.from($block.children)
-    .forEach(($row) => {
-      const $divs = $row.querySelectorAll('div');
-      switch ($divs[0].textContent) {
-        default:
-          payload.other.push($divs);
-          break;
-        case 'Heading':
-          if (payload.userAgent === 'iOS' || payload.userAgent === 'Android') {
-            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', payload.userAgent);
-          }
-          if (payload.userAgent === 'unknown') {
-            payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
-          }
-          break;
-        case 'Copy':
-          if (payload.userAgent === 'iOS') {
-            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
-          }
-          if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
-            payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
-          }
-          break;
-        case 'Show Rating?':
-          payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
-          break;
-        case 'Rating Score':
-          if (payload.userAgent === 'iOS') {
-            payload.ratingScore = getMetadata('apple-store-rating-score');
-            payload.ratingCount = getMetadata('apple-store-rating-count');
-          }
-          if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
-            payload.ratingScore = getMetadata('google-store-rating-score');
-            payload.ratingCount = getMetadata('google-store-rating-count');
-          }
-          break;
-        case 'Images':
-          payload.images = $divs[1].querySelectorAll('picture');
-          break;
-        case 'Screen Demo':
-          payload.screenDemo = $divs[1].textContent;
-          break;
-        case 'Badge Link':
-          payload.badgeLink = $divs[1].textContent;
-          break;
-      }
-    });
+  for (const $row of Array.from($block.children)) {
+    const $divs = $row.querySelectorAll('div');
+    switch ($divs[0].textContent) {
+      default:
+        payload.other.push($divs);
+        break;
+      case 'Heading':
+        if (payload.userAgent === 'iOS' || payload.userAgent === 'Android') {
+          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', payload.userAgent);
+        }
+        if (payload.userAgent === 'unknown') {
+          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
+        }
+        break;
+      case 'Copy':
+        if (payload.userAgent === 'iOS') {
+          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
+        }
+        if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
+        }
+        break;
+      case 'Show Rating?':
+        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
+        break;
+      case 'Images':
+        payload.images = $divs[1].querySelectorAll('picture');
+        break;
+      case 'Screen Demo':
+        payload.screenDemo = $divs[1].textContent;
+        break;
+      case 'Badge Link':
+        payload.badgeLink = $divs[1].textContent;
+        break;
+    }
+  }
 }
 
 function getMobileOperatingSystem() {
@@ -266,6 +244,18 @@ export default async function decorate($block) {
     // other contains unwanted elements authored by mistake;
     other: [],
   };
+
+  await fetchPlaceholders()
+    .then((placeholders) => {
+      if (payload.userAgent === 'iOS') {
+        payload.ratingScore = placeholders['apple-store-rating-score'];
+        payload.ratingCount = placeholders['apple-store-rating-count'];
+      }
+      if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+        payload.ratingScore = placeholders['google-store-rating-score'];
+        payload.ratingCount = placeholders['google-store-rating-count'];
+      }
+    });
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length <= 0) {
     buildStandardPayload($block, payload);
