@@ -175,11 +175,14 @@ function decorateContent($block, payload) {
 }
 
 function decorateGallery($block, payload) {
-  const $gallery = createTag('div', { class: 'cards' });
+  const $cardsPlatform = createTag('div', { class: 'cards-platform' });
+  const $cards = createTag('div', { class: 'cards' });
+
+  $cardsPlatform.append($cards);
   payload.images.forEach((image) => {
     const $previewContainer = createTag('div', { class: 'card' });
     $previewContainer.append(image);
-    $gallery.append($previewContainer);
+    $cards.append($previewContainer);
   });
 
   const $previewContainer = createTag('div', { class: 'card' });
@@ -191,9 +194,9 @@ function decorateGallery($block, payload) {
     muted: true,
     playsInline: true,
   }));
-  $gallery.append($previewContainer);
+  $cards.append($previewContainer);
 
-  $block.append($gallery);
+  $block.append($cardsPlatform);
 }
 
 function decorateAppStoreIcon($block, payload) {
@@ -211,7 +214,7 @@ function decorateAppStoreIcon($block, payload) {
 
 function initScrollAnimation($block) {
   const $contentWrapper = $block.querySelector('.content-wrapper');
-  const $cards = $block.querySelector('.cards');
+  const $cardsPlatform = $block.querySelector('.cards-platform');
 
   $contentWrapper.style.transform = 'scale(1.2)';
   document.addEventListener('scroll', () => {
@@ -224,8 +227,8 @@ function initScrollAnimation($block) {
     }
 
     if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
-      const totalScroll = $cards.scrollWidth - window.innerWidth;
-      $cards.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
+      const totalScroll = $cardsPlatform.scrollWidth - window.innerWidth;
+      $cardsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
     }
   });
 }

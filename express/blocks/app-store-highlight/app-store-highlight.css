@@ -47,13 +47,17 @@ main .app-store-highlight-container .rating-stars .rating-votes {
   margin-left: 4px;
 }
 
+main .app-store-highlight-container .cards-platform {
+  overflow: auto;
+  margin: 0 -32px;
+  scrollbar-width: none;  /* Firefox */
+}
+
 main .app-store-highlight-container .cards {
   display: flex;
   gap: 12px;
   padding: 53px 32px;
-  overflow: auto;
-  margin: 0 -32px;
-  scrollbar-width: none;  /* Firefox */
+  width: max-content;
 }
 
 main .app-store-highlight-container .cards::-webkit-scrollbar {
@@ -62,8 +66,8 @@ main .app-store-highlight-container .cards::-webkit-scrollbar {
 
 main .app-store-highlight-container .cards .card {
   position: relative;
-  height: 338px;
-  min-width: 190px;
+  height: auto;
+  max-width: 190px;
   border-radius: 10px;
   overflow: hidden;
 }
