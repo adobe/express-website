@@ -28,27 +28,24 @@ import { buildCarousel } from '../shared/carousel.js';
 const cache = {
   templates: [],
   queryString: '',
-  nextQuery: '',
+  start: '',
   masonry: undefined,
 };
 
-function fetchTemplates(queryString, offset) {
-  if (cache.nextQuery !== '') {
-    return fetch(cache.nextQuery)
-      .then((response) => response.json())
-      .then((response) => response);
-  }
-  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${queryString} AND locales:en&schema=template&orderBy=-remixCount&premium=false&limit=70&next=${offset}`)
+function fetchTemplates(queryString, start) {
+  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${queryString} AND locales:en&schema=template&orderBy=-remixCount&premium=false&limit=70&start=${start}`)
     .then((response) => response.json())
     .then((response) => response);
 }
 
 async function normalizeFetchedTemplates(queryString) {
-  const response = await fetchTemplates(queryString, cache.templates.length - 1);
+  const response = await fetchTemplates(queryString, cache.start);
   // eslint-disable-next-line no-underscore-dangle
   const templateFetched = response._embedded.results;
   // eslint-disable-next-line no-underscore-dangle
-  cache.nextQuery = response._links.next.href;
+  const nextQuery = response._links.next.href;
+  const params = new URLSearchParams(nextQuery);
+  cache.start = params.get('start').split(',')[0];
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
