@@ -34,7 +34,7 @@ const cache = {
 
 function fetchTemplates(queryString, offset) {
   if (cache.nextQuery !== '') {
-    return fetch(`https://www.adobe.com${cache.nextQuery}`)
+    return fetch(cache.nextQuery)
       .then((response) => response.json())
       .then((response) => response);
   }
