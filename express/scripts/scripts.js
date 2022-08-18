@@ -1578,7 +1578,11 @@ function buildAutoBlocks($main) {
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     if ($main.querySelector('.app-store-highlight') === null) {
-      const $blade = buildBlock('app-store-highlight', '');
+      const $highlight = buildBlock('app-store-highlight', '');
+      $main.querySelector(':scope > div:last-of-type').append($highlight);
+    }
+    if ($main.querySelector('.app-store-blade') === null) {
+      const $blade = buildBlock('app-store-blade', '');
       $main.querySelector(':scope > div:last-of-type').append($blade);
     }
   }
