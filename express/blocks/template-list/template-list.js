@@ -19,7 +19,7 @@ import {
   getIconElement,
   toClassName,
   decorateMain,
-  addAnimationToggle,
+  addAnimationToggle, fetchPlaceholders,
 } from '../../scripts/scripts.js';
 import {
   Masonry,
@@ -295,6 +295,16 @@ export async function decorateTemplateList($block) {
   }
 
   const $templateLinks = $block.querySelectorAll('a.template');
+  for (const $templateLink of $templateLinks) {
+    const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
+    if (!isPremium) {
+      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
+      fetchPlaceholders().then((placeholders) => {
+        $freeInAppBadge.textContent = placeholders['free-in-app'];
+      });
+      $templateLink.querySelector('div').append($freeInAppBadge);
+    }
+  }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
   document.dispatchEvent(linksPopulated);
 }
