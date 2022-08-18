@@ -436,10 +436,11 @@ export function decorateSections($main) {
     const sectionMeta = section.querySelector('div.section-metadata');
     if (sectionMeta) {
       const meta = readBlockConfig(sectionMeta);
+      console.log('meta: ', meta);
       const keys = Object.keys(meta);
       keys.forEach((key) => {
         if (key === 'style') {
-          section.classList.add(toClassName(meta.style));
+          section.classList.add(...meta.style.split(', ').map(toClassName));
         } else if (key === 'anchor') {
           section.id = toClassName(meta.anchor);
         } else {
