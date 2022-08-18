@@ -1575,11 +1575,16 @@ function buildAutoBlocks($main) {
     $main.querySelector(':scope > div:last-of-type').append(branchio);
   }
 
-  // Load the app store blade autoblock...
+  // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    let $block;
+    if ($main.querySelector('.app-store-highlight') === null) {
+      $block = buildBlock('app-store-highlight', '');
+      $main.querySelector(':scope > div:last-of-type').append($block);
+    }
     if ($main.querySelector('.app-store-blade') === null) {
-      const $blade = buildBlock('app-store-blade', '');
-      $main.querySelector(':scope > div:last-of-type').append($blade);
+      $block = buildBlock('app-store-blade', '');
+      $main.querySelector(':scope > div:last-of-type').append($block);
     }
   }
 }
