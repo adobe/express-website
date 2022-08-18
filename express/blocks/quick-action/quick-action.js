@@ -13,7 +13,7 @@
 import { loadScript } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
-  window.qtId = 'remove-background';
+  window.qtId = 'convert-to-gif';
   window.isWebViewHost = false;
   window.qtWebViewScheme = 'false';
   window.qtColorTheme = '';
