@@ -161,6 +161,23 @@ main .template-list .template:not(.placeholder) .icon {
   right: 6px;
 }
 
+
+main .template-list .template:not(.placeholder) .icon-free-badge {
+  height: 24px;
+  display: flex;
+  border-radius: 1000px;
+  align-items: center;
+  font-weight: 500;
+  width: max-content;
+  top: 8px;
+  right: 8px;
+  color: var(--color-white);
+  font-size: 12px;
+  line-height: 16px;
+  padding: 0 12px;
+  background: #000000B3;
+}
+
 /* horizontal template-list */
 main .template-list-horizontal-fullwidth-container > div {
   max-width: none;

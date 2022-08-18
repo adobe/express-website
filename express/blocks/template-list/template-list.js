@@ -297,7 +297,7 @@ export async function decorateTemplateList($block) {
   const $templateLinks = $block.querySelectorAll('a.template');
   for (const $templateLink of $templateLinks) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
-    if (!isPremium) {
+    if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       fetchPlaceholders().then((placeholders) => {
         $freeInAppBadge.textContent = placeholders['free-in-app'];
