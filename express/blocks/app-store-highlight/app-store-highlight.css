@@ -68,11 +68,13 @@ main .app-store-highlight-container .cards .card {
   position: relative;
   height: auto;
   max-width: 190px;
+  max-height: 339px;
   border-radius: 10px;
   overflow: hidden;
 }
 
-main .app-store-highlight-container .cards .card img {
+main .app-store-highlight-container .cards .card img,
+main .app-store-highlight-container .cards .card video {
   object-fit: cover;
   height: 100%;
   width: 100%;

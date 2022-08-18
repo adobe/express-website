@@ -1574,6 +1574,14 @@ function buildAutoBlocks($main) {
     const branchio = buildBlock('branch-io', '');
     $main.querySelector(':scope > div:last-of-type').append(branchio);
   }
+
+  // Load the app store autoblocks...
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    if ($main.querySelector('.app-store-highlight') === null) {
+      const $blade = buildBlock('app-store-highlight', '');
+      $main.querySelector(':scope > div:last-of-type').append($blade);
+    }
+  }
 }
 
 function splitSections($main) {

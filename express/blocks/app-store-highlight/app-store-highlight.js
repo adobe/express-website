@@ -68,11 +68,17 @@ function buildStandardPayload($block, payload) {
   if (payload.userAgent === 'unknown') {
     payload.heading = 'Express it on your mobile devices.';
   }
-
+  // load default copy
+  if (payload.userAgent === 'iOS') {
+    payload.copy = 'Install the Adobe Express app on your iPad or iPhone.';
+  }
+  if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
+    payload.copy = 'Install the Adobe Express app on your phone or tablet.';
+  }
   payload.images = imageFiles.map((imageUrl) => createStandardImage(imageUrl));
 }
 
-function buildPayloadFromBlock($block, payload) {
+function updatePayloadFromBlock($block, payload) {
   for (const $row of Array.from($block.children)) {
     const $divs = $row.querySelectorAll('div');
     switch ($divs[0].textContent) {
@@ -234,6 +240,7 @@ function initScrollAnimation($block) {
 }
 
 export default async function decorate($block) {
+  let $injectionPoint;
   const payload = {
     userAgent: getMobileOperatingSystem(),
     heading: '',
@@ -258,13 +265,18 @@ export default async function decorate($block) {
         payload.ratingScore = placeholders['google-store-rating-score'];
         payload.ratingCount = placeholders['google-store-rating-count'];
       }
+      $injectionPoint = placeholders['app-store-highlight-follow-block'];
     });
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase()) && $block.children.length <= 0) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     buildStandardPayload($block, payload);
-  } else {
-    buildPayloadFromBlock($block, payload);
+    const $parentSection = $block.parentNode.parentNode;
+    const $elementToFollow = document.querySelector(`.${$injectionPoint}`);
+    $parentSection.dataset.audience = 'mobile';
+    $elementToFollow.after($parentSection);
   }
+
+  updatePayloadFromBlock($block, payload);
 
   $block.innerHTML = '';
 
