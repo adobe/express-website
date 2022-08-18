@@ -1,3 +1,12 @@
 .branch-io {
   display: none;
 }
+
+body.branch-banner-is-active ~ .doMoreModal {
+  bottom: 76px; 
+}
+
+.doMoreModal:not(.doMoreModalHide) ~ body.branch-banner-is-active #branch-banner-iframe,
+.doMoreModal:not(.doMoreModalHide) ~ body .floating-button-wrapper {
+  display: none;
+}

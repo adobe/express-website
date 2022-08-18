@@ -1,0 +1,141 @@
+main .seo-nav-container {
+  padding: 18px 28px;
+}
+
+main .seo-nav-container > div,
+main .seo-nav-center-container > div {
+  max-width: 1200px;
+}
+
+main .seo-nav-container .seo-nav-center-container .carousel-platform {
+  padding-top: 6px;
+}
+
+main .seo-nav-container .carousel-container a.button.carousel-arrow {
+  transform: translateY(-10px);
+}
+
+main .seo-nav {
+  display: block;
+  overflow: hidden;
+  margin: auto;
+  text-align: left;
+  padding: 30px 28px 40px 28px;
+  background-color: var(--color-gray-100);
+  border-radius: 20px;
+}
+
+main .seo-nav h2,
+main .seo-nav h3,
+main .seo-nav h4 {
+  text-align: left;
+}
+
+main .seo-nav.center {
+  width: fit-content;
+  max-width: 100%;
+}
+
+main .seo-nav h3 {
+  font-size: var(--heading-font-size-m);
+  margin-bottom: 20px;
+}
+
+main .seo-nav p.button-container {
+  margin: 0 5px 12px;
+  line-height: 0;
+}
+
+main .seo-nav p.button-container.current {
+  pointer-events: none;
+}
+
+main .seo-nav p.button-container.current > a {
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+main .seo-nav a.button.secondary {
+  margin: 6px 0;
+}
+
+main .seo-nav p.seo-paragraph {
+  font-size: 14px;
+  line-height: 21px;
+  margin: 0 0 21px;
+}
+
+main .seo-nav .carousel-container .carousel-fader-left {
+  width: 150px;
+  background: linear-gradient(to left, rgba(248, 248, 248, 0), rgba(248, 248, 248, 1));
+  pointer-events: none;
+}
+main .seo-nav .carousel-container .carousel-fader-right {
+  width: 150px;
+  background: linear-gradient(to right, rgba(248, 248, 248, 0), rgba(248, 248, 248, 1));
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  main .seo-nav-container > div,
+  main .seo-nav-center-container > div {
+    padding: 0 50px;
+  }
+
+  main .seo-nav {
+    text-align: left;
+  }
+
+  main .seo-nav h2,
+  main .seo-nav h3,
+  main .seo-nav h4 {
+    text-align: left;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .seo-nav-container > div,
+  main .seo-nav-center-container > div {
+      padding: 0 55px;
+  }
+}
+
+/* Carousel styles (Link-list specific) */
+
+/* Remove max-width on mobile breakpoints */
+main .section.seo-nav-container,
+main .section.seo-nav-container > div,
+main .section.seo-nav-container .seo-nav > div {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .seo-nav-container .seo-nav-wrapper {
+  margin: 40px 28px;
+}
+
+main .seo-nav .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+
+@media (min-width: 900px) {
+  main .seo-nav .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .section.seo-nav-container > div, main .seo-nav-center-container > div {
+    padding: 0 28px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section.seo-nav-container > div,
+  main .section.seo-nav-center-container > div {
+    padding: 0 28px;
+  }
+}
