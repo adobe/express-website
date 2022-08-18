@@ -41,6 +41,8 @@ function createTutorialCard(title, url, time, $picture) {
   });
   $card.appendChild($cardTop);
   $card.appendChild($cardBottom);
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: [$card] });
+  document.dispatchEvent(linksPopulated);
   return ($card);
 }
 
@@ -63,7 +65,7 @@ function decorateTutorials($block) {
   // handle history events
   window.addEventListener('popstate', ({ state }) => {
     hideVideoModal();
-    const { url, title } = state;
+    const { url, title } = state || {};
     if (url) {
       displayVideoModal(url, title);
     }

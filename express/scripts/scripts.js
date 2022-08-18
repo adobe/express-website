@@ -11,6 +11,8 @@
  */
 /* eslint-disable no-console */
 
+window.RUM_GENERATION = 'ccx-gen-3';
+
 /**
  * log RUM if part of the sample.
  * @param {string} checkpoint identifies the checkpoint in funnel
@@ -34,32 +36,94 @@ export function sampleRUM(checkpoint, data = {}) {
     const { random, weight, id } = window.hlx.rum;
     if (random && (random * weight < 1)) {
       const sendPing = () => {
-        // eslint-disable-next-line object-curly-newline
-        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: 'ccx-gen2', checkpoint, ...data });
-        const url = `https://rum.hlx3.page/.rum/${weight}`;
+        // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
+        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: window.RUM_GENERATION, checkpoint, ...data });
+        const url = `https://rum.hlx.page/.rum/${weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
       };
       sendPing();
       // special case CWV
       if (checkpoint === 'cwv') {
-        // eslint-disable-next-line import/no-unresolved
-        import('https://unpkg.com/web-vitals?module').then((mod) => {
+        // use classic script to avoid CORS issues
+        const script = document.createElement('script');
+        script.src = 'https://rum.hlx.page/.rum/web-vitals/dist/web-vitals.iife.js';
+        script.onload = () => {
           const storeCWV = (measurement) => {
             data.cwv = {};
             data.cwv[measurement.name] = measurement.value;
             sendPing();
           };
-          mod.getCLS(storeCWV);
-          mod.getFID(storeCWV);
-          mod.getLCP(storeCWV);
-        });
+          // When loading `web-vitals` using a classic script, all the public
+          // methods can be found on the `webVitals` global namespace.
+          window.webVitals.getCLS(storeCWV);
+          window.webVitals.getFID(storeCWV);
+          window.webVitals.getLCP(storeCWV);
+        };
+        document.head.appendChild(script);
       }
     }
   } catch (e) {
     // something went wrong
   }
 }
+
+sampleRUM.mediaobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting)
+    .forEach((entry) => {
+      sampleRUM.mediaobserver.unobserve(entry.target); // observe only once
+      const target = sampleRUM.targetselector(entry.target);
+      const source = sampleRUM.sourceselector(entry.target);
+      sampleRUM('viewmedia', { target, source });
+    });
+}, { threshold: 0.25 }) : { observe: () => { } };
+
+sampleRUM.blockobserver = (window.IntersectionObserver) ? new IntersectionObserver((entries) => {
+  entries
+    .filter((entry) => entry.isIntersecting)
+    .forEach((entry) => {
+      sampleRUM.blockobserver.unobserve(entry.target); // observe only once
+      const target = sampleRUM.targetselector(entry.target);
+      const source = sampleRUM.sourceselector(entry.target);
+      sampleRUM('viewblock', { target, source });
+    });
+}, { threshold: 0.25 }) : { observe: () => { } };
+
+sampleRUM.observe = ((elements) => {
+  elements.forEach((element) => {
+    if (element.tagName.toLowerCase() === 'img'
+      || element.tagName.toLowerCase() === 'video'
+      || element.tagName.toLowerCase() === 'audio'
+      || element.tagName.toLowerCase() === 'iframe') {
+      sampleRUM.mediaobserver.observe(element);
+    } else {
+      sampleRUM.blockobserver.observe(element);
+    }
+  });
+});
+
+sampleRUM.sourceselector = (element) => {
+  if (element === document.body || element === document.documentElement || !element) {
+    return undefined;
+  }
+  if (element.id) {
+    return `#${element.id}`;
+  }
+  if (element.getAttribute('data-block-name')) {
+    return `.${element.getAttribute('data-block-name')}`;
+  }
+  return sampleRUM.sourceselector(element.parentElement);
+};
+
+sampleRUM.targetselector = (element) => {
+  let value = element.getAttribute('href') || element.currentSrc || element.getAttribute('src');
+  if (value && value.startsWith('https://')) {
+    // resolve relative links
+    value = new URL(value, window.location).href;
+  }
+  return value;
+};
 
 sampleRUM('top');
 window.addEventListener('load', () => sampleRUM('load'));
@@ -103,10 +167,64 @@ export function getMeta(name) {
     const nameAttr = $m.getAttribute('name');
     const propertyAttr = $m.getAttribute('property');
     return ((nameAttr && nameLower === nameAttr.toLowerCase())
-    || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+      || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
   });
   if ($metas[0]) value = $metas[0].getAttribute('content');
   return value;
+}
+
+// Get lottie animation HTML - remember to lazyLoadLottiePlayer() to see it.
+export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
+  return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
+}
+
+// Lazy-load lottie player if you scroll to the block.
+export function lazyLoadLottiePlayer($block = null) {
+  const usp = new URLSearchParams(window.location.search);
+  const lottie = usp.get('lottie');
+  if (lottie !== 'off') {
+    const loadLottiePlayer = () => {
+      if (window['lottie-player']) return;
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.async = true;
+      script.src = '/express/scripts/lottie-player.1.5.6.js';
+      document.head.appendChild(script);
+      window['lottie-player'] = true;
+    };
+    if ($block) {
+      const addIntersectionObserver = (block) => {
+        const observer = (entries) => {
+          const entry = entries[0];
+          if (entry.isIntersecting) {
+            if (entry.intersectionRatio >= 0.25) {
+              loadLottiePlayer();
+            }
+          }
+        };
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: [0.0, 0.25],
+        };
+        const intersectionObserver = new IntersectionObserver(observer, options);
+        intersectionObserver.observe(block);
+      };
+      if (document.readyState === 'complete') {
+        addIntersectionObserver($block);
+      } else {
+        window.addEventListener('load', () => {
+          addIntersectionObserver($block);
+        });
+      }
+    } else if (document.readyState === 'complete') {
+      loadLottiePlayer();
+    } else {
+      window.addEventListener('load', () => {
+        loadLottiePlayer();
+      });
+    }
+  }
 }
 
 export function getIcon(icons, alt, size = 44) {
@@ -117,20 +235,24 @@ export function getIcon(icons, alt, size = 44) {
   const symbols = [
     'adobefonts',
     'adobe-stock',
+    'android',
     'animation',
     'blank',
     'brand',
     'brand-libraries',
     'brandswitch',
+    'calendar',
     'certified',
     'changespeed',
     'check',
     'chevron',
     'cloud-storage',
+    'crop-image',
     'crop-video',
     'convert',
     'convert-png-jpg',
     'cursor-browser',
+    'desktop',
     'desktop-round',
     'download',
     'elements',
@@ -139,6 +261,7 @@ export function getIcon(icons, alt, size = 44) {
     'incredibly-easy',
     'instagram',
     'image',
+    'ios',
     'libraries',
     'library',
     'linkedin',
@@ -146,14 +269,17 @@ export function getIcon(icons, alt, size = 44) {
     'mergevideo',
     'mobile-round',
     'muteaudio',
+    'palette',
     'photos',
     'photoeffects',
     'pinterest',
     'play',
+    'premium',
     'premium-templates',
     'pricingfree',
     'pricingpremium',
     'privacy',
+    'qr-code',
     'remove-background',
     'resize',
     'resize-video',
@@ -173,6 +299,9 @@ export function getIcon(icons, alt, size = 44) {
     'users',
     'webmobile',
     'youtube',
+    'star',
+    'star-half',
+    'star-empty',
   ];
   if (symbols.includes(icon)) {
     const iconName = icon;
@@ -251,17 +380,96 @@ export function linkImage($elem) {
   }
 }
 
-function wrapSections($sections) {
-  $sections.forEach(($div) => {
-    if ($div.textContent.trim() === '' && !$div.firstElementChild) {
-      // remove empty sections (neither text nor child elements)
-      $div.remove();
-    } else if (!$div.id) {
-      const $wrapper = createTag('div', { class: 'section-wrapper' });
-      $div.parentNode.appendChild($wrapper);
-      $wrapper.appendChild($div);
+export function readBlockConfig($block) {
+  const config = {};
+  $block.querySelectorAll(':scope>div').forEach(($row) => {
+    if ($row.children) {
+      const $cols = [...$row.children];
+      if ($cols[1]) {
+        const $value = $cols[1];
+        const name = toClassName($cols[0].textContent);
+        let value = '';
+        if ($value.querySelector('a')) {
+          const $as = [...$value.querySelectorAll('a')];
+          if ($as.length === 1) {
+            value = $as[0].href;
+          } else {
+            value = $as.map(($a) => $a.href);
+          }
+        } else if ($value.querySelector('p')) {
+          const $ps = [...$value.querySelectorAll('p')];
+          if ($ps.length === 1) {
+            value = $ps[0].textContent;
+          } else {
+            value = $ps.map(($p) => $p.textContent);
+          }
+        } else value = $row.children[1].textContent;
+        config[name] = value;
+      }
     }
   });
+  return config;
+}
+
+/**
+ * Decorates all sections in a container element.
+ * @param {Element} $main The container element
+ */
+export function decorateSections($main) {
+  $main.querySelectorAll(':scope > div').forEach((section) => {
+    const wrappers = [];
+    let defaultContent = false;
+    [...section.children].forEach((e) => {
+      if (e.tagName === 'DIV' || !defaultContent) {
+        const wrapper = document.createElement('div');
+        wrappers.push(wrapper);
+        defaultContent = e.tagName !== 'DIV';
+        if (defaultContent) wrapper.classList.add('default-content-wrapper');
+      }
+      wrappers[wrappers.length - 1].append(e);
+    });
+    wrappers.forEach((wrapper) => section.append(wrapper));
+    section.classList.add('section', 'section-wrapper'); // keep .section-wrapper for compatibility
+    section.setAttribute('data-section-status', 'initialized');
+
+    /* process section metadata */
+    const sectionMeta = section.querySelector('div.section-metadata');
+    if (sectionMeta) {
+      const meta = readBlockConfig(sectionMeta);
+      const keys = Object.keys(meta);
+      keys.forEach((key) => {
+        if (key === 'style') {
+          section.classList.add(toClassName(meta.style));
+        } else if (key === 'anchor') {
+          section.id = toClassName(meta.anchor);
+        } else {
+          section.dataset[key] = meta[key];
+        }
+      });
+      sectionMeta.remove();
+    }
+  });
+}
+
+/**
+ * Updates all section status in a container element.
+ * @param {Element} main The container element
+ */
+export function updateSectionsStatus(main) {
+  const sections = [...main.querySelectorAll(':scope > div.section')];
+  for (let i = 0; i < sections.length; i += 1) {
+    const section = sections[i];
+    const status = section.getAttribute('data-section-status');
+    if (status !== 'loaded') {
+      const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+      if (loadingBlock) {
+        section.setAttribute('data-section-status', 'loading');
+        break;
+      } else {
+        section.setAttribute('data-section-status', 'loaded');
+      }
+    }
+  }
 }
 
 export function getLocale(url) {
@@ -459,20 +667,32 @@ export async function getOffer(offerId, countryOverride) {
     country = 'us';
     currency = 'USD';
   }
-  const resp = await fetch('/express/system/offers.json');
+  const resp = await fetch('/express/system/offers-new.json');
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
   let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
   if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
 
   if (offer) {
+    // console.log(offer);
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
     const commerceURL = `https://commerce.adobe.com/checkout?cli=spark&co=${country}&items%5B0%5D%5Bid%5D=${offerId}&items%5B0%5D%5Bcs%5D=0&rUrl=https%3A%2F%express.adobe.com%2Fsp%2F&lang=${lang}`;
     const vatInfo = offer.vat;
+    const prefix = offer.pre;
+    const suffix = offer.suf;
+
     return {
-      country, currency, unitPrice, unitPriceCurrencyFormatted, commerceURL, lang, vatInfo,
+      country,
+      currency,
+      unitPrice,
+      unitPriceCurrencyFormatted,
+      commerceURL,
+      lang,
+      vatInfo,
+      prefix,
+      suffix,
     };
   }
   return {};
@@ -568,40 +788,123 @@ function resolveFragments() {
     });
 }
 
-export function decorateBlocks($main) {
-  $main.querySelectorAll('div.section-wrapper > div > div').forEach(($block) => {
-    const classes = Array.from($block.classList.values());
-    let blockName = classes[0];
-    if (!blockName) return;
-    const $section = $block.closest('.section-wrapper');
-    if ($section) {
-      $section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
-    }
-    const blocksWithOptions = ['checker-board', 'template-list', 'steps', 'cards', 'quotes', 'page-list', 'link-list', 'hero-animation',
-      'columns', 'show-section-only', 'image-list', 'feature-list', 'icon-list', 'table-of-contents', 'how-to-steps', 'banner', 'pricing-columns'];
+const blocksWithOptions = [
+  'checker-board',
+  'template-list',
+  'steps',
+  'cards',
+  'quotes',
+  'page-list',
+  'link-list',
+  'hero-animation',
+  'columns',
+  'show-section-only',
+  'image-list',
+  'feature-list',
+  'icon-list',
+  'table-of-contents',
+  'how-to-steps',
+  'banner',
+  'pricing-columns',
+  'ratings',
+];
 
-    if (blockName !== 'how-to-steps-carousel') {
+/**
+ * Decorates a block.
+ * @param {Element} block The block element
+ */
+export function decorateBlock(block) {
+  const blockName = block.classList[0];
+  if (blockName) {
+    let shortBlockName = blockName;
+    block.classList.add('block');
+    // begin CCX custom block option class handling
+    if (shortBlockName !== 'how-to-steps-carousel') {
       blocksWithOptions.forEach((b) => {
-        if (blockName.startsWith(`${b}-`)) {
-          const options = blockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-          blockName = b;
-          $block.classList.add(b);
-          $block.classList.add(...options);
+        if (shortBlockName.startsWith(`${b}-`)) {
+          const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+          shortBlockName = b;
+          block.classList.add(b);
+          block.classList.add(...options);
         }
       });
     }
-    $block.classList.add('block');
-    $block.setAttribute('data-block-name', blockName);
-    $block.setAttribute('data-block-status', 'initialized');
-  });
+    // end CCX custom block option class handling
+    block.setAttribute('data-block-name', shortBlockName);
+    block.setAttribute('data-block-status', 'initialized');
+    const blockWrapper = block.parentElement;
+    blockWrapper.classList.add(`${shortBlockName}-wrapper`);
+    const section = block.closest('.section');
+    if (section) section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
+  }
+}
+
+/**
+ * Decorates all blocks in a container element.
+ * @param {Element} main The container element
+ */
+export function decorateBlocks(main) {
+  main
+    .querySelectorAll('div.section > div > div')
+    .forEach((block) => decorateBlock(block));
 }
 
 function decorateMarqueeColumns($main) {
   // flag first columns block in first section block as marquee
-  const $firstColumnsBlock = $main.querySelector('.section-wrapper:first-of-type .columns:first-of-type');
+  const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
   if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
   }
+}
+
+/**
+ * scroll to hash
+ */
+
+export function scrollToHash() {
+  const { hash } = window.location;
+  if (hash) {
+    const elem = document.querySelector(hash);
+    if (elem) {
+      setTimeout(() => {
+        elem.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth',
+        });
+      }, 500);
+    }
+  }
+}
+
+/**
+ * Builds a block DOM Element from a two dimensional array
+ * @param {string} blockName name of the block
+ * @param {any} content two dimensional array or string or object of content
+ */
+export function buildBlock(blockName, content) {
+  const table = Array.isArray(content) ? content : [[content]];
+  const blockEl = document.createElement('div');
+  // build image block nested div structure
+  blockEl.classList.add(blockName);
+  table.forEach((row) => {
+    const rowEl = document.createElement('div');
+    row.forEach((col) => {
+      const colEl = document.createElement('div');
+      const vals = col.elems ? col.elems : [col];
+      vals.forEach((val) => {
+        if (val) {
+          if (typeof val === 'string') {
+            colEl.innerHTML += val;
+          } else {
+            colEl.appendChild(val);
+          }
+        }
+      });
+      rowEl.appendChild(colEl);
+    });
+    blockEl.appendChild(rowEl);
+  });
+  return (blockEl);
 }
 
 /**
@@ -612,18 +915,36 @@ export async function loadBlock(block, eager = false) {
   if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
+    let cssPath = `/express/blocks/${blockName}/${blockName}.css`;
+    let jsPath = `/express/blocks/${blockName}/${blockName}.js`;
+
+    if (window.hlx.experiment && window.hlx.experiment.run) {
+      const { experiment } = window.hlx;
+      if (experiment.selectedVariant !== 'control') {
+        const { control } = experiment.variants;
+        if (control && control.blocks && control.blocks.includes(blockName)) {
+          const blockIndex = control.blocks.indexOf(blockName);
+          const variant = experiment.variants[experiment.selectedVariant];
+          const blockPath = variant.blocks[blockIndex];
+          cssPath = `/express/experiments/${experiment.id}/${blockPath}/${blockName}.css`;
+          jsPath = `/express/experiments/${experiment.id}/${blockPath}/${blockName}.js`;
+        }
+      }
+    }
+
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`/express/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(cssPath, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(jsPath);
             if (mod.default) {
               await mod.default(block, blockName, document, eager);
             }
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.log(`failed to load module for ${blockName}`, err);
           }
           resolve();
@@ -631,15 +952,26 @@ export async function loadBlock(block, eager = false) {
       });
       await Promise.all([cssLoaded, decorationComplete]);
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(`failed to load block ${blockName}`, err);
     }
     block.setAttribute('data-block-status', 'loaded');
   }
 }
-export function loadBlocks($main) {
-  const blockPromises = [...$main.querySelectorAll('div.section-wrapper > div > .block')]
-    .map(($block) => loadBlock($block));
-  return blockPromises;
+
+/**
+ * Loads JS and CSS for all blocks in a container element.
+ * @param {Element} main The container element
+ */
+export async function loadBlocks(main) {
+  updateSectionsStatus(main);
+  const blocks = [...main.querySelectorAll('div.block')];
+  for (let i = 0; i < blocks.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await loadBlock(blocks[i]);
+    updateSectionsStatus(main);
+  }
+  return blocks;
 }
 
 export function loadScript(url, callback, type) {
@@ -653,69 +985,10 @@ export function loadScript(url, callback, type) {
   return $script;
 }
 
-// async function loadLazyFooter() {
-//   const resp = await fetch('/lazy-footer.plain.html');
-//   const inner = await resp.text();
-//   const $footer = document.querySelector('footer');
-//   $footer.innerHTML = inner;
-//   $footer.querySelectorAll('a').forEach(($a) => {
-//     const url = new URL($a.href);
-//     if (url.hostname === 'spark.adobe.com') {
-//       const slash = url.pathname.endsWith('/') ? 1 : 0;
-//       $a.href = url.pathname.substr(0, url.pathname.length - slash);
-//     }
-//   });
-//   wrapSections('footer>div');
-//   addDivClasses($footer, 'footer > div', ['dark', 'grey', 'grey']);
-//   const $div = createTag('div', { class: 'hidden' });
-//   const $dark = document.querySelector('footer .dark>div');
-
-//   Array.from($dark.children).forEach(($e, i) => {
-//     if (i) $div.append($e);
-//   });
-
-//   $dark.append($div);
-
-//   $dark.addEventListener('click', () => {
-//     $div.classList.toggle('hidden');
-//   });
-// }
-
-export function readBlockConfig($block) {
-  const config = {};
-  $block.querySelectorAll(':scope>div').forEach(($row) => {
-    if ($row.children) {
-      const $cols = [...$row.children];
-      if ($cols[1]) {
-        const $value = $cols[1];
-        const name = toClassName($cols[0].textContent);
-        let value = '';
-        if ($value.querySelector('a')) {
-          const $as = [...$value.querySelectorAll('a')];
-          if ($as.length === 1) {
-            value = $as[0].href;
-          } else {
-            value = $as.map(($a) => $a.href);
-          }
-        } else if ($value.querySelector('p')) {
-          const $ps = [...$value.querySelectorAll('p')];
-          if ($ps.length === 1) {
-            value = $ps[0].textContent;
-          } else {
-            value = $ps.map(($p) => $p.textContent);
-          }
-        } else value = $row.children[1].textContent;
-        config[name] = value;
-      }
-    }
-  });
-  return config;
-}
-
 export function getMetadata(name) {
   const attr = name && name.includes(':') ? 'property' : 'name';
   const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
-  return $meta && $meta.content;
+  return ($meta && $meta.content) || '';
 }
 
 /**
@@ -759,7 +1032,7 @@ function addPromotion() {
       };
       // insert promotion at the bottom
       if (promos[category]) {
-        const $promoSection = createTag('div', { class: 'section-wrapper' });
+        const $promoSection = createTag('div', { class: 'section' });
         $promoSection.innerHTML = `<div class="promotion" data-block-name="promotion"><div><div>${promos[category]}</div></div></div>`;
         document.querySelector('main').append($promoSection);
         loadBlock($promoSection.querySelector(':scope .promotion'));
@@ -776,16 +1049,15 @@ function loadMartech() {
   if (!(martech === 'off' || document.querySelector(`head script[src="${analyticsUrl}"]`))) {
     loadScript(analyticsUrl, null, 'module');
   }
+}
 
-  const martechUrl = '/express/scripts/delayed.js';
-  // loadLazyFooter();
-  if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 0;
-    const delay = usp.get('delay');
-    if (delay) ms = +delay;
-    setTimeout(() => {
-      loadScript(martechUrl, null, 'module');
-    }, ms);
+function loadGnav() {
+  const usp = new URLSearchParams(window.location.search);
+  const gnav = usp.get('gnav');
+
+  const gnavUrl = '/express/scripts/gnav.js';
+  if (!(gnav === 'off' || document.querySelector(`head script[src="${gnavUrl}"]`))) {
+    loadScript(gnavUrl, null, 'module');
   }
 }
 
@@ -806,7 +1078,7 @@ function decoratePageStyle() {
     loadCSS('/express/styles/blog.css');
   } else {
     // eslint-disable-next-line no-lonely-if
-    if ($h1 && !$h1.closest('.section-wrapper > div > div ')) {
+    if ($h1 && !$h1.closest('.section > div > div ')) {
       const $heroPicture = $h1.parentElement.querySelector('picture');
       let $heroSection;
       const $main = document.querySelector('main');
@@ -820,9 +1092,9 @@ function decoratePageStyle() {
         $div.append($h1);
         $main.prepend($heroSection);
       } else {
-        $heroSection = $h1.closest('.section-wrapper');
+        $heroSection = $h1.closest('.section');
         $heroSection.classList.add('hero');
-        $heroSection.classList.remove('section-wrapper');
+        $heroSection.classList.remove('section');
       }
       if ($heroPicture) {
         if (!isBlog) {
@@ -860,9 +1132,14 @@ export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
     const originalHref = $a.href;
+    if ($a.children.length > 0) {
+      // We can use this to eliminate styling so only text
+      // propagates to buttons.
+      $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
+    }
     $a.href = addSearchQueryToHref($a.href);
     $a.title = $a.title || $a.textContent;
-    const $block = $a.closest('div.section-wrapper > div > div');
+    const $block = $a.closest('div.section > div > div');
     let blockName;
     if ($block) {
       blockName = $block.className;
@@ -879,12 +1156,12 @@ export function decorateButtons(block = document) {
           $up.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-            && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
         }
@@ -925,78 +1202,280 @@ export function checkTesting() {
   return (getMeta('testing').toLowerCase() === 'on');
 }
 
-async function decorateTesting() {
-  let runTest = true;
-  // let reason = '';
-  const usp = new URLSearchParams(window.location.search);
-  const martech = usp.get('martech');
-  if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-    // eslint-disable-next-line no-console
-    console.log('rushing martech');
-    loadScript('/express/scripts/instrument.js', null, 'module');
-  }
+/**
+ * Sanitizes a string and turns it into camel case.
+ * @param {*} name The unsanitized string
+ * @returns {string} The camel cased string
+ */
+export function toCamelCase(name) {
+  return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+}
 
-  if (!window.location.host.includes('adobe.com')) {
-    runTest = false;
+/**
+ * Gets the experiment name, if any for the page based on env, useragent, queyr params
+ * @returns {string} experimentid
+ */
+export function getExperiment() {
+  let experiment = toClassName(getMeta('experiment'));
+
+  if (!window.location.host.includes('adobe.com') && !window.location.host.includes('.hlx.live')) {
+    experiment = '';
     // reason = 'not prod host';
   }
   if (window.location.hash) {
-    runTest = false;
+    experiment = '';
     // reason = 'suppressed by #';
   }
-  if (window.location.search === '?test') {
-    runTest = true;
-  }
+
   if (navigator.userAgent.match(/bot|crawl|spider/i)) {
-    runTest = false;
+    experiment = '';
     // reason = 'bot detected';
   }
 
-  if (runTest) {
-    let $testTable;
-    document.querySelectorAll('table th').forEach(($th) => {
-      if ($th.textContent.toLowerCase().trim() === 'a/b test') {
-        $testTable = $th.closest('table');
-      }
+  const usp = new URLSearchParams(window.location.search);
+  if (usp.has('experiment')) {
+    [experiment] = usp.get('experiment').split('/');
+  }
+
+  return experiment;
+}
+/**
+ * Gets experiment config from the manifest or the instant experiement
+ * metdata and transforms it to more easily consumable structure.
+ *
+ * the manifest consists of two sheets "settings" and "experiences"
+ *
+ * "settings" is applicable to the entire test and contains information
+ * like "Audience", "Status" or "Blocks".
+ *
+ * "experience" hosts the experiences in columns, consisting of:
+ * a "Percentage Split", "Label" and a set of "Pages".
+ *
+ *
+ * @param {string} experimentId
+ * @returns {object} containing the experiment manifest
+ */
+export async function getExperimentConfig(experimentId) {
+  const instantExperiment = getMeta('instant-experiment');
+  if (instantExperiment) {
+    const config = {
+      experimentName: `Instant Experiment: ${experimentId}`,
+      audience: '',
+      status: 'Active',
+      id: experimentId,
+      variants: {},
+      variantNames: [],
+    };
+
+    const pages = instantExperiment.split(',').map((p) => new URL(p.trim()).pathname);
+    const evenSplit = 1 / (pages.length + 1);
+
+    config.variantNames.push('control');
+    config.variants.control = {
+      percentageSplit: '',
+      pages: [window.location.pathname],
+      blocks: [],
+      label: 'Control',
+    };
+
+    pages.forEach((page, i) => {
+      const vname = `challenger-${i + 1}`;
+      config.variantNames.push(vname);
+      config.variants[vname] = {
+        percentageSplit: `${evenSplit}`,
+        pages: [page],
+        label: `Challenger ${i + 1}`,
+      };
     });
 
-    const testSetup = [];
-
-    if ($testTable) {
-      $testTable.querySelectorAll('tr').forEach(($row) => {
-        const $name = $row.children[0];
-        const $percentage = $row.children[1];
-        const $a = $name.querySelector('a');
-        if ($a) {
-          const url = new URL($a.href);
-          testSetup.push({
-            url: url.pathname,
-            traffic: parseFloat($percentage.textContent) / 100.0,
-          });
-        }
-      });
-    }
-
-    let test = Math.random();
-    let selectedUrl = '';
-    testSetup.forEach((e) => {
-      if (test >= 0 && test < e.traffic) {
-        selectedUrl = e.url;
-      }
-      test -= e.traffic;
-    });
-
-    if (selectedUrl) {
-      // eslint-disable-next-line no-console
-      console.log(selectedUrl);
-      const plainUrl = `${selectedUrl.replace('.html', '')}.plain.html`;
-      const resp = await fetch(plainUrl);
-      const html = await resp.text();
-      document.querySelector('main').innerHTML = html;
-    }
+    return (config);
   } else {
-    // eslint-disable-next-line no-console
-    // console.log(`Test is not run => ${reason}`);
+    const path = `/express/experiments/${experimentId}/manifest.json`;
+    try {
+      const config = {};
+      const resp = await fetch(path);
+      const json = await resp.json();
+      json.settings.data.forEach((line) => {
+        const key = toCamelCase(line.Name);
+        config[key] = line.Value;
+      });
+      config.id = experimentId;
+      config.manifest = path;
+      const variants = {};
+      let variantNames = Object.keys(json.experiences.data[0]);
+      variantNames.shift();
+      variantNames = variantNames.map((vn) => toCamelCase(vn));
+      variantNames.forEach((variantName) => {
+        variants[variantName] = {};
+      });
+      let lastKey = 'default';
+      json.experiences.data.forEach((line) => {
+        let key = toCamelCase(line.Name);
+        if (!key) key = lastKey;
+        lastKey = key;
+        const vns = Object.keys(line);
+        vns.shift();
+        vns.forEach((vn) => {
+          const camelVN = toCamelCase(vn);
+          if (key === 'pages' || key === 'blocks') {
+            variants[camelVN][key] = variants[camelVN][key] || [];
+            if (key === 'pages') variants[camelVN][key].push(new URL(line[vn]).pathname);
+            else variants[camelVN][key].push(line[vn]);
+          } else {
+            variants[camelVN][key] = line[vn];
+          }
+        });
+      });
+      config.variants = variants;
+      config.variantNames = variantNames;
+      console.log(config);
+      return config;
+    } catch (e) {
+      console.log(`error loading experiment manifest: ${path}`, e);
+    }
+    return null;
+  }
+}
+
+/**
+ * Replaces element with content from path
+ * @param {string} path
+ * @param {HTMLElement} element
+ */
+async function replaceInner(path, element) {
+  const plainPath = `${path}.plain.html`;
+  try {
+    const resp = await fetch(plainPath);
+    const html = await resp.text();
+    element.innerHTML = html;
+  } catch (e) {
+    console.log(`error loading experiment content: ${plainPath}`, e);
+  }
+  return null;
+}
+
+/**
+ * this is an extensible stub to take on audience mappings
+ * @param {string} audience
+ * @return {boolean} is member of this audience
+ */
+
+function checkExperimentAudience(audience) {
+  if (audience === 'mobile') {
+    return window.innerWidth < 600;
+  }
+  if (audience === 'desktop') {
+    return window.innerWidth > 600;
+  }
+  return true;
+}
+
+/**
+ * gets the variant id that this visitor has been assigned to if any
+ * @param {string} experimentId
+ * @return {string} assigned variant or empty string if none set
+ */
+
+function getLastExperimentVariant(experimentId) {
+  console.log('get last experiment', experimentId);
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  if (experimentsStr) {
+    const experiments = JSON.parse(experimentsStr);
+    if (experiments[experimentId]) {
+      return experiments[experimentId].variant;
+    }
+  }
+  return '';
+}
+
+/**
+ * sets/updates the variant id that is assigned to this visitor,
+ * also cleans up old variant ids
+ * @param {string} experimentId
+ * @param {variant} variant
+ */
+
+function setLastExperimentVariant(experimentId, variant) {
+  const experimentsStr = localStorage.getItem('hlx-experiments');
+  const experiments = experimentsStr ? JSON.parse(experimentsStr) : {};
+
+  const now = new Date();
+  const expKeys = Object.keys(experiments);
+  expKeys.forEach((key) => {
+    const date = new Date(experiments[key].date);
+    if (now - date > (1000 * 86400 * 30)) {
+      delete experiments[key];
+    }
+  });
+  const [date] = now.toISOString().split('T');
+
+  experiments[experimentId] = { variant, date };
+  localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
+}
+
+/**
+ * checks if a test is active on this page and if so executes the test
+ */
+async function decorateTesting() {
+  try {
+    // let reason = '';
+    const usp = new URLSearchParams(window.location.search);
+    const martech = usp.get('martech');
+    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+      // eslint-disable-next-line no-console
+      console.log('rushing martech');
+      loadScript('/express/scripts/instrument.js', null, 'module');
+    }
+
+    const experiment = getExperiment();
+    const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
+
+    if (experiment) {
+      console.log('experiment', experiment);
+      const config = await getExperimentConfig(experiment);
+      console.log(config);
+      if (toCamelCase(config.status) === 'active' || forcedExperiment) {
+        config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
+        console.log('run', config.run, config.audience);
+
+        window.hlx = window.hlx || {};
+        window.hlx.experiment = config;
+        if (config.run) {
+          const forced = forcedVariant || getLastExperimentVariant(config.id);
+          if (forced && config.variantNames.includes(forced)) {
+            config.selectedVariant = forced;
+          } else {
+            let random = Math.random();
+            let i = config.variantNames.length;
+            while (random > 0 && i > 0) {
+              i -= 1;
+              console.log(random, i);
+              random -= +config.variants[config.variantNames[i]].percentageSplit;
+            }
+            config.selectedVariant = config.variantNames[i];
+          }
+          setLastExperimentVariant(config.id, config.selectedVariant);
+          sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
+          console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          if (config.selectedVariant !== 'control') {
+            const currentPath = window.location.pathname;
+            const pageIndex = config.variants.control.pages.indexOf(currentPath);
+            console.log(pageIndex, config.variants.control.pages, currentPath);
+            if (pageIndex >= 0) {
+              const page = config.variants[config.selectedVariant].pages[pageIndex];
+              if (page) {
+                const experimentPath = new URL(page, window.location.href).pathname.split('.')[0];
+                if (experimentPath && experimentPath !== currentPath) {
+                  await replaceInner(experimentPath, document.querySelector('main'));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.log('error testing', e);
   }
 }
 
@@ -1030,9 +1509,11 @@ export async function fixIcons(block = document) {
         const $block = $picture.closest('.block');
         let size = 44;
         if ($block) {
-          const smallIconBlocks = ['columns'];
           const blockName = $block.getAttribute('data-block-name');
-          if (smallIconBlocks.includes(blockName)) size = 22;
+          // use small icons in .columns (except for .columns.offer)
+          if (blockName === 'columns') {
+            size = $block.classList.contains('offer') ? 44 : 22;
+          }
         }
         $picture.parentElement
           .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
@@ -1087,6 +1568,14 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
+function buildAutoBlocks($main) {
+  // Load the branch.io banner autoblock...
+  if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
+    const branchio = buildBlock('branch-io', '');
+    $main.querySelector(':scope > div:last-of-type').append(branchio);
+  }
+}
+
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
@@ -1107,6 +1596,7 @@ function setTheme() {
     $body.classList.add(themeClass);
     if (themeClass === 'blog') $body.classList.add('no-brand-header');
   }
+  $body.dataset.device = navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop';
 }
 
 function decorateLinkedPictures($main) {
@@ -1277,7 +1767,7 @@ function displayEnv() {
     /* setup based on referrer */
     if (document.referrer) {
       const url = new URL(document.referrer);
-      const expressEnvs = ['express-stage.adobe.com', 'express-qa.adobe.com'];
+      const expressEnvs = ['express-stage.adobe.com', 'express-qa.adobe.com', 'express-dev.adobe.com'];
       if (url.hostname.endsWith('.adobeprojectm.com') || expressEnvs.includes(url.hostname)) {
         setHelixEnv('stage', { spark: url.host });
       }
@@ -1352,8 +1842,9 @@ function decoratePictures(main) {
 }
 
 export async function decorateMain($main) {
+  buildAutoBlocks($main);
   splitSections($main);
-  wrapSections($main.querySelectorAll(':scope > div'));
+  decorateSections($main);
   decorateButtons($main);
   decorateBlocks($main);
   decorateMarqueeColumns($main);
@@ -1364,23 +1855,49 @@ export async function decorateMain($main) {
   makeRelativeLinks($main);
 }
 
+const usp = new URLSearchParams(window.location.search);
 window.spark = {};
+window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const hostparam = new URLSearchParams(window.location.search).get('hostname');
-window.spark.hostname = hostparam || window.location.hostname;
+const useAlloy = !(
+  usp.has('martech')
+  && usp.get('martech') === 'legacy'
+);
 
-function unhideBody(id) {
+function unhideBody() {
   try {
+    const id = (
+      useAlloy
+        ? 'alloy-prehiding'
+        : 'at-body-style'
+    );
     document.head.removeChild(document.getElementById(id));
   } catch (e) {
     // nothing
   }
 }
 
-function hideBody(id) {
-  const style = document.createElement('style');
-  style.id = id;
-  style.textContent = 'body{visibility: hidden !important}';
+function hideBody() {
+  const id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  let style = document.getElementById(id);
+  if (style) {
+    return;
+  }
+  style = document.createElement('style');
+  style.id = (
+    useAlloy
+      ? 'alloy-prehiding'
+      : 'at-body-style'
+  );
+  style.innerHTML = (
+    useAlloy
+      ? '.personalization-container{opacity:0.01 !important}'
+      : 'body{visibility: hidden !important}'
+  );
 
   try {
     document.head.appendChild(style);
@@ -1410,8 +1927,101 @@ async function wordBreakJapanese() {
   }
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
-  document.querySelectorAll('h1, h2, h3, h3, h4, h5, p').forEach((el) => {
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
     parser.applyElement(el);
+  });
+
+  const BalancedWordWrapper = (await import('./bw2.js')).default;
+  const bw2 = new BalancedWordWrapper();
+  document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    // apply balanced word wrap to headings
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(() => {
+        bw2.applyElement(el);
+      });
+    } else {
+      window.setTimeout(() => {
+        bw2.applyElement(el);
+      }, 1000);
+    }
+  });
+}
+
+/**
+ * Calculate a relatively more accurate "character count" for mixed Japanese
+ * + English texts, for the purpose of heading auto font sizing.
+ *
+ * The rationale is that English characters are usually narrower than Japanese
+ * ones. Hence each English character (and space character) is multiplied by an
+ * coefficient before being added to the total character count. The current
+ * coefficient value, 0.57, is an empirical value from some tests.
+ */
+function getJapaneseTextCharacterCount(text) {
+  const headingEngCharsRegEx = /[a-zA-Z0-9 ]+/gm;
+  const matches = text.matchAll(headingEngCharsRegEx);
+  const eCnt = [...matches].map((m) => m[0]).reduce((cnt, m) => cnt + m.length, 0);
+  const jtext = text.replaceAll(headingEngCharsRegEx, '');
+  const jCnt = jtext.length;
+  return eCnt * 0.57 + jCnt;
+}
+
+/**
+ * Add dynamic font sizing CSS class names to headings
+ *
+ * The CSS class names are determined by character counts.
+ * @param {Element} $block The container element
+ * @param {string} classPrefix Prefix in CSS class names before "-long", "-very-long", "-x-long".
+ * Default is "heading".
+ * @param {string} selector CSS selector to select the target heading tags. Default is "h1, h2".
+ */
+export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1, h2') {
+  const headings = $block.querySelectorAll(selector);
+  // Each threshold of JP should be smaller than other languages
+  // because JP characters are larger and JP sentences are longer
+  const sizes = getLocale(window.location) === 'jp'
+    ? [
+      { name: 'long', threshold: 8 },
+      { name: 'very-long', threshold: 11 },
+      { name: 'x-long', threshold: 15 },
+    ]
+    : [
+      { name: 'long', threshold: 30 },
+      { name: 'very-long', threshold: 40 },
+      { name: 'x-long', threshold: 50 },
+    ];
+  headings.forEach((h) => {
+    const length = getLocale(window.location) === 'jp'
+      ? getJapaneseTextCharacterCount(h.textContent)
+      : h.textContent.length;
+    sizes.forEach((size) => {
+      if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
+    });
+  });
+}
+
+/**
+ * Call `addHeaderSizing` on default content blocks in all section blocks
+ * in all Japanese pages except blog pages.
+ */
+function addJapaneseSectionHeaderSizing() {
+  if (getLocale(window.location) === 'jp') {
+    document.querySelectorAll('body:not(.blog) .section .default-content-wrapper').forEach((el) => {
+      addHeaderSizing(el);
+    });
+  }
+}
+
+/**
+ * Detects legal copy based on a * or † prefix and applies a smaller font size.
+ * @param {HTMLMainElement} main The main element
+ */
+function decorateLegalCopy(main) {
+  const legalCopyPrefixes = ['*', '†'];
+  main.querySelectorAll('p').forEach(($p) => {
+    const pText = $p.textContent.trim() ? $p.textContent.trim().charAt(0) : '';
+    if (pText && legalCopyPrefixes.includes(pText)) {
+      $p.classList.add('legal-copy');
+    }
   });
 }
 
@@ -1427,6 +2037,8 @@ async function loadEager() {
     await decorateMain(main);
     decorateHeaderAndFooter();
     decoratePageStyle();
+    decorateLegalCopy(main);
+    addJapaneseSectionHeaderSizing();
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
@@ -1437,13 +2049,17 @@ async function loadEager() {
     if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
+
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
+      if (useAlloy) {
+        document.querySelector('body').classList.add('personalization-container');
+        // target = true;
+      }
       if (target) {
-        const bodyHideStyleId = 'at-body-style';
-        hideBody(bodyHideStyleId);
+        hideBody();
         setTimeout(() => {
-          unhideBody(bodyHideStyleId);
+          unhideBody();
         }, 3000);
       }
     }
@@ -1451,12 +2067,35 @@ async function loadEager() {
     const lcpCandidate = document.querySelector('main img');
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
+        lcpCandidate.setAttribute('loading', 'eager');
         lcpCandidate.addEventListener('load', () => resolve());
         lcpCandidate.addEventListener('error', () => resolve());
       } else {
         resolve();
       }
     });
+  }
+}
+
+function removeMetadata() {
+  document.head.querySelectorAll('meta').forEach((meta) => {
+    if (meta.content && meta.content.includes('--none--')) {
+      meta.remove();
+    }
+  });
+}
+
+export async function addFreePlanWidget(elem) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+    const placeholders = await fetchPlaceholders();
+    const checkmark = getIcon('checkmark');
+    const widget = createTag('div', { class: 'free-plan-widget' });
+    widget.innerHTML = `
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+    `;
+    elem.append(widget);
+    elem.classList.add('free-plan-container');
   }
 }
 
@@ -1471,165 +2110,15 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
+  scrollToHash();
   resolveFragments();
   addPromotion();
+  removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
-}
 
-function loadIMS() {
-  window.adobeid = {
-    client_id: 'MarvelWeb3',
-    scope: 'AdobeID,openid,creative_sdk,gnav,sao.spark,additional_info.projectedProductContext,tk_platform,tk_platform_refresh_user,tk_platform_sync,creative_cloud,ab.manage,sao.typekit,mps,read_organizations,stk.a.k12_access.cru,stk.a.limited_license.cru,DCAPI,sao.ACOM_CLOUD_STORAGE',
-    locale: getLocale(window.location),
-    environment: 'prod',
-  };
-  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
-}
-
-function loadFEDS() {
-  const locale = getLocale(window.location);
-
-  async function showRegionPicker() {
-    const $body = document.body;
-    const regionpath = locale === 'us' ? '/' : `/${locale}/`;
-    const host = window.location.hostname === 'localhost' ? 'https://www.adobe.com' : '';
-    const url = `${host}${regionpath}`;
-    const resp = await fetch(url);
-    const html = await resp.text();
-    const $div = createTag('div');
-    $div.innerHTML = html;
-    const $regionNav = $div.querySelector('nav.language-Navigation');
-    if (!$regionNav) {
-      return;
-    }
-    const $regionPicker = createTag('div', { id: 'region-picker' });
-    $body.appendChild($regionPicker);
-    $regionPicker.appendChild($regionNav);
-    $regionNav.appendChild(createTag('div', { class: 'close' }));
-    $regionPicker.addEventListener('click', (event) => {
-      if (event.target === $regionPicker || event.target === $regionNav) {
-        $regionPicker.remove();
-      }
-    });
-    $regionPicker.querySelectorAll('li a').forEach(($a) => {
-      $a.addEventListener('click', (event) => {
-        const pathSplits = new URL($a.href).pathname.split('/');
-        const prefix = pathSplits[1] ? `/${pathSplits[1]}` : '';
-        const destLocale = pathSplits[1] ? `${pathSplits[1]}` : 'us';
-        const off = locale !== 'us' ? locale.length + 1 : 0;
-        const gPath = window.location.pathname.substr(off);
-        let domain = '';
-        if (window.location.hostname.endsWith('.adobe.com')) domain = ' domain=adobe.com;';
-        const cookieValue = `international=${destLocale};${domain} path=/`;
-        // eslint-disable-next-line no-console
-        console.log(`setting international based on language switch to: ${cookieValue}`);
-        document.cookie = cookieValue;
-        event.preventDefault();
-        window.location.href = prefix + gPath;
-      });
-    });
-    // focus link of current region
-    const lang = getLanguage(getLocale(new URL(window.location.href))).toLowerCase();
-    const currentRegion = $regionPicker.querySelector(`li a[lang="${lang}"]`);
-    if (currentRegion) {
-      currentRegion.focus();
-    }
-  }
-
-  function handleConsentSettings() {
-    try {
-      if (!window.adobePrivacy || window.adobePrivacy.hasUserProvidedCustomConsent()) {
-        window.sprk_full_consent = false;
-        return;
-      }
-      if (window.adobePrivacy.hasUserProvidedConsent()) {
-        window.sprk_full_consent = true;
-      } else {
-        window.sprk_full_consent = false;
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn("Couldn't determine user consent status:", e);
-      window.sprk_full_consent = false;
-    }
-  }
-
-  window.addEventListener('adobePrivacy:PrivacyConsent', handleConsentSettings);
-  window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
-  window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
-
-  window.fedsConfig = {
-    ...(window.fedsConfig || {}),
-
-    footer: {
-      regionModal: () => {
-        showRegionPicker();
-      },
-    },
-    locale: (locale === 'us' ? 'en' : locale),
-    content: {
-      experience: 'cc-express/cc-express-gnav',
-    },
-    profile: {
-      customSignIn: () => {
-        const sparkLang = getLanguage(locale);
-        const sparkPrefix = sparkLang === 'en-US' ? '' : `/${sparkLang}`;
-        let sparkLoginUrl = `https://express.adobe.com${sparkPrefix}/sp/`;
-        const env = getHelixEnv();
-        if (env && env.spark) {
-          sparkLoginUrl = sparkLoginUrl.replace('express.adobe.com', env.spark);
-        }
-        window.location.href = sparkLoginUrl;
-      },
-    },
-    privacy: {
-      otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
-      footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
-    },
-  };
-
-  window.addEventListener('feds.events.experience.loaded', () => {
-    document.querySelector('body').classList.add('feds-loaded');
-    /* attempt to switch link */
-    if (window.location.pathname.includes('/create/')
-      || window.location.pathname.includes('/discover/')
-      || window.location.pathname.includes('/feature/')) {
-      const $aNav = document.querySelector('header a.feds-navLink--primaryCta');
-      const $aHero = document.querySelector('main > div:first-of-type a.button.accent');
-      if ($aNav && $aHero) {
-        $aNav.href = $aHero.href;
-      }
-    }
-
-    /* switch all links if lower envs */
-    const env = getHelixEnv();
-    if (env && env.spark) {
-      // eslint-disable-next-line no-console
-      // console.log('lower env detected');
-      document.querySelectorAll('a[href^="https://spark.adobe.com/"]').forEach(($a) => {
-        const hrefURL = new URL($a.href);
-        hrefURL.host = env.spark;
-        $a.setAttribute('href', hrefURL.toString());
-      });
-      document.querySelectorAll('a[href^="https://express.adobe.com/"]').forEach(($a) => {
-        const hrefURL = new URL($a.href);
-        hrefURL.host = env.spark;
-        $a.setAttribute('href', hrefURL.toString());
-      });
-    }
-
-    /* region based redirect to homepage */
-    if (window.feds && window.feds.data && window.feds.data.location && window.feds.data.location.country === 'CN') {
-      const regionpath = locale === 'us' ? '/' : `/${locale}/`;
-      window.location.href = regionpath;
-    }
-  });
-  let prefix = '';
-  if (!['www.adobe.com', 'www.stage.adobe.com'].includes(window.location.hostname)) {
-    prefix = 'https://www.adobe.com';
-  }
-  loadScript(`${prefix}/etc.clientlibs/globalnav/clientlibs/base/feds.js`).id = 'feds-script';
+  sampleRUM.observe(document.querySelectorAll('main picture > img'));
+  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
 }
 
 /**
@@ -1642,8 +2131,10 @@ async function decoratePage() {
 
   await loadEager();
   loadLazy();
-  loadIMS();
-  loadFEDS();
+  loadGnav();
+  if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === ('localhost')) {
+    import('../../tools/preview/preview.js');
+  }
 }
 
 if (!window.hlx.init && !window.isTestEnv) {
@@ -1682,6 +2173,16 @@ function registerPerformanceLogger() {
     });
     pols.observe({ type: 'layout-shift', buffered: true });
 
+    const polt = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        // Log the entry and all associated details.
+        stamp(JSON.stringify(entry));
+      }
+    });
+
+    // Start listening for `longtask` entries to be dispatched.
+    polt.observe({ type: 'longtask', buffered: true });
+
     const pores = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       entries.forEach((entry) => {
@@ -1692,6 +2193,65 @@ function registerPerformanceLogger() {
     pores.observe({ type: 'resource', buffered: true });
   } catch (e) {
     // no output
+  }
+}
+
+export function trackBranchParameters($links) {
+  const rootUrl = new URL(window.location.href);
+  const rootUrlParameters = rootUrl.searchParams;
+
+  const sdid = rootUrlParameters.get('sdid');
+  const mv = rootUrlParameters.get('mv');
+  const sKwcId = rootUrlParameters.get('s_kwcid');
+  const efId = rootUrlParameters.get('ef_id');
+  const promoId = rootUrlParameters.get('promoid');
+  const trackingId = rootUrlParameters.get('trackingid');
+  const cgen = rootUrlParameters.get('cgen');
+
+  if (sdid || mv || sKwcId || efId || promoId || trackingId || cgen) {
+    $links.forEach(($a) => {
+      if ($a.href && $a.href.match('adobesparkpost.app.link')) {
+        const buttonUrl = new URL($a.href);
+        const urlParams = buttonUrl.searchParams;
+
+        if (sdid) {
+          urlParams.set('~campaign_id', sdid);
+        }
+
+        if (mv) {
+          urlParams.set('~customer_campaign', mv);
+        }
+
+        if (sKwcId) {
+          const sKwcIdParameters = sKwcId.split('!');
+
+          if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
+            urlParams.set('~customer_placement', 'Google%20AdWords');
+          }
+
+          if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+            urlParams.set('~keyword', sKwcIdParameters[8]);
+          }
+        }
+
+        if (promoId) {
+          urlParams.set('~ad_id', promoId);
+        }
+
+        if (trackingId) {
+          urlParams.set('~keyword_id', trackingId);
+        }
+
+        if (cgen) {
+          urlParams.set('~customer_keyword', cgen);
+        }
+
+        urlParams.set('~feature', 'paid%20advertising');
+
+        buttonUrl.search = urlParams.toString();
+        $a.href = buttonUrl.toString();
+      }
+    });
   }
 }
 

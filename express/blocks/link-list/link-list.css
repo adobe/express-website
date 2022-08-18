@@ -9,7 +9,12 @@ main .link-list {
   margin: 40px auto; 
   width: 100%;
   text-align: left;
+}
 
+main .link-list h2,
+main .link-list h3,
+main .link-list h4 {
+  text-align: left;
 }
 
 main .link-list.center {
@@ -18,101 +23,33 @@ main .link-list.center {
 }
 
 main .link-list h3 {
-  text-align: left;
   font-size: var(--heading-font-size-m);
   margin-bottom: 20px;
 }
 
 main .link-list p.button-container {
-  margin: 0;
+  margin: 0 10px;
+  line-height: 0;
 }
 
 main .link-list a.button.secondary {
-  margin: 6px 20px 6px 0;
+  margin: 6px 0;
 }
-
-main .link-list .link-list-carousel-platform {
-  position: relative;
-  width: fit-content;
-  height: 42px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  left: 0;
-  transition: left 0.4s;
-}
-
-main .link-list .link-list-carousel-fader-left {
-  display: none;
-  position: relative;
-  height: 40px;
-  width: 60px;
-  top: -40px;
-  float: left;
-  background: linear-gradient(
-    to left,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  transition: display 0.2s;
-}
-
-main .link-list .link-list-carousel-fader-right {
-  display: none;
-  position: relative;
-  height: 40px;
-  width: 68px;
-  top: -40px;
-  float: right;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
-  transition: display 0.2s;
-}
-
-main .link-list a.button.link-list-carousel-arrow {
-  cursor: pointer;
-  display: block;
-  float: left;
-  width: 32px;
-  height: 32px;
-  margin: 4px 0;
-  background: var(--color-white);
-  box-shadow: 0 4px 8px 2px rgba(102, 102, 102, 0.1);
-  border-radius: 50%;
-}
-
-main .link-list a.button.link-list-carousel-arrow::before {
-  content: '';
-  position: absolute;
-  margin-top: 11px;
-  width: 8px;
-  height: 8px;
-  border-top: solid 2px var(--color-gray-700);
-  border-right: solid 2px var(--color-gray-700);
-}
-
-main .link-list a.button.link-list-carousel-arrow-left::before {
-  margin-left: 12px;
-  transform: rotate(-135deg);
-}
-
-main .link-list a.button.link-list-carousel-arrow-right {
-  float: right;
-}
-
-main .link-list a.button.link-list-carousel-arrow-right::before {
-  margin-left: 9px;
-  transform: rotate(45deg);
-}
-
 
 @media (min-width: 900px) {
   main .link-list-container > div,
   main .link-list-center-container > div {
     padding: 0 50px;
+  }
+
+  main .link-list {
+    text-align: left;
+  }
+
+  main .link-list h2,
+  main .link-list h3,
+  main .link-list h4 {
+    text-align: left;
   }
 }
 
@@ -120,5 +57,65 @@ main .link-list a.button.link-list-carousel-arrow-right::before {
   main .link-list-container > div,
   main .link-list-center-container > div {
       padding: 0 55px;
+  }
+}
+
+
+/* Carousel styles (Link-list specific) */
+
+/* Remove max-width on mobile breakpoints */
+main .section.link-list-container,
+main .section.link-list-container > div,
+main .section.link-list-container .link-list,
+main .section.link-list-container .link-list > div {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .link-list .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+main .link-list h2,
+main .link-list h3,
+main .link-list h4 {
+  padding-left: 32px;
+}
+
+main .link-list .carousel-platform {
+  scroll-padding: 32px;
+}
+
+main .link-list .carousel-platform p.button-container:first-child {
+  margin-left: 32px;
+}
+
+@media (min-width: 900px) {
+  main .link-list .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .section.link-list-container > div,
+  main .section.link-list-center-container > div {
+    max-width: 1200px;
+  }
+  
+  main .section.link-list-container > div, main .link-list-center-container > div {
+    padding: 0 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section.link-list-container > div,
+  main .section.link-list-center-container > div {
+    padding: 0 55px;
+  }
+
+  main .section.link-list-container > div,
+  main .section.link-list-center-container > div {
+    max-width: 1200px;
   }
 }

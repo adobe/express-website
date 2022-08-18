@@ -1,17 +1,13 @@
-main .section-wrapper.banner-container {
+main .section.banner-container {
   background-color: var(--color-info-accent);
+}
+
+main .section.banner-container,
+main .section.banner-light-container {
   padding: 80px 15px;
 }
 
-main .section-wrapper.banner-light-container {
-  padding: 80px 15px;
-}
-
-main .section-wrapper:first-of-type {
-  padding-top: 0;
-}
-
-main .section-wrapper.banner-container > div {
+main .section.banner-container > div {
   padding: 0;
 }
 
@@ -55,7 +51,7 @@ main .banner.multi-button .button-container {
 }
 
 @media (min-width:900px) {
-  main .section-wrapper.banner-container {
+  main .section.banner-container {
     padding-left: 56px;
     padding-right: 56px;
   }

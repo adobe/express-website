@@ -5,11 +5,11 @@
     padding: 0;
   }
   
-  .blog main .section-wrapper > div > p {
+  .blog main .section > div > p {
     font-family: var(--body-serif-font-family);
   }
   
-  .blog main .section-wrapper > div > p .button {
+  .blog main .section > div > p .button {
     font-family: var(--body-font-family);
   }
   
@@ -32,6 +32,7 @@
     font-size: 16px;
     line-height: 20px;
     font-size: var(--body-font-size-s);
+    text-transform: capitalize;
   }
   
   .blog main .hero .blog-header .author {
@@ -89,40 +90,40 @@
     background-size: min(311px, 100%);
   }
   
-  .blog div.section-wrapper {
+  .blog div.section {
     text-align: left;
     margin: 0;
   }
   
-  .blog-article div.section-wrapper > div > p, .blog-article div.section-wrapper > div > h2,
-  .blog-article div.section-wrapper > div > h3, .blog-article div.section-wrapper > div > h4,
-  .blog-article div.section-wrapper > div > h5, .blog-article div.section-wrapper > div > ul, 
-  .blog-article div.section-wrapper > div > ol, .blog-article div.section-wrapper > div > .table-of-contents {
+  .blog-article div.section > div > p, .blog-article div.section > div > h2,
+  .blog-article div.section > div > h3, .blog-article div.section > div > h4,
+  .blog-article div.section > div > h5, .blog-article div.section > div > ul, 
+  .blog-article div.section > div > ol, .blog-article div.section > div > .table-of-contents {
     max-width: 530px;
     margin-left: auto;
     margin-right: auto;
   }
 
   
-  .blog div.section-wrapper.fullwidth > div {
+  .blog div.section.fullwidth > div {
     margin: auto;
     max-width: 1200px;
     padding: 0;
   }
   
   
-  .blog main div.section-wrapper h2, .blog main div.section-wrapper h3  {
+  .blog main div.section h2, .blog main div.section h3  {
     text-align: left;
   }
   
-  .blog main .section-wrapper h3 {
+  .blog main .section h3 {
     font-size: 36px;
     line-height: 40px;
     margin-top: 64px;
     text-align: left;
   }
   
-  .blog main .section-wrapper h4 {
+  .blog main .section h4 {
     text-align: left;
   }
 
@@ -172,9 +173,13 @@
 }
   
 @media (min-width: 900px) {
-  .blog div.section-wrapper > div > p.intro-text {
+  .blog div.section > div > p.intro-text {
     max-width: unset;
     margin-top: 0;
     }
 }
   
+/* Japanese font sizing styles */
+:lang(ja).blog main .section h3 {
+  font-size: var(--heading-font-size-m);
+}

@@ -29,6 +29,10 @@ main .how-to-steps-carousel-container > div p.button-container a {
   margin: 0;
 }
 
+main .how-to-steps-carousel-container > div p.button-container {
+    margin: 16px 0;
+}
+
 main .how-to-steps-carousel-container > div > h2 {
   font-size: var(--heading-font-size-xl);
   text-align: left;
@@ -133,7 +137,8 @@ main .how-to-steps-carousel .tip-number span {
   transform: translate(-50%, -50%);
 }
 
-main .how-to-steps-carousel .tip-text p {
+main .how-to-steps-carousel .tip-text p,
+main .how-to-steps-carousel .tip-text div {
   font-size: var(--body-font-size-xl);
   margin-top: 16px;
   margin-bottom: 0;
@@ -200,6 +205,11 @@ main .how-to-steps-carousel-container .icon {
 
   main .how-to-steps-carousel-container.no-cover > picture > img {
     object-fit: contain;
+  }
+
+  main .how-to-steps-carousel-container > div p.button-container {
+    margin: 0;
+    margin-top: 40px;
   }
 }
 

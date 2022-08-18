@@ -87,33 +87,82 @@ export function buildUrl(optionUrl, country, language) {
   return planUrl.href;
 }
 
-function dropdownAnalytics(plan) {
-  const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
-  const sparkEventName = 'pricing:commitmentTypeSelected';
+function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
+  const url = new URL(window.location.href);
+  const sparkTouchpoint = url.searchParams.get('touchpointName');
+  const useAlloy = (
+    window.location.hostname === 'www.stage.adobe.com'
+    || (
+      url.searchParams.has('martech')
+      && url.searchParams.get('martech').includes('alloy')
+    )
+  );
 
-  digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-  digitalData._set('spark.eventData.eventName', sparkEventName);
-  digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
-  digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
-  digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
-  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+  if (useAlloy) {
+    _satellite.track('event', {
+      xdm: {},
+      data: {
+        eventType: 'web.webinteraction.linkClicks',
+        web: {
+          webInteraction: {
+            name: adobeEventName,
+            linkClicks: {
+              value: 1,
+            },
+            type: 'other',
+          },
+        },
+        _adobe_corpnew: {
+          digitalData: {
+            primaryEvent: {
+              eventInfo: {
+                eventName: adobeEventName,
+              },
+            },
+            spark: {
+              eventData: {
+                eventName: sparkEventName,
+                trigger: sparkTouchpoint,
+                sendTimestamp: new Date().getTime(),
+                contextualData4: `billingFrequency:${plan.frequency}`,
+                contextualData6: `commitmentType:${plan.frequency}`,
+                contextualData7: `currencyCode:${plan.currency}`,
+                contextualData9: `offerId:${plan.offerId}`,
+                contextualData10: `price:${plan.price}`,
+                contextualData12: `productName:${plan.name} - ${plan.frequency}`,
+                contextualData14: 'quantity:1',
+              },
+            },
+          },
+        },
+      },
+    });
+  } else {
+    digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+    digitalData._set('spark.eventData.eventName', sparkEventName);
+    digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
+    digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
+    digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
+    digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
+    digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
+    digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
+    digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+    digitalData._set('spark.eventData.trigger', sparkTouchpoint);
 
-  _satellite.track('event', {
-    digitalData: digitalData._snapshot(),
-  });
+    _satellite.track('event', {
+      digitalData: digitalData._snapshot(),
+    });
 
-  digitalData._delete('primaryEvent.eventInfo.eventName');
-  digitalData._delete('spark.eventData.eventName');
-  digitalData._delete('spark.eventData.contextualData4');
-  digitalData._delete('spark.eventData.contextualData6');
-  digitalData._delete('spark.eventData.contextualData7');
-  digitalData._delete('spark.eventData.contextualData9');
-  digitalData._delete('spark.eventData.contextualData10');
-  digitalData._delete('spark.eventData.contextualData12');
-  digitalData._delete('spark.eventData.contextualData14');
+    digitalData._delete('primaryEvent.eventInfo.eventName');
+    digitalData._delete('spark.eventData.eventName');
+    digitalData._delete('spark.eventData.contextualData4');
+    digitalData._delete('spark.eventData.contextualData6');
+    digitalData._delete('spark.eventData.contextualData7');
+    digitalData._delete('spark.eventData.contextualData9');
+    digitalData._delete('spark.eventData.contextualData10');
+    digitalData._delete('spark.eventData.contextualData12');
+    digitalData._delete('spark.eventData.contextualData14');
+  }
 }
 
 function decorateIconList($column) {
@@ -141,10 +190,9 @@ function decorateIconList($column) {
   if ($iconList.children.length > 0) $column.appendChild($iconList);
 }
 
-async function selectPlan($pricingHeader, planUrl, sendAnalyticEvent) {
+async function fetchPlan(planUrl) {
   const link = new URL(planUrl);
   const params = link.searchParams;
-  let buttonId;
 
   const plan = {
     url: planUrl,
@@ -159,17 +207,17 @@ async function selectPlan($pricingHeader, planUrl, sendAnalyticEvent) {
     plan.offerId = 'FREE0';
     plan.frequency = 'monthly';
     plan.name = 'Free';
-    buttonId = 'free-trial';
+    plan.stringId = 'free-trial';
   } else {
     plan.offerId = params.get('items[0][id]');
     plan.frequency = null;
     plan.name = 'Premium';
-    buttonId = '3-month-trial';
+    plan.stringId = '3-month-trial';
   }
 
-  if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1') {
+  if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1' || plan.offerId === 'CFB1B7F391F77D02FE858C43C4A5C64F') {
     plan.frequency = 'Monthly';
-  } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24') {
+  } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24' || plan.offerId === 'BADDACAB87D148A48539B303F3C5FA92') {
     plan.frequency = 'Annual';
   } else {
     plan.frequency = null;
@@ -189,14 +237,23 @@ async function selectPlan($pricingHeader, planUrl, sendAnalyticEvent) {
     plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.rawPrice[0]}</strong>`);
   }
 
+  return plan;
+}
+
+async function selectPlan($pricingHeader, planUrl, sendAnalyticEvent) {
+  const plan = await fetchPlan(planUrl);
+
   $pricingHeader.querySelector('.pricing-columns-price').innerHTML = plan.formatted;
   $pricingHeader.querySelector('.pricing-columns-price').classList.add(plan.currency.toLowerCase());
   $pricingHeader.querySelector('.pricing-columns-cta').href = buildUrl(plan.url, plan.country, plan.language);
-  $pricingHeader.querySelector('.pricing-columns-cta').id = buttonId;
+  $pricingHeader.querySelector('.pricing-columns-cta').dataset.planUrl = planUrl;
+  $pricingHeader.querySelector('.pricing-columns-cta').id = plan.stringId;
   $pricingHeader.querySelector('.pricing-columns-vat-info').innerHTML = plan.vatInfo || '';
 
   if (sendAnalyticEvent) {
-    dropdownAnalytics(plan);
+    const adobeEventName = 'adobe.com:express:pricing:commitmentType:selected';
+    const sparkEventName = 'pricing:commitmentTypeSelected';
+    pushPricingAnalytics(adobeEventName, sparkEventName, plan);
   }
 }
 
@@ -254,6 +311,13 @@ function decoratePlan($column) {
     const $pricingCta = createTag('a', { class: 'pricing-columns-cta button large' });
     $pricingCta.innerHTML = $elements[2].textContent;
     $pricingCta.href = plans[0].url;
+    $pricingCta.addEventListener('click', async () => {
+      const { planUrl } = $pricingCta.dataset;
+      const plan = await fetchPlan(planUrl);
+      const adobeEventName = 'adobe.com:express:pricing:beginPurchaseFlow';
+      const sparkEventName = 'beginPurchaseFlow';
+      pushPricingAnalytics(adobeEventName, sparkEventName, plan);
+    });
     $pricingHeader.append($pricingCta);
 
     selectPlan($pricingHeader, plans[0].url, false);

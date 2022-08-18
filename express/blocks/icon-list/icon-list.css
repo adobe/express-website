@@ -54,7 +54,7 @@ main .icon-list h3, main .icon-list h4 {
 
 /* two column styles */
 
-main .section-wrapper.icon-list-highlight-container {
+main .section.icon-list-highlight-container {
   border-top: 12px solid black;
   border-image: var(--gradient-highlight-horizontal) 1;
   margin-top: 120px;
@@ -63,7 +63,7 @@ main .section-wrapper.icon-list-highlight-container {
   border-right: 0;
 }
 
-main .section-wrapper.icon-list-two-column-container h2 {
+main .section.icon-list-two-column-container h2 {
   margin-top: 0;
 }
 
@@ -141,7 +141,7 @@ main .icon-list.highlight .icon-list-regular .icon-list-image svg {
   height: 72px;
 }
 
-main .section-wrapper.icon-list-two-column-container > div {
+main .section.icon-list-two-column-container > div {
   max-width: unset;
   padding: 60px 32px;
 }
@@ -162,13 +162,13 @@ main .icon-list a:not(.button):any-link {
     padding: 0 32px;  
   }
 
-  main .section-wrapper.icon-list-two-column-container > div {
+  main .section.icon-list-two-column-container > div {
     max-width: 1122px;
   }  
 }
 
 @media (min-width:1200px) {
-  main .section-wrapper.icon-list-two-column-container > div {
+  main .section.icon-list-two-column-container > div {
     max-width: 1200px;
   }
 }

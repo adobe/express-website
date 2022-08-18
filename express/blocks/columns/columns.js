@@ -16,15 +16,20 @@ import {
   transformLinkToAnimation,
   addAnimationToggle,
   toClassName,
-  getLocale,
   getIconElement,
-// eslint-disable-next-line import/no-unresolved
+  addFreePlanWidget,
+  addHeaderSizing,
 } from '../../scripts/scripts.js';
 
 import {
   displayVideoModal,
   hideVideoModal,
+  isVideoLink,
 } from '../shared/video.js';
+
+import {
+  createFloatingButton,
+} from '../floating-button/floating-button.js';
 
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;
@@ -67,9 +72,21 @@ function transformToVideoColumn($cell, $a) {
   }
 }
 
-function decorateIconList($columnCell, rowNum) {
+function decorateIconList($columnCell, rowNum, blockClasses) {
   const icons = [...$columnCell.querySelectorAll('img.icon, svg.icon')]
     .filter(($icon) => !$icon.closest('p').classList.contains('social-links'));
+  // decorate offer icons
+  if (rowNum === 0 && blockClasses.contains('offer')) {
+    const $titleIcon = $columnCell.querySelector('img.icon, svg.icon');
+    const $title = $columnCell.querySelector('h1, h2, h3, h4, h5, h6');
+    if ($title && $titleIcon) {
+      const $titleIconWrapper = createTag('span', { class: 'columns-offer-icon' });
+      $titleIconWrapper.append($titleIcon);
+      $title.prepend($titleIconWrapper);
+    }
+    return;
+  }
+
   if (rowNum === 0
     && icons.length === 1
     && icons[0].closest('p').innerText === ''
@@ -108,29 +125,6 @@ function decorateIconList($columnCell, rowNum) {
   }
 }
 
-function addHeaderSizing($block) {
-  const headings = $block.querySelectorAll('h1, h2');
-  // Each threshold of JP should be smaller than other languages
-  // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 12 },
-      { name: 'very-long', threshold: 18 },
-      { name: 'x-long', threshold: 24 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
-  headings.forEach((h) => {
-    const { length } = h.textContent;
-    sizes.forEach((size) => {
-      if (length >= size.threshold) h.classList.add(`columns-heading-${size.name}`);
-    });
-  });
-}
-
 export default function decorate($block) {
   const $rows = Array.from($block.children);
 
@@ -153,7 +147,7 @@ export default function decorate($block) {
     const $cells = Array.from($row.children);
     $cells.forEach(($cell, cellNum) => {
       if ($cell.querySelector('img.icon, svg.icon')) {
-        decorateIconList($cell, rowNum);
+        decorateIconList($cell, rowNum, $block.classList);
       }
 
       if (cellNum === 0 && isNumberedList) {
@@ -181,18 +175,10 @@ export default function decorate($block) {
         $parentDiv.insertBefore($pics[0], $parentParagraph);
       }
 
-      // legal copy
-      $cell.querySelectorAll(':scope p').forEach(($p) => {
-        if ($p.textContent.trim().startsWith('* ')) {
-          $p.classList.add('legal-copy');
-        }
-      });
-
       // this probably needs to be tighter and possibly earlier
       const $a = $cell.querySelector('a');
       if ($a) {
-        if (($a.href.includes('vimeo') || $a.href.includes('youtu') || $a.href.includes('/media_'))
-          && $row.parentElement.classList.contains('highlight')) {
+        if (isVideoLink($a.href) && $row.parentElement.classList.contains('highlight')) {
           transformToVideoColumn($cell, $a);
 
           $a.addEventListener('click', (e) => {
@@ -210,35 +196,8 @@ export default function decorate($block) {
       if ($a && $a.classList.contains('button')) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
-
-          const $primaryCTA = $a;
-          const $floatButton = $primaryCTA.parentElement.cloneNode(true);
-          $floatButton.classList.add('fixed-button');
-          document.body.classList.add('has-fixed-button');
-          $cell.appendChild($floatButton);
-          $primaryCTA.classList.add('primaryCTA');
-          $floatButton.style.display = 'none';
-
-          setTimeout(() => {
-            $floatButton.classList.remove('shown');
-            $floatButton.style.display = '';
-          }, 1000);
-
-          const hideButtonWhenInView = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.intersectionRatio > 0) {
-                $floatButton.classList.remove('shown');
-              } else if (document.body.classList.contains('has-fixed-button')) {
-                $floatButton.classList.add('shown');
-              }
-            });
-          }, { threshold: 0 });
-
-          hideButtonWhenInView.observe($primaryCTA);
-          const banner = document.querySelector('.banner-container');
-          if (banner) {
-            hideButtonWhenInView.observe(banner);
-          }
+          $a.classList.add('primaryCTA');
+          createFloatingButton($a);
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
@@ -247,7 +206,7 @@ export default function decorate($block) {
       // handle history events
       window.addEventListener('popstate', ({ state }) => {
         hideVideoModal();
-        const { url, title } = state;
+        const { url, title } = state || {};
         if (url) {
           displayVideoModal(url, title);
         }
@@ -256,7 +215,7 @@ export default function decorate($block) {
       $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
 
       $cell.classList.add('column');
-      if ($cell.firstElementChild.tagName === 'PICTURE') {
+      if ($cell.firstElementChild && $cell.firstElementChild.tagName === 'PICTURE') {
         $cell.classList.add('column-picture');
       }
 
@@ -269,5 +228,36 @@ export default function decorate($block) {
     });
   });
   addAnimationToggle($block);
-  addHeaderSizing($block);
+  addHeaderSizing($block, 'columns-heading');
+
+  // decorate offer
+  if ($block.classList.contains('offer')) {
+    $block.querySelectorAll('a.button').forEach(($a) => $a.classList.add('large', 'wide'));
+    if ($rows.length > 1) {
+      // move all content into first row
+      $rows.forEach(($row, rowNum) => {
+        if (rowNum > 0) {
+          const $cells = Array.from($row.children);
+          $cells.forEach(($cell, cellNum) => {
+            $rows[0].children[cellNum].append(...$cell.children);
+          });
+          $row.remove();
+        }
+      });
+    }
+  }
+
+  // add free plan widget to first columns block on every page
+  if (document.querySelector('main .columns') === $block
+    && document.querySelector('main .block') === $block) {
+    addFreePlanWidget($block.querySelector('.button-container')
+      || $block.querySelector(':scope .column:not(.hero-animation-overlay,.columns-picture)'));
+  }
+
+  // invert buttons in regular columns inside columns-highlight-container
+  if ($block.closest('.section.columns-highlight-container') && !$block.classList.contains('highlight')) {
+    $block.querySelectorAll('a.button').forEach(($button) => {
+      $button.classList.add('dark');
+    });
+  }
 }

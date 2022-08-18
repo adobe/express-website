@@ -34,6 +34,7 @@
   --color-premium: #EBCF2D;
   --gradient-highlight-vertical: linear-gradient(15deg, #7c84fc, #ff4dd2);
   --gradient-highlight-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
+  --gradient-highlight-diagonal: linear-gradient(45deg, #7c84fc, #ff4dd2);
 
   /* body */
   --body-background-color: var(--color-white);
@@ -145,7 +146,7 @@ a.button:any-link {
   padding: 5px 1.2em 6px 1.2em;
   text-align: center;
   font-size: var(--body-font-size-s);
-  font-style: normal; 
+  font-style: normal;
   font-weight: 600;
   line-height: var(--body-line-height);
   cursor: pointer;
@@ -160,7 +161,7 @@ a.button:any-link {
 }
 
 a.button.xlarge:any-link {
-  padding: 13px 1.5em 13px 1.5em;
+  padding: 13px 1.5em 14px 1.5em;
   border-radius: 27px;
   font-size: var(--body-font-size-m);
 }
@@ -177,7 +178,7 @@ a.button.small:any-link {
 }
 
 a.button:any-link,
-a.button.accent:any-link, 
+a.button.accent:any-link,
 a.button.primaryCTA:any-link {
   color: var(--color-white);
   background-color: var(--color-info-accent);
@@ -199,7 +200,7 @@ a.button.primaryCTA:any-link:active {
 }
 
 a.button:focus,
-a.button.accent:focus, 
+a.button.accent:focus,
 a.button.primaryCTA:focus {
   background-color: var(--color-info-accent-hover);
   border-color: var(--color-info-accent-hover);
@@ -339,6 +340,40 @@ a.button.dark.reverse:any-link:focus {
   color: var(--color-info-accent-hover);
 }
 
+a.button.wide {
+  display: block;
+}
+
+a.button.gradient:any-link,
+a.button.gradient:any-link:hover,
+a.button.gradient:any-link:active,
+a.button.gradient:any-link:focus {
+  color: var(--color-white);
+  border-color: transparent;
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2,#FF993B );
+  background-size: 400% 400%;
+  transition: background-color .3s, color .3s, border .3s;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+}
+
+@-webkit-keyframes buttonGradient {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@-moz-keyframes buttonGradient {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes buttonGradient {
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
 a.button > svg {
   float: left;
   display: inline;
@@ -399,16 +434,20 @@ main img {
   max-width: 100%;
 }
 
-main .section-wrapper {
+main .section {
   padding-top: 40px;
 }
 
-main .section-wrapper:first-of-type {
+main .section:first-of-type {
   padding-top: 0;
 }
 
-main .section-wrapper:last-of-type {
+main .section:last-of-type {
   margin-bottom: 0;
+}
+
+main .section:last-of-type > .default-content-wrapper {
+  padding-bottom: 40px;  
 }
 
 @media (min-width:600px) {
@@ -444,17 +483,17 @@ main .section-wrapper:last-of-type {
 @media (min-width:900px) {
 
   main h5 + p,
-  main .section-wrapper p.button-container {
+  main .section p.button-container {
     text-align: unset;
   }
 
-  main .section-wrapper.cards-container {
+  main .section.cards-container {
     background-color: unset;
-  }  
+  }
 }
 
 @media(min-width:1200px) {
-  main .section-wrapper h1 {
+  main .section h1 {
     font-size: var(--heading-font-size-l);
   }
 }
@@ -472,7 +511,7 @@ main .hero.hero-noimage {
   padding-bottom: 0;
 }
 
-main .hero.hero-noimage + .section-wrapper {
+main .hero.hero-noimage + .section {
   padding-top: 0;
 }
 
@@ -567,6 +606,10 @@ main .hero a.button:any-link {
   border-radius: 22px;
 }
 
+main .section div .block p.legal-copy {
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
+}
 
 @media (min-width:600px) {
   main .hero h5 {
@@ -602,9 +645,9 @@ main .hero a.button:any-link {
 @media (min-width:1200px){
   main .hero h1 {
     font-size: var(--heading-font-size-xxl);
-    margin: 0; 
+    margin: 0;
   }
-  
+
   main .hero .columns > div > div {
     margin: 8px;
   }
@@ -612,62 +655,54 @@ main .hero a.button:any-link {
 
 /* make page : default content */
 
-main .section-wrapper {
+main .section {
   padding-top: 60px;
 }
 
-main .section-wrapper:first-of-type {
-  padding-top: 120px;
-}
-
-main .section-wrapper:first-of-type {
-  padding: 0;
-}
-
-main .section-wrapper > div {
+main .section > div {
   margin: auto;
   max-width: 375px;
   padding: 0 32px;
 }
 
-main .section-wrapper > div:empty {
+main .section > div:empty {
   padding: 0;
 }
 
-main .section-wrapper h1,
-main .section-wrapper h2,
-main .section-wrapper h3,
-main .section-wrapper h4,
-main .section-wrapper h5 {
+main .section h1,
+main .section h2,
+main .section h3,
+main .section h4,
+main .section h5 {
   margin: 0;
 }
 
-main .section-wrapper > div > h2 {
+main .section > div > h2 {
   margin-top: 80px
 }
 
 
-main .section-wrapper * + h2 {
+main .section * + h2 {
   margin-top: 120px;
 }
 
-main .section-wrapper > div > h3  {
+main .section > div > h3  {
   margin-top: 64px;
 }
 
-main .section-wrapper > div > h3:first-child  {
+main .section > div > h3:first-child  {
   margin-top: 0px;
 }
 
-main .section-wrapper * + h2 {
+main .section * + h2 {
     margin-top: 64px;
 }
 
-main .section-wrapper * + h4 {
+main .section * + h4 {
   margin-top: 56px;
 }
 
-main .section-wrapper h1 + h5 {
+main .section h1 + h5 {
   font-size: 20px;
   line-height: 28px;
   font-weight: normal;
@@ -675,34 +710,43 @@ main .section-wrapper h1 + h5 {
   margin-bottom: 16px;
 }
 
-main .section-wrapper h5 + p {
+main .section h5 + p {
   font-size: 16px;
   text-align: center;
   margin: 0;
 }
 
-main .section-wrapper p {
+main .section p {
     margin: 32px 0;
 }
 
-main .section-wrapper p.button-container {
+main .section p.button-container {
   text-align: center;
   margin-top: 16px;
   margin-bottom: 0;
 }
 
-main .section-wrapper .hero {
+main .section .hero {
   color: initial;
 }
 
+main [data-audience] {
+  display: none;
+}
+
+body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"],
+body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"] {
+  display: block;
+}
+
 @media (min-width:900px) {
-  main .section-wrapper > div {
+  main .section > div {
     max-width: 830px;
   }
 }
 
 @media (min-width:1200px) {
-  main .section-wrapper > div {
+  main .section > div {
     max-width: 1024px;
   }
 }
@@ -730,6 +774,74 @@ main .template-list.sixcols {
 
 main .columns.columns-marquee {
   min-height: 650px;
+}
+
+/* free plan widget */
+main .block .button-container.free-plan-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+main .block.center .button-container.free-plan-container {
+  justify-content: center;
+}
+
+main .block .button-container.free-plan-container a.button {
+  max-height: 24px;
+  margin-right: 24px !important;
+}
+
+main .block .free-plan-widget {
+  box-sizing: border-box;
+  background-color: var(--color-gray-100);
+  border-radius: 20px;
+  margin: 32px 0;
+  padding: 16px 24px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+main .block.center .free-plan-widget {
+  margin: 32px auto;
+}
+
+main .block .free-plan-widget > div {
+  display: flex;
+  flex-direction: row;
+}
+
+main .block .free-plan-widget > div > div:first-child {
+  position: relative;
+  margin-top: 5px;
+  margin-right: 6px;
+  width: 14px;
+  height: 14px;
+  background: #33AB84;
+  border-radius: 50%;
+}
+
+main .block .free-plan-widget .icon.icon-checkmark {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  fill: var(--color-white);
+  width: 8px;
+  max-height: 8px;
+}
+
+@media (min-width:900px) {
+  main .block .button-container.free-plan-container .free-plan-widget {
+    margin: 0;
+  }
+
+  main .block.center .free-plan-widget {
+    margin: 0 auto;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -761,4 +873,77 @@ img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-mic
   height: 70px;
   width: auto;
   margin: 8px;
+}
+
+/* Lottie player default */
+.lottie {
+  width: 32px;
+  height: 32px;
+}
+
+/* hide promotion block until loaded */
+main .promotion {
+  display: none;
+}
+
+/* hide floating button before css loads */
+main .floating-button-wrapper,
+main .floating-button {
+  position: fixed;
+  display: none;
+}
+/* hide the .section that ONLY has the floating-button block */
+/* (removes the extra whitespace from padding) */
+[class=".section floating-button-container"] {
+  display: none;
+}
+
+/* Japanese heading balanced word wrap styles */
+wbr.wbr-off {
+  display: none;
+}
+
+/* progressive section appearance */
+main .section[data-section-status='loading'],
+main .section[data-section-status='initialized'] {
+  display: none;
+}
+
+/* Japanese font sizing styles */
+:lang(ja) main h1.heading-long {
+  font-size: var(--heading-font-size-xl);
+}
+
+:lang(ja) main h1.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h1.heading-x-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-very-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main h2.heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
+
+@media (max-width: 600px) {
+  :lang(ja) main h2.heading-long {
+    font-size: var(--heading-font-size-l);
+  }
+
+  :lang(ja) main h2.heading-very-long {
+    font-size: var(--heading-font-size-m);
+  }
+
+  :lang(ja) main h2.heading-x-long {
+    font-size: var(--heading-font-size-m);
+  }
 }

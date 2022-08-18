@@ -18,6 +18,7 @@ import {
   fixIcons,
   toClassName,
   createOptimizedPicture,
+  trackBranchParameters,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -48,6 +49,10 @@ export default async function decorate($block) {
     const h2 = div.querySelector('h2');
 
     const containerDiv = createTag('div', { class: 'promotion-wrapper' });
+
+    containerDiv.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
 
     const heroPicture = div.querySelector('picture');
     if (heroPicture) {
@@ -83,5 +88,13 @@ export default async function decorate($block) {
     });
   } else {
     $block.innerHTML = '';
+  }
+
+  const $links = $block.querySelectorAll('a');
+
+  if ($links) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: $links });
+    document.dispatchEvent(linksPopulated);
+    trackBranchParameters($links);
   }
 }

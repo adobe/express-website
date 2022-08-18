@@ -66,7 +66,7 @@ async function fetchAuthorImage($image, author) {
 }
 
 function decorateBlogLinkedImages() {
-  document.querySelectorAll('main div.section-wrapper > div > p > a').forEach((a) => {
+  document.querySelectorAll('main div.section > div > p > a').forEach((a) => {
     if (a.textContent.startsWith('https://')) {
       const prevSib = a.parentElement.previousElementSibling;
       if (prevSib) {
@@ -111,7 +111,9 @@ export default async function decorateBlogPage() {
     const tagString = getMeta('article:tag');
     // eslint-disable-next-line no-unused-vars
     const tags = tagString.split(',');
-    $eyebrow.innerHTML = getMeta('category');
+    const locale = getLocale(window.location);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    $eyebrow.innerHTML = `<a href="${urlPrefix}/express/learn/blog/tags/${toClassName(getMeta('category'))}">${getMeta('category')}</a>`;
     // $eyebrow.innerHTML = tags[0];
     $blogHeader.append($eyebrow);
     $blogHeader.append($h1);
@@ -182,19 +184,19 @@ export default async function decorateBlogPage() {
     decorateBlogLinkedImages();
   }
 
-  const pictures = document.querySelectorAll('main div.section-wrapper > div > picture');
+  const pictures = document.querySelectorAll('main div.section > div > picture');
   pictures.forEach((picture) => {
-    const section = picture.closest('.section-wrapper');
+    const section = picture.closest('.section');
     section.classList.add('fullwidth');
   });
   /*
-  const introText = document.querySelector('main div.section-wrapper p');
+  const introText = document.querySelector('main div.section p');
   if (introText) {
     introText.classList.add('intro-text');
   }
   */
 
-  const section = createTag('div', { class: 'section-wrapper' });
+  const section = createTag('div', { class: '.section' });
   const block = buildBlock('tags', '');
   block.classList.add('block');
   block.setAttribute('data-block-name', 'tags');

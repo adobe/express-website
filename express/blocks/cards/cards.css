@@ -1,9 +1,9 @@
-main .section-wrapper.cards-container {
+main .section.cards-container {
   background-color: #F1F3F4;
   padding-top: 80px;
 }
 
-main .section-wrapper.cards-container > div > h2:first-of-type {
+main .section.cards-container > div > h2:first-of-type {
   margin-top: 0;
 }
 

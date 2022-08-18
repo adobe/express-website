@@ -1,3 +1,8 @@
+.submit-email-container {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
 .submit-email-container .submit-email {
   background-color: #FAFAFA;
   padding: 56px 16px;
@@ -5,16 +10,14 @@
 }
 
 .submit-email > div {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   text-align: left;
 }
 
 .submit-email .icon-cc-express-logo, 
 .submit-email .icon-creative-cloud-express {
-  width: 127px;
-  height: 124px;
+  height: 31px;
+  width: auto;
+  padding-bottom: 32px;
 }
 
 .submit-email h1 {
@@ -22,7 +25,8 @@
   font-weight: 900;
   text-align: left;
   line-height: 36px;
-  padding: 40px 0px;
+  padding-top: 0px;
+  padding-bottom: 12px;
 }
 
 .submit-email span {
@@ -35,11 +39,16 @@
   font-size: var(--body-font-size-xxl);
   font-weight: bold;
   text-align: left;
+  margin-top: 16px;
   margin-bottom: 16px;
 }
 
 .submit-email form .form-heading.success {
   color: #33AB84;
+}
+
+.submit-email form .form-heading.error {
+  color: #EC5B62;
 }
 
 .submit-email form .form-block {
@@ -57,7 +66,7 @@
   border-radius: 6px;
   width: 215px;
   height: 32px;
-  margin-bottom: 16px;
+  margin-bottom: 11px;
   padding-left: 12px;
 }
 
@@ -71,6 +80,18 @@
 
 
 @media(min-width: 900px) {
+  .submit-email-container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .submit-email .icon-cc-express-logo, 
+  .submit-email .icon-creative-cloud-express {
+    height: 51px;
+    width: auto;
+    padding-bottom: 32px;
+  }
+
   .submit-email-container .submit-email {
     padding: 56px;
     padding-bottom: 80px;
@@ -88,7 +109,7 @@
   .submit-email h1 {
     font-size: var(--heading-font-size-l);
     line-height: 44px;
-    padding-top: 12px;
+    padding-bottom: 10px;
   }
 
   .submit-email form .form-block {
@@ -100,13 +121,23 @@
     margin-top: 0px;
   }
 
+  .submit-email form .form-heading {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
   .submit-email span {
     display: block;
   }
 }
 
 @media(min-width: 1200px) {
-  .submit-email span {
-    display: inline-block;
+  .submit-email-container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  
+  .submit-email-container .submit-email {
+    padding: 80px;
   }
 }

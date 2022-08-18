@@ -28,10 +28,18 @@ main .inline-banner .icon {
   width: 72px;
 }
 
+main .columns-highlight-container .inline-banner h4 {
+  font-size: var(--heading-font-size-s);
+}
+
 @media (min-width:900px) {
   main .inline-banner {
     width: 100%;
     margin: 40px auto;
+  }
+
+  main .columns-highlight-container .inline-banner h4 {
+    font-size: var(--heading-font-size-m);
   }
 }
 
