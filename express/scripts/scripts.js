@@ -1575,7 +1575,7 @@ function buildAutoBlocks($main) {
     $main.querySelector(':scope > div:last-of-type').append(branchio);
   }
 
-// Load the app store autoblocks...
+  // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     let $block;
     if ($main.querySelector('.app-store-highlight') === null) {
