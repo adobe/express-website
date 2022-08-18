@@ -61,8 +61,12 @@ function loadVideo($block, payload) {
 
     $inlinePlayer.load();
     $inlinePlayerDuration.textContent = currentVideo.duration;
-
     $videoTitle.textContent = currentVideo.title;
+    if (currentVideo.hideTitle) {
+      $videoTitle.classList.add('hidden-mobile');
+    } else {
+      $videoTitle.classList.remove('hidden-mobile');
+    }
     toggleVideoButtonState($block, $videoButton);
   }
 }
@@ -279,7 +283,7 @@ export default function decorate($block) {
     if ($videos.length > 0) {
       const $videosThumbnail = $row.querySelector('picture');
       const $nodes = $row.querySelectorAll('div>div');
-      const $videoDuration = $nodes[$nodes.length - 1].textContent;
+      const $videoDuration = $nodes[2].textContent;
       payload.sessions[payload.sessions.length - 1].videos.push({
         title: $videos[0].textContent,
         files: Array.from($videos, (a) => ({
@@ -289,6 +293,7 @@ export default function decorate($block) {
         })),
         thumbnail: $videosThumbnail.querySelector('img').src,
         duration: $videoDuration,
+        hideTitle: $nodes[$nodes.length - 1].textContent.toLowerCase() === 'hide title',
       });
     }
   });
