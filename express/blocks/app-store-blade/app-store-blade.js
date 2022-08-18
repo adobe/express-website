@@ -73,7 +73,7 @@ function buildStandardPayload($block, payload) {
   payload.badgeLink = 'https://adobesparkpost.app.link/eOBwLjVLpsb';
 }
 
-function buildPayloadFromBlock($block, payload) {
+function updatePayloadFromBlock($block, payload) {
   Array.from($block.children).forEach(($row) => {
     const $divs = $row.querySelectorAll('div');
     switch ($divs[0].textContent) {
@@ -190,6 +190,7 @@ function decorateBlade($block, payload) {
 }
 
 export default async function decorate($block) {
+  let $injectionPoint;
   const payload = {
     heading: '',
     copyParagraphs: [],
@@ -207,14 +208,18 @@ export default async function decorate($block) {
     .then((placeholders) => {
       payload.ratingScore = placeholders['apple-store-rating-score'];
       payload.ratingCount = placeholders['apple-store-rating-count'];
+      $injectionPoint = placeholders['app-store-blade-follow-block'];
     });
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks')
-    .toLowerCase()) && $block.children.length <= 0) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     buildStandardPayload($block, payload);
-  } else {
-    buildPayloadFromBlock($block, payload);
+    const $parentSection = $block.parentNode.parentNode;
+    const $elementToFollow = document.querySelector(`.${$injectionPoint}`);
+    $parentSection.dataset.audience = 'desktop';
+    $elementToFollow.after($parentSection);
   }
+
+  updatePayloadFromBlock($block, payload);
 
   $block.innerHTML = '';
 
