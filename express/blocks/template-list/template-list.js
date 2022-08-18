@@ -28,18 +28,27 @@ import { buildCarousel } from '../shared/carousel.js';
 const cache = {
   templates: [],
   queryString: '',
+  nextQuery: '',
   masonry: undefined,
 };
 
 function fetchTemplates(queryString, offset) {
-  // return fetch(`https://www.adobe.com/cc-express-search-api?q=${queryString}&schema=template&sort=mostremixed&type=free&locale=en&limit=70&offset=${offset}`)
-  return fetch(`https://www.adobe.com/cc-express-search-api?q=${queryString}&schema=template&orderBy=-remixCount&premium=false&locales=en&limit=70&offset=${offset}`)
-    // eslint-disable-next-line no-underscore-dangle
-    .then((response) => response.json()).then((response) => response._embedded.results);
+  if (cache.nextQuery !== '') {
+    return fetch(`https://www.adobe.com${cache.nextQuery}`)
+      .then((response) => response.json())
+      .then((response) => response);
+  }
+  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${queryString} AND locales:en&schema=template&orderBy=-remixCount&premium=false&limit=70&next=${offset}`)
+    .then((response) => response.json())
+    .then((response) => response);
 }
 
 async function normalizeFetchedTemplates(queryString) {
-  const templateFetched = await fetchTemplates(queryString, cache.templates.length - 1);
+  const response = await fetchTemplates(queryString, cache.templates.length - 1);
+  // eslint-disable-next-line no-underscore-dangle
+  const templateFetched = response._embedded.results;
+  // eslint-disable-next-line no-underscore-dangle
+  cache.nextQuery = response._links.next.href;
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
