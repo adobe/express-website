@@ -1484,7 +1484,7 @@ function loadIMS() {
     locale: getLocale(window.location),
     environment: 'prod',
   };
-  loadScript('auth.services.adobe.com/imslib/imslib.min.js');
+  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
 }
 
 function loadFEDS() {
