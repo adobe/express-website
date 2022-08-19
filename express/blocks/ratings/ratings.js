@@ -441,7 +441,6 @@ export default async function decorate($block) {
     }
   }
 
-  
   const $rows = Array.from($block.children);
   if (!$rows[1]) return;
 
@@ -459,7 +458,7 @@ export default async function decorate($block) {
   $block.innerHTML = '';
   lazyLoadLottiePlayer($block);
 
-  const resp = await fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`)
+  const resp = await fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`);
   if (resp.ok) {
     const response = JSON.parse(resp);
     if (response.data[0].Average) {
