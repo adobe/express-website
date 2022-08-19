@@ -147,17 +147,17 @@ function decorateContent($block, payload) {
 }
 
 function decorateGallery($block, payload) {
-  const $cardsPlatform = createTag('div', { class: 'cards-platform' });
-  const $cards = createTag('div', { class: 'cards' });
+  const $highlightsPlatform = createTag('div', { class: 'highlights-platform' });
+  const $highlights = createTag('div', { class: 'highlights' });
 
-  $cardsPlatform.append($cards);
+  $highlightsPlatform.append($highlights);
   payload.images.forEach((image) => {
-    const $previewContainer = createTag('div', { class: 'card' });
+    const $previewContainer = createTag('div', { class: 'highlight' });
     $previewContainer.append(image);
-    $cards.append($previewContainer);
+    $highlights.append($previewContainer);
   });
 
-  const $previewContainer = createTag('div', { class: 'card' });
+  const $previewContainer = createTag('div', { class: 'highlight' });
   $previewContainer.append(createTag('video', {
     type: `video/${getUrlExtension(payload.screenDemo)}`,
     src: payload.screenDemo,
@@ -166,9 +166,9 @@ function decorateGallery($block, payload) {
     muted: true,
     playsInline: true,
   }));
-  $cards.append($previewContainer);
+  $highlights.append($previewContainer);
 
-  $block.append($cardsPlatform);
+  $block.append($highlightsPlatform);
 }
 
 function decorateAppStoreIcon($block, payload) {
@@ -186,7 +186,7 @@ function decorateAppStoreIcon($block, payload) {
 
 function initScrollAnimation($block) {
   const $contentWrapper = $block.querySelector('.content-wrapper');
-  const $cardsPlatform = $block.querySelector('.cards-platform');
+  const $highlightsPlatform = $block.querySelector('.highlights-platform');
 
   $contentWrapper.style.transform = 'scale(1.2)';
   document.addEventListener('scroll', () => {
@@ -199,8 +199,8 @@ function initScrollAnimation($block) {
     }
 
     if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
-      const totalScroll = $cardsPlatform.scrollWidth - window.innerWidth;
-      $cardsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
+      const totalScroll = $highlightsPlatform.scrollWidth - window.innerWidth;
+      $highlightsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
     }
   });
 }
