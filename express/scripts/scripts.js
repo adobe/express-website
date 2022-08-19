@@ -1590,7 +1590,7 @@ function buildAutoBlocks($main) {
 
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
