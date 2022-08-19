@@ -1591,7 +1591,11 @@ function buildAutoBlocks($main) {
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
-
+    // work around for splitting columns and sixcols template list
+    // add metadata condition to minimize impact on other use cases
+    if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+      blocksToSplit.push('columns--fullsize-center-');
+    }
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
