@@ -66,6 +66,7 @@ main .hero-3d .fallback {
     right: 0;
     box-sizing: border-box;
     border-width: 0px;
+    border: none;
     z-index: -1;
     object-fit: cover;
     width: 100vw;
@@ -126,5 +127,12 @@ main .hero-3d>div>div {
 @media (min-width: 1200px) {
     main .hero-3d>div>div {
         max-height: 222px;
+    }
+}
+
+
+@media (min-width: 1200px) {
+    main .section>div {
+        max-width: 1356px;
     }
 }

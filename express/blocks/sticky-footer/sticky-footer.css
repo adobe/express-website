@@ -11,23 +11,27 @@ main .sticky-footer-wrapper {
 main .sticky-footer {
     background: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
     background-size: 400% 400%;
-    width: calc(574px - 32px);
-    height: calc(211px - 32px);
+    width: calc(500px - (32px * 2));
+    height: calc(210px - (32px * 2));
     margin: 32px auto;
     padding: 32px;
-    border-radius: 32px;
+    border-radius: 28px;
+}
+
+img[alt~="qr"] {
+    border-radius: 12px;
 }
 
 main .sticky-footer>div {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     height: 100%;
 }
 
 main .sticky-footer>div>div {
-    margin: auto;
+    margin: auto 0;
     text-align: left;
 }
 
@@ -38,6 +42,40 @@ main .sticky-footer>div p {
 main .sticky-footer picture img {
     height: 147px;
     width: 147px;
+}
+
+main .sticky-footer>div p em {
+    font-style: normal;
+    margin-top: 12px;
+    font-size: var(--body-font-size-s);
+    font-weight: 300;
+}
+
+img.icon-apple-store,
+img.icon-google-store,
+img.icon-galaxy-store,
+img.icon-microsoft-store,
+img.icon-editors-choice {
+    height: 35px;
+    width: auto;
+    margin: 0;
+    margin-top: 16px;
+    margin-right: 16px;
+}
+
+img.icon-editors-choice {
+    height: 25px;
+    margin-left: 4px;
+    margin-top: 5px;
+}
+
+img.icon-duplicate {
+    margin-left: 8px;
+    width: var(--body-font-size-s);
+    height: var(--body-font-size-s);
+    vertical-align: middle;
+    cursor: pointer;
+    pointer-events: all;
 }
 
 @media not (min-width: 900px) {

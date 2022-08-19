@@ -15,7 +15,20 @@
  */
 export default function decorate($block) {
   if (document.body.dataset.device === 'mobile') {
-    console.warn('[sticky-footer] mobile bail out!');
     $block.remove();
+  }
+
+  const $dupIcon = $block.querySelector('img.icon-duplicate');
+  if ($dupIcon) {
+    const sib = $dupIcon.previousElementSibling;
+    if (!sib) return;
+
+    const link = sib.querySelector('a[href]');
+    if (!link || !link.href) return;
+
+    const { href } = link;
+    $dupIcon.onclick = () => {
+      navigator.clipboard.writeText(href);
+    };
   }
 }
