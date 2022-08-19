@@ -47,24 +47,24 @@ main .app-store-highlight-container .rating-stars .rating-votes {
   margin-left: 4px;
 }
 
-main .app-store-highlight-container .cards-platform {
+main .app-store-highlight-container .highlights-platform {
   overflow: auto;
   margin: 0 -32px;
   scrollbar-width: none;  /* Firefox */
 }
 
-main .app-store-highlight-container .cards {
+main .app-store-highlight-container .highlights {
   display: flex;
   gap: 12px;
   padding: 53px 32px;
   width: max-content;
 }
 
-main .app-store-highlight-container .cards::-webkit-scrollbar {
+main .app-store-highlight-container .highlights::-webkit-scrollbar {
   display: none;
 }
 
-main .app-store-highlight-container .cards .card {
+main .app-store-highlight-container .highlights .highlight {
   position: relative;
   height: auto;
   max-width: 190px;
@@ -73,8 +73,8 @@ main .app-store-highlight-container .cards .card {
   overflow: hidden;
 }
 
-main .app-store-highlight-container .cards .card img,
-main .app-store-highlight-container .cards .card video {
+main .app-store-highlight-container .highlights .highlight img,
+main .app-store-highlight-container .highlights .highlight video {
   object-fit: cover;
   height: 100%;
   width: 100%;
