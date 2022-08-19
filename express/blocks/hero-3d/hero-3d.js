@@ -16,38 +16,36 @@ import {
 } from '../../scripts/scripts.js';
 
 const DEFAULT_DELAY = 1000;
-
-/**
- * @param {HTMLDivElement} block
- */
-function unwrapImages(block) {
-  block.querySelectorAll('p').forEach(($p) => {
-    if ($p.childElementCount === 1 && $p.firstChild.tagName === 'PICTURE') {
-      $p.replaceWith($p.firstChild);
-    }
-  });
-}
+const MAX_NONCONFIG_ROWS = 3;
 
 /**
  * @param {HTMLDivElement} block
  */
 export default async function decorate(block) {
   const conf = readBlockConfig(block);
-  // remove conf divs
-  block.querySelectorAll(':scope > div').forEach(($row, i) => {
-    if (i >= 2) {
+  const rows = [...block.querySelectorAll(':scope > div')];
+
+  const nonconfRows = Math.min(rows.length - Object.keys(conf).length, MAX_NONCONFIG_ROWS);
+  rows.forEach(($row, i) => {
+    if (i >= nonconfRows) {
       $row.remove();
     }
   });
 
-  unwrapImages(block);
+  // required row
+  const $link = rows.shift().querySelector(':scope a');
+  $link.parentElement.parentElement.remove();
 
-  console.debug('conf: ', conf);
+  // fallback image
+  /** @type {HTMLDivElement} */
+  let $fallbackImg;
+  if (rows[0] && rows[0].childElementCount === 1 && rows[0].querySelector('picture')) {
+    rows[0].classList.add('fallback');
+    // eslint-disable-next-line prefer-destructuring
+    $fallbackImg = rows[0];
+  }
 
-  const $link = block.querySelector('a');
   if (!$link || document.body.dataset.device === 'mobile') {
-    // TODO: fallback image handling for mobile
-    console.warn('[3d] bail out!');
     return;
   }
 
@@ -62,10 +60,16 @@ export default async function decorate(block) {
     delay = DEFAULT_DELAY;
   }
 
-  setTimeout(() => {
-    const iframe = document.createElement('iframe');
-    iframe.loading = 'lazy';
-    iframe.src = href;
-    block.append(iframe);
-  }, delay);
+  const iframe = document.createElement('iframe');
+  iframe.loading = 'lazy';
+  iframe.src = href;
+
+  iframe.onload = () => {
+    iframe.style.opacity = '1';
+    if ($fallbackImg) {
+      $fallbackImg.style.display = 'none';
+    }
+    iframe.onload = null;
+  };
+  block.append(iframe);
 }

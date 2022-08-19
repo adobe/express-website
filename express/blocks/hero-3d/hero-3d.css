@@ -3,6 +3,10 @@ body>* {
     pointer-events: none;
 }
 
+body a {
+    pointer-events: all;
+}
+
 main .section {
     padding: 0;
     overflow: hidden;
@@ -12,17 +16,25 @@ main .hero-3d {
     margin-top: 56px;
 }
 
+main .hero-3d>div>div>p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 main .hero-3d-wrapper {
-    height: 170vh;
+    height: calc(100vh - 64px);
+    display: inline-block;
 }
 
 main .section.dark .hero-3d-wrapper {
     color: white;
 }
 
-main .hero-3d img {
-    height: 80px;
-    width: 80px;
+main .hero-3d .icon {
+    height: 58px;
+    width: auto;
+    margin: 0 auto;
 }
 
 main .hero-3d img {
@@ -45,23 +57,41 @@ main .section.highlight h1 strong em {
     -moz-text-fill-color: transparent;
 }
 
-main .hero-3d iframe {
+main .hero-3d iframe,
+main .hero-3d .fallback {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     z-index: -1;
     object-fit: cover;
     width: 100vw;
-    height: 170vh;
-    object-position: 100% 100%;
+    height: 100vh;
+    /* object-position: 100% 100%; */
     pointer-events: all;
+    padding-top: 63px;
 }
 
-main .section.dark .hero-3d iframe {
-    background-color: black;
+main .hero-3d iframe {
+    opacity: 0;
+}
+
+main .hero-3d .fallback {
+    z-index: -2;
+    overflow: hidden;
+}
+
+main .hero-3d .fallback img {
+    height: 100vh;
+    object-fit: contain;
+    object-position: 100% 70%;
+}
+
+main .section.dark .hero-3d iframe,
+main .section.dark .hero-3d .fallback img {
+    background-color: #030b1c;
 }
 
 main .hero-3d p {
@@ -77,13 +107,12 @@ main .hero-3d>div>div {
         font-size: var(--heading-font-size-xxl);
     }
 
-    main .hero-3d>div>div {
-        max-height: 280px;
+    main .hero-3d .icon {
+        height: 50px;
     }
 
-    main .hero-3d iframe,
-    main .hero-3d-wrapper {
-        height: 150vh;
+    main .hero-3d>div>div {
+        max-height: 280px;
     }
 
     main .hero-3d .button-container {
@@ -94,10 +123,5 @@ main .hero-3d>div>div {
 @media (min-width: 1200px) {
     main .hero-3d>div>div {
         max-height: 222px;
-    }
-
-    main .hero-3d iframe,
-    main .hero-3d-wrapper {
-        height: 130vh;
     }
 }

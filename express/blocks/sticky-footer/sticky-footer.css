@@ -1,4 +1,4 @@
-main .section.sticky-footer-container {
+main .sticky-footer-wrapper {
     position: fixed;
     left: 0;
     right: 0;
@@ -18,8 +18,30 @@ main .sticky-footer {
     border-radius: 32px;
 }
 
+main .sticky-footer>div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+
+main .sticky-footer>div>div {
+    margin: auto;
+    text-align: left;
+}
+
+main .sticky-footer>div p {
+    margin: 0;
+}
+
+main .sticky-footer picture img {
+    height: 147px;
+    width: 147px;
+}
+
 @media not (min-width: 900px) {
-    main .section.sticky-footer-container {
+    main .sticky-footer-wrapper {
         display: none;
     }
 }
