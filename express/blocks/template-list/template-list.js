@@ -20,7 +20,7 @@ import {
   toClassName,
   decorateMain,
   addAnimationToggle,
-  fetchPlaceholders,
+  // fetchPlaceholders,
 } from '../../scripts/scripts.js';
 import {
   Masonry,
@@ -296,14 +296,15 @@ export async function decorateTemplateList($block) {
 
   const $templateLinks = $block.querySelectorAll('a.template');
   let freeInAppText;
-  await fetchPlaceholders().then((placeholders) => {
-    freeInAppText = placeholders['free-in-app'];
-  });
+  // await fetchPlaceholders().then((placeholders) => {
+  //   freeInAppText = placeholders['free-in-app'];
+  // });
   for (const $templateLink of $templateLinks) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = freeInAppText;
+      // $freeInAppBadge.textContent = freeInAppText;
+      $freeInAppBadge.textContent = 'Free in app';
       $templateLink.querySelector('div').append($freeInAppBadge);
     }
   }
