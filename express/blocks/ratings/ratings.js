@@ -458,6 +458,17 @@ export default async function decorate($block) {
   $block.innerHTML = '';
   lazyLoadLottiePlayer($block);
 
+  // When the context comes in.
+  document.addEventListener('context_loaded', () => {
+    regenerateBlockState(actionTitle, $CTA, headingTag);
+  });
+
+  // When the ratings are retrieved.
+  document.addEventListener('ratings_received', () => {
+    regenerateBlockState(actionTitle, $CTA, headingTag);
+    $block.classList.add('ratings_received');
+  });
+
   const resp = await fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`);
   if (resp.ok) {
     const response = JSON.parse(resp);
@@ -497,16 +508,5 @@ export default async function decorate($block) {
     alreadySubmittedText = placeholders['rating-already-submitted-text'];
     votesText = placeholders['rating-votes'];
     regenerateBlockState(actionTitle, $CTA, headingTag);
-  });
-
-  // When the context comes in.
-  document.addEventListener('context_loaded', () => {
-    regenerateBlockState(actionTitle, $CTA, headingTag);
-  });
-
-  // When the ratings are retrieved.
-  document.addEventListener('ratings_received', () => {
-    regenerateBlockState(actionTitle, $CTA, headingTag);
-    $block.classList.add('ratings_received');
   });
 }
