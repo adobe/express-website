@@ -64,12 +64,12 @@ main .hero-3d .fallback {
     bottom: 0;
     left: 0;
     right: 0;
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
+    border-width: 0px;
     z-index: -1;
     object-fit: cover;
     width: 100vw;
     height: 100vh;
-    /* object-position: 100% 100%; */
     pointer-events: all;
     padding-top: 63px;
 }
@@ -87,9 +87,9 @@ main .hero-3d .fallback {
 main .hero-3d .fallback img {
     height: 100vh;
     width: 100vw;
-    max-width: calc(3000px / 2);
+    max-width: 1356px;
     object-fit: contain;
-    object-position: 50% 100%;
+    object-position: 50% 70%;
 }
 
 main .section.dark .hero-3d iframe,
