@@ -1574,12 +1574,28 @@ function buildAutoBlocks($main) {
     const branchio = buildBlock('branch-io', '');
     $main.querySelector(':scope > div:last-of-type').append(branchio);
   }
+
+  // Load the app store autoblocks...
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    if ($main.querySelector('.app-store-highlight') === null) {
+      const $highlight = buildBlock('app-store-highlight', '');
+      $main.querySelector(':scope > div:last-of-type').append($highlight);
+    }
+    if ($main.querySelector('.app-store-blade') === null) {
+      const $blade = buildBlock('app-store-blade', '');
+      $main.querySelector(':scope > div:last-of-type').append($blade);
+    }
+  }
 }
 
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
-
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
+    // work around for splitting columns and sixcols template list
+    // add metadata condition to minimize impact on other use cases
+    if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+      blocksToSplit.push('columns--fullsize-center-');
+    }
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }

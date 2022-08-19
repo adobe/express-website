@@ -91,18 +91,21 @@
   }
   
   .blog div.section {
-    text-align: left;
+    /*text-align: left;*/
     margin: 0;
   }
   
-  .blog-article div.section > div > p, .blog-article div.section > div > h2,
+  .blog-article div.section > div > p:not(.button-container), .blog-article div.section > div > h2,
   .blog-article div.section > div > h3, .blog-article div.section > div > h4,
   .blog-article div.section > div > h5, .blog-article div.section > div > ul, 
   .blog-article div.section > div > ol, .blog-article div.section > div > .table-of-contents {
     max-width: 530px;
     margin-left: auto;
     margin-right: auto;
+    text-align: left;
   }
+
+
 
   
   .blog div.section.fullwidth > div {

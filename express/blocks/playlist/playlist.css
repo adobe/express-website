@@ -6,7 +6,7 @@ main .playlist-container .default-content-wrapper {
     max-width: none;
     padding: 0 16px;
 }
-main .playlist-container h2#sessions {
+main .playlist-container h2 {
     margin-top: 12px;
     margin-bottom: 16px;
     text-align: left;
@@ -26,6 +26,7 @@ main .playlist-container .thumbnails-container .session {
     cursor: pointer;
     margin-top: 4px;
     padding: 0 12px;
+    max-width: 200px;
 }
 main .playlist-container .thumbnails-container .session.active *,
 main .playlist-container .thumbnails-container .session:hover * {
@@ -174,6 +175,11 @@ main .playlist-container .video-player-video-title {
     margin-bottom: 14px;
     text-align: left;
 }
+
+main .playlist-container .video-player-video-title.hidden-mobile {
+    display: none;
+}
+
 main .playlist-container .video-player-buttons {
     display: flex;
     gap: 8px;
@@ -244,6 +250,10 @@ main .playlist-container .video-player-video-list-wrapper .video-player-video-li
     line-height: 24px;
 }
 
+main .playlist-container .carousel-container .carousel-platform {
+    align-items: flex-start;
+}
+
 main .playlist-container .carousel-container a.button.carousel-arrow {
     position: absolute;
     top: 25%;
@@ -258,7 +268,7 @@ main .playlist-container .carousel-container a.button.carousel-arrow {
         position: relative;
         max-width: 830px;
     }
-    main .playlist-container h2#sessions {
+    main .playlist-container h2 {
         margin: 0 40px 32px;
     }
     main .playlist-container .thumbnails-container {
@@ -282,6 +292,9 @@ main .playlist-container .carousel-container a.button.carousel-arrow {
         margin-bottom: 14px;
         text-align: left;
         min-height: 64px;
+    }
+    main .playlist-container .video-player-video-title.hidden-mobile {
+        display: block;
     }
     main .playlist-container .video-player-body {
         flex-direction: row;
@@ -318,7 +331,7 @@ main .playlist-container .carousel-container a.button.carousel-arrow {
         position: relative;
         max-width: 1120px;
     }
-    main .playlist-container h2#sessions {
+    main .playlist-container h2 {
         margin: 0 40px 32px;
     }
     main .playlist-container .thumbnails-container {
