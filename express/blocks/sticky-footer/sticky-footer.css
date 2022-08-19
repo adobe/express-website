@@ -11,8 +11,8 @@ main .section.sticky-footer-container {
 main .sticky-footer {
     background: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
     background-size: 400% 400%;
-    width: 574px;
-    height: 211px;
+    width: calc(574px - 32px);
+    height: calc(211px - 32px);
     margin: 32px auto;
     padding: 32px;
     border-radius: 32px;

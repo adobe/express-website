@@ -7,6 +7,10 @@ main .hero-3d {
     margin-top: 56px;
 }
 
+main .hero-3d-wrapper {
+    height: 170vh;
+}
+
 main .section.dark .hero-3d-wrapper {
     color: white;
 }
@@ -64,8 +68,13 @@ main .hero-3d>div>div {
         max-height: 280px;
     }
 
-    main .hero-3d iframe {
+    main .hero-3d iframe,
+    main .hero-3d-wrapper {
         height: 130vh;
+    }
+
+    main .hero-3d .button-container {
+        display: none;
     }
 }
 
@@ -74,7 +83,8 @@ main .hero-3d>div>div {
         max-height: 222px;
     }
 
-    main .hero-3d iframe {
+    main .hero-3d iframe,
+    main .hero-3d-wrapper {
         height: 110vh;
     }
 }
