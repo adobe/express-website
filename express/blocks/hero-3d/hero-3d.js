@@ -33,12 +33,12 @@ function unwrapImages(block) {
  */
 export default async function decorate(block) {
   const conf = readBlockConfig(block);
-  // remove conf divs
-  block.querySelectorAll(':scope > div').forEach(($row, i) => {
-    if (i >= 2) {
-      $row.remove();
-    }
-  });
+  // // remove conf divs
+  // block.querySelectorAll(':scope > div').forEach(($row, i) => {
+  //   if (i >= 2) {
+  //     $row.remove();
+  //   }
+  // });
 
   unwrapImages(block);
 
@@ -46,7 +46,7 @@ export default async function decorate(block) {
 
   const $link = block.querySelector('a');
   if (!$link || document.body.dataset.device === 'mobile') {
-    // TODO: insert fallback image
+    // TODO: fallback image handling for mobile
     console.warn('[3d] bail out!');
     return;
   }
@@ -54,8 +54,8 @@ export default async function decorate(block) {
   const { href } = $link;
   $link.parentElement.parentElement.remove();
 
-  const nh = conf['no-header'];
-  if (nh && nh.toLowerCase() === 'true') {
+  const noHeader = block.classList.contains('noheader');
+  if (noHeader) {
     document.querySelector('header').remove();
   }
 

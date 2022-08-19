@@ -1,0 +1,25 @@
+main .section.sticky-footer-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gradient-highlight-diagonal);
+    color: white;
+    z-index: 2;
+}
+
+main .sticky-footer {
+    background: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
+    background-size: 400% 400%;
+    width: 574px;
+    height: 211px;
+    margin: 32px auto;
+    padding: 32px;
+    border-radius: 32px;
+}
+
+@media not (min-width: 900px) {
+    main .section.sticky-footer-container {
+        display: none;
+    }
+}

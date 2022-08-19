@@ -436,7 +436,6 @@ export function decorateSections($main) {
     const sectionMeta = section.querySelector('div.section-metadata');
     if (sectionMeta) {
       const meta = readBlockConfig(sectionMeta);
-      console.log('meta: ', meta);
       const keys = Object.keys(meta);
       keys.forEach((key) => {
         if (key === 'style') {
@@ -808,6 +807,7 @@ const blocksWithOptions = [
   'banner',
   'pricing-columns',
   'ratings',
+  'hero-3d',
 ];
 
 /**

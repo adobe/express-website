@@ -1,7 +1,3 @@
-:root {
-    --highlight-gradient: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
-}
-
 main .section {
     padding: 0;
     overflow: hidden;
@@ -46,7 +42,7 @@ main .hero-3d iframe {
     z-index: -1;
     object-fit: cover;
     width: 100vw;
-    height: 100vh;
+    height: 170vh;
     /* min-height: 375px; */
     object-position: 100% 100%;
 }
@@ -54,12 +50,6 @@ main .hero-3d iframe {
 main .section.dark .hero-3d iframe {
     background-color: black;
 }
-
-/* main .hero-3d {
-    position: absolute;
-    text-align: center;
-    margin: 0 100px;
-} */
 
 main .hero-3d p {
     margin: 24px 0 24px 0;
@@ -71,8 +61,20 @@ main .hero-3d>div>div {
 
 @media (min-width: 900px) {
     main .hero-3d>div>div {
-        max-height: 222px;
+        max-height: 280px;
+    }
+
+    main .hero-3d iframe {
+        height: 130vh;
     }
 }
 
-@media (min-width: 1200px) {}
+@media (min-width: 1200px) {
+    main .hero-3d>div>div {
+        max-height: 222px;
+    }
+
+    main .hero-3d iframe {
+        height: 110vh;
+    }
+}
