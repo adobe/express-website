@@ -15,15 +15,15 @@ import {
 } from '../../scripts/scripts.js';
 
 const imageSrcs = [
-  '/drafts/qiyundai/fragments/media_1e71d9d4a13e8a8422dd1b8dbdad9a0bf4d2565f8.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_1595dccf97b235679b21f3ccd02b20efddc3f3839.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_1593e6a78c527e9799bb087cfcdb9d305a376123c.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_1d3ae36afedf6def1703f32502b30e96a30d2c7a8.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_1670698e01bd60bd8a2bc5b2e9c63b771dd9887e0.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_1d8ff5ab0f17bf993dcd73f59e09c220a98dd9337.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_169477a276ef70a1eb2b5b89a90d7eae6edd78e0c.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_10c82ab880b3859c3850e1f6ece6fa57238b8af92.jpeg?width=380&format=jpeg&optimize=medium',
-  '/drafts/qiyundai/fragments/media_1e1122a588f3d5d7e6f19e27aabf5102e72457b05.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1e71d9d4a13e8a8422dd1b8dbdad9a0bf4d2565f8.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1595dccf97b235679b21f3ccd02b20efddc3f3839.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1593e6a78c527e9799bb087cfcdb9d305a376123c.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1d3ae36afedf6def1703f32502b30e96a30d2c7a8.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1670698e01bd60bd8a2bc5b2e9c63b771dd9887e0.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1d8ff5ab0f17bf993dcd73f59e09c220a98dd9337.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_169477a276ef70a1eb2b5b89a90d7eae6edd78e0c.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_10c82ab880b3859c3850e1f6ece6fa57238b8af92.jpeg?width=380&format=jpeg&optimize=medium',
+  '/express/media_1e1122a588f3d5d7e6f19e27aabf5102e72457b05.jpeg?width=380&format=jpeg&optimize=medium',
 ];
 
 function buildStandardPayload($block, payload) {
