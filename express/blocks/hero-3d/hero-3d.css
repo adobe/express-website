@@ -81,16 +81,19 @@ main .hero-3d iframe {
 main .hero-3d .fallback {
     z-index: -2;
     overflow: hidden;
+
 }
 
 main .hero-3d .fallback img {
     height: 100vh;
+    width: 100vw;
+    max-width: calc(3000px / 2);
     object-fit: contain;
-    object-position: 100% 70%;
+    object-position: 50% 100%;
 }
 
 main .section.dark .hero-3d iframe,
-main .section.dark .hero-3d .fallback img {
+main .section.dark .hero-3d .fallback {
     background-color: #030b1c;
 }
 

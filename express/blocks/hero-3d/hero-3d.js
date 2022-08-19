@@ -15,7 +15,7 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-const DEFAULT_DELAY = 2000;
+const DEFAULT_DELAY = 1000;
 const MAX_NONCONFIG_ROWS = 3;
 
 /**
@@ -66,10 +66,12 @@ export default async function decorate(block) {
 
   setTimeout(() => {
     iframe.onload = () => {
-      iframe.style.opacity = '1';
-      if ($fallbackImg) {
-        $fallbackImg.style.display = 'none';
-      }
+      setTimeout(() => {
+        iframe.style.opacity = '1';
+        if ($fallbackImg) {
+          $fallbackImg.style.display = 'none';
+        }
+      }, delay);
       iframe.onload = null;
     };
     block.append(iframe);
