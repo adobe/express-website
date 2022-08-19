@@ -1,3 +1,8 @@
+body,
+body>* {
+    pointer-events: none;
+}
+
 main .section {
     padding: 0;
     overflow: hidden;
@@ -24,6 +29,10 @@ main .hero-3d img {
     margin: 0 0 16px;
 }
 
+main .hero-3d h1 {
+    font-size: var(--heading-font-size-xl);
+}
+
 main .section.highlight h1 em strong,
 main .section.highlight h1 strong em {
     background: var(--gradient-highlight-diagonal);
@@ -47,8 +56,8 @@ main .hero-3d iframe {
     object-fit: cover;
     width: 100vw;
     height: 170vh;
-    /* min-height: 375px; */
     object-position: 100% 100%;
+    pointer-events: all;
 }
 
 main .section.dark .hero-3d iframe {
@@ -64,13 +73,17 @@ main .hero-3d>div>div {
 }
 
 @media (min-width: 900px) {
+    main .hero-3d h1 {
+        font-size: var(--heading-font-size-xxl);
+    }
+
     main .hero-3d>div>div {
         max-height: 280px;
     }
 
     main .hero-3d iframe,
     main .hero-3d-wrapper {
-        height: 130vh;
+        height: 150vh;
     }
 
     main .hero-3d .button-container {
@@ -85,6 +98,6 @@ main .hero-3d>div>div {
 
     main .hero-3d iframe,
     main .hero-3d-wrapper {
-        height: 110vh;
+        height: 130vh;
     }
 }

@@ -33,12 +33,12 @@ function unwrapImages(block) {
  */
 export default async function decorate(block) {
   const conf = readBlockConfig(block);
-  // // remove conf divs
-  // block.querySelectorAll(':scope > div').forEach(($row, i) => {
-  //   if (i >= 2) {
-  //     $row.remove();
-  //   }
-  // });
+  // remove conf divs
+  block.querySelectorAll(':scope > div').forEach(($row, i) => {
+    if (i >= 2) {
+      $row.remove();
+    }
+  });
 
   unwrapImages(block);
 
@@ -53,11 +53,6 @@ export default async function decorate(block) {
 
   const { href } = $link;
   $link.parentElement.parentElement.remove();
-
-  const noHeader = block.classList.contains('noheader');
-  if (noHeader) {
-    document.querySelector('header').remove();
-  }
 
   let { delay } = conf;
   if (delay) {
