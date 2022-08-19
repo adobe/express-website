@@ -42,10 +42,15 @@ async function normalizeFetchedTemplates(queryString) {
   const response = await fetchTemplates(queryString, cache.start);
   // eslint-disable-next-line no-underscore-dangle
   const templateFetched = response._embedded.results;
-  // eslint-disable-next-line no-underscore-dangle
-  const nextQuery = response._links.next.href;
-  const params = new URLSearchParams(nextQuery);
-  cache.start = params.get('start').split(',')[0];
+  if ('_links' in response) {
+    // eslint-disable-next-line no-underscore-dangle
+    const nextQuery = response._links.next.href;
+    const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
+    cache.start = start;
+  } else {
+    cache.start = '';
+  }
+
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
@@ -363,7 +368,13 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
-async function decorateNewTamplates($block) {
+function updateButtonStatus($block, $loadMore) {
+  if (cache.start === '') {
+    $loadMore.style.display = 'none';
+  }
+}
+
+async function decorateNewTamplates($block, $loadMore) {
   const { templates, queryString, masonry } = cache;
   const newTemplates = await normalizeFetchedTemplates(queryString);
 
@@ -377,6 +388,7 @@ async function decorateNewTamplates($block) {
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
   masonry.cells = masonry.cells.concat(newCells);
   masonry.draw(newCells);
+  updateButtonStatus($block, $loadMore);
 }
 
 function decorateLoadMoreButton($block) {
@@ -393,7 +405,7 @@ function decorateLoadMoreButton($block) {
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
     const scrollPosition = window.scrollY;
-    await decorateNewTamplates($block);
+    await decorateNewTamplates($block, $loadMoreDiv);
     window.scrollTo({
       top: scrollPosition,
       left: 0,
@@ -401,6 +413,7 @@ function decorateLoadMoreButton($block) {
     });
     $loadMoreButton.classList.remove('disabled');
   });
+  updateButtonStatus($block, $loadMoreDiv);
 }
 
 function cacheCreatedTemplate($block) {
