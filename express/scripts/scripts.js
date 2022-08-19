@@ -1577,14 +1577,13 @@ function buildAutoBlocks($main) {
 
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
-    let $block;
     if ($main.querySelector('.app-store-highlight') === null) {
-      $block = buildBlock('app-store-highlight', '');
-      $main.querySelector(':scope > div:last-of-type').append($block);
+      const $highlight = buildBlock('app-store-highlight', '');
+      $main.querySelector(':scope > div:last-of-type').append($highlight);
     }
     if ($main.querySelector('.app-store-blade') === null) {
-      $block = buildBlock('app-store-blade', '');
-      $main.querySelector(':scope > div:last-of-type').append($block);
+      const $blade = buildBlock('app-store-blade', '');
+      $main.querySelector(':scope > div:last-of-type').append($blade);
     }
   }
 }
