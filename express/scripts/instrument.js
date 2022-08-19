@@ -559,6 +559,11 @@ loadScript(martechURL, () => {
     } else if ($a.classList.contains('floating-button-lottie')) {
       adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
       sparkEventName = 'landing:floatingButtonScrollPressed';
+    } else if ($a.classList.contains('video-player-inline-player-overlay')) {
+      const sessionName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-session-number').textContent;
+      const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent;
+      adobeEventName = `${adobeEventName}playing:${sessionName}-${videoName}`;
+      sparkEventName = `playing:${sessionName}-${videoName}`;
     } else if ($a.parentElement.classList.contains('floating-button')) {
       adobeEventName = `${adobeEventName}floatingButton:ctaPressed`;
       sparkEventName = 'landing:floatingButtonPressed';
