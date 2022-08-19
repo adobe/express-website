@@ -161,7 +161,6 @@ main .template-list .template:not(.placeholder) .icon {
   right: 6px;
 }
 
-
 main .template-list .template:not(.placeholder) .icon-free-badge {
   height: 24px;
   display: flex;
@@ -456,6 +455,10 @@ main .template-list.flex-masonry .template.appear {
   main .columns .template-list {
     margin-top: 0;
     margin-left: 40px;
+  }
+
+  main .template-list .template:not(.placeholder) .icon-free-badge {
+    display: none;
   }
 }
 
