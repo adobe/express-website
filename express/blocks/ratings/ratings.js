@@ -514,6 +514,7 @@ export default function decorate($block) {
     // When the ratings are retrieved.
     document.addEventListener('ratings_received', () => {
       regenerateBlockState(actionTitle, $CTA, headingTag);
+      $block.classList.add('ratings_received');
     });
 
     lazyLoadLottiePlayer($block);
