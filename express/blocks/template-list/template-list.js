@@ -88,6 +88,10 @@ async function fetchBlueprint(pathname) {
 }
 
 export async function decorateTemplateList($block) {
+  let freeInAppText;
+  await fetchPlaceholders().then((placeholders) => {
+    freeInAppText = placeholders['free-in-app'];
+  });
   let rows = $block.children.length;
   const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
@@ -298,9 +302,7 @@ export async function decorateTemplateList($block) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      fetchPlaceholders().then((placeholders) => {
-        $freeInAppBadge.textContent = placeholders['free-in-app'];
-      });
+      $freeInAppBadge.textContent = freeInAppText;
       $templateLink.querySelector('div').append($freeInAppBadge);
     }
   }
