@@ -1,3 +1,8 @@
+:root {
+    --dark-bg-color: #030b1c;
+    --header-height: 63px;
+}
+
 body,
 body>* {
     pointer-events: none;
@@ -12,6 +17,7 @@ main .section {
     overflow: hidden;
 }
 
+
 main .hero-3d {
     margin-top: 56px;
 }
@@ -23,7 +29,7 @@ main .hero-3d>div>div>p {
 }
 
 main .hero-3d-wrapper {
-    height: calc(100vh - 64px);
+    height: calc(150vh - var(--header-height));
     display: inline-block;
 }
 
@@ -57,8 +63,8 @@ main .section.highlight h1 strong em {
     -moz-text-fill-color: transparent;
 }
 
-main .hero-3d iframe,
-main .hero-3d .fallback {
+main .hero-3d .fallback,
+main .hero-3d iframe {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -70,36 +76,47 @@ main .hero-3d .fallback {
     z-index: -1;
     object-fit: cover;
     width: 100vw;
-    height: 100vh;
     pointer-events: all;
-    padding-top: 63px;
+    padding-top: var(--header-height);
 }
 
 main .hero-3d iframe {
     opacity: 0;
+    height: 100vh;
 }
 
 main .hero-3d .fallback {
     z-index: -2;
     overflow: hidden;
-
+    height: 150vh;
 }
 
 main .hero-3d .fallback img {
-    height: 100vh;
-    width: 100vw;
-    max-width: 1356px;
-    object-fit: contain;
-    object-position: 50% 70%;
+    height: 140vh;
+    object-position: 50% 100%;
+    object-fit: none;
+}
+
+main .hero-3d .fallback img[alt~="mobile"] {
+    display: unset;
+}
+
+main .hero-3d .fallback img[alt~="desktop"] {
+    display: none;
+    zoom: 111%;
 }
 
 main .section.dark .hero-3d iframe,
 main .section.dark .hero-3d .fallback {
-    background-color: #030b1c;
+    background-color: var(--dark-bg-color);
 }
 
 main .hero-3d p {
     margin: 24px 0 24px 0;
+}
+
+main .hero-3d .fallback p {
+    margin: 0;
 }
 
 main .hero-3d>div>div {
@@ -107,6 +124,22 @@ main .hero-3d>div>div {
 }
 
 @media (min-width: 900px) {
+    main .hero-3d-wrapper {
+        max-width: 750px;
+    }
+
+    main .hero-3d .fallback img {
+        height: 100vh;
+    }
+
+    main .hero-3d .fallback img[alt~="mobile"] {
+        display: none;
+    }
+
+    main .hero-3d .fallback img[alt~="desktop"] {
+        display: unset;
+    }
+
     main .hero-3d h1 {
         font-size: var(--heading-font-size-xxl);
     }
@@ -122,6 +155,12 @@ main .hero-3d>div>div {
     main .hero-3d .button-container {
         display: none;
     }
+
+    main .hero-3d .fallback img {
+        height: calc(100vh - var(--header-height));
+        object-position: 50% 100%;
+        object-fit: none;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -132,7 +171,14 @@ main .hero-3d>div>div {
 
 
 @media (min-width: 1200px) {
-    main .section>div {
+    main .hero-3d-wrapper {
         max-width: 1356px;
+    }
+}
+
+@media not (min-height: 800px) {
+    main .hero-3d .fallback img {
+        object-fit: contain;
+        object-position: 50% 90%;
     }
 }
