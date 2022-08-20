@@ -3,8 +3,11 @@
     --header-height: 63px;
 }
 
-body,
-body>* {
+header {
+    z-index: 3;
+}
+
+body main .hero-3d-container {
     pointer-events: none;
 }
 
@@ -20,6 +23,11 @@ main .section {
 
 main .hero-3d {
     margin-top: 56px;
+}
+
+main .hero-3d :not(.fallback, iframe) {
+    z-index: 2;
+    position: relative;
 }
 
 main .hero-3d>div>div>p {
@@ -73,7 +81,7 @@ main .hero-3d iframe {
     box-sizing: border-box;
     border-width: 0px;
     border: none;
-    z-index: -1;
+    z-index: 0;
     object-fit: cover;
     width: 100vw;
     pointer-events: all;
@@ -82,18 +90,20 @@ main .hero-3d iframe {
 
 main .hero-3d iframe {
     opacity: 0;
-    height: 100vh;
+    /* display: none; */
+    height: 150vh;
 }
 
 main .hero-3d .fallback {
-    z-index: -2;
+    z-index: -1;
     overflow: hidden;
     height: 150vh;
 }
 
 main .hero-3d .fallback img {
     height: 140vh;
-    object-position: 50% 100%;
+    object-position: 50% 80%;
+    /* object-position: 50% 100%; */
     object-fit: none;
 }
 
@@ -126,8 +136,15 @@ main .hero-3d>div>div {
 @media (min-width: 900px) {
     main .hero-3d-wrapper {
         max-width: 750px;
+        height: calc(100vh - var(--header-height));
     }
 
+    main .hero-3d iframe {
+        display: unset;
+        height: 100vh;
+    }
+
+    main .hero-3d .fallback,
     main .hero-3d .fallback img {
         height: 100vh;
     }

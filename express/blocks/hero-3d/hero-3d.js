@@ -45,20 +45,21 @@ function loadSplineFrame(block, href, $fallback, delay = 0) {
 
   iframe.src = href;
 
-  setTimeout(() => {
-    iframe.onload = () => {
-      setTimeout(() => {
-        iframe.style.opacity = '1';
-        if ($fallback) {
-          $fallback.style.display = 'none';
-        }
-      }, delay);
-      iframe.onload = null;
-    };
-    block.append(iframe);
-    // const content = iframe.previousElementSibling;
-    // window.content = content;
-  }, delay);
+  // setTimeout(() => {
+  iframe.onload = () => {
+    setTimeout(() => {
+      iframe.style.opacity = '1';
+      if ($fallback) {
+        $fallback.style.display = 'none';
+      }
+    }, delay);
+    iframe.onload = null;
+  };
+  block.append(iframe);
+  // const content = iframe.previousElementSibling;
+  // window.content = content;
+  // iframe.style.paddingTop = `${content.offsetHeight + content.offsetTop - 63}px`;
+  // }, delay);
 }
 
 /**
@@ -90,7 +91,7 @@ export default async function decorate(block) {
     }
   }
 
-  if (!$link || document.body.dataset.device === 'mobile') {
+  if (!$link || document.body.dataset.device === 'mobile' || window.screen.width < 900) {
     return;
   }
 
