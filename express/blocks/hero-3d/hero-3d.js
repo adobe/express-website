@@ -12,6 +12,7 @@
 
 import {
   createTag,
+  getIconElement,
   readBlockConfig,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
@@ -104,6 +105,13 @@ export default async function decorate(block) {
   }
   if (delay == null || Number.isNaN(delay)) {
     delay = DEFAULT_DELAY;
+  }
+
+  const cta = block.querySelector('.button-container a');
+  console.log('cta: ', cta);
+  if (cta && cta.innerText.toLowerCase().startsWith('download')) {
+    const icon = getIconElement('download');
+    cta.prepend(icon);
   }
 
   // loadSpline(block, href, $fallbackImg,delay);
