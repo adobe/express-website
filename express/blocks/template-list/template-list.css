@@ -405,6 +405,7 @@ main .template-list-fullwidth-apipowered-container .load-more {
 
 main .template-list-fullwidth-apipowered-container .load-more-button {
   width: 88px;
+  text-align: center;
   cursor: pointer;
   background: linear-gradient(45deg, #e263f2, #f36979);
   color: var(--color-white);
