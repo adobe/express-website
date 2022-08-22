@@ -31,10 +31,6 @@ import {
   // eslint-disable-next-line import/no-unresolved
 } from '../shared/carousel.js';
 
-const cache = {
-  freeInAppText: 'Free in app',
-};
-
 /**
  * Returns a picture element with webp and fallbacks
  * @param {string} src The image URL
@@ -299,11 +295,16 @@ export async function decorateTemplateList($block) {
   }
 
   const $templateLinks = $block.querySelectorAll('a.template');
+  let freeInAppText;
+  await fetchPlaceholders().then((placeholders) => {
+    freeInAppText = placeholders['free-in-app'];
+  });
   for (const $templateLink of $templateLinks) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = cache.freeInAppText;
+      // $freeInAppBadge.textContent = freeInAppText;
+      $freeInAppBadge.textContent = freeInAppText;
       $templateLink.querySelector('div').append($freeInAppBadge);
     }
   }
@@ -312,12 +313,6 @@ export async function decorateTemplateList($block) {
 }
 
 export default async function decorate($block) {
-  fetchPlaceholders().then((placeholders) => {
-    if (placeholders) {
-      cache.freeInAppText = placeholders['free-in-app'];
-    }
-  });
-
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
     /* carousel */
