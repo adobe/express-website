@@ -808,6 +808,8 @@ const blocksWithOptions = [
   'pricing-columns',
   'ratings',
   'hero-3d',
+  'download-screens',
+  'download-cards',
 ];
 
 /**

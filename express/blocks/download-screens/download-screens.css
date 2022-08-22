@@ -1,0 +1,14 @@
+main .download-screens-wrapper.scroll {
+  max-width: unset;
+  overflow: scroll;
+}
+
+main .cards.scroll {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  max-width: unset;
+}
+
+main .section.large .default-content-wrapper h2 {
+  font-size: var(--heading-font-size-xl);
+}

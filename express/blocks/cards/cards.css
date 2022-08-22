@@ -12,22 +12,11 @@ main .cards-dark-container>div {
   max-width: 870px;
 }
 
-main .cards-wrapper.scroll {
-  max-width: unset;
-  overflow: scroll;
-}
-
 main .cards {
   padding: 0;
   display: flex;
   flex-direction: column;
   margin: 56px auto;
-}
-
-main .cards.scroll {
-  display: inline-flex;
-  flex-wrap: nowrap;
-  max-width: unset;
 }
 
 main .cards .card {
@@ -123,11 +112,6 @@ main .cards.large .card .card-content li {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-  }
-
-  main .cards.scroll {
-    flex-wrap: nowrap;
-    max-width: unset;
   }
 
   main .cards .card {

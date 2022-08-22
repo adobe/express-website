@@ -50,9 +50,9 @@ function loadSplineFrame(block, href, $fallback, delay = 0) {
   iframe.onload = () => {
     setTimeout(() => {
       iframe.style.opacity = '1';
-      if ($fallback) {
-        $fallback.style.display = 'none';
-      }
+      // if ($fallback) {
+      //   $fallback.style.display = 'none';
+      // }
     }, delay);
     iframe.onload = null;
   };
@@ -61,6 +61,17 @@ function loadSplineFrame(block, href, $fallback, delay = 0) {
   // window.content = content;
   // iframe.style.paddingTop = `${content.offsetHeight + content.offsetTop - 63}px`;
   // }, delay);
+}
+
+/**
+ * @param {HTMLDivElement} block
+ */
+function prependDownloadIcon(block) {
+  const cta = block.querySelector('.button-container a');
+  if (cta && cta.innerText.toLowerCase().startsWith('download')) {
+    const icon = getIconElement('download');
+    cta.prepend(icon);
+  }
 }
 
 /**
@@ -107,12 +118,7 @@ export default async function decorate(block) {
     delay = DEFAULT_DELAY;
   }
 
-  const cta = block.querySelector('.button-container a');
-  console.log('cta: ', cta);
-  if (cta && cta.innerText.toLowerCase().startsWith('download')) {
-    const icon = getIconElement('download');
-    cta.prepend(icon);
-  }
+  prependDownloadIcon(block);
 
   // loadSpline(block, href, $fallbackImg,delay);
   loadSplineFrame(block, href, $fallbackImg, delay);

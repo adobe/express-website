@@ -90,7 +90,7 @@ main .hero-3d iframe {
 
 main .hero-3d iframe {
     opacity: 0;
-    /* display: none; */
+    display: none;
     height: 150vh;
 }
 
@@ -135,7 +135,7 @@ main .hero-3d>div>div {
 
 main .hero-3d .button-container .icon-download {
     width: 16px;
-    height: 16px;
+    height: 20px;
     margin: 2px 8px 0 0;
     filter: invert(1);
 }
