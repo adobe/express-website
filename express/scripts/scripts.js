@@ -1590,14 +1590,23 @@ function buildAutoBlocks($main) {
 
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
+    const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
-    if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    if (hasAppStoreBlocks) {
       blocksToSplit.push('columns--fullsize-center-');
     }
+
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
+    }
+
+    if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
+      const $parentNode = $block.parentNode;
+      if ($parentNode) {
+        $block.parentNode.classList.add('split-by-app-store-highlight');
+      }
     }
   });
 }

@@ -217,7 +217,8 @@ main .columns.columns-marquee .brand.icon {
   display: none;
 }
 
-body.no-brand-header main .columns.columns-marquee .brand.icon {
+body.no-brand-header main .columns.columns-marquee .brand.icon,
+main .split-by-app-store-highlight .has-brand .column img.icon.icon-cc-express-logo.brand {
   display: unset;
   height: 32px;
   width: auto;
@@ -226,6 +227,14 @@ body.no-brand-header main .columns.columns-marquee .brand.icon {
   top: 40px;
   left: 50%;
   transform: translateX(-50%);
+}
+
+main .split-by-app-store-highlight {
+  padding: 0;
+}
+
+main .split-by-app-store-highlight .columns-wrapper {
+  padding: 0;
 }
 
 body.no-brand-header main .columns .has-brand {
@@ -356,6 +365,11 @@ main .columns-video .column-picture .column-video-overlay svg {
 
   main .columns-video .column-picture .column-video-overlay {
     width: 50%;
+  }
+
+  main .split-by-app-store-highlight .has-brand .column img.icon.icon-cc-express-logo.brand {
+    position: unset;
+    transform: unset;
   }
 }
 
@@ -598,7 +612,7 @@ main .columns .column {
 
   main .columns.offer > div {
     width: 1100px;
-    margin: 0 auto;   
+    margin: 0 auto;
     flex-direction: row;
     justify-content: space-between;
   }
@@ -731,7 +745,7 @@ main .columns.highlight .column.column-picture {
   main .columns.fullsize .has-brand > div p:first-child {
     margin: 16px 0;
   }
-  
+
   main .columns .column {
     padding-left: 32px;
     padding-right: 32px;
