@@ -27,19 +27,21 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
-  queryString: '',
+  type: 'flyer',
+  locales: 'en',
+  premium: false,
   start: '',
   masonry: undefined,
 };
 
-function fetchTemplates(queryString, start) {
-  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${queryString} AND locales:en&schema=template&orderBy=-remixCount&premium=false&limit=70&start=${start}`)
+function fetchTemplates() {
+  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${cache.type} AND locales:${cache.locales}&schema=template&orderBy=-remixCount&premium=${cache.premium}&limit=70&start=${cache.start}`)
     .then((response) => response.json())
     .then((response) => response);
 }
 
-async function normalizeFetchedTemplates(queryString) {
-  const response = await fetchTemplates(queryString, cache.start);
+async function normalizeFetchedTemplates() {
+  const response = await fetchTemplates();
   // eslint-disable-next-line no-underscore-dangle
   const templateFetched = response._embedded.results;
   if ('_links' in response) {
@@ -240,11 +242,17 @@ function populateTemplates($block, templates) {
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
-    if ($block.children[0].querySelectorAll('div')[0].textContent === 'Search query') {
-      cache.queryString = $block.children[0].querySelectorAll('div')[1].textContent;
+    if ($block.children[0].querySelectorAll('div')[0].textContent === 'type') {
+      cache.type = $block.children[0].querySelectorAll('div')[1].textContent;
     }
-    const { templates, queryString } = cache;
-    cache.templates = templates.concat(await normalizeFetchedTemplates(queryString));
+    if ($block.children[1].querySelectorAll('div')[0].textContent === 'locales') {
+      cache.locales = $block.children[1].querySelectorAll('div')[1].textContent;
+    }
+    if ($block.children[2].querySelectorAll('div')[0].textContent === 'premium') {
+      cache.premium = ['yes', 'true'].includes($block.children[2].querySelectorAll('div')[1].textContent);
+    }
+    const { templates, type } = cache;
+    cache.templates = templates.concat(await normalizeFetchedTemplates(type));
     cache.templates.forEach((template) => {
       const clone = template.cloneNode(true);
       $block.append(clone);
@@ -375,8 +383,8 @@ function updateButtonStatus($block, $loadMore) {
 }
 
 async function decorateNewTamplates($block, $loadMore) {
-  const { templates, queryString, masonry } = cache;
-  const newTemplates = await normalizeFetchedTemplates(queryString);
+  const { templates, type, masonry } = cache;
+  const newTemplates = await normalizeFetchedTemplates(type);
 
   cache.templates = templates.concat(newTemplates);
   populateTemplates($block, newTemplates);
