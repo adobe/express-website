@@ -58,7 +58,6 @@ export class Masonry {
     if (colWidth === 185) {
       this.columnWidth = colWidth - 10;
     }
-    
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
