@@ -303,7 +303,6 @@ export async function decorateTemplateList($block) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      // $freeInAppBadge.textContent = freeInAppText;
       $freeInAppBadge.textContent = freeInAppText;
       $templateLink.querySelector('div').append($freeInAppBadge);
     }
