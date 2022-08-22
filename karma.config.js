@@ -29,6 +29,7 @@ module.exports = (config) => {
     proxies: {
       '/express': '/base/express',
       '/blocks': '/base/test/unit/blocks',
+      '/express/placeholders.json': '/base/test/unit/mocks/express/placeholders.json',
       '/express/testing.json': '/base/test/unit/mocks/express/testing.json',
       '/express/system/offers.json': '/base/test/unit/mocks/express/system/offers.json',
       '/express/system/offers-new.json': '/base/test/unit/mocks/express/system/offers.json',
