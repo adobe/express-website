@@ -54,7 +54,7 @@ async function normalizeFetchedTemplates(queryString) {
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
-    size: 240,
+    size: 400,
   };
   return templateFetched.map((template) => {
     const $template = createTag('div');
