@@ -20,6 +20,7 @@ import {
   toClassName,
   decorateMain,
   addAnimationToggle,
+  fetchPlaceholders,
 } from '../../scripts/scripts.js';
 import {
   Masonry,
@@ -279,7 +280,6 @@ export async function decorateTemplateList($block) {
   if (!$block.classList.contains('horizontal')) {
     if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
-      // console.log(`masonry-rows: ${rows}`);
       const cells = Array.from($block.children);
       $block.classList.remove('masonry');
       $block.classList.add('flex-masonry');
@@ -295,6 +295,18 @@ export async function decorateTemplateList($block) {
   }
 
   const $templateLinks = $block.querySelectorAll('a.template');
+  let freeInAppText;
+  await fetchPlaceholders().then((placeholders) => {
+    freeInAppText = placeholders['free-in-app'];
+  });
+  for (const $templateLink of $templateLinks) {
+    const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
+    if (!isPremium && !$templateLink.classList.contains('placeholder')) {
+      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
+      $freeInAppBadge.textContent = freeInAppText;
+      $templateLink.querySelector('div').append($freeInAppBadge);
+    }
+  }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
   document.dispatchEvent(linksPopulated);
 }
