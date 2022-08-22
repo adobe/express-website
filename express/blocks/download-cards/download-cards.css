@@ -13,6 +13,10 @@ main .cards.download-cards.bleed .card .card-image {
   border-radius: 20px 20px 20px 20px;
 }
 
+main .cards.download-cards.bleed .card .branded-header img {
+  border-radius: 0;
+}
+
 main .cards.download-cards.bleed .bleed__c {
   display: flex;
   flex-direction: column;
