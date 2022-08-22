@@ -66,12 +66,17 @@ function loadSplineFrame(block, href, $fallback, delay = 0) {
 /**
  * @param {HTMLDivElement} block
  */
-function prependDownloadIcon(block) {
-  const cta = block.querySelector('.button-container a');
-  if (cta && cta.innerText.toLowerCase().startsWith('download')) {
-    const icon = getIconElement('download');
-    cta.prepend(icon);
-  }
+export function prependDownloadIcon(block) {
+  const ctas = block.querySelectorAll('.button-container a');
+
+  console.log('ctas: ', ctas);
+
+  ctas.forEach((cta) => {
+    if (cta.innerText.toLowerCase().startsWith('download')) {
+      const icon = getIconElement('download');
+      cta.prepend(icon);
+    }
+  });
 }
 
 /**

@@ -11,7 +11,8 @@
  */
 
 // eslint-disable-next-line import/no-unresolved
-import { loadCSS } from '../../scripts/scripts.js';
+import { createTag, loadCSS } from '../../scripts/scripts.js';
+import { prependDownloadIcon } from '../hero-3d/hero-3d.js';
 
 /**
  * Load block as base
@@ -51,6 +52,47 @@ async function extendBlock(block, blockName) {
 /**
  * @param {HTMLDivElement} $block
  */
+function brandHeaders($block) {
+  const headers = $block.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  headers.forEach((header) => {
+    const prev = header.previousElementSibling;
+    if (!prev || prev.childElementCount !== 1 || !prev.querySelector('picture, .icon')) return;
+
+    const parent = prev.parentElement;
+    prev.parentElement.removeChild(prev);
+    header.parentElement.removeChild(header);
+
+    const pic = prev.querySelector('picture, .icon');
+
+    /** @type {HTMLDivElement} */
+    const wrapper = createTag('div', { class: 'branded-header' });
+    wrapper.append(pic, header);
+    parent.prepend(wrapper);
+  });
+}
+
+/**
+ * @param {HTMLDivElement} $block
+ */
 export default async function decorate($block) {
   await extendBlock($block, 'cards');
+
+  if ($block.classList.contains('branded')) {
+    brandHeaders($block);
+  }
+
+  if ($block.classList.contains('bleed')) {
+    const imCards = $block.querySelectorAll('.card-image');
+    imCards.forEach((imCard) => {
+      const pic = imCard.querySelector(':scope > p:last-of-type picture');
+      if (!pic) return;
+
+      const parent = pic.parentElement;
+      if (parent.childElementCount === 1) {
+        parent.classList.add('bleed__c');
+      }
+    });
+  }
+
+  prependDownloadIcon($block);
 }
