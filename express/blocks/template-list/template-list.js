@@ -268,8 +268,8 @@ export async function decorateTemplateList($block) {
       const localesRow = $block.children[1];
       const premiumRow = $block.children[2];
 
-      if (typeRow[0].textContent.toLowerCase() === 'type' && !typeRow[1].textContent.length) {
-        cache.type = 'Authoring error: "type" row must have a value';
+      if (typeRow[0].textContent.toLowerCase() === 'type*' && !typeRow[1].textContent.length) {
+        cache.type = 'Authoring error: "type*" row must have a value';
         cache.authoringError = true;
       } else {
         cache.type = typeRow[1].textContent;
@@ -293,7 +293,7 @@ export async function decorateTemplateList($block) {
         });
       }
     } else {
-      cache.type = 'Authoring error: first row must specify the template “type”';
+      cache.type = 'Authoring error: first row must specify the template “type*”';
       cache.authoringError = true;
     }
 
