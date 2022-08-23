@@ -80,7 +80,7 @@ export function prependDownloadIcon(block) {
 }
 
 /**
- * @param {HTMLDivElement} block 
+ * @param {HTMLDivElement} block
  */
 function addScrollAnimation(block) {
   const loti = getLottie('scroll', 'https://assets.website-files.com/62e1bd17785b4a21a5affda4/62e31da63e4adb171e1a2682_lf30_editor_jo11ftge.json');
@@ -137,8 +137,10 @@ export default async function decorate(block) {
 
   prependDownloadIcon(block);
   addScrollAnimation(block);
-  
 
-  // loadSpline(block, href, $fallbackImg,delay);
-  loadSplineFrame(block, href, $fallbackImg, delay);
+  if (href.endsWith('scene.splinecode')) {
+    loadSpline(block, href, $fallbackImg, delay);
+  } else {
+    loadSplineFrame(block, href, $fallbackImg, delay);
+  }
 }
