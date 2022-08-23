@@ -35,12 +35,16 @@ main .ratings .rating-stars {
 }
 
 main .ratings .rating-votes {
+  display: none;
   font-size: var(--heading-font-size-s);
   color: var(--body-color);
   font-weight: 400;
-  display: block;
   padding-top: 18px;
   padding-bottom: 10px;
+}
+
+main .ratings.ratings_received .rating-votes {
+  display: block;
 }
 
 main .ratings .rating-votes strong {
