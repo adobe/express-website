@@ -13,6 +13,8 @@
 import {
   createTag,
   getIconElement,
+  getLottie,
+  lazyLoadLottiePlayer,
   readBlockConfig,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
@@ -69,14 +71,24 @@ function loadSplineFrame(block, href, $fallback, delay = 0) {
 export function prependDownloadIcon(block) {
   const ctas = block.querySelectorAll('.button-container a');
 
-  console.log('ctas: ', ctas);
-
   ctas.forEach((cta) => {
     if (cta.innerText.toLowerCase().startsWith('download')) {
       const icon = getIconElement('download');
       cta.prepend(icon);
     }
   });
+}
+
+/**
+ * @param {HTMLDivElement} block 
+ */
+function addScrollAnimation(block) {
+  const loti = getLottie('scroll', 'https://assets.website-files.com/62e1bd17785b4a21a5affda4/62e31da63e4adb171e1a2682_lf30_editor_jo11ftge.json');
+  const span = createTag('span', { class: 'scroll-animation' });
+  span.innerHTML = loti;
+  block.append(span);
+
+  lazyLoadLottiePlayer(block);
 }
 
 /**
@@ -124,6 +136,8 @@ export default async function decorate(block) {
   }
 
   prependDownloadIcon(block);
+  addScrollAnimation(block);
+  
 
   // loadSpline(block, href, $fallbackImg,delay);
   loadSplineFrame(block, href, $fallbackImg, delay);

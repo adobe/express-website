@@ -3,12 +3,16 @@ main .download-screens-wrapper.scroll {
   overflow: scroll;
 }
 
-main .cards.scroll {
+main .section.large .default-content-wrapper h2 {
+  font-size: var(--heading-font-size-xl);
+}
+
+main .cards.download-screens.scroll {
   display: inline-flex;
   flex-wrap: nowrap;
   max-width: unset;
-}
-
-main .section.large .default-content-wrapper h2 {
-  font-size: var(--heading-font-size-xl);
+  width: unset;
+  margin: 80px auto;
+  flex-direction: row;
+  justify-content: center;
 }

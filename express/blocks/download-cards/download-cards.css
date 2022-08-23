@@ -57,3 +57,7 @@ main .cards.download-cards .branded-header picture img {
 main .cards.download-cards.flat .card {
   box-shadow: none;
 }
+
+main .cards.download-cards.flat .card .card-image {
+  background-color: #F1F3F4;
+}
