@@ -15,7 +15,8 @@ import {
   addAnimationToggle,
   addSearchQueryToHref,
   createTag,
-  decorateMain, fetchPlaceholders,
+  decorateMain,
+  fetchPlaceholders,
   getIconElement,
   getLocale,
   linkImage,
@@ -33,10 +34,11 @@ const cache = {
   premium: false,
   start: '',
   masonry: undefined,
+  authoringError: false,
 };
 
 function fetchTemplates() {
-  if (cache.type !== 'Authoring error: first row must specify the template “type”') {
+  if (!cache.authoringError) {
     return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}&schema=template&orderBy=-remixCount`)
       .then((response) => response.json())
       .then((response) => response);
@@ -261,42 +263,51 @@ function populateTemplates($block, templates) {
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
-    const typeRow = $block.children[0].querySelectorAll('div');
-    const localesRow = $block.children[1].querySelectorAll('div');
-    const premiumRow = $block.children[2].querySelectorAll('div');
+    if ($block.children.length > 0) {
+      const typeRow = $block.children[0].querySelectorAll('div');
+      const localesRow = $block.children[1];
+      const premiumRow = $block.children[2];
 
-    if (typeRow[0].textContent === 'type' && typeRow[1].textContent === '') {
-      cache.type = 'Authoring error: first row must specify the template “type”';
+      if (typeRow[0].textContent.toLowerCase() === 'type' && !typeRow[1].textContent.length) {
+        cache.type = 'Authoring error: "type" row must have a value';
+        cache.authoringError = true;
+      } else {
+        cache.type = typeRow[1].textContent;
+      }
+
+      if (localesRow && localesRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'locales') {
+        cache.locales = localesRow.querySelectorAll('div')[1].textContent;
+      }
+
+      if (premiumRow && premiumRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'premium') {
+        cache.premium = ['yes', 'true'].includes(premiumRow.querySelectorAll('div')[1].textContent);
+      }
+
+      const fetchedTemplates = await processResponse();
+
+      if (fetchedTemplates) {
+        cache.templates = cache.templates.concat(fetchedTemplates);
+        cache.templates.forEach((template) => {
+          const clone = template.cloneNode(true);
+          $block.append(clone);
+        });
+      }
     } else {
-      cache.type = typeRow[1].textContent;
-    }
-
-    if (localesRow[0].textContent === 'locales') {
-      cache.locales = localesRow[1].textContent;
-    }
-
-    if (premiumRow[0].textContent === 'premium') {
-      cache.premium = ['yes', 'true'].includes(premiumRow[1].textContent);
-    }
-
-    const fetchedTemplates = await processResponse();
-
-    if (fetchedTemplates) {
-      cache.templates = cache.templates.concat(fetchedTemplates);
-      cache.templates.forEach((template) => {
-        const clone = template.cloneNode(true);
-        $block.append(clone);
-      });
+      cache.type = 'Authoring error: first row must specify the template “type”';
+      cache.authoringError = true;
     }
 
     const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
     if ($parent) {
       const $sectionHeading = $parent.querySelector('div > h2');
       if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
-        const headingEnding = await fetchPlaceholders()
-          .then((placeholders) => placeholders['api-powered-grid-heading']);
-        const total = cache.total === 0 ? '' : cache.total.toLocaleString('en-US');
-        $sectionHeading.textContent = `${total} ${cache.type} ${headingEnding}`;
+        if (cache.authoringError) {
+          $sectionHeading.textContent = cache.type;
+        } else {
+          const headingEnding = await fetchPlaceholders()
+            .then((placeholders) => placeholders['api-powered-grid-heading']);
+          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.type} ${headingEnding}`;
+        }
       }
     }
   }
