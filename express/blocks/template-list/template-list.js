@@ -28,7 +28,7 @@ import { buildCarousel } from '../shared/carousel.js';
 const cache = {
   templates: [],
   total: 0,
-  type: 'flyer',
+  type: '',
   locales: 'en',
   premium: false,
   start: '',
@@ -36,27 +36,35 @@ const cache = {
 };
 
 function fetchTemplates() {
-  return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}&schema=template&orderBy=-remixCount`)
-    .then((response) => response.json())
-    .then((response) => response);
+  if (cache.type !== 'Authoring error: first row must specify the template “type”') {
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}&schema=template&orderBy=-remixCount`)
+      .then((response) => response.json())
+      .then((response) => response);
+  }
+  return null;
 }
 
 async function processResponse() {
   const response = await fetchTemplates();
+  let templateFetched;
   // eslint-disable-next-line no-underscore-dangle
-  const templateFetched = response._embedded.results;
-  if ('_links' in response) {
+  if (response) {
     // eslint-disable-next-line no-underscore-dangle
-    const nextQuery = response._links.next.href;
-    const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
-    cache.start = start;
-  } else {
-    cache.start = '';
-  }
+    templateFetched = response._embedded.results;
 
-  if (cache.total === 0) {
-    // eslint-disable-next-line no-underscore-dangle
-    cache.total = response._embedded.total;
+    if ('_links' in response) {
+      // eslint-disable-next-line no-underscore-dangle
+      const nextQuery = response._links.next.href;
+      const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
+      cache.start = start;
+    } else {
+      cache.start = '';
+    }
+
+    if (cache.total === 0) {
+      // eslint-disable-next-line no-underscore-dangle
+      cache.total = response._embedded.total;
+    }
   }
 
   const renditionParams = {
@@ -64,31 +72,36 @@ async function processResponse() {
     dimension: 'width',
     size: 400,
   };
-  return templateFetched.map((template) => {
-    const $template = createTag('div');
-    const $pictureWrapper = createTag('div');
 
-    ['format', 'dimension', 'size'].forEach((param) => {
-      template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
-    });
-    const $picture = createTag('img', {
-      src: template.rendition.href,
-      alt: template.title,
-    });
-    const $buttonWrapper = createTag('div', { class: 'button-container' });
-    const $button = createTag('a', {
-      href: template.branchURL,
-      title: 'Edit this template',
-      class: 'button accent',
-    });
+  if (templateFetched) {
+    return templateFetched.map((template) => {
+      const $template = createTag('div');
+      const $pictureWrapper = createTag('div');
 
-    $button.textContent = 'Edit this template';
-    $pictureWrapper.insertAdjacentElement('beforeend', $picture);
-    $buttonWrapper.insertAdjacentElement('beforeend', $button);
-    $template.insertAdjacentElement('beforeend', $pictureWrapper);
-    $template.insertAdjacentElement('beforeend', $buttonWrapper);
-    return $template;
-  });
+      ['format', 'dimension', 'size'].forEach((param) => {
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+      });
+      const $picture = createTag('img', {
+        src: template.rendition.href,
+        alt: template.title,
+      });
+      const $buttonWrapper = createTag('div', { class: 'button-container' });
+      const $button = createTag('a', {
+        href: template.branchURL,
+        title: 'Edit this template',
+        class: 'button accent',
+      });
+
+      $button.textContent = 'Edit this template';
+      $pictureWrapper.insertAdjacentElement('beforeend', $picture);
+      $buttonWrapper.insertAdjacentElement('beforeend', $button);
+      $template.insertAdjacentElement('beforeend', $pictureWrapper);
+      $template.insertAdjacentElement('beforeend', $buttonWrapper);
+      return $template;
+    });
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -248,20 +261,33 @@ function populateTemplates($block, templates) {
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
-    if ($block.children[0].querySelectorAll('div')[0].textContent === 'type') {
-      cache.type = $block.children[0].querySelectorAll('div')[1].textContent;
+    const typeRow = $block.children[0].querySelectorAll('div');
+    const localesRow = $block.children[1].querySelectorAll('div');
+    const premiumRow = $block.children[2].querySelectorAll('div');
+
+    if (typeRow[0].textContent === 'type' && typeRow[1].textContent === '') {
+      cache.type = 'Authoring error: first row must specify the template “type”';
+    } else {
+      cache.type = typeRow[1].textContent;
     }
-    if ($block.children[1].querySelectorAll('div')[0].textContent === 'locales') {
-      cache.locales = $block.children[1].querySelectorAll('div')[1].textContent;
+
+    if (localesRow[0].textContent === 'locales') {
+      cache.locales = localesRow[1].textContent;
     }
-    if ($block.children[2].querySelectorAll('div')[0].textContent === 'premium') {
-      cache.premium = ['yes', 'true'].includes($block.children[2].querySelectorAll('div')[1].textContent);
+
+    if (premiumRow[0].textContent === 'premium') {
+      cache.premium = ['yes', 'true'].includes(premiumRow[1].textContent);
     }
-    cache.templates = cache.templates.concat(await processResponse());
-    cache.templates.forEach((template) => {
-      const clone = template.cloneNode(true);
-      $block.append(clone);
-    });
+
+    const fetchedTemplates = await processResponse();
+
+    if (fetchedTemplates) {
+      cache.templates = cache.templates.concat(fetchedTemplates);
+      cache.templates.forEach((template) => {
+        const clone = template.cloneNode(true);
+        $block.append(clone);
+      });
+    }
 
     const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
     if ($parent) {
@@ -269,7 +295,8 @@ export async function decorateTemplateList($block) {
       if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
         const headingEnding = await fetchPlaceholders()
           .then((placeholders) => placeholders['api-powered-grid-heading']);
-        $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.type} ${headingEnding}`;
+        const total = cache.total === 0 ? '' : cache.total.toLocaleString('en-US');
+        $sectionHeading.textContent = `${total} ${cache.type} ${headingEnding}`;
       }
     }
   }
