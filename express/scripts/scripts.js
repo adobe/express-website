@@ -1605,7 +1605,7 @@ function splitSections($main) {
     if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
       const $parentNode = $block.parentNode;
       if ($parentNode) {
-        $block.parentNode.classList.add('split-by-app-store-highlight');
+        $parentNode.classList.add('split-by-app-store-highlight');
       }
     }
   });
