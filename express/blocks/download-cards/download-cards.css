@@ -61,3 +61,49 @@ main .cards.download-cards.flat .card {
 main .cards.download-cards.flat .card .card-image {
   background-color: #F1F3F4;
 }
+
+main .cards.download-cards.large .card {
+  width: 350px;
+}
+
+main .section>div.download-cards-wrapper {
+  max-width: 100%;
+}
+
+main .cards.download-cards.large {
+  width: 100%;
+  gap: 16px;
+}
+
+main .cards.download-cards .pad-card {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  main .cards.download-cards .pad-card {
+    display: unset;
+  }
+
+  main .cards.download-cards.large .card {
+    width: 402px;
+  }
+
+  main .cards.download-cards.stagger .card:nth-child(even) {
+    margin-top: 20%;
+    margin-bottom: -20%;
+  }
+
+  main .cards.download-cards.stagger .card:nth-child(even):last-child {
+    margin-bottom: 20%;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section>div.download-cards-wrapper {
+    max-width: 1200px;
+  }
+
+  main .cards.download-cards.large .card {
+    width: 500px;
+  }
+}

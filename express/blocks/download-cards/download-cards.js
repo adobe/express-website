@@ -72,6 +72,17 @@ function brandHeaders($block) {
 }
 
 /**
+ * Pad cards to an even number
+ * @param {HTMLDivElement} $block
+ */
+function padCards($block) {
+  const existing = $block.querySelectorAll(':scope > div.card');
+  if (existing.length % 2) {
+    $block.append(createTag('div', { class: 'card pad-card' }));
+  }
+}
+
+/**
  * @param {HTMLDivElement} $block
  */
 export default async function decorate($block) {
@@ -92,6 +103,10 @@ export default async function decorate($block) {
         parent.classList.add('bleed__c');
       }
     });
+  }
+
+  if ($block.classList.contains('stagger')) {
+    padCards($block);
   }
 
   prependDownloadIcon($block);
