@@ -27,6 +27,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
+  total: 0,
   type: 'flyer',
   locales: 'en',
   premium: false,
@@ -35,12 +36,12 @@ const cache = {
 };
 
 function fetchTemplates() {
-  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${cache.type} AND locales:${cache.locales}&schema=template&orderBy=-remixCount&premium=${cache.premium}&limit=70&start=${cache.start}`)
+  return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}&schema=template&orderBy=-remixCount`)
     .then((response) => response.json())
     .then((response) => response);
 }
 
-async function normalizeFetchedTemplates() {
+async function processResponse() {
   const response = await fetchTemplates();
   // eslint-disable-next-line no-underscore-dangle
   const templateFetched = response._embedded.results;
@@ -51,6 +52,11 @@ async function normalizeFetchedTemplates() {
     cache.start = start;
   } else {
     cache.start = '';
+  }
+
+  if (cache.total === 0) {
+    // eslint-disable-next-line no-underscore-dangle
+    cache.total = response._embedded.total;
   }
 
   const renditionParams = {
@@ -251,12 +257,21 @@ export async function decorateTemplateList($block) {
     if ($block.children[2].querySelectorAll('div')[0].textContent === 'premium') {
       cache.premium = ['yes', 'true'].includes($block.children[2].querySelectorAll('div')[1].textContent);
     }
-    const { templates, type } = cache;
-    cache.templates = templates.concat(await normalizeFetchedTemplates(type));
+    cache.templates = cache.templates.concat(await processResponse());
     cache.templates.forEach((template) => {
       const clone = template.cloneNode(true);
       $block.append(clone);
     });
+
+    const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
+    if ($parent) {
+      const $sectionHeading = $parent.querySelector('div > h2');
+      if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+        const headingEnding = await fetchPlaceholders()
+          .then((placeholders) => placeholders['api-powered-grid-heading']);
+        $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.type} ${headingEnding}`;
+      }
+    }
   }
 
   let rows = $block.children.length;
@@ -383,10 +398,9 @@ function updateButtonStatus($block, $loadMore) {
 }
 
 async function decorateNewTamplates($block, $loadMore) {
-  const { templates, type, masonry } = cache;
-  const newTemplates = await normalizeFetchedTemplates(type);
+  const newTemplates = await processResponse();
 
-  cache.templates = templates.concat(newTemplates);
+  cache.templates = cache.templates.concat(newTemplates);
   populateTemplates($block, newTemplates);
   newTemplates.forEach((template) => {
     const clone = template.cloneNode(true);
@@ -394,8 +408,8 @@ async function decorateNewTamplates($block, $loadMore) {
   });
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
-  masonry.cells = masonry.cells.concat(newCells);
-  masonry.draw(newCells);
+  cache.masonry.cells = cache.masonry.cells.concat(newCells);
+  cache.masonry.draw(newCells);
   updateButtonStatus($block, $loadMore);
 }
 
