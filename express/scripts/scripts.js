@@ -851,8 +851,12 @@ export function decorateBlocks(main) {
 
 function decorateMarqueeColumns($main) {
   // flag first columns block in first section block as marquee
+  const $sectionSplitByHighlight = $main.querySelector('.split-by-app-store-highlight');
   const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
-  if ($firstColumnsBlock) {
+
+  if ($sectionSplitByHighlight) {
+    $sectionSplitByHighlight.querySelector('.columns--fullsize-center-').classList.add('columns-marquee');
+  } else if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
   }
 }

@@ -217,8 +217,7 @@ main .columns.columns-marquee .brand.icon {
   display: none;
 }
 
-body.no-brand-header main .columns.columns-marquee .brand.icon,
-main .split-by-app-store-highlight .has-brand .column img.icon.icon-cc-express-logo.brand {
+body.no-brand-header main .columns.columns-marquee .brand.icon {
   display: unset;
   height: 32px;
   width: auto;
@@ -365,11 +364,6 @@ main .columns-video .column-picture .column-video-overlay svg {
 
   main .columns-video .column-picture .column-video-overlay {
     width: 50%;
-  }
-
-  main .split-by-app-store-highlight .has-brand .column img.icon.icon-cc-express-logo.brand {
-    position: unset;
-    transform: unset;
   }
 }
 
