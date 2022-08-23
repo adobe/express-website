@@ -39,7 +39,7 @@ const cache = {
 
 function fetchTemplates() {
   if (!cache.authoringError) {
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}&schema=template&orderBy=-remixCount`)
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}`)
       .then((response) => response.json())
       .then((response) => response);
   }
