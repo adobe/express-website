@@ -15,7 +15,8 @@ import {
   addAnimationToggle,
   addSearchQueryToHref,
   createTag,
-  decorateMain, fetchPlaceholders,
+  decorateMain,
+  fetchPlaceholders,
   getIconElement,
   getLocale,
   linkImage,
@@ -27,28 +28,45 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
-  queryString: '',
+  total: 0,
+  type: '',
+  locales: 'en',
+  premium: false,
   start: '',
   masonry: undefined,
+  authoringError: false,
 };
 
-function fetchTemplates(queryString, start) {
-  return fetch(`https://www.adobe.com/cc-express-search-api?filters=tasks:${queryString} AND locales:en&schema=template&orderBy=-remixCount&premium=false&limit=70&start=${start}`)
-    .then((response) => response.json())
-    .then((response) => response);
+function fetchTemplates() {
+  if (!cache.authoringError) {
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}`)
+      .then((response) => response.json())
+      .then((response) => response);
+  }
+  return null;
 }
 
-async function normalizeFetchedTemplates(queryString) {
-  const response = await fetchTemplates(queryString, cache.start);
+async function processResponse() {
+  const response = await fetchTemplates();
+  let templateFetched;
   // eslint-disable-next-line no-underscore-dangle
-  const templateFetched = response._embedded.results;
-  if ('_links' in response) {
+  if (response) {
     // eslint-disable-next-line no-underscore-dangle
-    const nextQuery = response._links.next.href;
-    const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
-    cache.start = start;
-  } else {
-    cache.start = '';
+    templateFetched = response._embedded.results;
+
+    if ('_links' in response) {
+      // eslint-disable-next-line no-underscore-dangle
+      const nextQuery = response._links.next.href;
+      const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
+      cache.start = start;
+    } else {
+      cache.start = '';
+    }
+
+    if (cache.total === 0) {
+      // eslint-disable-next-line no-underscore-dangle
+      cache.total = response._embedded.total;
+    }
   }
 
   const renditionParams = {
@@ -56,31 +74,36 @@ async function normalizeFetchedTemplates(queryString) {
     dimension: 'width',
     size: 400,
   };
-  return templateFetched.map((template) => {
-    const $template = createTag('div');
-    const $pictureWrapper = createTag('div');
 
-    ['format', 'dimension', 'size'].forEach((param) => {
-      template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
-    });
-    const $picture = createTag('img', {
-      src: template.rendition.href,
-      alt: template.title,
-    });
-    const $buttonWrapper = createTag('div', { class: 'button-container' });
-    const $button = createTag('a', {
-      href: template.branchURL,
-      title: 'Edit this template',
-      class: 'button accent',
-    });
+  if (templateFetched) {
+    return templateFetched.map((template) => {
+      const $template = createTag('div');
+      const $pictureWrapper = createTag('div');
 
-    $button.textContent = 'Edit this template';
-    $pictureWrapper.insertAdjacentElement('beforeend', $picture);
-    $buttonWrapper.insertAdjacentElement('beforeend', $button);
-    $template.insertAdjacentElement('beforeend', $pictureWrapper);
-    $template.insertAdjacentElement('beforeend', $buttonWrapper);
-    return $template;
-  });
+      ['format', 'dimension', 'size'].forEach((param) => {
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+      });
+      const $picture = createTag('img', {
+        src: template.rendition.href,
+        alt: template.title,
+      });
+      const $buttonWrapper = createTag('div', { class: 'button-container' });
+      const $button = createTag('a', {
+        href: template.branchURL,
+        title: 'Edit this template',
+        class: 'button accent',
+      });
+
+      $button.textContent = 'Edit this template';
+      $pictureWrapper.insertAdjacentElement('beforeend', $picture);
+      $buttonWrapper.insertAdjacentElement('beforeend', $button);
+      $template.insertAdjacentElement('beforeend', $pictureWrapper);
+      $template.insertAdjacentElement('beforeend', $buttonWrapper);
+      return $template;
+    });
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -240,15 +263,53 @@ function populateTemplates($block, templates) {
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
-    if ($block.children[0].querySelectorAll('div')[0].textContent === 'Search query') {
-      cache.queryString = $block.children[0].querySelectorAll('div')[1].textContent;
+    if ($block.children.length > 0) {
+      const typeRow = $block.children[0].querySelectorAll('div');
+      const localesRow = $block.children[1];
+      const premiumRow = $block.children[2];
+
+      if (typeRow[0].textContent.toLowerCase() === 'type' && !typeRow[1].textContent.length) {
+        cache.type = 'Authoring error: "type" row must have a value';
+        cache.authoringError = true;
+      } else {
+        cache.type = typeRow[1].textContent;
+      }
+
+      if (localesRow && localesRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'locales') {
+        cache.locales = localesRow.querySelectorAll('div')[1].textContent;
+      }
+
+      if (premiumRow && premiumRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'premium') {
+        cache.premium = ['yes', 'true'].includes(premiumRow.querySelectorAll('div')[1].textContent);
+      }
+
+      const fetchedTemplates = await processResponse();
+
+      if (fetchedTemplates) {
+        cache.templates = cache.templates.concat(fetchedTemplates);
+        cache.templates.forEach((template) => {
+          const clone = template.cloneNode(true);
+          $block.append(clone);
+        });
+      }
+    } else {
+      cache.type = 'Authoring error: first row must specify the template “type”';
+      cache.authoringError = true;
     }
-    const { templates, queryString } = cache;
-    cache.templates = templates.concat(await normalizeFetchedTemplates(queryString));
-    cache.templates.forEach((template) => {
-      const clone = template.cloneNode(true);
-      $block.append(clone);
-    });
+
+    const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
+    if ($parent) {
+      const $sectionHeading = $parent.querySelector('div > h2');
+      if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+        if (cache.authoringError) {
+          $sectionHeading.textContent = cache.type;
+        } else {
+          const headingEnding = await fetchPlaceholders()
+            .then((placeholders) => placeholders['api-powered-grid-heading']);
+          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.type} ${headingEnding}`;
+        }
+      }
+    }
   }
 
   let rows = $block.children.length;
@@ -387,10 +448,9 @@ function updateButtonStatus($block, $loadMore) {
 }
 
 async function decorateNewTamplates($block, $loadMore) {
-  const { templates, queryString, masonry } = cache;
-  const newTemplates = await normalizeFetchedTemplates(queryString);
+  const newTemplates = await processResponse();
 
-  cache.templates = templates.concat(newTemplates);
+  cache.templates = cache.templates.concat(newTemplates);
   populateTemplates($block, newTemplates);
   newTemplates.forEach((template) => {
     const clone = template.cloneNode(true);
@@ -398,8 +458,8 @@ async function decorateNewTamplates($block, $loadMore) {
   });
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
-  masonry.cells = masonry.cells.concat(newCells);
-  masonry.draw(newCells);
+  cache.masonry.cells = cache.masonry.cells.concat(newCells);
+  cache.masonry.draw(newCells);
   updateButtonStatus($block, $loadMore);
 }
 
