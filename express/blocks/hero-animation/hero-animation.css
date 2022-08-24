@@ -3,117 +3,55 @@ body.no-desktop-brand-header header {
   height: 143px;
 }
 
+main .hero-animation-container,
+main .hero-animation-wide-container {
+  position: relative;
+  padding-top: 0;
+  overflow: hidden;
+}
+
+main .hero-animation-container > div,
+main .hero-animation-wide-container > div {
+  max-width: unset;
+  padding: 0;
+}
+
+main .hero-animation-container > div {
+  padding: 0;
+}
+
 main .hero-animation.appear {
   opacity: 1;
   height: unset;
 }
 
-main .hero-animation-container > div,
-main .hero-animation-dark-container > div {
-  max-width: 1200px;
+main .hero-animation .hero-animation-overlay p:first-of-type { /* p with icon */
+  margin-bottom: 8px;
 }
 
-main .hero-animation-container,
-main .hero-animation-dark-container {
-  position: relative;
-}
-
-main .hero-animation-container > div,
-main .hero-animation-dark-container > div {
-  padding: 0;
-}
-
-main .hero-animation video {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  box-sizing: border-box;
-  z-index: -1;
-  object-fit: cover;
-  width: 100vw;
-  min-height: 375px;
-  object-position: 100% 100%;
-}
-
-main .hero-animation .hero-animation-overlay p {
-  margin: 16px 0;
-}
-
-main .hero-animation .icon {
+main .hero-animation .hero-animation-overlay .icon {
   height: 32px;
   width: unset;
 }
 
-main .hero-animation .hero-animation-attributions {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-main .hero-animation .hero-animation-attribution {
-  position: absolute;
-  opacity: 0;
-  transition: opacity 500ms ease-in-out;
-  display: flex;
-  text-align: left;
-  align-items: center;
-  width: 400px;
-}
-
-main .hero-animation .hero-animation-attribution p {
-  margin: 0;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-main .hero-animation .hero-animation-attribution img {
-  height: 132px;
-  width: 132px;
-  margin-right: 8px;
-  border-radius: 50%;
-}
-
-main .hero-animation .hero-animation-overlay p:first-of-type {
-  margin-bottom: 8px;
-}
-
-main .hero-animation {
-  padding-top: 134%;
-}
-
-main .hero-animation .hero-animation-attribution.appear {
-  opacity: 1;
-}
-
-main .hero-animation .hero-animation-overlay {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 15px;
-  margin: auto;
-  max-width: 500px;
-  box-sizing: border-box;
-}
-
-main .hero-animation .hero-animation-overlay > *:not(video) {
-  position: relative;
-}
-
-main .hero-animation h1 {
-  font-size: var(--heading-font-size-xl);
+main .hero-animation .hero-animation-overlay h1 {
+  font-size: var(--heading-font-size-l);
   margin: 0 0 8px 0;
 }
 
-main .hero-animation .icon-adobe-creative-cloud-express {
+main .hero-animation .hero-animation-overlay p {
+  font-size: var(--body-font-size-l);
+  margin: 16px 0;
+}
+
+main .hero-animation .hero-animation-overlay .icon-adobe-creative-cloud-express {
   margin-top: 13px;
   height: 33px;
   width: 294px;
   margin-bottom: 380px;
 }
 
-main .hero-animation .icon-adobe-creative-cloud-express {
+main .hero-animation .hero-animation-overlay .icon-adobe-creative-cloud-express {
   display: none;
 }
 
@@ -126,149 +64,154 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
   margin: 0;
 }
 
-@media (min-width: 400px) {
-  main .hero-animation {
-    padding-top: max( 49%, 375px);
-  }
+main .hero-animation .hero-animation-overlay {
+  text-align: left;
+  padding: 0;
+  margin: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+main .hero-animation .hero-animation-overlay video {
+  box-sizing: border-box;
+  object-fit: cover;
+  width: 100vw;
+  min-height: 375px;
+  object-position: 100% 100%;
+}
+
+main .hero-animation .hero-animation-overlay > div {
+  padding: 16px 15px;
+  position: relative;
 }
 
 @media (min-width: 600px) {
   main .hero-animation .icon {
     height: 65px;
   }
+
+  main .hero-animation .hero-animation-overlay > div {
+    left: 56px;
+    width: 500px;
+  }
 }
 
 @media (min-width: 950px) {
-  body.no-desktop-brand-header header, body.no-brand-header header {
-    height: 64px;
-    background-image: unset;
-  }
-
-  main .hero-animation {
-    display: block;
-    padding-top: 0;
-  }   
-
-  main .hero-animation-container > div,
-  main .hero-animation-dark-container > div {
-    padding: 0 56px;
-  }
-
-  main .hero-animation .hero-animation-overlay {
-    width: 512xpx;
-    justify-content: center;
-    margin: unset;
-    padding: 0;
-  }
-  
   main .hero-animation.dark,
   main .hero-animation.dark a:any-link {
     color: var(--color-white);
   }
 
+  main .hero-animation .hero-animation-overlay h1 {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  main .hero-animation .hero-animation-overlay p {
+    font-size: var(--body-font-size-xl);
+  }
+
+  main .hero-animation .hero-animation-overlay > div {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 56px;
+    width: 500px;
+  }
+
+  body.no-desktop-brand-header header, body.no-brand-header header {
+    height: 64px;
+    background-image: unset;
+  }
+
   main .hero-animation h1 {
     font-size: var(--heading-font-size-xxl);
   }
+}
 
-  main .hero-animation .hero-animation-attribution.hero-animation-top-right {
-    top: 50px;
-    left: unset;
-    bottom: unset;
-    right: 50px;
+@media (min-width: 1400px) {
+  main .hero-animation .hero-animation-overlay > div {
+    left: 50%;
+    transform: translate(-120%, -50%);
   }
 }
 
 @media (min-width: 1800px) {
-  main .hero-animation-container > div,
-  main .hero-animation-dark-container > div {
-    max-width: 65%;
+  main .hero-animation .hero-animation-overlay > div {
+    max-width: 30%;
+    left: 25%;
+    transform: translate(-50%, -50%);
   }   
 }
 
-/* Japanese font sizing styles */
-:lang(ja) main .hero-animation h1 {
-    font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main .hero-animation h1.heading-long {
-    font-size: var(--heading-font-size-l);
-}
-
-:lang(ja) main .hero-animation h1.heading-very-long {
-    font-size: var(--heading-font-size-m);
-}
-
-:lang(ja) main .hero-animation h1.heading-x-long {
-    font-size: var(--heading-font-size-m);
-}
-
-
 /* Wide option */
 
-main .hero-animation-wide-container > div {
-  max-width: unset;
-  padding: 0;
-}
 
-main .hero-animation-wide-container .hero-animation.wide {
+/* @media (min-width: 400px) and (max-width: 949px) {
+  main .hero-animation.dark,
+  main .hero-animation.dark a:any-link {
+    color: var(--color-white);
+  }
+
+  main .hero-animation .hero-animation-overlay > div {
+    position: relative;
+    top: unset;
+    transform: unset;
+  }
+} */
+/* 
+main .hero-animation.wide .hero-animation-overlay > div {
   position: relative;
-  padding: 0;
-  padding-top: 200px;
-}
-
-main .hero-animation-wide-container .hero-animation.wide .icon {
-  height: 30px;
-}
-
-main .hero-animation-wide-container .hero-animation.wide p {
-  font-size: var(--body-font-size-m);
-  margin: 12px 0;
-}
-
-main .hero-animation-wide-container .hero-animation.wide h1 {
-  font-size: var(--heading-font-size-l);
-  position: relative;
-}
-
-main .hero-animation-wide-container .hero-animation.wide video {
-  position: static;
-}
-
-main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay {
-  width: 100%;
-  max-width: 520px;
-}
-
-main .hero-animation-wide-container .hero-animation.wide > div {
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-main .hero-animation-wide-container .hero-animation.wide video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: auto;
-  right: auto;
-  height: 200px;
-  width: 100%;
-  z-index: unset;
-  object-fit: cover;
-  min-height: unset;
-  object-position: 100% 0;
+  top: unset;
+  transform: unset;
 }
 
 @media (min-width: 950px) {
-  main .hero-animation-wide-container .hero-animation.wide,
+  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay .icon {
+    height: 30px;
+  }
+  
+  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay p {
+    font-size: var(--body-font-size-m);
+    margin: 12px 0;
+  }
+  
+  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay h1 {
+    font-size: var(--heading-font-size-l);
+  }
+  
+  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay video {
+    position: static;
+  }
+  
   main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay {
-    min-height: 350px;
-    padding: 32px;
+    max-width: 1200px;
+  }
+  
+  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay > div {
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+    transform: unset;
+  }
+  
+  main .hero-animation-wide-container .hero-animation.wide > div {
+    max-width: 1200px;
+    margin: 0 auto;
     box-sizing: border-box;
   }
-
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay {
-    max-width: 550px;
+  
+  main .hero-animation-wide-container .hero-animation.wide video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    height: 200px;
+    width: 100%;
+    z-index: unset;
+    object-fit: cover;
+    min-height: unset;
+    object-position: 100% 0;
   }
 
   main .hero-animation-wide-container .hero-animation.wide video {
@@ -287,6 +230,32 @@ main .hero-animation-wide-container .hero-animation.wide video {
     margin-bottom: 0;
   }
 }
+
+@media (min-width: 600px) and (max-width: 1450px) {
+  main .hero-animation-wide-container .hero-animation.wide video { 
+    object-position: 50% 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  main .hero-animation-wide-container .hero-animation.wide video { 
+    object-position: 75% 100%;
+  }
+}
+
+@media (min-width: 1450px) {
+  main .hero-animation-wide-container .hero-animation.wide video {
+    object-fit: contain;
+    object-position: center 100%;
+  }
+} */
+
+main .hero-animation.white-text,
+main .hero-animation.white-text a:any-link {
+  color: var(--color-white);
+}
+
+/* shadow */
 
 main .hero-animation .hero-shadow {
   display: none;
@@ -307,30 +276,13 @@ main .hero-animation .hero-shadow picture {
   }
 }
 
-@media (min-width: 600px) and (max-width: 1450px) {
-  main .hero-animation-wide-container .hero-animation.wide video { 
-    object-position: 50% 100%;
-  }
-}
-
 @media (min-width: 950px) and (max-width: 1250px) {
   main .hero-animation .hero-shadow {
     transform: translateX(-5%);
   }
 }
 
-@media (max-width: 600px) {
-  main .hero-animation-wide-container .hero-animation.wide video { 
-    object-position: 75% 100%;
-  }
-}
-
 @media (min-width: 1450px) {
-  main .hero-animation-wide-container .hero-animation.wide video {
-    object-fit: contain;
-    object-position: center 100%;
-  }
-  
   main .hero-animation .hero-shadow {
     transform: translate(-15%, -2px);
   }
@@ -357,4 +309,22 @@ main .hero-animation.wide .button-container.free-plan-container {
 main .hero-animation.wide .free-plan-widget {
   margin: 0;
   background-color: transparent;
+}
+
+/* Japanese font sizing styles */
+
+:lang(ja) main .hero-animation h1 {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-very-long {
+  font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) main .hero-animation h1.heading-x-long {
+  font-size: var(--heading-font-size-m);
 }
