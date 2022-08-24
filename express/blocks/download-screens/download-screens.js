@@ -13,6 +13,22 @@
 // eslint-disable-next-line import/no-unresolved
 import { loadCSS } from '../../scripts/scripts.js';
 
+const CARD_WIDTH = 157;
+const CARD_HEIGHT = 313;
+const CARD_GAP = 16;
+
+const DESKTOP_CARD_ENDPOINTS = [
+  { start: -145, end: 700 },
+  { start: -185, end: 395 },
+  { start: -90, end: 97 },
+  { start: -85, end: 258 },
+  { start: -90, end: 427 },
+  { start: -185, end: 720 },
+  { start: -145, end: 600 },
+];
+
+const RANGES = DESKTOP_CARD_ENDPOINTS.map((c) => Math.abs(c.start) + Math.abs(c.end));
+
 /**
  * Load block as base
  * @param {HTMLDivElement} block
@@ -70,7 +86,7 @@ function initScrollAnimationMobile($block) {
     const blockMidY = (blockPosition.bottom - blockHeight / 2);
     const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
     const totalScroll = $block.scrollWidth - docWidth;
-    container.scrollLeft = (totalScroll / 100) * (offset * 100);
+    container.scrollLeft = (totalScroll / 50) * (offset * 100);
   });
 }
 
@@ -81,12 +97,21 @@ function initScrollAnimationMobile($block) {
 function initScrollAnimationDesktop($block) {
   console.debug('initScrollAnimationDesktop()');
   const docHeight = window.innerHeight;
-  const docWidth = window.innerWidth;
-  const docTargetY = (docHeight / 10) * 9;
+  const docTargetY = (docHeight / 10) * 6;
   const container = $block.parentElement;
-
   window.container = container;
-  window.block = $block;
+
+  const screens = $block.querySelectorAll(':scope > div.card');
+  const leftPad = (window.innerWidth - ((CARD_GAP + CARD_WIDTH) * screens.length + CARD_GAP)) / 2;
+
+  screens.forEach((screen, i) => {
+    const left = (CARD_GAP + CARD_WIDTH) * i + CARD_GAP;
+    const limit = DESKTOP_CARD_ENDPOINTS[i];
+    screen.style.top = `${limit.start}px`;
+    screen.style.left = `${left + leftPad}px`;
+    screen.style.margin = '0';
+    screen.style.position = 'absolute';
+  });
 
   document.addEventListener('scroll', () => {
     const blockPosition = $block.getBoundingClientRect();
@@ -98,8 +123,23 @@ function initScrollAnimationDesktop($block) {
     // offset % from center of block to center of view
     const blockMidY = (blockPosition.bottom - blockHeight / 2);
     const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
-    const totalScroll = $block.scrollWidth - docWidth;
-    container.scrollLeft = (totalScroll / 100) * (offset * 100);
+    const containerHLimit = (container.clientHeight - CARD_HEIGHT) / 2;
+
+    screens.forEach((screen, i) => {
+      const limit = DESKTOP_CARD_ENDPOINTS[i];
+      const absRange = RANGES[i];
+      const margin = (absRange / 100) * (offset * 100);
+
+      if (margin < limit.start) {
+        screen.style.top = `${limit.start}px`;
+      } else if (margin > absRange) {
+        screen.style.top = `${limit.end}px`;
+      } else if (margin > containerHLimit) {
+        console.warn('[download-screens] limit out of bounds');
+      } else {
+        screen.style.top = `${margin}px`;
+      }
+    });
   });
 }
 
@@ -124,7 +164,8 @@ function isMobileUserAgent() {
 
 function isMobileLike() {
   return (document.body.dataset.device === 'mobile'
-  || window.screen.width < 900
+  || window.screen.width < 1200
+  || window.innerWidth < 1200
   || isMobileUserAgent());
 }
 

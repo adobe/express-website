@@ -76,7 +76,7 @@ main .section>div.download-cards-wrapper {
 
 main .cards.download-cards.large {
   width: 100%;
-  gap: 16px;
+  gap: 24px;
 }
 
 main .cards.download-cards .pad-card {
@@ -92,9 +92,14 @@ main .cards.download-cards .pad-card {
     width: 402px;
   }
 
+  main .cards.download-cards.stagger .card:nth-child(odd) {
+    margin: 0 0 0 auto;
+  }
+
   main .cards.download-cards.stagger .card:nth-child(even) {
-    margin-top: 20%;
-    margin-bottom: -20%;
+    /* margin-top: 20%;
+    margin-bottom: -20%; */
+    margin: 20% auto -20% 0;
   }
 
   main .cards.download-cards.stagger .card:nth-child(even):last-child {
