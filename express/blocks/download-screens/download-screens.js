@@ -51,28 +51,56 @@ async function extendBlock(block, blockName) {
 function initScrollAnimationMobile($block) {
   console.debug('initScrollAnimationMobile()');
 
-  const $contentWrapper = $block.querySelector('.content-wrapper');
-  const $highlightsPlatform = $block.querySelector('.highlights-platform');
+  const docHeight = window.innerHeight;
+  const docWidth = window.innerWidth;
+  const docTargetY = (docHeight / 10) * 9;
+  const container = $block.parentElement;
 
-  $contentWrapper.style.transform = 'scale(1.2)';
+  window.container = container;
+  window.block = $block;
+
   document.addEventListener('scroll', () => {
     const blockPosition = $block.getBoundingClientRect();
-    const blockInViewPercent = (1 - blockPosition.top / blockPosition.height) * 100;
-    const blockTopToEdge = Math.round((blockPosition.top / window.innerHeight) * 100);
-
-    if (blockTopToEdge <= 100 && blockTopToEdge >= 30) {
-      $contentWrapper.style.transform = `scale(${1 + ((blockTopToEdge - 30) * (0.2 / 70))})`;
+    if (blockPosition.top > docHeight || blockPosition.bottom < 0) {
+      return;
     }
+    const blockHeight = $block.clientHeight;
 
-    if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
-      const totalScroll = $highlightsPlatform.scrollWidth - window.innerWidth;
-      $highlightsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
-    }
+    // offset % from center of block to center of view
+    const blockMidY = (blockPosition.bottom - blockHeight / 2);
+    const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
+    const totalScroll = $block.scrollWidth - docWidth;
+    container.scrollLeft = (totalScroll / 100) * (offset * 100);
   });
 }
 
+/**
+ *
+ * @param {HTMLDivElement} $block
+ */
 function initScrollAnimationDesktop($block) {
   console.debug('initScrollAnimationDesktop()');
+  const docHeight = window.innerHeight;
+  const docWidth = window.innerWidth;
+  const docTargetY = (docHeight / 10) * 9;
+  const container = $block.parentElement;
+
+  window.container = container;
+  window.block = $block;
+
+  document.addEventListener('scroll', () => {
+    const blockPosition = $block.getBoundingClientRect();
+    if (blockPosition.top > docHeight || blockPosition.bottom < 0) {
+      return;
+    }
+    const blockHeight = $block.clientHeight;
+
+    // offset % from center of block to center of view
+    const blockMidY = (blockPosition.bottom - blockHeight / 2);
+    const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
+    const totalScroll = $block.scrollWidth - docWidth;
+    container.scrollLeft = (totalScroll / 100) * (offset * 100);
+  });
 }
 
 function isMobileUserAgent() {

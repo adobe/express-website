@@ -1,3 +1,7 @@
+main .section>div.download-cards-wrapper {
+  padding: 0;
+}
+
 main .cards.download-cards .card h3 {
   margin: 32px 0 0;
 }

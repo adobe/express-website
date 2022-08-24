@@ -87,7 +87,7 @@ export function prependDownloadIcon(block) {
 function addScrollAnimation(block, scrollTo) {
   let href = scrollTo;
   if (!href.startsWith('http://') && !href.startsWith('https://')) {
-    href = `#${scrollTo.replace(/ /g, '-')}`;
+    href = `#${scrollTo.replace(/ /g, '-').toLowerCase()}`;
   }
 
   const loti = getLottie('scroll', SCROLL_ANIMATION_URL);
