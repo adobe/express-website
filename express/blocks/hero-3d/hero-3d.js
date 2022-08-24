@@ -21,6 +21,7 @@ import {
 
 const DEFAULT_DELAY = 1000;
 const MAX_NONCONFIG_ROWS = 3;
+const SCROLL_ANIMATION_URL = 'https://assets.website-files.com/62e1bd17785b4a21a5affda4/62e31da63e4adb171e1a2682_lf30_editor_jo11ftge.json';
 
 /**
  * @param {HTMLDivElement} block
@@ -48,21 +49,21 @@ function loadSplineFrame(block, href, $fallback, delay = 0) {
 
   iframe.src = href;
 
-  // setTimeout(() => {
-  iframe.onload = () => {
-    setTimeout(() => {
-      iframe.style.opacity = '1';
-      // if ($fallback) {
-      //   $fallback.style.display = 'none';
-      // }
-    }, delay);
-    iframe.onload = null;
-  };
-  block.append(iframe);
-  // const content = iframe.previousElementSibling;
-  // window.content = content;
-  // iframe.style.paddingTop = `${content.offsetHeight + content.offsetTop - 63}px`;
-  // }, delay);
+  setTimeout(() => {
+    iframe.onload = () => {
+      setTimeout(() => {
+        iframe.style.opacity = '1';
+        // if ($fallback) {
+        //   $fallback.style.display = 'none';
+        // }
+      }, delay);
+      iframe.onload = null;
+    };
+    block.append(iframe);
+    // const content = iframe.previousElementSibling;
+    // window.content = content;
+    // iframe.style.paddingTop = `${content.offsetHeight + content.offsetTop - 63}px`;
+  }, delay);
 }
 
 /**
@@ -81,12 +82,20 @@ export function prependDownloadIcon(block) {
 
 /**
  * @param {HTMLDivElement} block
+ * @param {string} scrollTo
  */
-function addScrollAnimation(block) {
-  const loti = getLottie('scroll', 'https://assets.website-files.com/62e1bd17785b4a21a5affda4/62e31da63e4adb171e1a2682_lf30_editor_jo11ftge.json');
-  const span = createTag('span', { class: 'scroll-animation' });
-  span.innerHTML = loti;
-  block.append(span);
+function addScrollAnimation(block, scrollTo) {
+  let href = scrollTo;
+  if (!href.startsWith('http://') && !href.startsWith('https://')) {
+    href = `#${scrollTo.replace(/ /g, '-')}`;
+  }
+
+  const loti = getLottie('scroll', SCROLL_ANIMATION_URL);
+  const container = createTag('div', { class: 'scroll-animation' });
+  const link = createTag('a', { href });
+  container.append(link);
+  link.innerHTML = loti;
+  block.append(container);
 
   lazyLoadLottiePlayer(block);
 }
@@ -136,7 +145,10 @@ export default async function decorate(block) {
   }
 
   prependDownloadIcon(block);
-  addScrollAnimation(block);
+
+  if (conf['scroll-anchor']) {
+    addScrollAnimation(block, conf['scroll-anchor']);
+  }
 
   if (href.endsWith('scene.splinecode')) {
     loadSpline(block, href, $fallbackImg, delay);

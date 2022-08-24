@@ -1,5 +1,6 @@
 main .download-screens-wrapper.scroll {
-  max-width: unset;
+  max-width: 100vw;
+  width: 100vw;
   overflow: scroll;
 }
 
@@ -7,12 +8,20 @@ main .section.large .default-content-wrapper h2 {
   font-size: var(--heading-font-size-xl);
 }
 
-main .cards.download-screens.scroll {
+main .cards.download-screens {
   display: inline-flex;
   flex-wrap: nowrap;
-  max-width: unset;
-  width: unset;
+  /* max-width: unset;
+  width: unset; */
+  width: 100vw;
+  max-width: 100vw;
+
+
   margin: 80px auto;
   flex-direction: row;
   justify-content: center;
+}
+
+main .cards.download-screens .card .card-image img {
+  border-radius: 0;
 }

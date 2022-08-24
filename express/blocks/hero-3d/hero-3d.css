@@ -96,6 +96,7 @@ main .hero-3d iframe {
 
 main .hero-3d .fallback {
     z-index: -1;
+    object-fit: cover;
     overflow: hidden;
     height: 150vh;
 }
@@ -120,7 +121,20 @@ main .hero-3d .scroll-animation {
     position: relative;
     z-index: 4;
     pointer-events: none;
+    cursor: pointer;
 }
+
+main .hero-3d .scroll-animation a {
+    width: 90px;
+    height: 90px;
+}
+
+main .hero-3d .scroll-animation .lottie {
+    width: 55px;
+    height: 55px;
+    margin: auto;
+}
+
 
 main .section.dark .hero-3d iframe,
 main .section.dark .hero-3d .fallback {
