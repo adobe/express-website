@@ -152,6 +152,11 @@ function transformToVideoLink($cell, $a) {
       displayVideoModal(vidUrls, title);
     }
   });
+
+  // auto-play if hash matches title
+  if (toClassName(title) === window.location.hash.substring(1)) {
+    displayVideoModal(vidUrls, title);
+  }
 }
 
 export default async function decorate($block) {
