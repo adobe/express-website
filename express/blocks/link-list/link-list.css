@@ -119,3 +119,22 @@ main .link-list .carousel-platform p.button-container:first-child {
     max-width: 1200px;
   }
 }
+
+main .link-list.center,
+main .link-list.center h2, 
+main .link-list.center h3,
+main .link-list.center h4 {
+  text-align: center;
+}
+
+main .link-list.center .carousel-platform {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  main .section > div.link-list-wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

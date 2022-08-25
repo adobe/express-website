@@ -501,6 +501,7 @@ main .template-list.flex-masonry .template.appear {
 main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
 main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
   opacity: 0;
+  pointer-events: none;
 }
 
 main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
@@ -552,6 +553,7 @@ main .template-list.horizontal .carousel-platform {
   main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden,
   main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden {
     opacity: 0;
+    pointer-events: none;
   }
 
   main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
@@ -643,5 +645,13 @@ main .template-list.horizontal .carousel-platform {
 
   main .template-list.horizontal {
     max-width: 1090px;
+  }
+}
+
+@media (max-width: 600px) {
+  main .section.template-list-horizontal-container > div.template-list-wrapper {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: unset;
   }
 }
