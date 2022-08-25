@@ -5,8 +5,11 @@ body.no-desktop-brand-header header {
 
 main .hero-animation-container,
 main .hero-animation-wide-container {
-  position: relative;
   padding-top: 0;
+}
+
+main .hero-animation-wrapper {
+  position: relative;
 }
 
 main .hero-animation-container > div,
@@ -68,7 +71,7 @@ main .hero-animation .hero-animation-overlay {
 main .hero-animation .hero-animation-overlay video {
   box-sizing: border-box;
   object-fit: cover;
-  width: 100vw;
+  width: 100%;
   min-height: 200px;
   max-height: 500px;
   object-position: 100% 100%;
