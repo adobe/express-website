@@ -215,7 +215,7 @@ export default async function decorate($block) {
     ratingScore: 0,
     ratingCount: '',
     images: [],
-    screenDemo: 'https://main--express-website--adobe.hlx3.page/media_1160add6fb9f21ff1d3e9a402a6eafeb6360654be.mp4',
+    screenDemo: './media_1160add6fb9f21ff1d3e9a402a6eafeb6360654be.mp4',
     badgeLink: 'https://adobesparkpost.app.link/d9EzZEpk4rb',
     // other contains unwanted elements authored by mistake;
     other: [],
