@@ -236,7 +236,7 @@ export default async function decorate($block) {
           parseInt(color.substr(1, 2), 16)
           + parseInt(color.substr(3, 2), 16)
           + parseInt(color.substr(5, 2), 16)) / 3;
-        if (lightness < 200) $block.classList.add('white-text')
+        if (lightness < 200) $block.classList.add('white-text');
         $div.remove();
       }
     }
