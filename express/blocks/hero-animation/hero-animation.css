@@ -7,16 +7,11 @@ main .hero-animation-container,
 main .hero-animation-wide-container {
   position: relative;
   padding-top: 0;
-  overflow: hidden;
 }
 
 main .hero-animation-container > div,
 main .hero-animation-wide-container > div {
   max-width: unset;
-  padding: 0;
-}
-
-main .hero-animation-container > div {
   padding: 0;
 }
 
@@ -40,7 +35,7 @@ main .hero-animation .hero-animation-overlay h1 {
 }
 
 main .hero-animation .hero-animation-overlay p {
-  font-size: var(--body-font-size-l);
+  font-size: var(--body-font-size-m);
   margin: 16px 0;
 }
 
@@ -81,8 +76,31 @@ main .hero-animation .hero-animation-overlay video {
 }
 
 main .hero-animation .hero-animation-overlay > div {
-  padding: 16px 15px;
+  padding: 32px 28px;
   position: relative;
+}
+
+main .hero-animation .hero-animation-overlay > div > :last-child {
+  margin-bottom: 0;
+}
+
+main .hero-animation .hero-animation-overlay > div > :first-child {
+  margin-top: 0;
+}
+
+@media (min-width: 400px) {
+  main .hero-animation.dark,
+  main .hero-animation.dark a:any-link {
+    color: var(--color-white);
+  }
+
+  main .hero-animation.dark .hero-animation-overlay > div {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 56px;
+    width: 500px;
+  }
 }
 
 @media (min-width: 600px) {
@@ -102,14 +120,6 @@ main .hero-animation .hero-animation-overlay > div {
     color: var(--color-white);
   }
 
-  main .hero-animation .hero-animation-overlay h1 {
-    font-size: var(--heading-font-size-xl);
-  }
-
-  main .hero-animation .hero-animation-overlay p {
-    font-size: var(--body-font-size-xl);
-  }
-
   main .hero-animation .hero-animation-overlay > div {
     position: absolute;
     top: 50%;
@@ -118,13 +128,17 @@ main .hero-animation .hero-animation-overlay > div {
     width: 500px;
   }
 
+  main .hero-animation .hero-animation-overlay h1 {
+    font-size: var(--heading-font-size-xl);
+  }
+
+  main .hero-animation .hero-animation-overlay p {
+    font-size: var(--body-font-size-xl);
+  }
+
   body.no-desktop-brand-header header, body.no-brand-header header {
     height: 64px;
     background-image: unset;
-  }
-
-  main .hero-animation h1 {
-    font-size: var(--heading-font-size-xxl);
   }
 }
 
@@ -143,116 +157,92 @@ main .hero-animation .hero-animation-overlay > div {
   }   
 }
 
-/* Wide option */
-
-
-/* @media (min-width: 400px) and (max-width: 949px) {
-  main .hero-animation.dark,
-  main .hero-animation.dark a:any-link {
-    color: var(--color-white);
+@media (max-width: 399px) {
+  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) .hero-animation-overlay video {
+    display: none;
   }
-
-  main .hero-animation .hero-animation-overlay > div {
-    position: relative;
-    top: unset;
-    transform: unset;
-  }
-} */
-/* 
-main .hero-animation.wide .hero-animation-overlay > div {
-  position: relative;
-  top: unset;
-  transform: unset;
 }
 
-@media (min-width: 950px) {
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay .icon {
-    height: 30px;
-  }
-  
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay p {
-    font-size: var(--body-font-size-m);
-    margin: 12px 0;
-  }
-  
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay h1 {
-    font-size: var(--heading-font-size-l);
-  }
-  
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay video {
-    position: static;
-  }
-  
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay {
-    max-width: 1200px;
-  }
-  
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay > div {
-    width: 100%;
-    max-width: 520px;
+/* Wide option */
+
+@media (min-width: 400px) {
+  main .hero-animation.wide {
     position: relative;
-    transform: unset;
-  }
-  
-  main .hero-animation-wide-container .hero-animation.wide > div {
     max-width: 1200px;
     margin: 0 auto;
-    box-sizing: border-box;
   }
-  
-  main .hero-animation-wide-container .hero-animation.wide video {
+
+  main .hero-animation.wide .hero-animation-overlay h1 {
+    font-size: var(--heading-font-size-l);
+  }
+
+  main .hero-animation.wide .hero-animation-overlay p {
+    font-size: var(--body-font-size-m);
+    position: relative;
+    margin: 12px 0;
+  }
+
+  main .hero-animation.wide .hero-animation-overlay .icon {
+    height: 30px;
+  }
+
+  main .hero-animation.dark.wide .hero-animation-overlay > div {
+    position: relative;
+    top: unset;
+    left: unset;
+    transform: unset;
+    width: unset;
+    max-width: 550px;
+    box-sizing: border-box;
+    padding: 32px;
+  }
+
+  main .hero-animation.dark.wide .hero-animation-overlay video {
     position: absolute;
     top: 0;
     left: 0;
     bottom: auto;
     right: auto;
-    height: 200px;
+    height: 100%;
     width: 100%;
     z-index: unset;
     object-fit: cover;
     min-height: unset;
-    object-position: 100% 0;
-  }
-
-  main .hero-animation-wide-container .hero-animation.wide video {
-    height: 100%;
-  }
-
-  main .hero-animation-wide-container .hero-animation.wide {
-    padding: 0;
-  }
-
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay :nth-child(2) {
-    margin-top: 0;
-  }
-
-  main .hero-animation-wide-container .hero-animation.wide .hero-animation-overlay :last-child {
-    margin-bottom: 0;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 1450px) {
-  main .hero-animation-wide-container .hero-animation.wide video { 
-    object-position: 50% 100%;
-  }
-}
-
-@media (max-width: 600px) {
-  main .hero-animation-wide-container .hero-animation.wide video { 
-    object-position: 75% 100%;
-  }
-}
-
-@media (min-width: 1450px) {
-  main .hero-animation-wide-container .hero-animation.wide video {
-    object-fit: contain;
     object-position: center 100%;
   }
-} */
+}
 
-main .hero-animation.white-text,
-main .hero-animation.white-text a:any-link {
-  color: var(--color-white);
+@media (min-width: 950px) {
+  main .hero-animation.wide .hero-animation-overlay > div {
+    position: relative;
+    top: unset;
+    left: unset;
+    transform: unset;
+    width: unset;
+    max-width: 550px;
+    box-sizing: border-box;
+    padding: 32px;
+  }
+    
+  main .hero-animation.wide .hero-animation-overlay video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    height: 100%;
+    width: 100%;
+    z-index: unset;
+    object-fit: cover;
+    min-height: unset;
+    object-position: center 100%;
+  }
+}
+
+@media (max-width: 950px) {
+  main .hero-animation.wide .hero-animation-overlay video { 
+    object-position: 75% 100%;
+  }
 }
 
 /* shadow */
@@ -306,7 +296,7 @@ main .hero-animation.wide .button-container.free-plan-container {
   align-items: center;
 }
 
-main .hero-animation.wide .free-plan-widget {
+main .hero-animation.wide .button-container.free-plan-container .free-plan-widget {
   margin: 0;
   background-color: transparent;
 }
