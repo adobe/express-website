@@ -161,6 +161,9 @@ function decorateCardsBase($block) {
  */
 export default async function decorate($block) {
   decorateCardsBase($block);
+
+  // apply default variants
+  $block.classList.add('scroll');
   $block.parentElement.classList.add('scroll');
 
   if (document.body.dataset.device === 'mobile' || window.screen.width < 900 || isMobileLike()) {

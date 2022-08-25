@@ -77,6 +77,9 @@ function decorateCardsBase($block) {
 export default async function decorate($block) {
   decorateCardsBase($block);
 
+  // apply default variants
+  $block.classList.add('branded', 'flat', 'large', 'bleed', 'stagger');
+
   if ($block.classList.contains('branded')) {
     brandHeaders($block);
   }
