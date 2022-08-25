@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-// eslint-disable-next-line import/no-unresolved
-import { loadCSS } from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
 
 const CARD_WIDTH = 157;
 const CARD_HEIGHT = 313;
@@ -28,41 +27,6 @@ const DESKTOP_CARD_ENDPOINTS = [
 ];
 
 const RANGES = DESKTOP_CARD_ENDPOINTS.map((c) => Math.abs(c.start) + Math.abs(c.end));
-
-/**
- * Load block as base
- * @param {HTMLDivElement} block
- * @param {string} blockName
- */
-async function extendBlock(block, blockName) {
-  const cssPath = `/express/blocks/${blockName}/${blockName}.css`;
-  const jsPath = `/express/blocks/${blockName}/${blockName}.js`;
-
-  block.classList.add(blockName);
-
-  try {
-    const cssLoaded = new Promise((resolve) => {
-      loadCSS(cssPath, resolve);
-    });
-    const decorationComplete = new Promise((resolve) => {
-      (async () => {
-        try {
-          const mod = await import(jsPath);
-          if (mod.default) {
-            await mod.default(block, blockName, document, true);
-          }
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.log(`failed to load module for ${blockName}`, err);
-        }
-        resolve();
-      })();
-    });
-    await Promise.all([cssLoaded, decorationComplete]);
-  } catch (e) {
-    console.error('failed to load extended block: ', e);
-  }
-}
 
 function initScrollAnimationMobile($block) {
   const docHeight = window.innerHeight;
@@ -170,8 +134,33 @@ function isMobileLike() {
 /**
  * @param {HTMLDivElement} $block
  */
+function decorateCardsBase($block) {
+  $block.classList.add('cards');
+  $block.querySelectorAll(':scope>div').forEach(($card) => {
+    $card.classList.add('card');
+    const $cardDivs = [...$card.children];
+    $cardDivs.forEach(($div) => {
+      if ($div.querySelector('img')) {
+        $div.classList.add('card-image');
+      } else {
+        $div.classList.add('card-content');
+      }
+      const $a = $div.querySelector('a');
+      if ($a && $a.textContent.startsWith('https://')) {
+        const $wrapper = createTag('a', { href: $a.href, class: 'card' });
+        $a.remove();
+        $wrapper.innerHTML = $card.innerHTML;
+        $block.replaceChild($wrapper, $card);
+      }
+    });
+  });
+}
+
+/**
+ * @param {HTMLDivElement} $block
+ */
 export default async function decorate($block) {
-  await extendBlock($block, 'cards');
+  decorateCardsBase($block);
   $block.parentElement.classList.add('scroll');
 
   if (document.body.dataset.device === 'mobile' || window.screen.width < 900 || isMobileLike()) {
