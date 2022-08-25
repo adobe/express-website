@@ -206,7 +206,6 @@ function initScrollAnimation($block) {
 }
 
 export default async function decorate($block) {
-  let $injectionPoint;
   const payload = {
     userAgent: getMobileOperatingSystem(),
     heading: '',
@@ -231,15 +230,17 @@ export default async function decorate($block) {
         payload.ratingScore = placeholders['google-store-rating-score'];
         payload.ratingCount = placeholders['google-store-rating-count'];
       }
-      $injectionPoint = placeholders['app-store-highlight-follow-block'];
     });
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     buildStandardPayload($block, payload);
     const $parentSection = $block.parentNode.parentNode;
-    const $elementToFollow = document.querySelector(`.${$injectionPoint}`);
+    const $elementToFollow = document.querySelector('.columns-fullsize-center-container');
     $parentSection.dataset.audience = 'mobile';
-    $elementToFollow.after($parentSection);
+
+    if ($elementToFollow) {
+      $elementToFollow.after($parentSection);
+    }
   }
 
   updatePayloadFromBlock($block, payload);

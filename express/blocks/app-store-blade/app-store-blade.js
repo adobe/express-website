@@ -190,7 +190,6 @@ function decorateBlade($block, payload) {
 }
 
 export default async function decorate($block) {
-  let $injectionPoint;
   const payload = {
     heading: '',
     copyParagraphs: [],
@@ -208,15 +207,17 @@ export default async function decorate($block) {
     .then((placeholders) => {
       payload.ratingScore = placeholders['apple-store-rating-score'];
       payload.ratingCount = placeholders['apple-store-rating-count'];
-      $injectionPoint = placeholders['app-store-blade-follow-block'];
     });
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     buildStandardPayload($block, payload);
     const $parentSection = $block.parentNode.parentNode;
-    const $elementToFollow = document.querySelector(`.${$injectionPoint}`);
+    const $elementToFollow = document.querySelector('.link-list-container');
     $parentSection.dataset.audience = 'desktop';
-    $elementToFollow.after($parentSection);
+
+    if ($elementToFollow) {
+      $elementToFollow.after($parentSection);
+    }
   }
 
   updatePayloadFromBlock($block, payload);
