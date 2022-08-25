@@ -24,7 +24,8 @@ main .hero-animation .hero-animation-overlay p:first-of-type { /* p with icon */
   margin-bottom: 8px;
 }
 
-main .hero-animation .hero-animation-overlay .icon {
+main .hero-animation .hero-animation-overlay .icon,
+main .hero-animation .hero-animation-overlay > div > p:first-child img {
   height: 32px;
   width: unset;
 }
@@ -37,17 +38,6 @@ main .hero-animation .hero-animation-overlay h1 {
 main .hero-animation .hero-animation-overlay p {
   font-size: var(--body-font-size-m);
   margin: 16px 0;
-}
-
-main .hero-animation .hero-animation-overlay .icon-adobe-creative-cloud-express {
-  margin-top: 13px;
-  height: 33px;
-  width: 294px;
-  margin-bottom: 380px;
-}
-
-main .hero-animation .hero-animation-overlay .icon-adobe-creative-cloud-express {
-  display: none;
 }
 
 main .hero-animation .hero-animation-overlay p.button-container {
@@ -97,23 +87,19 @@ main .hero-animation.white-text a:any-link {
 }
 
 @media (min-width: 600px) {
-  main .hero-animation .hero-animation-overlay .icon {
-    height: 65px;
-  }
-
   main .hero-animation .hero-animation-overlay > div {
     margin: 0 auto;
     width: 500px;
+  }
+
+  main .hero-animation .hero-animation-overlay h1 {
+    max-width: calc(100% - 84px);
   }
 }
 
 @media (min-width: 950px) {
   main .hero-animation .hero-animation-overlay video {
     min-height: 500px;
-  }
-  
-  main .hero-animation .hero-animation-overlay .icon {
-    height: 65px;
   }
 
   main .hero-animation.dark,
@@ -129,14 +115,6 @@ main .hero-animation.white-text a:any-link {
     width: 500px;
   }
 
-  main .hero-animation .hero-animation-overlay h1 {
-    font-size: var(--heading-font-size-xxl);
-  }
-
-  main .hero-animation .hero-animation-overlay p {
-    font-size: var(--body-font-size-l);
-  }
-
   body.no-desktop-brand-header header, body.no-brand-header header {
     height: 64px;
     background-image: unset;
@@ -148,12 +126,25 @@ main .hero-animation.white-text a:any-link {
     left: 50%;
     transform: translate(-113%, -50%);
   }
+
+  main .hero-animation .hero-animation-overlay .icon.icon-adobe-express {
+    height: 65px;
+  }
+
+  main .hero-animation .hero-animation-overlay h1 {
+    font-size: var(--heading-font-size-xxl);
+    max-width: unset;
+  }
+
+  main .hero-animation .hero-animation-overlay p {
+    font-size: var(--body-font-size-l);
+  }
 }
 
 @media (min-width: 1800px) {
   main .hero-animation .hero-animation-overlay > div {
     max-width: 30%;
-    left: 25%;
+    left: 30%;
     transform: translate(-50%, -50%);
   }   
 }
