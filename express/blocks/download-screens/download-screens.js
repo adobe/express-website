@@ -54,12 +54,11 @@ function initScrollAnimationMobile($block) {
 }
 
 /**
- *
  * @param {HTMLDivElement} $block
  */
 function initScrollAnimationDesktop($block) {
   const docHeight = window.innerHeight;
-  const docTargetY = (docHeight / 10) * 7; // 60% down the page
+  const docTargetY = (docHeight / 10) * 7; // 70% down the page
   const container = $block.parentElement;
 
   const screens = $block.querySelectorAll(':scope > div.card');
@@ -84,17 +83,16 @@ function initScrollAnimationDesktop($block) {
 
       // offset % from center of block to center of view
       const blockMidY = (blockPosition.bottom - blockHeight / 2);
-      const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
+      // multiplier to extend animation during entire scroll, not to complete while block is in view
+      // goal was to have the scroll effect continue for entire duration, never see it end
+      const mult = 3;
+      const offset = (docTargetY - blockMidY) / ((docHeight - blockHeight) * mult);
       const containerHLimit = (container.clientHeight - CARD_HEIGHT - V_MARGIN - 1);
-
-      // console.debug('offset: ', offset);
 
       screens.forEach((screen, i) => {
         const limit = DESKTOP_CARD_ENDPOINTS[i];
         const absRange = RANGES[i];
         const margin = absRange * offset;
-
-        // console.debug('margin: ', margin);
 
         if (margin < limit.start) {
           screen.style.top = `${limit.start}px`;
