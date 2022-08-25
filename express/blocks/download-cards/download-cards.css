@@ -1,3 +1,8 @@
+:root {
+  --dark-bg-color: #000B1D;
+  --header-height: 63px;
+}
+
 /* cards block styles - removing is ok, do not modify */
 main .section.cards-container {
   background-color: #F1F3F4;
@@ -173,8 +178,17 @@ main .cards.large .card .card-content li {
 }
 
 /* extension - modifications are ok */
+main .section.dark.download-cards-container {
+  background-color: var(--dark-bg-color);
+  color: white;
+}
+
 main .section>div.download-cards-wrapper {
   padding: 0;
+}
+
+main .cards.download-cards .card {
+  color: var(--body-color);
 }
 
 main .cards.download-cards .card h3 {
@@ -266,6 +280,7 @@ main .cards.download-cards .pad-card {
 @media (min-width: 900px) {
   main .cards.download-cards .pad-card {
     display: unset;
+    opacity: 0;
   }
 
   main .cards.download-cards.large .card {

@@ -21,10 +21,8 @@ export default function decorate($block) {
   }
 
   const conf = readBlockConfig($block);
-  console.log('conf: ', conf);
 
-  const rows = [...$block.querySelectorAll(':scope > div')];
-  rows.forEach(($row, i) => {
+  $block.querySelectorAll(':scope > div').forEach(($row, i) => {
     if (i >= 1) {
       $row.remove();
     }

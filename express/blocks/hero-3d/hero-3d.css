@@ -1,5 +1,5 @@
 :root {
-    --dark-bg-color: #030b1c;
+    --dark-bg-color: #000B1D;
     --header-height: 63px;
 }
 
@@ -99,6 +99,7 @@ main .hero-3d .fallback {
     object-fit: cover;
     overflow: hidden;
     height: 150vh;
+    box-sizing: content-box;
 }
 
 main .hero-3d .fallback img {
@@ -167,7 +168,7 @@ main .hero-3d .button-container .icon-download {
 @media (min-width: 900px) {
     main .hero-3d-wrapper {
         max-width: 750px;
-        height: calc(100vh - var(--header-height));
+        height: calc(110vh - var(--header-height));
     }
 
     main .hero-3d .scroll-animation {
@@ -177,12 +178,12 @@ main .hero-3d .button-container .icon-download {
 
     main .hero-3d iframe {
         display: unset;
-        height: 100vh;
+        height: 110vh;
     }
 
     main .hero-3d .fallback,
     main .hero-3d .fallback img {
-        height: 100vh;
+        height: 110vh;
     }
 
     main .hero-3d .fallback.mobile {
@@ -210,7 +211,7 @@ main .hero-3d .button-container .icon-download {
     }
 
     main .hero-3d .fallback img {
-        height: calc(100vh - var(--header-height));
+        height: calc(110vh - var(--header-height));
         object-position: 50% 100%;
         object-fit: none;
     }

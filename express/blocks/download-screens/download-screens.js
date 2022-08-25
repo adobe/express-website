@@ -10,11 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag } from '../../scripts/scripts.js';
+import { createTag, readBlockConfig } from '../../scripts/scripts.js';
 
 const CARD_WIDTH = 157;
 const CARD_HEIGHT = 313;
 const CARD_GAP = 16;
+const V_MARGIN = 120;
 
 const DESKTOP_CARD_ENDPOINTS = [
   { start: -145, end: 700 },
@@ -58,7 +59,7 @@ function initScrollAnimationMobile($block) {
  */
 function initScrollAnimationDesktop($block) {
   const docHeight = window.innerHeight;
-  const docTargetY = (docHeight / 10) * 6; // 60% down the page
+  const docTargetY = (docHeight / 10) * 7; // 60% down the page
   const container = $block.parentElement;
 
   const screens = $block.querySelectorAll(':scope > div.card');
@@ -84,18 +85,22 @@ function initScrollAnimationDesktop($block) {
       // offset % from center of block to center of view
       const blockMidY = (blockPosition.bottom - blockHeight / 2);
       const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
-      const containerHLimit = (container.clientHeight - CARD_HEIGHT) / 2;
+      const containerHLimit = (container.clientHeight - CARD_HEIGHT - V_MARGIN - 1);
+
+      // console.debug('offset: ', offset);
 
       screens.forEach((screen, i) => {
         const limit = DESKTOP_CARD_ENDPOINTS[i];
         const absRange = RANGES[i];
         const margin = absRange * offset;
 
+        // console.debug('margin: ', margin);
+
         if (margin < limit.start) {
           screen.style.top = `${limit.start}px`;
-        } else if (margin > containerHLimit) {
+        } else if (margin >= containerHLimit && containerHLimit < limit.end) {
           screen.style.top = `${containerHLimit}px`;
-        } else if (margin > absRange) {
+        } else if (margin >= limit.end) {
           screen.style.top = `${limit.end}px`;
         } else {
           screen.style.top = `${margin}px`;
@@ -158,8 +163,26 @@ function decorateCardsBase($block) {
 
 /**
  * @param {HTMLDivElement} $block
+ * @param {string} heightStr
+ */
+function applyHeight($block, heightStr) {
+  const height = Number.parseInt(heightStr, 10);
+  if (Number.isNaN(height)) return;
+
+  $block.style.height = `${height + CARD_HEIGHT}px`;
+}
+
+/**
+ * @param {HTMLDivElement} $block
  */
 export default async function decorate($block) {
+  const conf = readBlockConfig($block);
+  $block.querySelectorAll(':scope > div').forEach(($row) => {
+    if ($row.childElementCount === 2) {
+      $row.remove();
+    }
+  });
+
   decorateCardsBase($block);
 
   // apply default variants
@@ -169,6 +192,9 @@ export default async function decorate($block) {
   if (document.body.dataset.device === 'mobile' || window.screen.width < 900 || isMobileLike()) {
     initScrollAnimationMobile($block);
   } else {
+    if (conf.height) {
+      applyHeight($block, conf.height);
+    }
     initScrollAnimationDesktop($block);
   }
 }
