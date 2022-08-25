@@ -851,8 +851,12 @@ export function decorateBlocks(main) {
 
 function decorateMarqueeColumns($main) {
   // flag first columns block in first section block as marquee
+  const $sectionSplitByHighlight = $main.querySelector('.split-by-app-store-highlight');
   const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
-  if ($firstColumnsBlock) {
+
+  if ($sectionSplitByHighlight) {
+    $sectionSplitByHighlight.querySelector('.columns--fullsize-center-').classList.add('columns-marquee');
+  } else if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
   }
 }
@@ -1574,14 +1578,39 @@ function buildAutoBlocks($main) {
     const branchio = buildBlock('branch-io', '');
     $main.querySelector(':scope > div:last-of-type').append(branchio);
   }
+
+  // Load the app store autoblocks...
+  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
+    if ($main.querySelector('.app-store-highlight') === null) {
+      const $highlight = buildBlock('app-store-highlight', '');
+      $main.querySelector(':scope > div:last-of-type').append($highlight);
+    }
+    if ($main.querySelector('.app-store-blade') === null) {
+      const $blade = buildBlock('app-store-blade', '');
+      $main.querySelector(':scope > div:last-of-type').append($blade);
+    }
+  }
 }
 
 function splitSections($main) {
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
-    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment'];
+    const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
+    // work around for splitting columns and sixcols template list
+    // add metadata condition to minimize impact on other use cases
+    if (hasAppStoreBlocks) {
+      blocksToSplit.push('columns--fullsize-center-');
+    }
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
+    }
+
+    if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
+      const $parentNode = $block.parentNode;
+      if ($parentNode) {
+        $parentNode.classList.add('split-by-app-store-highlight');
+      }
     }
   });
 }

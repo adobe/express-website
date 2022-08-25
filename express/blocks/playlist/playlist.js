@@ -79,7 +79,7 @@ function loadList($block, payload) {
     const videoArr = payload.sessions[payload.sessionIndex].videos;
 
     videoArr.forEach((video, index) => {
-      const $videoButton = createTag('li', { class: 'video-button' });
+      const $videoButton = createTag('a', { class: 'video-button' });
       const $videoButtonTitle = createTag('span', { class: 'video-button-title' });
       const $videoButtonDuration = createTag('span', { class: 'video-button-duration' });
 
@@ -158,7 +158,7 @@ function decorateSessionsCarousel($block, payload) {
   $block.append($thumbnailsContainer);
 
   payload.sessions.forEach((session, index) => {
-    const $session = createTag('div', { class: 'session' });
+    const $session = createTag('a', { class: 'session' });
     const $sessionThumbnail = session.thumbnail;
     const $sessionTitle = createTag('h5', { class: 'session-title' });
     const $sessionDescription = createTag('h4', { class: 'session-description' });
@@ -192,7 +192,7 @@ function decorateVideoPlayerSection($block) {
 
 function decorateInlineVideoPlayer($block, payload) {
   const $inlinePlayerWrapper = createTag('div', { class: 'video-player-inline-player-wrapper' });
-  const $playerOverlay = createTag('div', { class: 'video-player-inline-player-overlay' });
+  const $playerOverlay = createTag('a', { class: 'video-player-inline-player-overlay' });
   const $inlinePlayer = createTag('video', {
     class: 'video-player-inline-player',
     preload: 'metadata',
@@ -236,7 +236,7 @@ function decorateVideoPlayerMenu($block, payload) {
   const $buttonNext = createTag('a', { class: 'video-player-button-next button accent', href: '#' });
   const $videoListWrapper = createTag('div', { class: 'video-player-video-list-wrapper' });
   const $videoListHeading = createTag('p', { class: 'video-player-video-list-heading' });
-  const $videoList = createTag('ul', { class: 'video-player-video-list' });
+  const $videoList = createTag('div', { class: 'video-player-video-list' });
   const $videoPlayerBody = $block.querySelector('.video-player-body');
 
   $buttonNext.textContent = 'Next clip';

@@ -36,7 +36,13 @@ export class Masonry {
   // set up fresh grid if necessary
   setupColumns() {
     let result = 1;
-    const colWidth = this.$block.classList.contains('sixcols') ? 175 : 264;
+    let colWidth = 264;
+    if (this.$block.classList.contains('sixcols')) {
+      colWidth = 175;
+    }
+    if (this.$block.classList.contains('fullwidth')) {
+      colWidth = 185;
+    }
     const width = this.$block.offsetWidth;
     if (!width) {
       return 0;
@@ -45,7 +51,13 @@ export class Masonry {
     if (usp.has('debug-template-list')) {
       this.debug = true;
     }
-    this.columnWidth = colWidth - (colWidth === 175 ? 10 : 4); // padding/margin adjustment
+    this.columnWidth = colWidth - 4;
+    if (colWidth === 175) {
+      this.columnWidth = colWidth - 10;
+    }
+    if (colWidth === 185) {
+      this.columnWidth = colWidth - 10;
+    }
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
@@ -101,7 +113,7 @@ export class Masonry {
     let mediaWidth = 0;
     let calculatedHeight = 0;
 
-    const img = $cell.querySelector('picture > img');
+    const img = $cell.querySelector('img');
     if (img) {
       mediaHeight = img.naturalHeight;
       mediaWidth = img.naturalWidth;

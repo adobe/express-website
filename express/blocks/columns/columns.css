@@ -228,6 +228,14 @@ body.no-brand-header main .columns.columns-marquee .brand.icon {
   transform: translateX(-50%);
 }
 
+main .split-by-app-store-highlight {
+  padding: 0;
+}
+
+main .split-by-app-store-highlight .columns-wrapper {
+  padding: 0;
+}
+
 body.no-brand-header main .columns .has-brand {
   padding-top: 72px;
   position: relative;
@@ -598,7 +606,7 @@ main .columns .column {
 
   main .columns.offer > div {
     width: 1100px;
-    margin: 0 auto;   
+    margin: 0 auto;
     flex-direction: row;
     justify-content: space-between;
   }
@@ -731,7 +739,7 @@ main .columns.highlight .column.column-picture {
   main .columns.fullsize .has-brand > div p:first-child {
     margin: 16px 0;
   }
-  
+
   main .columns .column {
     padding-left: 32px;
     padding-right: 32px;

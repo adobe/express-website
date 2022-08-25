@@ -26,7 +26,7 @@ import {
 // eslint-disable-next-line import/no-unresolved
 import Context from '../../scripts/context.js';
 
-export default function decorate($block) {
+export default async function decorate($block) {
   let submitButtonText;
   let submissionTitle;
   let submissionText;
@@ -410,24 +410,6 @@ export default function decorate($block) {
     sliderFunctionality();
   }
 
-  function fetchRatingInformation() {
-    fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`)
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.data[0].Average) {
-          ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
-        }
-
-        if (response.data[0].Total) {
-          ratingTotal = parseFloat(response.data[0].Total);
-        }
-
-        if (ratingAverage || ratingTotal) {
-          document.dispatchEvent(new Event('ratings_received'));
-        }
-      });
-  }
-
   // Decorate block state when user is not allowed to rate (already rated / hasn't used block)
   function decorateCannotRateBlock(title, paragraph, $CTA = null, headingTag = 'h3') {
     const $headingWrapper = createTag('div', { class: 'ratings-heading' });
@@ -459,65 +441,72 @@ export default function decorate($block) {
     }
   }
 
-  function initiateBlock() {
-    const $rows = Array.from($block.children);
-    if (!$rows[1]) return;
+  const $rows = Array.from($block.children);
+  if (!$rows[1]) return;
 
-    const classes = $block.classList;
-    if (classes.contains('show') && classes.contains('average')) showRatingAverage = true;
+  const classes = $block.classList;
+  if (classes.contains('show') && classes.contains('average')) showRatingAverage = true;
 
-    const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
-    const headingTag = ($heading) ? $heading.tagName : 'h3';
-    const $CTA = $rows[0].querySelector('a');
-    if ($CTA) $CTA.classList.add('xlarge');
-    const $sheet = $rows[1].firstElementChild;
-    actionTitle = ($heading) ? $heading.textContent : defaultTitle;
-    sheet = $sheet.textContent.trim();
-    sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
+  const $heading = $rows[0].querySelector('h1') ?? $rows[0].querySelector('h2') ?? $rows[0].querySelector('h3') ?? $rows[0].querySelector('h4');
+  const headingTag = ($heading) ? $heading.tagName : 'h3';
+  const $CTA = $rows[0].querySelector('a');
+  if ($CTA) $CTA.classList.add('xlarge');
+  const $sheet = $rows[1].firstElementChild;
+  actionTitle = ($heading) ? $heading.textContent : defaultTitle;
+  sheet = $sheet.textContent.trim();
+  sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
+  $block.innerHTML = '';
+  lazyLoadLottiePlayer($block);
 
-    $block.innerHTML = '';
+  // When the context comes in.
+  document.addEventListener('context_loaded', () => {
+    regenerateBlockState(actionTitle, $CTA, headingTag);
+  });
 
-    fetchRatingInformation();
+  // When the ratings are retrieved.
+  document.addEventListener('ratings_received', () => {
+    regenerateBlockState(actionTitle, $CTA, headingTag);
+    $block.classList.add('ratings_received');
+  });
 
-    fetchPlaceholders().then((placeholders) => {
-      ratings[0].text = placeholders['one-star-rating'];
-      ratings[0].textareaLabel = placeholders['one-star-rating-text'];
-      ratings[0].textareaInside = placeholders['one-star-rating-input'];
-      ratings[1].text = placeholders['two-star-rating'];
-      ratings[1].textareaLabel = placeholders['two-star-rating-text'];
-      ratings[1].textareaInside = placeholders['two-star-rating-input'];
-      ratings[2].text = placeholders['three-star-rating'];
-      ratings[2].textareaLabel = placeholders['three-star-rating-text'];
-      ratings[2].textareaInside = placeholders['three-star-rating-input'];
-      ratings[3].text = placeholders['four-star-rating'];
-      ratings[3].textareaLabel = placeholders['four-star-rating-text'];
-      ratings[3].textareaInside = placeholders['four-star-rating-input'];
-      ratings[4].text = placeholders['five-star-rating'];
-      ratings[4].textareaLabel = placeholders['five-star-rating-text'];
-      ratings[4].textareaInside = placeholders['five-star-rating-input'];
-      submitButtonText = placeholders['rating-submit'];
-      submissionTitle = placeholders['rating-submission-title'];
-      submissionText = placeholders['rating-submission-text'];
-      defaultTitle = placeholders['rating-default-title'];
-      actionNotUsedText = placeholders['rating-action-not-used'];
-      alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
-      alreadySubmittedText = placeholders['rating-already-submitted-text'];
-      votesText = placeholders['rating-votes'];
-      regenerateBlockState(actionTitle, $CTA, headingTag);
-    });
-
-    // When the context comes in.
-    document.addEventListener('context_loaded', () => {
-      regenerateBlockState(actionTitle, $CTA, headingTag);
-    });
-
-    // When the ratings are retrieved.
-    document.addEventListener('ratings_received', () => {
-      regenerateBlockState(actionTitle, $CTA, headingTag);
-    });
-
-    lazyLoadLottiePlayer($block);
+  const resp = await fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`);
+  if (resp.ok) {
+    const response = await resp.json();
+    if (response.data[0].Average) {
+      ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
+    }
+    if (response.data[0].Total) {
+      ratingTotal = parseFloat(response.data[0].Total);
+    }
+    if (ratingAverage || ratingTotal) {
+      document.dispatchEvent(new Event('ratings_received'));
+    }
   }
 
-  initiateBlock();
+  await fetchPlaceholders().then((placeholders) => {
+    ratings[0].text = placeholders['one-star-rating'];
+    ratings[0].textareaLabel = placeholders['one-star-rating-text'];
+    ratings[0].textareaInside = placeholders['one-star-rating-input'];
+    ratings[1].text = placeholders['two-star-rating'];
+    ratings[1].textareaLabel = placeholders['two-star-rating-text'];
+    ratings[1].textareaInside = placeholders['two-star-rating-input'];
+    ratings[2].text = placeholders['three-star-rating'];
+    ratings[2].textareaLabel = placeholders['three-star-rating-text'];
+    ratings[2].textareaInside = placeholders['three-star-rating-input'];
+    ratings[3].text = placeholders['four-star-rating'];
+    ratings[3].textareaLabel = placeholders['four-star-rating-text'];
+    ratings[3].textareaInside = placeholders['four-star-rating-input'];
+    ratings[4].text = placeholders['five-star-rating'];
+    ratings[4].textareaLabel = placeholders['five-star-rating-text'];
+    ratings[4].textareaInside = placeholders['five-star-rating-input'];
+    submitButtonText = placeholders['rating-submit'];
+    submissionTitle = placeholders['rating-submission-title'];
+    submissionText = placeholders['rating-submission-text'];
+    defaultTitle = placeholders['rating-default-title'];
+    actionNotUsedText = placeholders['rating-action-not-used'];
+    alreadySubmittedTitle = placeholders['rating-already-submitted-title'];
+    alreadySubmittedText = placeholders['rating-already-submitted-text'];
+    votesText = placeholders['rating-votes'];
+    regenerateBlockState(actionTitle, $CTA, headingTag);
+  });
 }

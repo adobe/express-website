@@ -13,6 +13,7 @@
 // eslint-disable-next-line import/no-unresolved
 import {
   createTag,
+  fetchPlaceholders,
   getLottie,
 } from '../../scripts/scripts.js';
 
@@ -30,7 +31,7 @@ function getHeight() {
   return window.screen.height;
 }
 
-function enableMouseAnimation($block) {
+async function enableMouseAnimation($block) {
   const $slides = $block.querySelectorAll('.choose-your-path-slide ');
   const $images = $block.querySelectorAll('.choose-your-path-slide-image');
 
@@ -90,6 +91,7 @@ function enableMouseAnimation($block) {
       $images[1].style.transform = 'scale(1.2)';
     }
   });
+  const placeholders = await fetchPlaceholders();
 
   const $mouseLeftAnimation = createTag('div', { class: 'choose-your-path-mouse choose-your-path-mouse-left hidden' });
   const $mouseLeftContainer = createTag('div', { class: 'choose-your-path-mouse-container' });
@@ -97,8 +99,8 @@ function enableMouseAnimation($block) {
   const $mouseLeftLottie = createTag('div', { class: 'choose-your-path-mouse-lottie' });
   const $mouseRightContainer = createTag('div', { class: 'choose-your-path-mouse-container' });
   const $mouseRightLottie = createTag('div', { class: 'choose-your-path-mouse-lottie' });
-  $mouseLeftContainer.textContent = 'See what you can do with Creative Cloud';
-  $mouseRightContainer.textContent = 'Make a new project with Adobe Express';
+  $mouseLeftContainer.textContent = placeholders['choose-your-path-cc'];
+  $mouseRightContainer.textContent = placeholders['choose-your-path-express'];
   $mouseLeftLottie.innerHTML = getLottie('mouse-arrow', '/express/blocks/choose-your-path/mouse-arrow.json');
   $mouseRightLottie.innerHTML = getLottie('mouse-arrow', '/express/blocks/choose-your-path/mouse-arrow.json');
   $mouseLeftAnimation.append($mouseLeftContainer);
