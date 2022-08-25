@@ -12,24 +12,99 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  getLocale,
-  createTag,
-  linkImage,
-  addSearchQueryToHref,
-  getIconElement,
-  toClassName,
-  decorateMain,
   addAnimationToggle,
+  addSearchQueryToHref,
+  createTag,
+  decorateMain,
   fetchPlaceholders,
+  getIconElement,
+  getLocale,
+  linkImage,
+  toClassName,
 } from '../../scripts/scripts.js';
-import {
-  Masonry,
-} from '../shared/masonry.js';
+import { Masonry } from '../shared/masonry.js';
 
-import {
-  buildCarousel,
-  // eslint-disable-next-line import/no-unresolved
-} from '../shared/carousel.js';
+import { buildCarousel } from '../shared/carousel.js';
+
+const cache = {
+  templates: [],
+  total: 0,
+  type: '',
+  locales: 'en',
+  premium: false,
+  start: '',
+  masonry: undefined,
+  authoringError: false,
+};
+
+function fetchTemplates() {
+  if (!cache.authoringError) {
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}`)
+      .then((response) => response.json())
+      .then((response) => response);
+  }
+  return null;
+}
+
+async function processResponse() {
+  const response = await fetchTemplates();
+  let templateFetched;
+  // eslint-disable-next-line no-underscore-dangle
+  if (response) {
+    // eslint-disable-next-line no-underscore-dangle
+    templateFetched = response._embedded.results;
+
+    if ('_links' in response) {
+      // eslint-disable-next-line no-underscore-dangle
+      const nextQuery = response._links.next.href;
+      const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
+      cache.start = start;
+    } else {
+      cache.start = '';
+    }
+
+    if (cache.total === 0) {
+      // eslint-disable-next-line no-underscore-dangle
+      cache.total = response._embedded.total;
+    }
+  }
+
+  const renditionParams = {
+    format: 'jpg',
+    dimension: 'width',
+    size: 400,
+  };
+
+  if (templateFetched) {
+    return templateFetched.map((template) => {
+      const $template = createTag('div');
+      const $pictureWrapper = createTag('div');
+
+      ['format', 'dimension', 'size'].forEach((param) => {
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+      });
+      const $picture = createTag('img', {
+        src: template.rendition.href,
+        alt: template.title,
+      });
+      const $buttonWrapper = createTag('div', { class: 'button-container' });
+      const $button = createTag('a', {
+        href: template.branchURL,
+        title: 'Edit this template',
+        class: 'button accent',
+      });
+
+      $button.textContent = 'Edit this template';
+      $pictureWrapper.insertAdjacentElement('beforeend', $picture);
+      $buttonWrapper.insertAdjacentElement('beforeend', $button);
+      $template.insertAdjacentElement('beforeend', $pictureWrapper);
+      $template.insertAdjacentElement('beforeend', $buttonWrapper);
+      return $template;
+    });
+  } else {
+    return null;
+  }
+}
 
 /**
  * Returns a picture element with webp and fallbacks
@@ -88,99 +163,7 @@ async function fetchBlueprint(pathname) {
   return ($main);
 }
 
-export async function decorateTemplateList($block) {
-  let rows = $block.children.length;
-  const locale = getLocale(window.location);
-  if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
-    && locale !== 'us') {
-    const i18nTexts = $block.firstElementChild
-      // author defined localized edit text(s)
-      && ($block.firstElementChild.querySelector('p')
-        // multiple lines in separate p tags
-        ? Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent.trim())
-        // single text directly in div
-        : [$block.firstElementChild.textContent.trim()]);
-    $block.innerHTML = '';
-    const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
-    const i = tls.indexOf($block);
-
-    const $blueprint = await fetchBlueprint(window.location.pathname);
-
-    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
-    if ($bpBlock) {
-      $block.innerHTML = $bpBlock.innerHTML;
-    } else {
-      $block.remove();
-    }
-
-    if (i18nTexts && i18nTexts.length > 0) {
-      const [placeholderText] = i18nTexts;
-      let [, templateText] = i18nTexts;
-      if (!templateText) {
-        templateText = placeholderText;
-      }
-      $block.querySelectorAll('a').forEach(($a, index) => {
-        $a.textContent = index === 0 ? placeholderText : templateText;
-      });
-    }
-
-    const $heroPicture = document.querySelector('.hero-bg');
-
-    if (!$heroPicture && $blueprint) {
-      const $bpHeroImage = $blueprint.querySelector('div:first-of-type img');
-      if ($bpHeroImage) {
-        const $heroSection = document.querySelector('main .hero');
-        const $heroDiv = document.querySelector('main .hero > div');
-
-        if ($heroSection && !$heroDiv) {
-          const $p = createTag('p');
-          const $pic = createTag('picture', { class: 'hero-bg' });
-          $pic.appendChild($bpHeroImage);
-          $p.append($pic);
-          $heroSection.classList.remove('hero-noimage');
-          $heroDiv.prepend($p);
-        }
-      }
-    }
-  }
-
-  const templates = Array.from($block.children);
-  // process single column first row as title
-  if (templates[0] && templates[0].children.length === 1) {
-    const $titleRow = templates.shift();
-    $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
-      $a.className = 'template-title-link';
-      $a.closest('p').classList.remove('button-container');
-    });
-  }
-
-  rows = templates.length;
-  let breakpoints = [{ width: '400' }];
-
-  if (rows > 6 && !$block.classList.contains('horizontal')) {
-    $block.classList.add('masonry');
-  }
-
-  if (rows === 1) {
-    $block.classList.add('large');
-    breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }];
-  }
-
-  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    const { src, alt } = $img;
-    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
-  });
-
-  // find the edit link and turn the template DIV into the A
-  // A
-  // +- DIV
-  //    +- PICTURE
-  // +- DIV
-  //    +- SPAN
-  //       +- "Edit this template"
-  //
-  // make copy of children to avoid modifying list while looping
+function populateTemplates($block, templates) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
@@ -276,7 +259,153 @@ export async function decorateTemplateList($block) {
       $tmplt.classList.add('placeholder');
     }
   }
+}
 
+export async function decorateTemplateList($block) {
+  if ($block.classList.contains('apipowered')) {
+    if ($block.children.length > 0) {
+      const typeRow = $block.children[0].querySelectorAll('div');
+      const localesRow = $block.children[1];
+      const premiumRow = $block.children[2];
+
+      if (typeRow[0].textContent.toLowerCase() === 'type' && !typeRow[1].textContent.length) {
+        cache.type = 'Authoring error: "type" row must have a value';
+        cache.authoringError = true;
+      } else {
+        cache.type = typeRow[1].textContent;
+      }
+
+      if (localesRow && localesRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'locales') {
+        cache.locales = localesRow.querySelectorAll('div')[1].textContent;
+      }
+
+      if (premiumRow && premiumRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'premium') {
+        cache.premium = ['yes', 'true'].includes(premiumRow.querySelectorAll('div')[1].textContent);
+      }
+
+      const fetchedTemplates = await processResponse();
+
+      if (fetchedTemplates) {
+        cache.templates = cache.templates.concat(fetchedTemplates);
+        cache.templates.forEach((template) => {
+          const clone = template.cloneNode(true);
+          $block.append(clone);
+        });
+      }
+    } else {
+      cache.type = 'Authoring error: first row must specify the template “type”';
+      cache.authoringError = true;
+    }
+
+    const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
+    if ($parent) {
+      const $sectionHeading = $parent.querySelector('div > h2');
+      if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+        if (cache.authoringError) {
+          $sectionHeading.textContent = cache.type;
+        } else {
+          const headingEnding = await fetchPlaceholders()
+            .then((placeholders) => placeholders['api-powered-grid-heading']);
+          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.type} ${headingEnding}`;
+        }
+      }
+    }
+  }
+
+  let rows = $block.children.length;
+  const locale = getLocale(window.location);
+  if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
+    && locale !== 'us') {
+    const i18nTexts = $block.firstElementChild
+      // author defined localized edit text(s)
+      && ($block.firstElementChild.querySelector('p')
+        // multiple lines in separate p tags
+        ? Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent.trim())
+        // single text directly in div
+        : [$block.firstElementChild.textContent.trim()]);
+    $block.innerHTML = '';
+    const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
+    const i = tls.indexOf($block);
+
+    const $blueprint = await fetchBlueprint(window.location.pathname);
+
+    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
+    if ($bpBlock) {
+      $block.innerHTML = $bpBlock.innerHTML;
+    } else {
+      $block.remove();
+    }
+
+    if (i18nTexts && i18nTexts.length > 0) {
+      const [placeholderText] = i18nTexts;
+      let [, templateText] = i18nTexts;
+      if (!templateText) {
+        templateText = placeholderText;
+      }
+      $block.querySelectorAll('a').forEach(($a, index) => {
+        $a.textContent = index === 0 ? placeholderText : templateText;
+      });
+    }
+
+    const $heroPicture = document.querySelector('.hero-bg');
+
+    if (!$heroPicture && $blueprint) {
+      const $bpHeroImage = $blueprint.querySelector('div:first-of-type img');
+      if ($bpHeroImage) {
+        const $heroSection = document.querySelector('main .hero');
+        const $heroDiv = document.querySelector('main .hero > div');
+
+        if ($heroSection && !$heroDiv) {
+          const $p = createTag('p');
+          const $pic = createTag('picture', { class: 'hero-bg' });
+          $pic.appendChild($bpHeroImage);
+          $p.append($pic);
+          $heroSection.classList.remove('hero-noimage');
+          $heroDiv.prepend($p);
+        }
+      }
+    }
+  }
+
+  const templates = Array.from($block.children);
+  // process single column first row as title
+  if (templates[0] && templates[0].children.length === 1) {
+    const $titleRow = templates.shift();
+    $titleRow.classList.add('template-title');
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      $a.closest('p').classList.remove('button-container');
+    });
+  }
+
+  rows = templates.length;
+  let breakpoints = [{ width: '400' }];
+
+  if (rows > 6 && !$block.classList.contains('horizontal')) {
+    $block.classList.add('masonry');
+  }
+
+  if (rows === 1) {
+    $block.classList.add('large');
+    breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }];
+  }
+
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    const { src, alt } = $img;
+    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+  });
+
+  // find the edit link and turn the template DIV into the A
+  // A
+  // +- DIV
+  //    +- PICTURE
+  // +- DIV
+  //    +- SPAN
+  //       +- "Edit this template"
+  //
+  // make copy of children to avoid modifying list while looping
+
+  populateTemplates($block, templates);
   if (!$block.classList.contains('horizontal')) {
     if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
@@ -285,6 +414,7 @@ export async function decorateTemplateList($block) {
       $block.classList.add('flex-masonry');
 
       const masonry = new Masonry($block, cells);
+      cache.masonry = masonry;
       masonry.draw();
       window.addEventListener('resize', () => {
         masonry.draw();
@@ -311,12 +441,72 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
+function updateButtonStatus($block, $loadMore) {
+  if (cache.start === '') {
+    $loadMore.style.display = 'none';
+  }
+}
+
+async function decorateNewTamplates($block, $loadMore) {
+  const newTemplates = await processResponse();
+
+  cache.templates = cache.templates.concat(newTemplates);
+  populateTemplates($block, newTemplates);
+  newTemplates.forEach((template) => {
+    const clone = template.cloneNode(true);
+    $block.append(clone);
+  });
+
+  const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
+  cache.masonry.cells = cache.masonry.cells.concat(newCells);
+  cache.masonry.draw(newCells);
+  updateButtonStatus($block, $loadMore);
+}
+
+function decorateLoadMoreButton($block) {
+  const $loadMoreDiv = createTag('div', { class: 'load-more' });
+  const $loadMoreButton = createTag('button', { class: 'load-more-button' });
+  const $loadMoreText = createTag('p', { class: 'load-more-text' });
+  $loadMoreDiv.append($loadMoreButton, $loadMoreText);
+  fetchPlaceholders().then((placeholders) => {
+    $loadMoreText.textContent = placeholders['load-more'];
+  });
+  $block.insertAdjacentElement('afterend', $loadMoreDiv);
+  $loadMoreButton.textContent = '+';
+
+  $loadMoreButton.addEventListener('click', async () => {
+    $loadMoreButton.classList.add('disabled');
+    const scrollPosition = window.scrollY;
+    await decorateNewTamplates($block, $loadMoreDiv);
+    window.scrollTo({
+      top: scrollPosition,
+      left: 0,
+      behavior: 'smooth',
+    });
+    $loadMoreButton.classList.remove('disabled');
+  });
+  updateButtonStatus($block, $loadMoreDiv);
+}
+
+function cacheCreatedTemplate($block) {
+  cache.templates.push($block.children[$block.children.length - 1]);
+  $block.children[$block.children.length - 1].remove();
+}
+
 export default async function decorate($block) {
+  if ($block.classList.contains('apipowered')) {
+    cacheCreatedTemplate($block);
+  }
+
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
     /* carousel */
     buildCarousel(':scope > .template', $block, true);
   } else {
     addAnimationToggle($block);
+  }
+
+  if ($block.classList.contains('apipowered')) {
+    decorateLoadMoreButton($block);
   }
 }

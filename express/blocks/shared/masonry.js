@@ -58,7 +58,6 @@ export class Masonry {
     if (colWidth === 185) {
       this.columnWidth = colWidth - 10;
     }
-    // this.columnWidth = colWidth - (colWidth === 175 ? 10 : 4); // padding/margin adjustment
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
@@ -114,7 +113,7 @@ export class Masonry {
     let mediaWidth = 0;
     let calculatedHeight = 0;
 
-    const img = $cell.querySelector('picture > img');
+    const img = $cell.querySelector('img');
     if (img) {
       mediaHeight = img.naturalHeight;
       mediaWidth = img.naturalWidth;
