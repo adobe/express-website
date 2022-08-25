@@ -74,6 +74,28 @@ function decorateCardsBase($block) {
 /**
  * @param {HTMLDivElement} $block
  */
+function groupButtons($block) {
+  $block.querySelectorAll(':scope>div').forEach(($card) => {
+    const btns = [...$card.querySelectorAll('.button-container')];
+    const first = btns.shift();
+    if (!first) {
+      return;
+    }
+
+    const wrapper = createTag('div', { class: 'button-row' });
+    first.replaceWith(wrapper);
+    wrapper.append(first);
+
+    btns.forEach((btn) => {
+      btn.remove();
+      wrapper.append(btn);
+    });
+  });
+}
+
+/**
+ * @param {HTMLDivElement} $block
+ */
 export default async function decorate($block) {
   decorateCardsBase($block);
 
@@ -102,4 +124,6 @@ export default async function decorate($block) {
   }
 
   prependDownloadIcon($block);
+
+  groupButtons($block);
 }

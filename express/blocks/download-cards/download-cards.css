@@ -206,6 +206,11 @@ main .cards.download-cards.bleed .bleed__c>* {
   line-height: 0;
 }
 
+main .cards.download-cards .card .button-row {
+  display: flex;
+  margin: auto;
+}
+
 main .cards.download-cards .card p.button-container {
   margin-top: 16px;
   margin-bottom: 16px;
