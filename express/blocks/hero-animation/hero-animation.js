@@ -141,12 +141,13 @@ function transformToVideoLink($cell, $a) {
 
 export default async function decorate($block) {
   const possibleOptions = ['mobile', 'desktop', 'hd'];
-  const $sectionWrapper = $block.closest('.section-wrapper');
+  const $section = $block.closest('.section');
+  const $sectionWrapper = $block.closest('.hero-animation-wrapper');
   const animations = {};
   if ($block.classList.contains('wide')) {
-    $sectionWrapper.classList.add('hero-animation-wide-container');
+    $section.classList.add('hero-animation-wide-container');
   } else {
-    $sectionWrapper.classList.add('hero-animation-container');
+    $section.classList.add('hero-animation-container');
   }
   const $rows = [...$block.children];
   $rows.forEach(($div, index) => {
