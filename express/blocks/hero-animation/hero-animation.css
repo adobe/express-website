@@ -69,7 +69,8 @@ main .hero-animation .hero-animation-overlay video {
   box-sizing: border-box;
   object-fit: cover;
   width: 100vw;
-  min-height: 375px;
+  min-height: 200px;
+  max-height: 500px;
   object-position: 100% 100%;
 }
 
@@ -100,6 +101,7 @@ main .hero-animation.white-text a:any-link {
 @media (min-width: 950px) {
   main .hero-animation .hero-animation-overlay video {
     min-height: 500px;
+    max-height: unset ;
   }
 
   main .hero-animation.dark,
@@ -164,6 +166,10 @@ main .hero-animation.white-text a:any-link {
     margin: 0 auto;
   }
 
+  main .hero-animation.wide.fullwidth {
+    max-width: unset;
+  }
+
   main .hero-animation.wide .hero-animation-overlay h1 {
     font-size: var(--heading-font-size-l);
   }
@@ -225,6 +231,12 @@ main .hero-animation.wide .hero-animation-overlay video {
 @media (max-width: 950px) {
   main .hero-animation.wide .hero-animation-overlay video { 
     object-position: 75% 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .hero-animation.wide.fullwidth .hero-animation-overlay > div {
+    margin-left: calc(50vw - 600px);
   }
 }
 
