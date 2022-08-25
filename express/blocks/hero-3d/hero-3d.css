@@ -45,7 +45,8 @@ main .section.dark .hero-3d-wrapper {
     color: white;
 }
 
-main .hero-3d .icon-adobe-express-white {
+main .hero-3d .icon-adobe-express-white,
+main .hero-3d .icon-adobe-express-white-stroke {
     height: 58px;
     width: auto;
     margin: 0 auto;
@@ -115,11 +116,6 @@ main .hero-3d .fallback.mobile {
 main .hero-3d .fallback.desktop {
     display: none;
 }
-
-main .hero-3d .fallback.desktop img {
-    zoom: 111%;
-}
-
 
 main .hero-3d .scroll-animation {
     display: none;
