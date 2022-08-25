@@ -206,7 +206,6 @@ function initScrollAnimation($block) {
 }
 
 export default async function decorate($block) {
-  let $injectionPoint;
   const payload = {
     userAgent: getMobileOperatingSystem(),
     heading: '',
