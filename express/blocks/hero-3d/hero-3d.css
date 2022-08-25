@@ -107,14 +107,18 @@ main .hero-3d .fallback img {
     object-fit: none;
 }
 
-main .hero-3d .fallback img[alt~="mobile"] {
+main .hero-3d .fallback.mobile {
     display: unset;
 }
 
-main .hero-3d .fallback img[alt~="desktop"] {
+main .hero-3d .fallback.desktop {
     display: none;
+}
+
+main .hero-3d .fallback.desktop img {
     zoom: 111%;
 }
+
 
 main .hero-3d .scroll-animation {
     display: none;
@@ -145,9 +149,9 @@ main .hero-3d p {
     margin: 16px 0 16px 0;
 }
 
-main .hero-3d .fallback p {
+/* main .hero-3d .fallback p {
     margin: 0;
-}
+} */
 
 main .hero-3d>div>div {
     max-height: 464px;
@@ -181,11 +185,11 @@ main .hero-3d .button-container .icon-download {
         height: 100vh;
     }
 
-    main .hero-3d .fallback img[alt~="mobile"] {
+    main .hero-3d .fallback.mobile {
         display: none;
     }
 
-    main .hero-3d .fallback img[alt~="desktop"] {
+    main .hero-3d .fallback.desktop {
         display: unset;
     }
 

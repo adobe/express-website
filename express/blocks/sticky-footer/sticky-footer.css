@@ -18,7 +18,8 @@ main .sticky-footer {
     border-radius: 28px;
 }
 
-img[alt~="qr"] {
+main .sticky-footer img[alt~="qr"],
+main .sticky-footer img[alt~="qr-code"] {
     border-radius: 12px;
 }
 
@@ -51,11 +52,11 @@ main .sticky-footer>div p em {
     font-weight: 300;
 }
 
-img.icon-apple-store,
-img.icon-google-store,
-img.icon-galaxy-store,
-img.icon-microsoft-store,
-img.icon-editors-choice {
+main .sticky-footer img.icon-apple-store,
+main .sticky-footer img.icon-google-store,
+main .sticky-footer img.icon-galaxy-store,
+main .sticky-footer img.icon-microsoft-store,
+main .sticky-footer img.icon-editors-choice {
     height: 35px;
     width: auto;
     margin: 0;
@@ -63,19 +64,23 @@ img.icon-editors-choice {
     margin-right: 16px;
 }
 
-img.icon-editors-choice {
+main .sticky-footer img.icon-editors-choice {
     height: 25px;
     margin-left: 4px;
     margin-top: 5px;
 }
 
-img.icon-duplicate {
+main .sticky-footer img.icon-duplicate {
     margin-left: 8px;
     width: var(--body-font-size-s);
     height: var(--body-font-size-s);
     vertical-align: middle;
     cursor: pointer;
     pointer-events: all;
+}
+
+main .sticky-footer p a {
+    color: white;
 }
 
 @media not (min-width: 900px) {

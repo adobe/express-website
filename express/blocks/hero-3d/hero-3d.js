@@ -20,7 +20,7 @@ import {
 } from '../../scripts/scripts.js';
 
 const DEFAULT_DELAY = 1000;
-const MAX_NONCONFIG_ROWS = 3;
+const MAX_NONCONFIG_ROWS = 4;
 const SCROLL_ANIMATION_URL = 'https://assets.website-files.com/62e1bd17785b4a21a5affda4/62e31da63e4adb171e1a2682_lf30_editor_jo11ftge.json';
 
 /**
@@ -99,6 +99,9 @@ function addScrollAnimation(block, scrollTo) {
  */
 export default async function decorate(block) {
   const conf = readBlockConfig(block);
+  delete conf.desktop;
+  delete conf.mobile;
+
   const rows = [...block.querySelectorAll(':scope > div')];
 
   const nonconfRows = Math.min(rows.length - Object.keys(conf).length, MAX_NONCONFIG_ROWS);
@@ -113,11 +116,24 @@ export default async function decorate(block) {
   $link.parentElement.parentElement.remove();
 
   // fallback images
-  if (rows[0] && rows[0].childElementCount === 1) {
-    if (rows[0].querySelectorAll('picture').length === rows[0].firstChild.childElementCount) {
-      rows[0].classList.add('fallback');
+  rows.forEach((row) => {
+    const description = row.firstChild.innerText.trim().toLowerCase();
+    if (description !== 'desktop' && description !== 'mobile') return;
+
+    if (description === 'desktop') {
+      const descriptor = row.firstChild;
+      const imDiv = descriptor.nextSibling;
+      imDiv.classList.add('fallback', 'desktop');
+      block.append(imDiv);
+      row.remove();
+    } else if (description === 'mobile') {
+      const descriptor = row.firstChild;
+      const imDiv = descriptor.nextSibling;
+      imDiv.classList.add('fallback', 'mobile');
+      block.append(imDiv);
+      row.remove();
     }
-  }
+  });
 
   if (!$link || document.body.dataset.device === 'mobile' || window.screen.width < 900) {
     return;

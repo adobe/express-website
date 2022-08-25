@@ -10,12 +10,42 @@
  * governing permissions and limitations under the License.
  */
 
+import { createTag, readBlockConfig } from '../../scripts/scripts.js';
+
 /**
  * @param {HTMLDivElement} $block
  */
 export default function decorate($block) {
   if (document.body.dataset.device === 'mobile') {
     $block.remove();
+  }
+
+  const conf = readBlockConfig($block);
+  console.log('conf: ', conf);
+
+  const rows = [...$block.querySelectorAll(':scope > div')];
+  rows.forEach(($row, i) => {
+    if (i >= 1) {
+      $row.remove();
+    }
+  });
+
+  if (conf['apple-store']) {
+    const $icon = $block.querySelector('img.icon.icon-apple-store');
+    if ($icon) {
+      const $link = createTag('a', { href: conf['apple-store'] });
+      $icon.parentElement.replaceChild($link, $icon);
+      $link.append($icon);
+    }
+  }
+
+  if (conf['google-store']) {
+    const $icon = $block.querySelector('img.icon.icon-google-store');
+    if ($icon) {
+      const $link = createTag('a', { href: conf['google-store'] });
+      $icon.parentElement.replaceChild($link, $icon);
+      $link.append($icon);
+    }
   }
 
   const $dupIcon = $block.querySelector('img.icon-duplicate');
