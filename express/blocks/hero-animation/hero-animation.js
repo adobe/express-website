@@ -69,6 +69,8 @@ function createAnimation(animations) {
   const breakpoint = getBreakpoint(animations);
   const animation = getAnimation(animations, breakpoint);
 
+  if (animation === undefined) return null;
+
   if (animation.params.loop) {
     attribs.loop = '';
   }
@@ -91,11 +93,13 @@ function adjustLayout(animations, $parent) {
 
   if (!animation.active) {
     const $newVideo = createAnimation(animations);
-    $parent.replaceChild($newVideo, $parent.querySelector('video'));
-    $newVideo.addEventListener('canplay', () => {
-      $newVideo.muted = true;
-      $newVideo.play();
-    });
+    if ($newVideo) {
+      $parent.replaceChild($newVideo, $parent.querySelector('video'));
+      $newVideo.addEventListener('canplay', () => {
+        $newVideo.muted = true;
+        $newVideo.play();
+      });
+    }
   }
 }
 
@@ -197,14 +201,14 @@ export default async function decorate($block) {
 
     if (rowType === 'content') {
       const $video = createAnimation(animations);
-      $div.prepend($video);
-
-      $video.addEventListener('canplay', () => {
-        $video.muted = true;
-        $video.play();
-      });
-
       if ($video) {
+        $div.prepend($video);
+
+        $video.addEventListener('canplay', () => {
+          $video.muted = true;
+          $video.play();
+        });
+
         const $innerDiv = $video.closest('div');
         $innerDiv.classList.add('hero-animation-overlay');
         const $videoParent = $video.parentNode;
