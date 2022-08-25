@@ -50,7 +50,7 @@ function initScrollAnimationMobile($block) {
     const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
     const totalScroll = $block.scrollWidth - docWidth;
     container.scrollLeft = (totalScroll / 50) * (offset * 100);
-  });
+  }, { passive: true });
 }
 
 /**
@@ -74,38 +74,36 @@ function initScrollAnimationDesktop($block) {
   });
 
   document.addEventListener('scroll', () => {
-    requestAnimationFrame(() => {
-      const blockPosition = $block.getBoundingClientRect();
-      if (blockPosition.top > docHeight || blockPosition.bottom < 0) {
-        return;
+    const blockPosition = $block.getBoundingClientRect();
+    if (blockPosition.top > docHeight || blockPosition.bottom < 0) {
+      return;
+    }
+    const blockHeight = $block.clientHeight;
+
+    // offset % from center of block to center of view
+    const blockMidY = (blockPosition.bottom - blockHeight / 2);
+    // multiplier to extend animation during entire scroll, not to complete while block is in view
+    // goal was to have the scroll effect continue for entire duration, never see it end
+    const mult = 5;
+    const offset = (docTargetY - blockMidY) / ((docHeight - blockHeight) * mult);
+    const containerHLimit = (container.clientHeight - CARD_HEIGHT - V_MARGIN - 1);
+
+    screens.forEach((screen, i) => {
+      const limit = DESKTOP_CARD_ENDPOINTS[i];
+      const absRange = RANGES[i];
+      const margin = absRange * offset;
+
+      if (margin < limit.start) {
+        screen.style.top = `${limit.start}px`;
+      } else if (margin >= containerHLimit && containerHLimit < limit.end) {
+        screen.style.top = `${containerHLimit}px`;
+      } else if (margin >= limit.end) {
+        screen.style.top = `${limit.end}px`;
+      } else {
+        screen.style.top = `${margin}px`;
       }
-      const blockHeight = $block.clientHeight;
-
-      // offset % from center of block to center of view
-      const blockMidY = (blockPosition.bottom - blockHeight / 2);
-      // multiplier to extend animation during entire scroll, not to complete while block is in view
-      // goal was to have the scroll effect continue for entire duration, never see it end
-      const mult = 3;
-      const offset = (docTargetY - blockMidY) / ((docHeight - blockHeight) * mult);
-      const containerHLimit = (container.clientHeight - CARD_HEIGHT - V_MARGIN - 1);
-
-      screens.forEach((screen, i) => {
-        const limit = DESKTOP_CARD_ENDPOINTS[i];
-        const absRange = RANGES[i];
-        const margin = absRange * offset;
-
-        if (margin < limit.start) {
-          screen.style.top = `${limit.start}px`;
-        } else if (margin >= containerHLimit && containerHLimit < limit.end) {
-          screen.style.top = `${containerHLimit}px`;
-        } else if (margin >= limit.end) {
-          screen.style.top = `${limit.end}px`;
-        } else {
-          screen.style.top = `${margin}px`;
-        }
-      });
     });
-  });
+  }, { passive: true });
 }
 
 function isMobileUserAgent() {
