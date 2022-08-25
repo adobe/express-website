@@ -88,6 +88,7 @@ main .hero-animation .hero-animation-overlay > div {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 @media (min-width: 600px) {
@@ -102,6 +103,10 @@ main .hero-animation .hero-animation-overlay > div {
 }
 
 @media (min-width: 950px) {
+  main .hero-animation .hero-animation-overlay video {
+    min-height: 500px;
+  }
+  
   main .hero-animation .hero-animation-overlay .icon {
     height: 65px;
   }
@@ -176,7 +181,7 @@ main .hero-animation .hero-animation-overlay > div {
   main .hero-animation.wide .hero-animation-overlay .icon {
     height: 30px;
   }
-  
+
   main .hero-animation .hero-animation-overlay > div > :first-child {
     margin-top: 0;
   }
@@ -202,6 +207,7 @@ main .hero-animation.wide .hero-animation-overlay video {
     box-sizing: border-box;
     padding: 32px;
     margin: 0;
+    min-height: 375px;
   }
     
   main .hero-animation.wide .hero-animation-overlay video {
