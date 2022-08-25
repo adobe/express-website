@@ -176,6 +176,14 @@ main .hero-animation .hero-animation-overlay > div {
   main .hero-animation.wide .hero-animation-overlay .icon {
     height: 30px;
   }
+  
+  main .hero-animation .hero-animation-overlay > div > :first-child {
+    margin-top: 0;
+  }
+  
+  main .hero-animation .hero-animation-overlay > div > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 main .hero-animation.wide .hero-animation-overlay video {
