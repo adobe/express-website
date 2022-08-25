@@ -471,7 +471,7 @@ export default async function decorate($block) {
 
   const resp = await fetch(`https://www.adobe.com/reviews-api/ccx${sheet}.json`);
   if (resp.ok) {
-    const response = JSON.parse(resp);
+    const response = await resp.json();
     if (response.data[0].Average) {
       ratingAverage = parseFloat(response.data[0].Average).toFixed(2);
     }
