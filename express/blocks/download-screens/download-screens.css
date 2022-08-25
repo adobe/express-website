@@ -23,6 +23,10 @@ main .cards.download-screens {
   justify-content: center;
 }
 
+main .cards.download-screens .card .card-image {
+  border-radius: 20px;
+}
+
 main .cards.download-screens .card .card-image img {
   border-radius: 0;
 }
@@ -31,6 +35,7 @@ main .cards.download-screens .card {
   width: 157px;
   height: 313px;
   margin: 0;
+  box-shadow: none;
 }
 
 main .cards.download-screens .card:first-child {
