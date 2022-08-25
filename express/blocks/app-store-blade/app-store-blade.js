@@ -190,7 +190,6 @@ function decorateBlade($block, payload) {
 }
 
 export default async function decorate($block) {
-  let $injectionPoint;
   const payload = {
     heading: '',
     copyParagraphs: [],
