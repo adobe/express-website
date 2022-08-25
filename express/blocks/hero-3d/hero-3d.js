@@ -29,40 +29,34 @@ const SCROLL_ANIMATION_URL = 'https://assets.website-files.com/62e1bd17785b4a21a
  * @param {number} [delay=0]
  */
 // eslint-disable-next-line no-unused-vars
-async function loadSpline(block, href, $fallback, delay = 0) {
+async function loadSpline(block, href, delay = 0) {
   const { Application } = await import('../../scripts/spline-runtime.min.js');
   const canvas = createTag('canvas', { id: 'canvas3d', class: 'canvas3d' });
   block.append(canvas);
   const app = new Application(canvas);
 
-  console.debug('[loadSpline()/code] href: ', href);
-
-  await app.load(href, {
-    // credentials: 'include',
-    mode: 'no-cors',
-  });
+  setTimeout(async () => {
+    await app.load(href, {
+      // credentials: 'include',
+      mode: 'no-cors',
+    });
+    setTimeout(() => {
+      canvas.style.opacity = '1';
+    }, delay);
+  }, delay);
 }
 
-function loadSplineFrame(block, href, $fallback, delay = 0) {
+function loadSplineFrame(block, href, delay = 0) {
   const iframe = document.createElement('iframe');
-  console.debug('[loadSpline()/frame] href: ', href);
-
   iframe.src = href;
-
   setTimeout(() => {
     iframe.onload = () => {
       setTimeout(() => {
         iframe.style.opacity = '1';
-        // if ($fallback) {
-        //   $fallback.style.display = 'none';
-        // }
       }, delay);
       iframe.onload = null;
     };
     block.append(iframe);
-    // const content = iframe.previousElementSibling;
-    // window.content = content;
-    // iframe.style.paddingTop = `${content.offsetHeight + content.offsetTop - 63}px`;
   }, delay);
 }
 
@@ -119,13 +113,9 @@ export default async function decorate(block) {
   $link.parentElement.parentElement.remove();
 
   // fallback images
-  /** @type {HTMLDivElement} */
-  let $fallbackImg;
   if (rows[0] && rows[0].childElementCount === 1) {
     if (rows[0].querySelectorAll('picture').length === rows[0].firstChild.childElementCount) {
       rows[0].classList.add('fallback');
-      // eslint-disable-next-line prefer-destructuring
-      $fallbackImg = rows[0];
     }
   }
 
@@ -151,8 +141,8 @@ export default async function decorate(block) {
   }
 
   if (href.endsWith('scene.splinecode')) {
-    loadSpline(block, href, $fallbackImg, delay);
+    loadSpline(block, href, delay);
   } else {
-    loadSplineFrame(block, href, $fallbackImg, delay);
+    loadSplineFrame(block, href, delay);
   }
 }

@@ -65,8 +65,6 @@ async function extendBlock(block, blockName) {
 }
 
 function initScrollAnimationMobile($block) {
-  console.debug('initScrollAnimationMobile()');
-
   const docHeight = window.innerHeight;
   const docWidth = window.innerWidth;
   const docTargetY = (docHeight / 10) * 9;
@@ -95,11 +93,9 @@ function initScrollAnimationMobile($block) {
  * @param {HTMLDivElement} $block
  */
 function initScrollAnimationDesktop($block) {
-  console.debug('initScrollAnimationDesktop()');
   const docHeight = window.innerHeight;
-  const docTargetY = (docHeight / 10) * 6;
+  const docTargetY = (docHeight / 10) * 6; // 60% down the page
   const container = $block.parentElement;
-  window.container = container;
 
   const screens = $block.querySelectorAll(':scope > div.card');
   const leftPad = (window.innerWidth - ((CARD_GAP + CARD_WIDTH) * screens.length + CARD_GAP)) / 2;
@@ -114,31 +110,33 @@ function initScrollAnimationDesktop($block) {
   });
 
   document.addEventListener('scroll', () => {
-    const blockPosition = $block.getBoundingClientRect();
-    if (blockPosition.top > docHeight || blockPosition.bottom < 0) {
-      return;
-    }
-    const blockHeight = $block.clientHeight;
-
-    // offset % from center of block to center of view
-    const blockMidY = (blockPosition.bottom - blockHeight / 2);
-    const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
-    const containerHLimit = (container.clientHeight - CARD_HEIGHT) / 2;
-
-    screens.forEach((screen, i) => {
-      const limit = DESKTOP_CARD_ENDPOINTS[i];
-      const absRange = RANGES[i];
-      const margin = (absRange / 100) * (offset * 100);
-
-      if (margin < limit.start) {
-        screen.style.top = `${limit.start}px`;
-      } else if (margin > absRange) {
-        screen.style.top = `${limit.end}px`;
-      } else if (margin > containerHLimit) {
-        console.warn('[download-screens] limit out of bounds');
-      } else {
-        screen.style.top = `${margin}px`;
+    requestAnimationFrame(() => {
+      const blockPosition = $block.getBoundingClientRect();
+      if (blockPosition.top > docHeight || blockPosition.bottom < 0) {
+        return;
       }
+      const blockHeight = $block.clientHeight;
+
+      // offset % from center of block to center of view
+      const blockMidY = (blockPosition.bottom - blockHeight / 2);
+      const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
+      const containerHLimit = (container.clientHeight - CARD_HEIGHT) / 2;
+
+      screens.forEach((screen, i) => {
+        const limit = DESKTOP_CARD_ENDPOINTS[i];
+        const absRange = RANGES[i];
+        const margin = absRange * offset;
+
+        if (margin < limit.start) {
+          screen.style.top = `${limit.start}px`;
+        } else if (margin > containerHLimit) {
+          screen.style.top = `${containerHLimit}px`;
+        } else if (margin > absRange) {
+          screen.style.top = `${limit.end}px`;
+        } else {
+          screen.style.top = `${margin}px`;
+        }
+      });
     });
   });
 }
