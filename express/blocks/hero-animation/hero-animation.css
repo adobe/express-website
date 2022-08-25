@@ -20,14 +20,6 @@ main .hero-animation.appear {
   height: unset;
 }
 
-main .hero-animation .hero-animation-overlay > div > :first-child {
-  margin-top: 0;
-}
-
-main .hero-animation .hero-animation-overlay > div > :last-child {
-  margin-bottom: 0;
-}
-
 main .hero-animation .hero-animation-overlay p:first-of-type { /* p with icon */
   margin-bottom: 8px;
 }
@@ -67,6 +59,14 @@ main .hero-animation .hero-animation-overlay p.button-container a.button:any-lin
   margin: 0;
 }
 
+main .hero-animation .hero-animation-overlay > div > :first-child {
+  margin-top: 0;
+}
+
+main .hero-animation .hero-animation-overlay > div > :last-child {
+  margin-bottom: 0;
+}
+
 main .hero-animation .hero-animation-overlay {
   text-align: left;
   padding: 0;
@@ -89,6 +89,11 @@ main .hero-animation .hero-animation-overlay > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+main .hero-animation.white-text,
+main .hero-animation.white-text a:any-link {
+  color: var(--color-white);
 }
 
 @media (min-width: 600px) {
