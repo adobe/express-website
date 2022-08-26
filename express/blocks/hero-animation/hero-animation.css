@@ -23,44 +23,44 @@ main .hero-animation.appear {
   height: unset;
 }
 
-main .hero-animation .hero-animation-overlay p:first-of-type { /* p with icon */
+main .hero-animation p:first-child { /* p with icon above heading */
   margin-bottom: 8px;
 }
 
-main .hero-animation .hero-animation-overlay .icon,
-main .hero-animation .hero-animation-overlay > div > p:first-child img {
+main .hero-animation .icon,
+main .hero-animation .hero-animation-foreground > p:first-child img {
   height: 32px;
   width: unset;
 }
 
-main .hero-animation .hero-animation-overlay h1 {
+main .hero-animation h1 {
   font-size: var(--heading-font-size-l);
   margin: 0 0 8px 0;
 }
 
-main .hero-animation .hero-animation-overlay p {
+main .hero-animation p {
   font-size: var(--body-font-size-m);
   margin: 16px 0;
 }
 
-main .hero-animation .hero-animation-overlay p.button-container {
+main .hero-animation p.button-container {
   text-align: left;
   margin: 16px 0;
 }
 
-main .hero-animation .hero-animation-overlay p.button-container a.button:any-link {
+main .hero-animation p.button-container a.button:any-link {
   margin: 0;
 }
 
-main .hero-animation .hero-animation-overlay > div > :first-child {
+main .hero-animation .hero-animation-foreground > :first-child {
   margin-top: 0;
 }
 
-main .hero-animation .hero-animation-overlay > div > :last-child {
+main .hero-animation .hero-animation-foreground > :last-child {
   margin-bottom: 0;
 }
 
-main .hero-animation .hero-animation-overlay {
+main .hero-animation {
   text-align: left;
   padding: 0;
   margin: auto;
@@ -68,7 +68,8 @@ main .hero-animation .hero-animation-overlay {
   box-sizing: border-box;
 }
 
-main .hero-animation .hero-animation-overlay video {
+main .hero-animation .hero-animation-background,
+main .hero-animation video.hero-animation-background {
   box-sizing: border-box;
   object-fit: cover;
   width: 100%;
@@ -77,7 +78,7 @@ main .hero-animation .hero-animation-overlay video {
   object-position: 100% 100%;
 }
 
-main .hero-animation .hero-animation-overlay > div {
+main .hero-animation .hero-animation-foreground {
   padding: 32px 28px;
   position: relative;
   display: flex;
@@ -91,18 +92,19 @@ main .hero-animation.white-text a:any-link {
 }
 
 @media (min-width: 600px) {
-  main .hero-animation .hero-animation-overlay > div {
+  main .hero-animation .hero-animation-foreground {
     margin: 0 auto;
     width: 500px;
   }
 
-  main .hero-animation .hero-animation-overlay h1 {
+  main .hero-animation h1 {
     max-width: calc(100% - 84px);
   }
 }
 
 @media (min-width: 950px) {
-  main .hero-animation .hero-animation-overlay video {
+  main .hero-animation .hero-animation-background,
+main .hero-animation video.hero-animation-background {
     min-height: 500px;
     max-height: unset ;
   }
@@ -112,7 +114,7 @@ main .hero-animation.white-text a:any-link {
     color: var(--color-white);
   }
 
-  main .hero-animation .hero-animation-overlay > div {
+  main .hero-animation .hero-animation-foreground {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -127,27 +129,27 @@ main .hero-animation.white-text a:any-link {
 }
 
 @media (min-width: 1400px) {
-  main .hero-animation .hero-animation-overlay > div {
+  main .hero-animation .hero-animation-foreground {
     left: 50%;
     transform: translate(-113%, -50%);
   }
 
-  main .hero-animation .hero-animation-overlay .icon.icon-adobe-express {
+  main .hero-animation .icon.icon-adobe-express {
     height: 65px;
   }
 
-  main .hero-animation .hero-animation-overlay h1 {
+  main .hero-animation h1 {
     font-size: var(--heading-font-size-xxl);
     max-width: unset;
   }
 
-  main .hero-animation .hero-animation-overlay p {
+  main .hero-animation p {
     font-size: var(--body-font-size-l);
   }
 }
 
 @media (min-width: 1800px) {
-  main .hero-animation .hero-animation-overlay > div {
+  main .hero-animation .hero-animation-foreground {
     max-width: 30%;
     left: 30%;
     transform: translate(-50%, -50%);
@@ -155,7 +157,8 @@ main .hero-animation.white-text a:any-link {
 }
 
 @media (max-width: 399px) {
-  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) .hero-animation-overlay video {
+  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) .hero-animation-background,
+  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) video.hero-animation-background {
     display: none;
   }
 }
@@ -173,36 +176,36 @@ main .hero-animation.white-text a:any-link {
     max-width: unset;
   }
 
-  main .hero-animation.wide .hero-animation-overlay h1 {
+  main .hero-animation.wide h1 {
     font-size: var(--heading-font-size-l);
   }
 
-  main .hero-animation.wide .hero-animation-overlay p {
+  main .hero-animation.wide p {
     font-size: var(--body-font-size-m);
     position: relative;
     margin: 12px 0;
   }
 
-  main .hero-animation.wide .hero-animation-overlay .icon {
+  main .hero-animation.wide .icon {
     height: 30px;
   }
 
-  main .hero-animation .hero-animation-overlay > div > :first-child {
+  main .hero-animation .hero-animation-foreground > :first-child {
     margin-top: 0;
   }
   
-  main .hero-animation .hero-animation-overlay > div > :last-child {
+  main .hero-animation .hero-animation-foreground > :last-child {
     margin-bottom: 0;
   }
 }
 
-main .hero-animation.wide .hero-animation-overlay video {
+main .hero-animation.wide .hero-animation-background {
   max-height: 200px;
   min-height: 200px;
 }
 
 @media (min-width: 950px) {
-  main .hero-animation.wide .hero-animation-overlay > div {
+  main .hero-animation.wide .hero-animation-foreground {
     position: relative;
     top: unset;
     left: unset;
@@ -215,7 +218,7 @@ main .hero-animation.wide .hero-animation-overlay video {
     min-height: 375px;
   }
     
-  main .hero-animation.wide .hero-animation-overlay video {
+  main .hero-animation.wide .hero-animation-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -232,13 +235,14 @@ main .hero-animation.wide .hero-animation-overlay video {
 }
 
 @media (max-width: 950px) {
-  main .hero-animation.wide .hero-animation-overlay video { 
+  main .hero-animation .hero-animation-background,
+main .hero-animation video.hero-animation-background {
     object-position: 75% 100%;
   }
 }
 
 @media (min-width: 1200px) {
-  main .hero-animation.wide.fullwidth .hero-animation-overlay > div {
+  main .hero-animation.wide.fullwidth .hero-animation-foreground {
     margin-left: calc(50vw - 600px);
   }
 }

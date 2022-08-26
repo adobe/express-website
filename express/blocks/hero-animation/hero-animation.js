@@ -57,7 +57,9 @@ function getAnimation(animations, breakpoint) {
 }
 
 function createAnimation(animations) {
-  const attribs = {};
+  const attribs = {
+    class: 'hero-animation-background',
+  };
   ['playsinline', 'autoplay', 'muted'].forEach((p) => {
     attribs[p] = '';
   });
@@ -91,7 +93,7 @@ function adjustLayout(animations, $parent) {
   const breakpoint = getBreakpoint(animations);
   const animation = getAnimation(animations, breakpoint);
 
-  if (!animation.active) {
+  if (animation && !animation.active) {
     const $newVideo = createAnimation(animations);
     if ($newVideo) {
       $parent.replaceChild($newVideo, $parent.querySelector('video'));
@@ -144,7 +146,8 @@ function transformToVideoLink($cell, $a) {
 }
 
 export default async function decorate($block) {
-  const possibleOptions = ['mobile', 'desktop', 'hd'];
+  const possibleBreakpoints = animationBreakPointSettings.map((bp) => bp.typeHint);
+  const possibleOptions = ['shadow', 'background'];
   const $section = $block.closest('.section');
   const $sectionWrapper = $block.closest('.hero-animation-wrapper');
   const animations = {};
@@ -158,12 +161,12 @@ export default async function decorate($block) {
     let rowType = 'animation';
     let typeHint;
     if (index + 1 === $rows.length) rowType = 'content';
-    if ([...$div.children].length > 1) {
-      typeHint = $div.children[0].textContent.trim().toLowerCase();
-    }
-    if (['shadow', 'background'].includes(typeHint)) {
+    if ([...$div.children].length > 1) typeHint = $div.children[0].textContent.trim().toLowerCase();
+    if (typeHint && possibleOptions.includes(typeHint)) {
       rowType = 'option';
-    } else if (!possibleOptions.includes(typeHint)) typeHint = 'default';
+    } else if (!typeHint || (typeHint && !possibleBreakpoints.includes(typeHint))) {
+      typeHint = 'default';
+    }
 
     if (rowType === 'animation') {
       if (typeHint !== 'default') $block.classList.add(`has-${typeHint}-animation`);
@@ -201,24 +204,25 @@ export default async function decorate($block) {
 
     if (rowType === 'content') {
       const $video = createAnimation(animations);
+      let $bg;
       if ($video) {
+        $bg = $video;
         $div.prepend($video);
-
         $video.addEventListener('canplay', () => {
           $video.muted = true;
           $video.play();
         });
-
-        const $innerDiv = $video.closest('div');
-        $innerDiv.classList.add('hero-animation-overlay');
-        const $videoParent = $video.parentNode;
         window.addEventListener('resize', () => {
-          adjustLayout(animations, $videoParent);
+          adjustLayout(animations, $div);
         });
-        adjustLayout(animations, $videoParent);
+        adjustLayout(animations, $div);
+      } else {
+        $bg = createTag('div');
       }
+      $bg.classList.add('hero-animation-background');
+      $div.prepend($bg);
+      $bg.nextElementSibling.classList.add('hero-animation-foreground');
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
-
       const videoLink = [...$div.querySelectorAll('a')]
         .find(($a) => isVideoLink($a.href));
       if (videoLink) {
