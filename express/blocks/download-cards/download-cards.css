@@ -214,7 +214,6 @@ main .cards.download-cards.bleed .card .branded-header img {
 main .cards.download-cards.bleed .bleed__c {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 }
 
 main .cards.download-cards.bleed .bleed__c>* {
