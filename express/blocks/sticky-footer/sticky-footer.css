@@ -1,11 +1,13 @@
 main .sticky-footer-wrapper {
     position: fixed;
+    top: 100%;
     left: 0;
     right: 0;
-    bottom: 0;
+    transform: translate(0, -100%);
     background-color: var(--gradient-highlight-diagonal);
     color: white;
     z-index: 2;
+    transition: top 0.6s ease-out;
 }
 
 main .sticky-footer {

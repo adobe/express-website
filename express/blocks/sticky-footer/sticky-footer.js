@@ -70,6 +70,21 @@ async function insertRatings(ratingsImg) {
   });
 }
 
+function attachScrollHandler() {
+  const docEl = document.documentElement;
+  const el = document.querySelector('main .sticky-footer-wrapper');
+  let hidden = false;
+  document.addEventListener('scroll', () => {
+    if (!hidden && docEl.scrollTop >= docEl.offsetHeight - window.innerHeight) {
+      hidden = true;
+      el.style.top = `calc(100% + ${el.clientHeight}px)`;
+    } else if (hidden && docEl.scrollTop < docEl.offsetHeight - window.innerHeight) {
+      hidden = false;
+      el.style.top = '100%';
+    }
+  });
+}
+
 /**
  * @param {HTMLDivElement} $block
  */
@@ -122,4 +137,6 @@ export default function decorate($block) {
   if (ratingsImg) {
     insertRatings(ratingsImg);
   }
+
+  attachScrollHandler();
 }
