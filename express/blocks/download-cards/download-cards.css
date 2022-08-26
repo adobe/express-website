@@ -249,6 +249,16 @@ main .cards.download-cards .button-container .icon-download {
   filter: invert(1);
 }
 
+main .cards.download-cards .button-container.icon-button {
+  line-height: 0;
+}
+
+main .cards.download-cards .button-container.icon-button img {
+  height: 37px;
+  width: auto;
+  border-radius: 0;
+}
+
 main .cards.download-cards .card .branded-header {
   position: relative;
 }

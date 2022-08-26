@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag } from '../../scripts/scripts.js';
+import { createTag, readBlockConfig } from '../../scripts/scripts.js';
 import { prependDownloadIcon } from '../hero-3d/hero-3d.js';
 
 /**
@@ -97,10 +97,30 @@ function groupButtons($block) {
  * @param {HTMLDivElement} $block
  */
 export default async function decorate($block) {
+  const conf = readBlockConfig($block);
+  $block.querySelectorAll(':scope > div').forEach(($row) => {
+    if ($row.childElementCount === 2) {
+      $row.remove();
+    }
+  });
+
   decorateCardsBase($block);
 
   // apply default variants
   $block.classList.add('branded', 'flat', 'large', 'bleed', 'stagger');
+
+  // wrap icons with links from config, if any
+  if (Object.keys(conf).length) {
+    $block.querySelectorAll(':scope img.icon').forEach((icon) => {
+      const alt = icon.getAttribute('alt');
+      if (conf[alt]) {
+        icon.parentElement.classList.add('button-container', 'icon-button');
+        const link = createTag('a', { href: conf[alt] });
+        icon.replaceWith(link);
+        link.append(icon);
+      }
+    });
+  }
 
   if ($block.classList.contains('branded')) {
     brandHeaders($block);
