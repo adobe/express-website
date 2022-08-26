@@ -114,7 +114,9 @@ export default async function decorate($block) {
 
       const parent = pic.parentElement;
       if (parent.childElementCount === 1) {
-        parent.classList.add('bleed__c');
+        const wrapper = createTag('div', { class: 'bleed__c' });
+        parent.replaceWith(wrapper);
+        wrapper.append(parent);
       }
     });
   }

@@ -212,17 +212,25 @@ main .cards.download-cards.bleed .card .branded-header img {
 }
 
 main .cards.download-cards.bleed .bleed__c {
-  display: flex;
-  flex-direction: column;
+  height: 100%;
 }
 
 main .cards.download-cards.bleed .bleed__c>* {
   line-height: 0;
 }
 
+main .cards.download-cards.bleed .bleed__c p {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  flex-grow: 1;
+}
+
+
 main .cards.download-cards .card .button-row {
   display: flex;
-  margin: auto;
+  margin: 0 auto;
+  flex-shrink: 1;
 }
 
 main .cards.download-cards .card p.button-container {
