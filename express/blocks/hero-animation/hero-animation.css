@@ -221,7 +221,7 @@ main .hero-animation.wide video.hero-animation-background {
     box-sizing: border-box;
     padding: 32px;
     margin: 0;
-    min-height: 375px;
+    min-height: 250px;
   }
 
   main .hero-animation.wide video.hero-animation-background {
@@ -235,7 +235,7 @@ main .hero-animation.wide video.hero-animation-background {
     z-index: unset;
     object-fit: cover;
     max-height: unset;
-    min-height: 375px;
+    min-height: 250px;
     object-position: center 100%;
   }
 }
