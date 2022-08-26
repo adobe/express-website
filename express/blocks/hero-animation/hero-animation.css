@@ -27,8 +27,7 @@ main .hero-animation p:first-child { /* p with icon above heading */
   margin-bottom: 8px;
 }
 
-main .hero-animation .icon,
-main .hero-animation .hero-animation-foreground > p:first-child img {
+main .hero-animation .hero-animation-foreground > p:first-child img.icon {
   height: 32px;
   width: unset;
 }
@@ -136,7 +135,7 @@ main .hero-animation.white-text a:any-link {
     transform: translate(-113%, -50%);
   }
 
-  main .hero-animation .icon.icon-adobe-express {
+  main .hero-animation .hero-animation-foreground > p:first-child img.icon.icon-adobe-express {
     height: 65px;
   }
 
@@ -187,7 +186,7 @@ main .hero-animation.white-text a:any-link {
     margin: 12px 0;
   }
 
-  main .hero-animation.wide .icon {
+  main .hero-animation.wide .hero-animation-foreground > p:first-child img.icon {
     height: 30px;
   }
 
