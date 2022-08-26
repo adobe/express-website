@@ -26,8 +26,7 @@ main .hero-animation.appear {
 main .hero-animation p:first-child { /* p with icon above heading */
   margin-bottom: 8px;
 }
-
-main .hero-animation .hero-animation-foreground > p:first-child img.icon {
+main .hero-animation .hero-animation-foreground > p:first-child img {
   height: 32px;
   width: unset;
 }
