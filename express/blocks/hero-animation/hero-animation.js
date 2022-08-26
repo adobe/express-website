@@ -223,6 +223,8 @@ export default async function decorate($block) {
       $div.prepend($bg);
       $bg.nextElementSibling.classList.add('hero-animation-foreground');
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
+
+      // check for video link
       const videoLink = [...$div.querySelectorAll('a')]
         .find(($a) => isVideoLink($a.href));
       if (videoLink) {
