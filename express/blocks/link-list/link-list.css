@@ -17,11 +17,6 @@ main .link-list h4 {
   text-align: left;
 }
 
-main .link-list.center {
-  width: fit-content;
-  max-width: 100%;
-}
-
 main .link-list h3 {
   font-size: var(--heading-font-size-m);
   margin-bottom: 20px;
@@ -118,18 +113,6 @@ main .link-list .carousel-platform p.button-container:first-child {
   main .section.link-list-center-container > div {
     max-width: 1200px;
   }
-}
-
-main .link-list.center,
-main .link-list.center h2, 
-main .link-list.center h3,
-main .link-list.center h4 {
-  text-align: center;
-}
-
-main .link-list.center .carousel-platform {
-  margin-left: auto;
-  margin-right: auto;
 }
 
 @media (max-width: 900px) {
