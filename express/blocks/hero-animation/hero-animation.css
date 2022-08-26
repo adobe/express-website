@@ -68,9 +68,11 @@ main .hero-animation {
   box-sizing: border-box;
 }
 
-main .hero-animation .hero-animation-background,
-main .hero-animation video.hero-animation-background {
+main .hero-animation .hero-animation-background {
   box-sizing: border-box;
+}
+
+main .hero-animation video.hero-animation-background {
   object-fit: cover;
   width: 100%;
   min-height: 200px;
@@ -104,9 +106,9 @@ main .hero-animation.white-text a:any-link {
 
 @media (min-width: 950px) {
   main .hero-animation .hero-animation-background,
-main .hero-animation video.hero-animation-background {
+  main .hero-animation video.hero-animation-background {
     min-height: 500px;
-    max-height: unset ;
+    max-height: unset;
   }
 
   main .hero-animation.dark,
@@ -157,8 +159,7 @@ main .hero-animation video.hero-animation-background {
 }
 
 @media (max-width: 399px) {
-  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) .hero-animation-background,
-  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) video.hero-animation-background {
+  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) .hero-animation-background {
     display: none;
   }
 }
@@ -200,8 +201,14 @@ main .hero-animation video.hero-animation-background {
 }
 
 main .hero-animation.wide .hero-animation-background {
+  min-height: unset;
+  max-height: unset;
+}
+
+main .hero-animation.wide video.hero-animation-background {
   max-height: 200px;
   min-height: 200px;
+  object-position: 75% 100%;
 }
 
 @media (min-width: 950px) {
@@ -217,8 +224,8 @@ main .hero-animation.wide .hero-animation-background {
     margin: 0;
     min-height: 375px;
   }
-    
-  main .hero-animation.wide .hero-animation-background {
+
+  main .hero-animation.wide video.hero-animation-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -231,13 +238,6 @@ main .hero-animation.wide .hero-animation-background {
     max-height: unset;
     min-height: 375px;
     object-position: center 100%;
-  }
-}
-
-@media (max-width: 950px) {
-  main .hero-animation .hero-animation-background,
-main .hero-animation video.hero-animation-background {
-    object-position: 75% 100%;
   }
 }
 
