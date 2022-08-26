@@ -212,7 +212,7 @@ main .cards.download-cards.bleed .card .branded-header img {
 }
 
 main .cards.download-cards.bleed .bleed__c {
-  height: 100%;
+  flex-grow: 1;
 }
 
 main .cards.download-cards.bleed .bleed__c>* {
@@ -223,9 +223,13 @@ main .cards.download-cards.bleed .bleed__c p {
   display: flex;
   flex-direction: column;
   margin: 0;
-  flex-grow: 1;
+  height: 100%;
+  justify-content: flex-end;
 }
 
+main .cards.download-cards.bleed .bleed__c p img {
+  display: block;
+}
 
 main .cards.download-cards .card .button-row {
   display: flex;
@@ -246,7 +250,6 @@ main .cards.download-cards .button-container .icon-download {
 }
 
 main .cards.download-cards .card .branded-header {
-  /* display: flex; */
   position: relative;
 }
 
