@@ -10,7 +10,65 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, readBlockConfig } from '../../scripts/scripts.js';
+import { createTag, fetchPlaceholders, readBlockConfig } from '../../scripts/scripts.js';
+
+/**
+ * @param {number} [rating=5]
+ */
+function createStars(rating = 5) {
+  if (typeof rating === 'string') {
+    // eslint-disable-next-line no-param-reassign
+    rating = Number.parseFloat(rating);
+  }
+  const rHalves = Math.round(rating / 0.5);
+  const whole = Math.floor(rHalves / 2);
+  let hasHalf = rHalves % 2;
+
+  let str = '';
+  for (let i = 0; i < 5; i += 1) {
+    let type = 'star44';
+    if (i < whole) {
+      type = 'star44';
+    } else if (hasHalf) {
+      type = 'star-half44';
+      hasHalf = 0;
+    } else {
+      type = 'star-empty44';
+    }
+
+    str += `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-star">
+      <use href="/express/icons/ccx-sheet_44.svg#${type}"></use>
+    </svg>`;
+  }
+
+  return str;
+}
+
+function createRatings() {
+  return `
+<span class="rating-stars">
+  ${createStars()}
+  <span class="rating-votes">5 • -</span>
+</span>`;
+}
+
+/**
+ * @param {HTMLImageElement} ratingsImg
+ */
+async function insertRatings(ratingsImg) {
+  const d = createTag('div');
+  d.innerHTML = createRatings();
+  ratingsImg.parentElement.replaceWith(d);
+
+  fetchPlaceholders().then((p) => {
+    // update ratings
+    const rating = p['apple-store-rating-score'];
+    const count = p['apple-store-rating-count'];
+    const container = d.querySelector(':scope span.rating-stars');
+    container.innerHTML = `${createStars(rating)}
+    <span class="rating-votes">${rating} • ${count} Ratings</span>`;
+  });
+}
 
 /**
  * @param {HTMLDivElement} $block
@@ -58,5 +116,10 @@ export default function decorate($block) {
     $dupIcon.onclick = () => {
       navigator.clipboard.writeText(href);
     };
+  }
+
+  const ratingsImg = $block.querySelector(':scope img[alt="ratings:ios"]');
+  if (ratingsImg) {
+    insertRatings(ratingsImg);
   }
 }

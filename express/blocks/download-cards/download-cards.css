@@ -204,6 +204,7 @@ main .cards.download-cards.bleed .card .card-image {
   display: flex;
   flex-direction: column;
   border-radius: 20px 20px 20px 20px;
+  overflow: hidden;
 }
 
 main .cards.download-cards.bleed .card .branded-header img {

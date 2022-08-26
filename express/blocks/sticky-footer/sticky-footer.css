@@ -38,6 +38,9 @@ main .sticky-footer>div>div {
 
 main .sticky-footer>div p {
     margin: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 main .sticky-footer picture img {
@@ -47,7 +50,7 @@ main .sticky-footer picture img {
 
 main .sticky-footer>div p em {
     font-style: normal;
-    margin-top: 12px;
+    margin-top: 8px;
     font-size: var(--body-font-size-s);
     font-weight: 300;
 }
@@ -72,6 +75,7 @@ main .sticky-footer img.icon-editors-choice {
 
 main .sticky-footer img.icon-duplicate {
     margin-left: 8px;
+    margin-top: 8px;
     width: var(--body-font-size-s);
     height: var(--body-font-size-s);
     vertical-align: middle;
@@ -81,6 +85,22 @@ main .sticky-footer img.icon-duplicate {
 
 main .sticky-footer p a {
     color: white;
+}
+
+main .sticky-footer .rating-stars {
+    font-size: 12px;
+    line-height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .sticky-footer .rating-stars svg {
+    color: var(--color-premium);
+}
+
+main .sticky-footer .rating-stars .rating-votes {
+    margin-left: 4px;
 }
 
 @media not (min-width: 900px) {
