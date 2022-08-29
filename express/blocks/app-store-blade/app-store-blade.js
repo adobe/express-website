@@ -135,7 +135,7 @@ function decorateRatings($block, payload) {
     const $votes = createTag('span', { class: 'rating-votes' });
     $votes.textContent = `${payload.ratingScore} • ${payload.ratingCount} Ratings`;
     $stars.appendChild($votes);
-    const $editorChoice = getIconElement('editor-choice');
+    const $editorChoice = createTag('img', { class: 'icon-editor-choice', src: '/express/icons/editor-choice.png', alt: 'editor-choice' });
     $ratingWrapper.append($editorChoice);
     $ratingWrapper.append($stars);
   }
