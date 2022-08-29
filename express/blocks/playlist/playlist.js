@@ -13,6 +13,41 @@
 // eslint-disable-next-line import/no-unresolved
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 import { buildCarousel } from '../shared/carousel.js';
+import { fetchVideoAnalytics } from '../shared/video.js';
+
+async function loadVideoAnalytic($video) {
+  const videoAnalytics = await fetchVideoAnalytics();
+  let videoAnalytic;
+
+  videoAnalytics.forEach((analytic) => {
+    if (window.location.pathname.includes(analytic.Page)) {
+      const filenames = analytic.Filenames ? analytic.Filenames.split('\n') : [];
+
+      filenames.forEach((filename) => {
+        if ($video.currentSrc.includes(filename)) {
+          videoAnalytic = {
+            video: $video,
+            parameters: {
+              videoName: analytic.videoName ?? null,
+              videoId: analytic.videoId ?? null,
+              videoLength: $video.duration,
+              product: 'Adobe Express',
+              videoCategory: 'default',
+              videoDescription: analytic.videoDescription ?? null,
+              videoPlayer: 'html5-video',
+              videoMediaType: 'VOD',
+            },
+          };
+        }
+      });
+    }
+  });
+
+  if (videoAnalytic) {
+    const videoLoaded = new CustomEvent('videoloaded', { detail: videoAnalytic });
+    document.dispatchEvent(videoLoaded);
+  }
+}
 
 function startVideo(player, overlay) {
   overlay.style.zIndex = 0;
@@ -68,6 +103,10 @@ function loadVideo($block, payload) {
       $videoTitle.classList.remove('hidden-mobile');
     }
     toggleVideoButtonState($block, $videoButton);
+
+    setTimeout(async () => {
+      await loadVideoAnalytic($inlinePlayer);
+    }, 10);
   }
 }
 
