@@ -68,7 +68,7 @@ main .sticky-footer img.icon-editor-choice {
 }
 
 main .sticky-footer img.icon-editor-choice {
-    height: 25px;
+    height: 20px;
     margin-left: 4px;
     margin-top: 5px;
 }
@@ -84,7 +84,7 @@ main .sticky-footer img.icon-copy {
 }
 
 main .sticky-footer p a {
-    color: white;
+    color: #FFF;
 }
 
 main .sticky-footer .rating-stars {

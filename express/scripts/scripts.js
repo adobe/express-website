@@ -313,7 +313,11 @@ export function getIcon(icons, alt, size = 44) {
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
   } else {
-    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt || icon}">`);
+    const pngs = [
+      'editor-choice',
+    ];
+    const ext = pngs.includes(icon) ? 'png' : 'svg';
+    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.${ext}" alt="${alt || icon}">`);
   }
 }
 
