@@ -4,15 +4,13 @@ main .sticky-footer-wrapper {
     left: 0;
     right: 0;
     transform: translate(0, -100%);
-    background-color: var(--gradient-highlight-diagonal);
     color: white;
     z-index: 2;
     transition: top 0.6s ease-out;
 }
 
 main .sticky-footer {
-    background: linear-gradient(320deg, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2);
-    background-size: 400% 400%;
+    background: var(--gradient-highlight-diagonal);
     width: calc(500px - (32px * 2));
     height: calc(210px - (32px * 2));
     margin: 32px auto;
@@ -61,7 +59,7 @@ main .sticky-footer img.icon-apple-store,
 main .sticky-footer img.icon-google-store,
 main .sticky-footer img.icon-galaxy-store,
 main .sticky-footer img.icon-microsoft-store,
-main .sticky-footer img.icon-editors-choice {
+main .sticky-footer img.icon-editor-choice {
     height: 35px;
     width: auto;
     margin: 0;
@@ -69,13 +67,13 @@ main .sticky-footer img.icon-editors-choice {
     margin-right: 16px;
 }
 
-main .sticky-footer img.icon-editors-choice {
+main .sticky-footer img.icon-editor-choice {
     height: 25px;
     margin-left: 4px;
     margin-top: 5px;
 }
 
-main .sticky-footer img.icon-duplicate {
+main .sticky-footer img.icon-copy {
     margin-left: 8px;
     margin-top: 8px;
     width: var(--body-font-size-s);

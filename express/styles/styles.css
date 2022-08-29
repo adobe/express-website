@@ -4,7 +4,7 @@
   font-family: 'Trebuchet MS';
   size-adjust: 90%;
   src: local('Trebuchet MS'),
-       local('TrebuchetMS');
+    local('TrebuchetMS');
 }
 
 :root {
@@ -36,6 +36,10 @@
   --gradient-highlight-horizontal: linear-gradient(90deg, #ff4dd2, #7c84fc);
   --gradient-highlight-diagonal: linear-gradient(45deg, #7c84fc, #ff4dd2);
 
+  /* header */
+  --header-height: 143px;
+  --header-height-no-brand: 64px;
+
   /* body */
   --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-200);
@@ -44,33 +48,47 @@
   --body-font-weight: normal;
   --body-color: var(--color-gray-800);
   --body-line-height: 1.5;
-  --body-font-size-xxl: 1.5rem; /* 24px */
-  --body-font-size-xl: 1.25rem; /* 20px */
-  --body-font-size-l: 1.125rem; /* 18px */
-  --body-font-size-m: 1rem; /* 16px */
-  --body-font-size-s: 0.875rem; /* 14px */
-  --body-font-size-xs: 0.75rem; /* 12px */
+  --body-font-size-xxl: 1.5rem;
+  /* 24px */
+  --body-font-size-xl: 1.25rem;
+  /* 20px */
+  --body-font-size-l: 1.125rem;
+  /* 18px */
+  --body-font-size-m: 1rem;
+  /* 16px */
+  --body-font-size-s: 0.875rem;
+  /* 14px */
+  --body-font-size-xs: 0.75rem;
+  /* 12px */
   /* headings */
   --heading-font-weight: 800;
   --heading-color: var(--color-gray-800);
   --heading-line-height: 1.25;
-  --heading-font-size-xxxl: 5rem; /* 80px */
-  --heading-font-size-xxl: 3.75rem; /* 60px */
-  --heading-font-size-xl: 2.8125rem; /* 45px */
-  --heading-font-size-l: 2.25rem; /* 36px */
-  --heading-font-size-m: 1.75rem; /* 28px */
-  --heading-font-size-s: 1.375rem; /* 22px */
+  --heading-font-size-xxxl: 5rem;
+  /* 80px */
+  --heading-font-size-xxl: 3.75rem;
+  /* 60px */
+  --heading-font-size-xl: 2.8125rem;
+  /* 45px */
+  --heading-font-size-l: 2.25rem;
+  /* 36px */
+  --heading-font-size-m: 1.75rem;
+  /* 28px */
+  --heading-font-size-s: 1.375rem;
+  /* 22px */
 }
 
 @media (min-width: 900px) {
   :root {
-    --heading-font-size-xxxl: 3.75rem; /* 60px */
+    --heading-font-size-xxxl: 3.75rem;
+    /* 60px */
   }
 }
 
 @media (min-width: 1200px) {
   :root {
-    --heading-font-size-xxxl: 2.8125rem; /* 45px */
+    --heading-font-size-xxxl: 2.8125rem;
+    /* 45px */
   }
 }
 
@@ -93,7 +111,7 @@ body.appear {
 header {
   box-sizing: border-box;
   border-bottom: 1px solid #EAEAEA;
-  height: 143px;
+  height: var(--header-height);
   background-image: url(/express/icons/cc-express-logo.svg);
   background-repeat: no-repeat;
   background-size: auto 32px;
@@ -102,12 +120,13 @@ header {
   background-color: #FFF;
 }
 
-body.no-brand-header header, body.no-desktop-brand-header header {
-  height: 64px;
+body.no-brand-header header,
+body.no-desktop-brand-header header {
+  height: var(--header-height-no-brand);
   background-image: unset;
 }
 
-body.feds-loaded > header {
+body.feds-loaded>header {
   height: auto;
 }
 
@@ -117,8 +136,8 @@ header #feds-topnav a.feds-navLink.feds-navLink--primaryCta {
 }
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:hover {
-  background-color: var(--color-info-accent-hover)!important;
-  border-color: var(--color-info-accent-hover)!important;
+  background-color: var(--color-info-accent-hover) !important;
+  border-color: var(--color-info-accent-hover) !important;
 }
 
 header #feds-topnav a.feds-navLink.feds-navLink--primaryCta:focus {
@@ -324,13 +343,13 @@ a.button.dark.reverse:any-link {
 
 a.button.dark.reverse:any-link:hover {
   color: var(--color-white);
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0, 0, 0, 0.1);
   border-color: var(--color-gray-100);
 }
 
 a.button.dark.reverse:any-link:active {
   color: var(--color-white);
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   border-color: var(--color-gray-200);
 }
 
@@ -350,7 +369,7 @@ a.button.gradient:any-link:active,
 a.button.gradient:any-link:focus {
   color: var(--color-white);
   border-color: transparent;
-  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2,#FF993B );
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
   background-size: 400% 400%;
   transition: background-color .3s, color .3s, border .3s;
   -webkit-animation: buttonGradient 45s ease infinite;
@@ -359,22 +378,48 @@ a.button.gradient:any-link:focus {
 }
 
 @-webkit-keyframes buttonGradient {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-@-moz-keyframes buttonGradient {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-@keyframes buttonGradient {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
 }
 
-a.button > svg {
+@-moz-keyframes buttonGradient {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+@keyframes buttonGradient {
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
+}
+
+a.button>svg {
   float: left;
   display: inline;
   width: 20px;
@@ -384,7 +429,7 @@ a.button > svg {
   color: currentColor;
 }
 
-a.button > svg > use {
+a.button>svg>use {
   fill: currentColor;
   color: currentColor;
 }
@@ -397,7 +442,12 @@ main {
   text-align: center;
 }
 
-main h1, h2, h3, h4, h5, h6 {
+main h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
 }
@@ -446,8 +496,8 @@ main .section:last-of-type {
   margin-bottom: 0;
 }
 
-main .section:last-of-type > .default-content-wrapper {
-  padding-bottom: 40px;  
+main .section:last-of-type>.default-content-wrapper {
+  padding-bottom: 40px;
 }
 
 @media (min-width:600px) {
@@ -459,7 +509,7 @@ main .section:last-of-type > .default-content-wrapper {
 
   main h3 {
     font-size: var(--heading-font-size-l);
-      text-align: center;
+    text-align: center;
   }
 
   main h4 {
@@ -468,7 +518,7 @@ main .section:last-of-type > .default-content-wrapper {
     text-align: center;
   }
 
-  main h1 + h5 {
+  main h1+h5 {
     font-size: var(--body-font-size-xxl);
     font-weight: var(--body-font-weight);
     margin-top: 32px;
@@ -482,7 +532,7 @@ main .section:last-of-type > .default-content-wrapper {
 
 @media (min-width:900px) {
 
-  main h5 + p,
+  main h5+p,
   main .section p.button-container {
     text-align: unset;
   }
@@ -511,11 +561,11 @@ main .hero.hero-noimage {
   padding-bottom: 0;
 }
 
-main .hero.hero-noimage + .section {
+main .hero.hero-noimage+.section {
   padding-top: 0;
 }
 
-main .hero.hero-noimage > div {
+main .hero.hero-noimage>div {
   max-width: 1024px;
 }
 
@@ -523,7 +573,7 @@ main .hero.hero-noimage a.button:any-link {
   color: white;
 }
 
-main .hero.hero-noimage a:any-link{
+main .hero.hero-noimage a:any-link {
   color: black;
 }
 
@@ -577,24 +627,24 @@ main .banner .icon.icon-facebook {
 }
 
 main .hero .hero-bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    box-sizing: border-box;
-    z-index: -1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  z-index: -1;
 }
 
 main .hero .hero-bg img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
-main .hero > div {
-    padding: 0;
-    margin: auto;
+main .hero>div {
+  padding: 0;
+  margin: auto;
 }
 
 main .hero a:any-link {
@@ -624,7 +674,7 @@ main .section div .block p.legal-copy {
   main .hero p {
     font-size: var(--body-font-size-xl);
     line-height: var(--body-line-height);
-    text-align:center;
+    text-align: center;
     margin: 24px 15px 0 15px;
   }
 }
@@ -642,13 +692,13 @@ main .section div .block p.legal-copy {
   }
 }
 
-@media (min-width:1200px){
+@media (min-width:1200px) {
   main .hero h1 {
     font-size: var(--heading-font-size-xxl);
     margin: 0;
   }
 
-  main .hero .columns > div > div {
+  main .hero .columns>div>div {
     margin: 8px;
   }
 }
@@ -659,13 +709,13 @@ main .section {
   padding-top: 60px;
 }
 
-main .section > div {
+main .section>div {
   margin: auto;
   max-width: 375px;
   padding: 0 32px;
 }
 
-main .section > div:empty {
+main .section>div:empty {
   padding: 0;
 }
 
@@ -677,32 +727,32 @@ main .section h5 {
   margin: 0;
 }
 
-main .section > div > h2 {
+main .section>div>h2 {
   margin-top: 80px
 }
 
 
-main .section * + h2 {
+main .section *+h2 {
   margin-top: 120px;
 }
 
-main .section > div > h3  {
+main .section>div>h3 {
   margin-top: 64px;
 }
 
-main .section > div > h3:first-child  {
+main .section>div>h3:first-child {
   margin-top: 0px;
 }
 
-main .section * + h2 {
-    margin-top: 64px;
+main .section *+h2 {
+  margin-top: 64px;
 }
 
-main .section * + h4 {
+main .section *+h4 {
   margin-top: 56px;
 }
 
-main .section h1 + h5 {
+main .section h1+h5 {
   font-size: 20px;
   line-height: 28px;
   font-weight: normal;
@@ -710,14 +760,14 @@ main .section h1 + h5 {
   margin-bottom: 16px;
 }
 
-main .section h5 + p {
+main .section h5+p {
   font-size: 16px;
   text-align: center;
   margin: 0;
 }
 
 main .section p {
-    margin: 32px 0;
+  margin: 32px 0;
 }
 
 main .section p.button-container {
@@ -740,13 +790,13 @@ body[data-device="desktop"] main [data-audience="desktop"][data-section-status="
 }
 
 @media (min-width:900px) {
-  main .section > div {
+  main .section>div {
     max-width: 830px;
   }
 }
 
 @media (min-width:1200px) {
-  main .section > div {
+  main .section>div {
     max-width: 1024px;
   }
 }
@@ -754,17 +804,21 @@ body[data-device="desktop"] main [data-audience="desktop"][data-section-status="
 
 /* jank protection for async blocks/sections */
 
-main .pricing, main .hero-animation, main .fragment {
+main .pricing,
+main .hero-animation,
+main .fragment {
   opacity: 0;
   height: 100vh;
   transition: opacity 100ms;
 }
 
-main .block[data-block-status='loading'], main .block[data-block-status='initialized'] {
+main .block[data-block-status='loading'],
+main .block[data-block-status='initialized'] {
   visibility: hidden;
 }
 
-main .block.template-list[data-block-status='loading'] > div , main .block.template-list[data-block-status='initialized'] > div {
+main .block.template-list[data-block-status='loading']>div,
+main .block.template-list[data-block-status='initialized']>div {
   display: none;
 }
 
@@ -810,12 +864,12 @@ main .block.center .free-plan-widget {
   margin: 32px auto;
 }
 
-main .block .free-plan-widget > div {
+main .block .free-plan-widget>div {
   display: flex;
   flex-direction: row;
 }
 
-main .block .free-plan-widget > div > div:first-child {
+main .block .free-plan-widget>div>div:first-child {
   position: relative;
   margin-top: 5px;
   margin-right: 6px;
@@ -845,31 +899,40 @@ main .block .free-plan-widget .icon.icon-checkmark {
 }
 
 @media (min-width: 1200px) {
-  main .template-list-fourcols-container > div,
-  main .template-list-horizontal-container > div {
+
+  main .template-list-fourcols-container>div,
+  main .template-list-horizontal-container>div {
     max-width: 1200px;
   }
 
-  main .columns-fullsize-container > div,
-  main .columns-fullsize-center-container > div,
-  main .template-list-sixcols-container > div {
+  main .columns-fullsize-container>div,
+  main .columns-fullsize-center-container>div,
+  main .template-list-sixcols-container>div {
     max-width: 1122px;
   }
 }
 
-main .template-list-sixcols-container > div {
+main .template-list-sixcols-container>div {
   padding: 0;
 }
 
 /* disable budoux on small screens  */
 @media (max-width: 600px) {
-  h1.budoux, h2.budoux, h3.budoux, h4.budoux, h5.budoux {
+
+  h1.budoux,
+  h2.budoux,
+  h3.budoux,
+  h4.budoux,
+  h5.budoux {
     word-break: normal !important;
   }
 }
 
 /* Store icons */
-img.icon-apple-store, img.icon-google-store, img.icon-galaxy-store, img.icon-microsoft-store {
+img.icon-apple-store,
+img.icon-google-store,
+img.icon-galaxy-store,
+img.icon-microsoft-store {
   height: 70px;
   width: auto;
   margin: 8px;
@@ -892,6 +955,7 @@ main .floating-button {
   position: fixed;
   display: none;
 }
+
 /* hide the .section that ONLY has the floating-button block */
 /* (removes the extra whitespace from padding) */
 [class=".section floating-button-container"] {

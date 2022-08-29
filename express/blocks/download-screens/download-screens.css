@@ -1,8 +1,3 @@
-:root {
-  --dark-bg-color: #000B1D;
-  --header-height: 63px;
-}
-
 /* cards block styles - removing is ok, do not modify */
 main .section.cards-container {
   background-color: #F1F3F4;
@@ -179,8 +174,8 @@ main .cards.large .card .card-content li {
 
 /* extension - modifications are ok */
 main .section.dark.download-screens-container {
-  background-color: var(--dark-bg-color);
-  color: white;
+  background-color: var(--color-brand-title);
+  color: #FFF;
 }
 
 main .download-screens-wrapper.scroll {

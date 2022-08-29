@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2022 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, fetchPlaceholders, readBlockConfig } from '../../scripts/scripts.js';
+import {
+  createTag, fetchPlaceholders, getIcon, readBlockConfig,
+} from '../../scripts/scripts.js';
 
 /**
  * @param {number} [rating=5]
@@ -26,19 +28,17 @@ function createStars(rating = 5) {
 
   let str = '';
   for (let i = 0; i < 5; i += 1) {
-    let type = 'star44';
+    let type = 'star';
     if (i < whole) {
-      type = 'star44';
+      type = 'star';
     } else if (hasHalf) {
-      type = 'star-half44';
+      type = 'star-half';
       hasHalf = 0;
     } else {
-      type = 'star-empty44';
+      type = 'star-empty';
     }
 
-    str += `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-star">
-      <use href="/express/icons/ccx-sheet_44.svg#${type}"></use>
-    </svg>`;
+    str += getIcon(type);
   }
 
   return str;
@@ -119,16 +119,16 @@ export default function decorate($block) {
     }
   }
 
-  const $dupIcon = $block.querySelector('img.icon-duplicate');
-  if ($dupIcon) {
-    const sib = $dupIcon.previousElementSibling;
+  const $copyIcon = $block.querySelector('img.icon-copy');
+  if ($copyIcon) {
+    const sib = $copyIcon.previousElementSibling;
     if (!sib) return;
 
     const link = sib.querySelector('a[href]');
     if (!link || !link.href) return;
 
     const { href } = link;
-    $dupIcon.onclick = () => {
+    $copyIcon.onclick = () => {
       navigator.clipboard.writeText(href);
     };
   }

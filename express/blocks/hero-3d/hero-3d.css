@@ -1,8 +1,3 @@
-:root {
-    --dark-bg-color: #000B1D;
-    --header-height: 63px;
-}
-
 header {
     z-index: 3;
 }
@@ -41,15 +36,20 @@ main .hero-3d-wrapper {
     display: inline-block;
 }
 
-main .section.dark .hero-3d-wrapper {
-    color: white;
+body.no-brand-header main .hero-3d-wrapper {
+    height: calc(150vh - var(--header-height-no-brand));
 }
 
-main .hero-3d .icon-adobe-express-white,
-main .hero-3d .icon-adobe-express-white-stroke {
+main .section.dark .hero-3d-wrapper {
+    color: #FFF;
+}
+
+main .hero-3d .icon-adobe-express {
     height: 58px;
     width: auto;
     margin: 0 auto;
+    border: 1px solid #ffffff2e;
+    border-radius: 8px;
 }
 
 main .hero-3d img {
@@ -83,10 +83,14 @@ main .hero-3d iframe {
     border-width: 0px;
     border: none;
     z-index: 0;
-    /* object-fit: cover; */
     width: 100vw;
     pointer-events: all;
     padding-top: var(--header-height);
+}
+
+body.no-brand-header main .hero-3d .fallback,
+body.no-brand-header main .hero-3d iframe {
+    padding-top: var(--header-height-no-brand);
 }
 
 main .hero-3d iframe {
@@ -139,16 +143,12 @@ main .hero-3d .scroll-animation .lottie {
 
 main .section.dark .hero-3d iframe,
 main .section.dark .hero-3d .fallback {
-    background-color: var(--dark-bg-color);
+    background-color: var(--color-brand-title);
 }
 
 main .hero-3d p {
     margin: 16px 0 16px 0;
 }
-
-/* main .hero-3d .fallback p {
-    margin: 0;
-} */
 
 main .hero-3d>div>div {
     max-height: 464px;
@@ -165,6 +165,10 @@ main .hero-3d .button-container .icon-download {
     main .hero-3d-wrapper {
         max-width: 750px;
         height: calc(110vh - var(--header-height));
+    }
+
+    body.no-brand-header main .hero-3d-wrapper {
+        height: calc(110vh - var(--header-height-no-brand));
     }
 
     main .hero-3d .scroll-animation {
@@ -210,6 +214,10 @@ main .hero-3d .button-container .icon-download {
         height: calc(110vh - var(--header-height));
         object-position: 50% 100%;
         object-fit: none;
+    }
+
+    body.no-brand-header main .hero-3d .fallback img {
+        height: calc(110vh - var(--header-height-no-brand));
     }
 }
 
