@@ -13,22 +13,7 @@
 // eslint-disable-next-line import/no-unresolved
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 import { buildCarousel } from '../shared/carousel.js';
-
-async function fetchVideoAnalytics() {
-  if (!window.videoAnalytics) {
-    window.videoAnalytics = [];
-    try {
-      const resp = await fetch('/express/video-analytics.json');
-      const json = await resp.json();
-      json.data.forEach((entry) => {
-        window.videoAnalytics.push(entry);
-      });
-    } catch (e) {
-      // ignore
-    }
-  }
-  return window.videoAnalytics;
-}
+import { fetchVideoAnalytics } from '../shared/video.js';
 
 async function loadVideoAnalytic($video) {
   const videoAnalytics = await fetchVideoAnalytics();
