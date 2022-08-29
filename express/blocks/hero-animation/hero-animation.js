@@ -25,17 +25,11 @@ import {
   displayVideoModal,
 } from '../shared/video.js';
 
-function timecodeToSeconds(timecode) {
-  const splits = timecode.split(':');
-  let seconds = 0;
-  splits.forEach((seg) => {
-    seconds *= 60;
-    seconds += +seg;
-  });
-  return seconds;
-}
-
 const animationBreakPointSettings = [
+  {
+    typeHint: 'default',
+    minWidth: 0,
+  },
   {
     typeHint: 'mobile',
     minWidth: 0,
@@ -51,7 +45,7 @@ const animationBreakPointSettings = [
 ];
 
 function getBreakpoint(animations) {
-  let breakpoint = animations[Object.keys(animations)[0]].typeHint;
+  let breakpoint = 'default';
   animationBreakPointSettings.forEach((bp) => {
     if ((window.innerWidth > bp.minWidth) && animations[bp.typeHint]) breakpoint = bp.typeHint;
   });
@@ -63,7 +57,9 @@ function getAnimation(animations, breakpoint) {
 }
 
 function createAnimation(animations) {
-  const attribs = {};
+  const attribs = {
+    class: 'hero-animation-background',
+  };
   ['playsinline', 'autoplay', 'muted'].forEach((p) => {
     attribs[p] = '';
   });
@@ -74,6 +70,8 @@ function createAnimation(animations) {
 
   const breakpoint = getBreakpoint(animations);
   const animation = getAnimation(animations, breakpoint);
+
+  if (animation === undefined) return null;
 
   if (animation.params.loop) {
     attribs.loop = '';
@@ -91,31 +89,19 @@ function createAnimation(animations) {
   return $video;
 }
 
-function adjustLayout($overlay, $attributions, animations, $parent) {
-  if (!$parent.closest('.block').classList.contains('wide')) {
-    $overlay.style.minHeight = `${Math.max((window.innerWidth * 700) / 1440, 375)}px`;
-    const scale = window.innerWidth / 1440;
-    if (window.innerWidth > 375 * (1440 / 700)) {
-      $attributions.style.transform = `scale(${scale})`;
-      $attributions.style.top = `${scale * 545}px`;
-      $attributions.style.left = `${scale * 1030}px`;
-    } else {
-      $attributions.style.transform = 'scale(0.4)';
-      $attributions.style.top = '300px';
-      $attributions.style.left = '80px';
-    }
-  }
-
+function adjustLayout(animations, $parent) {
   const breakpoint = getBreakpoint(animations);
   const animation = getAnimation(animations, breakpoint);
 
-  if (!animation.active) {
+  if (animation && !animation.active) {
     const $newVideo = createAnimation(animations);
-    $parent.replaceChild($newVideo, $parent.querySelector('video'));
-    $newVideo.addEventListener('canplay', () => {
-      $newVideo.muted = true;
-      $newVideo.play();
-    });
+    if ($newVideo) {
+      $parent.replaceChild($newVideo, $parent.querySelector('video'));
+      $newVideo.addEventListener('canplay', () => {
+        $newVideo.muted = true;
+        $newVideo.play();
+      });
+    }
   }
 }
 
@@ -152,30 +138,38 @@ function transformToVideoLink($cell, $a) {
       displayVideoModal(vidUrls, title);
     }
   });
+
+  // auto-play if hash matches title
+  if (toClassName(title) === window.location.hash.substring(1)) {
+    displayVideoModal(vidUrls, title);
+  }
 }
 
 export default async function decorate($block) {
-  const attributions = [];
-  const $attributions = createTag('div', { class: 'hero-animation-attributions' });
+  const possibleBreakpoints = animationBreakPointSettings.map((bp) => bp.typeHint);
+  const possibleOptions = ['shadow', 'background'];
+  const $section = $block.closest('.section');
+  const $sectionWrapper = $block.closest('.hero-animation-wrapper');
   const animations = {};
-  if ($block.classList.contains('shadow')) {
-    const shadowDiv = createTag('div');
-    shadowDiv.innerHTML = '<div>shadow</div>';
-    $block.appendChild(shadowDiv);
-  }
   if ($block.classList.contains('wide')) {
-    $block.closest('.section-wrapper').classList.add('hero-animation-wide-container');
+    $section.classList.add('hero-animation-wide-container');
+  } else {
+    $section.classList.add('hero-animation-container');
   }
   const $rows = [...$block.children];
-  $rows.forEach(($div) => {
-    const typeHint = $div.children[0].textContent.trim().toLowerCase();
-    let rowType = 'content';
-    if (animationBreakPointSettings.map((e) => e.typeHint).includes(typeHint)) rowType = 'animation';
-    if (typeHint.startsWith('00:')) rowType = 'timecode';
-    if (typeHint.startsWith('shadow')) rowType = 'shadow';
+  $rows.forEach(($div, index) => {
+    let rowType = 'animation';
+    let typeHint;
+    if (index + 1 === $rows.length) rowType = 'content';
+    if ([...$div.children].length > 1) typeHint = $div.children[0].textContent.trim().toLowerCase();
+    if (typeHint && possibleOptions.includes(typeHint)) {
+      rowType = 'option';
+    } else if (!typeHint || (typeHint && !possibleBreakpoints.includes(typeHint))) {
+      typeHint = 'default';
+    }
 
-    // content row
     if (rowType === 'animation') {
+      if (typeHint !== 'default') $block.classList.add(`has-${typeHint}-animation`);
       let source;
       let videoParameters = {};
       const $a = $div.querySelector('a');
@@ -208,35 +202,26 @@ export default async function decorate($block) {
       $div.remove();
     }
 
-    // content row
     if (rowType === 'content') {
       const $video = createAnimation(animations);
-      $div.children[0].prepend($video);
-
-      $video.addEventListener('canplay', () => {
-        $video.muted = true;
-        $video.play();
-      });
-
+      let $bg;
       if ($video) {
-        const $innerDiv = $video.closest('div');
-        $innerDiv.classList.add('hero-animation-overlay');
-
-        $video.addEventListener('timeupdate', () => {
-          attributions.forEach((att) => {
-            if ($video.currentTime >= att.start && $video.currentTime <= att.end) {
-              att.$elem.classList.add('appear');
-            } else {
-              att.$elem.classList.remove('appear');
-            }
-          });
+        $bg = $video;
+        $div.prepend($video);
+        $video.addEventListener('canplay', () => {
+          $video.muted = true;
+          $video.play();
         });
-        const $videoParent = $video.parentNode;
         window.addEventListener('resize', () => {
-          adjustLayout($innerDiv, $attributions, animations, $videoParent);
+          adjustLayout(animations, $div);
         });
-        adjustLayout($innerDiv, $attributions, animations, $videoParent);
+        adjustLayout(animations, $div);
+      } else {
+        $bg = createTag('div');
       }
+      $bg.classList.add('hero-animation-background');
+      $div.prepend($bg);
+      $bg.nextElementSibling.classList.add('hero-animation-foreground');
       $div.querySelectorAll('p:empty').forEach(($p) => $p.remove());
 
       // check for video link
@@ -248,49 +233,36 @@ export default async function decorate($block) {
       addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
     }
 
-    // timecode animations
-    if (rowType === 'timecode') {
-      const $cols = [...$div.children];
-      const attribution = { $elem: $div };
-      $div.classList.add('hero-animation-attribution');
-      $cols.forEach(($cell, j) => {
-        if (j === 0) {
-          const seconds = timecodeToSeconds($cell.textContent.trim());
-          attribution.start = seconds;
-          $cell.remove();
-        }
-
-        if (j === 1) {
-          const seconds = timecodeToSeconds($cell.textContent.trim());
-          attribution.end = seconds;
-          $cell.remove();
-        }
-
-        if (j === 2) {
-          const className = toClassName($cell.textContent);
-          $div.classList.add(`hero-animation-${className}`);
-          $cell.remove();
-        }
-      });
-      attributions.push(attribution);
-      $attributions.append($div);
-    }
-
-    if (rowType === 'shadow') {
-      if (!$block.querySelector('.hero-shadow')) {
+    if (rowType === 'option') {
+      if (typeHint === 'shadow') {
         const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
         $div.innerHTML = '';
         $div.appendChild(shadow);
         $div.classList.add('hero-shadow');
-      } else {
+      }
+      if (typeHint === 'background') {
+        const color = $div.children[1].textContent.trim().toLowerCase();
+        if (color) $sectionWrapper.style.background = color;
+        const lightness = (
+          parseInt(color.substr(1, 2), 16)
+          + parseInt(color.substr(3, 2), 16)
+          + parseInt(color.substr(5, 2), 16)) / 3;
+        if (lightness < 200) $block.classList.add('white-text');
         $div.remove();
       }
     }
   });
+
+  if ($block.classList.contains('shadow') && !$block.querySelector('.hero-shadow')) {
+    const shadowDiv = createTag('div', { class: 'hero-shadow' });
+    const shadow = createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+    shadowDiv.appendChild(shadow);
+    $block.appendChild(shadowDiv);
+  }
+
   const button = $block.querySelector('.button');
   if (button) button.classList.add('xlarge');
 
-  $block.append($attributions);
   if ($block.classList.contains('wide')) {
     addAnimationToggle($block);
   }

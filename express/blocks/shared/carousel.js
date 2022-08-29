@@ -78,7 +78,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
       const platformScrollLeft = $platform.scrollLeft;
       const left = (platformScrollLeft > 33);
       toggleArrow($faderLeft, left);
-      const right = !($platform.offsetWidth + platformScrollLeft >= ($platform.scrollWidth - 33));
+      const right = !($platform.offsetWidth + platformScrollLeft >= ($platform.scrollWidth - 31));
       toggleArrow($faderRight, right);
     }
     if (hideControls) {

@@ -1,0 +1,143 @@
+main .category-list-container {
+  padding: 18px 28px 6px 28px;
+}
+
+main .category-list-container > div,
+main .category-list-center-container > div {
+  max-width: 1200px;
+}
+
+main .category-list-container .category-list-center-container .carousel-platform {
+  padding-top: 6px;
+}
+
+main .category-list-container .carousel-container a.button.carousel-arrow {
+  transform: translateY(-10px);
+}
+
+main .category-list {
+  display: block;
+  overflow: hidden;
+  margin: auto;
+  text-align: left;
+}
+
+main .category-list h2,
+main .category-list h3,
+main .category-list h4 {
+  text-align: left;
+}
+
+main .category-list.center {
+  width: fit-content;
+  max-width: 100%;
+}
+
+main .category-list h3 {
+  font-size: var(--heading-font-size-m);
+  margin-bottom: 20px;
+}
+
+main .category-list p.button-container {
+  margin: 0 5px 12px;
+  line-height: 0;
+}
+
+main .category-list a.button.secondary:any-link {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-100);
+}
+
+main .category-list a.button.secondary:any-link:hover {
+  background-color: var(--color-gray-200);
+  border-color: var(--color-gray-200);
+}
+
+main .category-list p.button-container.current {
+  pointer-events: none;
+}
+
+main .category-list p.button-container.current > a.button.secondary:any-link {
+  color: var(--color-white);
+  background-color: var(--color-black);
+  border-color: var(--color-black);
+}
+
+main .category-list a.button.secondary {
+  margin: 6px 0;
+}
+
+main .category-list p.seo-paragraph {
+  font-size: 14px;
+  line-height: 21px;
+  margin: 0 0 21px;
+}
+
+main .category-list .carousel-container .carousel-fader-left {
+  width: 150px;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  pointer-events: none;
+}
+
+main .category-list .carousel-container .carousel-fader-right {
+  width: 150px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+  pointer-events: none;
+}
+
+@media (min-width: 900px) {
+  main .category-list-container > div,
+  main .category-list-center-container > div {
+    padding: 0 50px;
+  }
+
+  main .category-list {
+    text-align: left;
+  }
+
+  main .category-list h2,
+  main .category-list h3,
+  main .category-list h4 {
+    text-align: left;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .category-list-container > div,
+  main .category-list-center-container > div {
+      padding: 0 55px;
+  }
+}
+
+/* Carousel styles (Link-list specific) */
+
+/* Remove max-width on mobile breakpoints */
+main .section.category-list-container > div,
+main .section.category-list-container .category-list > div {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .category-list .carousel-container {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+@media (min-width: 900px) {
+  main .category-list .carousel-platform {
+    scroll-padding: 0;
+  }
+
+  main .section.category-list-container > div, main .category-list-center-container > div {
+    padding: 0 28px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section.category-list-container > div,
+  main .section.category-list-center-container > div {
+    padding: 0 28px;
+  }
+}

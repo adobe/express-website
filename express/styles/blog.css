@@ -115,7 +115,8 @@
   }
   
   
-  .blog main div.section h2, .blog main div.section h3  {
+  .blog main div.section h2, .blog main div.section h3, 
+  .blog main div.section h2 + p, .blog main div.section h3 + p  {
     text-align: left;
   }
   

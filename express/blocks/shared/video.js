@@ -17,7 +17,7 @@ import {
 
 const docTitle = document.title;
 
-async function fetchVideoAnalytics() {
+export async function fetchVideoAnalytics() {
   if (!window.videoAnalytics) {
     window.videoAnalytics = [];
     try {
