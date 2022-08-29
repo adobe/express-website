@@ -50,7 +50,8 @@ main .app-store-highlight-container .rating-stars .rating-votes {
 main .app-store-highlight-container .highlights-platform {
   overflow: auto;
   margin: 0 -32px;
-  scrollbar-width: none;  /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 main .app-store-highlight-container .highlights {

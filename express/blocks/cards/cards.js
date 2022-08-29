@@ -13,6 +13,9 @@
 // eslint-disable-next-line import/no-unresolved
 import { createTag } from '../../scripts/scripts.js';
 
+/**
+ * @param {HTMLDivElement} $block
+ */
 export default function decorate($block) {
   $block.querySelectorAll(':scope>div').forEach(($card) => {
     $card.classList.add('card');

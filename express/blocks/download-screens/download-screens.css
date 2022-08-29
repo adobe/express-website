@@ -1,3 +1,4 @@
+/* cards block styles - removing is ok, do not modify */
 main .section.cards-container {
   background-color: #F1F3F4;
   padding-top: 80px;
@@ -168,5 +169,84 @@ main .cards.large .card .card-content li {
   main .cards.featured .card:first-of-type .card-content {
     padding: 32px 40px 8px 40px;
     min-height: 294px;
+  }
+}
+
+/* extension - modifications are ok */
+main .section.dark.download-screens-container {
+  background-color: var(--color-brand-title);
+  color: #FFF;
+}
+
+main .download-screens-wrapper.scroll {
+  max-width: 100vw;
+  width: 100vw;
+  overflow: scroll;
+  padding: 0;
+}
+
+main .section.large .default-content-wrapper h2 {
+  font-size: var(--heading-font-size-xl);
+}
+
+main .cards.download-screens {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  /* max-width: unset;
+  width: unset; */
+  /* width: 100vw; */
+  max-width: 100vw;
+  width: max-content;
+  gap: 16px;
+  margin: 80px auto;
+  flex-direction: row;
+  justify-content: center;
+}
+
+main .cards.download-screens .card .card-image {
+  border-radius: 20px;
+}
+
+main .cards.download-screens .card .card-image img {
+  border-radius: 0;
+}
+
+main .cards.download-screens .card {
+  width: 157px;
+  height: 313px;
+  margin: 0;
+  box-shadow: none;
+}
+
+main .cards.download-screens .card:first-child {
+  margin: 0 0 0 16px;
+}
+
+main .cards.download-screens .card:last-child {
+  margin: 0 16px 0 0;
+}
+
+main .cards.download-screens .card .card-image {
+  width: 157px;
+  height: 313px;
+  display: inline-block;
+}
+
+@media (min-width: 1200px) {
+  main .download-screens-wrapper.scroll {
+    overflow: visible;
+  }
+
+  main .cards.download-screens {
+    max-width: 100vw;
+    width: 100vw;
+    height: 313px;
+    position: relative;
+    margin: 120px auto;
+  }
+
+  main .cards.download-screens .card .card-image img {
+    width: 100%;
+    height: 100%;
   }
 }
