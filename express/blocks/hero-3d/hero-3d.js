@@ -21,7 +21,7 @@ import {
 
 const DEFAULT_DELAY = 1000;
 const MAX_NONCONFIG_ROWS = 4;
-const SCROLL_ANIMATION_URL = 'https://assets.website-files.com/62e1bd17785b4a21a5affda4/62e31da63e4adb171e1a2682_lf30_editor_jo11ftge.json';
+const SCROLL_ANIMATION_PATH = '/express/icons/lottie-scroll.json';
 
 /**
  * @param {HTMLDivElement} block
@@ -84,7 +84,7 @@ function addScrollAnimation(block, scrollTo) {
     href = `#${scrollTo.replace(/ /g, '-').toLowerCase()}`;
   }
 
-  const loti = getLottie('scroll', SCROLL_ANIMATION_URL);
+  const loti = getLottie('scroll', SCROLL_ANIMATION_PATH);
   const container = createTag('div', { class: 'scroll-animation' });
   const link = createTag('a', { href });
   container.append(link);
