@@ -72,13 +72,14 @@ async function insertRatings(ratingsImg) {
 
 function attachScrollHandler() {
   const docEl = document.documentElement;
+  const pad = 20;
   const el = document.querySelector('main .sticky-footer-wrapper');
   let hidden = false;
   document.addEventListener('scroll', () => {
-    if (!hidden && docEl.scrollTop >= docEl.offsetHeight - window.innerHeight) {
+    if (!hidden && docEl.scrollTop >= docEl.offsetHeight - window.innerHeight - pad) {
       hidden = true;
       el.style.top = `calc(100% + ${el.clientHeight}px)`;
-    } else if (hidden && docEl.scrollTop < docEl.offsetHeight - window.innerHeight) {
+    } else if (hidden && docEl.scrollTop < docEl.offsetHeight - window.innerHeight - pad) {
       hidden = false;
       el.style.top = '100%';
     }
