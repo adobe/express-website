@@ -222,6 +222,10 @@ main .cards.download-cards.bleed .bleed__c p {
   justify-content: flex-end;
 }
 
+main .cards.download-cards.bleed .bleed__c p picture {
+  height: 100%;
+}
+
 main .cards.download-cards.bleed .bleed__c p img {
   display: block;
 }
