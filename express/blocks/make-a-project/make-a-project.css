@@ -466,3 +466,7 @@ main .make-a-project .free-plan-widget {
 main .default-content-wrapper + .make-a-project-wrapper > .make-a-project {
   padding-top: 40px;
 }
+
+main .make-a-project .carousel-container .carousel-platform {
+  padding-top: 0;
+}

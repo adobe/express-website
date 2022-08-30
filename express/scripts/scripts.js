@@ -439,7 +439,7 @@ export function decorateSections($main) {
       const keys = Object.keys(meta);
       keys.forEach((key) => {
         if (key === 'style') {
-          section.classList.add(toClassName(meta.style));
+          section.classList.add(...meta.style.split(', ').map(toClassName));
         } else if (key === 'anchor') {
           section.id = toClassName(meta.anchor);
         } else {
@@ -807,6 +807,9 @@ const blocksWithOptions = [
   'banner',
   'pricing-columns',
   'ratings',
+  'hero-3d',
+  'download-screens',
+  'download-cards',
 ];
 
 /**
@@ -2072,7 +2075,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);

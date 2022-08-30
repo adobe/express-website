@@ -1,3 +1,4 @@
+/* cards block styles - removing is ok, do not modify */
 main .section.cards-container {
   background-color: #F1F3F4;
   padding-top: 80px;
@@ -168,5 +169,161 @@ main .cards.large .card .card-content li {
   main .cards.featured .card:first-of-type .card-content {
     padding: 32px 40px 8px 40px;
     min-height: 294px;
+  }
+}
+
+/* extension - modifications are ok */
+main .section.dark.download-cards-container {
+  background-color: var(--color-brand-title);
+  color: #FFF;
+}
+
+main .section>div.download-cards-wrapper {
+  padding: 0;
+}
+
+main .cards.download-cards .card {
+  color: var(--body-color);
+}
+
+main .cards.download-cards .card h3 {
+  margin: 32px 0 0;
+}
+
+main .cards.download-cards .bleed__c {
+  margin: 0;
+}
+
+main .cards.download-cards.bleed .card .card-image {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px 20px 20px 20px;
+  overflow: hidden;
+}
+
+main .cards.download-cards.bleed .card .branded-header img {
+  border-radius: 0;
+}
+
+main .cards.download-cards.bleed .bleed__c {
+  flex-grow: 1;
+}
+
+main .cards.download-cards.bleed .bleed__c>* {
+  line-height: 0;
+}
+
+main .cards.download-cards.bleed .bleed__c p {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+main .cards.download-cards.bleed .bleed__c p img {
+  display: block;
+}
+
+main .cards.download-cards .card .button-row {
+  display: flex;
+  margin: 0 auto;
+  flex-shrink: 1;
+}
+
+main .cards.download-cards .card p.button-container {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+main .cards.download-cards .button-container .icon-download {
+  width: 16px;
+  height: 20px;
+  margin: 2px 8px 0 0;
+  filter: invert(1);
+}
+
+main .cards.download-cards .button-container.icon-button {
+  line-height: 0;
+}
+
+main .cards.download-cards .button-container.icon-button img {
+  height: 37px;
+  width: auto;
+  border-radius: 0;
+}
+
+main .cards.download-cards .card .branded-header {
+  position: relative;
+}
+
+main .cards.download-cards .branded-header picture {
+  position: absolute;
+  right: 25px;
+  top: 25px;
+}
+
+main .cards.download-cards .branded-header picture img {
+  width: 20px;
+}
+
+main .cards.download-cards.flat .card {
+  box-shadow: none;
+}
+
+main .cards.download-cards.flat .card .card-image {
+  background-color: #F1F3F4;
+}
+
+main .cards.download-cards.large .card {
+  width: 350px;
+}
+
+main .section>div.download-cards-wrapper {
+  max-width: 100%;
+}
+
+main .cards.download-cards.large {
+  width: 100%;
+  gap: 24px;
+}
+
+main .cards.download-cards .pad-card {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  main .cards.download-cards .pad-card {
+    display: unset;
+    opacity: 0;
+  }
+
+  main .cards.download-cards.large .card {
+    width: 402px;
+  }
+
+  main .cards.download-cards.stagger .card:nth-child(odd) {
+    margin: 0 0 0 auto;
+  }
+
+  main .cards.download-cards.stagger .card:nth-child(even) {
+    /* margin-top: 20%;
+    margin-bottom: -20%; */
+    margin: 20% auto -20% 0;
+  }
+
+  main .cards.download-cards.stagger .card:nth-child(even):last-child {
+    margin-bottom: 20%;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .section>div.download-cards-wrapper {
+    max-width: 1200px;
+  }
+
+  main .cards.download-cards.large .card {
+    width: 500px;
   }
 }

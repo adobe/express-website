@@ -1,0 +1,110 @@
+main .sticky-footer-wrapper {
+    position: fixed;
+    top: 100%;
+    left: 0;
+    right: 0;
+    transform: translate(0, -100%);
+    color: white;
+    z-index: 2;
+    transition: top 0.6s ease-out;
+}
+
+main .sticky-footer {
+    background: var(--gradient-highlight-diagonal);
+    width: calc(500px - (32px * 2));
+    height: calc(210px - (32px * 2));
+    margin: 32px auto;
+    padding: 32px;
+    border-radius: 28px;
+}
+
+main .sticky-footer img[alt~="qr"],
+main .sticky-footer img[alt~="qr-code"] {
+    border-radius: 12px;
+}
+
+main .sticky-footer>div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+main .sticky-footer>div>div {
+    margin: auto 0;
+    text-align: left;
+}
+
+main .sticky-footer>div p {
+    margin: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+main .sticky-footer picture img {
+    height: 147px;
+    width: 147px;
+}
+
+main .sticky-footer>div p em {
+    font-style: normal;
+    margin-top: 8px;
+    font-size: var(--body-font-size-s);
+    font-weight: 300;
+}
+
+main .sticky-footer img.icon-apple-store,
+main .sticky-footer img.icon-google-store,
+main .sticky-footer img.icon-galaxy-store,
+main .sticky-footer img.icon-microsoft-store,
+main .sticky-footer img.icon-editor-choice {
+    height: 35px;
+    width: auto;
+    margin: 0;
+    margin-top: 16px;
+    margin-right: 16px;
+}
+
+main .sticky-footer img.icon-editor-choice {
+    height: 25px;
+    margin-left: 4px;
+    margin-top: 5px;
+}
+
+main .sticky-footer img.icon-copy {
+    margin-left: 8px;
+    margin-top: 8px;
+    width: var(--body-font-size-s);
+    height: var(--body-font-size-s);
+    vertical-align: middle;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+main .sticky-footer p a {
+    color: #FFF;
+}
+
+main .sticky-footer .rating-stars {
+    font-size: 12px;
+    line-height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .sticky-footer .rating-stars svg {
+    color: var(--color-premium);
+}
+
+main .sticky-footer .rating-stars .rating-votes {
+    margin-left: 4px;
+}
+
+@media not (min-width: 900px) {
+    main .sticky-footer-wrapper {
+        display: none;
+    }
+}
