@@ -124,7 +124,11 @@ export default function decorate(block) {
   const heading = section.querySelector('h2, h3, h4');
 
   const includeSchema = block.classList.contains('schema');
-
+  if (includeSchema) {
+    // this is due to block loaded setting how-to-steps-carousel-schema-container
+    // and not how-to-steps-carousel-container as expected
+    section.classList.add('how-to-steps-carousel-container');
+  }
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
@@ -204,7 +208,7 @@ export default function decorate(block) {
   if (includeSchema) {
     const $schema = createTag('script', { type: 'application/ld+json' });
     $schema.innerHTML = JSON.stringify(schema);
-    const $head = doc.head;
+    const $head = document.head;
     $head.append($schema);
   }
 
