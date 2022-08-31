@@ -121,6 +121,17 @@ export default function decorate(block) {
   const howto = block;
   const rows = Array.from(howto.children);
 
+  const heading = section.querySelector('h2, h3, h4');
+
+  const includeSchema = block.classList.contains('schema');
+
+  const schema = {
+    '@context': 'http://schema.org',
+    '@type': 'HowTo',
+    name: (heading && heading.textContent) || document.title,
+    step: [],
+  };
+
   const numbers = createTag('div', { class: 'tip-numbers', 'aria-role': 'tablist' });
   block.prepend(numbers);
   const tips = createTag('div', { class: 'tips' });
@@ -143,6 +154,16 @@ export default function decorate(block) {
     row.append(text);
 
     tips.prepend(row);
+
+    schema.step.push({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: h3.textContent,
+      itemListElement: {
+        '@type': 'HowToDirection',
+        text: text.textContent,
+      },
+    });
 
     const number = createTag('div', {
       class: `tip-number tip-${i + 1}`,
@@ -179,6 +200,13 @@ export default function decorate(block) {
       number.classList.add('active');
     }
   });
+
+  if (includeSchema) {
+    const $schema = createTag('script', { type: 'application/ld+json' });
+    $schema.innerHTML = JSON.stringify(schema);
+    const $head = doc.head;
+    $head.append($schema);
+  }
 
   if (window) {
     window.addEventListener('resize', () => {
