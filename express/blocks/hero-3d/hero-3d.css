@@ -1,3 +1,7 @@
+:root {
+    --mobile-height: 150vh;
+}
+
 header {
     z-index: 3;
 }
@@ -32,12 +36,12 @@ main .hero-3d>div>div>p {
 }
 
 main .hero-3d-wrapper {
-    height: calc(150vh - var(--header-height));
+    height: calc(var(--mobile-height) - var(--header-height));
     display: inline-block;
 }
 
 body.no-brand-header main .hero-3d-wrapper {
-    height: calc(150vh - var(--header-height-no-brand));
+    height: calc(var(--mobile-height) - var(--header-height-no-brand));
 }
 
 main .section.dark .hero-3d-wrapper {
@@ -88,7 +92,7 @@ main .hero-3d iframe {
     padding-top: var(--header-height);
 }
 
-body.no-brand-header main .hero-3d .fallback,
+body.no-brand-header main .hero-3d .fallback:not(.mobile),
 body.no-brand-header main .hero-3d iframe {
     padding-top: var(--header-height-no-brand);
 }
@@ -96,19 +100,19 @@ body.no-brand-header main .hero-3d iframe {
 main .hero-3d iframe {
     opacity: 0;
     display: none;
-    height: 150vh;
+    height: var(--mobile-height);
 }
 
 main .hero-3d .fallback {
     z-index: -1;
     object-fit: cover;
     overflow: hidden;
-    height: 150vh;
+    height: var(--mobile-height);
     box-sizing: content-box;
 }
 
 main .hero-3d .fallback img {
-    height: 150vh;
+    height: var(--mobile-height);
     object-position: 50% 70%;
     object-fit: none;
 }
@@ -161,7 +165,7 @@ main .hero-3d .button-container .icon-download {
     filter: invert(1);
 }
 
-@media (min-width: 900px) {
+@media screen and (min-width: 900px) {
     main .hero-3d-wrapper {
         max-width: 750px;
         height: calc(110vh - var(--header-height));
@@ -234,21 +238,33 @@ main .hero-3d .button-container .icon-download {
     }
 }
 
-@media (max-height: 1000px) {
+@media (max-height: 950px) {
+    :root {
+        --mobile-height: 117vh;
+    }
+
     main .hero-3d .fallback img {
         object-fit: contain;
         object-position: 50% 60%;
     }
 }
 
-@media (max-height: 900px) {
+@media (max-height: 850px) {
+    :root {
+        --mobile-height: 125vh;
+    }
+
     main .hero-3d .fallback img {
         object-fit: contain;
         object-position: 50% 70%;
     }
 }
 
-@media (max-height: 800px) {
+@media (max-height: 750px) {
+    :root {
+        --mobile-height: 132vh;
+    }
+
     main .hero-3d .fallback img {
         object-fit: contain;
         object-position: 50% 75%;
