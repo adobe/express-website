@@ -823,7 +823,7 @@ export function decorateBlock(block) {
     let shortBlockName = blockName;
     block.classList.add('block');
     // begin CCX custom block option class handling
-    for (let i = 0; i < blocksWithOptions.length; i++) {
+    for (let i = 0; i < blocksWithOptions.length; i += 1) {
       const b = blocksWithOptions[i];
       if (shortBlockName.startsWith(`${b}-`)) {
         const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
@@ -832,7 +832,8 @@ export function decorateBlock(block) {
         block.classList.add(...options);
         break;
       } else if (shortBlockName === b) {
-        // case: block with option but no option provided (and potentially substring of another block)
+        // case: block with option but no option provided
+        // and potentially substring of another block
         break;
       }
     }
