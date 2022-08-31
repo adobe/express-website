@@ -234,16 +234,23 @@ main .hero-3d .button-container .icon-download {
     }
 }
 
-@media (max-height: 800px) {
-    main .hero-3d .fallback img {
-        object-fit: contain;
-        object-position: 50% 80%;
-    }
-}
-
 @media (max-height: 1000px) {
     main .hero-3d .fallback img {
         object-fit: contain;
         object-position: 50% 60%;
+    }
+}
+
+@media (max-height: 900px) {
+    main .hero-3d .fallback img {
+        object-fit: contain;
+        object-position: 50% 70%;
+    }
+}
+
+@media (max-height: 800px) {
+    main .hero-3d .fallback img {
+        object-fit: contain;
+        object-position: 50% 75%;
     }
 }
