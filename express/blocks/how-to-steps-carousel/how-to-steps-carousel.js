@@ -125,7 +125,7 @@ export default function decorate(block) {
 
   const includeSchema = block.classList.contains('schema');
   if (includeSchema) {
-    // this is due to block loaded setting how-to-steps-carousel-schema-container
+    // this is due to block loader setting how-to-steps-carousel-schema-container
     // and not how-to-steps-carousel-container as expected
     section.classList.add('how-to-steps-carousel-container');
   }

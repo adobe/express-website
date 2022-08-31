@@ -836,7 +836,6 @@ export function decorateBlock(block) {
         break;
       }
     }
-    console.log('found block', blockName, shortBlockName);
     // end CCX custom block option class handling
     block.setAttribute('data-block-name', shortBlockName);
     block.setAttribute('data-block-status', 'initialized');
