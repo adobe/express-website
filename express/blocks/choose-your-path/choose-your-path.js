@@ -160,20 +160,10 @@ export default function decorate($block) {
 
     if ($link) {
       $slide = createTag('a', { href: $link.href, class: 'choose-your-path-slide' });
-      $slide.target = '_blank';
-      $slide.rel = 'noopener';
       $link.parentNode.remove();
     } else {
       $slide = createTag('div', { class: 'choose-your-path-slide' });
     }
-
-    $slide.addEventListener('click', () => {
-      $block.style.opacity = '0';
-      setTimeout(() => {
-        $block.remove();
-      }, 510);
-      document.body.classList.remove('no-scroll');
-    });
 
     $slides.push($slide);
   });
