@@ -135,6 +135,8 @@ export default async function decorate(block) {
     }
   });
 
+  prependDownloadIcon(block);
+
   if (!$link || document.body.dataset.device === 'mobile' || window.screen.width < 900) {
     return;
   }
@@ -149,8 +151,6 @@ export default async function decorate(block) {
   if (delay == null || Number.isNaN(delay)) {
     delay = DEFAULT_DELAY;
   }
-
-  prependDownloadIcon(block);
 
   if (conf['scroll-anchor']) {
     addScrollAnimation(block, conf['scroll-anchor']);
