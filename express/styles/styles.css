@@ -896,6 +896,21 @@ main .block .free-plan-widget .icon.icon-checkmark {
   main .block.center .free-plan-widget {
     margin: 0 auto;
   }
+
+  main .block .button-container.free-plan-container.stacked {
+    margin-top: 0;
+    flex-wrap: wrap;
+  }
+
+  main .block .button-container.free-plan-container.stacked .free-plan-widget {
+    padding-left: 0;
+    flex-direction: row;
+    background-color: transparent;
+  }
+
+  main .block .button-container.free-plan-container.stacked .free-plan-widget > div {
+    margin-right: 16px;
+  }
 }
 
 @media (min-width: 1200px) {
