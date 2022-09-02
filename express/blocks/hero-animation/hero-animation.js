@@ -17,7 +17,6 @@ import {
   toClassName,
   getLocale,
   addHeaderSizing,
-  getJapaneseTextCharacterCount,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
