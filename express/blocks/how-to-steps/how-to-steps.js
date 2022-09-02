@@ -46,8 +46,9 @@ export default function decorate($block, name, doc) {
     $h3.innerHTML = $cells[0].textContent;
     const $p = createTag('p');
     $p.innerHTML = $cells[1].innerHTML;
-    const $text = createTag('div', { class: 'tip-text' });
+    const $heading = createTag('div', { class: 'tip-heading' });
     $text.append($h3);
+    const $text = createTag('div', { class: 'tip-text'});
     $text.append($p);
     const $number = createTag('div', { class: 'tip-number' });
     $number.innerHTML = `<span>${i + 1}</span>`;
@@ -55,6 +56,7 @@ export default function decorate($block, name, doc) {
     $cells[1].innerHTML = '';
     $cells[1].classList.add('tip');
     $cells[1].append($number);
+    $cells[1].append($heading)
     $cells[1].append($text);
   });
 
