@@ -37,6 +37,7 @@ export default async function decorate($block) {
   let votesText;
   let sheet;
   let sheetCamelCase;
+  let actionSegments;
   let ratingTotal;
   let ratingAverage;
   let showRatingAverage = false;
@@ -100,7 +101,7 @@ export default async function decorate($block) {
   }
 
   function determineActionUsed() {
-    // dev mode: check action-used query parameter
+    // "dev" mode: check action-used query parameter
     const u = new URL(window.location.href);
     const param = u.searchParams.get('action-used');
     if (param) {
@@ -109,8 +110,14 @@ export default async function decorate($block) {
     }
 
     // "production" mode: check for audience
-    const audiences = Context.get('audiences');
-    return (audiences && audiences.includes('enableRatingAction'));
+    const segments = Context.get('segments');
+
+    if (actionSegments && segments) {
+      const parsedActionSegments = actionSegments.replace(/ /g, '').split(',').map(Number);
+      return parsedActionSegments.some((segment) => segments.includes(segment));
+    }
+
+    return false;
   }
 
   function submitRating(rating, comment) {
@@ -477,6 +484,9 @@ export default async function decorate($block) {
     }
     if (response.data[0].Total) {
       ratingTotal = parseFloat(response.data[0].Total);
+    }
+    if (response.data[0].Segments) {
+      actionSegments = response.data[0].Segments;
     }
     if (ratingAverage || ratingTotal) {
       document.dispatchEvent(new Event('ratings_received'));
