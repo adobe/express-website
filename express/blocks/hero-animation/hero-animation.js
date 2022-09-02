@@ -231,6 +231,12 @@ export default async function decorate($block) {
         transformToVideoLink($div, videoLink);
       }
       addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
+      // stack CTA and free plan widget if CTA text exceeds 24 characters
+      const $cta = $div.querySelector('.button.accent');
+      const ctaLength = $cta && $cta.textContent.trim().length;
+      if (ctaLength > 24) {
+        $cta.parentElement.classList.add('stacked');
+      }
     }
 
     if (rowType === 'option') {
