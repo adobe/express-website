@@ -17,6 +17,7 @@ import {
   toClassName,
   getLocale,
   addHeaderSizing,
+  getJapaneseTextCharacterCount,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -231,10 +232,10 @@ export default async function decorate($block) {
         transformToVideoLink($div, videoLink);
       }
       addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
-      // stack CTA and free plan widget if CTA text exceeds 24 characters
+      // stack CTA and free plan widget if CTA text is japanese or exceeds 22 characters
       const $cta = $div.querySelector('.button.accent');
       const ctaLength = $cta && $cta.textContent.trim().length;
-      if (ctaLength > 24) {
+      if (ctaLength > 22 || getLocale(window.location) === 'jp') {
         $cta.parentElement.classList.add('stacked');
       }
     }
