@@ -12,7 +12,7 @@
 async function fetchPageContent(path) {
   if (!(window.templates && window.templates.data)) {
     window.templates = {};
-    const resp = await fetch('/express/template-pages.json');
+    const resp = await fetch('/express/templates/template-pages.json');
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
@@ -57,7 +57,7 @@ function updateBlocks(data) {
     const linkListContainer = linkList.querySelector('p').parentElement;
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = data.related.split(', ');
-
+    
     updateLinkList(linkListContainer, linkListTemplate, linkListData);
   }
 
@@ -70,6 +70,14 @@ function updateBlocks(data) {
 
     if (data.premium) {
       templateList.innerHTML = templateList.innerHTML.replace('default-premium', data.premium);
+    }
+
+    if (data.createText) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-create-link-text', data.createText);
+    }
+
+    if (data.createLink) {
+      templateList.innerHTML = templateList.innerHTML.replace('https://www.adobe.com/express/templates/default-create-link', data.createLink);
     }
   }
 
