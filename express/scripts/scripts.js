@@ -2128,6 +2128,11 @@ export async function addFreePlanWidget(elem) {
     `;
     elem.append(widget);
     elem.classList.add('free-plan-container');
+    // stack CTA and free plan widget if country not US, CN, KR or TW
+    const cta = elem.querySelector('.button.accent');
+    if (cta && !['us', 'cn', 'kr', 'tw'].includes(getLocale(window.location))) {
+      elem.classList.add('stacked');
+    }
   }
 }
 

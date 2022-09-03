@@ -301,26 +301,6 @@ main .hero-animation.wide .button-container.free-plan-container .free-plan-widge
   background-color: transparent;
 }
 
-main .hero-animation .button-container.free-plan-container.stacked {
-  margin-top: 0;
-}
-
-main .hero-animation .button-container.free-plan-container.stacked .free-plan-widget {
-  padding-left: 0;
-}
-
-main .hero-animation .button-container.free-plan-container.stacked {
-  flex-wrap: wrap;
-}
-
-main .hero-animation .button-container.free-plan-container.stacked .free-plan-widget {
-  flex-direction: row;
-}
-
-main .hero-animation .button-container.free-plan-container.stacked .free-plan-widget > div {
-  margin-right: 16px;
-}
-
 /* Japanese font sizing styles */
 
 :lang(ja) main .hero-animation h1 {
