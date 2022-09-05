@@ -201,6 +201,10 @@ main .template-list.horizontal.fullwidth {
   margin-left: auto;
 }
 
+main .template-list.horizontal.fullwidth.mini {
+  padding: unset;
+}
+
 main .template-list.horizontal .template {
   min-height: 200px;
   width: max-content;
@@ -756,25 +760,30 @@ main .template-list.horizontal .carousel-platform {
   }
 }
 
-main .template-list-horizontal-mini-container .template-list .template-title {
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title {
   margin-bottom: 8px;
 }
 
-main .template-list-horizontal-mini-container .template-list .template-title p:last-of-type {
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:last-of-type {
   margin-top: 16px;
   font-weight: 800;
 }
 
-main .template-list-horizontal-mini-container .template-list .template-title p:first-of-type {
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:first-of-type {
   margin-bottom: 8px;
 }
 
-main .template-list-horizontal-mini-container .template-list .template-title p:last-of-type {
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:last-of-type {
   margin-top: 16px;
   font-weight: 800;
 }
 
-main .template-list-horizontal-mini-container .template-title .icon {
+main .template-list-horizontal-fullwidth-mini-container .template-title .icon {
   height: unset;
   width: 167px;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-list .carousel-fader-left,
+main .template-list-horizontal-fullwidth-mini-container .template-list .carousel-fader-right {
+  display: none;
 }
