@@ -28,6 +28,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
+  tailButton: '',
   total: 0,
   type: '',
   locales: 'en',
@@ -167,23 +168,32 @@ function populateTemplates($block, templates) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
-    const $link = $linkContainer.querySelector(':scope a');
-    if ($link) {
-      const $a = createTag('a', {
-        href: $link.href ? addSearchQueryToHref($link.href) : '#',
-      });
+    const $linkRow = $tmplt.querySelector(':scope > div:nth-of-type(1) > a');
 
-      $a.append(...$tmplt.childNodes);
-      $tmplt.remove();
-      $tmplt = $a;
-      $block.append($a);
+    if ($linkContainer) {
+      const $link = $linkContainer.querySelector(':scope a');
+      if ($link) {
+        const $a = createTag('a', {
+          href: $link.href ? addSearchQueryToHref($link.href) : '#',
+        });
 
-      // convert A to SPAN
-      const $newLink = createTag('span', { class: 'template-link' });
-      $newLink.append($link.textContent);
+        $a.append(...$tmplt.childNodes);
+        $tmplt.remove();
+        $tmplt = $a;
+        $block.append($a);
 
-      $linkContainer.innerHTML = '';
-      $linkContainer.append($newLink);
+        // convert A to SPAN
+        const $newLink = createTag('span', { class: 'template-link' });
+        $newLink.append($link.textContent);
+
+        $linkContainer.innerHTML = '';
+        $linkContainer.append($newLink);
+      }
+    }
+
+    if ($linkRow) {
+      cache.tailButton = $linkRow;
+      $linkRow.remove();
     }
 
     if ($tmplt.children.length === 3) {
@@ -255,6 +265,7 @@ function populateTemplates($block, templates) {
         }
       }
     }
+
     if (isPlaceholder) {
       $tmplt.classList.add('placeholder');
     }
@@ -488,6 +499,15 @@ function decorateLoadMoreButton($block) {
   updateButtonStatus($block, $loadMoreDiv);
 }
 
+function decorateTailButton($block) {
+  const $carouselPlatform = $block.querySelector('.carousel-platform');
+
+  if ($carouselPlatform) {
+    cache.tailButton.classList.add('tail-cta');
+    $carouselPlatform.append(cache.tailButton);
+  }
+}
+
 function cacheCreatedTemplate($block) {
   cache.templates.push($block.children[$block.children.length - 1]);
   $block.children[$block.children.length - 1].remove();
@@ -499,14 +519,19 @@ export default async function decorate($block) {
   }
 
   await decorateTemplateList($block);
-  if ($block.classList.contains('horizontal')) {
-    /* carousel */
+  if ($block.classList.contains('horizontal') && !$block.classList.contains('mini')) {
     buildCarousel(':scope > .template', $block, true);
+  } else if ($block.classList.contains('mini')) {
+    buildCarousel(':scope > .template', $block, false);
   } else {
     addAnimationToggle($block);
   }
 
   if ($block.classList.contains('apipowered')) {
     decorateLoadMoreButton($block);
+  }
+
+  if ($block.classList.contains('mini')) {
+    decorateTailButton($block);
   }
 }

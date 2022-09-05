@@ -224,6 +224,47 @@ main .template-list.horizontal .template:not(.placeholder) .template-link {
   display: none;
 }
 
+main .template-list.horizontal.mini .template {
+  min-height: unset;
+  max-height: 100px;
+  margin: 0 4px;
+}
+
+main .template-list.horizontal.mini .template.placeholder {
+  height: 100px;
+  width: 60px;
+  margin: 0 4px 0 12px;
+}
+
+main .template-list.horizontal.mini .template.placeholder > div:first-of-type {
+  height: unset;
+  width: unset;
+  display: block;
+  padding-top: 16px;
+}
+
+main .template-list.horizontal.mini .template.placeholder svg {
+  height: 18px;
+  width: 18px;
+}
+
+main .template-list.horizontal.mini .template.placeholder .template-link {
+  font-size: 12px;
+}
+
+main .template-list.horizontal.mini .template img,
+main .template-list.horizontal.mini .template video {
+  height: 100px;
+}
+
+main .template-list.horizontal.mini .template .icon-free-badge {
+  height: 14px;
+  font-size: 8px;
+  padding: 0 5px;
+  right: 4px;
+  top: 4px;
+}
+
 main .template-list.sixcols .template,
 main .template-list.fullwidth .template {
   position: relative;
@@ -316,6 +357,11 @@ main .template-list.fullwidth .template:not(.placeholder) .template-link {
   text-overflow: ellipsis;
   display: inline-block;
   height: fit-content;
+}
+
+main .template-list.horizontal.mini .template:not(.placeholder) .template-link {
+  padding: 2px 4px;
+  font-size: 8px;
 }
 
 main .template-list.horizontal .template:not(.placeholder) .template-link::after,
@@ -708,4 +754,27 @@ main .template-list.horizontal .carousel-platform {
     margin-right: 0;
     max-width: unset;
   }
+}
+
+main .template-list-horizontal-mini-container .template-list .template-title {
+  margin-bottom: 8px;
+}
+
+main .template-list-horizontal-mini-container .template-list .template-title p:last-of-type {
+  margin-top: 16px;
+  font-weight: 800;
+}
+
+main .template-list-horizontal-mini-container .template-list .template-title p:first-of-type {
+  margin-bottom: 8px;
+}
+
+main .template-list-horizontal-mini-container .template-list .template-title p:last-of-type {
+  margin-top: 16px;
+  font-weight: 800;
+}
+
+main .template-list-horizontal-mini-container .template-title .icon {
+  height: unset;
+  width: 167px;
 }
