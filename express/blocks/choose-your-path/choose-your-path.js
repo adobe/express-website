@@ -155,25 +155,26 @@ export default function decorate($block) {
   $block.innerHTML = '';
 
   Array.from($rows[0].children).forEach(($linkContainer) => {
+    const currentUrl = new URL(window.location.href);
     const $link = $linkContainer.querySelector('a');
     let $slide;
 
     if ($link) {
-      $slide = createTag('a', { href: $link.href, class: 'choose-your-path-slide' });
-      $slide.target = '_blank';
-      $slide.rel = 'noopener';
+      const slideUrl = new URL($link.href);
+      $slide = createTag('a', { class: 'choose-your-path-slide' });
+
+      currentUrl.searchParams.forEach((value, param) => {
+        if (!slideUrl.searchParams.has(param)) {
+          slideUrl.searchParams.set(param, value);
+        }
+      });
+
+      $slide.href = slideUrl.href;
+
       $link.parentNode.remove();
     } else {
       $slide = createTag('div', { class: 'choose-your-path-slide' });
     }
-
-    $slide.addEventListener('click', () => {
-      $block.style.opacity = '0';
-      setTimeout(() => {
-        $block.remove();
-      }, 510);
-      document.body.classList.remove('no-scroll');
-    });
 
     $slides.push($slide);
   });

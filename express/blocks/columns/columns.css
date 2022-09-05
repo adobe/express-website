@@ -798,6 +798,10 @@ main .columns.highlight .column.column-picture {
   }
 }
 
+main .columns.center .button-container.free-plan-container.stacked .free-plan-widget {
+  padding-left: 24px;
+}
+
 @media (max-width: 600px) {
   :lang(ja) main .columns h2 {
     font-size: var(--heading-font-size-l);
