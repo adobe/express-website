@@ -803,6 +803,7 @@ const blocksWithOptions = [
   'feature-list',
   'icon-list',
   'table-of-contents',
+  'how-to-steps-carousel',
   'how-to-steps',
   'banner',
   'pricing-columns',
@@ -822,15 +823,19 @@ export function decorateBlock(block) {
     let shortBlockName = blockName;
     block.classList.add('block');
     // begin CCX custom block option class handling
-    if (shortBlockName !== 'how-to-steps-carousel') {
-      blocksWithOptions.forEach((b) => {
-        if (shortBlockName.startsWith(`${b}-`)) {
-          const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-          shortBlockName = b;
-          block.classList.add(b);
-          block.classList.add(...options);
-        }
-      });
+    for (let i = 0; i < blocksWithOptions.length; i += 1) {
+      const b = blocksWithOptions[i];
+      if (shortBlockName.startsWith(`${b}-`)) {
+        const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
+        shortBlockName = b;
+        block.classList.add(b);
+        block.classList.add(...options);
+        break;
+      } else if (shortBlockName === b) {
+        // case: block with option but no option provided
+        // and potentially substring of another block
+        break;
+      }
     }
     // end CCX custom block option class handling
     block.setAttribute('data-block-name', shortBlockName);
