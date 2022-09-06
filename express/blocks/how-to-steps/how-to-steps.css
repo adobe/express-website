@@ -32,12 +32,19 @@ main .how-to-steps > div {
 }
 
 main .how-to-steps .tip {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
+  display: grid;
+}
+
+main .how-to-steps .tip-number{
+  grid-area: 1/1/1/1;
+}
+
+main .how-to-steps .tip-heading {
+  grid-area: 1/2/1/2;                               
+}
+
+main .how-to-steps .tip-text {
+  grid-area: 2/2/2/2;
 }
 
 main .how-to-steps .tip-text p {
@@ -46,10 +53,17 @@ main .how-to-steps .tip-text p {
   margin-bottom: 0;
 }
 
-main .how-to-steps .tip-text h3 {
-  margin-bottom: 16px;
+
+
+main .how-to-steps .tip-heading h3 {
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
   font-size: var(--heading-font-size-s);
   text-align: left;
+  align-content: center;
+  align-items: center;
+  margin-top:0;
 }
 
 main .how-to-steps .tip-number {
@@ -86,8 +100,15 @@ main .how-to-steps .tip-number span {
     min-height: 70px;
     margin-right: 24px;
   }
-  main .how-to-steps .tip-text h3 {
+  main .how-to-steps .tip-heading h3 {
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
     font-size: var(--heading-font-size-m);
+    text-align: left;
+    align-content: center;
+    align-items: center;
+    margin-top: 0;
   }
   main .how-to-steps .tip-text p {
     font-size: var(--body-font-size-xl);
