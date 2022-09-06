@@ -116,7 +116,7 @@
   
   
   .blog main div.section h2, .blog main div.section h3, 
-  .blog main div.section h2 + p, .blog main div.section h3 + p  {
+  .blog main div.section h2 + p:not(.button-container), .blog main div.section h3 + p:not(.button-container)  {
     text-align: left;
   }
   
