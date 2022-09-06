@@ -168,7 +168,7 @@ function populateTemplates($block, templates) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
-    const $linkRow = $tmplt.querySelector(':scope > div:nth-of-type(1) > a');
+    const $rowWithLinkInFirstCol = $tmplt.querySelector(':scope > div:first-of-type > a');
 
     if ($linkContainer) {
       const $link = $linkContainer.querySelector(':scope a');
@@ -191,9 +191,9 @@ function populateTemplates($block, templates) {
       }
     }
 
-    if ($linkRow && !$linkRow.parentElement.querySelector('img')) {
-      cache.tailButton = $linkRow;
-      $linkRow.remove();
+    if ($rowWithLinkInFirstCol && !$tmplt.querySelector('img')) {
+      cache.tailButton = $rowWithLinkInFirstCol;
+      $rowWithLinkInFirstCol.remove();
     }
 
     if ($tmplt.children.length === 3) {
