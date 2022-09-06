@@ -62,7 +62,7 @@ function decorateToggleButton($block) {
 
   $toggleButton.addEventListener('click', () => {
     toggleCollapsibleCard($block);
-  })
+  });
 }
 
 function decorateBadge($block) {
