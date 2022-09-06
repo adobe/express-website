@@ -953,9 +953,26 @@ loadScript(martechURL, () => {
   decorateAnalyticsEvents();
 
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
-  const ENABLE_RATE_ACTION_AUDIENCE = 'enableRatingAction';
   const RETURNING_VISITOR_SEGMENT_ID = 23153796;
-  const USED_ACTION_SEGMENT_ID = 24241150;
+
+  const QUICK_ACTION_SEGMENTS = [
+    [24241150, 'enableRemoveBackgroundRating'],
+    [24793469, 'enableConvertToGifRating'],
+    [24793470, 'enableConvertToJpgRating'],
+    [24793471, 'enableConvertToMp4Rating'],
+    [24793472, 'enableConvertToPngRating'],
+    [24793473, 'enableConvertToSvgRating'],
+    [24793474, 'enableCropImageRating'],
+    [24793475, 'enableCropVideoRating'],
+    [24793476, 'enableLogoMakerRating'],
+    [24793477, 'enableMergeVideoRating'],
+    [24793478, 'enableQrGeneratorRating'],
+    [24793479, 'enableResizeImageRating'],
+    [24793480, 'enableChangeSpeedRating'],
+    [24793481, 'enableTrimVideoRating'],
+    [24793483, 'enableResizeVideoRating'],
+    [24793488, 'enableReverseVideoRating'],
+  ];
 
   Context.set('audiences', []);
   Context.set('segments', []);
@@ -1014,12 +1031,14 @@ loadScript(martechURL, () => {
             }
           }
 
-          if (json && json.segments && json.segments.includes(USED_ACTION_SEGMENT_ID)) {
-            const audiences = Context.get('audiences');
-            const segments = Context.get('segments');
-            audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
-            segments.push(USED_ACTION_SEGMENT_ID);
-          }
+          QUICK_ACTION_SEGMENTS.forEach((QUICK_ACTION_SEGMENT) => {
+            if (json && json.segments && json.segments.includes(QUICK_ACTION_SEGMENT[0])) {
+              const audiences = Context.get('audiences');
+              const segments = Context.get('segments');
+              audiences.push(QUICK_ACTION_SEGMENT[1]);
+              segments.push(QUICK_ACTION_SEGMENT[0]);
+            }
+          });
 
           document.dispatchEvent(new Event('context_loaded'));
         };
