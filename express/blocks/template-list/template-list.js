@@ -519,10 +519,8 @@ export default async function decorate($block) {
   }
 
   await decorateTemplateList($block);
-  if ($block.classList.contains('horizontal') && !$block.classList.contains('mini')) {
-    buildCarousel(':scope > .template', $block, true);
-  } else if ($block.classList.contains('mini')) {
-    buildCarousel(':scope > .template', $block, false);
+  if ($block.classList.contains('horizontal')) {
+    buildCarousel(':scope > .template', $block, !$block.classList.contains('mini'));
   } else {
     addAnimationToggle($block);
   }
