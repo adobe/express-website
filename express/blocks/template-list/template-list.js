@@ -243,7 +243,7 @@ function populateTemplates($block, templates) {
         $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
-          const $img = $tmplt.querySelector('img');
+          const $img = $tmplt.querySelector('picture > img');
           const $video = createTag('video', {
             playsinline: '',
             autoplay: '',
