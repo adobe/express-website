@@ -301,14 +301,6 @@ main .hero-animation.wide .button-container.free-plan-container .free-plan-widge
   background-color: transparent;
 }
 
-main .collapsible-card-wrapper + .hero-animation-wrapper .hero-animation > div {
-  display: flex;
-  flex-direction: column-reverse;
-  font-size: 20px;
-  line-height: 28px;
-  text-align: center;
-}
-
 /* Japanese font sizing styles */
 
 :lang(ja) main .hero-animation h1 {

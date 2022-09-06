@@ -755,6 +755,14 @@ main .columns.highlight .column.column-picture {
   }
 }
 
+main .collapsible-card-wrapper + .columns-wrapper .columns > div {
+  display: flex;
+  flex-direction: column-reverse;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+}
+
 /* Japanese font sizing styles */
 :lang(ja) main .columns h2.columns-heading-long {
   font-size: var(--heading-font-size-l);
