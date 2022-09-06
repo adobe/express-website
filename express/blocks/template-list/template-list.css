@@ -677,7 +677,7 @@ main .template-list.horizontal .carousel-platform {
   }
 
   main .template-list.horizontal.fullwidth .carousel-container {
-    margin: 0 12px 20px 12px;
+    margin-bottom: 20px;
     max-width: none;
     display: block;
   }
