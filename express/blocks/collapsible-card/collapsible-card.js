@@ -33,6 +33,7 @@ function getMobileOperatingSystem() {
 
 function toggleCollapsibleCard($block) {
   $block.classList.toggle('expanded');
+  $block.classList.remove('initial-expansion');
   const $divs = $block.querySelectorAll(':scope > div');
   const $childDiv = $divs[$divs.length - 1].querySelector('div');
 
@@ -46,9 +47,13 @@ function toggleCollapsibleCard($block) {
 }
 
 function initToggleState($block) {
-  toggleCollapsibleCard($block);
+  $block.classList.add('expanded');
+  $block.classList.add('initial-expansion');
+  const $divs = $block.querySelectorAll(':scope > div');
+  $divs[$divs.length - 1].style.maxHeight = '600px';
+
   setTimeout(() => {
-    if ($block.classList.contains('expanded')) {
+    if ($block.classList.contains('initial-expansion')) {
       toggleCollapsibleCard($block);
     }
   }, 10000);

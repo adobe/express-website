@@ -146,25 +146,25 @@ main .hero-animation-wrapper + .link-list-wrapper .link-list {
   margin-top: 16px;
 }
 
-main .template-list-wrapper + .link-list-wrapper .link-list.noarrows {
+main .link-list-wrapper .link-list.noarrows {
   margin-top: 0;
 }
 
-main .template-list-wrapper + .link-list-wrapper .link-list.noarrows > div > div > p:first-of-type {
+main .link-list-wrapper .link-list.noarrows > div > div > p:first-of-type {
   font-weight: 800;
   font-size: 16px;
   margin: 0 12px 4px 12px;
 }
 
-main .template-list-wrapper + .link-list-wrapper .link-list.noarrows .carousel-fader-right,
-main .template-list-wrapper + .link-list-wrapper .link-list.noarrows .carousel-fader-left {
+main .link-list-wrapper .link-list.noarrows .carousel-fader-right,
+main .link-list-wrapper .link-list.noarrows .carousel-fader-left {
   display: none;
 }
 
-main .template-list-wrapper + .link-list-wrapper .link-list.noarrows .button-container {
+main .link-list-wrapper .link-list.noarrows p.button-container {
   margin: 0 8px;
 }
 
-main .template-list-wrapper + .link-list-wrapper .link-list.noarrows .button-container .button.medium.secondary {
+main .link-list-wrapper .link-list.noarrows p.button-container .button.medium.secondary {
   padding: 3px 14px;
 }
