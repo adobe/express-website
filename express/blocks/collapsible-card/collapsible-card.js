@@ -71,51 +71,23 @@ function decorateToggleButton($block) {
 }
 
 function decorateBadge($block) {
-  const $anchors = $block.querySelectorAll('a');
+  const $anchor = $block.querySelector('a');
   const OS = getMobileOperatingSystem();
 
-  if ($anchors.length > 0) {
-    const $parent = $anchors[0].closest('div');
-    $parent.classList.add('badge-container');
-  }
-
-  if ($anchors.length === 1) {
-    $anchors[0].textContent = '';
-    $anchors[0].classList.add('badge');
-    if (OS === 'iOS') {
-      $anchors[0].append(getIconElement('apple-store'));
-    } else if (OS === 'Windows') {
-      $anchors[0].append(getIconElement('google-store'));
-    }
-  } else if ($anchors.length === 2) {
-    for (let i = 0; i < $anchors.length; i += 1) {
-      $anchors[i].textContent = '';
-      $anchors[i].classList.add('badge');
-    }
+  if ($anchor) {
+    $anchor.textContent = '';
+    $anchor.classList.add('badge');
 
     if (OS === 'iOS') {
-      $anchors[0].append(getIconElement('apple-store'));
-      $anchors[1].parentElement.remove();
-    } else if (OS === 'Android') {
-      $anchors[0].append(getIconElement('google-store'));
-      $anchors[1].parentElement.remove();
-    } else if (OS === 'Windows') {
-      $anchors[0].append(getIconElement('microsoft-store'));
-      $anchors[1].parentElement.remove();
+      $anchor.append(getIconElement('apple-store'));
     } else {
-      $anchors[0].append(getIconElement('google-store'));
-      $anchors[1].append(getIconElement('microsoft-store'));
+      $anchor.append(getIconElement('google-store'));
     }
-  } else {
-    $block.innerHTML = '';
-    const $alert = createTag('strong');
-    $alert.textContent = 'The second row of the collapsible card block takes at least 1 link, and at most 2 links. The links are used to populate the store badges.';
   }
 }
 
 export default function decorate($block) {
   decorateBadge($block);
   decorateToggleButton($block);
-
   initToggleState($block);
 }
