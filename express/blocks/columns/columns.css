@@ -763,6 +763,12 @@ main .collapsible-card-wrapper + .columns-wrapper .columns > div {
   text-align: center;
 }
 
+@media (min-width: 900px) {
+  main .collapsible-card-wrapper + .columns-wrapper .columns > div {
+    flex-direction: unset;
+  }
+}
+
 /* Japanese font sizing styles */
 :lang(ja) main .columns h2.columns-heading-long {
   font-size: var(--heading-font-size-l);

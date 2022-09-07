@@ -796,3 +796,9 @@ main .template-list-horizontal-fullwidth-mini-container > div {
   max-width: unset;
   padding: 0;
 }
+
+@media (min-width: 1200px) {
+  main .template-list-horizontal-fullwidth-mini-container .template-list.mini {
+    display: none;
+  }
+}
