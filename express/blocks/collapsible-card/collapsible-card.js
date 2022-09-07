@@ -17,7 +17,7 @@ function getMobileOperatingSystem() {
 
   // Windows Phone must come first because its UA also contains "Android"
   if (/windows phone/i.test(userAgent)) {
-    return 'Windows Phone';
+    return 'Windows';
   }
 
   if (/android/i.test(userAgent)) {
@@ -84,7 +84,7 @@ function decorateBadge($block) {
     $anchors[0].classList.add('badge');
     if (OS === 'iOS') {
       $anchors[0].append(getIconElement('apple-store'));
-    } else {
+    } else if (OS === 'Windows') {
       $anchors[0].append(getIconElement('google-store'));
     }
   } else if ($anchors.length === 2) {
@@ -98,6 +98,9 @@ function decorateBadge($block) {
       $anchors[1].parentElement.remove();
     } else if (OS === 'Android') {
       $anchors[0].append(getIconElement('google-store'));
+      $anchors[1].parentElement.remove();
+    } else if (OS === 'Windows') {
+      $anchors[0].append(getIconElement('microsoft-store'));
       $anchors[1].parentElement.remove();
     } else {
       $anchors[0].append(getIconElement('google-store'));
