@@ -48,7 +48,18 @@ main .collapsible-card-wrapper .collapsible-card.expanded .toggle-button {
     padding: 4px;
 }
 
-main .collapsible-card-wrapper .collapsible-card div:last-of-type {
+main .collapsible-card-wrapper .collapsible-card > div:last-of-type {
     font-size: 14px;
     line-height: 21px;
 }
+
+main .collapsible-card-wrapper .collapsible-card .badge-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+main .collapsible-card-wrapper .collapsible-card .badge-container > p {
+    margin: 0;
+}
+
