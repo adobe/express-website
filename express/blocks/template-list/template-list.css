@@ -760,6 +760,10 @@ main .template-list.horizontal .carousel-platform {
   }
 }
 
+main .template-list.mini {
+  min-height: unset;
+}
+
 main .template-list-horizontal-fullwidth-mini-container .template-list .template-title {
   margin-bottom: 8px;
 }
