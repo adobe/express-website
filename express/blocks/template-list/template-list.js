@@ -28,6 +28,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
+  tailButton: '',
   total: 0,
   type: '',
   locales: 'en',
@@ -167,23 +168,32 @@ function populateTemplates($block, templates) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
-    const $link = $linkContainer.querySelector(':scope a');
-    if ($link) {
-      const $a = createTag('a', {
-        href: $link.href ? addSearchQueryToHref($link.href) : '#',
-      });
+    const $rowWithLinkInFirstCol = $tmplt.querySelector(':scope > div:first-of-type > a');
 
-      $a.append(...$tmplt.childNodes);
-      $tmplt.remove();
-      $tmplt = $a;
-      $block.append($a);
+    if ($linkContainer) {
+      const $link = $linkContainer.querySelector(':scope a');
+      if ($link) {
+        const $a = createTag('a', {
+          href: $link.href ? addSearchQueryToHref($link.href) : '#',
+        });
 
-      // convert A to SPAN
-      const $newLink = createTag('span', { class: 'template-link' });
-      $newLink.append($link.textContent);
+        $a.append(...$tmplt.childNodes);
+        $tmplt.remove();
+        $tmplt = $a;
+        $block.append($a);
 
-      $linkContainer.innerHTML = '';
-      $linkContainer.append($newLink);
+        // convert A to SPAN
+        const $newLink = createTag('span', { class: 'template-link' });
+        $newLink.append($link.textContent);
+
+        $linkContainer.innerHTML = '';
+        $linkContainer.append($newLink);
+      }
+    }
+
+    if ($rowWithLinkInFirstCol && !$tmplt.querySelector('img')) {
+      cache.tailButton = $rowWithLinkInFirstCol;
+      $rowWithLinkInFirstCol.remove();
     }
 
     if ($tmplt.children.length === 3) {
@@ -255,6 +265,7 @@ function populateTemplates($block, templates) {
         }
       }
     }
+
     if (isPlaceholder) {
       $tmplt.classList.add('placeholder');
     }
@@ -488,6 +499,15 @@ function decorateLoadMoreButton($block) {
   updateButtonStatus($block, $loadMoreDiv);
 }
 
+function decorateTailButton($block) {
+  const $carouselPlatform = $block.querySelector('.carousel-platform');
+
+  if ($carouselPlatform) {
+    cache.tailButton.classList.add('tail-cta');
+    $carouselPlatform.append(cache.tailButton);
+  }
+}
+
 function cacheCreatedTemplate($block) {
   cache.templates.push($block.children[$block.children.length - 1]);
   $block.children[$block.children.length - 1].remove();
@@ -500,13 +520,16 @@ export default async function decorate($block) {
 
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
-    /* carousel */
-    buildCarousel(':scope > .template', $block, true);
+    buildCarousel(':scope > .template', $block, !$block.classList.contains('mini'));
   } else {
     addAnimationToggle($block);
   }
 
   if ($block.classList.contains('apipowered')) {
     decorateLoadMoreButton($block);
+  }
+
+  if ($block.classList.contains('mini')) {
+    decorateTailButton($block);
   }
 }
