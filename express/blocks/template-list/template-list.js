@@ -205,12 +205,23 @@ function populateTemplates($block, templates) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
           const ratios = option.split(sep).map((e) => +e);
-          const width = $block.classList.contains('sixcols') ? 165 : 200;
-          if (ratios[1]) {
-            const height = (ratios[1] / ratios[0]) * width;
-            $tmplt.style = `height: ${height - 21}px`;
-            if (width / height > 1.3) {
-              $tmplt.classList.add('wide');
+          if ($block.classList.contains('horizontal')) {
+            const height = $block.classList.contains('mini') ? 100 : 200;
+            if (ratios[1]) {
+              const width = (ratios[0] / ratios[1]) * height;
+              $tmplt.style = `width: ${width}px`;
+              if (width / height > 1.3) {
+                $tmplt.classList.add('tall');
+              }
+            }
+          } else {
+            const width = $block.classList.contains('sixcols') ? 165 : 200;
+            if (ratios[1]) {
+              const height = (ratios[1] / ratios[0]) * width;
+              $tmplt.style = `height: ${height - 21}px`;
+              if (width / height > 1.3) {
+                $tmplt.classList.add('wide');
+              }
             }
           }
         } else {
