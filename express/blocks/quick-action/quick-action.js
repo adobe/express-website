@@ -25,6 +25,6 @@ export default function decorate(block) {
   <cclqt-sign-up-modal id="qt-sign-up-modal"></cclqt-sign-up-modal>
   <cclqt-done-modal id="qt-done-modal"></cclqt-done-modal>`;
   // loadScript('https://project-marvel-marvel-12256-cci.fracture.adobeprojectm.com/static/platform-shell/standalone-host-app-dae691af.js');
-  loadScript('https://express.adobe.com/static/platform-shell/standalone-host-app-cca400e6.js');
+  loadScript('https://project-marvel-marvel-12256-cci.fracture.adobeprojectm.com/static/platform-shell/standalone-host-app-13261934.js');
   
 }
