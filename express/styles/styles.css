@@ -780,13 +780,27 @@ main .section .hero {
   color: initial;
 }
 
-main [data-audience] {
+/*main [data-audience] {
+  display: none;
+}
+*/
+
+body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"] {
+  display: block;
+}
+
+main [data-audience="desktop"][data-section-status="loaded"] {
   display: none;
 }
 
-body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"],
-body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"] {
-  display: block;
+@media (min-width:600px){
+  body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"] {
+    display: block;
+  }
+
+  main [data-audience="mobile"][data-section-status="loaded"] {
+    display: none;
+  }
 }
 
 @media (min-width:900px) {
