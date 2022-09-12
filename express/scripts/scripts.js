@@ -1606,7 +1606,10 @@ function splitSections($main) {
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
-    if (hasAppStoreBlocks) {
+
+    // check if app-store-highlight already split the first columns
+    const alreadySplitColumns = document.querySelector('.split-by-app-store-highlight');
+    if (hasAppStoreBlocks && !alreadySplitColumns) {
       blocksToSplit.push('columns--fullsize-center-');
     }
 
@@ -1616,7 +1619,7 @@ function splitSections($main) {
 
     if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
       const $parentNode = $block.parentNode;
-      if ($parentNode) {
+      if ($parentNode && !alreadySplitColumns) {
         $parentNode.classList.add('split-by-app-store-highlight');
       }
     }
