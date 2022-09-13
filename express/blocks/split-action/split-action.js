@@ -51,42 +51,9 @@ function initCTAListener($block, href) {
   }
 }
 
-export default function decorate($block) {
-  const $buttonsWrapper = createTag('div', { class: 'buttons-wrapper' });
-  const $blockBackground = createTag('div', { class: 'block-background' });
-  const $underlay = createTag('a', { class: 'underlay' });
-  const $notch = createTag('a', { class: 'notch' });
-  const $notchPill = createTag('div', { class: 'notch-pill' });
-  const $blockWrapper = $block.parentNode;
-
-  let hrefHolder = '';
+function initNotchDragAction($block) {
   let touchStart = 0;
-
-  $block.prepend(getIconElement('adobe-express-white'));
-
-  Array.from($block.children).forEach((div) => {
-    const anchor = div.querySelector('a');
-    if (anchor) {
-      $buttonsWrapper.append(anchor);
-      div.remove();
-
-      if (anchor.classList.contains('same-as-floating-button-CTA')) {
-        anchor.classList.add('no-event');
-        hrefHolder = anchor.href;
-      }
-    }
-
-    if (div.querySelector('picture')) {
-      $blockBackground.append(div.querySelector('picture'));
-      div.remove();
-    }
-  });
-
-  [$notch, $underlay].forEach((element) => {
-    element.addEventListener('click', () => {
-      hide($block);
-    });
-  });
+  const $notch = $block.querySelector('.notch');
 
   $notch.addEventListener('touchstart', (e) => {
     $block.style.transition = 'none';
@@ -105,15 +72,54 @@ export default function decorate($block) {
       $block.style.bottom = '0';
     }
   });
+}
+
+export default function decorate($block) {
+  const $buttonsWrapper = createTag('div', { class: 'buttons-wrapper' });
+  const $blockBackground = createTag('div', { class: 'block-background' });
+  const $underlay = createTag('a', { class: 'underlay' });
+  const $notch = createTag('a', { class: 'notch' });
+  const $notchPill = createTag('div', { class: 'notch-pill' });
+  const $blockWrapper = $block.parentNode;
+
+  let hrefHolder = '';
+
+  $block.prepend(getIconElement('adobe-express-white'));
+
+  Array.from($block.children).forEach((div) => {
+    const anchor = div.querySelector('a');
+    if (anchor) {
+      $buttonsWrapper.append(anchor);
+      div.remove();
+
+      if (anchor.classList.contains('same-as-floating-button-CTA')) {
+        anchor.classList.add('no-event');
+        anchor.target = '_self';
+        hrefHolder = anchor.href;
+      }
+    }
+
+    if (div.querySelector('picture')) {
+      $blockBackground.append(div.querySelector('picture'));
+      div.remove();
+    }
+  });
 
   $notch.append($notchPill);
   $blockBackground.append($underlay);
   $blockWrapper.append($blockBackground);
   $block.append($notch, $buttonsWrapper);
 
+  [$notch, $underlay].forEach((element) => {
+    element.addEventListener('click', () => {
+      hide($block);
+    });
+  });
+
   hide($block);
 
-  if (window.innerWidth < 1200) {
+  if (window.innerWidth < 900) {
+    initNotchDragAction($block);
     initCTAListener($block, hrefHolder);
   }
 }
