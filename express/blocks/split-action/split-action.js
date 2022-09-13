@@ -56,9 +56,11 @@ export default function decorate($block) {
   const $blockBackground = createTag('div', { class: 'block-background' });
   const $underlay = createTag('a', { class: 'underlay' });
   const $notch = createTag('a', { class: 'notch' });
+  const $notchPill = createTag('div', { class: 'notch-pill' });
   const $blockWrapper = $block.parentNode;
 
   let hrefHolder = '';
+  let touchStart = 0;
 
   $block.prepend(getIconElement('adobe-express-white'));
 
@@ -86,11 +88,34 @@ export default function decorate($block) {
     });
   });
 
+  $notch.addEventListener('touchstart', (e) => {
+    $block.style.transition = 'none';
+    touchStart = e.changedTouches[0].clientY;
+  });
+
+  $notch.addEventListener('touchmove', (e) => {
+    console.log(e.changedTouches[0].clientY - touchStart);
+    $block.style.bottom = `-${e.changedTouches[0].clientY - touchStart}px`;
+    // $block.style.top = `${$block.style.top - (e.changedTouches[0].clientY - touchStart)}px`;
+  });
+
+  $notch.addEventListener('touchend', (e) => {
+    $block.style.transition = 'bottom 0.2s';
+    if (e.changedTouches[0].clientY - touchStart > 100) {
+      hide($block);
+    } else {
+      $block.style.bottom = '0';
+    }
+  });
+
+  $notch.append($notchPill);
   $blockBackground.append($underlay);
   $blockWrapper.append($blockBackground);
   $block.append($notch, $buttonsWrapper);
 
   hide($block);
 
-  initCTAListener($block, hrefHolder);
+  if (window.innerWidth < 1200) {
+    initCTAListener($block, hrefHolder);
+  }
 }

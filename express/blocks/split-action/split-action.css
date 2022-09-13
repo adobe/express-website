@@ -78,9 +78,13 @@ main .split-action > .buttons-wrapper > a.button.same-as-floating-button-CTA {
 
 main .split-action .notch {
     position: absolute;
-    top: 6px;
+    padding: 6px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
+}
+
+main .split-action .notch-pill {
     border-radius: 20px;
     height: 4px;
     width: 36px;
