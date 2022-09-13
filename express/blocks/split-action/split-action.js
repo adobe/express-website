@@ -121,5 +121,7 @@ export default function decorate($block) {
   if (window.innerWidth < 900) {
     initNotchDragAction($block);
     initCTAListener($block, hrefHolder);
+
+    document.dispatchEvent(new Event('splitactionloaded'));
   }
 }

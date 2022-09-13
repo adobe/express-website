@@ -47,6 +47,10 @@ main .split-action > div {
     padding: 12px 0;
 }
 
+main .split-action > div:nth-of-type(2) {
+    max-width: 300px;
+}
+
 main .split-action .icon {
     min-width: 175px;
     min-height: 32px;
