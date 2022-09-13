@@ -1883,7 +1883,6 @@ function normalizePadding($main) {
 
   for (let i = 0; i < $sections.length; i += 1) {
     if ($sections[i].dataset.audience) {
-      console.log($sections[i].dataset.audience);
       $sections[i].style.paddingTop = '0';
     } else {
       break;
