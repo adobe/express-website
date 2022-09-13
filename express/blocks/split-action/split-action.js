@@ -94,9 +94,7 @@ export default function decorate($block) {
   });
 
   $notch.addEventListener('touchmove', (e) => {
-    console.log(e.changedTouches[0].clientY - touchStart);
     $block.style.bottom = `-${e.changedTouches[0].clientY - touchStart}px`;
-    // $block.style.top = `${$block.style.top - (e.changedTouches[0].clientY - touchStart)}px`;
   });
 
   $notch.addEventListener('touchend', (e) => {
