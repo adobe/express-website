@@ -19,7 +19,6 @@ main .split-action {
 main .block-background {
     position: fixed;
     top: 0;
-    margin-top: 64px;
     left: 0;
     height: 100%;
     width: 100%;
@@ -29,7 +28,7 @@ main .block-background {
 
 main .block-background .underlay {
     content: '';
-    top: -64px;
+    top: 0;
     left: 0;
     position: absolute;
     height: 100%;
