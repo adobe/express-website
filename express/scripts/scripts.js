@@ -416,6 +416,7 @@ export function readBlockConfig($block) {
  * @param {Element} $main The container element
  */
 export function decorateSections($main) {
+  let noAudienceFound = false;
   $main.querySelectorAll(':scope > div').forEach((section) => {
     const wrappers = [];
     let defaultContent = false;
@@ -447,6 +448,12 @@ export function decorateSections($main) {
         }
       });
       sectionMeta.remove();
+    }
+
+    if (section.dataset.audience && !noAudienceFound) {
+      section.style.paddingTop = '0';
+    } else {
+      noAudienceFound = true;
     }
   });
 }
@@ -1878,18 +1885,6 @@ function decoratePictures(main) {
   });
 }
 
-function normalizePadding($main) {
-  const $sections = $main.querySelectorAll('.section');
-
-  for (let i = 0; i < $sections.length; i += 1) {
-    if ($sections[i].dataset.audience) {
-      $sections[i].style.paddingTop = '0';
-    } else {
-      break;
-    }
-  }
-}
-
 export async function decorateMain($main) {
   buildAutoBlocks($main);
   splitSections($main);
@@ -1902,7 +1897,6 @@ export async function decorateMain($main) {
   decorateLinkedPictures($main);
   decorateSocialIcons($main);
   makeRelativeLinks($main);
-  normalizePadding($main);
 }
 
 const usp = new URLSearchParams(window.location.search);
