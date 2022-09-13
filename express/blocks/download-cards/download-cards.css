@@ -228,6 +228,10 @@ main .cards.download-cards.bleed .bleed__c p picture {
 
 main .cards.download-cards.bleed .bleed__c p img {
   display: block;
+  object-position: bottom;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
 main .cards.download-cards .card .button-row {

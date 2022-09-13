@@ -104,7 +104,7 @@ main .block.puf .puf-card .puf-card-top .puf-card-plans {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px auto;
+    margin: 0 auto 20px;
 }
 
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div {
@@ -277,6 +277,11 @@ main .puf .puf-right {
 
     main .block.puf .puf-card .puf-card-top h2 {
         margin: 10px 0 0 0;
+    }
+
+    main .block.puf .puf-card .puf-vat-info {
+        height: 24px;
+        line-height: 1;
     }
 
     main .block.puf .puf-card .puf-card-top p {

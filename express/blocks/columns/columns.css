@@ -755,6 +755,20 @@ main .columns.highlight .column.column-picture {
   }
 }
 
+main .collapsible-card-wrapper + .columns-wrapper .columns > div {
+  display: flex;
+  flex-direction: column-reverse;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  main .collapsible-card-wrapper + .columns-wrapper .columns > div {
+    flex-direction: unset;
+  }
+}
+
 /* Japanese font sizing styles */
 :lang(ja) main .columns h2.columns-heading-long {
   font-size: var(--heading-font-size-l);
@@ -796,6 +810,10 @@ main .columns.highlight .column.column-picture {
   :lang(ja) main .columns h2.columns-heading-x-long {
     font-size: var(--heading-font-size-m);
   }
+}
+
+main .columns.center .button-container.free-plan-container.stacked .free-plan-widget {
+  padding-left: 24px;
 }
 
 @media (max-width: 600px) {

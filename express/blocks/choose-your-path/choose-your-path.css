@@ -82,6 +82,11 @@ main .choose-your-path .choose-your-path-slide .choose-your-path-slide-image img
     height: 160px;
 }
 
+main .choose-your-path .choose-your-path-mouse-container {
+    max-width: 156px;
+    max-height: 100px;
+}
+
 @media (min-width: 600px) {
     main .choose-your-path {
         flex-direction: row;
