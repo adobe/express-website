@@ -100,7 +100,7 @@ export default function decorate($block) {
   $notch.addEventListener('touchend', (e) => {
     $block.style.transition = 'bottom 0.2s';
     if (e.changedTouches[0].clientY - touchStart > 100) {
-      hide($block);
+      $notch.click();
     } else {
       $block.style.bottom = '0';
     }
