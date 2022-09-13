@@ -231,6 +231,7 @@ main .template-list.horizontal .template:not(.placeholder) .template-link {
 main .template-list.horizontal.mini .template {
   min-height: unset;
   max-height: 100px;
+  max-width: 200px;
   margin: 0 4px;
 }
 
@@ -258,6 +259,7 @@ main .template-list.horizontal.mini .template.placeholder .template-link {
 
 main .template-list.horizontal.mini .template img,
 main .template-list.horizontal.mini .template video {
+  object-fit: cover;
   height: 100px;
 }
 
