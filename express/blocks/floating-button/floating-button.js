@@ -41,10 +41,10 @@ export async function createFloatingButton($a) {
   });
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
-  $floatButton.appendChild($floatButtonLink);
-  $floatButton.appendChild($lottieScrollButton);
-  $floatButtonWrapper.appendChild($floatButton);
-  main.prepend($floatButtonWrapper);
+  $floatButton.append($floatButtonLink);
+  $floatButton.append($lottieScrollButton);
+  $floatButtonWrapper.append($floatButton);
+  main.append($floatButtonWrapper);
   if ($floatButtonWrapperOld) {
     const $parent = $floatButtonWrapperOld.parentElement;
     if ($parent && $parent.children.length === 1) {
