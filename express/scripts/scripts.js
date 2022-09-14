@@ -416,6 +416,7 @@ export function readBlockConfig($block) {
  * @param {Element} $main The container element
  */
 export function decorateSections($main) {
+  let noAudienceFound = false;
   $main.querySelectorAll(':scope > div').forEach((section) => {
     const wrappers = [];
     let defaultContent = false;
@@ -447,6 +448,12 @@ export function decorateSections($main) {
         }
       });
       sectionMeta.remove();
+    }
+
+    if (section.dataset.audience && !noAudienceFound) {
+      section.style.paddingTop = '0';
+    } else {
+      noAudienceFound = true;
     }
   });
 }
