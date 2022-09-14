@@ -173,7 +173,6 @@ main .ratings .slider-bottom .timer {
   transform: translateX(-50%);
   top: 2px;
   padding-top: 2px;
-  background: var(--color-gray-100);
 }
 
 main .ratings .slider-bottom .lottie {
