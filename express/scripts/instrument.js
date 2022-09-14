@@ -564,6 +564,12 @@ loadScript(martechURL, () => {
       const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent;
       adobeEventName = `${adobeEventName}playing:${sessionName}-${videoName}`;
       sparkEventName = `playing:${sessionName}-${videoName}`;
+    } else if ($a.classList.contains('notch')) {
+      adobeEventName = `${adobeEventName}splitAction:cancelled:notch`;
+      sparkEventName = 'landing:splitActionCancelledNotch';
+    } else if ($a.classList.contains('underlay')) {
+      adobeEventName = `${adobeEventName}splitAction:cancelled:background`;
+      sparkEventName = 'landing:splitActionCancelledBackground';
     } else if ($a.parentElement.classList.contains('floating-button')) {
       adobeEventName = `${adobeEventName}floatingButton:ctaPressed`;
       sparkEventName = 'landing:floatingButtonPressed';
@@ -721,6 +727,24 @@ loadScript(martechURL, () => {
       $slide.addEventListener('click', () => {
         trackButtonClick($slide);
       });
+    });
+
+    // for tracking split action block notch and underlay background
+    document.addEventListener('splitactionloaded', () => {
+      const $notch = d.querySelector('main .split-action-container .notch');
+      const $underlay = d.querySelector('main .split-action-container .underlay');
+
+      if ($notch) {
+        $notch.addEventListener('click', () => {
+          trackButtonClick($notch);
+        });
+      }
+
+      if ($underlay) {
+        $underlay.addEventListener('click', () => {
+          trackButtonClick($underlay);
+        });
+      }
     });
 
     // for tracking just the sticky banner close button
