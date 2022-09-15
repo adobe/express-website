@@ -812,8 +812,13 @@ main .collapsible-card-wrapper + .columns-wrapper .columns > div {
   }
 }
 
-main .columns.center .button-container.free-plan-container.stacked .free-plan-widget {
-  margin-top: 36px;
+main .columns .button-container.free-plan-container.stacked .free-plan-widget {
+  margin-top: 0;
+  padding: 16px 0;
+  background-color: transparent;
+}
+
+main .columns.center.button-container.free-plan-container.stacked .free-plan-widget {
   padding-left: 24px;
 }
 
