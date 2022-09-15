@@ -308,6 +308,10 @@ main .hero-animation.wide .free-plan-widget {
     align-items: center;
   }
 
+  main .hero-animation.wide .button-container.free-plan-container a.button {
+    margin-right: 24px;
+  }
+
   main .hero-animation.wide .button-container.free-plan-container.stacked {
     flex-direction: column;
     align-items: flex-start;
@@ -315,7 +319,7 @@ main .hero-animation.wide .free-plan-widget {
 
   main .hero-animation.wide .button-container.free-plan-container .free-plan-widget {
     margin-top: 0;
-    padding: 0 0 0 24px;
+    padding: 16px 24px;
   }
 
   main .hero-animation.wide .button-container.free-plan-container.stacked .free-plan-widget {
