@@ -833,7 +833,7 @@ main .columns.columns-marquee {
 /* free plan widget */
 main .block .button-container.free-plan-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -843,7 +843,6 @@ main .block.center .button-container.free-plan-container {
 
 main .block .button-container.free-plan-container a.button {
   max-height: 24px;
-  margin-right: 24px !important;
 }
 
 main .block .free-plan-widget {
@@ -889,12 +888,23 @@ main .block .free-plan-widget .icon.icon-checkmark {
 }
 
 @media (min-width:900px) {
-  main .block .button-container.free-plan-container .free-plan-widget {
-    margin: 0;
+}
+
+@media (min-width: 1200px) {
+  main .block .button-container.free-plan-container {
+    flex-direction: row;
   }
 
-  main .block.center .free-plan-widget {
+  main .block .free-plan-widget {
     margin: 0 auto;
+  }
+
+  main .block .button-container.free-plan-container a.button {
+    margin-right: 24px;
+  }
+
+  main .block .button-container.free-plan-container .free-plan-widget {
+    margin: 0;
   }
 
   main .block .button-container.free-plan-container.stacked {
@@ -905,15 +915,11 @@ main .block .free-plan-widget .icon.icon-checkmark {
   main .block .button-container.free-plan-container.stacked .free-plan-widget {
     padding-left: 0;
     flex-direction: row;
-    background-color: transparent;
   }
 
   main .block .button-container.free-plan-container.stacked .free-plan-widget > div {
     margin-right: 16px;
   }
-}
-
-@media (min-width: 1200px) {
 
   main .template-list-fourcols-container>div,
   main .template-list-horizontal-container>div {
