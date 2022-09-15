@@ -25,12 +25,12 @@ function updateLinkList(container, template, list) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.name === d && p.live === 'Y');
+      const templatePageData = templatePages.find((p) => p.shortTitle === d && p.live === 'Y');
 
       if (templatePageData) {
         const clone = template.cloneNode(true);
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replace('Default', templatePageData.name);
+        clone.innerHTML = clone.innerHTML.replace('Default', templatePageData.shortTitle);
         container.append(clone);
       }
     });
@@ -44,28 +44,28 @@ function updateBlocks(data) {
   const seoNav = document.querySelector('.seo-nav');
 
   if (heroAnimation) {
-    if (data.title) {
-      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template title', data.title);
+    if (data.heroAnimationTitle) {
+      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template title', data.heroAnimationTitle);
     }
 
-    if (data.text) {
-      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template text', data.text);
+    if (data.heroAnimationText) {
+      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template text', data.heroAnimationText);
     }
   }
 
-  if (linkList && window.templates.data && data.related) {
+  if (linkList && window.templates.data && data.heroAnimationLinkList) {
     const linkListContainer = linkList.querySelector('p').parentElement;
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
-    const linkListData = data.related.split(', ');
-    
+    const linkListData = data.heroAnimationLinkList.split(', ');
+
     updateLinkList(linkListContainer, linkListTemplate, linkListData);
   }
 
   if (templateList) {
     templateList.innerHTML = templateList.innerHTML.replace('default-locale', 'en');
 
-    if (data.type) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-type', data.type);
+    if (data.templateTitle) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-type', data.templateTitle);
     }
 
     if (data.premium) {
@@ -104,4 +104,6 @@ const page = await fetchPageContent(window.location.pathname);
 
 if (page) {
   updateBlocks(page);
+} else {
+  window.location.replace('/404');
 }
