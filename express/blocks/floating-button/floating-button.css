@@ -113,7 +113,7 @@ main .floating-button--scrolled .floating-button-lottie {
   user-select: none;
 }
 
-main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
+main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
   display: none;
 }
 
@@ -134,7 +134,7 @@ main .floating-button-wrapper:first-of-type + .section {
   }
 
   /* set desktop below/above the fold styles */
-  main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
+  main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
     display: inline-block;
   }
 
