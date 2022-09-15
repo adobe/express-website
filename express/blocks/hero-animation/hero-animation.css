@@ -298,7 +298,6 @@ main .hero-animation.wide .free-plan-widget {
 }
 
 main .hero-animation.wide .free-plan-widget {
-  margin-top: 12px;
   padding-left: 0;
 }
 
@@ -324,7 +323,6 @@ main .hero-animation.wide .free-plan-widget {
 
   main .hero-animation.wide .button-container.free-plan-container.stacked .free-plan-widget {
     padding-left: 0;
-    margin-top: 12px;
   }
 }
 
