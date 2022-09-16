@@ -213,7 +213,7 @@ function loadFEDS() {
         $a.setAttribute('href', hrefURL.toString());
       });
     }
-    
+
     const geocheck = new URLSearchParams(window.location.search).get('geocheck');
     if (geocheck === 'on' || geocheck === 'force') {
       const userGeo = window.feds
