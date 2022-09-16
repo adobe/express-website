@@ -213,8 +213,9 @@ function loadFEDS() {
         $a.setAttribute('href', hrefURL.toString());
       });
     }
-
-    if (window.hlx.geocheck) {
+    
+    const geocheck = new URLSearchParams(window.location.search).get('geocheck');
+    if (geocheck === 'on' || geocheck === 'force') {
       const userGeo = window.feds
       && window.feds.data
       && window.feds.data.location
@@ -224,7 +225,7 @@ function loadFEDS() {
       && navigator.languages.length
         ? navigator.languages[0].toLowerCase()
         : navigator.language.toLowerCase();
-      const redirect = await checkGeo(userGeo, navigatorLocale, window.hlx.geocheckforce);
+      const redirect = await checkGeo(userGeo, navigatorLocale, geocheck === 'force');
       if (redirect) {
         window.location.href = redirect;
       }
