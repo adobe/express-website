@@ -2176,6 +2176,9 @@ async function loadLazy() {
 async function decoratePage() {
   window.hlx = window.hlx || {};
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+  const geocheck = new URLSearchParams(window.location.search).get('geocheck');
+  window.hlx.geocheck = geocheck === 'on' || geocheck === 'force';
+  window.hlx.geocheckforce = geocheck === 'force';
   window.hlx.init = true;
 
   await loadEager();
