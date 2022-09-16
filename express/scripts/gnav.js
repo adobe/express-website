@@ -21,18 +21,16 @@ import {
 } from './scripts.js';
 
 async function checkRedirect(location, geoLookup) {
-  const pathNameSplit = location.pathname.split('/');
-  if (!pathNameSplit.includes(geoLookup) || geoLookup === '') {
-    pathNameSplit.shift(); // remove empty first segment
-    if (geoLookup === '') {
-      pathNameSplit.shift(); // once more if redirect to default root
-    } else {
-      const i = pathNameSplit.indexOf('express');
-      pathNameSplit.splice(0, i === 0 ? 0 : 1, geoLookup); // prepend or replace language segment
-    }
-    return `${window.origin}/${pathNameSplit.join('/')}${location.search}${location.hash}`;
-  }
-  return null; // invalid express url
+  const splits = location.pathname.split('/express/');
+  splits[0] = '';
+  const prefix = geoLookup ? `/${geoLookup}` : '';
+
+  // remove ?geocheck param
+  const params = new URLSearchParams(location.search);
+  params.delete('geocheck');
+  const queryString = params.toString() ? `?${params.toString()}` : '';
+
+  return `${prefix}${splits.join('/express/')}${queryString}${location.hash}`;
 }
 
 async function checkGeo(userGeo, userLocale, geoCheckForce) {
