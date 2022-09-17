@@ -17,6 +17,7 @@ import {
   getLanguage,
   getHelixEnv,
   sampleRUM,
+  getCookie,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
@@ -34,35 +35,25 @@ async function checkRedirect(location, geoLookup) {
 }
 
 async function checkGeo(userGeo, userLocale, geoCheckForce) {
-  const isInternationalCookie = document.cookie.match(/^(.*;)?\s*international\s*=\s*[^;]+(.*)?$/);
-  let redirect = null;
-  // DON'T check geo if international cookie is set, unless geocheck=force is passed explicitly
-  if (geoCheckForce || !isInternationalCookie) {
-    const resp = await fetch(`${window.location.origin}/express/system/geo-map.json`);
+  const geoLookup = async () => {
+    let region = '';
+    const resp = await fetch('/express/system/geo-map.json');
     const json = await resp.json();
-    let geoLookup = null;
-    for (let i = 0; i < json.data.length && geoLookup === null; i += 1) {
-      if (json.data[i].usergeo === userGeo) {
-        if (json.data[i].userlocales && json.data[i].userlocales.length > 0) {
-          const redirectLocalPaths = json.data[i].redirectlocalpaths.split(',');
-          const userLanguage = userLocale.substr(0, userLocale.indexOf('-'));
-          const userExpectedPath = `${userGeo.toLowerCase()}_${userLanguage}`;
-          for (let j = 0; j < redirectLocalPaths.length && geoLookup === null; j += 1) {
-            if (redirectLocalPaths[j].trim() === userExpectedPath) {
-              geoLookup = userExpectedPath;
-            }
-          }
-          if (geoLookup == null) {
-            geoLookup = json.data[i].redirectdefaultpath;
-          }
-        } else {
-          geoLookup = json.data[i].redirectdefaultpath;
-        }
-      }
+    const matchedGeo = json.data.find((row) => (row.usergeo === userGeo));
+    const { userlocales, redirectlocalpaths, redirectdefaultpath } = matchedGeo;
+    region = redirectdefaultpath;
+
+    if (userlocales) {
+      const redirectLocalPaths = redirectlocalpaths.split(',');
+      const [userLanguage] = userLocale.split('-');
+      const userExpectedPath = `${userGeo.toLowerCase()}_${userLanguage}`;
+      region = redirectLocalPaths.find((locale) => locale.trim() === userExpectedPath) || region;
     }
-    redirect = checkRedirect(window.location, geoLookup);
-  }
-  return redirect;
+    return (region);
+  };
+
+  const region = geoCheckForce ? await geoLookup() : getCookie('international') || await geoLookup();
+  return checkRedirect(window.location, region);
 }
 
 function loadIMS() {
