@@ -12,7 +12,7 @@ main .split-action {
     margin: 10px;
     padding: 24px;
     border-radius: 24px;
-    z-index: 110;
+    z-index: 100001;
     background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
     background-size: 400% 400%;
     -webkit-animation: buttonGradient 45s ease infinite;
@@ -28,7 +28,7 @@ main .block-background {
     height: 100%;
     width: 100%;
     background-color: var(--color-white);
-    z-index: 90;
+    z-index: 100000;
 }
 
 main .block-background .underlay {
