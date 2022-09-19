@@ -487,7 +487,7 @@ export function getLocale(url) {
   return 'us';
 }
 
-function getCookie(cname) {
+export function getCookie(cname) {
   const name = `${cname}=`;
   const decodedCookie = decodeURIComponent(document.cookie);
   const ca = decodedCookie.split(';');
