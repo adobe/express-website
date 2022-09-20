@@ -16,7 +16,7 @@ async function fetchPageContent(path) {
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
-  return window.templates.data.find((p) => p.path === path && p.live === 'Y');
+  return window.templates.data.find((p) => p.path === path && p.live !== 'N');
 }
 
 function updateLinkList(container, template, list) {
