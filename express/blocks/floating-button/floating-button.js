@@ -55,7 +55,7 @@ export async function createFloatingButton($a) {
   }
 
   // Floating button scroll/click events
-  const $scrollAnchor = document.querySelector('.block.template-list, .block.layouts, .steps-highlight-container') ?? document.querySelector('.section:nth-of-type(3)');
+  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
   const hideScrollArrow = () => {
     $floatButtonWrapper.classList.add('floating-button--scrolled');
     if (document.activeElement === $lottieScrollButton) $lottieScrollButton.blur();
