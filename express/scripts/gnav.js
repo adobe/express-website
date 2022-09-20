@@ -24,7 +24,7 @@ import {
 async function checkRedirect(location, geoLookup) {
   const splits = location.pathname.split('/express/');
   splits[0] = '';
-  const prefix = geoLookup ? `/${geoLookup}` : '';
+  const prefix = geoLookup && geoLookup !== 'us' ? `/${geoLookup}` : '';
 
   // remove ?geocheck param
   const params = new URLSearchParams(location.search);
