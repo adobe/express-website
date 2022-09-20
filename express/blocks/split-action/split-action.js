@@ -12,19 +12,6 @@
 
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 
-function hide($block) {
-  const body = document.querySelector('body');
-  body.style.overflow = 'auto';
-  const $blockWrapper = $block.parentNode;
-  if ($blockWrapper.parentElement.classList.contains('split-action-container')) {
-    $blockWrapper.parentElement.style.opacity = '0';
-    $block.style.bottom = `-${$block.offsetHeight}px`;
-    setTimeout(() => {
-      $blockWrapper.parentElement.style.display = 'none';
-    }, 200);
-  }
-}
-
 function show($block) {
   const body = document.querySelector('body');
   body.style.overflow = 'hidden';
@@ -88,6 +75,7 @@ export default function decorate($block) {
 
   Array.from($block.children).forEach((div) => {
     const anchor = div.querySelector('a');
+
     if (anchor) {
       $buttonsWrapper.append(anchor);
       div.remove();
@@ -112,11 +100,10 @@ export default function decorate($block) {
 
   [$notch, $underlay].forEach((element) => {
     element.addEventListener('click', () => {
-      hide($block);
+      const $actionCta = $block.querySelector('.same-as-floating-button-CTA');
+      window.location.href = $actionCta.href;
     });
   });
-
-  hide($block);
 
   if (window.innerWidth < 900) {
     initNotchDragAction($block);
