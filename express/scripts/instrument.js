@@ -565,11 +565,11 @@ loadScript(martechURL, () => {
       adobeEventName = `${adobeEventName}playing:${sessionName}-${videoName}`;
       sparkEventName = `playing:${sessionName}-${videoName}`;
     } else if ($a.classList.contains('notch')) {
-      adobeEventName = `${adobeEventName}splitAction:cancelled:notch`;
-      sparkEventName = 'landing:splitActionCancelledNotch';
+      adobeEventName = `${adobeEventName}splitAction:notch`;
+      sparkEventName = 'landing:splitActionNotch';
     } else if ($a.classList.contains('underlay')) {
-      adobeEventName = `${adobeEventName}splitAction:cancelled:background`;
-      sparkEventName = 'landing:splitActionCancelledBackground';
+      adobeEventName = `${adobeEventName}splitAction:background`;
+      sparkEventName = 'landing:splitActionBackground';
     } else if ($a.parentElement.classList.contains('floating-button')) {
       adobeEventName = `${adobeEventName}floatingButton:ctaPressed`;
       sparkEventName = 'landing:floatingButtonPressed';
