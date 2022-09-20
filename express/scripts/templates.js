@@ -12,7 +12,7 @@
 async function fetchPageContent(path) {
   if (!(window.templates && window.templates.data)) {
     window.templates = {};
-    const resp = await fetch('/express/templates/template-pages.json');
+    const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
