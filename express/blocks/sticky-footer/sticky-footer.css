@@ -11,8 +11,8 @@ main .sticky-footer-wrapper {
 
 main .sticky-footer {
     background: var(--gradient-highlight-diagonal);
-    width: calc(500px - (32px * 2));
-    height: calc(210px - (32px * 2));
+    width: 500px;
+    box-sizing: border-box;
     margin: 32px auto;
     padding: 32px;
     border-radius: 28px;
@@ -29,6 +29,7 @@ main .sticky-footer>div {
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    gap: 12px;
 }
 
 main .sticky-footer>div>div {
@@ -36,14 +37,18 @@ main .sticky-footer>div>div {
     text-align: left;
 }
 
+main .sticky-footer>div>div:nth-of-type(2) {
+    max-width: 277px;
+}
+
 main .sticky-footer>div p {
-    margin: 0;
     margin: 0;
     display: flex;
     align-items: center;
 }
 
 main .sticky-footer picture img {
+    display: block;
     height: 147px;
     width: 147px;
 }
@@ -62,9 +67,7 @@ main .sticky-footer img.icon-microsoft-store,
 main .sticky-footer img.icon-editor-choice {
     height: 35px;
     width: auto;
-    margin: 0;
-    margin-top: 16px;
-    margin-right: 16px;
+    margin: 16px 16px 0 0;
 }
 
 main .sticky-footer img.icon-editor-choice {
