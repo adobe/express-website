@@ -158,7 +158,7 @@ async function fetchBlueprint(pathname) {
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
-  decorateMain($main);
+  await decorateMain($main);
 
   window.spark.$blueprint = $main;
   return ($main);
@@ -197,7 +197,7 @@ function populateTemplates($block, templates) {
     }
 
     if ($tmplt.children.length === 3) {
-      // look for for options in last cell
+      // look for options in last cell
       const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
       const option = $overlayCell.textContent.trim();
       if (option) {
@@ -351,9 +351,16 @@ export async function decorateTemplateList($block) {
 
     const $blueprint = await fetchBlueprint(window.location.pathname);
 
-    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
-    if ($bpBlock) {
-      $block.innerHTML = $bpBlock.innerHTML;
+    const $bpBlocks = $blueprint.querySelectorAll('.template-list');
+    if ($bpBlocks[i] && $bpBlocks[i].className === $block.className) {
+      $block.innerHTML = $bpBlocks[i].innerHTML;
+    } else if ($bpBlocks.length > 1 && $bpBlocks[i].className !== $block.className) {
+      for (let x = 0; x < $bpBlocks.length; x += 1) {
+        if ($bpBlocks[x].className === $block.className) {
+          $block.innerHTML = $bpBlocks[x].innerHTML;
+          break;
+        }
+      }
     } else {
       $block.remove();
     }
