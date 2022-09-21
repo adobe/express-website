@@ -1608,12 +1608,14 @@ function buildAutoBlocks($main) {
 }
 
 function splitSections($main) {
+  // check if there are more than one columns--fullsize-center-. If so, don't split.
+  const multipleColumns = $main.querySelectorAll('.columns--fullsize-center-').length > 1;
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
-    if (hasAppStoreBlocks) {
+    if (hasAppStoreBlocks && !multipleColumns) {
       blocksToSplit.push('columns--fullsize-center-');
     }
 
@@ -1623,7 +1625,7 @@ function splitSections($main) {
 
     if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
       const $parentNode = $block.parentNode;
-      if ($parentNode) {
+      if ($parentNode && !multipleColumns) {
         $parentNode.classList.add('split-by-app-store-highlight');
       }
     }
