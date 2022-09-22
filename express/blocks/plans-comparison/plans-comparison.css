@@ -165,7 +165,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-card .ctas-
         max-width: unset;
     }
 
-    main .plans-comparison-container .plans-comparison .plans-comparison-card.expanded .features-wrapper {
+    main .plans-comparison-container .plans-comparison .plans-comparison-card .features-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 16px;
