@@ -1605,6 +1605,11 @@ function buildAutoBlocks($main) {
       $main.querySelector(':scope > div:last-of-type').append($blade);
     }
   }
+
+  if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
+    const $plansComparison = buildBlock('plans-comparison', '');
+    $main.querySelector(':scope > div:last-of-type').append($plansComparison);
+  }
 }
 
 function splitSections($main) {
