@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, loadBlocks, getLocale, getIconElement } from '../../scripts/scripts.js';
+import {
+  createTag, getIconElement, getLocale, loadBlocks,
+} from '../../scripts/scripts.js';
 
 async function decorateAsFragment($block, content) {
   const path = new URL(content).pathname.split('.')[0];
@@ -42,9 +44,9 @@ function buildPayload($block) {
   };
   Array.from($block.children).forEach(($row, index) => {
     if (index === 0) {
-      const headings = $row.querySelectorAll('h3');
-      payload.free.heading = headings[0].textContent;
-      payload.premium.heading = headings[1].textContent;
+      const headings = $row.querySelectorAll('div');
+      payload.free.heading = headings[0].innerHTML;
+      payload.premium.heading = headings[1].innerHTML;
     }
 
     if (index === 1) {
@@ -69,23 +71,65 @@ function buildPayload($block) {
   return payload;
 }
 
+function collapseCard($card) {
+  const padding = window.innerWidth >= 1200 ? 64 : 40;
+  const $heading = $card.querySelector('.plans-comparison-heading');
+  const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
+  if (window.innerWidth >= 1200) {
+    $card.style.maxWidth = '354px';
+    $subcopy.style.maxWidth = `${354 - padding}px`;
+  } else {
+    $card.style.maxWidth = '900px';
+  }
+
+  $card.style.maxHeight = `${
+    $heading.offsetHeight
+    + $subcopy.offsetHeight
+    + padding}px`;
+  $card.classList.remove('expanded');
+}
+
+function expandCard($card) {
+  const padding = window.innerWidth >= 1200 ? 64 : 40;
+  const $heading = $card.querySelector('.plans-comparison-heading');
+  const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
+  const $featuresWrapper = $card.querySelector('.features-wrapper');
+  const $ctasWrapper = $card.querySelector('.ctas-wrapper');
+  if (window.innerWidth >= 1200) {
+    $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
+    $subcopy.style.maxWidth = 'unset';
+  } else {
+    $card.style.maxWidth = '900px';
+  }
+
+  $card.style.maxHeight = `${
+    $heading.offsetHeight
+    + $subcopy.offsetHeight
+    + $featuresWrapper.offsetHeight
+    + $ctasWrapper.offsetHeight
+    + padding
+  }px`;
+
+  $card.classList.add('expanded');
+}
+
 function toggleExpandableCard($block, $cardClicked) {
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   Array.from($cards).forEach(($card) => {
     if ($card !== $cardClicked) {
-      $card.classList.remove('expanded');
+      collapseCard($card);
     }
-  })
-  $cardClicked.classList.add('expanded');
+  });
+  expandCard($cardClicked);
 }
 
 function decorateToggleButton($block, $card) {
   const $toggleButton = createTag('div', { class: 'toggle-button' });
   $toggleButton.append(getIconElement('plus'));
 
-  $card.prepend($toggleButton);
+  $card.append($toggleButton);
 
-  $toggleButton.addEventListener('click', () => {
+  $card.addEventListener('click', () => {
     toggleExpandableCard($block, $card);
   });
 }
@@ -114,22 +158,28 @@ function decorateCTAs($block, payload, value) {
 function decorateCards($block, payload) {
   for (const [key, value] of Object.entries(payload)) {
     const $card = createTag('div', { class: `plans-comparison-card card-${key}` });
-    const $heading = createTag('h3', { class: 'plans-comparison-heading' });
+    const $heading = createTag('div', { class: 'plans-comparison-heading' });
     const $subCopy = createTag('p', { class: 'plans-comparison-sub-copy' });
     const $features = decorateFeatures($block, payload, value);
     const $ctas = decorateCTAs($block, payload, value);
-    decorateToggleButton($block, $card);
 
-    $heading.textContent = value.heading;
+    $block.append($card);
+    $heading.innerHTML = value.heading;
     $subCopy.textContent = value.subCopy;
     $card.append($heading, $subCopy, $features, $ctas);
-    $block.append($card);
+    decorateToggleButton($block, $card);
+    if (key === 'free') {
+      expandCard($card);
+    } else {
+      collapseCard($card);
+    }
   }
 }
 
 export default function decorate($block) {
   let payload;
   const locale = getLocale(new URL(window.location));
+  const $linkList = document.querySelector('.link-list-container');
   let fragmentUrl;
   if (locale === 'us') {
     fragmentUrl = 'https://main--express-website--adobe.hlx.page/drafts/qiyundai/fragments/plans-comparison';
@@ -139,12 +189,33 @@ export default function decorate($block) {
   decorateAsFragment($block, fragmentUrl);
 
   document.addEventListener('planscomparisonloaded', () => {
-    const $newBlock = document.querySelector('.plans-comparison');
-    if ($newBlock) {
-      payload = buildPayload($newBlock);
-      $newBlock.innerHTML = '';
-    }
+    const $section = document.querySelector('.plans-comparison-container');
+    if ($section) {
+      const $newBlock = $section.querySelector('.plans-comparison');
+      if ($newBlock) {
+        payload = buildPayload($newBlock);
+        $newBlock.innerHTML = '';
 
-    decorateCards($newBlock, payload);
+        decorateCards($newBlock, payload);
+
+        const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
+
+        if ($cards) {
+          window.addEventListener('resize', () => {
+            Array.from($cards).forEach(($card) => {
+              if ($card.classList.contains('expanded')) {
+                expandCard($card);
+              } else {
+                collapseCard($card);
+              }
+            });
+          });
+        }
+      }
+
+      if ($linkList) {
+        $linkList.before($section);
+      }
+    }
   });
 }
