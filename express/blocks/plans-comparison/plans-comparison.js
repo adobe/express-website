@@ -22,6 +22,7 @@ async function decorateAsFragment($block, content) {
     const $newBlock = createTag('div');
     $newBlock.innerHTML = html;
     $newBlock.className = 'plans-comparison-container';
+    $newBlock.id = 'plans-comparison-container';
     const img = $newBlock.querySelector('img');
     if (img) {
       img.setAttribute('loading', 'lazy');
@@ -68,18 +69,24 @@ function buildPayload($block) {
   return payload;
 }
 
-function toggleExpandableCard($card) {
-  
+function toggleExpandableCard($block, $cardClicked) {
+  const $cards = $block.querySelectorAll('.plans-comparison-card');
+  Array.from($cards).forEach(($card) => {
+    if ($card !== $cardClicked) {
+      $card.classList.remove('expanded');
+    }
+  })
+  $cardClicked.classList.add('expanded');
 }
 
-function decorateToggleButton($card) {
+function decorateToggleButton($block, $card) {
   const $toggleButton = createTag('div', { class: 'toggle-button' });
   $toggleButton.append(getIconElement('plus'));
 
   $card.prepend($toggleButton);
 
   $toggleButton.addEventListener('click', () => {
-    toggleExpandableCard($card);
+    toggleExpandableCard($block, $card);
   });
 }
 
@@ -105,13 +112,13 @@ function decorateCTAs($block, payload, value) {
 }
 
 function decorateCards($block, payload) {
-  for (const [, value] of Object.entries(payload)) {
-    const $card = createTag('div', { class: 'plans-comparison-card' });
+  for (const [key, value] of Object.entries(payload)) {
+    const $card = createTag('div', { class: `plans-comparison-card card-${key}` });
     const $heading = createTag('h3', { class: 'plans-comparison-heading' });
     const $subCopy = createTag('p', { class: 'plans-comparison-sub-copy' });
     const $features = decorateFeatures($block, payload, value);
     const $ctas = decorateCTAs($block, payload, value);
-    decorateToggleButton($card);
+    decorateToggleButton($block, $card);
 
     $heading.textContent = value.heading;
     $subCopy.textContent = value.subCopy;
