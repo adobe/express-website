@@ -3,7 +3,7 @@ main .collapsible-card-wrapper .collapsible-card {
     background-color: var(--color-gray-200);
     border-radius: 20px;
     max-width: 263px;
-    margin: auto;
+    margin: auto auto 40px;
     position: relative;
 }
 
