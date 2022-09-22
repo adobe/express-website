@@ -181,6 +181,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-card .ctas-
         padding: 0 50px;
     }
 
+    main .plans-comparison-container .plans-comparison .plans-comparison-card.expanded .features-wrapper {
+        display: grid;
+    }
+
     main .plans-comparison-container .plans-comparison .plans-comparison-card .ctas-wrapper a {
         display: inline-block;
         justify-content: unset;
