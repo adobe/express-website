@@ -14,40 +14,10 @@ import {
   getMetadata,
 } from '../../scripts/scripts.js';
 
-function initSchema() {
-  const script = document.createElement('script');
-  script.setAttribute('type', 'application/ld+json');
-  script.textContent = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [],
-  });
-
-  return script;
-}
-
-function appendToSchema(script, question, answer) {
-  const newEntity = JSON.parse(script.textContent).mainEntity;
-  newEntity.push({
-    '@type': 'Question',
-    name: question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: answer,
-    },
-  });
-
-  script.textContent = JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: newEntity,
-  });
-}
-
 function decorateFAQBlocks($block) {
   const showSchema = getMetadata('show-faq-schema');
-  const $schemaScript = initSchema();
   const faqs = [];
+  const entities = [];
   const $rows = Array.from($block.children);
   $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
@@ -75,13 +45,25 @@ function decorateFAQBlocks($block) {
     $accordion.append($answerDiv);
     $answerDiv.innerHTML = answer;
 
-    appendToSchema($schemaScript, question, answer);
+    entities.push({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: answer,
+      },
+    });
   });
 
   if (showSchema !== 'no') {
+    const $schemaScript = document.createElement('script');
+    $schemaScript.setAttribute('type', 'application/ld+json');
+    $schemaScript.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: entities,
+    });
     document.head.appendChild($schemaScript);
-  } else {
-    $schemaScript.remove();
   }
 
   // find previous h2 and move it in the FAQ
