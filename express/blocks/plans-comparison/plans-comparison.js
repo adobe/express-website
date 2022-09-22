@@ -10,9 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag, getIconElement, getLocale, getOffer, loadBlocks,
-} from '../../scripts/scripts.js';
+import { createTag, loadBlocks, getLocale, getIconElement } from '../../scripts/scripts.js';
 
 async function decorateAsFragment($block, content) {
   const path = new URL(content).pathname.split('.')[0];
@@ -24,7 +22,6 @@ async function decorateAsFragment($block, content) {
     const $newBlock = createTag('div');
     $newBlock.innerHTML = html;
     $newBlock.className = 'plans-comparison-container';
-    $newBlock.id = 'plans-comparison-container';
     const img = $newBlock.querySelector('img');
     if (img) {
       img.setAttribute('loading', 'lazy');
@@ -37,192 +34,52 @@ async function decorateAsFragment($block, content) {
   }
 }
 
-async function fetchPlan(planUrl) {
-  if (!window.pricingPlans) {
-    window.pricingPlans = {};
-  }
-
-  let plan = window.pricingPlans[planUrl];
-
-  if (!plan) {
-    plan = {};
-    const link = new URL(planUrl);
-    const params = link.searchParams;
-
-    plan.url = planUrl;
-    plan.country = 'us';
-    plan.language = 'en';
-    plan.price = '9.99';
-    plan.currency = 'US';
-    plan.symbol = '$';
-
-    if (planUrl.includes('/sp/')) {
-      plan.offerId = 'FREE0';
-      plan.frequency = 'monthly';
-      plan.name = 'Free';
-      plan.stringId = 'free-trial';
-    } else {
-      plan.offerId = params.get('items[0][id]');
-      plan.frequency = null;
-      plan.name = 'Premium';
-      plan.stringId = '3-month-trial';
-    }
-
-    if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1' || plan.offerId === 'CFB1B7F391F77D02FE858C43C4A5C64F') {
-      plan.frequency = 'Monthly';
-    } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24' || plan.offerId === 'BADDACAB87D148A48539B303F3C5FA92') {
-      plan.frequency = 'Annual';
-    } else {
-      plan.frequency = null;
-    }
-
-    const countryOverride = new URLSearchParams(window.location.search).get('country');
-    const offer = await getOffer(plan.offerId, countryOverride);
-
-    if (offer) {
-      plan.currency = offer.currency;
-      plan.price = offer.unitPrice;
-      plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
-      plan.country = offer.country;
-      plan.vatInfo = offer.vatInfo;
-      plan.language = offer.lang;
-      plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d\s,.+]+/g);
-      plan.prefix = offer.prefix ?? '';
-      plan.suffix = offer.suffix ?? '';
-      plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.prefix}${plan.rawPrice[0]}${plan.suffix}</strong>`);
-    }
-
-    window.pricingPlans[planUrl] = plan;
-  }
-
-  return plan;
-}
-
-async function buildPayload($block) {
+function buildPayload($block) {
   const payload = {
     free: {},
     premium: {},
-    cardPadding: window.innerWidth >= 1200 ? 64 : 40,
   };
-
-  Array.from($block.children)
-    .forEach(($row, index) => {
-      if (index === 0) {
-        payload.mainHeading = $row.innerHTML;
-      }
-
-      if (index === 1) {
-        const headings = $row.querySelectorAll('div');
-        payload.free.heading = headings[0].innerHTML;
-        payload.premium.heading = headings[1].innerHTML;
-      }
-
-      if (index === 2) {
-        const subCopies = $row.querySelectorAll('div');
-        payload.free.subCopy = subCopies[0].textContent;
-        payload.premium.subCopy = subCopies[1].textContent;
-        payload.premium.pricingUrl = subCopies[1].querySelector('a').href;
-      }
-
-      if (index === 3) {
-        const lists = $row.querySelectorAll('ul');
-        payload.free.features = Array.from(lists[0].querySelectorAll('li'));
-        payload.premium.features = Array.from(lists[1].querySelectorAll('li'));
-      }
-
-      if (index === 4) {
-        const ctas = $row.querySelectorAll('div');
-        payload.free.ctas = Array.from(ctas[0].querySelectorAll('a'));
-        payload.premium.ctas = Array.from(ctas[1].querySelectorAll('a'));
-      }
-    });
-
-  if (payload && payload.premium && payload.premium.subCopy && payload.premium.pricingUrl) {
-    const plan = await fetchPlan(payload.premium.pricingUrl);
-    const pricing = `${plan.formatted.replace('<strong>', '').replace('</strong>', '')}`;
-    const subcopy = payload.premium.subCopy;
-
-    if (subcopy.indexOf('{{pricing}}') !== -1) {
-      if (plan.vatInfo !== '') {
-        payload.premium.subCopy = subcopy.replace('{{pricing}}', `${pricing} ${plan.vatInfo}`);
-      } else {
-        payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
-      }
+  Array.from($block.children).forEach(($row, index) => {
+    if (index === 0) {
+      const headings = $row.querySelectorAll('h3');
+      payload.free.heading = headings[0].textContent;
+      payload.premium.heading = headings[1].textContent;
     }
-  }
+
+    if (index === 1) {
+      const subCopies = $row.querySelectorAll('div');
+      payload.free.subCopy = subCopies[0].textContent;
+      payload.premium.subCopy = subCopies[1].textContent;
+    }
+
+    if (index === 2) {
+      const lists = $row.querySelectorAll('ul');
+      payload.free.features = Array.from(lists[0].querySelectorAll('li'));
+      payload.premium.features = Array.from(lists[1].querySelectorAll('li'));
+    }
+
+    if (index === 3) {
+      const ctas = $row.querySelectorAll('div');
+      payload.free.ctas = Array.from(ctas[0].querySelectorAll('a'));
+      payload.premium.ctas = Array.from(ctas[1].querySelectorAll('a'));
+    }
+  });
 
   return payload;
 }
 
-function collapseCard($card, payload) {
-  const $heading = $card.querySelector('.plans-comparison-heading');
-  const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
-  $card.classList.remove('expanded');
-  if (window.innerWidth >= 1200) {
-    $card.style.maxWidth = `${354 - payload.cardPadding}px`;
-  } else {
-    $card.style.maxHeight = `${
-      $heading.offsetHeight
-      + $subcopy.offsetHeight
-      + payload.cardPadding}px`;
-    $card.style.maxWidth = '';
-  }
+function toggleExpandableCard($card) {
+  
 }
 
-function expandCard($card, payload) {
-  const $heading = $card.querySelector('.plans-comparison-heading');
-  const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
-  const $featuresWrapper = $card.querySelector('.features-wrapper');
-  const $ctasWrapper = $card.querySelector('.ctas-wrapper');
-  if (!$card.classList.contains('expanded')) {
-    $card.classList.add('expanded');
-    if (window.innerWidth >= 1200) {
-      $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
-      $card.classList.add('clip');
-      setTimeout(() => {
-        $card.classList.remove('clip');
-      }, 700);
-    } else {
-      $card.style.maxHeight = `${
-        $heading.offsetHeight
-        + $subcopy.offsetHeight
-        + $featuresWrapper.offsetHeight
-        + $ctasWrapper.offsetHeight
-        + payload.cardPadding * 2
-      }px`;
-    }
-  }
-}
-
-function toggleExpandableCard($block, $cardClicked, payload) {
-  const $cards = $block.querySelectorAll('.plans-comparison-card');
-  const $paginations = $block.querySelectorAll('.pagination-pill');
-  Array.from($cards)
-    .forEach(($card, index) => {
-      if ($card !== $cardClicked) {
-        collapseCard($card, payload);
-        $paginations[index].classList.remove('active');
-      } else {
-        $paginations[index].classList.add('active');
-      }
-    });
-  expandCard($cardClicked, payload);
-}
-
-function decorateToggleButton($block, $card, payload) {
+function decorateToggleButton($card) {
   const $toggleButton = createTag('div', { class: 'toggle-button' });
-  $toggleButton.append(getIconElement('plus-heavy'));
+  $toggleButton.append(getIconElement('plus'));
 
-  $card.append($toggleButton);
+  $card.prepend($toggleButton);
 
-  $card.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!$card.classList.contains('expanded')) {
-      toggleExpandableCard($block, $card, payload);
-    } else {
-      const $otherCard = $block.querySelector('.plans-comparison-card:not(.expanded)');
-      toggleExpandableCard($block, $otherCard, payload);
-    }
+  $toggleButton.addEventListener('click', () => {
+    toggleExpandableCard($card);
   });
 }
 
@@ -242,157 +99,45 @@ function decorateCTAs($block, payload, value) {
     if (index === 0) {
       cta.classList.add('primary');
     }
-
-    cta.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
   });
 
   return $buttonsWrapper;
 }
 
 function decorateCards($block, payload) {
-  const $cardsWrapper = createTag('div', { class: 'plans-comparison-cards' });
+  for (const [, value] of Object.entries(payload)) {
+    const $card = createTag('div', { class: 'plans-comparison-card' });
+    const $heading = createTag('h3', { class: 'plans-comparison-heading' });
+    const $subCopy = createTag('p', { class: 'plans-comparison-sub-copy' });
+    const $features = decorateFeatures($block, payload, value);
+    const $ctas = decorateCTAs($block, payload, value);
+    decorateToggleButton($card);
 
-  $block.append($cardsWrapper);
-
-  for (const [key, value] of Object.entries(payload)) {
-    if (['free', 'premium'].includes(key)) {
-      const $card = createTag('div', { class: `plans-comparison-card card-${key}` });
-      const $contentTop = createTag('div', { class: 'content-top' });
-      const $contentBottom = createTag('div', { class: 'content-bottom' });
-      const $heading = createTag('div', { class: 'plans-comparison-heading' });
-      const $subCopy = createTag('p', { class: 'plans-comparison-sub-copy' });
-      const $features = decorateFeatures($block, payload, value);
-      const $ctas = decorateCTAs($block, payload, value);
-
-      $cardsWrapper.append($card);
-      $contentTop.append($heading, $subCopy, $features);
-      $contentBottom.append($ctas);
-      $heading.innerHTML = value.heading;
-      $subCopy.textContent = value.subCopy;
-      $card.append($contentTop, $contentBottom);
-
-      decorateToggleButton($block, $card, payload);
-
-      if (key === 'premium') {
-        expandCard($card, payload);
-        payload.cardHeight = $card.offsetHeight;
-        collapseCard($card, payload);
-      }
-
-      $card.classList.add('transition');
-    }
-  }
-}
-
-function decoratePagination($block, payload) {
-  const $paginationWrapper = createTag('div', { class: 'pagination-wrapper' });
-  const $cards = $block.querySelectorAll('.plans-comparison-card');
-  if ($cards) {
-    Array.from($cards)
-      .forEach(($card) => {
-        const $paginationPill = createTag('span', { class: 'pagination-pill' });
-        $paginationWrapper.append($paginationPill);
-
-        $paginationPill.addEventListener('click', () => {
-          toggleExpandableCard($block, $card, payload);
-        });
-      });
-    $block.append($paginationWrapper);
+    $heading.textContent = value.heading;
+    $subCopy.textContent = value.subCopy;
+    $card.append($heading, $subCopy, $features, $ctas);
+    $block.append($card);
   }
 }
 
 export default function decorate($block) {
   let payload;
-  const location = new URL(window.location);
-  const locale = getLocale(location);
-  const $linkList = document.querySelector('.link-list-container');
+  const locale = getLocale(new URL(window.location));
   let fragmentUrl;
   if (locale === 'us') {
-    fragmentUrl = `${location.origin}/express/fragments/plans-comparison`;
+    fragmentUrl = 'https://main--express-website--adobe.hlx.page/drafts/qiyundai/fragments/plans-comparison';
   } else {
-    fragmentUrl = `${location.origin}/${locale}/express/fragments/plans-comparison`;
+    fragmentUrl = `https://main--express-website--adobe.hlx.page/drafts/qiyundai/${locale}/fragments/plans-comparison`;
   }
   decorateAsFragment($block, fragmentUrl);
 
-  document.addEventListener('planscomparisonloaded', async () => {
-    const $section = document.querySelector('.plans-comparison-container');
-
-    if ($linkList) {
-      $linkList.before($section);
+  document.addEventListener('planscomparisonloaded', () => {
+    const $newBlock = document.querySelector('.plans-comparison');
+    if ($newBlock) {
+      payload = buildPayload($newBlock);
+      $newBlock.innerHTML = '';
     }
 
-    if ($section) {
-      const $newBlock = $section.querySelector('.plans-comparison');
-      if ($newBlock) {
-        payload = await buildPayload($newBlock);
-        $newBlock.innerHTML = payload.mainHeading;
-        $newBlock.querySelector('div')
-          .classList
-          .add('main-heading-wrapper');
-        decorateCards($newBlock, payload);
-        decoratePagination($newBlock, payload);
-        const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
-        const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
-        if ($cards) {
-          Array.from($cards)
-            .forEach(($card, index) => {
-              if (index === 0) {
-                toggleExpandableCard($newBlock, $card, payload);
-              }
-
-              if (index === 1) {
-                payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
-              }
-            });
-
-          if (window.innerWidth >= 1200) {
-            Array.from($featuresWrappers)
-              .forEach((wrapper) => {
-                wrapper.style.maxHeight = payload.desiredHeight;
-              });
-          }
-
-          $newBlock.classList.add('restrained');
-
-          window.addEventListener('resize', () => {
-            Array.from($cards)
-              .forEach(($card, index) => {
-                if (window.innerWidth >= 1200) {
-                  $card.style.maxHeight = '';
-                  if ($card.classList.contains('expanded')) {
-                    $card.style.maxWidth = `${$card.offsetWidth}px`;
-
-                    if ($card.classList.contains('card-premium')) {
-                      $featuresWrappers[index].style.maxHeight = '';
-                      payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
-                    }
-                  } else {
-                    collapseCard($card, payload);
-                  }
-
-                  Array.from($featuresWrappers)
-                    .forEach((wrapper) => {
-                      wrapper.style.maxHeight = payload.desiredHeight;
-                    });
-                } else {
-                  $card.style.maxWidth = '';
-                  if ($card.classList.contains('expanded')) {
-                    $card.style.maxHeight = `${$card.offsetHeight}px`;
-                  } else {
-                    collapseCard($card, payload);
-                  }
-
-                  Array.from($featuresWrappers)
-                    .forEach((wrapper) => {
-                      wrapper.style.maxHeight = 'none';
-                    });
-                }
-              });
-          });
-        }
-      }
-    }
+    decorateCards($newBlock, payload);
   });
 }
