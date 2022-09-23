@@ -37,31 +37,43 @@ async function decorateAsFragment($block, content) {
   }
 }
 
+function unifyCardHeight($block, payload) {
+  const $cards = $block.querySelectorAll('.plans-comparison-card');
+  Array.from($cards).forEach(($card) => {
+    $card.style.height = `${payload.cardHeight - 64}px`;
+  });
+}
+
 function buildPayload($block) {
   const payload = {
     free: {},
     premium: {},
+    cardPadding: window.innerWidth >= 1200 ? 64 : 40,
   };
   Array.from($block.children).forEach(($row, index) => {
     if (index === 0) {
+      payload.mainHeading = $row.innerHTML;
+    }
+
+    if (index === 1) {
       const headings = $row.querySelectorAll('div');
       payload.free.heading = headings[0].innerHTML;
       payload.premium.heading = headings[1].innerHTML;
     }
 
-    if (index === 1) {
+    if (index === 2) {
       const subCopies = $row.querySelectorAll('div');
       payload.free.subCopy = subCopies[0].textContent;
       payload.premium.subCopy = subCopies[1].textContent;
     }
 
-    if (index === 2) {
+    if (index === 3) {
       const lists = $row.querySelectorAll('ul');
       payload.free.features = Array.from(lists[0].querySelectorAll('li'));
       payload.premium.features = Array.from(lists[1].querySelectorAll('li'));
     }
 
-    if (index === 3) {
+    if (index === 4) {
       const ctas = $row.querySelectorAll('div');
       payload.free.ctas = Array.from(ctas[0].querySelectorAll('a'));
       payload.premium.ctas = Array.from(ctas[1].querySelectorAll('a'));
@@ -71,26 +83,22 @@ function buildPayload($block) {
   return payload;
 }
 
-function collapseCard($card) {
-  const padding = window.innerWidth >= 1200 ? 64 : 40;
+function collapseCard($card, payload) {
   const $heading = $card.querySelector('.plans-comparison-heading');
   const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
   if (window.innerWidth >= 1200) {
-    $card.style.maxWidth = '354px';
-    $subcopy.style.maxWidth = `${354 - padding}px`;
+    $card.style.maxWidth = `${354 - payload.cardPadding}px`;
   } else {
     $card.style.maxWidth = '900px';
+    $card.style.maxHeight = `${
+      $heading.offsetHeight
+      + $subcopy.offsetHeight
+      + payload.cardPadding}px`;
   }
-
-  $card.style.maxHeight = `${
-    $heading.offsetHeight
-    + $subcopy.offsetHeight
-    + padding}px`;
   $card.classList.remove('expanded');
 }
 
-function expandCard($card) {
-  const padding = window.innerWidth >= 1200 ? 64 : 40;
+function expandCard($card, payload) {
   const $heading = $card.querySelector('.plans-comparison-heading');
   const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
   const $featuresWrapper = $card.querySelector('.features-wrapper');
@@ -101,36 +109,42 @@ function expandCard($card) {
   } else {
     $card.style.maxWidth = '900px';
   }
-
-  $card.style.maxHeight = `${
-    $heading.offsetHeight
-    + $subcopy.offsetHeight
-    + $featuresWrapper.offsetHeight
-    + $ctasWrapper.offsetHeight
-    + padding
-  }px`;
-
   $card.classList.add('expanded');
+
+  if (window.innerWidth >= 1200) {
+    $card.classList.add('clip');
+    setTimeout(() => {
+      $card.classList.remove('clip');
+    }, 700);
+  } else {
+    $card.style.maxHeight = `${
+      $heading.offsetHeight
+      + $subcopy.offsetHeight
+      + $featuresWrapper.offsetHeight
+      + $ctasWrapper.offsetHeight
+      + payload.cardPadding * 2
+    }px`;
+  }
 }
 
-function toggleExpandableCard($block, $cardClicked) {
+function toggleExpandableCard($block, $cardClicked, payload) {
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   Array.from($cards).forEach(($card) => {
     if ($card !== $cardClicked) {
-      collapseCard($card);
+      collapseCard($card, payload);
     }
   });
-  expandCard($cardClicked);
+  expandCard($cardClicked, payload);
 }
 
-function decorateToggleButton($block, $card) {
+function decorateToggleButton($block, $card, payload) {
   const $toggleButton = createTag('div', { class: 'toggle-button' });
   $toggleButton.append(getIconElement('plus'));
 
   $card.append($toggleButton);
 
   $card.addEventListener('click', () => {
-    toggleExpandableCard($block, $card);
+    toggleExpandableCard($block, $card, payload);
   });
 }
 
@@ -156,24 +170,44 @@ function decorateCTAs($block, payload, value) {
 }
 
 function decorateCards($block, payload) {
-  for (const [key, value] of Object.entries(payload)) {
-    const $card = createTag('div', { class: `plans-comparison-card card-${key}` });
-    const $heading = createTag('div', { class: 'plans-comparison-heading' });
-    const $subCopy = createTag('p', { class: 'plans-comparison-sub-copy' });
-    const $features = decorateFeatures($block, payload, value);
-    const $ctas = decorateCTAs($block, payload, value);
+  const $cardsWrapper = createTag('div', { class: 'plans-comparison-cards' });
+  const $headingWrapper = $block.querySelector('.main-heading-wrapper');
+  $block.append($cardsWrapper);
 
-    $block.append($card);
-    $heading.innerHTML = value.heading;
-    $subCopy.textContent = value.subCopy;
-    $card.append($heading, $subCopy, $features, $ctas);
-    decorateToggleButton($block, $card);
-    if (key === 'free') {
-      expandCard($card);
-    } else {
-      collapseCard($card);
+  for (const [key, value] of Object.entries(payload)) {
+    if (['free', 'premium'].includes(key)) {
+      const $card = createTag('div', { class: `plans-comparison-card card-${key}` });
+      const $contentTop = createTag('div', { class: 'content-top' });
+      const $contentBottom = createTag('div', { class: 'content-bottom' });
+      const $heading = createTag('div', { class: 'plans-comparison-heading' });
+      const $subCopy = createTag('p', { class: 'plans-comparison-sub-copy' });
+      const $features = decorateFeatures($block, payload, value);
+      const $ctas = decorateCTAs($block, payload, value);
+
+      $cardsWrapper.append($card);
+      $contentTop.append($heading, $subCopy, $features);
+      $contentBottom.append($ctas);
+      $heading.innerHTML = value.heading;
+      $subCopy.textContent = value.subCopy;
+      $card.append($contentTop, $contentBottom);
+      decorateToggleButton($block, $card, payload);
+      if (key === 'premium') {
+        expandCard($card, payload);
+        payload.cardHeight = $card.offsetHeight;
+        collapseCard($card, payload);
+      }
+
+      $card.classList.add('transition');
+
+      if (key === 'free') {
+        expandCard($card, payload);
+      } else {
+        collapseCard($card, payload);
+      }
     }
   }
+
+  $block.style.height = `${payload.cardHeight + $headingWrapper.offsetHeight + payload.cardPadding}px`;
 }
 
 export default function decorate($block) {
@@ -190,31 +224,40 @@ export default function decorate($block) {
 
   document.addEventListener('planscomparisonloaded', () => {
     const $section = document.querySelector('.plans-comparison-container');
+    if ($linkList) {
+      $linkList.before($section);
+    }
     if ($section) {
       const $newBlock = $section.querySelector('.plans-comparison');
       if ($newBlock) {
         payload = buildPayload($newBlock);
-        $newBlock.innerHTML = '';
-
+        $newBlock.innerHTML = payload.mainHeading;
+        $newBlock.querySelector('div').classList.add('main-heading-wrapper');
         decorateCards($newBlock, payload);
 
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
-
         if ($cards) {
+          unifyCardHeight($newBlock, payload);
           window.addEventListener('resize', () => {
+            if (window.innerWidth < 1200) {
+              $newBlock.style.height = 'auto';
+            } else {
+              unifyCardHeight($newBlock, payload);
+            }
             Array.from($cards).forEach(($card) => {
-              if ($card.classList.contains('expanded')) {
-                expandCard($card);
+              if (window.innerWidth < 1200) {
+                $card.style.height = 'auto';
               } else {
-                collapseCard($card);
+                $card.style.height = `${payload.cardHeight}px`;
+              }
+              if ($card.classList.contains('expanded')) {
+                expandCard($card, payload);
+              } else {
+                collapseCard($card, payload);
               }
             });
           });
         }
-      }
-
-      if ($linkList) {
-        $linkList.before($section);
       }
     }
   });
