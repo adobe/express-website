@@ -11,29 +11,45 @@
  */
 /* eslint-disable import/named, import/extensions */
 
+/*
+ * Fragment Block
+ * Include content from one Helix page in another.
+ * https://www.hlx.live/developer/block-collection/fragment
+ */
+
 import {
-  createTag,
   decorateMain,
   loadBlocks,
-// eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-async function decorateFragment($block) {
-  const ref = $block.textContent;
-  const path = new URL(ref).pathname.split('.')[0];
-  const resp = await fetch(`${path}.plain.html`);
-  const html = await resp.text();
-  const $main = createTag('main');
-  $main.innerHTML = html;
-  const img = $main.querySelector('img');
-  img.setAttribute('loading', 'lazy');
-  decorateMain($main);
-  const loadedBlocks = await loadBlocks($main);
-  await Promise.all(loadedBlocks);
-  const $section = $block.closest('.section');
-  $section.parentNode.replaceChild($main, $section);
+/**
+ * Loads a fragment.
+ * @param {string} path The path to the fragment
+ * @returns {HTMLElement} The root element of the fragment
+ */
+async function loadFragment(path) {
+  if (path && path.startsWith('/')) {
+    const resp = await fetch(`${path}.plain.html`);
+    if (resp.ok) {
+      const main = document.createElement('main');
+      main.innerHTML = await resp.text();
+      decorateMain(main);
+      await loadBlocks(main);
+      return main;
+    }
+  }
+  return null;
 }
 
-export default async function decorate($block) {
-  await decorateFragment($block);
+export default async function decorate(block) {
+  const link = block.querySelector('a');
+  const path = link ? link.getAttribute('href') : block.textContent.trim();
+  const fragment = await loadFragment(path);
+  if (fragment) {
+    const fragmentSection = fragment.querySelector(':scope .section');
+    if (fragmentSection) {
+      block.closest('.section').classList.add(...fragmentSection.classList);
+      block.closest('.fragment-wrapper').replaceWith(...fragmentSection.childNodes);
+    }
+  }
 }
