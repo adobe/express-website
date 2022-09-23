@@ -42,13 +42,13 @@ main .how-to-steps .tip {
 
 main .how-to-steps .tip-text p {
   font-size: var(--body-font-size-l);
-  margin-top: 16px;
+  margin-top: 0;
   margin-bottom: 0;
 }
 
 main .how-to-steps .tip-text h3 {
   margin-top: 0px;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   font-size: var(--heading-font-size-s);
   text-align: left;
 }
