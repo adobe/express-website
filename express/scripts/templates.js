@@ -62,7 +62,11 @@ function updateBlocks(data) {
   }
 
   if (templateList) {
-    templateList.innerHTML = templateList.innerHTML.replace('default-locale', 'en');
+    if (data.templateLocale) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-locale', data.templateLocale);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replace('default-locale', 'en');
+    }
 
     if (data.templateTitle) {
       templateList.innerHTML = templateList.innerHTML.replace('default-type', data.templateTitle);
@@ -70,6 +74,12 @@ function updateBlocks(data) {
 
     if (data.premium) {
       templateList.innerHTML = templateList.innerHTML.replace('default-premium', data.premium);
+    }
+
+    if (data.placeholderFormat) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-format', data.placeholderFormat);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replace('default-format', '2:3');
     }
 
     if (data.createText) {
