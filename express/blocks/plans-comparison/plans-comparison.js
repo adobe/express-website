@@ -87,6 +87,7 @@ function collapseCard($card, payload) {
       $heading.offsetHeight
       + $subcopy.offsetHeight
       + payload.cardPadding}px`;
+    $card.style.maxWidth = '';
   }
 }
 
@@ -95,47 +96,23 @@ function expandCard($card, payload) {
   const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
   const $featuresWrapper = $card.querySelector('.features-wrapper');
   const $ctasWrapper = $card.querySelector('.ctas-wrapper');
-  $card.classList.add('expanded');
-  if (window.innerWidth >= 1200) {
-    $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
-    $card.classList.add('clip');
-    setTimeout(() => {
-      $card.classList.remove('clip');
-    }, 700);
-  } else {
-    $card.style.maxHeight = `${
-      $heading.offsetHeight
-      + $subcopy.offsetHeight
-      + $featuresWrapper.offsetHeight
-      + $ctasWrapper.offsetHeight
-      + payload.cardPadding * 2
-    }px`;
-  }
-}
-
-function unifyCardHeight($block, payload) {
-  const $cards = $block.querySelectorAll('.plans-comparison-card');
-  if (window.innerWidth >= 1200) {
-    Array.from($cards).forEach(($card) => {
-      $card.classList.remove('transition');
-
-      if ($card.classList.contains('card-premium')) {
-        $card.style.maxHeight = '';
-        $card.style.height = '';
-        payload.cardHeight = $card.offsetHeight;
-      }
-    });
-
-    Array.from($cards).forEach(($card) => {
-      $card.style.height = `${payload.cardHeight - payload.cardPadding}px`;
-      $card.classList.add('transition');
-    });
-  } else {
-    Array.from($cards).forEach(($card) => {
-      $card.style.width = '';
-      $card.style.height = '';
-      $card.style.maxWidth = '';
-    });
+  if (!$card.classList.contains('expanded')) {
+    $card.classList.add('expanded');
+    if (window.innerWidth >= 1200) {
+      $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
+      $card.classList.add('clip');
+      setTimeout(() => {
+        $card.classList.remove('clip');
+      }, 700);
+    } else {
+      $card.style.maxHeight = `${
+        $heading.offsetHeight
+        + $subcopy.offsetHeight
+        + $featuresWrapper.offsetHeight
+        + $ctasWrapper.offsetHeight
+        + payload.cardPadding * 2
+      }px`;
+    }
   }
 }
 
@@ -247,9 +224,24 @@ export default function decorate($block) {
 
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
         if ($cards) {
-          unifyCardHeight($newBlock, payload);
           window.addEventListener('resize', () => {
-            unifyCardHeight($newBlock, payload);
+            Array.from($cards).forEach(($card) => {
+              if (window.innerWidth >= 1200) {
+                $card.style.maxHeight = '';
+                if ($card.classList.contains('expanded')) {
+                  $card.style.maxWidth = `${$card.offsetWidth}px`;
+                } else {
+                  collapseCard($card, payload);
+                }
+              } else {
+                $card.style.maxWidth = '';
+                if ($card.classList.contains('expanded')) {
+                  $card.style.maxHeight = `${$card.offsetHeight}px`;
+                } else {
+                  collapseCard($card, payload);
+                }
+              }
+            });
           });
         }
       }

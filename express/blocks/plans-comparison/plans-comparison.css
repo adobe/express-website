@@ -2,7 +2,7 @@ main .plans-comparison-container {
     background: var(--color-gray-100);
     border-radius: 30px;
     max-width: calc(100% - 120px);
-    padding: 24px 20px 40px 20px;
+    padding: 24px 24px 40px 24px;
     margin: 60px auto;
     scroll-margin-top: 64px;
 }
@@ -13,13 +13,13 @@ main .plans-comparison-container .plans-comparison {
 
 main .plans-comparison-container .plans-comparison h2 {
     text-align: left;
-    margin: 0 0 24px 40px;
+    margin: 0 0 24px 32px;
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     gap: 12px;
 }
@@ -27,7 +27,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards {
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card {
     position: relative;
     display: flex;
-    width: 84%;
+    width: calc(100% - 64px);
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
@@ -36,6 +36,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     border-radius: 20px;
     padding: 20px 24px;
     border: solid 2px var(--color-gray-200);
+    flex-grow: 1
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card:after {
@@ -135,7 +136,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li {
     list-style: none;
     display: block;
-    padding-bottom: 16px;
+    padding-bottom: 12px;
     font-size: 18px;
     max-width: 280px;
     white-space: nowrap;
@@ -181,6 +182,13 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     text-overflow: ellipsis;
 }
 
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip.height-calculating .features-wrapper > li,
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip.height-calculating .plans-comparison-sub-copy {
+    white-space: unset;
+    overflow: unset;
+    text-overflow: unset;
+}
+
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip .features-wrapper .ctas-wrapper {
     white-space: nowrap;
 }
@@ -196,7 +204,6 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     background: var(--gradient-highlight-diagonal);
     color: var(--color-white);
     border: none;
-    flex-grow: 1
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper {
@@ -217,6 +224,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     color: white;
 }
 
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .ctas-wrapper a:hover {
+    text-decoration: underline;
+}
+
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .ctas-wrapper a.primary {
     background: var(--color-white);
     color: var(--color-black);
@@ -225,6 +236,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .ctas-wrapper a.primary:hover {
     opacity: 0.9;
+    text-decoration: unset;
 }
 
 @media (min-width: 1200px) {
@@ -234,12 +246,22 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 
     main .plans-comparison-container .plans-comparison .plans-comparison-cards {
         flex-direction: unset;
-        align-items: flex-start;
+        align-items: stretch;
     }
 
     main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card {
         padding: 32px;
+        max-width: 290px;
         width: unset;
+    }
+
+    main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.card-premium.height-calculating {
+        max-width: unset;
+        width: unset;
+    }
+
+    main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded {
+        max-width: unset;
     }
 
     main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper {
@@ -268,6 +290,16 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 
     main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper {
         display: grid;
+    }
+
+    main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper li {
+        display: flex;
+        padding-bottom: 16px;
+        gap: 8px;
+    }
+
+    main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper li img {
+        transform: unset;
     }
 
     main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li {
