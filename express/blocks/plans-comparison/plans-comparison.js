@@ -37,13 +37,6 @@ async function decorateAsFragment($block, content) {
   }
 }
 
-function unifyCardHeight($block, payload) {
-  const $cards = $block.querySelectorAll('.plans-comparison-card');
-  Array.from($cards).forEach(($card) => {
-    $card.style.height = `${payload.cardHeight - 64}px`;
-  });
-}
-
 function buildPayload($block) {
   const payload = {
     free: {},
@@ -86,16 +79,15 @@ function buildPayload($block) {
 function collapseCard($card, payload) {
   const $heading = $card.querySelector('.plans-comparison-heading');
   const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
+  $card.classList.remove('expanded');
   if (window.innerWidth >= 1200) {
     $card.style.maxWidth = `${354 - payload.cardPadding}px`;
   } else {
-    $card.style.maxWidth = '900px';
     $card.style.maxHeight = `${
       $heading.offsetHeight
       + $subcopy.offsetHeight
       + payload.cardPadding}px`;
   }
-  $card.classList.remove('expanded');
 }
 
 function expandCard($card, payload) {
@@ -103,15 +95,9 @@ function expandCard($card, payload) {
   const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
   const $featuresWrapper = $card.querySelector('.features-wrapper');
   const $ctasWrapper = $card.querySelector('.ctas-wrapper');
+  $card.classList.add('expanded');
   if (window.innerWidth >= 1200) {
     $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
-    $subcopy.style.maxWidth = 'unset';
-  } else {
-    $card.style.maxWidth = '900px';
-  }
-  $card.classList.add('expanded');
-
-  if (window.innerWidth >= 1200) {
     $card.classList.add('clip');
     setTimeout(() => {
       $card.classList.remove('clip');
@@ -124,6 +110,32 @@ function expandCard($card, payload) {
       + $ctasWrapper.offsetHeight
       + payload.cardPadding * 2
     }px`;
+  }
+}
+
+function unifyCardHeight($block, payload) {
+  const $cards = $block.querySelectorAll('.plans-comparison-card');
+  if (window.innerWidth >= 1200) {
+    Array.from($cards).forEach(($card) => {
+      $card.classList.remove('transition');
+
+      if ($card.classList.contains('card-premium')) {
+        $card.style.maxHeight = '';
+        $card.style.height = '';
+        payload.cardHeight = $card.offsetHeight;
+      }
+    });
+
+    Array.from($cards).forEach(($card) => {
+      $card.style.height = `${payload.cardHeight - payload.cardPadding}px`;
+      $card.classList.add('transition');
+    });
+  } else {
+    Array.from($cards).forEach(($card) => {
+      $card.style.width = '';
+      $card.style.height = '';
+      $card.style.maxWidth = '';
+    });
   }
 }
 
@@ -171,7 +183,6 @@ function decorateCTAs($block, payload, value) {
 
 function decorateCards($block, payload) {
   const $cardsWrapper = createTag('div', { class: 'plans-comparison-cards' });
-  const $headingWrapper = $block.querySelector('.main-heading-wrapper');
   $block.append($cardsWrapper);
 
   for (const [key, value] of Object.entries(payload)) {
@@ -191,6 +202,7 @@ function decorateCards($block, payload) {
       $subCopy.textContent = value.subCopy;
       $card.append($contentTop, $contentBottom);
       decorateToggleButton($block, $card, payload);
+
       if (key === 'premium') {
         expandCard($card, payload);
         payload.cardHeight = $card.offsetHeight;
@@ -206,8 +218,6 @@ function decorateCards($block, payload) {
       }
     }
   }
-
-  $block.style.height = `${payload.cardHeight + $headingWrapper.offsetHeight + payload.cardPadding}px`;
 }
 
 export default function decorate($block) {
@@ -239,23 +249,7 @@ export default function decorate($block) {
         if ($cards) {
           unifyCardHeight($newBlock, payload);
           window.addEventListener('resize', () => {
-            if (window.innerWidth < 1200) {
-              $newBlock.style.height = 'auto';
-            } else {
-              unifyCardHeight($newBlock, payload);
-            }
-            Array.from($cards).forEach(($card) => {
-              if (window.innerWidth < 1200) {
-                $card.style.height = 'auto';
-              } else {
-                $card.style.height = `${payload.cardHeight}px`;
-              }
-              if ($card.classList.contains('expanded')) {
-                expandCard($card, payload);
-              } else {
-                collapseCard($card, payload);
-              }
-            });
+            unifyCardHeight($newBlock, payload);
           });
         }
       }
