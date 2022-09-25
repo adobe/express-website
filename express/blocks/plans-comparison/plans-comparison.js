@@ -118,9 +118,13 @@ function expandCard($card, payload) {
 
 function toggleExpandableCard($block, $cardClicked, payload) {
   const $cards = $block.querySelectorAll('.plans-comparison-card');
-  Array.from($cards).forEach(($card) => {
+  const $paginations = $block.querySelectorAll('.pagination-pill');
+  Array.from($cards).forEach(($card, index) => {
     if ($card !== $cardClicked) {
       collapseCard($card, payload);
+      $paginations[index].classList.remove('active');
+    } else {
+      $paginations[index].classList.add('active');
     }
   });
   expandCard($cardClicked, payload);
@@ -132,8 +136,19 @@ function decorateToggleButton($block, $card, payload) {
 
   $card.append($toggleButton);
 
-  $card.addEventListener('click', () => {
-    toggleExpandableCard($block, $card, payload);
+  $card.addEventListener('click', (e) => {
+    if (!$card.classList.contains('expanded')) {
+      e.stopPropagation();
+      toggleExpandableCard($block, $card, payload);
+    }
+  });
+
+  $toggleButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if ($card.classList.contains('expanded')) {
+      const $otherCard = $block.querySelector('.plans-comparison-card:not(.expanded)');
+      toggleExpandableCard($block, $otherCard, payload);
+    }
   });
 }
 
@@ -187,13 +202,23 @@ function decorateCards($block, payload) {
       }
 
       $card.classList.add('transition');
-
-      if (key === 'free') {
-        expandCard($card, payload);
-      } else {
-        collapseCard($card, payload);
-      }
     }
+  }
+}
+
+function decoratePagination($block, payload) {
+  const $paginationWrapper = createTag('div', { class: 'pagination-wrapper' });
+  const $cards = $block.querySelectorAll('.plans-comparison-card');
+  if ($cards) {
+    Array.from($cards).forEach(($card) => {
+      const $paginationPill = createTag('span', { class: 'pagination-pill' });
+      $paginationWrapper.append($paginationPill);
+
+      $paginationPill.addEventListener('click', () => {
+        toggleExpandableCard($block, $card, payload);
+      });
+    });
+    $block.append($paginationWrapper);
   }
 }
 
@@ -221,9 +246,15 @@ export default function decorate($block) {
         $newBlock.innerHTML = payload.mainHeading;
         $newBlock.querySelector('div').classList.add('main-heading-wrapper');
         decorateCards($newBlock, payload);
-
+        decoratePagination($newBlock, payload);
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
         if ($cards) {
+          Array.from($cards).forEach(($card, index) => {
+            if (index === 0) {
+              toggleExpandableCard($newBlock, $card, payload);
+            }
+          });
+
           window.addEventListener('resize', () => {
             Array.from($cards).forEach(($card) => {
               if (window.innerWidth >= 1200) {
