@@ -67,9 +67,9 @@ function buildStandardPayload($block, payload) {
   $orToLink.textContent = 'bit.ly/3zWOkVU';
   $copy.append($orToLink);
   payload.copyParagraphs.push($subHeading, $copy);
-  payload.image = createOptimizedPicture('https://main--express-website--adobe.hlx.page/media_19efee4e43868abe18cd3f60225041a781599614a.png#width=1160&height=816');
+  payload.image = createOptimizedPicture('/express/media_19efee4e43868abe18cd3f60225041a781599614a.png#width=1160&height=816');
   payload.image.classList.add('foreground-image');
-  payload.QRCode = createStandardImage('express/blocks/app-store-blade/mobileappsblade_jdi_standard.png');
+  payload.QRCode = createStandardImage('/express/blocks/app-store-blade/mobileappsblade_jdi_standard.png');
   payload.QRCode.classList.add('qr-code');
   payload.badgeLink = 'https://adobesparkpost.app.link/eOBwLjVLpsb';
 }
