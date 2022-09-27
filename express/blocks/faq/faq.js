@@ -11,11 +11,13 @@
  */
 import {
   createTag,
-// eslint-disable-next-line import/no-unresolved
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 function decorateFAQBlocks($block) {
+  const showSchema = getMetadata('show-faq-schema');
   const faqs = [];
+  const entities = [];
   const $rows = Array.from($block.children);
   $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
@@ -35,14 +37,34 @@ function decorateFAQBlocks($block) {
     const $accordion = createTag('div', { class: 'faq-accordion' });
     $block.append($accordion);
 
-    const $questionDiv = createTag('div', { class: 'faq-question' });
+    const $questionDiv = createTag('h3', { class: 'faq-question' });
     $accordion.append($questionDiv);
     $questionDiv.innerHTML = question;
 
     const $answerDiv = createTag('div', { class: 'faq-answer' });
     $accordion.append($answerDiv);
     $answerDiv.innerHTML = answer;
+
+    entities.push({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: answer,
+      },
+    });
   });
+
+  if (showSchema !== 'no') {
+    const $schemaScript = document.createElement('script');
+    $schemaScript.setAttribute('type', 'application/ld+json');
+    $schemaScript.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: entities,
+    });
+    document.head.appendChild($schemaScript);
+  }
 
   // find previous h2 and move it in the FAQ
   const section = $block.closest('.section');
