@@ -45,8 +45,6 @@ function fetchTemplates() {
       }
     }, '');
 
-
-    console.log(filterString);
     return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${filterString}`)
       .then((response) => response.json())
       .then((response) => response);
