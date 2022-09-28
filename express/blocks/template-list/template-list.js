@@ -274,14 +274,18 @@ export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
       Array.from($block.children).forEach((row, index, array) => {
+        const cells = row.querySelectorAll('div');
         if (index === 0) {
-          cache.heading = row.textContent;
+          if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+            cache.heading = cells[1].textContent;
+          } else {
+            cache.heading = row.textContent;
+          }
           row.remove();
         } else if (index < array.length) {
-          const cells = row.querySelectorAll('div');
-
           if (cells.length >= 2) {
-            if (cells[0].textContent.toLowerCase() === 'type') {
+            if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
               cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
             } else {
               cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
