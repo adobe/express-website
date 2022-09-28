@@ -28,7 +28,10 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
-  filters: {},
+  filters: {
+    locales: 'en',
+    premium: false,
+  },
   total: 0,
   start: '',
   masonry: undefined,
