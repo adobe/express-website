@@ -28,18 +28,26 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const cache = {
   templates: [],
+  filters: {},
   total: 0,
-  type: '',
-  locales: 'en',
-  premium: false,
   start: '',
   masonry: undefined,
   authoringError: false,
 };
 
 function fetchTemplates() {
-  if (!cache.authoringError) {
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${cache.type} AND locales:${cache.locales} AND premium:${cache.premium}`)
+  if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
+    const filterString = Object.entries(cache.filters).reduce((string, [key, value]) => {
+      if (key === Object.keys(cache.filters).pop()) {
+        return `${string}${key}:${value}`;
+      } else {
+        return `${string}${key}:${value} AND `;
+      }
+    }, '');
+
+
+    console.log(filterString);
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${filterString}`)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -264,24 +272,23 @@ function populateTemplates($block, templates) {
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
-      const typeRow = $block.children[0].querySelectorAll('div');
-      const localesRow = $block.children[1];
-      const premiumRow = $block.children[2];
+      Array.from($block.children).forEach((row, index, array) => {
+        if (index === 0) {
+          cache.heading = row.textContent;
+          row.remove();
+        } else if (index < array.length) {
+          const cells = row.querySelectorAll('div');
 
-      if (typeRow[0].textContent.toLowerCase() === 'type' && !typeRow[1].textContent.length) {
-        cache.type = 'Authoring error: "type" row must have a value';
-        cache.authoringError = true;
-      } else {
-        cache.type = typeRow[1].textContent;
-      }
-
-      if (localesRow && localesRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'locales') {
-        cache.locales = localesRow.querySelectorAll('div')[1].textContent;
-      }
-
-      if (premiumRow && premiumRow.querySelectorAll('div')[0].textContent.toLowerCase() === 'premium') {
-        cache.premium = ['yes', 'true'].includes(premiumRow.querySelectorAll('div')[1].textContent);
-      }
+          if (cells.length >= 2) {
+            if (cells[0].textContent.toLowerCase() === 'type') {
+              cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+            } else {
+              cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+            }
+          }
+          row.remove();
+        }
+      });
 
       const fetchedTemplates = await processResponse();
 
@@ -293,7 +300,7 @@ export async function decorateTemplateList($block) {
         });
       }
     } else {
-      cache.type = 'Authoring error: first row must specify the template “type”';
+      cache.heading = 'Authoring error: first row must specify the template “type”';
       cache.authoringError = true;
     }
 
@@ -302,11 +309,11 @@ export async function decorateTemplateList($block) {
       const $sectionHeading = $parent.querySelector('div > h2');
       if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
         if (cache.authoringError) {
-          $sectionHeading.textContent = cache.type;
+          $sectionHeading.textContent = cache.heading;
         } else {
           const headingEnding = await fetchPlaceholders()
             .then((placeholders) => placeholders['api-powered-grid-heading']);
-          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.type} ${headingEnding}`;
+          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
         }
       }
     }
