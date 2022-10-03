@@ -163,6 +163,10 @@ function decorateCTAs($block, payload, value) {
     if (index === 0) {
       cta.classList.add('primary');
     }
+
+    cta.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
   });
 
   return $buttonsWrapper;
