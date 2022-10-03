@@ -56,6 +56,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     transition: max-width .7s, max-height .7s, filter .2s;
 }
 
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded.transition {
+    transition: max-width 1s, max-height .7s, filter .2s;
+}
+
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card:hover {
     background-color: #E6E6E6;
     cursor: pointer;
@@ -138,6 +142,26 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper,
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .ctas-wrapper {
     padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper:after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(#FFFFFF00, var(--color-white));
+}
+
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card:hover .features-wrapper:after {
+    background-image: linear-gradient(#FFFFFF00, var(--color-gray-200));
+}
+
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper:after {
+    content: unset;
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .ctas-wrapper {
@@ -288,6 +312,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
         column-gap: 16px;
     }
 
+    main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper .restained {
+        display: block;
+    }
+
     main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .ctas-wrapper {
         min-width: max-content;
     }
@@ -340,5 +368,13 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     main .plans-comparison-container .plans-comparison .pagination-wrapper .pagination-pill:hover,
     main .plans-comparison-container .plans-comparison .pagination-wrapper .pagination-pill.active {
         background-color: var(--color-gray-300);
+    }
+
+    main .plans-comparison-container .plans-comparison.restrained .plans-comparison-cards .plans-comparison-card .features-wrapper {
+        display: block;
+    }
+
+    main .plans-comparison-container .plans-comparison.restrained .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper {
+        display: grid;
     }
 }
