@@ -255,9 +255,11 @@ export default function decorate($block) {
             }
           });
 
-          Array.from($featuresWrappers).forEach((wrapper) => {
-            wrapper.style.maxHeight = payload.desiredHeight;
-          });
+          if (window.innerWidth >= 1200) {
+            Array.from($featuresWrappers).forEach((wrapper) => {
+              wrapper.style.maxHeight = payload.desiredHeight;
+            });
+          }
 
           $newBlock.classList.add('restrained');
 
