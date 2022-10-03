@@ -53,7 +53,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.transition {
-    transition: max-width .7s, max-height .7s;
+    transition: max-width .7s, max-height .7s, filter .2s;
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card:hover {
@@ -62,8 +62,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded:hover {
-    filter: unset;
-    cursor: unset;
+    filter: brightness(95%);
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card:hover .toggle-button {
@@ -122,17 +121,13 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     filter: drop-shadow(0px 0px 1px #000);
 }
 
-/*main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .toggle-button {*/
-/*    opacity: 0;*/
-/*    display: none;*/
-/*}*/
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .toggle-button {
     transform: rotate(45deg);
     cursor: pointer;
     background-color: #00000050;
 }
 
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .toggle-button:hover {
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded:hover .toggle-button {
     background-color: #00000040;
 }
 
