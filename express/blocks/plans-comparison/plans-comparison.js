@@ -132,7 +132,7 @@ function toggleExpandableCard($block, $cardClicked, payload) {
 
 function decorateToggleButton($block, $card, payload) {
   const $toggleButton = createTag('div', { class: 'toggle-button' });
-  $toggleButton.append(getIconElement('plus'));
+  $toggleButton.append(getIconElement('plus-heavy'));
 
   $card.append($toggleButton);
 
