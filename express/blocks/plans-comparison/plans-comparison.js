@@ -137,15 +137,10 @@ function decorateToggleButton($block, $card, payload) {
   $card.append($toggleButton);
 
   $card.addEventListener('click', (e) => {
-    if (!$card.classList.contains('expanded')) {
-      e.stopPropagation();
-      toggleExpandableCard($block, $card, payload);
-    }
-  });
-
-  $toggleButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    if ($card.classList.contains('expanded')) {
+    if (!$card.classList.contains('expanded')) {
+      toggleExpandableCard($block, $card, payload);
+    } else {
       const $otherCard = $block.querySelector('.plans-comparison-card:not(.expanded)');
       toggleExpandableCard($block, $otherCard, payload);
     }
@@ -248,22 +243,42 @@ export default function decorate($block) {
         decorateCards($newBlock, payload);
         decoratePagination($newBlock, payload);
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
+        const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
         if ($cards) {
           Array.from($cards).forEach(($card, index) => {
             if (index === 0) {
               toggleExpandableCard($newBlock, $card, payload);
             }
+
+            if (index === 1) {
+              payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
+            }
           });
 
+          Array.from($featuresWrappers).forEach((wrapper) => {
+            wrapper.style.maxHeight = payload.desiredHeight;
+          });
+
+          $newBlock.classList.add('restrained');
+
           window.addEventListener('resize', () => {
-            Array.from($cards).forEach(($card) => {
+            Array.from($cards).forEach(($card, index) => {
               if (window.innerWidth >= 1200) {
                 $card.style.maxHeight = '';
                 if ($card.classList.contains('expanded')) {
                   $card.style.maxWidth = `${$card.offsetWidth}px`;
+
+                  if ($card.classList.contains('card-premium')) {
+                    $featuresWrappers[index].style.maxHeight = '';
+                    payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
+                  }
                 } else {
                   collapseCard($card, payload);
                 }
+
+                Array.from($featuresWrappers).forEach((wrapper) => {
+                  wrapper.style.maxHeight = payload.desiredHeight;
+                });
               } else {
                 $card.style.maxWidth = '';
                 if ($card.classList.contains('expanded')) {
@@ -271,6 +286,10 @@ export default function decorate($block) {
                 } else {
                   collapseCard($card, payload);
                 }
+
+                Array.from($featuresWrappers).forEach((wrapper) => {
+                  wrapper.style.maxHeight = 'none';
+                });
               }
             });
           });
