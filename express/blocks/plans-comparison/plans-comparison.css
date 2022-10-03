@@ -45,7 +45,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     left: 0;
     height: 100%;
     width: 100%;
-    background-image: linear-gradient(#ffffff00, var(--color-white));
+    background-image: linear-gradient(#FFFFFF00, var(--color-white));
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded:after {
@@ -57,7 +57,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card:hover {
-    filter: brightness(97%);
+    background-color: #E6E6E6;
     cursor: pointer;
 }
 
@@ -119,6 +119,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .toggle-button .icon.icon-plus {
     height: 32px;
     width: 32px;
+    filter: drop-shadow(0px 0px 1px #000);
 }
 
 /*main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .toggle-button {*/
@@ -136,7 +137,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .toggle-button .icon.icon-plus {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1) drop-shadow(0px 0px 1px #fff);
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper,
