@@ -182,7 +182,8 @@ main .template-list .template:not(.placeholder) .icon-free-badge {
 }
 
 /* horizontal template-list */
-main .template-list-horizontal-fullwidth-container > div {
+main .template-list-horizontal-fullwidth-container > div,
+main .template-list-horizontal-fullwidth-collaboration-container > div {
   max-width: none;
   padding: 0;
 }
@@ -577,7 +578,7 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
   }
 
   main .template-list-fullwidth-container > div,
-  main .template-list-fullwidth-apipowered-container > div{
+  main .template-list-fullwidth-apipowered-container > div {
     max-width: none;
   }
 
@@ -744,8 +745,9 @@ main .template-list.horizontal .carousel-platform {
     max-width: 1024px;
   }
 
-  main .template-list.horizontal.fullwidth,
-  main .section.template-list-horizontal-fullwidth-container > div {
+  main .template-list.horizontal.fullwidth > div,
+  main .section.template-list-horizontal-fullwidth-container > div,
+  main .section.template-list-horizontal-fullwidth-collaboration-container > div {
     max-width: none;
   }
 
@@ -799,8 +801,62 @@ main .template-list-horizontal-fullwidth-mini-container > div {
   padding: 0;
 }
 
+main .template-list.collaboration .template-title > div {
+  display: block;
+  position: relative;
+}
+
+main .template-list.collaboration .template-title .social-links {
+  display: flex;
+  gap: 12px;
+}
+
+main .template-list.collaboration .template-title .social-links a.template-title-link {
+  height: 22px;
+  width: 22px;
+}
+
+main .template-list.collaboration .template-title .social-links a.template-title-link svg {
+  height: 100%;
+  width: 100%;
+}
+
+main .template-list.collaboration .template-title .social-links a.template-title-link:after {
+  content: unset;
+}
+
+main .template-list.collaboration h3 .template-title-link {
+  font-size: 22px;
+  line-height: 25px;
+  color: var(--color-black);
+}
+
+main .template-list.collaboration .template-title p:first-of-type {
+  max-width: 600px;
+  margin: 16px 0;
+}
+
+main .template-list.collaboration .template-title p:last-of-type {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+main .template-list.collaboration h3 .template-title-link:after {
+  all: unset;
+  content: '';
+  margin-left: 8px;
+  height: 24px;
+  width: 24px;
+  background-image: url('/express/icons/hyperlink.png');
+}
+
 @media (min-width: 1200px) {
   main .template-list-horizontal-fullwidth-mini-container .template-list.mini {
     display: none;
+  }
+
+  main .template-list.collaboration h3 .template-title-link:after {
+    margin-left: 16px;
   }
 }

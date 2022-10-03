@@ -12,6 +12,7 @@ main .browse-by-collaboration-container .browse-by-collaboration-card .button-co
   align-items: center;
   position: absolute;
   width: 100%;
+  max-width: 240px;
   height: 100%;
   border-radius: 7px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -111,6 +112,10 @@ main .browse-by-collaboration-container .browse-by-collaboration-card {
   margin: 0 24px 0 0;
 }
 
+main .browse-by-collaboration-container .browse-by-collaboration-card:first-of-type {
+  padding-left: 28px;
+}
+
 main .browse-by-collaboration-container .browse-by-collaboration-anchor {
   position: absolute;
   height: 100%;
@@ -168,6 +173,10 @@ main .browse-by-collaboration-container .browse-by-collaboration-title {
   main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
     padding: 0 28px;
     max-width: none;
+  }
+
+  main .browse-by-collaboration-container .browse-by-collaboration-card:first-of-type {
+    padding-left: unset;
   }
 }
 

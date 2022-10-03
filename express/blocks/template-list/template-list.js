@@ -403,7 +403,10 @@ export async function decorateTemplateList($block) {
     $titleRow.classList.add('template-title');
     $titleRow.querySelectorAll(':scope a').forEach(($a) => {
       $a.className = 'template-title-link';
-      $a.closest('p').classList.remove('button-container');
+      const p = $a.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
     });
   }
 
@@ -538,7 +541,8 @@ export default async function decorate($block) {
 
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
-    buildCarousel(':scope > .template', $block, !$block.classList.contains('mini'));
+    const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
+    buildCarousel(':scope > .template', $block, requireInfiniteScroll);
   } else {
     addAnimationToggle($block);
   }
