@@ -30,7 +30,6 @@ const cache = {
   templates: [],
   filters: {
     locales: 'en',
-    premium: false,
   },
   total: 0,
   start: '',
@@ -47,8 +46,8 @@ function fetchTemplates() {
         return `${string}${key}:${value} AND `;
       }
     }, '');
-
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&schema=template&orderBy=-remixCount&filters=${filterString}`)
+    
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&orderBy=-remixCount&filters=${filterString}`)
       .then((response) => response.json())
       .then((response) => response);
   }
