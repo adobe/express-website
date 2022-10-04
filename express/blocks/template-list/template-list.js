@@ -408,6 +408,24 @@ export async function decorateTemplateList($block) {
         p.classList.remove('button-container');
       }
     });
+
+    if ($block.classList.contains('collaboration')) {
+      const $titleHeading = $titleRow.querySelector('h3');
+      const $anchorLink = createTag('a', {
+        class: 'collaboration-anchor',
+        href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
+      });
+
+      $anchorLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText($anchorLink.href);
+        $anchorLink.classList.add('copied');
+        setTimeout(() => {
+          $anchorLink.classList.remove('copied');
+        }, 2000);
+      });
+      $titleHeading.append($anchorLink);
+    }
   }
 
   rows = templates.length;
