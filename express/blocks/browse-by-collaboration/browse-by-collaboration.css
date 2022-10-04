@@ -2,8 +2,29 @@ main .browse-by-collaboration-container {
   padding-bottom: 24px;
 }
 
+main .browse-by-collaboration-container .browse-by-collaboration-heading-section {
+  padding-left: 28px;
+  padding-right: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-heading-section .browse-by-collaboration-heading {
+  text-align: left;
+  font-size: 28px;
+  line-height: 30px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-heading-section .browse-by-collaboration-link-wrapper {
+  margin: 8px 0 0;
+}
+
 main .browse-by-collaboration-container .browse-by-collaboration-card {
-  max-width: max-content;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 24px 0 0;
 }
 
 main .browse-by-collaboration-container .browse-by-collaboration-card .button-container {
@@ -56,27 +77,6 @@ main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
   max-width: none;
 }
 
-main .browse-by-collaboration-container .browse-by-collaboration-heading-section {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  padding-left: 28px;
-  padding-right: 28px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-}
-
-main .browse-by-collaboration-container .browse-by-collaboration-heading-section .browse-by-collaboration-heading {
-  text-align: left;
-  font-size: 28px;
-  line-height: 30px;
-}
-
-main .browse-by-collaboration-container .browse-by-collaboration-heading-section .browse-by-collaboration-link-wrapper {
-  margin: 8px 0 0;
-}
-
 main .browse-by-collaboration-container .browse-by-collaboration-link {
   font-size: 16px;
   line-height: 22px;
@@ -102,14 +102,6 @@ main .browse-by-collaboration-container .browse-by-collaboration-link::after {
   margin-top: 5px;
   margin-left: 5px;
   margin-right: 2.25px;
-}
-
-main .browse-by-collaboration-container .browse-by-collaboration-card {
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  min-width: 123px;
-  margin: 0 24px 0 0;
 }
 
 main .browse-by-collaboration-container .browse-by-collaboration-card:first-of-type {
@@ -166,13 +158,11 @@ main .browse-by-collaboration-container .browse-by-collaboration-title {
 
 @media (min-width: 900px) {
   main .browse-by-collaboration-container .browse-by-collaboration-heading-section {
-    flex-direction: row;
     padding: 0;
   }
 
   main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
     padding: 0 28px;
-    max-width: none;
   }
 
   main .browse-by-collaboration-container .browse-by-collaboration-card:first-of-type {
@@ -183,6 +173,5 @@ main .browse-by-collaboration-container .browse-by-collaboration-title {
 @media (min-width: 1200px) {
   main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
     padding: 0 28px;
-    max-width: none;
   }
 }
