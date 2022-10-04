@@ -851,7 +851,7 @@ main .template-list.collaboration .template-title > div > h3 .collaboration-anch
   position: relative;
   height: 24px;
   width: 24px;
-  background-image: url('/express/icons/hyperlink.png');
+  background-image: url('/express/icons/link.svg');
   background-repeat: no-repeat;
   cursor: pointer;
 }
