@@ -385,6 +385,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     }
 
     main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .toggle-button .icon.icon-plus-heavy {
+        padding: 6px;
         height: 20px;
         width: 20px;
     }
