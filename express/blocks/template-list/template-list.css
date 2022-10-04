@@ -685,10 +685,6 @@ main .template-list.horizontal .carousel-platform {
     display: block;
   }
 
-  main .template-list.horizontal .carousel-platform {
-    scroll-padding: 0;
-  }
-
   main .template-list.horizontal .carousel-container .carousel-fader-left {
     background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
   }
@@ -877,7 +873,13 @@ main .template-list.collaboration .template-title > div > h3 .collaboration-anch
 }
 
 main .template-list.collaboration .carousel-container {
-  margin-left: 0;
+  margin-left: 6px;
+}
+
+@media (min-width: 900px) {
+  main .template-list.collaboration .carousel-container {
+    margin-left: 0;
+  }
 }
 
 @media (min-width: 1200px) {

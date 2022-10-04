@@ -14,7 +14,7 @@ main .browse-by-collaboration-container .browse-by-collaboration-card .button-co
   width: 100%;
   max-width: 240px;
   height: 100%;
-  border-radius: 7px;
+  border-radius: 12px;
   background-color: rgba(0, 0, 0, 0.5);
   top: 0;
   opacity: 0;
