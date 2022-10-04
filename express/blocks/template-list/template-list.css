@@ -848,6 +848,7 @@ main .template-list.collaboration .template-title p:last-of-type {
 
 main .template-list.collaboration .template-title > div > h3 .collaboration-anchor {
   display: inline-block;
+  position: relative;
   height: 24px;
   width: 24px;
   background-image: url('/express/icons/hyperlink.png');
@@ -855,18 +856,23 @@ main .template-list.collaboration .template-title > div > h3 .collaboration-anch
   cursor: pointer;
 }
 
-main .template-list.collaboration .template-title > div > h3 .collaboration-anchor:after {
-  content: 'copied!';
+main .template-list.collaboration .template-title > div > h3 .collaboration-anchor .clipboard-tag {
+  background-color: #268e6c;
+  color: var(--color-white);
+  white-space: nowrap;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  position: absolute;
+  left: 48px;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0;
-  display: inline-block;
-  padding-left: 28px;
-  font-size: 16px;
-  color: var(--color-black);
-  font-weight: 400;
-  transition: opacity .2s;
+  transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
-main .template-list.collaboration .template-title > div > h3 .collaboration-anchor.copied:after {
+main .template-list.collaboration .template-title > div > h3 .collaboration-anchor.copied .clipboard-tag {
+  left: 28px;
   opacity: 1;
 }
 

@@ -415,6 +415,10 @@ export async function decorateTemplateList($block) {
         class: 'collaboration-anchor',
         href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
       });
+      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
+      fetchPlaceholders().then((placeholders) => {
+        $clipboardTag.textContent = placeholders['tag-copied'];
+      });
 
       $anchorLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -424,6 +428,8 @@ export async function decorateTemplateList($block) {
           $anchorLink.classList.remove('copied');
         }, 2000);
       });
+
+      $anchorLink.append($clipboardTag);
       $titleHeading.append($anchorLink);
     }
   }
