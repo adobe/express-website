@@ -828,6 +828,7 @@ main .template-list.collaboration .template-title .social-links a.template-title
 main .template-list.collaboration h3 .template-title-link {
   font-size: 22px;
   line-height: 25px;
+  width: max-content;
   color: var(--color-black);
 }
 
