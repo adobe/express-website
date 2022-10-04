@@ -74,7 +74,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-    justify-content: left;
+    justify-content: flex-end;
     gap: 14px;
 }
 
@@ -169,7 +169,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     list-style: none;
     display: block;
     padding-bottom: 12px;
-    font-size: 18px;
+    font-size: 16px;
     max-width: 280px;
     white-space: nowrap;
     overflow: hidden;
@@ -180,7 +180,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     display: block;
     margin-top: 12px;
     padding-bottom: 16px;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 24px;
     max-width: 280px;
     white-space: nowrap;
@@ -388,5 +388,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
         padding: 6px;
         height: 20px;
         width: 20px;
+    }
+
+    main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li > picture {
+        height: 22px;
+        width: 22px;
     }
 }
