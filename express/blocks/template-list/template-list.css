@@ -876,6 +876,10 @@ main .template-list.collaboration .template-title > div > h3 .collaboration-anch
   opacity: 1;
 }
 
+main .template-list.collaboration .carousel-container {
+  margin-left: 0;
+}
+
 @media (min-width: 1200px) {
   main .template-list-horizontal-fullwidth-mini-container .template-list.mini {
     display: none;
