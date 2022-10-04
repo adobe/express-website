@@ -227,9 +227,9 @@ export default function decorate($block) {
   const $linkList = document.querySelector('.link-list-container');
   let fragmentUrl;
   if (locale === 'us') {
-    fragmentUrl = 'https://main--express-website--adobe.hlx.page/drafts/qiyundai/fragments/plans-comparison';
+    fragmentUrl = 'https://main--express-website--adobe.hlx.page/express/fragments/plans-comparison';
   } else {
-    fragmentUrl = `https://main--express-website--adobe.hlx.page/drafts/qiyundai/${locale}/fragments/plans-comparison`;
+    fragmentUrl = `https://main--express-website--adobe.hlx.page/${locale}/express/fragments/plans-comparison`;
   }
   decorateAsFragment($block, fragmentUrl);
 
