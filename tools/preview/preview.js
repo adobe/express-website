@@ -174,7 +174,6 @@ async function createExperiment() {
           },
         });
         const winner = variantsAsNums.reduce((w, v) => {
-          console.log(v);
           if (v.variant_conversion_rate > w.conversion_rate && v.p_value < 0.05) {
             w.conversion_rate = v.variant_conversion_rate;
             w.p_value = v.p_value;
@@ -182,13 +181,11 @@ async function createExperiment() {
           }
           return w;
         }, { variant: 'control', p_value: 1, conversion_rate: 0 });
-        console.log('winner', winner);
 
         // add summary
         const summary = div.querySelector('.hlx-info');
         summary.innerHTML = `Showing results for ${bigcountformat.format(totals.total_experimentations)} visits and ${bigcountformat.format(totals.total_conversions)} conversions: `;
         if (totals.total_conversion_events < 500 && winner.p_value > 0.05) {
-          console.log('totals', totals);
           summary.innerHTML += ` not yet enough data to determine a winner. Keep going until you get ${bigcountformat.format((500 * totals.total_experimentations) / totals.total_conversion_events)} visits.`;
         } else if (winner.p_value > 0.05) {
           summary.innerHTML += ' no significant difference between variants. In doubt, stick with <code>control</code>.';
