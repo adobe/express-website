@@ -75,8 +75,20 @@ function updateBlocks(data) {
       templateList.innerHTML = templateList.innerHTML.replace('default-type', data.templateTitle);
     }
 
-    if (data.premium) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-premium', data.premium);
+    if (data.templateTopics) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-topic', data.templateTopics);
+    }
+
+    if (data.templateTasks) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-tasks', data.templateTasks);
+    }
+
+    if (data.templateAnimated) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-animated', data.templateAnimated);
+    }
+
+    if (data.templatePremium) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-premium', data.templatePremium);
     }
 
     if (data.placeholderFormat) {
