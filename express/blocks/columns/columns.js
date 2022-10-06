@@ -197,7 +197,7 @@ export default function decorate($block) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
-          createFloatingButton($a);
+          createFloatingButton($a, $block.closest('.section').dataset.audience);
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }

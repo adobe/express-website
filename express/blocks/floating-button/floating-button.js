@@ -18,7 +18,7 @@ import {
   fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
-export async function createFloatingButton($a) {
+export async function createFloatingButton($a, audience) {
   const main = document.querySelector('main');
   loadCSS('/express/blocks/floating-button/floating-button.css');
 
@@ -35,12 +35,20 @@ export async function createFloatingButton($a) {
   const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper' });
   const $floatButton = createTag('div', { class: 'floating-button' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
+
+  if (audience) {
+    $floatButtonWrapper.dataset.audience = audience;
+    $floatButtonWrapper.dataset.sectionStatus = 'loaded';
+  }
+
   $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
   fetchPlaceholders().then((placeholders) => {
     $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
   });
+
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
+
   $floatButton.append($floatButtonLink);
   $floatButton.append($lottieScrollButton);
   $floatButtonWrapper.append($floatButton);
