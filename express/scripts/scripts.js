@@ -13,7 +13,7 @@
 
 window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
-window.RUM_HIGH_SAMPLE_RATE = 10;
+window.RUM_HIGH_SAMPLE_RATE = 50;
 
 /**
  * log RUM if part of the sample.
