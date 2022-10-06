@@ -120,7 +120,7 @@ async function buildPayload($block) {
     const pricing = await getGeoPricing();
     const subcopy = payload.premium.subCopy;
 
-    if (subcopy.indexOf('{{pricing-placeholder}}') === -1) {
+    if (subcopy.indexOf('{{pricing-placeholder}}') !== -1) {
       payload.premium.subCopy = subcopy.replace('{{pricing-placeholder}}', pricing);
     } else if (subcopy.indexOf('$') !== -1) {
       payload.premium.subCopy = `${subcopy.slice(0, subcopy.indexOf('$'))} $${pricing}.`;
