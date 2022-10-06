@@ -139,8 +139,10 @@ async function buildPayload($block) {
 
   if (payload && payload.premium && payload.premium.subCopy && payload.premium.pricingUrl) {
     const plan = await fetchPlan(payload.premium.pricingUrl);
-    const pricing = `${plan.country.toUpperCase()} ${plan.symbol}${plan.price}${plan.suffix}`;
+    const pricing = plan.formatted.replace('<strong>', '').replace('</strong>', '');
     const subcopy = payload.premium.subCopy;
+
+    console.log(plan);
 
     if (subcopy.indexOf('{{pricing}}') !== -1) {
       payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
