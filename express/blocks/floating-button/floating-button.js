@@ -18,7 +18,7 @@ import {
   fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
-export async function createFloatingButton($a, audience = undefined) {
+export async function createFloatingButton($a, audience) {
   const main = document.querySelector('main');
   loadCSS('/express/blocks/floating-button/floating-button.css');
 
