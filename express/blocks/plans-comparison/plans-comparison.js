@@ -142,8 +142,6 @@ async function buildPayload($block) {
     const pricing = plan.formatted.replace('<strong>', '').replace('</strong>', '');
     const subcopy = payload.premium.subCopy;
 
-    console.log(plan);
-
     if (subcopy.indexOf('{{pricing}}') !== -1) {
       payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
     }
