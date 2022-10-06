@@ -139,12 +139,15 @@ async function buildPayload($block) {
 
   if (payload && payload.premium && payload.premium.subCopy && payload.premium.pricingUrl) {
     const plan = await fetchPlan(payload.premium.pricingUrl);
-    const pricing = plan.formatted.replace('<strong>', '').replace('</strong>', '');
+    const pricing = `${plan.formatted.replace('<strong>', '').replace('</strong>', '')}`;
     const subcopy = payload.premium.subCopy;
 
     if (subcopy.indexOf('{{pricing}}') !== -1) {
-      payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
-      payload.premium.vatInfo = plan.vatInfo;
+      if (plan.vatInfo !== '') {
+        payload.premium.subCopy = subcopy.replace('{{pricing}}', `${pricing} ${plan.vatInfo}`);
+      } else {
+        payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
+      }
     }
   }
 
@@ -273,12 +276,6 @@ function decorateCards($block, payload) {
       decorateToggleButton($block, $card, payload);
 
       if (key === 'premium') {
-        if (payload.premium.vatInfo !== '') {
-          const $subscript = createTag('sub', { class: 'plans-comparison-sub-copy-vat' });
-          $subscript.textContent = payload.premium.vatInfo;
-          $subCopy.append($subscript);
-        }
-
         expandCard($card, payload);
         payload.cardHeight = $card.offsetHeight;
         collapseCard($card, payload);
