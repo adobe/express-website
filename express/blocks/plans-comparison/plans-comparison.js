@@ -144,6 +144,7 @@ async function buildPayload($block) {
 
     if (subcopy.indexOf('{{pricing}}') !== -1) {
       payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
+      payload.premium.vatInfo = plan.vatInfo;
     }
   }
 
@@ -272,6 +273,12 @@ function decorateCards($block, payload) {
       decorateToggleButton($block, $card, payload);
 
       if (key === 'premium') {
+        if (payload.premium.vatInfo !== '') {
+          const $subscript = createTag('sub', { class: 'plans-comparison-sub-copy-vat' });
+          $subscript.textContent = payload.premium.vatInfo;
+          $subCopy.append($subscript);
+        }
+
         expandCard($card, payload);
         payload.cardHeight = $card.offsetHeight;
         collapseCard($card, payload);
