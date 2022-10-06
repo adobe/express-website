@@ -11,7 +11,7 @@
  */
 
 import {
-  createTag, getIconElement, getLocale, loadBlocks,
+  createTag, getIconElement, getLocale, getOffer, loadBlocks,
 } from '../../scripts/scripts.js';
 
 async function decorateAsFragment($block, content) {
@@ -37,45 +37,65 @@ async function decorateAsFragment($block, content) {
   }
 }
 
-async function fetchPricingForRegion(geoLookup) {
-  const prefix = geoLookup && geoLookup !== 'us' ? `/${geoLookup}` : '';
-  const resp = await fetch(`${prefix}/express/pricing-sheet.json`);
-  const json = await resp.json();
+async function fetchPlan(planUrl) {
+  if (!window.pricingPlans) {
+    window.pricingPlans = {};
+  }
 
-  return json['plan-options'].data[1]['Option Full Price'];
-}
+  let plan = window.pricingPlans[planUrl];
 
-async function getGeoPricing() {
-  const userGeo = window.feds
-  && window.feds.data
-  && window.feds.data.location
-  && window.feds.data.location.country
-    ? window.feds.data.location.country : null;
+  if (!plan) {
+    plan = {};
+    const link = new URL(planUrl);
+    const params = link.searchParams;
 
-  const userLocale = navigator.languages
-  && navigator.languages.length
-    ? navigator.languages[0].toLowerCase()
-    : navigator.language.toLowerCase();
+    plan.url = planUrl;
+    plan.country = 'us';
+    plan.language = 'en';
+    plan.price = '9.99';
+    plan.currency = 'US';
+    plan.symbol = '$';
 
-  const geoLookup = async () => {
-    let region = '';
-    const resp = await fetch('/express/system/geo-map.json');
-    const json = await resp.json();
-    const matchedGeo = json.data.find((row) => (row.usergeo === userGeo));
-    const { userlocales, redirectlocalpaths, redirectdefaultpath } = matchedGeo;
-    region = redirectdefaultpath;
-
-    if (userlocales) {
-      const redirectLocalPaths = redirectlocalpaths.split(',');
-      const [userLanguage] = userLocale.split('-');
-      const userExpectedPath = `${userGeo.toLowerCase()}_${userLanguage}`;
-      region = redirectLocalPaths.find((locale) => locale.trim() === userExpectedPath) || region;
+    if (planUrl.includes('/sp/')) {
+      plan.offerId = 'FREE0';
+      plan.frequency = 'monthly';
+      plan.name = 'Free';
+      plan.stringId = 'free-trial';
+    } else {
+      plan.offerId = params.get('items[0][id]');
+      plan.frequency = null;
+      plan.name = 'Premium';
+      plan.stringId = '3-month-trial';
     }
-    return region;
-  };
 
-  const region = await geoLookup();
-  return fetchPricingForRegion(region);
+    if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1' || plan.offerId === 'CFB1B7F391F77D02FE858C43C4A5C64F') {
+      plan.frequency = 'Monthly';
+    } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24' || plan.offerId === 'BADDACAB87D148A48539B303F3C5FA92') {
+      plan.frequency = 'Annual';
+    } else {
+      plan.frequency = null;
+    }
+
+    const countryOverride = new URLSearchParams(window.location.search).get('country');
+    const offer = await getOffer(plan.offerId, countryOverride);
+
+    if (offer) {
+      plan.currency = offer.currency;
+      plan.price = offer.unitPrice;
+      plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
+      plan.country = offer.country;
+      plan.vatInfo = offer.vatInfo;
+      plan.language = offer.lang;
+      plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d\s,.+]+/g);
+      plan.prefix = offer.prefix ?? '';
+      plan.suffix = offer.suffix ?? '';
+      plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.prefix}${plan.rawPrice[0]}${plan.suffix}</strong>`);
+    }
+
+    window.pricingPlans[planUrl] = plan;
+  }
+
+  return plan;
 }
 
 async function buildPayload($block) {
@@ -101,6 +121,7 @@ async function buildPayload($block) {
         const subCopies = $row.querySelectorAll('div');
         payload.free.subCopy = subCopies[0].textContent;
         payload.premium.subCopy = subCopies[1].textContent;
+        payload.premium.pricingUrl = subCopies[1].querySelector('a').href;
       }
 
       if (index === 3) {
@@ -116,14 +137,13 @@ async function buildPayload($block) {
       }
     });
 
-  if (payload && payload.premium && payload.premium.subCopy) {
-    const pricing = await getGeoPricing();
+  if (payload && payload.premium && payload.premium.subCopy && payload.premium.pricingUrl) {
+    const plan = await fetchPlan(payload.premium.pricingUrl);
+    const pricing = `${plan.country.toUpperCase()} ${plan.symbol}${plan.price}${plan.suffix}`;
     const subcopy = payload.premium.subCopy;
 
-    if (subcopy.indexOf('{{pricing-placeholder}}') !== -1) {
-      payload.premium.subCopy = subcopy.replace('{{pricing-placeholder}}', pricing);
-    } else if (subcopy.indexOf('$') !== -1) {
-      payload.premium.subCopy = `${subcopy.slice(0, subcopy.indexOf('$'))} $${pricing}.`;
+    if (subcopy.indexOf('{{pricing}}') !== -1) {
+      payload.premium.subCopy = subcopy.replace('{{pricing}}', pricing);
     }
   }
 
@@ -173,14 +193,15 @@ function expandCard($card, payload) {
 function toggleExpandableCard($block, $cardClicked, payload) {
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   const $paginations = $block.querySelectorAll('.pagination-pill');
-  Array.from($cards).forEach(($card, index) => {
-    if ($card !== $cardClicked) {
-      collapseCard($card, payload);
-      $paginations[index].classList.remove('active');
-    } else {
-      $paginations[index].classList.add('active');
-    }
-  });
+  Array.from($cards)
+    .forEach(($card, index) => {
+      if ($card !== $cardClicked) {
+        collapseCard($card, payload);
+        $paginations[index].classList.remove('active');
+      } else {
+        $paginations[index].classList.add('active');
+      }
+    });
   expandCard($cardClicked, payload);
 }
 
@@ -265,14 +286,15 @@ function decoratePagination($block, payload) {
   const $paginationWrapper = createTag('div', { class: 'pagination-wrapper' });
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   if ($cards) {
-    Array.from($cards).forEach(($card) => {
-      const $paginationPill = createTag('span', { class: 'pagination-pill' });
-      $paginationWrapper.append($paginationPill);
+    Array.from($cards)
+      .forEach(($card) => {
+        const $paginationPill = createTag('span', { class: 'pagination-pill' });
+        $paginationWrapper.append($paginationPill);
 
-      $paginationPill.addEventListener('click', () => {
-        toggleExpandableCard($block, $card, payload);
+        $paginationPill.addEventListener('click', () => {
+          toggleExpandableCard($block, $card, payload);
+        });
       });
-    });
     $block.append($paginationWrapper);
   }
 }
@@ -291,9 +313,11 @@ export default function decorate($block) {
 
   document.addEventListener('planscomparisonloaded', async () => {
     const $section = document.querySelector('.plans-comparison-container');
+
     if ($linkList) {
       $linkList.before($section);
     }
+
     if ($section) {
       const $newBlock = $section.querySelector('.plans-comparison');
       if ($newBlock) {
