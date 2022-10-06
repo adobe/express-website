@@ -197,7 +197,12 @@ export default function decorate($block) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
-          createFloatingButton($a, $block.closest('.section').dataset.audience);
+          const columnsWithDataAudience = document.querySelectorAll('.section.columns-fullsize-center-container[data-audience]');
+          if (columnsWithDataAudience.length > 1) {
+            createFloatingButton($a, $block.closest('.section').dataset.audience);
+          } else {
+            createFloatingButton($a);
+          }
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
