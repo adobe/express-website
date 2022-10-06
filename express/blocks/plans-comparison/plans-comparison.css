@@ -178,6 +178,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .plans-comparison-sub-copy {
     display: block;
+    position: relative;
     margin-top: 12px;
     font-size: 18px;
     line-height: 24px;
@@ -185,11 +186,6 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .plans-comparison-sub-copy-vat {
-    font-size: 12px;
-    margin-left: 4px;
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li > picture {
@@ -218,14 +214,17 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     white-space: unset;
     overflow: unset;
     text-overflow: unset;
-    display: block;
     gap: 8px;
 }
 
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip .features-wrapper > li,
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip .plans-comparison-sub-copy {
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip .features-wrapper > li {
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip .plans-comparison-sub-copy {
+    white-space: nowrap;
     text-overflow: ellipsis;
 }
 
