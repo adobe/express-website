@@ -37,41 +37,95 @@ async function decorateAsFragment($block, content) {
   }
 }
 
-function buildPayload($block) {
+async function fetchPricingForRegion(geoLookup) {
+  const prefix = geoLookup && geoLookup !== 'us' ? `/${geoLookup}` : '';
+  const resp = await fetch(`${prefix}/express/pricing-sheet.json`);
+  const json = await resp.json();
+
+  return json['plan-options'].data[1]['Option Full Price'];
+}
+
+async function getGeoPricing() {
+  const userGeo = window.feds
+  && window.feds.data
+  && window.feds.data.location
+  && window.feds.data.location.country
+    ? window.feds.data.location.country : null;
+
+  const userLocale = navigator.languages
+  && navigator.languages.length
+    ? navigator.languages[0].toLowerCase()
+    : navigator.language.toLowerCase();
+
+  const geoLookup = async () => {
+    let region = '';
+    const resp = await fetch('/express/system/geo-map.json');
+    const json = await resp.json();
+    const matchedGeo = json.data.find((row) => (row.usergeo === userGeo));
+    const { userlocales, redirectlocalpaths, redirectdefaultpath } = matchedGeo;
+    region = redirectdefaultpath;
+
+    if (userlocales) {
+      const redirectLocalPaths = redirectlocalpaths.split(',');
+      const [userLanguage] = userLocale.split('-');
+      const userExpectedPath = `${userGeo.toLowerCase()}_${userLanguage}`;
+      region = redirectLocalPaths.find((locale) => locale.trim() === userExpectedPath) || region;
+    }
+    return region;
+  };
+
+  const region = await geoLookup();
+  return fetchPricingForRegion(region);
+}
+
+async function buildPayload($block) {
   const payload = {
     free: {},
     premium: {},
     cardPadding: window.innerWidth >= 1200 ? 64 : 40,
   };
-  Array.from($block.children).forEach(($row, index) => {
-    if (index === 0) {
-      payload.mainHeading = $row.innerHTML;
-    }
 
-    if (index === 1) {
-      const headings = $row.querySelectorAll('div');
-      payload.free.heading = headings[0].innerHTML;
-      payload.premium.heading = headings[1].innerHTML;
-    }
+  Array.from($block.children)
+    .forEach(($row, index) => {
+      if (index === 0) {
+        payload.mainHeading = $row.innerHTML;
+      }
 
-    if (index === 2) {
-      const subCopies = $row.querySelectorAll('div');
-      payload.free.subCopy = subCopies[0].textContent;
-      payload.premium.subCopy = subCopies[1].textContent;
-    }
+      if (index === 1) {
+        const headings = $row.querySelectorAll('div');
+        payload.free.heading = headings[0].innerHTML;
+        payload.premium.heading = headings[1].innerHTML;
+      }
 
-    if (index === 3) {
-      const lists = $row.querySelectorAll('ul');
-      payload.free.features = Array.from(lists[0].querySelectorAll('li'));
-      payload.premium.features = Array.from(lists[1].querySelectorAll('li'));
-    }
+      if (index === 2) {
+        const subCopies = $row.querySelectorAll('div');
+        payload.free.subCopy = subCopies[0].textContent;
+        payload.premium.subCopy = subCopies[1].textContent;
+      }
 
-    if (index === 4) {
-      const ctas = $row.querySelectorAll('div');
-      payload.free.ctas = Array.from(ctas[0].querySelectorAll('a'));
-      payload.premium.ctas = Array.from(ctas[1].querySelectorAll('a'));
+      if (index === 3) {
+        const lists = $row.querySelectorAll('ul');
+        payload.free.features = Array.from(lists[0].querySelectorAll('li'));
+        payload.premium.features = Array.from(lists[1].querySelectorAll('li'));
+      }
+
+      if (index === 4) {
+        const ctas = $row.querySelectorAll('div');
+        payload.free.ctas = Array.from(ctas[0].querySelectorAll('a'));
+        payload.premium.ctas = Array.from(ctas[1].querySelectorAll('a'));
+      }
+    });
+
+  if (payload && payload.premium && payload.premium.subCopy) {
+    const pricing = await getGeoPricing();
+    const subcopy = payload.premium.subCopy;
+
+    if (subcopy.indexOf('{{pricing-placeholder}}') === -1) {
+      payload.premium.subCopy = subcopy.replace('{{pricing-placeholder}}', pricing);
+    } else if (subcopy.indexOf('$') !== -1) {
+      payload.premium.subCopy = `${subcopy.slice(0, subcopy.indexOf('$'))} $${pricing}.`;
     }
-  });
+  }
 
   return payload;
 }
@@ -174,6 +228,7 @@ function decorateCTAs($block, payload, value) {
 
 function decorateCards($block, payload) {
   const $cardsWrapper = createTag('div', { class: 'plans-comparison-cards' });
+
   $block.append($cardsWrapper);
 
   for (const [key, value] of Object.entries(payload)) {
@@ -192,6 +247,7 @@ function decorateCards($block, payload) {
       $heading.innerHTML = value.heading;
       $subCopy.textContent = value.subCopy;
       $card.append($contentTop, $contentBottom);
+
       decorateToggleButton($block, $card, payload);
 
       if (key === 'premium') {
@@ -233,7 +289,7 @@ export default function decorate($block) {
   }
   decorateAsFragment($block, fragmentUrl);
 
-  document.addEventListener('planscomparisonloaded', () => {
+  document.addEventListener('planscomparisonloaded', async () => {
     const $section = document.querySelector('.plans-comparison-container');
     if ($linkList) {
       $linkList.before($section);
@@ -241,63 +297,70 @@ export default function decorate($block) {
     if ($section) {
       const $newBlock = $section.querySelector('.plans-comparison');
       if ($newBlock) {
-        payload = buildPayload($newBlock);
+        payload = await buildPayload($newBlock);
         $newBlock.innerHTML = payload.mainHeading;
-        $newBlock.querySelector('div').classList.add('main-heading-wrapper');
+        $newBlock.querySelector('div')
+          .classList
+          .add('main-heading-wrapper');
         decorateCards($newBlock, payload);
         decoratePagination($newBlock, payload);
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
         const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
         if ($cards) {
-          Array.from($cards).forEach(($card, index) => {
-            if (index === 0) {
-              toggleExpandableCard($newBlock, $card, payload);
-            }
+          Array.from($cards)
+            .forEach(($card, index) => {
+              if (index === 0) {
+                toggleExpandableCard($newBlock, $card, payload);
+              }
 
-            if (index === 1) {
-              payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
-            }
-          });
+              if (index === 1) {
+                payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
+              }
+            });
 
           if (window.innerWidth >= 1200) {
-            Array.from($featuresWrappers).forEach((wrapper) => {
-              wrapper.style.maxHeight = payload.desiredHeight;
-            });
+            Array.from($featuresWrappers)
+              .forEach((wrapper) => {
+                wrapper.style.maxHeight = payload.desiredHeight;
+              });
           }
 
           $newBlock.classList.add('restrained');
 
           window.addEventListener('resize', () => {
-            Array.from($cards).forEach(($card, index) => {
-              if (window.innerWidth >= 1200) {
-                $card.style.maxHeight = '';
-                if ($card.classList.contains('expanded')) {
-                  $card.style.maxWidth = `${$card.offsetWidth}px`;
+            Array.from($cards)
+              .forEach(($card, index) => {
+                if (window.innerWidth >= 1200) {
+                  $card.style.maxHeight = '';
+                  if ($card.classList.contains('expanded')) {
+                    $card.style.maxWidth = `${$card.offsetWidth}px`;
 
-                  if ($card.classList.contains('card-premium')) {
-                    $featuresWrappers[index].style.maxHeight = '';
-                    payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
+                    if ($card.classList.contains('card-premium')) {
+                      $featuresWrappers[index].style.maxHeight = '';
+                      payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
+                    }
+                  } else {
+                    collapseCard($card, payload);
                   }
-                } else {
-                  collapseCard($card, payload);
-                }
 
-                Array.from($featuresWrappers).forEach((wrapper) => {
-                  wrapper.style.maxHeight = payload.desiredHeight;
-                });
-              } else {
-                $card.style.maxWidth = '';
-                if ($card.classList.contains('expanded')) {
-                  $card.style.maxHeight = `${$card.offsetHeight}px`;
+                  Array.from($featuresWrappers)
+                    .forEach((wrapper) => {
+                      wrapper.style.maxHeight = payload.desiredHeight;
+                    });
                 } else {
-                  collapseCard($card, payload);
-                }
+                  $card.style.maxWidth = '';
+                  if ($card.classList.contains('expanded')) {
+                    $card.style.maxHeight = `${$card.offsetHeight}px`;
+                  } else {
+                    collapseCard($card, payload);
+                  }
 
-                Array.from($featuresWrappers).forEach((wrapper) => {
-                  wrapper.style.maxHeight = 'none';
-                });
-              }
-            });
+                  Array.from($featuresWrappers)
+                    .forEach((wrapper) => {
+                      wrapper.style.maxHeight = 'none';
+                    });
+                }
+              });
           });
         }
       }
