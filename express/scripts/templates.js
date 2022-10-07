@@ -19,6 +19,14 @@ async function fetchPageContent(path) {
   return window.templates.data.find((p) => p.path === path && p.live !== 'N');
 }
 
+async function fetchLinkList() {
+  if (!(window.linkLists && window.linkLists.data)) {
+    window.linkLists = {};
+    const resp = await fetch('/express/templates/top-priority-categories.json');
+    window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+  }
+}
+
 function updateLinkList(container, template, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
@@ -55,9 +63,17 @@ function updateBlocks(data) {
 
   const linkListContainer = linkList.querySelector('p').parentElement;
 
-  if (linkList && window.templates.data && data.heroAnimationLinkList) {
+  if (linkList && window.templates.data) {
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
-    const linkListData = data.heroAnimationLinkList.split(', ');
+    const linkListData = [];
+
+    if (window.linkLists && window.linkLists.data && data.shortTitle) {
+      window.linkLists.data.forEach((row) => {
+        if (row.parent === data.shortTitle) {
+          linkListData.push(row['child-siblings']);
+        }
+      });
+    }
 
     updateLinkList(linkListContainer, linkListTemplate, linkListData);
   } else {
@@ -65,36 +81,32 @@ function updateBlocks(data) {
   }
 
   if (templateList) {
-    if (data.templateLocale) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-locale', data.templateLocale);
+    if (data.shortTitle) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-title', data.shortTitle);
     } else {
-      templateList.innerHTML = templateList.innerHTML.replace('default-locale', 'en');
-    }
-
-    if (data.templateTitle) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-type', data.templateTitle);
-    }
-
-    if (data.templateTopics) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-topic', data.templateTopics);
+      templateList.innerHTML = templateList.innerHTML.replace('default-title', '');
     }
 
     if (data.templateTasks) {
       templateList.innerHTML = templateList.innerHTML.replace('default-tasks', data.templateTasks);
     }
 
-    if (data.templateAnimated) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-animated', data.templateAnimated);
+    if (data.templateTopics) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-topics', data.templateTopics);
+    }
+
+    if (data.templateLocale) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-locale', data.templateLocale);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replace('default-locale', 'en');
     }
 
     if (data.templatePremium) {
       templateList.innerHTML = templateList.innerHTML.replace('default-premium', data.templatePremium);
     }
 
-    if (data.placeholderFormat) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-format', data.placeholderFormat);
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replace('default-format', '2:3');
+    if (data.templateAnimated) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-animated', data.templateAnimated);
     }
 
     if (data.createText) {
@@ -103,6 +115,12 @@ function updateBlocks(data) {
 
     if (data.createLink) {
       templateList.innerHTML = templateList.innerHTML.replace('https://www.adobe.com/express/templates/default-create-link', data.createLink);
+    }
+
+    if (data.placeholderFormat) {
+      templateList.innerHTML = templateList.innerHTML.replace('default-format', data.placeholderFormat);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replace('default-format', '2:3');
     }
   }
 
@@ -129,6 +147,7 @@ function updateBlocks(data) {
 }
 
 const page = await fetchPageContent(window.location.pathname);
+await fetchLinkList();
 
 if (page) {
   updateBlocks(page);
