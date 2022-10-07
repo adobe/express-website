@@ -22,6 +22,9 @@ export default function decorate($block) {
   [...$block.querySelectorAll('a')].forEach((a) => {
     a.className = '';
     a.removeAttribute('target');
+    a.addEventListener('click', (ev) => {
+      $block.parentElement.parentElement.classList.toggle('open', false);
+    });
   });
 
   const toggle2 = document.createElement('a');
