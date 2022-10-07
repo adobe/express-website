@@ -1,3 +1,7 @@
-main .toc-container {
+main .toc-container .default-content-wrapper {
+  display: none;
+}
+
+main .toc-wrapper {
   display: none;
 }
