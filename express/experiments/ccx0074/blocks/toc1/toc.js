@@ -19,6 +19,11 @@ export default function decorate($block) {
   heading.innerText = toggle.innerText;
   $block.insertBefore(heading, $block.firstChild);
 
+  [...$block.querySelectorAll('a')].forEach((a) => {
+    a.className = '';
+    a.removeAttribute('target');
+  });
+
   const toggle2 = document.createElement('a');
   toggle2.classList.add('button');
   toggle2.classList.add('toc-close');

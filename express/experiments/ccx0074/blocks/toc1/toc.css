@@ -84,6 +84,10 @@ main .toc-container .toc div div:first-child {
   margin-right: 12px;
 }
 
+main .toc-container .toc a {
+  color: var(--body-color);
+}
+
 main .toc-container.open ~ .floating-button-wrapper {
   background: none;
 }
