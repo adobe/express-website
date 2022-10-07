@@ -5,11 +5,16 @@ main .toc-container {
 
 main .toc-container .default-content-wrapper {
   position: absolute;
+  top: -6px;
   right: 0;
 }
 
-main .toc-container .button-container {
+main .toc-container .default-content-wrapper .button-container {
   margin-top: 0;
+}
+
+main .toc-container .default-content-wrapper .button {
+  font-size: .8em;
 }
 
 main .toc-container .button:any-link {
@@ -27,19 +32,58 @@ main .toc-container .toc-wrapper {
   background: rgba(0, 0, 0, .75);
 }
 
-main .toc-container .toc-wrapper.open {
+main .toc-container.open .toc-wrapper {
   display: block;
-  height: calc(100vh - 84px);
-  z-index: 3;
+  height: calc(100vh - 64px);
+  z-index: 2;
 }
 
 main .toc-container .toc {
-  padding: 20px;
-  background: var(--color-gray-100);
+  position: relative;
+  padding: 24px 24px 84px;
+  background-color: var(--color-gray-100);
+  background-image: url('/express/icons/cc-express-logo.svg');
+  background-position: bottom 22px left 22px;
+  background-repeat: no-repeat;
+  background-size: auto 30px;
   font-weight: bold;
   text-align: left;
 }
 
+main .toc-container .toc-heading {
+  font-size: inherit;
+  margin-bottom: 32px;
+}
+
+main .toc-container .toc-heading:before {
+  display: inline-block;
+  content: '';
+  background: rgba(0, 0, 0, .1);
+  height: 24px;
+  width: 24px;
+  margin-right: 12px;
+  vertical-align: middle;
+}
+
+main .toc-container .toc-close {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+}
+
 main .toc-container .toc div div {
-  line-height: 2em;
+  display: inline-block;
+  line-height: 2.2em;
+  vertical-align: middle;
+}
+
+main .toc-container .toc div div:first-child {
+  background: rgba(0, 0, 0, .1);
+  height: 24px;
+  width: 24px;
+  margin-right: 12px;
+}
+
+main .toc-container.open ~ .floating-button-wrapper {
+  background: none;
 }
