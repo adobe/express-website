@@ -29,7 +29,7 @@ import { buildCarousel } from '../shared/carousel.js';
 const cache = {
   templates: [],
   filters: {
-    locales: 'en',
+    locales: '(en)',
   },
   total: 0,
   start: '',
@@ -39,8 +39,9 @@ const cache = {
 
 function fetchTemplates() {
   if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
-    const filterString = Object.entries(cache.filters).reduce((string, [key, value]) => {
-      if (key === Object.keys(cache.filters).pop()) {
+    const prunedFilter = Object.entries(cache.filters).filter(([, value]) => value !== '()');
+    const filterString = prunedFilter.reduce((string, [key, value]) => {
+      if (key === prunedFilter[prunedFilter.length - 1][0]) {
         return `${string}${key}:${value}`;
       } else {
         return `${string}${key}:${value} AND `;
@@ -121,7 +122,13 @@ async function processResponse() {
  * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
  */
 
-export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+export function createOptimizedPicture(src,
+  alt = '',
+  eager = false,
+  breakpoints = [{
+    media: '(min-width: 400px)',
+    width: '2000',
+  }, { width: '750' }]) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
