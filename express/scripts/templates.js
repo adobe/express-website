@@ -103,10 +103,14 @@ function updateBlocks(data) {
 
     if (data.templatePremium) {
       templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', '');
     }
 
     if (data.templateAnimated) {
       templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', '');
     }
 
     if (data.createText) {
