@@ -1,3 +1,7 @@
 main .toc-container {
+  display: block;
+}
 
+main .toc-wrapper {
+  display: none;
 }

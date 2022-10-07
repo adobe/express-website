@@ -1,3 +1,45 @@
 main .toc-container {
+  position: relative;
+  display: block;
+}
 
+main .toc-container .default-content-wrapper {
+  position: absolute;
+  right: 0;
+}
+
+main .toc-container .button-container {
+  margin-top: 0;
+}
+
+main .toc-container .button:any-link {
+  background: none;
+  border: none;
+  color: var(--color-info-accent);
+}
+
+main .toc-container .toc-wrapper {
+  display: none;
+  height: 0;
+  position: fixed;
+  top: 64px;
+  width: 100%;
+  background: rgba(0, 0, 0, .75);
+}
+
+main .toc-container .toc-wrapper.open {
+  display: block;
+  height: calc(100vh - 84px);
+  z-index: 3;
+}
+
+main .toc-container .toc {
+  padding: 20px;
+  background: var(--color-gray-100);
+  font-weight: bold;
+  text-align: left;
+}
+
+main .toc-container .toc div div {
+  line-height: 2em;
 }
