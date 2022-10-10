@@ -1,17 +1,14 @@
-
+function toggleToc(toggle, block, status) {
+  toggle.style.display = status ? 'none' : 'block';
+  block.parentElement.parentElement.classList.toggle('open', status);
+}
 export default function decorate($block) {
-  $block.parentElement.addEventListener('click', (ev) => {
-    if (ev.target === $block.parentElement) {
-      $block.parentElement.parentElement.classList.toggle('open', false);
-    }
-  });
-
   const toggle = document.querySelector('.default-content-wrapper .button.accent');
   toggle.classList.remove('accent');
   toggle.href = '#toc';
   toggle.target = '';
   toggle.addEventListener('click', (ev) => {
-    $block.parentElement.parentElement.classList.toggle('open');
+    toggleToc(toggle, $block);
   });
 
   const heading = document.createElement('h2');
@@ -23,7 +20,7 @@ export default function decorate($block) {
     a.className = '';
     a.removeAttribute('target');
     a.addEventListener('click', (ev) => {
-      $block.parentElement.parentElement.classList.toggle('open', false);
+      toggleToc(toggle, $block, false);
     });
   });
 
@@ -33,7 +30,13 @@ export default function decorate($block) {
   toggle2.href = '#toc';
   toggle2.innerText = 'Close';
   toggle2.addEventListener('click', (ev) => {
-    $block.parentElement.parentElement.classList.toggle('open', false);
+    toggleToc(toggle, $block, false);
   });
   $block.append(toggle2);
+
+  $block.parentElement.addEventListener('click', (ev) => {
+    if (ev.target === $block.parentElement) {
+      toggleToc(toggle, $block, false);
+    }
+  });
 }

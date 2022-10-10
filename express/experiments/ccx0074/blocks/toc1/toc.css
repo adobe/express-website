@@ -25,21 +25,25 @@ main .toc-container .button:any-link {
 
 main .toc-container .toc-wrapper {
   display: none;
-  height: 0;
-  position: fixed;
-  top: 64px;
-  width: 100%;
-  background: rgba(0, 0, 0, .75);
 }
 
 main .toc-container.open .toc-wrapper {
   display: block;
-  height: calc(100vh - 64px);
-  z-index: 2;
+}
+
+main .toc-container.open .toc-wrapper:before {
+  content: '';
+  background: rgba(0,0,0,.75);
+  height: 100vh;
+  width: 100%;
+  display: block;
+  z-index: 1;
+  position: fixed;
 }
 
 main .toc-container .toc {
   position: relative;
+  z-index: 1;
   padding: 24px 24px 84px;
   background-color: var(--color-gray-100);
   background-image: url('/express/icons/cc-express-logo.svg');
@@ -86,6 +90,10 @@ main .toc-container .toc div div:first-child {
 
 main .toc-container .toc a {
   color: var(--body-color);
+}
+
+main .toc-container.open .template-title p:first-child {
+  display: none;
 }
 
 main .toc-container.open ~ .floating-button-wrapper {
