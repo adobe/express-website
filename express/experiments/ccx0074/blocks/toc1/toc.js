@@ -32,13 +32,12 @@ function toggleToc(toggle, block, status) {
 }
 
 export default function decorate($block) {
-  const icon = document.createElement('span');
-  icon.innerHTML = getLottie('arrow-down', '/express/icons/arrow_down.json');
+  const iconHTML = getLottie('arrow-down', '/express/icons/purple-arrows.json');
   const toggle = document.querySelector('.default-content-wrapper .button.accent');
   toggle.classList.remove('accent');
   toggle.href = '#toc';
   toggle.target = '';
-  toggle.innerHTML = icon.outerHTML + toggle.innerHTML;
+  toggle.innerHTML = iconHTML + toggle.innerHTML;
   toggle.addEventListener('click', (ev) => {
     toggleToc(toggle, $block);
   });
@@ -72,6 +71,7 @@ export default function decorate($block) {
   toggle2.classList.add('toc-close');
   toggle2.href = '#toc';
   toggle2.innerText = 'Close';
+  toggle2.innerHTML = iconHTML + toggle2.innerHTML;
   toggle2.addEventListener('click', (ev) => {
     toggleToc(toggle, $block, false);
   });

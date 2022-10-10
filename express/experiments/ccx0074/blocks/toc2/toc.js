@@ -32,7 +32,7 @@ function toggleToc(toggle, block, status) {
 }
 
 export default function decorate($block) {
-  const iconHTML = getLottie('arrow-down', '/express/icons/arrow_down.json');
+  const iconHTML = getLottie('arrow-down', '/express/icons/arrow-down.json');
   const toggle = document.querySelector('.default-content-wrapper .button.accent');
   toggle.href = '#toc';
   toggle.target = '';

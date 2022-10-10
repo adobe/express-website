@@ -17,6 +17,12 @@ main .toc-container .default-content-wrapper .button {
   font-size: .8em;
 }
 
+main .toc-container .lottie {
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 0 -2px -8px;
+}
+
 main .toc-container .button:any-link {
   background: none;
   border: none;
@@ -73,6 +79,10 @@ main .toc-container .toc-close {
   position: absolute;
   right: 12px;
   bottom: 8px;
+}
+
+main .toc-container .toc-close .lottie {
+  transform: rotateX('180deg');
 }
 
 main .toc-container .toc div div {
