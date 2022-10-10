@@ -1,7 +1,12 @@
+import {
+  fixIcons,
+} from '../../../../scripts/scripts.js';
+
 function toggleToc(toggle, block, status) {
   toggle.style.display = status ? 'none' : 'block';
   block.parentElement.parentElement.classList.toggle('open', status);
 }
+
 export default function decorate($block) {
   const toggle = document.querySelector('.default-content-wrapper .button.accent');
   toggle.classList.remove('accent');
@@ -39,4 +44,6 @@ export default function decorate($block) {
       toggleToc(toggle, $block, false);
     }
   });
+
+  fixIcons($block);
 }
