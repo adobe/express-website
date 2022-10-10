@@ -1,6 +1,7 @@
 import {
   fixIcons,
   getIconElement,
+  getLottie,
 } from '../../../../scripts/scripts.js';
 
 function getMobileOperatingSystem() {
@@ -31,10 +32,13 @@ function toggleToc(toggle, block, status) {
 }
 
 export default function decorate($block) {
+  const icon = document.createElement('span');
+  icon.innerHTML = getLottie('arrow-down', '/express/icons/arrow-down.json');
   const toggle = document.querySelector('.default-content-wrapper .button.accent');
   toggle.classList.remove('accent');
   toggle.href = '#toc';
   toggle.target = '';
+  toggle.innerHTML = icon.outerHTML + toggle.innerHTML;
   toggle.addEventListener('click', (ev) => {
     toggleToc(toggle, $block);
   });

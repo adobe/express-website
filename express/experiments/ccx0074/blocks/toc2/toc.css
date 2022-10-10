@@ -15,10 +15,20 @@ main .toc-container .default-content-wrapper .button-container {
 
 main .toc-container .default-content-wrapper .button {
   padding: 2px 1em;
-  background: var(--color-gray-800);
-  border-color: var(--color-gray-800);
+  background: var(--color-brand-title);
+  border-color: var(--color-brand-title);
   font-size: .7em;
   font-weight: normal;
+}
+
+main .toc-container .lottie {
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 0 -2px -8px;
+}
+
+main .toc-container .default-content-wrapper .lottie {
+  margin: -2px 0 -2px -8px;
 }
 
 main .toc-container .toc-wrapper {
@@ -56,6 +66,10 @@ main .toc-container .toc-heading {
   font-size: var(--body-font-size-l);
   font-weight: 600;
   margin-bottom: 24px;
+}
+
+main .toc-container .toc-heading .lottie {
+  margin: 0 12px 0 -6px;
 }
 
 main .toc-container .toc div div {
