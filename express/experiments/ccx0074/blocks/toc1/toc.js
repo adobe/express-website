@@ -23,6 +23,9 @@ function getMobileOperatingSystem() {
 }
 
 function toggleToc(toggle, block, status) {
+  if (status === undefined) {
+    status = !block.parentElement.parentElement.classList.contains('open');
+  }
   toggle.style.display = status ? 'none' : 'block';
   block.parentElement.parentElement.classList.toggle('open', status);
 }

@@ -1,7 +1,110 @@
 main .toc-container {
+  position: relative;
   display: block;
 }
 
-main .toc-wrapper {
+main .toc-container .default-content-wrapper {
+  position: absolute;
+  top: -4px;
+  right: 0;
+}
+
+main .toc-container .default-content-wrapper .button-container {
+  margin-top: 4px;
+}
+
+main .toc-container .default-content-wrapper .button {
+  padding: 2px 1em;
+  background: var(--color-gray-800);
+  border-color: var(--color-gray-800);
+  font-size: .7em;
+  font-weight: normal;
+}
+
+main .toc-container .toc-wrapper {
   display: none;
+}
+
+main .toc-container.open .toc-wrapper {
+  display: block;
+}
+
+main .toc-container.open .toc-wrapper:before {
+  position: fixed;
+  display: block;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 1;
+  content: '';
+  background: rgba(0,0,0,.8);
+}
+
+main .toc-container .toc {
+  position: relative;
+  z-index: 1;
+  margin: 12px;
+  padding: 30px 40px;
+  background-color: var(--color-brand-title);
+  border-radius: 32px;
+  font-weight: bold;
+  text-align: left;
+}
+
+main .toc-container .toc-heading {
+  color: var(--color-white);
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+main .toc-container .toc div div {
+  display: inline-block;
+  height: 42px;
+  vertical-align: middle;
+}
+
+main .toc-container .toc .icon {
+  display: inline-block;
+  margin: 10px 0;
+  height: 18px;
+  width: 18px;
+}
+
+main .toc-container .toc .icon[class*='-store'] {
+  position: absolute;
+  right: 38px;
+  height: auto;
+  width: 120px;
+  margin-top: 0;
+}
+
+main .toc-container .toc .button {
+  background: none;
+  border: none;
+  margin: 0;
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+main .toc-container .toc .toc-close {
+  position: absolute;
+  right: 18px;
+  top: 27px;
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
+}
+
+main .toc-container .toc .toc-close:before {
+  position: relative;
+  display: inline;
+  vertical-align: middle;
+  top: 2px;
+  margin-right: 4px;
+  content: url(/express/icons/close-red.svg);
+}
+
+main .toc-container.open ~ .floating-button-wrapper {
+  background: none;
 }
