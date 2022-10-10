@@ -185,7 +185,11 @@ async function createExperiment() {
         // add summary
         const summary = div.querySelector('.hlx-info');
         summary.innerHTML = `Showing results for ${bigcountformat.format(totals.total_experimentations)} visits and ${bigcountformat.format(totals.total_conversions)} conversions: `;
-        if (totals.total_conversion_events < 500 && winner.p_value > 0.05) {
+        if (totals.total_conversion_events < 500
+          && winner.p_value > 0.05
+          && variantsAsNums[0].remaining_runtime) {
+          summary.innerHTML += ` not yet enough data to determine a winner. Keep going for about ${countformat.format(variantsAsNums[0].remaining_runtime)} days until you get ${bigcountformat.format((500 * totals.total_experimentations) / totals.total_conversion_events)} visits.`;
+        } else if (totals.total_conversion_events < 500 && winner.p_value > 0.05) {
           summary.innerHTML += ` not yet enough data to determine a winner. Keep going until you get ${bigcountformat.format((500 * totals.total_experimentations) / totals.total_conversion_events)} visits.`;
         } else if (winner.p_value > 0.05) {
           summary.innerHTML += ' no significant difference between variants. In doubt, stick with <code>control</code>.';
