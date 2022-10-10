@@ -197,7 +197,13 @@ export default function decorate($block) {
         if ($block.classList.contains('fullsize')) {
           $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
-          createFloatingButton($a);
+          const allColumns = document.querySelectorAll('.block.columns');
+          const columnsWithDataAudience = Array.from(allColumns).filter((block) => block.closest('.section[data-audience][data-section-status]'));
+          if (columnsWithDataAudience.length > 1) {
+            createFloatingButton($a, $block.closest('.section').dataset.audience);
+          } else {
+            createFloatingButton($a);
+          }
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
