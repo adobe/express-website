@@ -1,6 +1,26 @@
 import {
   fixIcons,
+  getIconElement,
 } from '../../../../scripts/scripts.js';
+
+function getMobileOperatingSystem() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    return 'Windows Phone';
+  }
+
+  if (/android/i.test(userAgent)) {
+    return 'Android';
+  }
+
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return 'iOS';
+  }
+
+  return 'unknown';
+}
 
 function toggleToc(toggle, block, status) {
   toggle.style.display = status ? 'none' : 'block';
@@ -16,18 +36,29 @@ export default function decorate($block) {
     toggleToc(toggle, $block);
   });
 
-  const heading = document.createElement('h2');
-  heading.classList.add('toc-heading');
-  heading.innerText = toggle.innerText;
-  $block.insertBefore(heading, $block.firstChild);
-
-  [...$block.querySelectorAll('a')].forEach((a) => {
+  [...$block.children].forEach((div) => {
+    const a = div.children.item(1).children.item(0);
     a.className = '';
     a.removeAttribute('target');
     a.addEventListener('click', (ev) => {
       toggleToc(toggle, $block, false);
     });
+    if (div.querySelector('.icon-dl-green')) {
+      const os = getMobileOperatingSystem();
+      const anchor = document.createElement('a');
+      a.parentElement.append(anchor);
+      if (os === 'iOS') {
+        anchor.append(getIconElement('apple-store'));
+      } else {
+        anchor.append(getIconElement('google-store'));
+      }
+    }
   });
+
+  const heading = document.createElement('h2');
+  heading.classList.add('toc-heading');
+  heading.innerText = toggle.innerText;
+  $block.insertBefore(heading, $block.firstChild);
 
   const toggle2 = document.createElement('a');
   toggle2.classList.add('button');

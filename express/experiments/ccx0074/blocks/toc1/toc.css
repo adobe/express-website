@@ -81,11 +81,20 @@ main .toc-container .toc div div {
   vertical-align: middle;
 }
 
-main .toc-container .toc div div:first-child {
-  background: rgba(0, 0, 0, .1);
+main .toc-container .toc .icon {
+  display: inline-block;
   height: 24px;
   width: 24px;
   margin-right: 12px;
+  vertical-align: middle;
+}
+
+main .toc-container .toc .icon[class*='-store'] {
+  position: absolute;
+  right: 12px;
+  height: auto;
+  width: 120px;
+  margin-top: 0;
 }
 
 main .toc-container .toc a {
