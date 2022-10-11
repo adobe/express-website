@@ -149,7 +149,6 @@ main .floating-button-wrapper .toolbox .notch-pill {
   height: 4px;
   width: 36px;
   background: var(--color-gray-300);
-  opacity: 30%;
 }
 
 main .floating-button-wrapper .toolbox .badge {
