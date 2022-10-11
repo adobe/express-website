@@ -1579,6 +1579,11 @@ function buildAutoBlocks($main) {
       $main.querySelector(':scope > div:last-of-type').append($blade);
     }
   }
+
+  if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
+    const $plansComparison = buildBlock('plans-comparison', '');
+    $main.querySelector(':scope > div:last-of-type').append($plansComparison);
+  }
 }
 
 function splitSections($main) {
@@ -2114,6 +2119,15 @@ export async function addFreePlanWidget(elem) {
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
     `;
+    document.addEventListener('planscomparisonloaded', () => {
+      const $learnMoreButton = createTag('a', { class: 'learn-more-button', href: '#plans-comparison-container' });
+      const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
+      $learnMoreButton.textContent = placeholders['learn-more'];
+      lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+      $learnMoreButton.append(lottieWrapper);
+      lazyLoadLottiePlayer();
+      widget.append($learnMoreButton);
+    });
     elem.append(widget);
     elem.classList.add('free-plan-container');
     // stack CTA and free plan widget if country not US, CN, KR or TW
