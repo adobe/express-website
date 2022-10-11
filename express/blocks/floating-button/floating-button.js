@@ -232,7 +232,8 @@ export async function createMFB($block, $parentSection) {
     const $cta = $ctaContainer.querySelector('a');
     loadCSS('/express/blocks/floating-button/floating-button.css');
 
-    const $buttonWrapper = await createFloatingButton($cta, $parentSection).then(((result) => result));
+    const $buttonWrapper = await createFloatingButton($cta, $parentSection)
+      .then(((result) => result));
     buildTools($buttonWrapper, tools);
   }
 }
