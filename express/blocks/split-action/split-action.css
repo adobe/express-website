@@ -67,7 +67,7 @@ main .split-action .icon {
 main .split-action > .buttons-wrapper {
     display: flex;
     align-items: center;
-    gap: 24px;
+    flex-wrap: wrap-reverse;
 }
 
 main .split-action > .buttons-wrapper > a.button {
@@ -78,7 +78,11 @@ main .split-action > .buttons-wrapper > a.button {
     background-color: var(--color-white);
     color: var(--color-info-accent);
     border: none;
-    margin: 0;
+    margin: 8px 8px 0 0;
+}
+
+main .split-action > .buttons-wrapper > a.button:last-of-type {
+    margin: 8px 0 0 0;
 }
 
 main .split-action > .buttons-wrapper > a.button.same-as-floating-button-CTA {
