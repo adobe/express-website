@@ -403,8 +403,35 @@ export async function decorateTemplateList($block) {
     $titleRow.classList.add('template-title');
     $titleRow.querySelectorAll(':scope a').forEach(($a) => {
       $a.className = 'template-title-link';
-      $a.closest('p').classList.remove('button-container');
+      const p = $a.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
     });
+
+    if ($block.classList.contains('collaboration')) {
+      const $titleHeading = $titleRow.querySelector('h3');
+      const $anchorLink = createTag('a', {
+        class: 'collaboration-anchor',
+        href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
+      });
+      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
+      fetchPlaceholders().then((placeholders) => {
+        $clipboardTag.textContent = placeholders['tag-copied'];
+      });
+
+      $anchorLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText($anchorLink.href);
+        $anchorLink.classList.add('copied');
+        setTimeout(() => {
+          $anchorLink.classList.remove('copied');
+        }, 2000);
+      });
+
+      $anchorLink.append($clipboardTag);
+      $titleHeading.append($anchorLink);
+    }
   }
 
   rows = templates.length;
@@ -538,7 +565,8 @@ export default async function decorate($block) {
 
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
-    buildCarousel(':scope > .template', $block, !$block.classList.contains('mini'));
+    const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
+    buildCarousel(':scope > .template', $block, requireInfiniteScroll);
   } else {
     addAnimationToggle($block);
   }
