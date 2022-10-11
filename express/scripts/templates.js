@@ -19,6 +19,14 @@ async function fetchPageContent(path) {
   return window.templates.data.find((p) => p.path === path && p.live !== 'N');
 }
 
+async function fetchLinkList() {
+  if (!(window.linkLists && window.linkLists.data)) {
+    window.linkLists = {};
+    const resp = await fetch('/express/templates/top-priority-categories.json');
+    window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+  }
+}
+
 function updateLinkList(container, template, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
@@ -55,9 +63,17 @@ function updateBlocks(data) {
 
   const linkListContainer = linkList.querySelector('p').parentElement;
 
-  if (linkList && window.templates.data && data.heroAnimationLinkList) {
+  if (linkList && window.templates.data) {
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
-    const linkListData = data.heroAnimationLinkList.split(', ');
+    const linkListData = [];
+
+    if (window.linkLists && window.linkLists.data && data.shortTitle) {
+      window.linkLists.data.forEach((row) => {
+        if (row.parent === data.shortTitle) {
+          linkListData.push(row['child-siblings']);
+        }
+      });
+    }
 
     updateLinkList(linkListContainer, linkListTemplate, linkListData);
   } else {
@@ -65,32 +81,50 @@ function updateBlocks(data) {
   }
 
   if (templateList) {
+    if (data.shortTitle) {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', '');
+    }
+
+    if (data.templateTasks) {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks);
+    }
+
+    if (data.templateTopics) {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics);
+    }
+
     if (data.templateLocale) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-locale', data.templateLocale);
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale);
     } else {
-      templateList.innerHTML = templateList.innerHTML.replace('default-locale', 'en');
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', 'en');
     }
 
-    if (data.templateTitle) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-type', data.templateTitle);
-    }
-
-    if (data.premium) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-premium', data.premium);
-    }
-
-    if (data.placeholderFormat) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-format', data.placeholderFormat);
+    if (data.templatePremium) {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium);
     } else {
-      templateList.innerHTML = templateList.innerHTML.replace('default-format', '2:3');
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', '');
+    }
+
+    if (data.templateAnimated) {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', '');
     }
 
     if (data.createText) {
-      templateList.innerHTML = templateList.innerHTML.replace('default-create-link-text', data.createText);
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText);
     }
 
     if (data.createLink) {
-      templateList.innerHTML = templateList.innerHTML.replace('https://www.adobe.com/express/templates/default-create-link', data.createLink);
+      templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink);
+    }
+
+    if (data.placeholderFormat) {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat);
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', '2:3');
     }
   }
 
@@ -117,6 +151,7 @@ function updateBlocks(data) {
 }
 
 const page = await fetchPageContent(window.location.pathname);
+await fetchLinkList();
 
 if (page) {
   updateBlocks(page);
