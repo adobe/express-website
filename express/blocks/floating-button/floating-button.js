@@ -217,9 +217,12 @@ function buildTools($wrapper, $tools) {
       }
     }
   });
+
+  $wrapper.classList.add('toolbox-opened');
+
   $notch.append($notchPill);
-  $toolBox.append($notch, $appStoreBadge, $background);
-  $wrapper.append($toolBox);
+  $toolBox.append($notch, $appStoreBadge);
+  $wrapper.append($toolBox, $background);
 }
 
 export async function createMFB($block, $parentSection) {
