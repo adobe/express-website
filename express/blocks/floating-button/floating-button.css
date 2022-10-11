@@ -135,18 +135,39 @@ main .floating-button-wrapper:first-of-type + .section {
 }
 
 main .floating-button-wrapper .toolbox {
+  pointer-events: auto;
   background-color: var(--color-white);
   box-sizing: border-box;
-  padding: 32px 32px 75px;
-  min-width: 320px;
-  margin-bottom: 24px;
-  border-radius: 32px;
+  padding: 32px 32px 0;
+  width: 100%;
+  min-width: 322px;
+  border-radius: 32px 32px 0 0;
   overflow: hidden;
-  position: absolute;
-  display: flex;
   flex-direction: column;
   text-align: left;
   bottom: 0;
+  z-index: 1;
+}
+
+main .floating-button-wrapper.toolbox-opened {
+  flex-direction: column-reverse;
+  height: unset;
+  align-items: center;
+  width: max-content;
+  transform: translateX(-50%);
+  left: 50%;
+}
+
+main .floating-button-wrapper.toolbox-opened .toolbox {
+  display: flex;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+main .floating-button-wrapper.toolbox-opened .floating-button {
+  background-color: var(--color-white);
+  border-radius: 0 0 36px 36px;
 }
 
 main .floating-button-wrapper .toolbox .notch {
@@ -168,7 +189,7 @@ main .floating-button-wrapper .toolbox .badge {
   position: absolute;
   max-width: 100px;
   top: -8px;
-  right: 32px;
+  right: 64px;
 }
 
 main .floating-button-wrapper .toolbox .tool {
@@ -196,14 +217,22 @@ main .floating-button-wrapper .toolbox .tool a {
   color: var(--color-black);
 }
 
-main .floating-button-wrapper .toolbox .toolbox-background {
+main .floating-button-wrapper.toolbox-opened .toolbox-background {
   position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
+  bottom: 0;
+  left: unset;
+  transform: unset;
+  height: 200vh;
+  width: 100vw;
   background-color: var(--color-black);
-  z-index: -1;
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+main .floating-button-wrapper.floating-button--hidden .toolbox,
+main .floating-button-wrapper.floating-button--hidden .toolbox-background {
+  opacity: 0;
 }
 
 @media screen and (min-width: 900px) {
