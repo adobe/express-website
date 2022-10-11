@@ -25,6 +25,19 @@ main .template-list.template-list-complete {
   min-height: unset;
 }
 
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper h2,
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper h3,
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper p {
+  text-align: left;
+  padding: 0 28px;
+  margin: 12px 0;
+}
+
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
 main .template-list {
   display: flex;
   flex-wrap: wrap;
