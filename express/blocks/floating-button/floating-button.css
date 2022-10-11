@@ -121,6 +121,79 @@ main .floating-button-wrapper:first-of-type + .section {
   padding-top: 0;
 }
 
+main .floating-button-wrapper .toolbox {
+  background-color: var(--color-white);
+  box-sizing: border-box;
+  padding: 32px 32px 75px;
+  min-width: 320px;
+  margin-bottom: 24px;
+  border-radius: 32px;
+  overflow: hidden;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  bottom: 0;
+}
+
+main .floating-button-wrapper .toolbox .notch {
+  position: absolute;
+  padding: 6px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+main .floating-button-wrapper .toolbox .notch-pill {
+  border-radius: 20px;
+  height: 4px;
+  width: 36px;
+  background: var(--color-gray-300);
+  opacity: 30%;
+}
+
+main .floating-button-wrapper .toolbox .badge {
+  position: absolute;
+  max-width: 100px;
+  top: -8px;
+  right: 32px;
+}
+
+main .floating-button-wrapper .toolbox .tool {
+  max-width: 72%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+main .floating-button-wrapper .toolbox .tool:first-of-type {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-gray-300);
+}
+
+main .floating-button-wrapper .toolbox .tool picture > img {
+  height: 22px;
+  max-width: 22px;
+  margin-right: 12px;
+  object-fit: contain;
+}
+
+main .floating-button-wrapper .toolbox .tool a {
+  font-size: 16px;
+  line-height: 21px;
+  color: var(--color-black);
+}
+
+main .floating-button-wrapper .toolbox .toolbox-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-black);
+  z-index: -1;
+}
+
 @media screen and (min-width: 900px) {
   /* reset above-banner styles */
   body.branch-banner-is-active #branch-banner-iframe {
