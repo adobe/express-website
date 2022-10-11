@@ -32,7 +32,7 @@ export function decorateCollaborations($block, payload) {
   const $categoriesWrapper = createTag('div', { class: 'browse-by-collaborations-wrapper' });
 
   payload.categories.forEach((collaboration) => {
-    const $collaboration = createTag('a', { class: 'browse-by-collaboration-card', href: collaboration.link, });
+    const $collaboration = createTag('a', { class: 'browse-by-collaboration-card', href: collaboration.link });
     const $collaborationImageWrapper = createTag('div', { class: 'browse-by-collaboration-image-wrapper' });
     const $collaborationImage = collaboration.$image;
     const $collaborationTitle = createTag('h4', { class: 'browse-by-collaboration-title' });
