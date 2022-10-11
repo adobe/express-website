@@ -1,6 +1,6 @@
 main .floating-button-wrapper {
   position: fixed;
-  left: 0;
+  /*left: 0;*/
   bottom: -1px;
   top: auto;
   right: auto;
@@ -14,10 +14,10 @@ main .floating-button-wrapper {
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  -webkit-box-align: flex-end;
-  -webkit-align-items: flex-end;
-  -ms-flex-align: flex-end;
-  align-items: flex-end;
+  /*-webkit-box-align: flex-end;*/
+  /*-webkit-align-items: flex-end;*/
+  /*-ms-flex-align: flex-end;*/
+  /*align-items: flex-end;*/
   mix-blend-mode: normal;
   box-sizing: border-box;
   padding: 0 6px;
@@ -25,7 +25,10 @@ main .floating-button-wrapper {
   background: -webkit-linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
   transition: bottom 0.6s ease-out, opacity 0.6s ease-out, height 0.6s ease-out;
-  height: 150px;
+  flex-direction: column-reverse;
+  align-items: center;
+  transform: translateX(-50%);
+  left: 50%;
 }
 
 body.branch-banner-is-active .floating-button-wrapper {
@@ -149,15 +152,13 @@ main .floating-button-wrapper .toolbox {
   z-index: 1;
 }
 
+main .floating-button-wrapper.initial-load,
 main .floating-button-wrapper.toolbox-opened {
-  flex-direction: column-reverse;
-  height: unset;
-  align-items: center;
   width: max-content;
-  transform: translateX(-50%);
-  left: 50%;
+  background: unset;
 }
 
+main .floating-button-wrapper.initial-load .toolbox,
 main .floating-button-wrapper.toolbox-opened .toolbox {
   display: flex;
   z-index: 1;
@@ -165,6 +166,7 @@ main .floating-button-wrapper.toolbox-opened .toolbox {
   transition: opacity 0.2s;
 }
 
+main .floating-button-wrapper.initial-load .floating-button,
 main .floating-button-wrapper.toolbox-opened .floating-button {
   background-color: var(--color-white);
   border-radius: 0 0 36px 36px;
@@ -217,6 +219,7 @@ main .floating-button-wrapper .toolbox .tool a {
   color: var(--color-black);
 }
 
+main .floating-button-wrapper.initial-load .toolbox-background,
 main .floating-button-wrapper.toolbox-opened .toolbox-background {
   position: fixed;
   bottom: 0;
@@ -226,7 +229,7 @@ main .floating-button-wrapper.toolbox-opened .toolbox-background {
   width: 100vw;
   background-color: var(--color-black);
   z-index: 0;
-  opacity: 1;
+  opacity: 0.75;
   transition: opacity 0.2s;
 }
 

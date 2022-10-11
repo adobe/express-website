@@ -217,7 +217,7 @@ function buildTools($wrapper, $tools) {
     }
   });
 
-  $wrapper.classList.add('toolbox-opened');
+  $wrapper.classList.add('initial-load');
 
   $notch.append($notchPill);
   $toolBox.append($notch, $appStoreBadge);
