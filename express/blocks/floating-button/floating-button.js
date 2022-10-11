@@ -16,6 +16,7 @@ import {
   lazyLoadLottiePlayer,
   getLottie,
   fetchPlaceholders,
+  getIconElement,
 } from '../../scripts/scripts.js';
 
 export async function createFloatingButton($a, audience) {
@@ -161,14 +162,85 @@ export async function createFloatingButton($a, audience) {
   return $floatButtonWrapper;
 }
 
+function getMobileOperatingSystem() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    return 'Windows';
+  }
+
+  if (/android/i.test(userAgent)) {
+    return 'Android';
+  }
+
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return 'iOS';
+  }
+
+  return 'unknown';
+}
+
+function decorateBadge() {
+  const $anchor = createTag('a');
+  const OS = getMobileOperatingSystem();
+
+  if ($anchor) {
+    $anchor.textContent = '';
+    $anchor.classList.add('badge');
+
+    if (OS === 'iOS') {
+      $anchor.append(getIconElement('apple-store'));
+    } else {
+      $anchor.append(getIconElement('google-store'));
+    }
+  }
+
+  return $anchor;
+}
+
+function buildTools($wrapper, $tools) {
+  const $toolBox = createTag('div', { class: 'toolbox' });
+  const $notch = createTag('a', { class: 'notch' });
+  const $notchPill = createTag('div', { class: 'notch-pill' });
+  const $appStoreBadge = decorateBadge();
+  const $background = createTag('div', { class: 'toolbox-background' });
+
+  $tools.forEach(($tool) => {
+    $tool.classList.add('tool');
+    $toolBox.append($tool);
+  });
+  $notch.append($notchPill);
+  $toolBox.append($notch, $appStoreBadge, $background);
+  $wrapper.append($toolBox);
+}
+
+export async function createMFB($block, $parentSection) {
+  const $ctaContainer = $block.querySelector('.button-container');
+  const tools = $block.querySelectorAll('li');
+  if ($ctaContainer) {
+    const $cta = $ctaContainer.querySelector('a');
+    loadCSS('/express/blocks/floating-button/floating-button.css');
+
+    const $buttonWrapper = await createFloatingButton($cta, $parentSection).then(((result) => result));
+    buildTools($buttonWrapper, tools);
+  }
+}
+
 export default function decorateBlock($block) {
   const $a = $block.querySelector('a.button');
   const $parentSection = $block.closest('.section');
-  if ($parentSection) {
-    createFloatingButton($a, $parentSection.dataset.audience);
+
+  if (Array.from($block.children).length <= 1) {
+    if ($parentSection) {
+      createFloatingButton($a, $parentSection.dataset.audience);
+    } else {
+      createFloatingButton($a);
+    }
   } else {
-    createFloatingButton($a);
+    createMFB($block, $parentSection);
   }
+
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
   const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('floating-button-wrapper')));
   emptySections.forEach((emptySection) => {
