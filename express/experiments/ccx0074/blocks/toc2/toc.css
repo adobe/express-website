@@ -32,7 +32,7 @@ main .toc-container .default-content-wrapper .lottie {
 }
 
 main .toc-container .toc-wrapper {
-  display: none;
+  /* display: none; */
 }
 
 main .toc-container.open .toc-wrapper {
@@ -50,22 +50,48 @@ main .toc-container.open .toc-wrapper:before {
   background: rgba(0,0,0,.8);
 }
 
+main .toc-container.open .toc-wrapper:after {
+  position: absolute;
+  display: block;
+  height: 4px;
+  width: 40px;
+  margin-top: -24px;
+  margin-left: -20px;
+  left: 50%;
+  z-index: 1;
+  content: '';
+  background: var(--color-gray-700);
+}
+
 main .toc-container .toc {
+  box-sizing: border-box;
   position: relative;
   z-index: 1;
-  margin: 12px;
-  padding: 30px 40px;
+  margin: 12px 12px 12px auto;
+  padding: 0;
   background-color: var(--color-brand-title);
   border-radius: 32px;
   font-weight: bold;
   text-align: left;
+  transition: opacity .3s ease-out, max-height .3s ease-in, width .3s ease-in, padding .3s ease-in;
+  width: 115px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+main .toc-container.open .toc {
+  padding: 30px 40px;
+  width: calc(100vw - 24px);
+  max-height: 100vh;
+  opacity: 1;
 }
 
 main .toc-container .toc-heading {
   color: var(--color-white);
   font-size: var(--body-font-size-l);
   font-weight: 600;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 main .toc-container .toc-heading .lottie {
@@ -74,7 +100,6 @@ main .toc-container .toc-heading .lottie {
 
 main .toc-container .toc div div {
   display: inline-block;
-  height: 42px;
   vertical-align: middle;
 }
 
@@ -84,6 +109,13 @@ main .toc-container .toc .icon {
   height: 18px;
   width: 18px;
 }
+
+main .toc-container .toc > div:nth-child(2) .icon { fill: #2b92f8; }
+main .toc-container .toc > div:nth-child(3) .icon { fill: #7777fa; }
+main .toc-container .toc > div:nth-child(4) .icon { fill: #d464fe; }
+main .toc-container .toc > div:nth-child(5) .icon { fill: #fc1f6d; }
+main .toc-container .toc > div:nth-child(6) .icon { fill: #fc4c00; }
+main .toc-container .toc > div:nth-child(7) .icon { fill: #bbde2e; }
 
 main .toc-container .toc .icon[class*='-store'] {
   position: absolute;
@@ -105,7 +137,7 @@ main .toc-container .toc .button {
 main .toc-container .toc .toc-close {
   position: absolute;
   right: 18px;
-  top: 27px;
+  top: 24px;
   font-size: var(--body-font-size-l);
   font-weight: 600;
 }

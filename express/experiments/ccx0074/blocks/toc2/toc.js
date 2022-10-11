@@ -42,17 +42,22 @@ export default function decorate($block) {
   });
 
   [...$block.children].forEach((div) => {
-    const a = div.children.item(1).children.item(0);
-    a.className = 'button';
-    a.removeAttribute('target');
-    a.addEventListener('click', (ev) => {
-      toggleToc(toggle, $block, false);
-    });
+    const wrapper = div.children.item(1);
+    const child = wrapper.children.length ? wrapper.children.item(0) : null;
+    if (child.nodeName === 'A') {
+      child.classList.remove('accent');
+      child.removeAttribute('target');
+      child.addEventListener('click', (ev) => {
+        toggleToc(toggle, $block, false);
+      });
+    } else if (child.nodeName === 'H2') {
+      child.classList.add('toc-heading');
+      child.innerHTML = iconHTML + child.innerHTML;
+    }
     if (div.querySelector('.icon-dl-green')) {
-      div.parentElement.append(div);
       const os = getMobileOperatingSystem();
       const anchor = document.createElement('a');
-      a.parentElement.append(anchor);
+      wrapper.append(anchor);
       if (os === 'iOS') {
         anchor.append(getIconElement('apple-store'));
       } else {
@@ -60,12 +65,6 @@ export default function decorate($block) {
       }
     }
   });
-
-  const heading = document.createElement('h2');
-  heading.classList.add('toc-heading');
-  heading.innerText = toggle.innerText;
-  heading.innerHTML = iconHTML + heading.innerHTML;
-  $block.insertBefore(heading, $block.firstChild);
 
   const toggle2 = document.createElement('a');
   toggle2.classList.add('button');

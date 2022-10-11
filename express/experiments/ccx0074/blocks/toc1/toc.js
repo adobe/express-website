@@ -37,41 +37,41 @@ export default function decorate($block) {
   toggle.classList.remove('accent');
   toggle.href = '#toc';
   toggle.target = '';
-  toggle.innerHTML = iconHTML + toggle.innerHTML;
+  toggle.innerHTML += iconHTML;
   toggle.addEventListener('click', (ev) => {
     toggleToc(toggle, $block);
   });
 
   [...$block.children].forEach((div) => {
-    const a = div.children.item(1).children.item(0);
-    a.className = '';
-    a.removeAttribute('target');
-    a.addEventListener('click', (ev) => {
-      toggleToc(toggle, $block, false);
-    });
+    const wrapper = div.children.item(1);
+    const child = wrapper.children.length ? wrapper.children.item(0) : null;
+    if (child.nodeName === 'A') {
+      child.className = '';
+      child.removeAttribute('target');
+      child.addEventListener('click', (ev) => {
+        toggleToc(toggle, $block, false);
+      });
+    } else if (child.nodeName === 'H2') {
+      child.classList.add('toc-heading');
+    }
     if (div.querySelector('.icon-dl-green')) {
       const os = getMobileOperatingSystem();
       const anchor = document.createElement('a');
-      a.parentElement.append(anchor);
+      wrapper.append(anchor);
       if (os === 'iOS') {
         anchor.append(getIconElement('apple-store'));
       } else {
         anchor.append(getIconElement('google-store'));
       }
     }
-  });
-
-  const heading = document.createElement('h2');
-  heading.classList.add('toc-heading');
-  heading.innerText = toggle.innerText;
-  $block.insertBefore(heading, $block.firstChild);
+  });  
 
   const toggle2 = document.createElement('a');
   toggle2.classList.add('button');
   toggle2.classList.add('toc-close');
   toggle2.href = '#toc';
   toggle2.innerText = 'Close';
-  toggle2.innerHTML = iconHTML + toggle2.innerHTML;
+  toggle2.innerHTML += iconHTML;
   toggle2.addEventListener('click', (ev) => {
     toggleToc(toggle, $block, false);
   });
