@@ -93,10 +93,11 @@ export async function createFloatingButton($a, audience) {
       hideScrollArrow();
     });
     window.addEventListener('scroll', () => {
+      const MFBOpened = $floatButtonWrapper.classList.contains('toolbox-opened') || $floatButtonWrapper.classList.contains('initial-load');
       if (clicked) return;
       if ($scrollAnchor.getBoundingClientRect().top < 100) {
         hideScrollArrow();
-      } else {
+      } else if (!MFBOpened) {
         showScrollArrow();
       }
     }, { passive: true });
@@ -199,12 +200,24 @@ function decorateBadge() {
   return $anchor;
 }
 
+function collapseToolBox($wrapper) {
+  $wrapper.classList.remove('initial-load');
+  $wrapper.classList.remove('toolbox-opened');
+}
+
+function toggleToolBox($wrapper) {
+  $wrapper.classList.toggle('toolbox-opened');
+}
+
 function buildTools($wrapper, $tools) {
   const $toolBox = createTag('div', { class: 'toolbox' });
   const $notch = createTag('a', { class: 'notch' });
   const $notchPill = createTag('div', { class: 'notch-pill' });
   const $appStoreBadge = decorateBadge();
   const $background = createTag('div', { class: 'toolbox-background' });
+  const $floatingButton = $wrapper.querySelector('.floating-button');
+  const $cta = $floatingButton.querySelector('a');
+
 
   $tools.forEach(($tool) => {
     if ($tool.querySelector('picture')) {
@@ -220,6 +233,18 @@ function buildTools($wrapper, $tools) {
 
   $wrapper.classList.add('initial-load');
 
+  setTimeout(() => {
+    collapseToolBox($wrapper);
+  }, 5000);
+
+  if ($cta) {
+    $cta.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleToolBox($wrapper);
+    });
+  }
+
+  $floatingButton.append(getIconElement('plus-heavy'));
   $notch.append($notchPill);
   $toolBox.append($notch, $appStoreBadge);
   $wrapper.append($toolBox, $background);
@@ -232,8 +257,15 @@ export async function createMFB($block, $parentSection) {
     const $cta = $ctaContainer.querySelector('a');
     loadCSS('/express/blocks/floating-button/floating-button.css');
 
-    const $buttonWrapper = await createFloatingButton($cta, $parentSection)
-      .then(((result) => result));
+    let $buttonWrapper;
+    if ($parentSection) {
+      $buttonWrapper = await createFloatingButton($cta, $parentSection.dataset.audience)
+        .then(((result) => result));
+    } else {
+      $buttonWrapper = await createFloatingButton($cta)
+        .then(((result) => result));
+    }
+
     buildTools($buttonWrapper, tools);
   }
 }
@@ -242,14 +274,18 @@ export default function decorateBlock($block) {
   const $a = $block.querySelector('a.button');
   const $parentSection = $block.closest('.section');
 
-  if (Array.from($block.children).length <= 1) {
-    if ($parentSection) {
-      createFloatingButton($a, $parentSection.dataset.audience);
+  if (Array.from($block.children).length > 0) {
+    if (Array.from($block.children).length === 1) {
+      if ($parentSection) {
+        createFloatingButton($a, $parentSection.dataset.audience);
+      } else {
+        createFloatingButton($a);
+      }
+    } else if ($parentSection) {
+      createMFB($block, $parentSection);
     } else {
-      createFloatingButton($a);
+      createMFB($block);
     }
-  } else {
-    createMFB($block, $parentSection);
   }
 
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));

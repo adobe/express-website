@@ -141,15 +141,33 @@ main .floating-button-wrapper .toolbox {
   pointer-events: auto;
   background-color: var(--color-white);
   box-sizing: border-box;
-  padding: 32px 32px 0;
+  padding: 0;
   width: 100%;
   min-width: 322px;
+  max-height: 0px;
   border-radius: 32px 32px 0 0;
   overflow: hidden;
   flex-direction: column;
   text-align: left;
   bottom: 0;
   z-index: 1;
+}
+
+main .floating-button-wrapper .icon-plus-heavy {
+  position: absolute;
+  left: 32px;
+  height: 18px;
+  width: 18px;
+  filter: invert(100%) brightness(100);
+  bottom: 50%;
+  transform: translateY(50%);
+  transition: transform 0.2s;
+  z-index: 2;
+}
+
+main .floating-button-wrapper.initial-load .icon-plus-heavy,
+main .floating-button-wrapper.toolbox-opened .icon-plus-heavy {
+  transform: translateY(50%) rotate(45deg);
 }
 
 main .floating-button-wrapper.initial-load,
@@ -160,10 +178,19 @@ main .floating-button-wrapper.toolbox-opened {
 
 main .floating-button-wrapper.initial-load .toolbox,
 main .floating-button-wrapper.toolbox-opened .toolbox {
+  padding: 30px 32px 0;
+  max-height: 400px;
   display: flex;
   z-index: 1;
   opacity: 1;
-  transition: opacity 0.2s;
+}
+
+main .floating-button-wrapper.initial-load .toolbox {
+  transition: max-height 2s, opacity 2s;
+}
+
+main .floating-button-wrapper.toolbox-opened .toolbox {
+  transition: max-height 0.5s, opacity 0.5s;
 }
 
 main .floating-button-wrapper.initial-load .floating-button,
@@ -175,7 +202,7 @@ main .floating-button-wrapper.toolbox-opened .floating-button {
 main .floating-button-wrapper .toolbox .notch {
   position: absolute;
   padding: 6px;
-  top: 0;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -191,7 +218,13 @@ main .floating-button-wrapper .toolbox .badge {
   position: absolute;
   max-width: 100px;
   top: -8px;
-  right: 64px;
+  right: 40px;
+  display: none;
+}
+
+main .floating-button-wrapper.initial-load .toolbox .badge,
+main .floating-button-wrapper.toolbox-opened .toolbox .badge{
+  display: initial;
 }
 
 main .floating-button-wrapper .toolbox .tool {
@@ -219,8 +252,7 @@ main .floating-button-wrapper .toolbox .tool a {
   color: var(--color-black);
 }
 
-main .floating-button-wrapper.initial-load .toolbox-background,
-main .floating-button-wrapper.toolbox-opened .toolbox-background {
+main .floating-button-wrapper .toolbox-background {
   position: fixed;
   bottom: 0;
   left: unset;
@@ -229,8 +261,20 @@ main .floating-button-wrapper.toolbox-opened .toolbox-background {
   width: 100vw;
   background-color: var(--color-black);
   z-index: 0;
+  opacity: 0;
+}
+
+main .floating-button-wrapper.initial-load .toolbox-background,
+main .floating-button-wrapper.toolbox-opened .toolbox-background {
   opacity: 0.75;
-  transition: opacity 0.2s;
+}
+
+main .floating-button-wrapper.slow-animation .toolbox-background {
+  transition: opacity 2s;
+}
+
+main .floating-button-wrapper.toolbox-opened .toolbox-background {
+  transition: opacity 0.5s;
 }
 
 main .floating-button-wrapper.floating-button--hidden .toolbox,
