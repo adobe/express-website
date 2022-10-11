@@ -77,7 +77,8 @@ main .toc-container.open .toc {
 }
 
 main .toc-container .toc-heading {
-  font-size: inherit;
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
   margin-bottom: 24px;
 }
 
@@ -105,7 +106,6 @@ main .toc-container .toc-close .lottie {
 
 main .toc-container .toc div div {
   display: inline-block;
-  line-height: 2.2em;
   vertical-align: middle;
 }
 
@@ -113,7 +113,7 @@ main .toc-container .toc .icon {
   display: inline-block;
   height: 18px;
   width: 18px;
-  margin-right: 12px;
+  margin: 7px 12px 7px 0;
   vertical-align: middle;
 }
 
@@ -122,7 +122,7 @@ main .toc-container .toc .icon[class*='-store'] {
   right: 12px;
   height: auto;
   width: 120px;
-  margin-top: 0;
+  margin: -8px 0 0 0;
 }
 
 main .toc-container .toc a {
