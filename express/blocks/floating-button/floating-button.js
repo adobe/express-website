@@ -207,8 +207,15 @@ function buildTools($wrapper, $tools) {
   const $background = createTag('div', { class: 'toolbox-background' });
 
   $tools.forEach(($tool) => {
-    $tool.classList.add('tool');
-    $toolBox.append($tool);
+    if ($tool.querySelector('picture')) {
+      $tool.classList.add('tool');
+      $toolBox.append($tool);
+    } else {
+      const $badgeAnchor = $tool.querySelector('a');
+      if ($badgeAnchor) {
+        $appStoreBadge.href = $badgeAnchor.href;
+      }
+    }
   });
   $notch.append($notchPill);
   $toolBox.append($notch, $appStoreBadge, $background);
