@@ -163,7 +163,12 @@ export async function createFloatingButton($a, audience) {
 
 export default function decorateBlock($block) {
   const $a = $block.querySelector('a.button');
-  createFloatingButton($a);
+  const $parentSection = $block.closest('.section');
+  if ($parentSection) {
+    createFloatingButton($a, $parentSection.dataset.audience);
+  } else {
+    createFloatingButton($a);
+  }
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
   const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('floating-button-wrapper')));
   emptySections.forEach((emptySection) => {
