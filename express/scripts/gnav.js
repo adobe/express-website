@@ -17,8 +17,44 @@ import {
   getLanguage,
   getHelixEnv,
   sampleRUM,
+  getCookie,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
+
+async function checkRedirect(location, geoLookup) {
+  const splits = location.pathname.split('/express/');
+  splits[0] = '';
+  const prefix = geoLookup && geoLookup !== 'us' ? `/${geoLookup}` : '';
+
+  // remove ?geocheck param
+  const params = new URLSearchParams(location.search);
+  params.delete('geocheck');
+  const queryString = params.toString() ? `?${params.toString()}` : '';
+
+  return `${prefix}${splits.join('/express/')}${queryString}${location.hash}`;
+}
+
+async function checkGeo(userGeo, userLocale, geoCheckForce) {
+  const geoLookup = async () => {
+    let region = '';
+    const resp = await fetch('/express/system/geo-map.json');
+    const json = await resp.json();
+    const matchedGeo = json.data.find((row) => (row.usergeo === userGeo));
+    const { userlocales, redirectlocalpaths, redirectdefaultpath } = matchedGeo;
+    region = redirectdefaultpath;
+
+    if (userlocales) {
+      const redirectLocalPaths = redirectlocalpaths.split(',');
+      const [userLanguage] = userLocale.split('-');
+      const userExpectedPath = `${userGeo.toLowerCase()}_${userLanguage}`;
+      region = redirectLocalPaths.find((locale) => locale.trim() === userExpectedPath) || region;
+    }
+    return (region);
+  };
+
+  const region = geoCheckForce ? await geoLookup() : getCookie('international') || await geoLookup();
+  return checkRedirect(window.location, region);
+}
 
 function loadIMS() {
   window.adobeid = {
@@ -137,7 +173,7 @@ function loadFEDS() {
     },
   };
 
-  window.addEventListener('feds.events.experience.loaded', () => {
+  window.addEventListener('feds.events.experience.loaded', async () => {
     document.querySelector('body').classList.add('feds-loaded');
     /* attempt to switch link */
     if (window.location.pathname.includes('/create/')
@@ -167,6 +203,22 @@ function loadFEDS() {
       });
     }
 
+    const geocheck = new URLSearchParams(window.location.search).get('geocheck');
+    if (geocheck === 'on' || geocheck === 'force') {
+      const userGeo = window.feds
+      && window.feds.data
+      && window.feds.data.location
+      && window.feds.data.location.country
+        ? window.feds.data.location.country : null;
+      const navigatorLocale = navigator.languages
+      && navigator.languages.length
+        ? navigator.languages[0].toLowerCase()
+        : navigator.language.toLowerCase();
+      const redirect = await checkGeo(userGeo, navigatorLocale, geocheck === 'force');
+      if (redirect) {
+        window.location.href = redirect;
+      }
+    }
     /* region based redirect to homepage */
     if (window.feds && window.feds.data && window.feds.data.location && window.feds.data.location.country === 'CN') {
       const regionpath = locale === 'us' ? '/' : `/${locale}/`;

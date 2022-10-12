@@ -235,7 +235,14 @@ export default async function decorate($block) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     buildStandardPayload($block, payload);
     const $parentSection = $block.parentNode.parentNode;
-    const $elementToFollow = document.querySelector('.columns-fullsize-center-container');
+    const $relevantRows = document.querySelector('.template-list-horizontal-fullwidth-mini-container');
+    let $elementToFollow;
+    if ($relevantRows) {
+      $elementToFollow = $relevantRows;
+    } else {
+      $elementToFollow = document.querySelector('.columns-fullsize-center-container');
+    }
+
     $parentSection.dataset.audience = 'mobile';
 
     if ($elementToFollow) {

@@ -1,0 +1,177 @@
+main .browse-by-collaboration-container {
+  padding-bottom: 24px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-heading-section {
+  padding-left: 28px;
+  padding-right: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-heading-section .browse-by-collaboration-heading {
+  text-align: left;
+  font-size: 28px;
+  line-height: 30px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-heading-section .browse-by-collaboration-link-wrapper {
+  margin: 8px 0 0;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-card {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 24px 0 0;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-card .button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  max-width: 240px;
+  height: 100%;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+  will-change: opacity;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-card .button-container .button {
+  text-decoration: none;
+  border-radius: 18px;
+  border: none;
+  padding: 5px 1.2em 6px 1.2em;
+  text-align: center;
+  font-size: var(--body-font-size-s);
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--body-line-height);
+  cursor: pointer;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  margin: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  height: fit-content;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-card:hover img {
+  transform: scale(1.1);
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-card:hover .button-container {
+  opacity: 1;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
+  padding: 0;
+  max-width: none;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-link {
+  font-size: 16px;
+  line-height: 22px;
+  display: flex;
+  padding: 0;
+  white-space: nowrap;
+  width: max-content;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-link::after {
+  display: flex;
+  width: 6px;
+  height: 6px;
+  border-top-width: 0;
+  border-left-width: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-style: solid;
+  border-color: var(--color-info-accent);
+  transform-origin: 75% 75%;
+  transform: rotate( -45deg );
+  content: "";
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 2.25px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-card:first-of-type {
+  padding-left: 28px;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-anchor {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-anchor:hover ~ .browse-by-collaboration-image-wrapper img {
+  transform: scale(1.1);
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-image-wrapper {
+  background-color: var(--color-gray-200);
+  min-height: 180px;
+  width: 240px;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-image-wrapper img {
+  display: block;
+  object-fit: cover;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  opacity: 1;
+  transition: transform 0.2s ease-in-out;
+}
+
+main .browse-by-collaboration-container .browse-by-collaboration-title {
+  margin: 0;
+  display: block;
+  height: 48px;
+  text-decoration: none;
+  color: var(--color-black);
+  background-color: var(--color-gray-100);
+  text-align: left;
+  padding: 8px 16px;
+  max-width: 208px;
+  overflow: hidden;
+  border-radius: 0 0 12px 12px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+}
+
+@media (min-width: 900px) {
+  main .browse-by-collaboration-container .browse-by-collaboration-heading-section {
+    padding: 0;
+  }
+
+  main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
+    padding: 0 28px;
+  }
+
+  main .browse-by-collaboration-container .browse-by-collaboration-card:first-of-type {
+    padding-left: unset;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .browse-by-collaboration-container .browse-by-collaboration-wrapper {
+    padding: 0 28px;
+  }
+}

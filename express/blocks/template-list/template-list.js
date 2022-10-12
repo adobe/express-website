@@ -31,6 +31,7 @@ const cache = {
   filters: {
     locales: '(en)',
   },
+  tailButton: '',
   total: 0,
   start: '',
   masonry: undefined,
@@ -172,7 +173,7 @@ async function fetchBlueprint(pathname) {
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
-  decorateMain($main);
+  await decorateMain($main);
 
   window.spark.$blueprint = $main;
   return ($main);
@@ -182,27 +183,36 @@ function populateTemplates($block, templates) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
-    const $link = $linkContainer.querySelector(':scope a');
-    if ($link) {
-      const $a = createTag('a', {
-        href: $link.href ? addSearchQueryToHref($link.href) : '#',
-      });
+    const $rowWithLinkInFirstCol = $tmplt.querySelector(':scope > div:first-of-type > a');
 
-      $a.append(...$tmplt.childNodes);
-      $tmplt.remove();
-      $tmplt = $a;
-      $block.append($a);
+    if ($linkContainer) {
+      const $link = $linkContainer.querySelector(':scope a');
+      if ($link) {
+        const $a = createTag('a', {
+          href: $link.href ? addSearchQueryToHref($link.href) : '#',
+        });
 
-      // convert A to SPAN
-      const $newLink = createTag('span', { class: 'template-link' });
-      $newLink.append($link.textContent);
+        $a.append(...$tmplt.childNodes);
+        $tmplt.remove();
+        $tmplt = $a;
+        $block.append($a);
 
-      $linkContainer.innerHTML = '';
-      $linkContainer.append($newLink);
+        // convert A to SPAN
+        const $newLink = createTag('span', { class: 'template-link' });
+        $newLink.append($link.textContent);
+
+        $linkContainer.innerHTML = '';
+        $linkContainer.append($newLink);
+      }
+    }
+
+    if ($rowWithLinkInFirstCol && !$tmplt.querySelector('img')) {
+      cache.tailButton = $rowWithLinkInFirstCol;
+      $rowWithLinkInFirstCol.remove();
     }
 
     if ($tmplt.children.length === 3) {
-      // look for for options in last cell
+      // look for options in last cell
       const $overlayCell = $tmplt.querySelector(':scope > div:last-of-type');
       const option = $overlayCell.textContent.trim();
       if (option) {
@@ -210,12 +220,23 @@ function populateTemplates($block, templates) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
           const ratios = option.split(sep).map((e) => +e);
-          const width = $block.classList.contains('sixcols') ? 165 : 200;
-          if (ratios[1]) {
-            const height = (ratios[1] / ratios[0]) * width;
-            $tmplt.style = `height: ${height - 21}px`;
-            if (width / height > 1.3) {
-              $tmplt.classList.add('wide');
+          if ($block.classList.contains('horizontal')) {
+            const height = $block.classList.contains('mini') ? 100 : 200;
+            if (ratios[1]) {
+              const width = (ratios[0] / ratios[1]) * height;
+              $tmplt.style = `width: ${width}px`;
+              if (width / height > 1.3) {
+                $tmplt.classList.add('tall');
+              }
+            }
+          } else {
+            const width = $block.classList.contains('sixcols') ? 165 : 200;
+            if (ratios[1]) {
+              const height = (ratios[1] / ratios[0]) * width;
+              $tmplt.style = `height: ${height - 21}px`;
+              if (width / height > 1.3) {
+                $tmplt.classList.add('wide');
+              }
             }
           }
         } else {
@@ -270,6 +291,7 @@ function populateTemplates($block, templates) {
         }
       }
     }
+
     if (isPlaceholder) {
       $tmplt.classList.add('placeholder');
     }
@@ -347,9 +369,16 @@ export async function decorateTemplateList($block) {
 
     const $blueprint = await fetchBlueprint(window.location.pathname);
 
-    const $bpBlock = $blueprint.querySelectorAll('.template-list')[i];
-    if ($bpBlock) {
-      $block.innerHTML = $bpBlock.innerHTML;
+    const $bpBlocks = $blueprint.querySelectorAll('.template-list');
+    if ($bpBlocks[i] && $bpBlocks[i].className === $block.className) {
+      $block.innerHTML = $bpBlocks[i].innerHTML;
+    } else if ($bpBlocks.length > 1 && $bpBlocks[i].className !== $block.className) {
+      for (let x = 0; x < $bpBlocks.length; x += 1) {
+        if ($bpBlocks[x].className === $block.className) {
+          $block.innerHTML = $bpBlocks[x].innerHTML;
+          break;
+        }
+      }
     } else {
       $block.remove();
     }
@@ -392,8 +421,35 @@ export async function decorateTemplateList($block) {
     $titleRow.classList.add('template-title');
     $titleRow.querySelectorAll(':scope a').forEach(($a) => {
       $a.className = 'template-title-link';
-      $a.closest('p').classList.remove('button-container');
+      const p = $a.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
     });
+
+    if ($block.classList.contains('collaboration')) {
+      const $titleHeading = $titleRow.querySelector('h3');
+      const $anchorLink = createTag('a', {
+        class: 'collaboration-anchor',
+        href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
+      });
+      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
+      fetchPlaceholders().then((placeholders) => {
+        $clipboardTag.textContent = placeholders['tag-copied'];
+      });
+
+      $anchorLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText($anchorLink.href);
+        $anchorLink.classList.add('copied');
+        setTimeout(() => {
+          $anchorLink.classList.remove('copied');
+        }, 2000);
+      });
+
+      $anchorLink.append($clipboardTag);
+      $titleHeading.append($anchorLink);
+    }
   }
 
   rows = templates.length;
@@ -506,6 +562,15 @@ function decorateLoadMoreButton($block) {
   updateButtonStatus($block, $loadMoreDiv);
 }
 
+function decorateTailButton($block) {
+  const $carouselPlatform = $block.querySelector('.carousel-platform');
+
+  if ($carouselPlatform) {
+    cache.tailButton.classList.add('tail-cta');
+    $carouselPlatform.append(cache.tailButton);
+  }
+}
+
 function cacheCreatedTemplate($block) {
   cache.templates.push($block.children[$block.children.length - 1]);
   $block.children[$block.children.length - 1].remove();
@@ -518,13 +583,17 @@ export default async function decorate($block) {
 
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
-    /* carousel */
-    buildCarousel(':scope > .template', $block, true);
+    const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
+    buildCarousel(':scope > .template', $block, requireInfiniteScroll);
   } else {
     addAnimationToggle($block);
   }
 
   if ($block.classList.contains('apipowered')) {
     decorateLoadMoreButton($block);
+  }
+
+  if ($block.classList.contains('mini')) {
+    decorateTailButton($block);
   }
 }

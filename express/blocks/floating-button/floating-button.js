@@ -18,7 +18,7 @@ import {
   fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
-export async function createFloatingButton($a) {
+export async function createFloatingButton($a, audience) {
   const main = document.querySelector('main');
   loadCSS('/express/blocks/floating-button/floating-button.css');
 
@@ -35,16 +35,24 @@ export async function createFloatingButton($a) {
   const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper' });
   const $floatButton = createTag('div', { class: 'floating-button' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
+
+  if (audience) {
+    $floatButtonWrapper.dataset.audience = audience;
+    $floatButtonWrapper.dataset.sectionStatus = 'loaded';
+  }
+
   $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
   fetchPlaceholders().then((placeholders) => {
     $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
   });
+
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
-  $floatButton.appendChild($floatButtonLink);
-  $floatButton.appendChild($lottieScrollButton);
-  $floatButtonWrapper.appendChild($floatButton);
-  main.prepend($floatButtonWrapper);
+
+  $floatButton.append($floatButtonLink);
+  $floatButton.append($lottieScrollButton);
+  $floatButtonWrapper.append($floatButton);
+  main.append($floatButtonWrapper);
   if ($floatButtonWrapperOld) {
     const $parent = $floatButtonWrapperOld.parentElement;
     if ($parent && $parent.children.length === 1) {
@@ -55,7 +63,7 @@ export async function createFloatingButton($a) {
   }
 
   // Floating button scroll/click events
-  const $scrollAnchor = document.querySelector('.block.template-list, .block.layouts, .steps-highlight-container') ?? document.querySelector('.section:nth-of-type(3)');
+  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
   const hideScrollArrow = () => {
     $floatButtonWrapper.classList.add('floating-button--scrolled');
     if (document.activeElement === $lottieScrollButton) $lottieScrollButton.blur();
@@ -118,8 +126,7 @@ export async function createFloatingButton($a) {
     }
   }
 
-  const $hero = document.querySelector('div.section');
-  const $heroCTA = $hero.querySelector('a.button.same-as-floating-button-CTA');
+  const $heroCTA = document.querySelector('a.button.same-as-floating-button-CTA');
   if ($heroCTA) {
     const hideButtonWhenIntersecting = new IntersectionObserver((entries) => {
       const $e = entries[0];
@@ -156,7 +163,12 @@ export async function createFloatingButton($a) {
 
 export default function decorateBlock($block) {
   const $a = $block.querySelector('a.button');
-  createFloatingButton($a);
+  const $parentSection = $block.closest('.section');
+  if ($parentSection) {
+    createFloatingButton($a, $parentSection.dataset.audience);
+  } else {
+    createFloatingButton($a);
+  }
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
   const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('floating-button-wrapper')));
   emptySections.forEach((emptySection) => {

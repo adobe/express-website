@@ -87,7 +87,7 @@ main .hero-3d iframe {
     border-width: 0px;
     border: none;
     z-index: 0;
-    width: 100vw;
+    width: 100%;
     pointer-events: all;
     padding-top: var(--header-height);
 }

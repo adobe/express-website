@@ -564,6 +564,12 @@ loadScript(martechURL, () => {
       const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent;
       adobeEventName = `${adobeEventName}playing:${sessionName}-${videoName}`;
       sparkEventName = `playing:${sessionName}-${videoName}`;
+    } else if ($a.classList.contains('notch')) {
+      adobeEventName = `${adobeEventName}splitAction:notch`;
+      sparkEventName = 'landing:splitActionNotch';
+    } else if ($a.classList.contains('underlay')) {
+      adobeEventName = `${adobeEventName}splitAction:background`;
+      sparkEventName = 'landing:splitActionBackground';
     } else if ($a.parentElement.classList.contains('floating-button')) {
       adobeEventName = `${adobeEventName}floatingButton:ctaPressed`;
       sparkEventName = 'landing:floatingButtonPressed';
@@ -721,6 +727,24 @@ loadScript(martechURL, () => {
       $slide.addEventListener('click', () => {
         trackButtonClick($slide);
       });
+    });
+
+    // for tracking split action block notch and underlay background
+    document.addEventListener('splitactionloaded', () => {
+      const $notch = d.querySelector('main .split-action-container .notch');
+      const $underlay = d.querySelector('main .split-action-container .underlay');
+
+      if ($notch) {
+        $notch.addEventListener('click', () => {
+          trackButtonClick($notch);
+        });
+      }
+
+      if ($underlay) {
+        $underlay.addEventListener('click', () => {
+          trackButtonClick($underlay);
+        });
+      }
     });
 
     // for tracking just the sticky banner close button
@@ -953,9 +977,26 @@ loadScript(martechURL, () => {
   decorateAnalyticsEvents();
 
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
-  const ENABLE_RATE_ACTION_AUDIENCE = 'enableRatingAction';
   const RETURNING_VISITOR_SEGMENT_ID = 23153796;
-  const USED_ACTION_SEGMENT_ID = 24241150;
+
+  const QUICK_ACTION_SEGMENTS = [
+    [24241150, 'enableRemoveBackgroundRating'],
+    [24793469, 'enableConvertToGifRating'],
+    [24793470, 'enableConvertToJpgRating'],
+    [24793471, 'enableConvertToMp4Rating'],
+    [24793472, 'enableConvertToPngRating'],
+    [24793473, 'enableConvertToSvgRating'],
+    [24793474, 'enableCropImageRating'],
+    [24793475, 'enableCropVideoRating'],
+    [24793476, 'enableLogoMakerRating'],
+    [24793477, 'enableMergeVideoRating'],
+    [24793478, 'enableQrGeneratorRating'],
+    [24793479, 'enableResizeImageRating'],
+    [24793480, 'enableChangeSpeedRating'],
+    [24793481, 'enableTrimVideoRating'],
+    [24793483, 'enableResizeVideoRating'],
+    [24793488, 'enableReverseVideoRating'],
+  ];
 
   Context.set('audiences', []);
   Context.set('segments', []);
@@ -1014,12 +1055,14 @@ loadScript(martechURL, () => {
             }
           }
 
-          if (json && json.segments && json.segments.includes(USED_ACTION_SEGMENT_ID)) {
-            const audiences = Context.get('audiences');
-            const segments = Context.get('segments');
-            audiences.push(ENABLE_RATE_ACTION_AUDIENCE);
-            segments.push(USED_ACTION_SEGMENT_ID);
-          }
+          QUICK_ACTION_SEGMENTS.forEach((QUICK_ACTION_SEGMENT) => {
+            if (json && json.segments && json.segments.includes(QUICK_ACTION_SEGMENT[0])) {
+              const audiences = Context.get('audiences');
+              const segments = Context.get('segments');
+              audiences.push(QUICK_ACTION_SEGMENT[1]);
+              segments.push(QUICK_ACTION_SEGMENT[0]);
+            }
+          });
 
           document.dispatchEvent(new Event('context_loaded'));
         };

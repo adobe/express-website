@@ -1,0 +1,109 @@
+main .split-action-container {
+    display: none;
+    opacity: 0;
+}
+
+main .split-action {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    text-align: left;
+    color: var(--color-white);
+    margin: 10px;
+    padding: 24px;
+    border-radius: 24px;
+    z-index: 100001;
+    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+    background-size: 400% 400%;
+    -webkit-animation: buttonGradient 45s ease infinite;
+    -moz-animation: buttonGradient 45s ease infinite;
+    animation: buttonGradient 45s ease infinite;
+    transition: bottom 0.2s;
+}
+
+main .block-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--color-white);
+    z-index: 100000;
+}
+
+main .block-background .underlay {
+    content: '';
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: var(--color-black);
+    opacity: 50%;
+}
+
+main .block-background img {
+    width: 100%;
+    object-fit: cover;
+}
+
+main .split-action > div {
+    padding: 12px 0;
+}
+
+main .split-action > div:nth-of-type(1) h2 {
+    text-align: left;
+}
+
+main .split-action > div:nth-of-type(2) {
+    padding-right: 32px;
+}
+
+main .split-action .icon {
+    min-width: 175px;
+    min-height: 32px;
+}
+
+main .split-action > .buttons-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+main .split-action > .buttons-wrapper > a.button {
+    font-size: 16px;
+    line-height: 20px;
+    padding: 14px 23px;
+    border-radius: 100px;
+    background-color: var(--color-white);
+    color: var(--color-info-accent);
+    border: none;
+    margin: 0;
+}
+
+main .split-action > .buttons-wrapper > a.button.same-as-floating-button-CTA {
+    padding: 14px 11px;
+    display: unset!important;
+    background-color: transparent;
+    color: var(--color-white);
+}
+
+main .split-action .notch {
+    position: absolute;
+    padding: 6px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+main .split-action .notch-pill {
+    border-radius: 20px;
+    height: 4px;
+    width: 36px;
+    background: var(--color-gray-200);
+    opacity: 30%;
+}
+
+main .split-action-container {
+    transition: opacity 0.2s;
+}

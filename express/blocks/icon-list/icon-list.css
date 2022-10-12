@@ -158,6 +158,11 @@ main .icon-list a:not(.button):any-link {
   font-weight: 600;
 }
 
+/* spacing between icon list and columns highlight */
+main .icon-list-center-container ~ .columns-highlight-container {
+  margin-top: 120px;
+}
+
 
 @media (min-width:900px) {
   main .icon-list.two-column {

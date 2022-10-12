@@ -47,6 +47,7 @@ main .how-to-steps .tip-text p {
 }
 
 main .how-to-steps .tip-text h3 {
+  margin-top: 0px;
   margin-bottom: 16px;
   font-size: var(--heading-font-size-s);
   text-align: left;

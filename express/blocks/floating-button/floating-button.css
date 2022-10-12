@@ -113,8 +113,21 @@ main .floating-button--scrolled .floating-button-lottie {
   user-select: none;
 }
 
-main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
+main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
   display: none;
+}
+
+main [data-audience].floating-button-wrapper {
+  display: none;
+}
+
+body[data-device="mobile"] main .floating-button-wrapper[data-audience="mobile"][data-section-status="loaded"],
+body[data-device="desktop"] main .floating-button-wrapper[data-audience="desktop"][data-section-status="loaded"] {
+  display: flex;
+}
+
+body[data-device="mobile"] main .floating-button-wrapper[data-audience="mobile"][data-section-status="loaded"] .same-as-floating-button-CTA {
+  display: block;
 }
 
 main .floating-button-wrapper:first-of-type + .section {
@@ -134,7 +147,7 @@ main .floating-button-wrapper:first-of-type + .section {
   }
 
   /* set desktop below/above the fold styles */
-  main .floating-button-wrapper ~ div:not(.banner-container) a.button.same-as-floating-button-CTA {
+  main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
     display: inline-block;
   }
 

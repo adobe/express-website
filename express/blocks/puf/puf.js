@@ -184,9 +184,11 @@ async function selectPlan($card, planUrl, sendAnalyticEvent) {
   if (plan) {
     const $pricingCta = $card.querySelector('.puf-card-top a');
     const $pricingHeader = $card.querySelector('.puf-pricing-header');
+    const $pricingVat = $card.querySelector('.puf-vat-info');
 
     $pricingHeader.innerHTML = plan.formatted;
     $pricingHeader.classList.add(plan.currency.toLowerCase());
+    $pricingVat.textContent = plan.vatInfo;
     $pricingCta.href = buildUrl(plan.url, plan.country, plan.language);
     $pricingCta.dataset.planUrl = planUrl;
     $pricingCta.id = plan.stringId;
@@ -258,6 +260,7 @@ function decorateCard($block, cardClass) {
   const $cardHeader = $cardTop.querySelector('h3');
   const $cardHeaderSvg = $cardTop.querySelector('svg');
   const $cardPricingHeader = createTag('h2', { class: 'puf-pricing-header' });
+  const $cardVat = createTag('div', { class: 'puf-vat-info' });
   const $cardPlansContainer = createTag('div', { class: 'puf-card-plans' });
   const $cardCta = createTag('a', { class: 'button large' });
   const $plans = $cardTop.querySelectorAll('li');
@@ -278,6 +281,7 @@ function decorateCard($block, cardClass) {
 
   $cardTop.prepend($cardCta);
   $cardTop.prepend($cardPlansContainer);
+  $cardTop.prepend($cardVat);
   $cardTop.prepend($cardPricingHeader);
   $cardTop.prepend($cardHeader);
 

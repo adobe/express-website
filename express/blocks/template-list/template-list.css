@@ -25,6 +25,19 @@ main .template-list.template-list-complete {
   min-height: unset;
 }
 
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper h2,
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper h3,
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper p {
+  text-align: left;
+  padding: 0 28px;
+  margin: 12px 0;
+}
+
+main .template-list-horizontal-fullwidth-collaboration-container .default-content-wrapper p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
 main .template-list {
   display: flex;
   flex-wrap: wrap;
@@ -182,7 +195,8 @@ main .template-list .template:not(.placeholder) .icon-free-badge {
 }
 
 /* horizontal template-list */
-main .template-list-horizontal-fullwidth-container > div {
+main .template-list-horizontal-fullwidth-container > div,
+main .template-list-horizontal-fullwidth-collaboration-container > div {
   max-width: none;
   padding: 0;
 }
@@ -199,6 +213,10 @@ main .template-list.horizontal.fullwidth {
   padding: 0 16px;
   display: block;
   margin-left: auto;
+}
+
+main .template-list.horizontal.fullwidth.mini {
+  padding: unset;
 }
 
 main .template-list.horizontal .template {
@@ -222,6 +240,49 @@ main .template-list.horizontal h4 {
 
 main .template-list.horizontal .template:not(.placeholder) .template-link {
   display: none;
+}
+
+main .template-list.horizontal.mini .template {
+  min-height: unset;
+  max-height: 100px;
+  max-width: 200px;
+  margin: 0 4px;
+}
+
+main .template-list.horizontal.mini .template.placeholder {
+  height: 100px;
+  width: 60px;
+  margin: 0 4px 0 12px;
+}
+
+main .template-list.horizontal.mini .template.placeholder > div:first-of-type {
+  height: unset;
+  width: unset;
+  display: block;
+  padding-top: 16px;
+}
+
+main .template-list.horizontal.mini .template.placeholder svg {
+  height: 18px;
+  width: 18px;
+}
+
+main .template-list.horizontal.mini .template.placeholder .template-link {
+  font-size: 12px;
+}
+
+main .template-list.horizontal.mini .template img,
+main .template-list.horizontal.mini .template video {
+  object-fit: cover;
+  height: 100px;
+}
+
+main .template-list.horizontal.mini .template .icon-free-badge {
+  height: 14px;
+  font-size: 8px;
+  padding: 0 5px;
+  right: 4px;
+  top: 4px;
 }
 
 main .template-list.sixcols .template,
@@ -316,6 +377,11 @@ main .template-list.fullwidth .template:not(.placeholder) .template-link {
   text-overflow: ellipsis;
   display: inline-block;
   height: fit-content;
+}
+
+main .template-list.horizontal.mini .template:not(.placeholder) .template-link {
+  padding: 2px 4px;
+  font-size: 8px;
 }
 
 main .template-list.horizontal .template:not(.placeholder) .template-link::after,
@@ -525,7 +591,7 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
   }
 
   main .template-list-fullwidth-container > div,
-  main .template-list-fullwidth-apipowered-container > div{
+  main .template-list-fullwidth-apipowered-container > div {
     max-width: none;
   }
 
@@ -627,13 +693,9 @@ main .template-list.horizontal .carousel-platform {
   }
 
   main .template-list.horizontal.fullwidth .carousel-container {
-    margin: 0 12px 20px 12px;
+    margin-bottom: 20px;
     max-width: none;
     display: block;
-  }
-
-  main .template-list.horizontal .carousel-platform {
-    scroll-padding: 0;
   }
 
   main .template-list.horizontal .carousel-container .carousel-fader-left {
@@ -692,8 +754,9 @@ main .template-list.horizontal .carousel-platform {
     max-width: 1024px;
   }
 
-  main .template-list.horizontal.fullwidth,
-  main .section.template-list-horizontal-fullwidth-container > div {
+  main .template-list.horizontal.fullwidth > div,
+  main .section.template-list-horizontal-fullwidth-container > div,
+  main .section.template-list-horizontal-fullwidth-collaboration-container > div {
     max-width: none;
   }
 
@@ -707,5 +770,151 @@ main .template-list.horizontal .carousel-platform {
     margin-left: 0;
     margin-right: 0;
     max-width: unset;
+  }
+}
+
+main .template-list.mini {
+  min-height: unset;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title {
+  margin-bottom: 8px;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:last-of-type {
+  margin-top: 16px;
+  font-weight: 800;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:first-of-type {
+  margin-bottom: 8px;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:last-of-type {
+  margin-top: 16px;
+  font-weight: 800;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-title .icon {
+  height: unset;
+  width: 167px;
+}
+
+main .template-list-horizontal-fullwidth-mini-container .template-list .carousel-fader-left,
+main .template-list-horizontal-fullwidth-mini-container .template-list .carousel-fader-right {
+  display: none;
+}
+
+main .template-list-horizontal-fullwidth-mini-container > div {
+  max-width: unset;
+  padding: 0;
+}
+
+main .template-list.collaboration {
+  margin-bottom: 40px;
+}
+
+main .template-list.collaboration .template-title > div {
+  display: block;
+  position: relative;
+}
+
+main .template-list.collaboration .template-title .social-links {
+  display: flex;
+  gap: 12px;
+}
+
+main .template-list.collaboration .template-title .social-links a.template-title-link {
+  height: 22px;
+  width: 22px;
+}
+
+main .template-list.collaboration .template-title .social-links a.template-title-link svg {
+  height: 100%;
+  width: 100%;
+}
+
+main .template-list.collaboration .template-title .social-links a.template-title-link:after {
+  content: unset;
+}
+
+main .template-list.collaboration .template-title > div > h3 {
+  scroll-margin: 72px;
+  display: flex;
+  gap: 8px;
+  font-size: 22px;
+  line-height: 25px;
+  color: var(--color-black);
+}
+
+main .template-list.collaboration .template-title p:first-of-type {
+  max-width: 600px;
+  margin: 16px 0;
+}
+
+main .template-list.collaboration .template-title p:last-of-type {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+main .template-list.collaboration .template-title > div > h3 .collaboration-anchor {
+  display: inline-block;
+  position: relative;
+  height: 24px;
+  width: 24px;
+  min-width: 24px;
+  background-image: url('/express/icons/link.svg');
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+main .template-list.collaboration .template-title > div > h3 .collaboration-anchor .clipboard-tag {
+  background-color: #268e6c;
+  color: var(--color-white);
+  white-space: nowrap;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  position: absolute;
+  right: 0;
+  bottom: 32px;
+  opacity: 0;
+  transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+main .template-list.collaboration .template-title > div > h3 .collaboration-anchor.copied .clipboard-tag {
+  opacity: 1;
+}
+
+main .template-list.collaboration .carousel-container {
+  margin-left: 6px;
+}
+
+@media (min-width: 900px) {
+  main .template-list.collaboration .carousel-container {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .template-list-horizontal-fullwidth-mini-container .template-list.mini {
+    display: none;
+  }
+
+  main .template-list.collaboration .template-title > div > h3 {
+    gap: 12px;
+  }
+
+  main .template-list.collaboration .template-title > div > h3 .collaboration-anchor .clipboard-tag {
+    right: unset;
+    bottom: unset;
+    top: 50%;
+    left: 48px;
+    transform: translateY(-50%);
+  }
+
+  main .template-list.collaboration .template-title > div > h3 .collaboration-anchor.copied .clipboard-tag {
+    left: 28px;
   }
 }

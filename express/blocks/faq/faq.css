@@ -47,6 +47,7 @@ main .faq .faq-answer {
 
 main .faq .faq-question {
     padding: 0 0 24px 0;
+    text-align: left;
 }
 
 main .faq .faq-answer ul {

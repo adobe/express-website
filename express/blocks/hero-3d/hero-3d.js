@@ -64,10 +64,9 @@ function loadSplineFrame(block, href, delay = 0) {
  * @param {HTMLDivElement} block
  */
 export function prependDownloadIcon(block) {
-  const ctas = block.querySelectorAll('.button-container a');
-
+  const ctas = block.querySelectorAll('.button-container a.button');
   ctas.forEach((cta) => {
-    if (cta.innerText.toLowerCase().startsWith('download')) {
+    if (cta.parentElement.tagName !== 'EM') {
       const icon = getIconElement('download');
       cta.prepend(icon);
     }

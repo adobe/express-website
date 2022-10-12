@@ -153,7 +153,7 @@ main .hero-animation.white-text a:any-link {
     max-width: 30%;
     left: 30%;
     transform: translate(-50%, -50%);
-  }   
+  }
 }
 
 @media (max-width: 399px) {
@@ -192,7 +192,7 @@ main .hero-animation.white-text a:any-link {
   main .hero-animation .hero-animation-foreground > :first-child {
     margin-top: 0;
   }
-  
+
   main .hero-animation .hero-animation-foreground > :last-child {
     margin-bottom: 0;
   }
@@ -280,25 +280,50 @@ main .hero-animation .hero-shadow picture {
 
 /* free plan widget */
 
+
 main .hero-animation .button-container.free-plan-container {
   justify-content: left;
   align-items: flex-start;
   flex-direction: column;
 }
 
-main .hero-animation .button-container.free-plan-container .free-plan-widget {
+main .hero-animation .free-plan-widget {
   margin-top: 40px;
   color: var(--body-color);
 }
 
-main .hero-animation.wide .button-container.free-plan-container {
-  flex-direction: row;
-  align-items: center;
-}
-
-main .hero-animation.wide .button-container.free-plan-container .free-plan-widget {
+main .hero-animation.wide .free-plan-widget {
   margin: 0;
   background-color: transparent;
+}
+
+main .hero-animation.wide .free-plan-widget {
+  padding-left: 0;
+}
+
+@media (min-width: 900px) {
+  main .hero-animation.wide .button-container.free-plan-container {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container a.button {
+    margin-right: 24px;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container.stacked {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container .free-plan-widget {
+    margin-top: 0;
+    padding: 16px 24px;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container.stacked .free-plan-widget {
+    padding-left: 0;
+  }
 }
 
 /* Japanese font sizing styles */
