@@ -237,14 +237,14 @@ function toggleToolBox($wrapper, $lottie, originalButtonState, initialAnimation 
 }
 
 function initNotchDragAction($wrapper) {
-  const $main = document.querySelector('main');
+  const $body = document.querySelector('body');
   const $notch = $wrapper.querySelector('.notch');
   const $toolBox = $wrapper.querySelector('.toolbox');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
   let touchStart = 0;
   const initialHeight = $toolBox.offsetHeight;
   $notch.addEventListener('touchstart', (e) => {
-    $main.style.overflow = 'hidden';
+    $body.style.overflow = 'hidden';
     $toolBox.style.transition = 'none';
     touchStart = e.changedTouches[0].clientY;
   });
@@ -254,7 +254,7 @@ function initNotchDragAction($wrapper) {
   });
 
   $notch.addEventListener('touchend', (e) => {
-    $main.style.removeProperty('overflow');
+    $body.style.removeProperty('overflow');
 
     if (e.changedTouches[0].clientY - touchStart > 100) {
       const initialLoad = $wrapper.classList.contains('initial-load');
