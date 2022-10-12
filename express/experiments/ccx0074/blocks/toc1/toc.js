@@ -34,7 +34,8 @@ export default async function decorate($block) {
     if (child.nodeName === 'A') {
       child.className = '';
       child.removeAttribute('target');
-      child.addEventListener('click', () => {
+      child.addEventListener('click', (ev) => {
+        ev.stopPropagation();
         toggleToc($toggle, $block, false);
       });
     } else if (child.nodeName === 'H2') {

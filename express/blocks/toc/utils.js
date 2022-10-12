@@ -99,16 +99,19 @@ export function toggleToc(toggle, block, status) {
 export function attachEventListeners($block, $toggle, $close) {
   $block.parentElement.addEventListener('click', (ev) => {
     if (ev.target === $block.parentElement) {
+      ev.stopPropagation();
       toggleToc($toggle, $block, false);
     }
   });
-  $toggle.addEventListener('click', () => {
+  $toggle.addEventListener('click', (ev) => {
+    ev.stopPropagation();
     toggleToc($toggle, $block);
   });
-  $close.addEventListener('click', () => {
+  $close.addEventListener('click', (ev) => {
+    ev.stopPropagation();
     toggleToc($toggle, $block, false);
   });
-  const linksPopulated = new CustomEvent('linkspopulated', { detail: [...$block.querySelectorAll('a')] });
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: [$toggle, ...$block.querySelectorAll('a'), $block.parentElement] });
   document.dispatchEvent(linksPopulated);
 }
 
