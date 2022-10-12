@@ -17,6 +17,7 @@ main .toc-container .default-content-wrapper {
   position: fixed;
   top: 72px;
   right: 2px;
+  z-index: 2;
 }
 
 main .toc-container .default-content-wrapper .button {

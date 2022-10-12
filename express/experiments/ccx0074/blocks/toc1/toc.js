@@ -24,7 +24,7 @@ import {
 
 export default async function decorate($block) {
   const iconHTML = getLottie('arrow-down', '/express/icons/purple-arrows.json');
-  const $toggle = getToggleButton($block);
+  const $toggle = getToggleButton();
   $toggle.classList.remove('accent');
   $toggle.innerHTML += iconHTML;
 
@@ -42,7 +42,7 @@ export default async function decorate($block) {
     }
   });
 
-  const $close = getCloseButton($block);
+  const $close = getCloseButton();
   $close.innerHTML += iconHTML;
   $block.append($close);
 
