@@ -4,13 +4,9 @@ main .toc-container {
 }
 
 main .toc-container .default-content-wrapper {
-  position: absolute;
-  top: -4px;
+  position: fixed;
+  top: 72px;
   right: 0;
-}
-
-main .toc-container .default-content-wrapper .button-container {
-  margin-top: 4px;
 }
 
 main .toc-container .default-content-wrapper .button {
@@ -50,22 +46,25 @@ main .toc-container.open .toc-wrapper:before {
   background: rgba(0,0,0,.8);
 }
 
-main .toc-container.open .toc-wrapper:after {
+main .toc-container.open .toc:after {
   position: absolute;
   display: block;
   height: 4px;
   width: 40px;
+  left: 50%;
+  bottom: 8px;
   margin-top: -24px;
   margin-left: -20px;
-  left: 50%;
   z-index: 1;
   content: '';
   background: var(--color-gray-700);
 }
 
 main .toc-container .toc {
+  position: fixed;
+  right: 0;
+  top: 84px;
   box-sizing: border-box;
-  position: relative;
   z-index: 1;
   margin: 12px 12px 12px auto;
   padding: 0;

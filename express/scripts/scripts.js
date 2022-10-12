@@ -1533,6 +1533,10 @@ export async function fixIcons(block = document) {
           if (blockName === 'columns') {
             size = $block.classList.contains('offer') ? 44 : 22;
           }
+          // ToC block has its own logic
+          else if (blockName === 'toc') {
+            return;
+          }
         }
         $picture.parentElement
           .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);

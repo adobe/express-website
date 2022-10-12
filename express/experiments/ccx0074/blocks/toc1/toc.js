@@ -1,46 +1,22 @@
 import {
-  fixIcons,
   getIconElement,
   getLottie,
 } from '../../../../scripts/scripts.js';
 
-function getMobileOperatingSystem() {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+import {
+  addAppStoreButton,
+  attachEventListeners,
+  fixIcons,
+  toggleToc,
+} from '../../../../blocks/toc/utils.js';
 
-  // Windows Phone must come first because its UA also contains "Android"
-  if (/windows phone/i.test(userAgent)) {
-    return 'Windows Phone';
-  }
-
-  if (/android/i.test(userAgent)) {
-    return 'Android';
-  }
-
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    return 'iOS';
-  }
-
-  return 'unknown';
-}
-
-function toggleToc(toggle, block, status) {
-  if (status === undefined) {
-    status = !block.parentElement.parentElement.classList.contains('open');
-  }
-  toggle.style.display = status ? 'none' : 'block';
-  block.parentElement.parentElement.classList.toggle('open', status);
-}
-
-export default function decorate($block) {
+export default async function decorate($block) {
   const iconHTML = getLottie('arrow-down', '/express/icons/purple-arrows.json');
   const toggle = document.querySelector('.default-content-wrapper .button.accent');
   toggle.classList.remove('accent');
   toggle.href = '#toc';
   toggle.target = '';
   toggle.innerHTML += iconHTML;
-  toggle.addEventListener('click', (ev) => {
-    toggleToc(toggle, $block);
-  });
 
   [...$block.children].forEach((div) => {
     const wrapper = div.children.item(1);
@@ -54,34 +30,17 @@ export default function decorate($block) {
     } else if (child.nodeName === 'H2') {
       child.classList.add('toc-heading');
     }
-    if (div.querySelector('.icon-dl-green')) {
-      const os = getMobileOperatingSystem();
-      const anchor = document.createElement('a');
-      wrapper.append(anchor);
-      if (os === 'iOS') {
-        anchor.append(getIconElement('apple-store'));
-      } else {
-        anchor.append(getIconElement('google-store'));
-      }
-    }
   });  
 
-  const toggle2 = document.createElement('a');
-  toggle2.classList.add('button');
-  toggle2.classList.add('toc-close');
-  toggle2.href = '#toc';
-  toggle2.innerText = 'Close';
-  toggle2.innerHTML += iconHTML;
-  toggle2.addEventListener('click', (ev) => {
-    toggleToc(toggle, $block, false);
-  });
-  $block.append(toggle2);
+  const $close = document.createElement('a');
+  $close.classList.add('button');
+  $close.classList.add('toc-close');
+  $close.href = '#toc';
+  $close.innerText = 'Close';
+  $close.innerHTML += iconHTML;
+  $block.append($close);
 
-  $block.parentElement.addEventListener('click', (ev) => {
-    if (ev.target === $block.parentElement) {
-      toggleToc(toggle, $block, false);
-    }
-  });
-
-  fixIcons($block);
+  attachEventListeners($block, toggle, $close);
+  await fixIcons($block);
+  addAppStoreButton($block);
 }
