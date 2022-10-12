@@ -218,7 +218,7 @@ function toggleToolBox($wrapper, $lottie, originalButtonState, initialAnimation 
         $button.classList.remove('toolbox-opened');
         $wrapper.classList.remove('initial-load');
         $toolbox.classList.add('hidden');
-      }, 5000);
+      }, 2000);
     } else {
       setTimeout(() => {
         $toolbox.classList.add('hidden');
@@ -305,10 +305,6 @@ function buildTools($wrapper, $tools) {
       toggleToolBox($wrapper, $lottie, 'withLottie', true);
     }
   }, 5000);
-
-  setTimeout(() => {
-    $wrapper.classList.remove('initial-load');
-  }, 7000);
 
   $floatingButton.append($toggleIcon);
   $notch.append($notchPill);
