@@ -61,7 +61,7 @@ function getIcon(icons, alt) {
   </svg>`;
 }
 
-function getIconElement(icons, alt) {
+export function getIconElement(icons, alt) {
   const $div = document.createElement('div');
   $div.innerHTML = getIcon(icons, alt);
   return ($div.firstChild);

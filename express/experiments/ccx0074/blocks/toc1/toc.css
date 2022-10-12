@@ -91,9 +91,11 @@ main .toc-container .toc-heading {
 main .toc-container .toc-heading:before {
   display: inline-block;
   content: '';
-  background: rgba(0, 0, 0, .1);
+  background: url(/express/blocks/toc/toc-sprite.svg#arrow-down) no-repeat;
+  background-size: auto 30px;
+  background-position: -156px 0;
   height: 24px;
-  width: 24px;
+  width: 18px;
   margin-right: 12px;
   vertical-align: middle;
 }

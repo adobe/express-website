@@ -18,6 +18,7 @@ import {
   attachEventListeners,
   fixIcons,
   getCloseButton,
+  getIconElement,
   getToggleButton,
   toggleToc,
 } from '../../../../blocks/toc/utils.js';
@@ -42,7 +43,9 @@ export default async function decorate($block) {
     }
   });
 
+  const $closeIcon = getIconElement(['close'], 'Icon: Close');
   const $close = getCloseButton();
+  $close.innerHTML = $closeIcon.outerHTML + $close.innerHTML;
   $block.append($close);
 
   attachEventListeners($block, $toggle, $close);
