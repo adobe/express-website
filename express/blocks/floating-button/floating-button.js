@@ -19,6 +19,19 @@ import {
   getIconElement,
 } from '../../scripts/scripts.js';
 
+let scrollState = 'withLottie';
+
+const hideScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
+  $floatButtonWrapper.classList.add('floating-button--scrolled');
+  if (document.activeElement === $lottieScrollButton) $lottieScrollButton.blur();
+  $lottieScrollButton.tabIndex = -1;
+};
+
+const showScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
+  $floatButtonWrapper.classList.remove('floating-button--scrolled');
+  $lottieScrollButton.removeAttribute('tabIndex');
+};
+
 export async function createFloatingButton($a, audience) {
   const main = document.querySelector('main');
   loadCSS('/express/blocks/floating-button/floating-button.css');
@@ -65,17 +78,8 @@ export async function createFloatingButton($a, audience) {
 
   // Floating button scroll/click events
   const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
-  const hideScrollArrow = () => {
-    $floatButtonWrapper.classList.add('floating-button--scrolled');
-    if (document.activeElement === $lottieScrollButton) $lottieScrollButton.blur();
-    $lottieScrollButton.tabIndex = -1;
-  };
-  const showScrollArrow = () => {
-    $floatButtonWrapper.classList.remove('floating-button--scrolled');
-    $lottieScrollButton.removeAttribute('tabIndex');
-  };
   if (!$scrollAnchor) {
-    hideScrollArrow();
+    hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
   } else {
     lazyLoadLottiePlayer();
     let clicked = false;
@@ -90,15 +94,16 @@ export async function createFloatingButton($a, audience) {
           clearInterval(checkIfScrollToIsFinished);
         }
       }, 200);
-      hideScrollArrow();
+      hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
     });
     window.addEventListener('scroll', () => {
-      const MFBOpened = $floatButtonWrapper.classList.contains('toolbox-opened') || $floatButtonWrapper.classList.contains('initial-load');
+      scrollState = $floatButtonWrapper.classList.contains('floating-button--scrolled') ? 'withoutLottie' : 'withLottie';
+      const MFBOpened = $floatButtonWrapper.classList.contains('toolbox-opened');
       if (clicked) return;
       if ($scrollAnchor.getBoundingClientRect().top < 100) {
-        hideScrollArrow();
+        hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
       } else if (!MFBOpened) {
-        showScrollArrow();
+        showScrollArrow($floatButtonWrapper, $lottieScrollButton);
       }
     }, { passive: true });
   }
@@ -200,13 +205,71 @@ function decorateBadge() {
   return $anchor;
 }
 
-function collapseToolBox($wrapper) {
-  $wrapper.classList.remove('initial-load');
-  $wrapper.classList.remove('toolbox-opened');
+function toggleToolBox($wrapper, $lottie, originalButtonState, initialAnimation = false) {
+  const $toolbox = $wrapper.querySelector('.toolbox');
+  const $button = $wrapper.querySelector('.floating-button');
+  if ($wrapper.classList.contains('toolbox-opened')) {
+    if (originalButtonState === 'withLottie') {
+      showScrollArrow($wrapper, $lottie);
+    }
+    $wrapper.classList.remove('toolbox-opened');
+    if (initialAnimation) {
+      setTimeout(() => {
+        $button.classList.remove('toolbox-opened');
+        $wrapper.classList.remove('initial-load');
+        $toolbox.classList.add('hidden');
+      }, 5000);
+    } else {
+      setTimeout(() => {
+        $toolbox.classList.add('hidden');
+        $button.classList.remove('toolbox-opened');
+      }, 500);
+    }
+  } else {
+    $toolbox.classList.remove('hidden');
+    $button.classList.add('toolbox-opened');
+    hideScrollArrow($wrapper, $lottie);
+
+    setTimeout(() => {
+      $wrapper.classList.add('toolbox-opened');
+    }, 10);
+  }
 }
 
-function toggleToolBox($wrapper) {
-  $wrapper.classList.toggle('toolbox-opened');
+function initNotchDragAction($wrapper) {
+  const $main = document.querySelector('main');
+  const $notch = $wrapper.querySelector('.notch');
+  const $toolBox = $wrapper.querySelector('.toolbox');
+  const $lottie = $wrapper.querySelector('.floating-button-lottie');
+  let touchStart = 0;
+  const initialHeight = $toolBox.offsetHeight;
+  $notch.addEventListener('touchstart', (e) => {
+    $main.style.overflow = 'hidden';
+    $toolBox.style.transition = 'none';
+    touchStart = e.changedTouches[0].clientY;
+  });
+
+  $notch.addEventListener('touchmove', (e) => {
+    $toolBox.style.maxHeight = `${initialHeight - (e.changedTouches[0].clientY - touchStart)}px`;
+  });
+
+  $notch.addEventListener('touchend', (e) => {
+    $main.style.removeProperty('overflow');
+
+    if (e.changedTouches[0].clientY - touchStart > 100) {
+      const initialLoad = $wrapper.classList.contains('initial-load');
+      if (initialLoad) {
+        $wrapper.classList.remove('initial-load');
+        toggleToolBox($wrapper, $lottie, scrollState, true);
+      } else {
+        toggleToolBox($wrapper, $lottie, scrollState);
+      }
+    } else {
+      $toolBox.style.maxHeight = `${initialHeight}px`;
+    }
+
+    $toolBox.removeAttribute('style');
+  });
 }
 
 function buildTools($wrapper, $tools) {
@@ -217,7 +280,8 @@ function buildTools($wrapper, $tools) {
   const $background = createTag('div', { class: 'toolbox-background' });
   const $floatingButton = $wrapper.querySelector('.floating-button');
   const $cta = $floatingButton.querySelector('a');
-
+  const $toggleIcon = getIconElement('plus-heavy');
+  const $lottie = $wrapper.querySelector('.floating-button-lottie');
 
   $tools.forEach(($tool) => {
     if ($tool.querySelector('picture')) {
@@ -232,22 +296,36 @@ function buildTools($wrapper, $tools) {
   });
 
   $wrapper.classList.add('initial-load');
+  $wrapper.classList.add('toolbox-opened');
+  $floatingButton.classList.add('toolbox-opened');
+  hideScrollArrow($wrapper, $lottie);
 
   setTimeout(() => {
-    collapseToolBox($wrapper);
+    if ($wrapper.classList.contains('initial-load')) {
+      toggleToolBox($wrapper, $lottie, 'withLottie', true);
+    }
   }, 5000);
 
-  if ($cta) {
-    $cta.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggleToolBox($wrapper);
-    });
-  }
+  setTimeout(() => {
+    $wrapper.classList.remove('initial-load');
+  }, 7000);
 
-  $floatingButton.append(getIconElement('plus-heavy'));
+  $floatingButton.append($toggleIcon);
   $notch.append($notchPill);
   $toolBox.append($notch, $appStoreBadge);
   $wrapper.append($toolBox, $background);
+
+  [$cta, $notch, $background].forEach(($element) => {
+    if ($element) {
+      $element.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleToolBox($wrapper, $lottie, scrollState);
+      });
+    }
+  });
+
+  initNotchDragAction($wrapper);
 }
 
 export async function createMFB($block, $parentSection) {
@@ -266,6 +344,7 @@ export async function createMFB($block, $parentSection) {
         .then(((result) => result));
     }
 
+    $buttonWrapper.classList.add('multifunction');
     buildTools($buttonWrapper, tools);
   }
 }
