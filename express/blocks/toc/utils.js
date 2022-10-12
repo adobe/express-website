@@ -1,3 +1,14 @@
+/*
+ * Copyright 2022 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 import {
   toClassName,
   getIconElement as genericGetIconElement,
@@ -54,7 +65,7 @@ export async function fixIcons(block = document) {
 
     const [icon, mobileIcon] = lowerAlt
       .split(';')
-      .map((i) => i ? toClassName(i.split(':')[1].trim()) : null);
+      .map((i) => (i ? toClassName(i.split(':')[1].trim()) : null));
 
     const $picture = $img.closest('picture');
     const $icon = getIconElement([icon, mobileIcon], alt);
@@ -63,11 +74,9 @@ export async function fixIcons(block = document) {
 }
 
 export function toggleToc(toggle, block, status) {
-  if (status === undefined) {
-    status = !block.parentElement.parentElement.classList.contains('open');
-  }
-  toggle.style.display = status ? 'none' : 'block';
-  block.parentElement.parentElement.classList.toggle('open', status);
+  const s = status === undefined ? !block.parentElement.parentElement.classList.contains('open') : status;
+  toggle.style.display = s ? 'none' : 'block';
+  block.parentElement.parentElement.classList.toggle('open', s);
 }
 
 export function attachEventListeners($block, $toggle, $close) {
@@ -76,10 +85,10 @@ export function attachEventListeners($block, $toggle, $close) {
       toggleToc($toggle, $block, false);
     }
   });
-  $toggle.addEventListener('click', (ev) => {
+  $toggle.addEventListener('click', () => {
     toggleToc($toggle, $block);
   });
-  $close.addEventListener('click', (ev) => {
+  $close.addEventListener('click', () => {
     toggleToc($toggle, $block, false);
   });
 }
@@ -91,7 +100,7 @@ export function addAppStoreButton($block) {
   }
   const os = getMobileOperatingSystem();
   const $button = document.createElement('a');
-  const $container = $icon.parentElement.parentElement.children
+  const $container = $icon.parentElement.parentElement.children;
   $button.href = $container.item(0).href;
   $button.title = $container.item(0).title;
   $container.item(1).append($button);
