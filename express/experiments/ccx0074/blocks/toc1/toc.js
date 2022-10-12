@@ -46,7 +46,7 @@ export default async function decorate($block) {
   $close.innerHTML += iconHTML;
   $block.append($close);
 
-  attachEventListeners($block, $toggle, $close);
   await fixIcons($block);
   addAppStoreButton($block);
+  attachEventListeners($block, $toggle, $close);
 }

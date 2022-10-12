@@ -617,6 +617,18 @@ loadScript(martechURL, () => {
     } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
+    // ToC clicks
+    } else if ($a.closest('.toc-container')) {
+      if ($a.classList.contains('toc-toggle')) {
+        adobeEventName += 'toc:toggle:Click';
+        sparkEventName = 'landing:tocTogglePressed';
+      } else if ($a.classList.contains('toc-close')) {
+        adobeEventName += 'toc:close:Click';
+        sparkEventName = 'landing:tocClosePressed';
+      } else {
+        adobeEventName = appendLinkText(`${adobeEventName}toc:link:Click:`, $a);
+        sparkEventName = 'landing:tocLinkPressed';
+      }
     // Default clicks
     } else {
       adobeEventName = appendLinkText(adobeEventName, $a);

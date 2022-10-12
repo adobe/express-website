@@ -35,6 +35,7 @@ export function getMobileOperatingSystem() {
 
 export function getToggleButton() {
   const $toggle = document.querySelector('.default-content-wrapper .button.accent');
+  $toggle.classList.add('toc-toggle');
   $toggle.href = '#toc';
   $toggle.target = '';
   return $toggle;
@@ -107,6 +108,8 @@ export function attachEventListeners($block, $toggle, $close) {
   $close.addEventListener('click', () => {
     toggleToc($toggle, $block, false);
   });
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: [...$block.querySelectorAll('a')] });
+  document.dispatchEvent(linksPopulated);
 }
 
 export function addAppStoreButton($block) {
