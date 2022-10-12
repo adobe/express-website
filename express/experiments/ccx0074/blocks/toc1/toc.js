@@ -17,16 +17,16 @@ import {
   addAppStoreButton,
   attachEventListeners,
   fixIcons,
+  getCloseButton,
+  getToggleButton,
   toggleToc,
 } from '../../../../blocks/toc/utils.js';
 
 export default async function decorate($block) {
   const iconHTML = getLottie('arrow-down', '/express/icons/purple-arrows.json');
-  const toggle = document.querySelector('.default-content-wrapper .button.accent');
-  toggle.classList.remove('accent');
-  toggle.href = '#toc';
-  toggle.target = '';
-  toggle.innerHTML += iconHTML;
+  const $toggle = getToggleButton($block);
+  $toggle.classList.remove('accent');
+  $toggle.innerHTML += iconHTML;
 
   [...$block.children].forEach((div) => {
     const wrapper = div.children.item(1);
@@ -35,22 +35,18 @@ export default async function decorate($block) {
       child.className = '';
       child.removeAttribute('target');
       child.addEventListener('click', () => {
-        toggleToc(toggle, $block, false);
+        toggleToc($toggle, $block, false);
       });
     } else if (child.nodeName === 'H2') {
       child.classList.add('toc-heading');
     }
   });
 
-  const $close = document.createElement('a');
-  $close.classList.add('button');
-  $close.classList.add('toc-close');
-  $close.href = '#toc';
-  $close.innerText = 'Close';
+  const $close = getCloseButton($block);
   $close.innerHTML += iconHTML;
   $block.append($close);
 
-  attachEventListeners($block, toggle, $close);
+  attachEventListeners($block, $toggle, $close);
   await fixIcons($block);
   addAppStoreButton($block);
 }

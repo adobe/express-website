@@ -33,6 +33,22 @@ export function getMobileOperatingSystem() {
   return 'unknown';
 }
 
+export function getToggleButton() {
+  const $toggle = document.querySelector('.default-content-wrapper .button.accent');
+  $toggle.href = '#toc';
+  $toggle.target = '';
+  return $toggle;
+}
+
+export function getCloseButton() {
+  const $close = document.createElement('a');
+  $close.classList.add('button');
+  $close.classList.add('toc-close');
+  $close.href = '#toc';
+  $close.innerText = 'Close';
+  return $close;
+}
+
 function getIcon(icons, alt) {
   // eslint-disable-next-line no-param-reassign
   icons = Array.isArray(icons) ? icons : [icons];
