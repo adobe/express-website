@@ -304,7 +304,7 @@ function buildTools($wrapper, $tools) {
     if ($wrapper.classList.contains('initial-load')) {
       toggleToolBox($wrapper, $lottie, 'withLottie', true);
     }
-  }, 5000);
+  }, 3000);
 
   $floatingButton.append($toggleIcon);
   $notch.append($notchPill);
