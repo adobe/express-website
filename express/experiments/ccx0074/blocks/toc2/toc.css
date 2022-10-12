@@ -1,15 +1,15 @@
 main .toc-container {
   position: relative;
-  display: block;
 }
 
 main .toc-container .default-content-wrapper {
   position: fixed;
   top: 72px;
-  right: 0;
+  right: 2px;
 }
 
 main .toc-container .default-content-wrapper .button {
+  display: block;
   padding: 2px 1em;
   background: var(--color-brand-title);
   border-color: var(--color-brand-title);
@@ -63,7 +63,7 @@ main .toc-container.open .toc:after {
 main .toc-container .toc {
   position: fixed;
   right: 0;
-  top: 84px;
+  top: 64px;
   box-sizing: border-box;
   z-index: 1;
   margin: 12px 12px 12px auto;
