@@ -17,7 +17,7 @@ main .toc-container .default-content-wrapper {
   position: absolute;
   top: -12px;
   right: 2px;
-  z-index: 2;
+  z-index: 10;
 }
 
 main .toc-container.sticky .default-content-wrapper {
@@ -158,7 +158,7 @@ main .toc-container .default-content-wrapper {
 }
 
 main .toc-container .toc {
-  transition: opacity .3s ease .2s, max-height .3s ease .2s, width .3s ease .2s, padding .3s ease .2s, top .2s ease-out;
+  transition: opacity .3s ease .2s, max-height .3s ease .2s, width .3s ease .2s, padding .3s ease .2s;
   padding: 0;
   width: 115px;
   max-height: 0;
@@ -184,7 +184,7 @@ main .toc-container .toc-close {
 }
 
 main .toc-container.open .toc {
-  transition: opacity .3s ease, max-height .3s ease, width .3s ease, padding .3s ease, top .2s ease-out;
+  transition: opacity .3s ease, max-height .3s ease, width .3s ease, padding .3s ease;
   padding: 30px 40px;
   width: calc(100vw - 24px);
   max-height: 100vh;
