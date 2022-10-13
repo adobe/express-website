@@ -14,10 +14,15 @@ main .toc-container {
 }
 
 main .toc-container .default-content-wrapper {
-  position: fixed;
-  top: 72px;
+  position: absolute;
+  top: -12px;
   right: 2px;
   z-index: 2;
+}
+
+main .toc-container.sticky .default-content-wrapper {
+  position: fixed;
+  top: 0px;
 }
 
 main .toc-container .default-content-wrapper .button {
@@ -65,6 +70,10 @@ main .toc-container .toc {
   border-radius: 32px;
   font-weight: bold;
   text-align: left;
+}
+
+main .toc-container.sticky .toc {
+  top: 0;
 }
 
 main .toc-container .toc-heading {
@@ -144,8 +153,12 @@ main .toc-container .toc-close .icon {
 
 /* Animations */
 
+main .toc-container .default-content-wrapper {
+  transition: top .2s ease-out;
+}
+
 main .toc-container .toc {
-  transition: opacity .3s ease .2s, max-height .3s ease .2s, width .3s ease .2s, padding .3s ease .2s;
+  transition: opacity .3s ease .2s, max-height .3s ease .2s, width .3s ease .2s, padding .3s ease .2s, top .2s ease-out;
   padding: 0;
   width: 115px;
   max-height: 0;
@@ -171,7 +184,7 @@ main .toc-container .toc-close {
 }
 
 main .toc-container.open .toc {
-  transition: opacity .3s ease, max-height .3s ease, width .3s ease, padding .3s ease;
+  transition: opacity .3s ease, max-height .3s ease, width .3s ease, padding .3s ease, top .2s ease-out;
   padding: 30px 40px;
   width: calc(100vw - 24px);
   max-height: 100vh;

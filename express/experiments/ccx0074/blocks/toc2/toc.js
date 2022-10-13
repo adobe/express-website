@@ -52,4 +52,14 @@ export default async function decorate($block) {
   await fixIcons($block);
   addAppStoreButton($block);
   attachEventListeners($block, $toggle, $close);
+
+  let lastPosition = 0;
+  document.addEventListener('scroll', () => {
+    if (document.documentElement.scrollTop > 64 && lastPosition <= 64) {
+      $block.parentElement.parentElement.classList.toggle('sticky', true);
+    } else if (document.documentElement.scrollTop < 64 && lastPosition >= 64) {
+      $block.parentElement.parentElement.classList.toggle('sticky', false);
+    }
+    lastPosition = document.documentElement.scrollTop;
+  });
 }

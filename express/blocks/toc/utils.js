@@ -68,8 +68,8 @@ export function getIconElement(icons, alt) {
   return ($div.firstChild);
 }
 
-export async function fixIcons(block = document) {
-  block.querySelectorAll('img').forEach(($img) => {
+export async function fixIcons($block = document) {
+  $block.querySelectorAll('img').forEach(($img) => {
     const alt = $img.getAttribute('alt');
     if (!alt) {
       return;
@@ -90,10 +90,10 @@ export async function fixIcons(block = document) {
   });
 }
 
-export function toggleToc(toggle, block, status) {
-  const s = status === undefined ? !block.parentElement.parentElement.classList.contains('open') : status;
-  toggle.style.display = s ? 'none' : 'block';
-  block.parentElement.parentElement.classList.toggle('open', s);
+export function toggleToc($toggle, $block, status) {
+  const s = status === undefined ? !$block.parentElement.parentElement.classList.contains('open') : status;
+  $toggle.style.display = s ? 'none' : 'block';
+  $block.parentElement.parentElement.classList.toggle('open', s);
 }
 
 export function attachEventListeners($block, $toggle, $close) {
