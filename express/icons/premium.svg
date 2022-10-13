@@ -1,0 +1,14 @@
+<svg id="Badge_-_Premium_-_M" data-name="Badge - Premium - M" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <circle id="Ellipse_24535" data-name="Ellipse 24535" cx="18" cy="18" r="18" fill="#242424"/>
+  <g id="SL_PremiumV3_18_N" transform="translate(7.875 7.875)">
+    <g id="Smock">
+      <rect id="Canvas" width="20" height="20" transform="translate(0.125 0.125)" fill="rgba(255,19,220,0)"/>
+    </g>
+    <g id="premium_testing" data-name="premium testing" transform="translate(2.66 3.042)">
+      <g id="Group_173774" data-name="Group 173774">
+        <path id="Path_124080" data-name="Path 124080" d="M4.488,12.882h9.956a.829.829,0,0,0,.821-.717c.174-1.253,1.462-5.47,1.66-6.891a.83.83,0,0,0-1.273-.812A20.413,20.413,0,0,0,13.6,6.041c-.38.32-.747.624-1.11.9-.3-.533-.6-1.1-.9-1.667-.467-.883-.935-1.769-1.419-2.549a.862.862,0,0,0-1.411,0c-.5.8-.976,1.707-1.449,2.6-.291.55-.581,1.1-.87,1.612-.363-.276-.729-.583-1.107-.9A20.856,20.856,0,0,0,3.28,4.459a.83.83,0,0,0-1.27.814c.2,1.436,1.486,5.645,1.66,6.892a.829.829,0,0,0,.819.717Z" transform="translate(-2.001 -2.36)" fill="#ebcf2d"/>
+        <path id="Path_124081" data-name="Path 124081" d="M14.167,14h-9.6a1.067,1.067,0,1,0,0,2.133h9.6a1.067,1.067,0,0,0,0-2.133Z" transform="translate(-1.901 -1.584)" fill="#ebcf2d"/>
+      </g>
+    </g>
+  </g>
+</svg>
