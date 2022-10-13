@@ -72,17 +72,6 @@ main .toc-container .toc {
   text-align: left;
 }
 
-main .toc-container.sticky .toc {
-  top: 0;
-}
-
-main .toc-container .toc-heading {
-  color: var(--color-white);
-  font-size: var(--body-font-size-l);
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
 main .toc-container .toc:after {
   position: absolute;
   display: block;
@@ -94,6 +83,17 @@ main .toc-container .toc:after {
   margin-left: -20px;
   content: '';
   background: var(--color-gray-700);
+}
+
+main .toc-container.sticky .toc {
+  top: 0;
+}
+
+main .toc-container .toc-heading {
+  color: var(--color-white);
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
+  margin-bottom: 20px;
 }
 
 main .toc-container .toc-heading .lottie {
@@ -208,6 +208,7 @@ main .toc-container.open .toc-close {
 }
 
 /* Side effects on rest of the page */
+
 main .toc-container.open ~ .floating-button-wrapper {
   background: none;
 }
