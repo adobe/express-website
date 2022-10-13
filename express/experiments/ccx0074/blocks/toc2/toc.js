@@ -55,9 +55,9 @@ export default async function decorate($block) {
 
   let lastPosition = 0;
   document.addEventListener('scroll', () => {
-    if (document.documentElement.scrollTop > 64 && lastPosition <= 64) {
+    if (document.documentElement.scrollTop > 68 && lastPosition <= 68) {
       $block.parentElement.parentElement.classList.toggle('sticky', true);
-    } else if (document.documentElement.scrollTop < 64 && lastPosition >= 64) {
+    } else if (document.documentElement.scrollTop < 68 && lastPosition >= 68) {
       $block.parentElement.parentElement.classList.toggle('sticky', false);
     }
     lastPosition = document.documentElement.scrollTop;
