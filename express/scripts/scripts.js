@@ -1532,9 +1532,8 @@ export async function fixIcons(block = document) {
           // use small icons in .columns (except for .columns.offer)
           if (blockName === 'columns') {
             size = $block.classList.contains('offer') ? 44 : 22;
-          }
-          // ToC block has its own logic
-          else if (blockName === 'toc') {
+          } else if (blockName === 'toc') {
+            // ToC block has its own logic
             return;
           }
         }
