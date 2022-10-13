@@ -70,6 +70,9 @@ main .toc-container .toc {
   border-radius: 32px;
   font-weight: bold;
   text-align: left;
+  z-index: 10;
+  padding: 30px 40px;
+  width: calc(100vw - 24px);
 }
 
 main .toc-container .toc:after {
@@ -83,6 +86,7 @@ main .toc-container .toc:after {
   margin-left: -20px;
   content: '';
   background: var(--color-gray-700);
+  border-radius: 4px;
 }
 
 main .toc-container.sticky .toc {
@@ -158,12 +162,10 @@ main .toc-container .default-content-wrapper {
 }
 
 main .toc-container .toc {
-  transition: opacity .3s ease .2s, max-height .3s ease .2s, width .3s ease .2s, padding .3s ease .2s;
-  padding: 0;
-  width: 115px;
-  max-height: 0;
-  opacity: 0;
+  transition: opacity .1s ease .3s, transform .3s ease-in .2s;
   overflow: hidden;
+  transform: translate(45%, -45%) scale(0);
+  opacity: 0;
 }
 
 main .toc-container .toc > div {
@@ -181,14 +183,13 @@ main .toc-container .toc-close {
   transition: top .3s ease, right .3s ease;
   top: 14px;
   right: 10px;
+  display: none;
 }
 
 main .toc-container.open .toc {
-  transition: opacity .3s ease, max-height .3s ease, width .3s ease, padding .3s ease;
-  padding: 30px 40px;
-  width: calc(100vw - 24px);
-  max-height: 100vh;
+  transition: opacity .3s ease, transform .3s ease;
   opacity: 1;
+  transform: translate(0, 0) scale(1);
 }
 
 main .toc-container.open .toc > div {
@@ -205,6 +206,7 @@ main .toc-container.open .toc > div:nth-child(7) { margin-left: 0px; }
 main .toc-container.open .toc-close {
   top: 24px;
   right: 18px;
+  display: block;
 }
 
 /* Side effects on rest of the page */
