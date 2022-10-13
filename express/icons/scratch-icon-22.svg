@@ -1,0 +1,13 @@
+<svg id="SX_Properties_22_N" xmlns="http://www.w3.org/2000/svg" width="19" height="19.125" viewBox="0 0 19 19.125">
+  <g id="SMOCK" transform="translate(0 0.086)">
+    <rect id="Canvas" width="19" height="19" fill="rgba(255,19,220,0)"/>
+  </g>
+  <g id="ICONS" transform="translate(0.869)">
+    <path id="Path_125925" data-name="Path 125925" d="M15.563,2.608H7.739V.869A.869.869,0,1,0,6,.869V6.085a.869.869,0,0,0,1.739,0V4.347h7.824a.869.869,0,0,0,0-1.739Z" transform="translate(-1.653)"/>
+    <path id="Path_125926" data-name="Path 125926" d="M1.869,4.739H3.608A.869.869,0,1,0,3.608,3H1.869a.869.869,0,1,0,0,1.739Z" transform="translate(-1 -0.392)"/>
+    <path id="Path_125927" data-name="Path 125927" d="M16.085,16.608H8.739V14.869a.869.869,0,1,0-1.739,0v5.216a.869.869,0,0,0,1.739,0V18.347h7.347a.869.869,0,0,0,0-1.739Z" transform="translate(-2.176 -1.83)"/>
+    <path id="Path_125928" data-name="Path 125928" d="M4.085,17H1.869a.869.869,0,1,0,0,1.739H4.085a.869.869,0,0,0,0-1.739Z" transform="translate(-1 -2.222)"/>
+    <path id="Path_125929" data-name="Path 125929" d="M19.477,9.608H17.739V7.869a.869.869,0,1,0-1.739,0v5.216a.869.869,0,1,0,1.739,0V11.347h1.739a.869.869,0,1,0,0-1.739Z" transform="translate(-5.568 -0.915)"/>
+    <path id="Path_125930" data-name="Path 125930" d="M4.869,11.739h7.824a.869.869,0,0,0,0-1.739H4.869a.869.869,0,1,0,0,1.739Z" transform="translate(-4 -1.307)"/>
+  </g>
+</svg>
