@@ -2057,6 +2057,10 @@ async function loadEager() {
   setTheme();
   if (!window.hlx.lighthouse) await decorateTesting();
 
+  if (window.location.href.includes('/express/templates/')) {
+    await import('./templates.js');
+  }
+
   const main = document.querySelector('main');
   if (main) {
     await decorateMain(main);
