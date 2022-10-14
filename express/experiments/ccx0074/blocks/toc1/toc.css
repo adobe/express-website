@@ -52,6 +52,7 @@ main .toc-container.open .toc-wrapper {
 main .toc-container.open .toc-wrapper:before {
   content: '';
   background: rgba(0,0,0,.75);
+  top: 0;
   height: 100vh;
   width: 100%;
   display: block;
