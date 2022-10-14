@@ -177,7 +177,6 @@ main .floating-button-wrapper.multifunction .toolbox:after {
   left: 0;
   bottom: 0;
   height: 64px;
-  border-radius: 0 0 32px 32px;
   width: 100%;
   background: white;
 }
