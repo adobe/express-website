@@ -53,8 +53,8 @@ export default async function decorate($block) {
 
   const observer = new ResizeObserver((mutations) => {
     for (const mutation of mutations) {
-      console.log(mutation);
-      mutation.target.parentElement.parentElement.style.paddingTop = Math.max(0.1, mutation.borderBoxSize[0].blockSize) + 'px';
+      const height = Math.max(0.1, mutation.borderBoxSize[0].blockSize);
+      mutation.target.parentElement.parentElement.style.paddingTop = `${height}px`;
     }
   });
   observer.observe(document.querySelector('.toc'));

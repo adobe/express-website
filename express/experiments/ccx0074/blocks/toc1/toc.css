@@ -142,6 +142,10 @@ main .toc-container .toc-close .lottie {
 
 /* Animations */
 
+main .toc-container {
+  transition: padding-top .05s linear;
+}
+
 main .toc-container .toc {
   transition: max-height .3s ease-in-out, padding-top .3s ease, padding-bottom .3s ease, opacity .3s ease, top .3s ease;
   max-height: 0;
