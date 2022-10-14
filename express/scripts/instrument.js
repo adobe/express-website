@@ -625,6 +625,9 @@ loadScript(martechURL, () => {
       } else if ($a.classList.contains('toc-close')) {
         adobeEventName += 'toc:close:Click';
         sparkEventName = 'landing:tocClosePressed';
+      } else if ($a.classList.contains('toc-handle')) {
+        adobeEventName += 'toc:close:Click:handle';
+        sparkEventName = 'landing:tocCloseHandlePressed';
       } else if ($a.classList.contains('toc-wrapper')) {
         adobeEventName += 'toc:close:Click:background';
         sparkEventName = 'landing:tocCloseBackgroundPressed';

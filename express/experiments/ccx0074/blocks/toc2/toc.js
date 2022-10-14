@@ -56,6 +56,8 @@ export default async function decorate($block) {
     toggleToc($toggle, $block, false);
   });
   $block.append($handle);
+  const linksPopulated = new CustomEvent('linkspopulated', { detail: [$handle] });
+  document.dispatchEvent(linksPopulated);
 
   await fixIcons($block);
   addAppStoreButton($block);
