@@ -58,7 +58,7 @@ export default async function decorate($block) {
       } else if (mutation.attributeName === 'class') {
         mutation.target.style.paddingTop = '0';
       }
-      console.log(mutation.target.style.paddingTop, `${mutation.target.querySelector('.toc').clientHeight}px`);
+      console.log(mutation, mutation.target.style.paddingTop, `${mutation.target.querySelector('.toc').clientHeight}px`);
     }
   });
   observer.observe($block.parentElement.parentElement, { attributes: true });

@@ -19,10 +19,6 @@ main .toc-container .default-content-wrapper {
   right: 0;
 }
 
-.feds-header-wrapper--retracted + main .toc-container .default-content-wrapper {
-  top: 0px;  
-}
-
 main .toc-container .default-content-wrapper .button-container {
   margin-top: 0;
 }
@@ -79,6 +75,10 @@ main .toc-container .toc {
   font-weight: bold;
   text-align: left;
   max-height: 0;
+}
+
+.feds-header-wrapper--retracted + main .toc-container .toc {
+  top: 0px;
 }
 
 main .toc-container .toc-heading {
