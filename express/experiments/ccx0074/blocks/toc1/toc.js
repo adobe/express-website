@@ -11,7 +11,6 @@
  */
 import {
   getLottie,
-  scrollToHash,
 } from '../../../../scripts/scripts.js';
 
 import {
