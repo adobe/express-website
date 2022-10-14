@@ -277,11 +277,17 @@ export function getIcon(icons, alt, size = 44) {
     'star-half',
     'star-empty',
   ];
+
+  const size22Icons = [
+    'chevron',
+    'pricingfree',
+    'pricingpremium',
+  ];
+
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
-    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
-    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
+    if (size22Icons.includes(icon)) sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       ${alt ? `<title>${alt}</title>` : ''}
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
