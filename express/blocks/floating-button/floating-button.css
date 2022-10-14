@@ -250,6 +250,7 @@ main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
 
 main .floating-button-wrapper.multifunction .toolbox .tool img,
 main .floating-button-wrapper.multifunction .toolbox .tool svg {
+  color: var(--color-black);
   height: 22px;
   max-width: 22px;
   margin-right: 12px;
