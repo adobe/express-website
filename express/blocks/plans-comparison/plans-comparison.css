@@ -96,10 +96,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     margin-left: 0;
 }
 
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .plans-comparison-heading picture,
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .plans-comparison-heading picture>img {
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .plans-comparison-heading img,
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .plans-comparison-heading svg {
     display: block;
-    max-height: 36px;
+    height: 36px;
     min-width: 36px;
 }
 
@@ -188,14 +188,11 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     text-overflow: ellipsis;
 }
 
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li > picture {
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li img,
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li svg {
     height: 22px;
     width: 22px;
-}
-
-main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card .features-wrapper li > picture > img {
     margin-right: 8px;
-    height: 100%;
     transform: translateY(5px);
 }
 
