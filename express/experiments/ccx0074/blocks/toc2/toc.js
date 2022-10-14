@@ -62,18 +62,4 @@ export default async function decorate($block) {
   await fixIcons($block);
   addAppStoreButton($block);
   attachEventListeners($block, $toggle, $close);
-
-  let lastPosition = 0;
-  const threshold = document.querySelector('header').offsetHeight + 6;
-  document.addEventListener('scroll', () => {
-    if ($block.parentElement.parentElement.classList.add('feds')) {
-      return;
-    }
-    if (document.documentElement.scrollTop > threshold && lastPosition <= threshold) {
-      $block.parentElement.parentElement.classList.toggle('sticky', true);
-    } else if (document.documentElement.scrollTop <= threshold && lastPosition > threshold) {
-      $block.parentElement.parentElement.classList.toggle('sticky', false);
-    }
-    lastPosition = document.documentElement.scrollTop;
-  });
 }

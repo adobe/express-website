@@ -15,8 +15,12 @@ main .toc-container {
 
 main .toc-container .default-content-wrapper {
   position: absolute;
-  top: 16px;
+  top: -4px;
   right: 0;
+}
+
+.feds-header-wrapper--retracted + main .toc-container .default-content-wrapper {
+  top: 0px;  
 }
 
 main .toc-container .default-content-wrapper .button-container {
@@ -47,6 +51,7 @@ main .toc-container .button:any-link {
 
 main .toc-container.open .toc-wrapper {
   display: block;
+  position: absolute;
 }
 
 main .toc-container.open .toc-wrapper:before {
@@ -61,8 +66,11 @@ main .toc-container.open .toc-wrapper:before {
 }
 
 main .toc-container .toc {
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  top: 64px;
+  z-index: 2;
+  width: 100%;
+  box-sizing: border-box;
   background-color: var(--color-gray-100);
   background-image: url('/express/icons/cc-express-logo.svg');
   background-position: bottom 22px left 22px;

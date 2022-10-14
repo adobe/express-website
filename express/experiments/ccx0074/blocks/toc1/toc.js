@@ -50,4 +50,16 @@ export default async function decorate($block) {
   await fixIcons($block);
   addAppStoreButton($block);
   attachEventListeners($block, $toggle, $close);
+
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.attributeName === 'class' && mutation.target.classList.contains('open')) {
+        mutation.target.style.paddingTop = `${mutation.target.querySelector('.toc').clientHeight}px`;
+      } else if (mutation.attributeName === 'class') {
+        mutation.target.style.paddingTop = '0';
+      }
+      console.log(mutation.target.style.paddingTop, `${mutation.target.querySelector('.toc').clientHeight}px`);
+    }
+  });
+  observer.observe($block.parentElement.parentElement, { attributes: true });
 }

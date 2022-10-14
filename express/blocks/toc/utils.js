@@ -113,6 +113,20 @@ export function attachEventListeners($block, $toggle, $close) {
   });
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$toggle, ...$block.querySelectorAll('a'), $block.parentElement] });
   document.dispatchEvent(linksPopulated);
+
+  let lastPosition = 0;
+  const threshold = document.querySelector('header').offsetHeight + 6;
+  document.addEventListener('scroll', () => {
+    if ($block.parentElement.parentElement.classList.add('feds')) {
+      return;
+    }
+    if (document.documentElement.scrollTop > threshold && lastPosition <= threshold) {
+      $block.parentElement.parentElement.classList.toggle('sticky', true);
+    } else if (document.documentElement.scrollTop <= threshold && lastPosition > threshold) {
+      $block.parentElement.parentElement.classList.toggle('sticky', false);
+    }
+    lastPosition = document.documentElement.scrollTop;
+  });
 }
 
 export function addAppStoreButton($block) {
