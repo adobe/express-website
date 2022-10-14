@@ -30,7 +30,7 @@ main .toc-container.no-feds .default-content-wrapper {
 
 main .toc-container.feds .default-content-wrapper {
   position: fixed;
-  top: 0px;
+  top: 64px;
 }
 
 main .toc-container.sticky .default-content-wrapper {
