@@ -20,22 +20,21 @@ main .toc-container .default-content-wrapper {
 }
 
 main .toc-container .default-content-wrapper {
-  top: 0px;
-}
-
-main .toc-container.no-feds .default-content-wrapper {
-  position: absolute;
   top: -12px;
-}
-
-main .toc-container.feds .default-content-wrapper {
-  position: fixed;
-  top: 64px;
 }
 
 main .toc-container.sticky .default-content-wrapper {
   position: fixed;
-  top: 0px;
+  top: 0;
+}
+
+.feds-header-wrapper--sticky + main .toc-container .default-content-wrapper {
+  top: 64px;
+  position: fixed;
+}
+
+.feds-header-wrapper--retracted + main .toc-container .default-content-wrapper {
+  top: 0px;  
 }
 
 main .toc-container .default-content-wrapper .button {
@@ -171,7 +170,7 @@ main .toc-container .toc-close .icon {
 /* Animations */
 
 main .toc-container .default-content-wrapper {
-  transition: top .2s ease-out;
+  transition: top .3s ease;
 }
 
 main .toc-container .toc {

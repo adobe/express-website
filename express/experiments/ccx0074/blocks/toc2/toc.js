@@ -63,42 +63,17 @@ export default async function decorate($block) {
   addAppStoreButton($block);
   attachEventListeners($block, $toggle, $close);
 
-  // Create an observer instance linked to the callback function
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (mutation.attributeName === 'class' && mutation.target.classList.contains('feds-header-wrapper--retracted')) {
-        $block.parentElement.parentElement.classList.toggle('sticky', true);
-      } else {
-        $block.parentElement.parentElement.classList.toggle('sticky', false);
-      }
+  let lastPosition = 0;
+  const threshold = document.querySelector('header').offsetHeight + 6;
+  document.addEventListener('scroll', () => {
+    if ($block.parentElement.parentElement.classList.add('feds')) {
+      return;
     }
+    if (document.documentElement.scrollTop > threshold && lastPosition <= threshold) {
+      $block.parentElement.parentElement.classList.toggle('sticky', true);
+    } else if (document.documentElement.scrollTop <= threshold && lastPosition > threshold) {
+      $block.parentElement.parentElement.classList.toggle('sticky', false);
+    }
+    lastPosition = document.documentElement.scrollTop;
   });
-
-  // Start observing the feds header to detect when it is toggled
-  const header = document.querySelector('header');
-  if (header.classList.contains('feds-header-wrapper')) {
-    $block.parentElement.parentElement.classList.add('feds');
-    observer.observe(header, { attributes: true });
-  } else {
-    $block.parentElement.parentElement.classList.add('no-feds');
-    let lastPosition = 0;
-    const threshold = document.querySelector('header').offsetHeight + 6;
-    document.addEventListener('scroll', () => {
-      if ($block.parentElement.parentElement.classList.add('feds')) {
-        return;
-      }
-      if (header.classList.contains('feds-header-wrapper')) {
-        $block.parentElement.parentElement.classList.remove('no-feds');
-        $block.parentElement.parentElement.classList.add('feds');
-        observer.observe(header, { attributes: true });
-        return;
-      }
-      if (document.documentElement.scrollTop > threshold && lastPosition <= threshold) {
-        $block.parentElement.parentElement.classList.toggle('sticky', true);
-      } else if (document.documentElement.scrollTop <= threshold && lastPosition > threshold) {
-        $block.parentElement.parentElement.classList.toggle('sticky', false);
-      }
-      lastPosition = document.documentElement.scrollTop;
-    });
-  }
 }
