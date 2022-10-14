@@ -305,13 +305,14 @@ function decoratePagination($block, payload) {
 
 export default function decorate($block) {
   let payload;
-  const locale = getLocale(new URL(window.location));
+  const location = new URL(window.location);
+  const locale = getLocale(location);
   const $linkList = document.querySelector('.link-list-container');
   let fragmentUrl;
   if (locale === 'us') {
-    fragmentUrl = 'https://main--express-website--adobe.hlx.page/express/fragments/plans-comparison';
+    fragmentUrl = `${location.origin}/express/fragments/plans-comparison`;
   } else {
-    fragmentUrl = `https://main--express-website--adobe.hlx.page/${locale}/express/fragments/plans-comparison`;
+    fragmentUrl = `${location.origin}/${locale}/express/fragments/plans-comparison`;
   }
   decorateAsFragment($block, fragmentUrl);
 
