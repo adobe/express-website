@@ -284,7 +284,8 @@ function buildTools($wrapper, $tools) {
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
 
   $tools.forEach(($tool) => {
-    if ($tool.querySelector('picture')) {
+    const iconFound = $tool.querySelector('img') || $tool.querySelector('svg');
+    if (iconFound) {
       $tool.classList.add('tool');
       $toolBox.append($tool);
     } else {

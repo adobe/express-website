@@ -248,7 +248,8 @@ main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
   border-bottom: 1px solid var(--color-gray-300);
 }
 
-main .floating-button-wrapper.multifunction .toolbox .tool picture > img {
+main .floating-button-wrapper.multifunction .toolbox .tool img,
+main .floating-button-wrapper.multifunction .toolbox .tool svg {
   height: 22px;
   max-width: 22px;
   margin-right: 12px;
