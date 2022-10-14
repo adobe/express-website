@@ -15,7 +15,7 @@ main .toc-container {
 
 main .toc-container .default-content-wrapper {
   position: absolute;
-  top: -4px;
+  top: 16px;
   right: 0;
 }
 
@@ -75,6 +75,10 @@ main .toc-container .toc {
   font-weight: bold;
   text-align: left;
   max-height: 0;
+}
+
+main .toc-container.sticky .toc {
+  top: 0px;
 }
 
 .feds-header-wrapper--retracted + main .toc-container .toc {
@@ -139,7 +143,7 @@ main .toc-container .toc-close .lottie {
 /* Animations */
 
 main .toc-container .toc {
-  transition: max-height .3s ease-in-out, padding-top .3s ease, padding-bottom .3s ease, opacity .3s ease;
+  transition: max-height .3s ease-in-out, padding-top .3s ease, padding-bottom .3s ease, opacity .3s ease, top .3s ease;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
