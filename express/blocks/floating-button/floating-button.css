@@ -158,21 +158,32 @@ main .floating-button-wrapper.multifunction .toolbox {
   pointer-events: auto;
   background-color: var(--color-white);
   box-sizing: border-box;
-  padding: 30px 32px 0;
-  transform: translateY(32px);
+  padding: 30px 32px;
+  transform: translateY(72px);
   width: 100%;
   max-height: 0;
-  border-radius: 32px 32px 0 0;
+  border-radius: 32px;
   overflow: hidden;
   flex-direction: column;
   text-align: left;
   bottom: 0;
   z-index: 1;
-  transition: max-height 0.5s, opacity 0.5s, transform 0.5s ease-in;
+  transition: max-height 0.5s, transform 0.5s ease-in, padding 0.5s;
+}
+
+main .floating-button-wrapper.multifunction .toolbox:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 64px;
+  border-radius: 0 0 32px 32px;
+  width: 100%;
+  background: white;
 }
 
 main .floating-button-wrapper.multifunction.initial-load .toolbox {
-  transition: max-height 2s ease, opacity 2s, transform 0.5s ease-in;
+  transition: max-height 2s ease, transform 0.5s ease-in;
 }
 
 main .floating-button-wrapper.multifunction .toolbox.hidden {
@@ -196,10 +207,10 @@ main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .ico
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .toolbox {
-  max-height: 300px;
-  transform: translateY(0);
+  max-height: 400px;
+  padding-bottom: 64px;
+  transform: translateY(64px);
   z-index: 1;
-  opacity: 1;
 }
 
 main .floating-button-wrapper.multifunction .floating-button {
@@ -208,7 +219,6 @@ main .floating-button-wrapper.multifunction .floating-button {
 
 main .floating-button-wrapper.multifunction .floating-button.toolbox-opened {
   background-color: var(--color-white);
-  border-radius: 0 0 36px 36px;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .notch {
