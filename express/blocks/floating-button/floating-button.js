@@ -317,7 +317,9 @@ function buildTools($wrapper, $tools) {
       $element.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleToolBox($wrapper, $lottie, scrollState);
+        if (!$wrapper.classList.contains('initial-load')) {
+          toggleToolBox($wrapper, $lottie, scrollState);
+        }
       });
     }
   });
