@@ -614,7 +614,7 @@ loadScript(martechURL, () => {
         sparkEventName = 'landing:ctaPressed';
       }
     // quick actions clicks
-    } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
+    } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g))) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
     // ToC clicks

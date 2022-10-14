@@ -162,14 +162,14 @@ main .toc-container .default-content-wrapper {
 }
 
 main .toc-container .toc {
-  transition: opacity .1s ease .3s, transform .3s ease-in .2s;
+  transition: opacity .1s ease .1s, transform .3s linear;
   overflow: hidden;
-  transform: translate(45%, -45%) scale(0);
+  transform: translate(45%, -45%) scale(.1);
   opacity: 0;
 }
 
 main .toc-container .toc > div {
-  transition: margin-left .3s ease, opacity .3s ease;
+  transition: margin-left .3s ease, opacity .2s ease .3s;
   opacity: 0;
 }
 main .toc-container .toc > div:nth-child(2) { margin-left: 0px; }
@@ -187,7 +187,7 @@ main .toc-container .toc-close {
 }
 
 main .toc-container.open .toc {
-  transition: opacity .3s ease, transform .3s ease;
+  transition: opacity .3s ease, transform .3s linear;
   opacity: 1;
   transform: translate(0, 0) scale(1);
 }
