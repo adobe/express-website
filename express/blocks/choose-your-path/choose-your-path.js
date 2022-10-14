@@ -14,8 +14,12 @@
 import {
   createTag,
   fetchPlaceholders,
-  getLottie,
 } from '../../scripts/scripts.js';
+
+import {
+  getLottie,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 function getWidth() {
   return Math.max(

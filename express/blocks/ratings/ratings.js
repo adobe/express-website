@@ -15,13 +15,17 @@ import {
   fetchPlaceholders,
   getIcon,
   getIconElement,
-  getLottie,
-  lazyLoadLottiePlayer,
   getLocale,
   toClassName,
   getMetadata,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+
+import {
+  getLottie,
+  lazyLoadLottiePlayer,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 // eslint-disable-next-line import/no-unresolved
 import Context from '../../scripts/context.js';

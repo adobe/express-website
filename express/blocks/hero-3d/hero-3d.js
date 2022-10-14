@@ -13,11 +13,15 @@
 import {
   createTag,
   getIconElement,
-  getLottie,
-  lazyLoadLottiePlayer,
   readBlockConfig,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+
+import {
+  getLottie,
+  lazyLoadLottiePlayer,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 const DEFAULT_DELAY = 1000;
 const MAX_NONCONFIG_ROWS = 4;

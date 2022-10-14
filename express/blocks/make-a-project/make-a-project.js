@@ -12,8 +12,11 @@
 
 import {
   createTag,
-  addFreePlanWidget,
 } from '../../scripts/scripts.js';
+
+import {
+  addFreePlanWidget,
+} from '../shared/utils.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 

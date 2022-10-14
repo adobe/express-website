@@ -13,10 +13,14 @@
 import {
   createTag,
   loadCSS,
-  lazyLoadLottiePlayer,
-  getLottie,
   fetchPlaceholders,
 } from '../../scripts/scripts.js';
+
+import {
+  getLottie,
+  lazyLoadLottiePlayer,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 export async function createFloatingButton($a, audience) {
   const main = document.querySelector('main');

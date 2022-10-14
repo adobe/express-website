@@ -17,9 +17,13 @@ import {
   addAnimationToggle,
   toClassName,
   getIconElement,
-  addFreePlanWidget,
   addHeaderSizing,
 } from '../../scripts/scripts.js';
+
+import {
+  addFreePlanWidget,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 import {
   displayVideoModal,
