@@ -785,7 +785,8 @@ main [data-audience] {
 }
 
 body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"]:not(.floating-button-wrapper),
-body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"]:not(.floating-button-wrapper) {
+body[data-device="desktop"] main [data-audience="desktop"][data-section-status="loaded"]:not(.floating-button-wrapper),
+body[data-device="mobile"] main [data-audience="mobile"][data-section-status="loaded"]:not(.split-action-container) {
   display: block;
 }
 

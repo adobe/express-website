@@ -175,12 +175,19 @@ async function createExperiment() {
         });
         const winner = variantsAsNums.reduce((w, v) => {
           if (v.variant_conversion_rate > w.conversion_rate && v.p_value < 0.05) {
+            // eslint-disable-next-line no-param-reassign
             w.conversion_rate = v.variant_conversion_rate;
+            // eslint-disable-next-line no-param-reassign
             w.p_value = v.p_value;
+            // eslint-disable-next-line no-param-reassign
             w.variant = v.variant;
           }
           return w;
-        }, { variant: 'control', p_value: 1, conversion_rate: 0 });
+        }, {
+          variant: 'control',
+          p_value: Math.max(...variantsAsNums.map((v) => v.p_value)),
+          conversion_rate: richVariants.control.variant_conversion_rate,
+        });
 
         // add summary
         const summary = div.querySelector('.hlx-info');
