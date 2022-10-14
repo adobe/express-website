@@ -42,7 +42,8 @@ export async function createFloatingButton($a, audience) {
   $floatButtonLink.classList.add('button', 'gradient', 'xlarge');
 
   // Hide CTAs on the page that are duplicates of the Floating CTA (in mobile/tablet)
-  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.textContent === $a.textContent || a.href === $a.href);
+  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link'))
+    .filter((a) => a.textContent === $a.textContent || a.href === $a.href);
   sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
@@ -56,9 +57,10 @@ export async function createFloatingButton($a, audience) {
   }
 
   $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
-  fetchPlaceholders().then((placeholders) => {
-    $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
-  });
+  fetchPlaceholders()
+    .then((placeholders) => {
+      $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
+    });
 
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
@@ -86,7 +88,10 @@ export async function createFloatingButton($a, audience) {
     $lottieScrollButton.addEventListener('click', () => {
       clicked = true;
       $floatButtonWrapper.classList.add('floating-button--clicked');
-      window.scrollTo({ top: $scrollAnchor.offsetTop, behavior: 'smooth' });
+      window.scrollTo({
+        top: $scrollAnchor.offsetTop,
+        behavior: 'smooth',
+      });
       const checkIfScrollToIsFinished = setInterval(() => {
         if ($scrollAnchor.offsetTop <= window.pageYOffset) {
           clicked = false;
@@ -205,25 +210,31 @@ function decorateBadge() {
   return $anchor;
 }
 
-function toggleToolBox($wrapper, $lottie, originalButtonState, initialAnimation = false) {
+function toggleToolBox($wrapper, $lottie, originalButtonState, userInitiated = true) {
   const $toolbox = $wrapper.querySelector('.toolbox');
   const $button = $wrapper.querySelector('.floating-button');
+
+  if (userInitiated) {
+    $wrapper.classList.remove('initial-load');
+  }
+
   if ($wrapper.classList.contains('toolbox-opened')) {
     if (originalButtonState === 'withLottie') {
       showScrollArrow($wrapper, $lottie);
     }
     $wrapper.classList.remove('toolbox-opened');
-    if (initialAnimation) {
-      setTimeout(() => {
-        $button.classList.remove('toolbox-opened');
-        $wrapper.classList.remove('initial-load');
-        $toolbox.classList.add('hidden');
-      }, 2000);
-    } else {
+    if (userInitiated) {
       setTimeout(() => {
         $toolbox.classList.add('hidden');
         $button.classList.remove('toolbox-opened');
       }, 500);
+    } else {
+      setTimeout(() => {
+        if ($wrapper.classList.contains('initial-load')) {
+          $toolbox.classList.add('hidden');
+          $button.classList.remove('toolbox-opened');
+        }
+      }, 2000);
     }
   } else {
     $toolbox.classList.remove('hidden');
@@ -257,13 +268,7 @@ function initNotchDragAction($wrapper) {
     $body.style.removeProperty('overflow');
 
     if (e.changedTouches[0].clientY - touchStart > 100) {
-      const initialLoad = $wrapper.classList.contains('initial-load');
-      if (initialLoad) {
-        $wrapper.classList.remove('initial-load');
-        toggleToolBox($wrapper, $lottie, scrollState, true);
-      } else {
-        toggleToolBox($wrapper, $lottie, scrollState);
-      }
+      toggleToolBox($wrapper, $lottie, scrollState);
     } else {
       $toolBox.style.maxHeight = `${initialHeight}px`;
     }
@@ -272,7 +277,7 @@ function initNotchDragAction($wrapper) {
   });
 }
 
-function buildTools($wrapper, $tools) {
+function buildTools($wrapper, $tools, delayInSeconds = 3) {
   const $toolBox = createTag('div', { class: 'toolbox' });
   const $notch = createTag('a', { class: 'notch' });
   const $notchPill = createTag('div', { class: 'notch-pill' });
@@ -280,7 +285,7 @@ function buildTools($wrapper, $tools) {
   const $background = createTag('div', { class: 'toolbox-background' });
   const $floatingButton = $wrapper.querySelector('.floating-button');
   const $cta = $floatingButton.querySelector('a');
-  const $toggleIcon = getIconElement('plus-heavy');
+  const $toggleIcon = getIconElement('plus-icon-22');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
 
   $tools.forEach(($tool) => {
@@ -303,9 +308,9 @@ function buildTools($wrapper, $tools) {
 
   setTimeout(() => {
     if ($wrapper.classList.contains('initial-load')) {
-      toggleToolBox($wrapper, $lottie, 'withLottie', true);
+      toggleToolBox($wrapper, $lottie, 'withLottie', false);
     }
-  }, 3000);
+  }, delayInSeconds * 1000);
 
   $floatingButton.append($toggleIcon);
   $notch.append($notchPill);
@@ -317,9 +322,7 @@ function buildTools($wrapper, $tools) {
       $element.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!$wrapper.classList.contains('initial-load')) {
-          toggleToolBox($wrapper, $lottie, scrollState);
-        }
+        toggleToolBox($wrapper, $lottie, scrollState);
       });
     }
   });
@@ -328,6 +331,7 @@ function buildTools($wrapper, $tools) {
 }
 
 export async function createMFB($block, $parentSection) {
+  const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
   const $ctaContainer = $block.querySelector('.button-container');
   const tools = $block.querySelectorAll('li');
   if ($ctaContainer) {
@@ -344,7 +348,11 @@ export async function createMFB($block, $parentSection) {
     }
 
     $buttonWrapper.classList.add('multifunction');
-    buildTools($buttonWrapper, tools);
+    if (delayInSeconds) {
+      buildTools($buttonWrapper, tools, delayInSeconds);
+    } else {
+      buildTools($buttonWrapper, tools);
+    }
   }
 }
 

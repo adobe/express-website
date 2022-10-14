@@ -179,12 +179,11 @@ main .floating-button-wrapper.multifunction .toolbox.hidden {
   display: none;
 }
 
-main .floating-button-wrapper.multifunction .icon-plus-heavy {
+main .floating-button-wrapper.multifunction .floating-button .icon {
   position: absolute;
   left: 32px;
   height: 18px;
   width: 18px;
-  filter: invert(100%) brightness(100);
   bottom: 50%;
   transform: translateY(50%);
   transition: transform 0.2s;
@@ -192,7 +191,7 @@ main .floating-button-wrapper.multifunction .icon-plus-heavy {
   z-index: 2;
 }
 
-main .floating-button-wrapper.multifunction.toolbox-opened .icon-plus-heavy {
+main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .icon {
   transform: translateY(50%) rotate(45deg);
 }
 
@@ -232,19 +231,14 @@ main .floating-button-wrapper.multifunction .toolbox .badge {
   max-width: 100px;
   top: -8px;
   right: 32px;
-  opacity: 0;
   transition: all 0.5s;
-}
-
-main .floating-button-wrapper.multifunction.toolbox-opened .toolbox .badge {
-  opacity: 1;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool {
   max-width: 72%;
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
@@ -257,7 +251,7 @@ main .floating-button-wrapper.multifunction .toolbox .tool svg {
   color: var(--color-black);
   fill: var(--color-black);
   height: 22px;
-  max-width: 22px;
+  width: 22px;
   margin-right: 12px;
   object-fit: contain;
 }
