@@ -15,9 +15,22 @@ main .toc-container {
 
 main .toc-container .default-content-wrapper {
   position: absolute;
-  top: -12px;
   right: 2px;
   z-index: 10;
+}
+
+main .toc-container .default-content-wrapper {
+  top: 0px;
+}
+
+main .toc-container.no-feds .default-content-wrapper {
+  position: absolute;
+  top: -12px;
+}
+
+main .toc-container.feds .default-content-wrapper {
+  position: fixed;
+  top: 0px;
 }
 
 main .toc-container.sticky .default-content-wrapper {

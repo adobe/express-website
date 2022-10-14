@@ -67,8 +67,10 @@ export default async function decorate($block) {
   // Start observing the target node for configured mutations
   const header = document.querySelector('header');
   if (header.classList.contains('feds-header-wrapper')) {
+    $block.parentElement.parentElement.classList.add('feds');
     observer.observe(header, { attributes: true });
   } else {
+    $block.parentElement.parentElement.classList.add('no-feds');
     let lastPosition = 0;
     const threshold = document.querySelector('header').offsetHeight + 6;
     document.addEventListener('scroll', () => {
