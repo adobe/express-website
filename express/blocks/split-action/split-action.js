@@ -45,11 +45,11 @@ function initNotchDragAction($block) {
   $notch.addEventListener('touchstart', (e) => {
     $block.style.transition = 'none';
     touchStart = e.changedTouches[0].clientY;
-  });
+  }, { passive: true });
 
   $notch.addEventListener('touchmove', (e) => {
     $block.style.bottom = `-${e.changedTouches[0].clientY - touchStart}px`;
-  });
+  }, { passive: true });
 
   $notch.addEventListener('touchend', (e) => {
     $block.style.transition = 'bottom 0.2s';
@@ -58,7 +58,7 @@ function initNotchDragAction($block) {
     } else {
       $block.style.bottom = '0';
     }
-  });
+  }, { passive: true });
 }
 
 export default function decorate($block) {

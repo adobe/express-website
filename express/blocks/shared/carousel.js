@@ -187,7 +187,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   let lastPos = null;
   $platform.addEventListener('touchstart', (e) => {
     lastPos = e;
-  });
+  }, { passive: true });
   $platform.addEventListener('touchmove', (e) => {
     if (lastPos && !e.target.classList.contains('carousel-arrow')) {
       const relativePosX = e.touches[0].pageX - lastPos.touches[0].pageX;
@@ -198,5 +198,5 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   }, { passive: true });
   $platform.addEventListener('touched', () => {
     lastPos = null;
-  });
+  }, { passive: true });
 }
