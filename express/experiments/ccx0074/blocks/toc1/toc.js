@@ -11,6 +11,7 @@
  */
 import {
   getLottie,
+  scrollToHash,
 } from '../../../../scripts/scripts.js';
 
 import {
@@ -37,6 +38,11 @@ export default async function decorate($block) {
       child.addEventListener('click', (ev) => {
         ev.stopPropagation();
         toggleToc($toggle, $block, false);
+        const url = new URL(ev.target.href);
+        if (url.pathname === window.location.pathname) {
+          ev.preventDefault();
+          window.location.hash = url.hash;
+        }
       });
     } else if (child.nodeName === 'H2') {
       child.classList.add('toc-heading');
