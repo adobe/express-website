@@ -88,7 +88,7 @@ main .toc-container .toc {
   width: calc(100vw - 24px);
 }
 
-main .toc-container .toc:after {
+main .toc-container .toc-handle {
   position: absolute;
   display: block;
   height: 4px;

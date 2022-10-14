@@ -49,6 +49,14 @@ export default async function decorate($block) {
   $close.innerHTML = $closeIcon.outerHTML + $close.innerHTML;
   $block.append($close);
 
+  const $handle = document.createElement('div');
+  $handle.classList.add('toc-handle');
+  $handle.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    toggleToc($toggle, $block, false);
+  });
+  $block.append($handle);
+
   await fixIcons($block);
   addAppStoreButton($block);
   attachEventListeners($block, $toggle, $close);
@@ -64,7 +72,7 @@ export default async function decorate($block) {
     }
   });
 
-  // Start observing the target node for configured mutations
+  // Start observing the feds header to detect when it is toggled
   const header = document.querySelector('header');
   if (header.classList.contains('feds-header-wrapper')) {
     $block.parentElement.parentElement.classList.add('feds');
