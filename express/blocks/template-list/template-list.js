@@ -339,7 +339,7 @@ export async function decorateTemplateList($block) {
             cache.heading = row.textContent;
           }
           row.remove();
-        } else if (cells[0].textContent === 'Auto-collapse delay') {
+        } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
           cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
         } else if (index < array.length) {
           if (cells.length >= 2) {
