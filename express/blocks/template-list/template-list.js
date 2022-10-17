@@ -370,9 +370,7 @@ export async function decorateTemplateList($block) {
       if ($block.classList.contains('holiday')) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
-        const $content = Array.from(cache.heading.querySelectorAll('p')).filter((p) => {
-          return p.textContent !== '' && p.querySelector('a') === null;
-        });
+        const $content = Array.from(cache.heading.querySelectorAll('p')).filter((p) => p.textContent !== '' && p.querySelector('a') === null);
         const $a = cache.heading.querySelector('a');
         $a.classList.add('expanded');
         $a.classList.add('toggle-button');
