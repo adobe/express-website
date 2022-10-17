@@ -1,5 +1,5 @@
-main .quick-action-hub-wrapper {
-  padding: 88px 16px!important;
+main .section > div.quick-action-hub-wrapper {
+  padding: 88px 16px;
 }
 
 main .block.quick-action-hub {
@@ -9,17 +9,15 @@ main .block.quick-action-hub {
   padding: 40px 24px 18px 24px;
 }
 
-main .block.quick-action-hub .quick-action-hub-header {
-  text-align: left;
-}
-
 main .block.quick-action-hub .quick-action-hub-header h2 {
   font-size: var(--heading-font-size-m);
+  text-align: left;
 }
 
 main .block.quick-action-hub .quick-action-hub-header p {
   font-size: var(--body-font-size-m);
   margin: 16px 0 32px 0;
+  text-align: left;
 }
 
 main .block.quick-action-hub .quick-action-hub-container {
@@ -30,7 +28,6 @@ main .block.quick-action-hub .quick-action-hub-container {
 main .block.quick-action-hub .quick-action-hub-column {
   display: flex;
   flex-direction: column;
-  text-align: left;
   margin-bottom: 28px;
 }
 
@@ -38,6 +35,7 @@ main .block.quick-action-hub .quick-action-hub-container h3 {
   font-size: var(--body-font-size-xl);
   font-weight: var(--body-font-weight);
   margin-bottom: 8px;
+  text-align: left;
 }
 
 main .block.quick-action-hub .quick-action-hub-container svg {
@@ -54,4 +52,42 @@ main .block.quick-action-hub .quick-action-hub-container a {
   font-size: var(--body-font-size-m);
   margin: 8px 0;
   user-select: none;
+  text-align: left;
+}
+
+@media (min-width: 900px) {
+  main .section > div.quick-action-hub-wrapper {
+    padding: 0;
+  }
+
+  main .block.quick-action-hub {
+    padding: 40px 54px;
+  }
+
+  main .block.quick-action-hub .quick-action-hub-header p {
+    max-width: 640px;
+  }
+
+  main .block.quick-action-hub .quick-action-hub-container {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  main .block.quick-action-hub .quick-action-hub-column {
+    align-items: flex-start;
+  }
+
+  main .block.quick-action-hub .quick-action-hub-container a {
+    width: 200px;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  main .block.quick-action-hub .quick-action-hub-container a:hover {
+    background-color: var(--color-gray-200);
+  }
+
+  main .block.quick-action-hub .quick-action-hub-container svg {
+    padding: 0 12px 0 0;
+  }
 }
