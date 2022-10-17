@@ -339,6 +339,8 @@ export async function decorateTemplateList($block) {
             cache.heading = row.textContent;
           }
           row.remove();
+        } else if (cells[0].textContent === 'Auto-collapse delay') {
+          cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
         } else if (index < array.length) {
           if (cells.length >= 2) {
             if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
@@ -394,6 +396,17 @@ export async function decorateTemplateList($block) {
 
         $parent.prepend($toggleBar);
         initToggle($parent);
+
+        setTimeout(() => {
+          if ($wrapper.classList.contains('expanded')) {
+            const $toggleButtons = $parent.querySelectorAll('.toggle-button');
+
+            $wrapper.classList.toggle('expanded');
+            Array.from($toggleButtons).forEach(($button) => {
+              $button.classList.toggle('expanded');
+            });
+          }
+        }, cache.autoCollapseDelay);
       } else {
         const $sectionHeading = $parent.querySelector('div > h2');
         if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
@@ -634,7 +647,7 @@ function cacheCreatedTemplate($block) {
 }
 
 export default async function decorate($block) {
-  if ($block.classList.contains('apipowered')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
   }
 
