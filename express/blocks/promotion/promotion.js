@@ -18,9 +18,13 @@ import {
   fixIcons,
   toClassName,
   createOptimizedPicture,
-  trackBranchParameters,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+
+import {
+  trackBranchParameters,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 const PROMOTION_FOLDER = 'express/promotions';
 

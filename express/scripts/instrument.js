@@ -18,9 +18,13 @@ import {
   getLanguage,
   getMetadata,
   checkTesting,
-  trackBranchParameters,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
+
+import {
+  trackBranchParameters,
+// eslint-disable-next-line import/no-unresolved
+} from '../shared/utils.js';
 
 // eslint-disable-next-line import/no-unresolved
 import Context from './context.js';
