@@ -42,9 +42,9 @@ function waitForMediaToLoad($parent) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEnabled = false) {
+export async function buildCarousel(selector = ':scope > *', $parent, infinityScrollEnabled = false) {
   // Load CSS
-  loadCSS('/express/blocks/shared/carousel.css');
+  await loadCSS('/express/blocks/shared/carousel.css');
   // Build the carousel HTML
   const $carouselContent = selector ? $parent.querySelectorAll(selector) : $parent.children;
   const $container = createTag('div', { class: 'carousel-container' });

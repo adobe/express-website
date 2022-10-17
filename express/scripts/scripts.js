@@ -2038,9 +2038,9 @@ async function loadEager() {
       }
     }
     console.log('LCP block detected', block);
-    if (hasLCPBlock) await loadBlock(block, true);
-
-    document.querySelector('body').classList.add('appear');
+    if (hasLCPBlock) {
+      await loadBlock(block, true);
+    }
 
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
@@ -2056,7 +2056,8 @@ async function loadEager() {
       }
     }
 
-    const lcpCandidate = document.querySelector('main img');
+    const lcpCandidate = hasLCPBlock && block.getAttribute('data-block-name') === 'template-list' ? block.querySelector('.carousel-container img') : document.querySelector('main img');
+
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
         lcpCandidate.setAttribute('loading', 'eager');
@@ -2066,6 +2067,12 @@ async function loadEager() {
         resolve();
       }
     });
+
+    if (hasLCPBlock) {
+      const section = block.closest('.section');
+      section.setAttribute('data-section-status', 'loaded');
+    }
+    document.body.classList.add('appear');
   }
 }
 
