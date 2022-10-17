@@ -2019,8 +2019,25 @@ async function loadEager() {
     wordBreakJapanese();
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d'];
-    const block = document.querySelector('.block');
+    let block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    if (hasLCPBlock) {
+      const section = block.closest('.section');
+      // section might be for the wrong audience
+      if (section
+        && section.dataset.audience
+        && !checkExperimentAudience(section.dataset.audience)) {
+        // try next section
+        const next = section.nextElementSibling;
+        if (next
+          && next.dataset.audience
+          && checkExperimentAudience(next.dataset.audience)) {
+          // get first block of the next section
+          block = next.querySelector('.block');
+        }
+      }
+    }
+    console.log('LCP block detected', block);
     if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
