@@ -26,9 +26,9 @@ export default function decorate($block) {
     const $column = $rows[i].firstChild;
 
     if ($column) {
-      const $rows = $column.querySelectorAll('p');
+      const $columnRows = $column.querySelectorAll('p');
 
-      $rows.forEach(($row) => {
+      $columnRows.forEach(($row) => {
         const $svg = $row.querySelector('svg');
         const $link = $row.querySelector('a');
 
