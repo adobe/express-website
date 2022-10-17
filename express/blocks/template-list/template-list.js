@@ -32,6 +32,7 @@ const cache = {
     locales: '(en)',
   },
   tailButton: '',
+  limit: 70,
   total: 0,
   start: '',
   masonry: undefined,
@@ -49,7 +50,7 @@ function fetchTemplates() {
       }
     }, '');
 
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&orderBy=-remixCount&filters=${filterString}`)
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${cache.limit}&start=${cache.start}&orderBy=-remixCount&filters=${filterString}`)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -298,6 +299,31 @@ function populateTemplates($block, templates) {
   }
 }
 
+function initToggle($section) {
+  const $bar = $section.querySelector('.toggle-bar');
+  const $wrapper = $section.querySelector('.template-list-wrapper');
+  const $toggleButtons = $section.querySelectorAll('.toggle-button');
+
+  $bar.addEventListener('click', (e) => {
+    e.preventDefault();
+    $wrapper.classList.toggle('expanded');
+    Array.from($toggleButtons).forEach(($button) => {
+      $button.classList.toggle('expanded');
+    });
+  });
+
+  Array.from($toggleButtons).forEach(($button) => {
+    $button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      $wrapper.classList.toggle('expanded');
+      Array.from($toggleButtons).forEach((b) => {
+        b.classList.toggle('expanded');
+      });
+    });
+  });
+}
+
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
@@ -307,6 +333,8 @@ export async function decorateTemplateList($block) {
           if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
             cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
             cache.heading = cells[1].textContent;
+          } else if ($block.classList.contains('holiday')) {
+            cache.heading = row;
           } else {
             cache.heading = row.textContent;
           }
@@ -337,16 +365,47 @@ export async function decorateTemplateList($block) {
       cache.authoringError = true;
     }
 
-    const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
+    const $parent = $block.closest('.section');
     if ($parent) {
-      const $sectionHeading = $parent.querySelector('div > h2');
-      if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
-        if (cache.authoringError) {
-          $sectionHeading.textContent = cache.heading;
-        } else {
-          const headingEnding = await fetchPlaceholders()
-            .then((placeholders) => placeholders['api-powered-grid-heading']);
-          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+      if ($block.classList.contains('holiday')) {
+        const $wrapper = $parent.querySelector('.template-list-wrapper');
+        const $icon = cache.heading.querySelector('picture');
+        const $content = Array.from(cache.heading.querySelectorAll('p')).filter((p) => {
+          return p.textContent !== '' && p.querySelector('a') === null;
+        });
+        const $a = cache.heading.querySelector('a');
+        $a.classList.add('expanded');
+        $a.classList.add('toggle-button');
+        $a.classList.remove('button');
+        $a.classList.remove('accent');
+
+        const $toggleBar = createTag('div', { class: 'toggle-bar' });
+        const $topElements = createTag('div', { class: 'toggle-bar-top' });
+        const $bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
+        const $mobileSubtext = $content[1].cloneNode(true);
+        const $mobileAnchor = $a.cloneNode(true);
+        $mobileSubtext.classList.add('mobile-only');
+        $mobileAnchor.classList.add('mobile-only');
+
+        $toggleBar.append($topElements, $bottomElements);
+        $topElements.append($icon, $content[0]);
+        $bottomElements.append($content[1], $a);
+        $wrapper.prepend($mobileSubtext);
+        $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
+        $wrapper.classList.add('expanded');
+
+        $parent.prepend($toggleBar);
+        initToggle($parent);
+      } else {
+        const $sectionHeading = $parent.querySelector('div > h2');
+        if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+          if (cache.authoringError) {
+            $sectionHeading.textContent = cache.heading;
+          } else {
+            const headingEnding = await fetchPlaceholders()
+              .then((placeholders) => placeholders['api-powered-grid-heading']);
+            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+          }
         }
       }
     }
