@@ -1,0 +1,57 @@
+main .quick-action-hub-wrapper {
+  padding: 88px 16px!important;
+}
+
+main .block.quick-action-hub {
+  border-radius: 16px;
+  background-color: #FBFBFB;
+  border: 1px #DBDBDB solid;
+  padding: 40px 24px 18px 24px;
+}
+
+main .block.quick-action-hub .quick-action-hub-header {
+  text-align: left;
+}
+
+main .block.quick-action-hub .quick-action-hub-header h2 {
+  font-size: var(--heading-font-size-m);
+}
+
+main .block.quick-action-hub .quick-action-hub-header p {
+  font-size: var(--body-font-size-m);
+  margin: 16px 0 32px 0;
+}
+
+main .block.quick-action-hub .quick-action-hub-container {
+  display: flex;
+  flex-direction: column;
+}
+
+main .block.quick-action-hub .quick-action-hub-column {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+main .block.quick-action-hub .quick-action-hub-container h3 {
+  font-size: var(--body-font-size-xl);
+  font-weight: var(--body-font-weight);
+  margin-bottom: 8px;
+}
+
+main .block.quick-action-hub .quick-action-hub-container svg {
+  width: 18px;
+  height: 18px;
+  padding: 0 12px;
+}
+
+main .block.quick-action-hub .quick-action-hub-container a {
+  display: flex;
+  align-items: center;
+  color: var(--body-color);
+  font-weight: var(--body-font-weight);
+  font-size: var(--body-font-size-m);
+  margin: 8px 0;
+  user-select: none;
+}
