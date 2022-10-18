@@ -93,51 +93,15 @@ function updateBlocks(data) {
   }
 
   if (templateList) {
-    if (data.shortTitle) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle);
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', '');
-    }
-
-    if (data.templateTasks) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks);
-    }
-
-    if (data.templateTopics) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics);
-    }
-
-    if (data.templateLocale) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale);
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', 'en');
-    }
-
-    if (data.templatePremium) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium);
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', '');
-    }
-
-    if (data.templateAnimated) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated);
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', '');
-    }
-
-    if (data.createText) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText);
-    }
-
-    if (data.createLink) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink);
-    }
-
-    if (data.placeholderFormat) {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat);
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', '2:3');
-    }
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale ?? 'en');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink ?? '/');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat ?? '');
   }
 
   if (seoNav) {
