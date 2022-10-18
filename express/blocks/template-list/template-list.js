@@ -572,8 +572,11 @@ function decorateTailButton($block) {
 }
 
 function cacheCreatedTemplate($block) {
-  cache.templates.push($block.children[$block.children.length - 1]);
-  $block.children[$block.children.length - 1].remove();
+  const lastRow = $block.children[$block.children.length - 1];
+  if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
+    cache.templates.push(lastRow.cloneNode(true));
+    lastRow.remove();
+  }
 }
 
 export default async function decorate($block) {
