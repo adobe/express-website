@@ -922,7 +922,7 @@ main .template-list.collaboration .carousel-container {
 main .template-list-horizontal-apipowered-holiday-container {
   background-color: var(--color-black);
   color: var(--color-white);
-  padding-bottom: 16px;
+  padding-bottom: 10px;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
