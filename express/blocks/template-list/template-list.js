@@ -354,7 +354,7 @@ export async function decorateTemplateList($block) {
 
   let rows = $block.children.length;
   const locale = getLocale(window.location);
-  if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
+  if ((rows === 0 || $block.querySelectorAll('img').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
       // author defined localized edit text(s)
