@@ -18,6 +18,7 @@ import {
   getHelixEnv,
   sampleRUM,
   getCookie,
+  getMetadata,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
@@ -153,7 +154,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: 'cc-express/cc-express-gnav',
+      experience: getMetadata('gnav') || 'cc-express-gnav-login-suppressed',
     },
     profile: {
       customSignIn: () => {
