@@ -26,7 +26,7 @@ main .toc-container.sticky .default-content-wrapper {
 }
 
 .feds-header-wrapper--sticky + main .toc-container .default-content-wrapper {
-  top: 64px;
+  top: 72px;
   position: fixed;
 }
 
