@@ -154,7 +154,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: getMetadata('gnav') || 'cc-express-gnav-login-suppressed',
+      experience: `cc-express/${getMetadata('gnav') || 'cc-express-gnav-login-suppressed'}`,
     },
     profile: {
       customSignIn: () => {
@@ -175,7 +175,7 @@ function loadFEDS() {
     jarvis: getMetadata('enable-chat') === 'yes'
       ? {
         surfaceName: 'AdobeExpressEducation',
-        surfaceversion: '1',
+        surfaceVersion: '1',
       }
       : {},
   };
