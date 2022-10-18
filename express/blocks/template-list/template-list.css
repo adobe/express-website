@@ -923,6 +923,12 @@ main .template-list-horizontal-apipowered-holiday-container {
   background-color: var(--color-black);
   color: var(--color-white);
   padding-bottom: 10px;
+  position: relative;
+}
+
+main .template-list-horizontal-apipowered-holiday-container p,
+main .template-list-horizontal-apipowered-holiday-container picture {
+  z-index: 1;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
@@ -935,6 +941,7 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar p {
   margin: 14px 0;
+  font-size: 16px;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar img {
@@ -947,7 +954,6 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar img {
 main .template-list-horizontal-apipowered-holiday-container .toggle-button {
   color: var(--color-white);
   display: flex;
-
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
@@ -995,10 +1001,6 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
   align-items: center;
 }
 
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar p {
-  font-size: 16px;
-}
-
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
   display: none;
   flex-grow: 1;
@@ -1014,6 +1016,7 @@ main .template-list-horizontal-apipowered-holiday-container .template-list-wrapp
 main .template-list.holiday,
 main .template-list.holiday .carousel-container {
   max-width: none;
+  z-index: 1;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper {
@@ -1028,6 +1031,21 @@ main .template-list-horizontal-apipowered-holiday-container .template-list-wrapp
 
 main .template-list.holiday .carousel-container .carousel-platform {
   scroll-padding: initial;
+}
+
+main .template-list-horizontal-apipowered-holiday-container .animation-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+  display: none;
+}
+
+main .template-list-horizontal-apipowered-holiday-container.expanded .animation-canvas {
+  display: unset;
 }
 
 @media (min-width: 600px) {

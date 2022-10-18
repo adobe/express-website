@@ -41,7 +41,8 @@ const cache = {
 
 function fetchTemplates() {
   if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
-    const prunedFilter = Object.entries(cache.filters).filter(([, value]) => value !== '()');
+    const prunedFilter = Object.entries(cache.filters)
+      .filter(([, value]) => value !== '()');
     const filterString = prunedFilter.reduce((string, [key, value]) => {
       if (key === prunedFilter[prunedFilter.length - 1][0]) {
         return `${string}${key}:${value}`;
@@ -68,7 +69,8 @@ async function processResponse() {
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
-      const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
+      const start = new URLSearchParams(nextQuery).get('start')
+        .split(',')[0];
       cache.start = start;
     } else {
       cache.start = '';
@@ -169,7 +171,8 @@ async function fetchBlueprint(pathname) {
     return (window.spark.$blueprint);
   }
 
-  const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
+  const bpPath = pathname.substr(pathname.indexOf('/', 1))
+    .split('.')[0];
   const resp = await fetch(`${bpPath}.plain.html`);
   const body = await resp.text();
   const $main = createTag('main');
@@ -220,7 +223,8 @@ function populateTemplates($block, templates) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep).map((e) => +e);
+          const ratios = option.split(sep)
+            .map((e) => +e);
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
             if (ratios[1]) {
@@ -267,7 +271,8 @@ function populateTemplates($block, templates) {
         if (videoLink.includes('/media_')) {
           videoLink = `./media_${videoLink.split('/media_')[1]}`;
         }
-        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
+        $tmplt.querySelectorAll(':scope br')
+          .forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
           const $img = $tmplt.querySelector('img');
@@ -307,51 +312,57 @@ function initToggle($section) {
   $bar.addEventListener('click', (e) => {
     e.preventDefault();
     $wrapper.classList.toggle('expanded');
-    Array.from($toggleButtons).forEach(($button) => {
-      $button.classList.toggle('expanded');
-    });
+    $section.classList.toggle('expanded');
+    Array.from($toggleButtons)
+      .forEach(($button) => {
+        $button.classList.toggle('expanded');
+      });
   });
 
-  Array.from($toggleButtons).forEach(($button) => {
-    $button.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      $wrapper.classList.toggle('expanded');
-      Array.from($toggleButtons).forEach((b) => {
-        b.classList.toggle('expanded');
+  Array.from($toggleButtons)
+    .forEach(($button) => {
+      $button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        $wrapper.classList.toggle('expanded');
+        $section.classList.toggle('expanded');
+        Array.from($toggleButtons)
+          .forEach((b) => {
+            b.classList.toggle('expanded');
+          });
       });
     });
-  });
 }
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
-      Array.from($block.children).forEach((row, index, array) => {
-        const cells = row.querySelectorAll('div');
-        if (index === 0) {
-          if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-            cache.heading = cells[1].textContent;
-          } else if ($block.classList.contains('holiday')) {
-            cache.heading = row;
-          } else {
-            cache.heading = row.textContent;
-          }
-          row.remove();
-        } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-          cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
-        } else if (index < array.length) {
-          if (cells.length >= 2) {
-            if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+      Array.from($block.children)
+        .forEach((row, index, array) => {
+          const cells = row.querySelectorAll('div');
+          if (index === 0) {
+            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
               cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+              cache.heading = cells[1].textContent;
+            } else if ($block.classList.contains('holiday')) {
+              cache.heading = row;
             } else {
-              cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+              cache.heading = row.textContent;
             }
+            row.remove();
+          } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
+            cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
+          } else if (index < array.length) {
+            if (cells.length >= 2) {
+              if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+                cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+              } else {
+                cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+              }
+            }
+            row.remove();
           }
-          row.remove();
-        }
-      });
+        });
 
       const fetchedTemplates = await processResponse();
 
@@ -372,7 +383,8 @@ export async function decorateTemplateList($block) {
       if ($block.classList.contains('holiday')) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
-        const $content = Array.from(cache.heading.querySelectorAll('p')).filter((p) => p.textContent !== '' && p.querySelector('a') === null);
+        const $content = Array.from(cache.heading.querySelectorAll('p'))
+          .filter((p) => p.textContent !== '' && p.querySelector('a') === null);
         const $a = cache.heading.querySelector('a');
         $a.classList.add('expanded');
         $a.classList.add('toggle-button');
@@ -395,6 +407,7 @@ export async function decorateTemplateList($block) {
         $wrapper.classList.add('expanded');
 
         $parent.prepend($toggleBar);
+        $parent.classList.add('expanded');
         initToggle($parent);
 
         setTimeout(() => {
@@ -402,9 +415,11 @@ export async function decorateTemplateList($block) {
             const $toggleButtons = $parent.querySelectorAll('.toggle-button');
 
             $wrapper.classList.toggle('expanded');
-            Array.from($toggleButtons).forEach(($button) => {
-              $button.classList.toggle('expanded');
-            });
+            $parent.classList.toggle('expanded');
+            Array.from($toggleButtons)
+              .forEach(($button) => {
+                $button.classList.toggle('expanded');
+              });
           }
         }, cache.autoCollapseDelay);
       } else {
@@ -430,11 +445,13 @@ export async function decorateTemplateList($block) {
       // author defined localized edit text(s)
       && ($block.firstElementChild.querySelector('p')
         // multiple lines in separate p tags
-        ? Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent.trim())
+        ? Array.from($block.querySelectorAll('p'))
+          .map(($p) => $p.textContent.trim())
         // single text directly in div
         : [$block.firstElementChild.textContent.trim()]);
     $block.innerHTML = '';
-    const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
+    const tls = Array.from($block.closest('main')
+      .querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 
     const $blueprint = await fetchBlueprint(window.location.pathname);
@@ -459,9 +476,10 @@ export async function decorateTemplateList($block) {
       if (!templateText) {
         templateText = placeholderText;
       }
-      $block.querySelectorAll('a').forEach(($a, index) => {
-        $a.textContent = index === 0 ? placeholderText : templateText;
-      });
+      $block.querySelectorAll('a')
+        .forEach(($a, index) => {
+          $a.textContent = index === 0 ? placeholderText : templateText;
+        });
     }
 
     const $heroPicture = document.querySelector('.hero-bg');
@@ -489,13 +507,14 @@ export async function decorateTemplateList($block) {
   if (templates[0] && templates[0].children.length === 1) {
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
-      $a.className = 'template-title-link';
-      const p = $a.closest('p');
-      if (p) {
-        p.classList.remove('button-container');
-      }
-    });
+    $titleRow.querySelectorAll(':scope a')
+      .forEach(($a) => {
+        $a.className = 'template-title-link';
+        const p = $a.closest('p');
+        if (p) {
+          p.classList.remove('button-container');
+        }
+      });
 
     if ($block.classList.contains('collaboration')) {
       const $titleHeading = $titleRow.querySelector('h3');
@@ -504,9 +523,10 @@ export async function decorateTemplateList($block) {
         href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
       });
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      fetchPlaceholders().then((placeholders) => {
-        $clipboardTag.textContent = placeholders['tag-copied'];
-      });
+      fetchPlaceholders()
+        .then((placeholders) => {
+          $clipboardTag.textContent = placeholders['tag-copied'];
+        });
 
       $anchorLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -531,13 +551,20 @@ export async function decorateTemplateList($block) {
 
   if (rows === 1) {
     $block.classList.add('large');
-    breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }];
+    breakpoints = [{
+      media: '(min-width: 400px)',
+      width: '2000',
+    }, { width: '750' }];
   }
 
-  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    const { src, alt } = $img;
-    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
-  });
+  $block.querySelectorAll(':scope picture > img')
+    .forEach(($img) => {
+      const {
+        src,
+        alt,
+      } = $img;
+      $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+    });
 
   // find the edit link and turn the template DIV into the A
   // A
@@ -570,15 +597,17 @@ export async function decorateTemplateList($block) {
 
   const $templateLinks = $block.querySelectorAll('a.template');
   let freeInAppText;
-  await fetchPlaceholders().then((placeholders) => {
-    freeInAppText = placeholders['free-in-app'];
-  });
+  await fetchPlaceholders()
+    .then((placeholders) => {
+      freeInAppText = placeholders['free-in-app'];
+    });
   for (const $templateLink of $templateLinks) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div').append($freeInAppBadge);
+      $templateLink.querySelector('div')
+        .append($freeInAppBadge);
     }
   }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
@@ -612,9 +641,10 @@ function decorateLoadMoreButton($block) {
   const $loadMoreButton = createTag('button', { class: 'load-more-button' });
   const $loadMoreText = createTag('p', { class: 'load-more-text' });
   $loadMoreDiv.append($loadMoreButton, $loadMoreText);
-  fetchPlaceholders().then((placeholders) => {
-    $loadMoreText.textContent = placeholders['load-more'];
-  });
+  fetchPlaceholders()
+    .then((placeholders) => {
+      $loadMoreText.textContent = placeholders['load-more'];
+    });
   $block.insertAdjacentElement('afterend', $loadMoreDiv);
   $loadMoreButton.textContent = '+';
 
@@ -646,6 +676,245 @@ function cacheCreatedTemplate($block) {
   $block.children[$block.children.length - 1].remove();
 }
 
+function startFirework($section) {
+  (function () {
+    const requestAnimationFrame = window.requestAnimationFrame
+      || window.mozRequestAnimationFrame
+      || window.webkitRequestAnimationFrame
+      || window.msRequestAnimationFrame;
+    window.requestAnimationFrame = requestAnimationFrame;
+  }());
+
+  const canvas = $section.querySelector('.animation-canvas');
+  const ctx = canvas.getContext('2d');
+  let width = 0;
+  let height = 0;
+  let vanishPointY = 0;
+  let vanishPointX = 0;
+  const focalLength = 300;
+  let angleX = 180;
+  let angleY = 180;
+  let angleZ = 180;
+  let angle = 0;
+  let cycle = 0;
+  const colors = {
+    r: 255,
+    g: 0,
+    b: 0,
+  };
+
+  canvas.width = width;
+  canvas.height = height;
+
+  function Particle(x, y, z, color) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+
+    this.startX = this.x;
+    this.startY = this.y;
+    this.startZ = this.z;
+
+    this.ox = this.x;
+    this.oy = this.y;
+    this.oz = this.z;
+
+    this.xPos = 0;
+    this.yPos = 0;
+
+    this.vx = (Math.random() * 10) - 5;
+    this.vy = (Math.random() * 10) - 5;
+    this.vz = (Math.random() * 10) - 5;
+
+    this.color = [color.r, color.g, color.b];
+    this.render = true;
+
+    this.size = Math.round(1 + Math.random() * 1);
+  }
+
+  // Controls the emitter
+  function Emitter() {
+    this.reset();
+  }
+
+  Emitter.prototype.reset = function () {
+    const PART_NUM = 200;
+    const x = (Math.random() * 400) - 200;
+    const y = (Math.random() * 400) - 200;
+    const z = (Math.random() * 800) - 200;
+
+    this.x = x || 0;
+    this.y = y || 0;
+    this.z = z || 0;
+    this.particles = [];
+
+    for (let i = 0; i < PART_NUM; i += 1) {
+      this.particles.push(new Particle(this.x, this.y, this.z, {
+        r: colors.r,
+        g: colors.g,
+        b: colors.b,
+      }));
+    }
+  };
+
+  Emitter.prototype.update = function () {
+    const partLen = this.particles.length;
+
+    angleY = (angle - vanishPointX) * 0.0001;
+    angleX = (angle - vanishPointX) * 0.0001;
+
+    this.particles.sort((a, b) => b.z - a.z);
+
+    for (let i = 0; i < partLen; i += 1) {
+      this.particles[i].update();
+    }
+
+    if (this.particles.length <= 0) {
+      this.reset();
+    }
+  };
+
+  Emitter.prototype.render = function (imgData) {
+    const { data } = imgData;
+
+    for (let i = 0; i < this.particles.length; i += 1) {
+      const particle = this.particles[i];
+      const dist = Math.sqrt((particle.x - particle.ox)
+        * (particle.x - particle.ox)
+        + (particle.y - particle.oy)
+        * (particle.y - particle.oy)
+        + (particle.z - particle.oz)
+        * (particle.z - particle.oz));
+
+      if (dist > 255) {
+        particle.render = false;
+        this.particles.splice(i, 1);
+        this.particles.length -= 1;
+      }
+
+      if (particle.render
+        && particle.xPos < width
+        && particle.xPos > 0
+        && particle.yPos > 0
+        && particle.yPos < height) {
+        for (let w = 0; w < particle.size; w += 1) {
+          for (let h = 0; h < particle.size; h += 1) {
+            if (particle.xPos + w < width
+              && particle.xPos + w > 0
+              && particle.yPos + h > 0
+              && particle.yPos + h < height) {
+              const pData = (Math.floor(particle.xPos + w)
+                + (Math.floor(particle.yPos + h) * width)) * 4;
+              [data[pData], data[pData + 1], data[pData + 2]] = particle.color;
+              data[pData + 3] = 255 - dist;
+            }
+          }
+        }
+      }
+    }
+  };
+
+  // Controls the individual particles
+
+  Particle.prototype.rotate = function () {
+    const x = this.startX * Math.cos(angleZ) - this.startY * Math.sin(angleZ);
+    const y = this.startY * Math.cos(angleZ) + this.startX * Math.sin(angleZ);
+
+    this.x = x;
+    this.y = y;
+  };
+
+  Particle.prototype.update = function () {
+    this.cosY = Math.cos(angleX);
+    this.sinY = Math.sin(angleX);
+    this.startX += this.vx;
+    this.x = this.startX;
+    this.startY += this.vy;
+    this.y = this.startY;
+    this.startZ -= this.vz;
+    this.z = this.startZ;
+    this.rotate();
+
+    this.vy += 0.1;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.z -= this.vz;
+
+    this.render = false;
+
+    if (this.z > -focalLength) {
+      const scale = focalLength / (focalLength + this.z);
+
+      this.size = scale * 2;
+      this.xPos = vanishPointX + this.x * scale;
+      this.yPos = vanishPointY + this.y * scale;
+      this.render = true;
+    }
+  };
+
+  const emitters = [];
+
+  function colorCycle() {
+    cycle += 0.6;
+    if (cycle > 100) {
+      cycle = 0;
+    }
+
+    colors.r = Math.floor(Math.sin(0.3 * cycle + 0) * 127 + 128);
+    colors.g = Math.floor(Math.sin(0.3 * cycle + 2) * 127 + 128);
+    colors.b = Math.floor(Math.sin(0.3 * cycle + 4) * 127 + 128);
+  }
+
+  function render() {
+    colorCycle();
+    // eslint-disable-next-line no-unused-vars
+    angleY = Math.sin(angle += 0.01);
+    angleX = Math.sin(angle);
+    angleZ = Math.sin(angle);
+
+    const imgData = ctx.createImageData(width, height);
+
+    for (let e = 0; e < 30; e += 1) {
+      emitters[e].update();
+      emitters[e].render(imgData);
+    }
+    ctx.putImageData(imgData, 0, 0);
+    requestAnimationFrame(render);
+  }
+
+  for (let e = 0; e < 30; e += 1) {
+    colorCycle();
+    emitters.push(new Emitter());
+  }
+
+  function adjustSize() {
+    canvas.width = $section.offsetWidth;
+    width = canvas.width;
+    canvas.height = $section.offsetHeight;
+    height = canvas.height;
+    vanishPointY = height / 2;
+    vanishPointX = width / 2;
+  }
+
+  setTimeout(() => {
+    adjustSize();
+    render();
+
+    window.addEventListener('resize', adjustSize);
+  }, 500);
+}
+
+function addBackgroundAnimation($block) {
+  const $parent = $block.closest('.section');
+
+  if ($parent) {
+    const $canvas = createTag('canvas', { class: 'animation-canvas' });
+    $parent.append($canvas);
+
+    startFirework($parent);
+  }
+}
+
 export default async function decorate($block) {
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
@@ -665,5 +934,9 @@ export default async function decorate($block) {
 
   if ($block.classList.contains('mini')) {
     decorateTailButton($block);
+  }
+
+  if ($block.classList.contains('holiday')) {
+    addBackgroundAnimation($block);
   }
 }
