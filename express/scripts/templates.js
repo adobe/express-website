@@ -146,6 +146,8 @@ function updateBlocks(data) {
 
     if (data.topTemplatesText) {
       seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', data.topTemplatesText);
+    } else {
+      seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', '');
     }
   }
 }
