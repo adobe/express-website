@@ -172,6 +172,12 @@ function loadFEDS() {
       otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
       footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
     },
+    jarvis: getMetadata('enable-chat') === 'yes'
+      ? {
+        surfaceName: 'AdobeExpressEducation',
+        surfaceversion: '1',
+      }
+      : {},
   };
 
   window.addEventListener('feds.events.experience.loaded', async () => {
