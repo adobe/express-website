@@ -928,7 +928,7 @@ export default async function decorate($block) {
     addAnimationToggle($block);
   }
 
-  if ($block.classList.contains('apipowered')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     decorateLoadMoreButton($block);
   }
 
