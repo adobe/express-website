@@ -9,6 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import {
+  getHelixEnv,
+  // eslint-disable-next-line import/no-unresolved
+} from '/express/scripts/scripts.js';
+
 async function fetchPageContent(path) {
   if (!(window.templates && window.templates.data)) {
     window.templates = {};
@@ -16,7 +21,14 @@ async function fetchPageContent(path) {
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
-  return window.templates.data.find((p) => p.path === path && p.live !== 'N');
+  const page = window.templates.data.find((p) => p.path === path);
+  const env = getHelixEnv();
+
+  if (env && env.name === 'stage') {
+    return page ?? null;
+  }
+
+  return page && page.live !== 'N' ? page : null;
 }
 
 async function fetchLinkList() {
