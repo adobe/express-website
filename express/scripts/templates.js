@@ -12,7 +12,7 @@
 import {
   getHelixEnv,
   // eslint-disable-next-line import/no-unresolved
-} from '/express/scripts/scripts.js';
+} from './scripts.js';
 
 async function fetchPageContent(path) {
   if (!(window.templates && window.templates.data)) {
