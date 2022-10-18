@@ -183,7 +183,7 @@ main .floating-button-wrapper.multifunction .toolbox:after {
 }
 
 main .floating-button-wrapper.multifunction.initial-load .toolbox {
-  transition: max-height 2s ease, transform 0.5s ease-in;
+  transition: max-height 2s ease, transform 0.5s ease-in, padding 0.5s ease-in;
 }
 
 main .floating-button-wrapper.multifunction .toolbox.hidden {
@@ -292,7 +292,7 @@ main .floating-button-wrapper.multifunction.toolbox-opened .toolbox-background {
 }
 
 main .floating-button-wrapper.multifunction.initial-load .toolbox-background {
-  transition: opacity 2s;
+  transition: all 2s;
 }
 
 main .floating-button-wrapper.multifunction.floating-button--hidden .toolbox,
