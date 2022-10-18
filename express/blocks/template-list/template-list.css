@@ -953,9 +953,10 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-button {
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
   width: max-content;
   margin: auto;
-  margin-left: 192px;
-  transform: translateX(-50%);
+  margin-left: 190px;
+  transform: translate(-50%, -6px);
   transition: margin 0.5s;
+  font-weight: 400;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only.expanded {
