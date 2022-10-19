@@ -2055,7 +2055,6 @@ async function loadEager() {
       }
     });
 
-    updateSectionsStatus(main);
     document.body.classList.add('appear');
   }
 }
