@@ -17,9 +17,9 @@ function show($block) {
   body.style.overflow = 'hidden';
   const $blockWrapper = $block.parentNode;
   if ($blockWrapper.parentElement.classList.contains('split-action-container')) {
-    $blockWrapper.parentElement.style.display = 'block';
+    $blockWrapper.parentElement.classList.remove('hidden');
     setTimeout(() => {
-      $blockWrapper.parentElement.style.opacity = '1';
+      $blockWrapper.parentElement.classList.remove('transparent');
       $block.style.bottom = '0';
     }, 10);
   }
@@ -62,6 +62,7 @@ function initNotchDragAction($block) {
 }
 
 export default function decorate($block) {
+  const $section = $block.closest('.section');
   const $buttonsWrapper = createTag('div', { class: 'buttons-wrapper' });
   const $blockBackground = createTag('div', { class: 'block-background' });
   const $underlay = createTag('a', { class: 'underlay' });
@@ -70,6 +71,11 @@ export default function decorate($block) {
   const $blockWrapper = $block.parentNode;
 
   let hrefHolder = '';
+
+  if ($section) {
+    $section.classList.add('hidden');
+    $section.classList.add('transparent');
+  }
 
   $block.prepend(getIconElement('adobe-express-white'));
 
