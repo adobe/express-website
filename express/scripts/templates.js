@@ -25,7 +25,7 @@ async function fetchPageContent(path) {
   const env = getHelixEnv();
 
   if (env && env.name === 'stage') {
-    return page ?? null;
+    return page || null;
   }
 
   return page && page.live !== 'N' ? page : null;
@@ -93,15 +93,15 @@ function updateBlocks(data) {
   }
 
   if (templateList) {
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle ?? '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks ?? '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics ?? '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale ?? 'en');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium ?? '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated ?? '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText ?? '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink ?? '/');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat ?? '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale || 'en');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat || '');
   }
 
   if (seoNav) {
