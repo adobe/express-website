@@ -332,6 +332,21 @@ export function readBlockConfig($block) {
 }
 
 /**
+ * this is an extensible stub to take on audience mappings
+ * @param {string} audience
+ * @return {boolean} is member of this audience
+ */
+function checkExperimentAudience(audience) {
+  if (audience === 'mobile') {
+    return window.innerWidth < 600;
+  }
+  if (audience === 'desktop') {
+    return window.innerWidth > 600;
+  }
+  return true;
+}
+
+/**
  * Decorates all sections in a container element.
  * @param {Element} $main The container element
  */
@@ -370,7 +385,9 @@ export function decorateSections($main) {
       sectionMeta.remove();
     }
 
-    if (section.dataset.audience && !noAudienceFound) {
+    if (section.dataset.audience && !checkExperimentAudience(section.dataset.audience)) {
+      section.remove();
+    } else if (section.dataset.audience && !noAudienceFound) {
       section.style.paddingTop = '0';
     } else {
       noAudienceFound = true;
@@ -389,6 +406,7 @@ export function updateSectionsStatus(main) {
     const status = section.getAttribute('data-section-status');
     if (status !== 'loaded') {
       const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
+      console.log('updateSectionsStatus loadingBlock', loadingBlock);
       if (loadingBlock) {
         section.setAttribute('data-section-status', 'loading');
         break;
@@ -894,6 +912,7 @@ export async function loadBlock(block, eager = false) {
       // eslint-disable-next-line no-console
       console.log(`failed to load block ${blockName}`, err);
     }
+    console.log(`block ${blockName} loaded`);
     block.setAttribute('data-block-status', 'loaded');
   }
 }
@@ -1291,22 +1310,6 @@ async function replaceInner(path, element) {
     console.log(`error loading experiment content: ${plainPath}`, e);
   }
   return null;
-}
-
-/**
- * this is an extensible stub to take on audience mappings
- * @param {string} audience
- * @return {boolean} is member of this audience
- */
-
-function checkExperimentAudience(audience) {
-  if (audience === 'mobile') {
-    return window.innerWidth < 600;
-  }
-  if (audience === 'desktop') {
-    return window.innerWidth > 600;
-  }
-  return true;
 }
 
 /**
@@ -2019,24 +2022,8 @@ async function loadEager() {
     wordBreakJapanese();
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d'];
-    let block = document.querySelector('.block');
+    const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) {
-      const section = block.closest('.section');
-      // section might be for the wrong audience
-      if (section
-        && section.dataset.audience
-        && !checkExperimentAudience(section.dataset.audience)) {
-        // try next section
-        const next = section.nextElementSibling;
-        if (next
-          && next.dataset.audience
-          && checkExperimentAudience(next.dataset.audience)) {
-          // get first block of the next section
-          block = next.querySelector('.block');
-        }
-      }
-    }
     console.log('LCP block detected', block);
     if (hasLCPBlock) {
       await loadBlock(block, true);
@@ -2068,10 +2055,7 @@ async function loadEager() {
       }
     });
 
-    if (hasLCPBlock) {
-      const section = block.closest('.section');
-      section.setAttribute('data-section-status', 'loaded');
-    }
+    updateSectionsStatus(main);
     document.body.classList.add('appear');
   }
 }
