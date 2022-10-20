@@ -618,9 +618,27 @@ loadScript(martechURL, () => {
         sparkEventName = 'landing:ctaPressed';
       }
     // quick actions clicks
-    } else if ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g)) {
+    } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g))) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
+    // ToC clicks
+    } else if ($a.closest('.toc-container')) {
+      if ($a.classList.contains('toc-toggle')) {
+        adobeEventName += 'toc:toggle:Click';
+        sparkEventName = 'landing:tocTogglePressed';
+      } else if ($a.classList.contains('toc-close')) {
+        adobeEventName += 'toc:close:Click';
+        sparkEventName = 'landing:tocClosePressed';
+      } else if ($a.classList.contains('toc-handle')) {
+        adobeEventName += 'toc:close:Click:handle';
+        sparkEventName = 'landing:tocCloseHandlePressed';
+      } else if ($a.classList.contains('toc-wrapper')) {
+        adobeEventName += 'toc:close:Click:background';
+        sparkEventName = 'landing:tocCloseBackgroundPressed';
+      } else {
+        adobeEventName = appendLinkText(`${adobeEventName}toc:link:Click:`, $a);
+        sparkEventName = 'landing:tocLinkPressed';
+      }
     // Default clicks
     } else {
       adobeEventName = appendLinkText(adobeEventName, $a);

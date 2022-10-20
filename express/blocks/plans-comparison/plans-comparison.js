@@ -11,7 +11,7 @@
  */
 
 import {
-  createTag, getIconElement, getLocale, getOffer, loadBlocks,
+  createTag, fixIcons, getIconElement, getLocale, getOffer, loadBlocks,
 } from '../../scripts/scripts.js';
 
 async function decorateAsFragment($block, content) {
@@ -335,6 +335,7 @@ export default function decorate($block) {
         decoratePagination($newBlock, payload);
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
         const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
+
         if ($cards) {
           Array.from($cards)
             .forEach(($card, index) => {
@@ -392,6 +393,8 @@ export default function decorate($block) {
               });
           });
         }
+
+        fixIcons($newBlock);
       }
     }
   });
