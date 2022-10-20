@@ -584,7 +584,7 @@ export default async function decorate($block) {
   await decorateTemplateList($block);
   if ($block.classList.contains('horizontal')) {
     const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
-    await buildCarousel(':scope > .template', $block, requireInfiniteScroll);
+    buildCarousel(':scope > .template', $block, requireInfiniteScroll);
   } else {
     addAnimationToggle($block);
   }
