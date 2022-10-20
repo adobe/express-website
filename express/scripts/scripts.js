@@ -2025,9 +2025,9 @@ async function loadEager() {
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     console.log('LCP block detected', hasLCPBlock, block);
-    if (hasLCPBlock) {
-      await loadBlock(block, true);
-    }
+    if (hasLCPBlock) await loadBlock(block, true);
+
+    document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
@@ -2043,7 +2043,7 @@ async function loadEager() {
       }
     }
 
-    const lcpCandidate = hasLCPBlock && block.getAttribute('data-block-name') === 'template-list' ? block.querySelector('.carousel-container img') : document.querySelector('main img');
+    const lcpCandidate = document.querySelector('main img');
 
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
@@ -2054,8 +2054,6 @@ async function loadEager() {
         resolve();
       }
     });
-
-    document.body.classList.add('appear');
   }
 }
 
