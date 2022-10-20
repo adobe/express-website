@@ -2024,7 +2024,6 @@ async function loadEager() {
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    console.log('LCP block detected', hasLCPBlock, block);
     if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
@@ -2043,8 +2042,8 @@ async function loadEager() {
       }
     }
 
-    const lcpCandidate = document.querySelector('main img');
-
+    // const lcpCandidate = document.querySelector('main img');
+    const lcpCandidate = hasLCPBlock && block.getAttribute('data-block-name') === 'template-list' ? block.querySelector('.carousel-container img') : document.querySelector('main img');
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
         lcpCandidate.setAttribute('loading', 'eager');
