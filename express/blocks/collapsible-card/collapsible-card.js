@@ -10,26 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIconElement } from '../../scripts/scripts.js';
-
-function getMobileOperatingSystem() {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-  // Windows Phone must come first because its UA also contains "Android"
-  if (/windows phone/i.test(userAgent)) {
-    return 'Windows';
-  }
-
-  if (/android/i.test(userAgent)) {
-    return 'Android';
-  }
-
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    return 'iOS';
-  }
-
-  return 'unknown';
-}
+import { createTag, getIconElement, getMobileOperatingSystem } from '../../scripts/scripts.js';
 
 function toggleCollapsibleCard($block) {
   $block.classList.toggle('expanded');

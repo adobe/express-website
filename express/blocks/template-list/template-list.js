@@ -354,7 +354,7 @@ export async function decorateTemplateList($block) {
 
   let rows = $block.children.length;
   const locale = getLocale(window.location);
-  if ((rows === 0 || $block.querySelectorAll('picture').length === 0)
+  if ((rows === 0 || $block.querySelectorAll('img').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
       // author defined localized edit text(s)
@@ -572,8 +572,11 @@ function decorateTailButton($block) {
 }
 
 function cacheCreatedTemplate($block) {
-  cache.templates.push($block.children[$block.children.length - 1]);
-  $block.children[$block.children.length - 1].remove();
+  const lastRow = $block.children[$block.children.length - 1];
+  if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
+    cache.templates.push(lastRow.cloneNode(true));
+    lastRow.remove();
+  }
 }
 
 export default async function decorate($block) {

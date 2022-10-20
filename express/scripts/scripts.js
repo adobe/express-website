@@ -1452,6 +1452,9 @@ export async function fixIcons(block = document) {
           // use small icons in .columns (except for .columns.offer)
           if (blockName === 'columns') {
             size = $block.classList.contains('offer') ? 44 : 22;
+          } else if (blockName === 'toc') {
+            // ToC block has its own logic
+            return;
           }
         }
         $picture.parentElement
@@ -2159,3 +2162,22 @@ function registerPerformanceLogger() {
 }
 
 if (window.name.includes('performance')) registerPerformanceLogger();
+
+export function getMobileOperatingSystem() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    return 'Windows Phone';
+  }
+
+  if (/android/i.test(userAgent)) {
+    return 'Android';
+  }
+
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return 'iOS';
+  }
+
+  return 'unknown';
+}
