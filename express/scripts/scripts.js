@@ -406,7 +406,6 @@ export function updateSectionsStatus(main) {
     const status = section.getAttribute('data-section-status');
     if (status !== 'loaded') {
       const loadingBlock = section.querySelector('.block[data-block-status="initialized"], .block[data-block-status="loading"]');
-      console.log('updateSectionsStatus loadingBlock', loadingBlock);
       if (loadingBlock) {
         section.setAttribute('data-section-status', 'loading');
         break;
@@ -912,7 +911,6 @@ export async function loadBlock(block, eager = false) {
       // eslint-disable-next-line no-console
       console.log(`failed to load block ${blockName}`, err);
     }
-    console.log(`block ${blockName} loaded`);
     block.setAttribute('data-block-status', 'loaded');
   }
 }
@@ -2042,17 +2040,27 @@ async function loadEager() {
       }
     }
 
-    // const lcpCandidate = document.querySelector('main img');
-    const lcpCandidate = hasLCPBlock && block.getAttribute('data-block-name') === 'template-list' ? block.querySelector('.carousel-container img') : document.querySelector('main img');
-    await new Promise((resolve) => {
-      if (lcpCandidate && !lcpCandidate.complete) {
-        lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', () => resolve());
-        lcpCandidate.addEventListener('error', () => resolve());
-      } else {
-        resolve();
-      }
-    });
+    let lcpCandidate;
+    if (hasLCPBlock) {
+      // TODO a block must be able to provide the LCP candidate if it is not the "default one",
+      // i.e. the first image.
+      lcpCandidate = block.getAttribute('data-block-name') === 'template-list'
+        ? block.querySelector('.carousel-container img')
+        : block.querySelector('img');
+    }
+    lcpCandidate = lcpCandidate || document.querySelector('main img');
+
+    if (lcpCandidate) {
+      await new Promise((resolve) => {
+        if (lcpCandidate && !lcpCandidate.complete) {
+          lcpCandidate.setAttribute('loading', 'eager');
+          lcpCandidate.addEventListener('load', () => resolve());
+          lcpCandidate.addEventListener('error', () => resolve());
+        } else {
+          resolve();
+        }
+      });
+    }
   }
 }
 
