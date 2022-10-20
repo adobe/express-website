@@ -332,21 +332,6 @@ export function readBlockConfig($block) {
 }
 
 /**
- * this is an extensible stub to take on audience mappings
- * @param {string} audience
- * @return {boolean} is member of this audience
- */
-function checkExperimentAudience(audience) {
-  if (audience === 'mobile') {
-    return window.innerWidth < 600;
-  }
-  if (audience === 'desktop') {
-    return window.innerWidth > 600;
-  }
-  return true;
-}
-
-/**
  * Decorates all sections in a container element.
  * @param {Element} $main The container element
  */
@@ -385,7 +370,10 @@ export function decorateSections($main) {
       sectionMeta.remove();
     }
 
-    if (section.dataset.audience && !checkExperimentAudience(section.dataset.audience)) {
+    if (section.dataset.audience
+        && document.body.dataset.device
+        && section.dataset.audience !== document.body.dataset.device) {
+      // remove section if audience does not match and will not be displayed
       section.remove();
     } else if (section.dataset.audience && !noAudienceFound) {
       section.style.paddingTop = '0';
@@ -1308,6 +1296,21 @@ async function replaceInner(path, element) {
     console.log(`error loading experiment content: ${plainPath}`, e);
   }
   return null;
+}
+
+/**
+ * this is an extensible stub to take on audience mappings
+ * @param {string} audience
+ * @return {boolean} is member of this audience
+ */
+function checkExperimentAudience(audience) {
+  if (audience === 'mobile') {
+    return window.innerWidth < 600;
+  }
+  if (audience === 'desktop') {
+    return window.innerWidth > 600;
+  }
+  return true;
 }
 
 /**
