@@ -344,7 +344,7 @@ export async function decorateTemplateList($block) {
             if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
               cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
               cache.heading = cells[1].textContent;
-            } else if ($block.classList.contains('highlight')) {
+            } else if ($block.classList.contains('dark')) {
               cache.heading = row;
             } else {
               cache.heading = row.textContent;
@@ -382,7 +382,7 @@ export async function decorateTemplateList($block) {
 
     const $parent = $block.closest('.section');
     if ($parent) {
-      if ($block.classList.contains('highlight')) {
+      if ($block.classList.contains('dark')) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
         const $content = Array.from(cache.heading.querySelectorAll('p'))
@@ -920,7 +920,7 @@ function addBackgroundAnimation($block, animationName) {
 }
 
 export default async function decorate($block) {
-  if ($block.classList.contains('apipowered') && !$block.classList.contains('highlight')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('dark')) {
     cacheCreatedTemplate($block);
   }
 
@@ -932,7 +932,7 @@ export default async function decorate($block) {
     addAnimationToggle($block);
   }
 
-  if ($block.classList.contains('apipowered') && !$block.classList.contains('highlight')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('dark')) {
     decorateLoadMoreButton($block);
   }
 
@@ -940,7 +940,7 @@ export default async function decorate($block) {
     decorateTailButton($block);
   }
 
-  if ($block.classList.contains('highlight') && cache.backgroundAnimation) {
+  if ($block.classList.contains('dark') && cache.backgroundAnimation) {
     addBackgroundAnimation($block, cache.backgroundAnimation);
   }
 }
