@@ -681,6 +681,8 @@ function cacheCreatedTemplate($block) {
 function addBackgroundAnimation($block, animationName) {
   const animations = {
     firework: function startFirework($section) {
+      $section.classList.add('firework');
+
       (function () {
         const requestAnimationFrame = window.requestAnimationFrame
           || window.mozRequestAnimationFrame
@@ -689,7 +691,8 @@ function addBackgroundAnimation($block, animationName) {
         window.requestAnimationFrame = requestAnimationFrame;
       }());
 
-      const canvas = $section.querySelector('.animation-canvas');
+      const canvas = createTag('canvas', { class: 'firework-canvas' });
+      $section.append(canvas);
       const ctx = canvas.getContext('2d');
       let width = 0;
       let height = 0;
@@ -907,14 +910,22 @@ function addBackgroundAnimation($block, animationName) {
         window.addEventListener('resize', adjustSize);
       }, 500);
     },
+    snow: function startSnowing($section) {
+      $section.classList.add('snowing');
+
+      const $canvas = createTag('div', { class: 'snowflakes' });
+      for (let i = 0; i < 89; i += 1) {
+        const $flake = createTag('i');
+        $canvas.append($flake);
+      }
+
+      $section.append($canvas);
+    },
   };
 
   const $parent = $block.closest('.section');
 
   if ($parent) {
-    const $canvas = createTag('canvas', { class: 'animation-canvas' });
-    $parent.append($canvas);
-
     animations[animationName]($parent);
   }
 }
