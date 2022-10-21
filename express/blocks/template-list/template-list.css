@@ -919,27 +919,27 @@ main .template-list.collaboration .carousel-container {
   }
 }
 
-main .template-list-horizontal-apipowered-dark-container {
+main .template-list-horizontal-apipowered-holiday-container {
   padding-bottom: 10px;
   position: relative;
 }
 
-main .template-list-horizontal-apipowered-dark-container.firework {
+main .template-list-horizontal-apipowered-holiday-container.firework {
   background: var(--color-black);
   color: var(--color-white);
 }
 
-main .template-list-horizontal-apipowered-dark-container.snowing {
+main .template-list-horizontal-apipowered-holiday-container.snowing {
   background: linear-gradient(to bottom,  #1e5799 0%,#7db9e8 100%);;
   color: var(--color-white);
 }
 
-main .template-list-horizontal-apipowered-dark-container p,
-main .template-list-horizontal-apipowered-dark-container picture {
+main .template-list-horizontal-apipowered-holiday-container p,
+main .template-list-horizontal-apipowered-holiday-container picture {
   z-index: 1;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-bar {
+main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
   display: flex;
   justify-content: space-between;
   gap: 20px;
@@ -947,24 +947,24 @@ main .template-list-horizontal-apipowered-dark-container .toggle-bar {
   cursor: pointer;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-bar p {
+main .template-list-horizontal-apipowered-holiday-container .toggle-bar p {
   margin: 14px 0;
   font-size: 16px;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-bar img {
+main .template-list-horizontal-apipowered-holiday-container .toggle-bar img {
   display: block;
   max-height: 32px;
   width: 84px;
   min-width: 84px;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-button {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button {
   color: var(--color-white);
   display: flex;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-button.mobile-only {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
   width: max-content;
   margin: auto;
   margin-left: 190px;
@@ -973,11 +973,11 @@ main .template-list-horizontal-apipowered-dark-container .toggle-button.mobile-o
   font-weight: 400;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-button.mobile-only.expanded {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only.expanded {
   margin-left: 50%;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-button::after {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button::after {
   display: flex;
   width: 6px;
   height: 6px;
@@ -996,12 +996,12 @@ main .template-list-horizontal-apipowered-dark-container .toggle-button::after {
   transition: transform 0.2s;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-button.expanded::after {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button.expanded::after {
   transform: rotate(-135deg);
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-bar-top,
-main .template-list-horizontal-apipowered-dark-container .toggle-bar-bottom {
+main .template-list-horizontal-apipowered-holiday-container .toggle-bar-top,
+main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
   text-align: left;
   display: flex;
   justify-content: space-between;
@@ -1009,41 +1009,41 @@ main .template-list-horizontal-apipowered-dark-container .toggle-bar-bottom {
   align-items: center;
 }
 
-main .template-list-horizontal-apipowered-dark-container .toggle-bar-bottom {
+main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
   display: none;
   flex-grow: 1;
 }
 
-main .template-list-horizontal-apipowered-dark-container .template-list-wrapper p.mobile-only{
+main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper p.mobile-only{
   font-size: 12px;
   text-align: left;
   margin: 0 0 16px;
 }
 
-main .template-list-horizontal-apipowered-dark-container .template-list-wrapper,
-main .template-list.dark,
-main .template-list.dark .carousel-container {
+main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper,
+main .template-list.holiday,
+main .template-list.holiday .carousel-container {
   max-width: none;
   z-index: 1;
 }
 
-main .template-list-horizontal-apipowered-dark-container .template-list-wrapper {
+main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper {
   max-height: 0;
   transition: max-height 0.5s;
   overflow: hidden;
 }
 
-main .template-list-horizontal-apipowered-dark-container .template-list-wrapper.expanded {
+main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper.expanded {
   max-height: 300px;
 }
 
-main .template-list.dark .carousel-container .carousel-platform {
+main .template-list.holiday .carousel-container .carousel-platform {
   scroll-padding: initial;
 }
 
-/* dark animations */
+/* holiday animations */
 
-main .template-list-horizontal-apipowered-dark-container .firework-canvas {
+main .template-list-horizontal-apipowered-holiday-container .firework-canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -1054,11 +1054,11 @@ main .template-list-horizontal-apipowered-dark-container .firework-canvas {
   display: none;
 }
 
-main .template-list-horizontal-apipowered-dark-container.expanded .firework-canvas {
+main .template-list-horizontal-apipowered-holiday-container.expanded .firework-canvas {
   display: unset;
 }
 
-main .template-list-horizontal-apipowered-dark-container .snowflakes {
+main .template-list-horizontal-apipowered-holiday-container .snowflakes {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -1071,19 +1071,19 @@ main .template-list-horizontal-apipowered-dark-container .snowflakes {
   pointer-events: none;
 }
 
-main .template-list-horizontal-apipowered-dark-container.expanded i,
-main .template-list-horizontal-apipowered-dark-container.expanded i:after,
-main .template-list-horizontal-apipowered-dark-container.expanded i:before {
+main .template-list-horizontal-apipowered-holiday-container.expanded i,
+main .template-list-horizontal-apipowered-holiday-container.expanded i:after,
+main .template-list-horizontal-apipowered-holiday-container.expanded i:before {
   background: white;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded i {
+main .template-list-horizontal-apipowered-holiday-container.expanded i {
   display: inline-block;
   animation: snowflakes 3s linear 2s 20;
   -moz-animation: snowflakes 3s linear 2s 20;
   position: relative;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded i:after,
-main .template-list-horizontal-apipowered-dark-container.expanded i:before {
+main .template-list-horizontal-apipowered-holiday-container.expanded i:after,
+main .template-list-horizontal-apipowered-holiday-container.expanded i:before {
   height: 100%;
   width: 100%;
   content: ".";
@@ -1093,7 +1093,7 @@ main .template-list-horizontal-apipowered-dark-container.expanded i:before {
   transform: rotate(120deg);
 }
 
-main .template-list-horizontal-apipowered-dark-container.expanded i:before {
+main .template-list-horizontal-apipowered-holiday-container.expanded i:before {
   transform: rotate(240deg);
 }
 
@@ -1106,21 +1106,21 @@ main .template-list-horizontal-apipowered-dark-container.expanded i:before {
   }
 }
 
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(3n) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(3n) {
   width: 16px; height: 4px;
   animation-duration: 4s;
   animation-iteration-count: infinite;
   transform-origin: right -45px;
 }
 
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(3n+1) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(3n+1) {
   width: 24px; height: 6px;
   animation-duration: 6s;
   animation-iteration-count: infinite;
   transform-origin: right -30px;
 }
 
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(3n+2) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(3n+2) {
   width: 32px; height: 8px;
   animation-duration: 8s;
   animation-iteration-count: infinite;
@@ -1128,63 +1128,63 @@ main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:
 }
 
 /* different delays so they don't all start at the same time */
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(3n) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(3n) {
   opacity:.3;
   animation-delay: 0s;
   animation-timing-function:ease-in;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(8n+1) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(8n+1) {
   opacity:.4;
   animation-delay: 1s;
   animation-timing-function:ease-out;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(8n+2) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(8n+2) {
   opacity:.5;
   animation-delay: 1.5s;
   animation-timing-function:linear;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(8n+3) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(8n+3) {
   opacity:.6;
   animation-delay: 2s;
   animation-timing-function:ease-in;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(8n+4) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(8n+4) {
   opacity:.7;
   animation-delay: 2.5s;
   animation-timing-function:linear;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(8n+5) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(8n+5) {
   opacity:.8;
   animation-delay: 3s;
   animation-timing-function:ease-out;
 }
-main .template-list-horizontal-apipowered-dark-container.expanded .snowflakes i:nth-child(8n+6) {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snowflakes i:nth-child(8n+6) {
   opacity:.9;
   animation-delay: 3.5s;
   animation-timing-function:ease-in;
 }
 
 @media (min-width: 600px) {
-  main .template-list.horizontal.dark .carousel-container .carousel-fader-left,
-  main .template-list.horizontal.dark .carousel-container .carousel-fader-right {
+  main .template-list.horizontal.holiday .carousel-container .carousel-fader-left,
+  main .template-list.horizontal.holiday .carousel-container .carousel-fader-right {
     background: initial;
   }
 }
 
 @media (min-width: 1200px) {
-  main .template-list-horizontal-apipowered-dark-container {
+  main .template-list-horizontal-apipowered-holiday-container {
     padding-bottom: 0;
   }
 
-  main .template-list-horizontal-apipowered-dark-container .toggle-bar {
+  main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
     max-width: 1024px;
   }
 
-  main .template-list-horizontal-apipowered-dark-container .mobile-only {
+  main .template-list-horizontal-apipowered-holiday-container .mobile-only {
     display: none;
   }
 
-  main .template-list-horizontal-apipowered-dark-container .toggle-bar-bottom {
+  main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
     display: flex;
   }
 }
