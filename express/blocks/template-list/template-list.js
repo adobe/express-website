@@ -26,7 +26,7 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import { addBackgroundAnimation } from '../shared/background-animations.js';
+import addBackgroundAnimation from '../shared/background-animations.js';
 
 const cache = {
   templates: [],

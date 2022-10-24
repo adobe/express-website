@@ -11,7 +11,7 @@
  */
 import { createTag } from '../../scripts/scripts.js';
 
-export function addBackgroundAnimation($block, animationName) {
+export default function addBackgroundAnimation($block, animationName) {
   const animations = {
     firework: function startFirework($section) {
       $section.classList.add('firework');
