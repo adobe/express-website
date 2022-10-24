@@ -62,6 +62,16 @@
   font-weight: 700;
 }
 
+@font-face {
+  font-family: "adobe-clean";
+  src: url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff2"),
+       url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff"),
+       url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("opentype");
+  font-display: swap;
+  font-style: normal;
+  font-weight:900;
+}
+
 /* below the fold */
 
 
