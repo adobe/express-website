@@ -14,9 +14,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/b0c5f5/l.woff") format("woff2"),
+  src: url("./fonts/b0c5f5/l") format("woff2"),
        url("./fonts/b0c5f5/d.woff") format("woff"),
-       url("./fonts/b0c5f5/a.otf") format("opentype");
+       url("./fonts/b0c5f5/a") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -24,9 +24,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/aa41d0/l.woff") format("woff2"),
+  src: url("./fonts/aa41d0/l") format("woff2"),
        url("./fonts/aa41d0/d.woff") format("woff"),
-       url("./fonts/aa41d0/a.otf") format("opentype");
+       url("./fonts/aa41d0/a") format("opentype");
   font-display: swap;
   font-style: italic;
   font-weight: 400;
@@ -34,9 +34,9 @@
 
 @font-face {
   font-family: "adobe-clean-serif";
-  src: url("./fonts/e09494/l.woff") format("woff2"),
+  src: url("./fonts/e09494/l") format("woff2"),
        url("./fonts/e09494/d.woff") format("woff"),
-       url("./fonts/e09494/a.otf") format("opentype");
+       url("./fonts/e09494/a") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -44,9 +44,9 @@
 
 @font-face {
   font-family: "adobe-clean-serif";
-  src: url("./fonts/c8f445/l.woff") format("woff2"),
+  src: url("./fonts/c8f445/l") format("woff2"),
        url("./fonts/c8f445/d.woff") format("woff"),
-       url("./fonts/c8f445/a.otf") format("opentype");
+       url("./fonts/c8f445/a") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
@@ -54,9 +54,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/97fbd1/l.woff") format("woff2"),
+  src: url("./fonts/97fbd1/l") format("woff2"),
        url("./fonts/97fbd1/d.woff") format("woff"),
-       url("./fonts/97fbd1/a.otf") format("opentype");
+       url("./fonts/97fbd1/a") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
@@ -64,9 +64,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/ad2a79/l.woff") format("woff2"),
+  src: url("./fonts/ad2a79/l") format("woff2"),
        url("./fonts/ad2a79/d.woff") format("woff"),
-       url("./fonts/ad2a79/a.otf") format("opentype");
+       url("./fonts/ad2a79/a") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight:900;
