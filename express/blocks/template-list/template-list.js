@@ -683,13 +683,13 @@ function addBackgroundAnimation($block, animationName) {
     firework: function startFirework($section) {
       $section.classList.add('firework');
 
-      (function () {
+      ((() => {
         const requestAnimationFrame = window.requestAnimationFrame
           || window.mozRequestAnimationFrame
           || window.webkitRequestAnimationFrame
           || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
-      }());
+      })());
 
       const canvas = createTag('canvas', { class: 'firework-canvas' });
       $section.append(canvas);
@@ -736,7 +736,7 @@ function addBackgroundAnimation($block, animationName) {
         this.color = [color.r, color.g, color.b];
         this.render = true;
 
-        this.size = Math.round(1 + Math.random() * 1);
+        this.size = Math.round(1 + Math.random());
       }
 
       // Controls the emitter
@@ -744,7 +744,7 @@ function addBackgroundAnimation($block, animationName) {
         this.reset();
       }
 
-      Emitter.prototype.reset = function () {
+      Emitter.prototype.reset = function resetEmitter() {
         const PART_NUM = 200;
         const x = (Math.random() * 400) - 200;
         const y = (Math.random() * 400) - 200;
@@ -764,7 +764,7 @@ function addBackgroundAnimation($block, animationName) {
         }
       };
 
-      Emitter.prototype.update = function () {
+      Emitter.prototype.update = function undateEmitter() {
         const partLen = this.particles.length;
 
         angleY = (angle - vanishPointX) * 0.0001;
@@ -781,7 +781,7 @@ function addBackgroundAnimation($block, animationName) {
         }
       };
 
-      Emitter.prototype.render = function (imgData) {
+      Emitter.prototype.render = function renderEmitter(imgData) {
         const { data } = imgData;
 
         for (let i = 0; i < this.particles.length; i += 1) {
@@ -823,7 +823,7 @@ function addBackgroundAnimation($block, animationName) {
 
       // Controls the individual particles
 
-      Particle.prototype.rotate = function () {
+      Particle.prototype.rotate = function rotateParticle() {
         const x = this.startX * Math.cos(angleZ) - this.startY * Math.sin(angleZ);
         const y = this.startY * Math.cos(angleZ) + this.startX * Math.sin(angleZ);
 
@@ -831,7 +831,7 @@ function addBackgroundAnimation($block, animationName) {
         this.y = y;
       };
 
-      Particle.prototype.update = function () {
+      Particle.prototype.update = function updateParticle() {
         this.cosY = Math.cos(angleX);
         this.sinY = Math.sin(angleX);
         this.startX += this.vx;
@@ -867,7 +867,7 @@ function addBackgroundAnimation($block, animationName) {
           cycle = 0;
         }
 
-        colors.r = Math.floor(Math.sin(0.3 * cycle + 0) * 127 + 128);
+        colors.r = Math.floor(Math.sin(0.3 * cycle) * 127 + 128);
         colors.g = Math.floor(Math.sin(0.3 * cycle + 2) * 127 + 128);
         colors.b = Math.floor(Math.sin(0.3 * cycle + 4) * 127 + 128);
       }
