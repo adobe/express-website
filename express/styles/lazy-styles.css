@@ -14,9 +14,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/b0c5f5/l") format("woff2"),
-       url("./fonts/b0c5f5/d.woff") format("woff"),
-       url("./fonts/b0c5f5/a") format("opentype");
+  src: url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=n4&v=3") format("woff2"),
+       url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/d?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=n4&v=3") format("woff"),
+       url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/a?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=n4&v=3") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -24,9 +24,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/aa41d0/l") format("woff2"),
-       url("./fonts/aa41d0/d.woff") format("woff"),
-       url("./fonts/aa41d0/a") format("opentype");
+  src: url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/l?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=i4&v=3") format("woff2"),
+       url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/d?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=i4&v=3") format("woff"),
+       url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/a?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=i4&v=3") format("opentype");
   font-display: swap;
   font-style: italic;
   font-weight: 400;
@@ -34,9 +34,9 @@
 
 @font-face {
   font-family: "adobe-clean-serif";
-  src: url("./fonts/e09494/l") format("woff2"),
-       url("./fonts/e09494/d.woff") format("woff"),
-       url("./fonts/e09494/a") format("opentype");
+  src: url("https://use.typekit.net/af/e09494/00000000000000003b9aee45/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),
+       url("https://use.typekit.net/af/e09494/00000000000000003b9aee45/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),
+       url("https://use.typekit.net/af/e09494/00000000000000003b9aee45/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -44,9 +44,9 @@
 
 @font-face {
   font-family: "adobe-clean-serif";
-  src: url("./fonts/c8f445/l") format("woff2"),
-       url("./fonts/c8f445/d.woff") format("woff"),
-       url("./fonts/c8f445/a") format("opentype");
+  src: url("https://use.typekit.net/af/c8f445/00000000000000003b9aee47/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n5&v=3") format("woff2"),
+       url("https://use.typekit.net/af/c8f445/00000000000000003b9aee47/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n5&v=3") format("woff"),
+       url("https://use.typekit.net/af/c8f445/00000000000000003b9aee47/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n5&v=3") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
@@ -54,9 +54,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/97fbd1/l") format("woff2"),
-       url("./fonts/97fbd1/d.woff") format("woff"),
-       url("./fonts/97fbd1/a") format("opentype");
+  src: url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=n7&v=3") format("woff2"),
+       url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/d?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=n7&v=3") format("woff"),
+       url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/a?primer=5f85f9f11cd5381b63b5247f08def02e63540b6c5567c66a734e1faa3ac86970&fvd=n7&v=3") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
@@ -64,9 +64,9 @@
 
 @font-face {
   font-family: "adobe-clean";
-  src: url("./fonts/ad2a79/l") format("woff2"),
-       url("./fonts/ad2a79/d.woff") format("woff"),
-       url("./fonts/ad2a79/a") format("opentype");
+  src: url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff2"),
+       url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("woff"),
+       url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3") format("opentype");
   font-display: swap;
   font-style: normal;
   font-weight:900;
