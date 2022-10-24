@@ -1,20 +1,20 @@
 /* default content */
 
-
-/* fallback font for adobe-clean (normal - 400) */
 @font-face {
-  font-family: "adobe-clean-normal-400-fallback";
-  size-adjust: 78.59899999999998%;
-  src: local("Verdana");
+  font-family: 'Trebuchet MS';
+  size-adjust: 95%;
+  src: local('Trebuchet MS'),
+       local('TrebuchetMS');
+       font-weight: 700;
 }
 
-/* fallback font for adobe-clean (normal - 700) */
 @font-face {
-  font-family: "adobe-clean-normal-700-fallback";
-  size-adjust: 81.90900000000002%;
-  src: local("Verdana");
+  font-family: 'Trebuchet MS';
+  size-adjust: 87%;
+  src: local('Trebuchet MS'),
+       local('TrebuchetMS');
+       font-weight: 400;
 }
-
 
 :root {
   --color-white: #FFF;
@@ -52,8 +52,7 @@
   /* body */
   --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-200);
-  --body-font-family: 'adobe-clean', 'Adobe Clean', 'adobe-clean-normal-400-fallback', sans-serif;
-  --heading-font-family: 'adobe-clean', 'Adobe Clean', 'adobe-clean-normal-700-fallback', sans-serif;
+  --body-font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
   --body-serif-font-family: 'adobe-clean-serif', 'Adobe Clean Serif', serif;
   --body-font-weight: normal;
   --body-color: var(--color-gray-800);
@@ -458,7 +457,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
 }
