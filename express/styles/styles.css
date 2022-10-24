@@ -1,18 +1,20 @@
 /* default content */
 
+
 /* fallback font for adobe-clean (normal - 400) */
 @font-face {
   font-family: "adobe-clean-normal-400-fallback";
-  size-adjust: 90.13%;
-  src: local("Arial");
+  size-adjust: 78.59899999999998%;
+  src: local("Verdana");
 }
 
 /* fallback font for adobe-clean (normal - 700) */
 @font-face {
   font-family: "adobe-clean-normal-700-fallback";
-  size-adjust: 93.91%;
-  src: local("Arial");
+  size-adjust: 81.90900000000002%;
+  src: local("Verdana");
 }
+
 
 :root {
   --color-white: #FFF;
