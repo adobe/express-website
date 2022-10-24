@@ -1,10 +1,17 @@
 /* default content */
 
+/* fallback font for adobe-clean (normal - 400) */
 @font-face {
-  font-family: 'Trebuchet MS';
-  size-adjust: 90%;
-  src: local('Trebuchet MS'),
-    local('TrebuchetMS');
+  font-family: "adobe-clean-normal-400-fallback";
+  size-adjust: 90.13%;
+  src: local("Arial");
+}
+
+/* fallback font for adobe-clean (normal - 700) */
+@font-face {
+  font-family: "adobe-clean-normal-700-fallback";
+  size-adjust: 93.91%;
+  src: local("Arial");
 }
 
 :root {
@@ -43,7 +50,8 @@
   /* body */
   --body-background-color: var(--color-white);
   --body-alt-background-color: var(--color-gray-200);
-  --body-font-family: 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
+  --body-font-family: 'adobe-clean', 'Adobe Clean', 'adobe-clean-normal-400-fallback', sans-serif;
+  --heading-font-family: 'adobe-clean', 'Adobe Clean', 'adobe-clean-normal-700-fallback', sans-serif;
   --body-serif-font-family: 'adobe-clean-serif', 'Adobe Clean Serif', serif;
   --body-font-weight: normal;
   --body-color: var(--color-gray-800);
@@ -61,7 +69,7 @@
   --body-font-size-xs: 0.75rem;
   /* 12px */
   /* headings */
-  --heading-font-weight: 800;
+  --heading-font-weight: 700;
   --heading-color: var(--color-gray-800);
   --heading-line-height: 1.25;
   --heading-font-size-xxxl: 5rem;
@@ -448,6 +456,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
 }
