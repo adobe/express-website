@@ -42,10 +42,13 @@ export async function createFloatingButton($a, audience) {
   $floatButtonLink.className = '';
   $floatButtonLink.classList.add('button', 'gradient', 'xlarge');
 
-  // Hide CTAs on the page that are duplicates of the Floating CTA (in mobile/tablet)
-  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link'))
-    .filter((a) => a.textContent === $a.textContent || a.href === $a.href);
-  sameUrlCTAs.forEach((cta) => cta.classList.add('same-as-floating-button-CTA'));
+  // Hide CTAs on the page where there are duplicates of the Floating CTA (in mobile/tablet)
+  const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link')).filter((a) => a.textContent === $a.textContent || a.href === $a.href);
+  sameUrlCTAs.forEach((cta) => {
+    if (!cta.parentElement.classList.contains('floating-button')) {
+      cta.classList.add('same-as-floating-button-CTA');
+    }
+  });
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
   const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper' });

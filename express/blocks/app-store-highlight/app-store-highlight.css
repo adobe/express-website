@@ -2,6 +2,7 @@ main .app-store-highlight-container {
   padding: 40px 0;
   background-color: var(--color-black);
   color: var(--color-white);
+  overflow: hidden;
 }
 
 main .app-store-highlight-container .content-wrapper {

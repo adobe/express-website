@@ -1535,7 +1535,10 @@ export function unwrapBlock($block) {
 
   let $appendTo;
   $elems.forEach(($e) => {
-    if ($e === $block) $appendTo = $blockSection;
+    if ($e === $block || ($e.className === 'section-metadata')) {
+      $appendTo = $blockSection;
+    }
+
     if ($appendTo) {
       $appendTo.appendChild($e);
       $appendTo = $postBlockSection;
