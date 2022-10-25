@@ -17,6 +17,7 @@ import {
   getLottie,
   fetchPlaceholders,
   getIconElement,
+  getMobileOperatingSystem,
 } from '../../scripts/scripts.js';
 
 let scrollState = 'withLottie';
@@ -103,11 +104,11 @@ export async function createFloatingButton($a, audience) {
     });
     window.addEventListener('scroll', () => {
       scrollState = $floatButtonWrapper.classList.contains('floating-button--scrolled') ? 'withoutLottie' : 'withLottie';
-      const MFBOpened = $floatButtonWrapper.classList.contains('toolbox-opened');
+      const multiFunctionButtonOpened = $floatButtonWrapper.classList.contains('toolbox-opened');
       if (clicked) return;
       if ($scrollAnchor.getBoundingClientRect().top < 100) {
         hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
-      } else if (!MFBOpened) {
+      } else if (!multiFunctionButtonOpened) {
         showScrollArrow($floatButtonWrapper, $lottieScrollButton);
       }
     }, { passive: true });
@@ -171,25 +172,6 @@ export async function createFloatingButton($a, audience) {
   }
 
   return $floatButtonWrapper;
-}
-
-function getMobileOperatingSystem() {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-  // Windows Phone must come first because its UA also contains "Android"
-  if (/windows phone/i.test(userAgent)) {
-    return 'Windows';
-  }
-
-  if (/android/i.test(userAgent)) {
-    return 'Android';
-  }
-
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    return 'iOS';
-  }
-
-  return 'unknown';
 }
 
 function decorateBadge() {
@@ -330,7 +312,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   initNotchDragAction($wrapper);
 }
 
-export async function createMFB($block, $parentSection) {
+export async function createMultiFunctionButton($block, $parentSection) {
   const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
   const $ctaContainer = $block.querySelector('.button-container');
   const tools = $block.querySelectorAll('li');
@@ -368,9 +350,9 @@ export default function decorateBlock($block) {
         createFloatingButton($a);
       }
     } else if ($parentSection) {
-      createMFB($block, $parentSection);
+      createMultiFunctionButton($block, $parentSection);
     } else {
-      createMFB($block);
+      createMultiFunctionButton($block);
     }
   }
 
