@@ -1,5 +1,8 @@
-main .split-action-container {
+main .split-action-container.hidden {
     display: none;
+}
+
+main .split-action-container.transparent {
     opacity: 0;
 }
 
@@ -28,7 +31,11 @@ main .block-background {
     height: 100%;
     width: 100%;
     background-color: var(--color-white);
-    z-index: 100000;
+}
+
+main .split-action-container.hidden .split-action,
+main .split-action-container.hidden .block-background {
+    display: none;
 }
 
 main .block-background .underlay {

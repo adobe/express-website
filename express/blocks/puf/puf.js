@@ -325,7 +325,7 @@ function updatePUFCarousel($block) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
   let $leftCard = $block.querySelector('.puf-left');
   let $rightCard = $block.querySelector('.puf-right');
-  $carouselContainer.classList.add('slide-2-selected');
+  $carouselContainer.classList.add('slide-1-selected');
   const slideFunctionality = () => {
     $carouselPlatform.scrollLeft = $carouselPlatform.offsetWidth;
     $carouselContainer.style.minHeight = `${$rightCard.clientHeight + 40}px`;
