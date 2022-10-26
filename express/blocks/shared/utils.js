@@ -89,6 +89,16 @@ export async function addFreePlanWidget(elem) {
       $learnMoreButton.append(lottieWrapper);
       lazyLoadLottiePlayer();
       widget.append($learnMoreButton);
+
+      $learnMoreButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        // temporarily disabling smooth scroll for accurate location
+        const $html = document.querySelector('html');
+        $html.style.scrollBehavior = 'unset';
+        const $plansComparison = document.querySelector('.plans-comparison-container');
+        $plansComparison.scrollIntoView();
+        $html.style.removeProperty('scroll-behavior');
+      });
     });
     elem.append(widget);
     elem.classList.add('free-plan-container');
