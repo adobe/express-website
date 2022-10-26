@@ -2123,62 +2123,12 @@ if (!window.hlx.init && !window.isTestEnv) {
   decoratePage();
 }
 
-/*
- * lighthouse performance instrumentation helper
- * (needs a refactor)
- */
-
-function stamp(message) {
-  if (window.name.includes('performance')) {
-    // eslint-disable-next-line no-console
-    console.log(`${new Date() - performance.timing.navigationStart}:${message}`);
-  }
+const params = new URLSearchParams(window.location.search);
+if (params.get('performance')) {
+  import('./performance.js').then((mod) => {
+    if (mod.default) mod.default();
+  });
 }
-
-stamp('start');
-
-function registerPerformanceLogger() {
-  try {
-    const polcp = new PerformanceObserver((entryList) => {
-      const entries = entryList.getEntries();
-      stamp(JSON.stringify(entries));
-      // eslint-disable-next-line no-console
-      console.log(entries[0].element);
-    });
-    polcp.observe({ type: 'largest-contentful-paint', buffered: true });
-
-    const pols = new PerformanceObserver((entryList) => {
-      const entries = entryList.getEntries();
-      stamp(JSON.stringify(entries));
-      // eslint-disable-next-line no-console
-      console.log(entries[0].sources[0].node);
-    });
-    pols.observe({ type: 'layout-shift', buffered: true });
-
-    const polt = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        // Log the entry and all associated details.
-        stamp(JSON.stringify(entry));
-      }
-    });
-
-    // Start listening for `longtask` entries to be dispatched.
-    polt.observe({ type: 'longtask', buffered: true });
-
-    const pores = new PerformanceObserver((entryList) => {
-      const entries = entryList.getEntries();
-      entries.forEach((entry) => {
-        stamp(`resource loaded: ${entry.name} - [${Math.round(entry.startTime + entry.duration)}]`);
-      });
-    });
-
-    pores.observe({ type: 'resource', buffered: true });
-  } catch (e) {
-    // no output
-  }
-}
-
-if (window.name.includes('performance')) registerPerformanceLogger();
 
 export function getMobileOperatingSystem() {
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
