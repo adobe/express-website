@@ -2031,8 +2031,7 @@ async function loadEager() {
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
-
-    document.querySelector('body').classList.add('appear');
+    console.log('hasLCPBlock', hasLCPBlock, block);
 
     if (!window.hlx.lighthouse) {
       const target = checkTesting();
@@ -2054,21 +2053,24 @@ async function loadEager() {
       // i.e. the first image.
       lcpCandidate = block.getAttribute('data-block-name') === 'template-list'
         ? block.querySelector('.carousel-container img')
-        : block.querySelector('img');
+        : block.querySelector('img:not(.icon)') || block.querySelector('video');
     }
-    lcpCandidate = lcpCandidate || document.querySelector('main img');
+    lcpCandidate = lcpCandidate || document.querySelector('main img:not(.icon)');
 
     if (lcpCandidate) {
+      console.log('LCP candidate', lcpCandidate);
       await new Promise((resolve) => {
         if (lcpCandidate && !lcpCandidate.complete) {
           lcpCandidate.setAttribute('loading', 'eager');
           lcpCandidate.addEventListener('load', () => resolve());
+          lcpCandidate.addEventListener('loadstart', () => resolve());
           lcpCandidate.addEventListener('error', () => resolve());
         } else {
           resolve();
         }
       });
     }
+    document.querySelector('body').classList.add('appear');
   }
 }
 
