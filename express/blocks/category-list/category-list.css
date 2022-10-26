@@ -11,7 +11,7 @@ main .category-list-container .category-list-center-container .carousel-platform
   padding-top: 6px;
 }
 
-main .category-list-container .carousel-container a.button.carousel-arrow {
+main .category-list-container .carousel-container span.button.carousel-arrow {
   transform: translateY(-10px);
 }
 
