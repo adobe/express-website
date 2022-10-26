@@ -584,19 +584,29 @@ export default async function decorate($block) {
     cacheCreatedTemplate($block);
   }
 
-  await decorateTemplateList($block);
-  if ($block.classList.contains('horizontal')) {
-    const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
-    buildCarousel(':scope > .template', $block, requireInfiniteScroll);
+  const isAPIPowered = $block.classList.contains('apipowered');
+
+  const postDecorate = () => {
+    if ($block.classList.contains('horizontal')) {
+      const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
+      buildCarousel(':scope > .template', $block, requireInfiniteScroll);
+    } else {
+      addAnimationToggle($block);
+    }
+
+    if (isAPIPowered) {
+      decorateLoadMoreButton($block);
+    }
+
+    if ($block.classList.contains('mini')) {
+      decorateTailButton($block);
+    }
+  };
+
+  if (isAPIPowered) {
+    // do not block page load for API powered list
+    decorateTemplateList($block).then(postDecorate);
   } else {
-    addAnimationToggle($block);
-  }
-
-  if ($block.classList.contains('apipowered')) {
-    decorateLoadMoreButton($block);
-  }
-
-  if ($block.classList.contains('mini')) {
-    decorateTailButton($block);
+    await decorateTemplateList($block);
   }
 }
