@@ -105,37 +105,36 @@ async function buildPayload($block) {
     cardPadding: window.innerWidth >= 1200 ? 64 : 40,
   };
 
-  Array.from($block.children)
-    .forEach(($row, index) => {
-      if (index === 0) {
-        payload.mainHeading = $row.innerHTML;
-      }
+  Array.from($block.children).forEach(($row, index) => {
+    if (index === 0) {
+      payload.mainHeading = $row.innerHTML;
+    }
 
-      if (index === 1) {
-        const headings = $row.querySelectorAll('div');
-        payload.free.heading = headings[0].innerHTML;
-        payload.premium.heading = headings[1].innerHTML;
-      }
+    if (index === 1) {
+      const headings = $row.querySelectorAll('div');
+      payload.free.heading = headings[0].innerHTML;
+      payload.premium.heading = headings[1].innerHTML;
+    }
 
-      if (index === 2) {
-        const subCopies = $row.querySelectorAll('div');
-        payload.free.subCopy = subCopies[0].textContent;
-        payload.premium.subCopy = subCopies[1].textContent;
-        payload.premium.pricingUrl = subCopies[1].querySelector('a').href;
-      }
+    if (index === 2) {
+      const subCopies = $row.querySelectorAll('div');
+      payload.free.subCopy = subCopies[0].textContent;
+      payload.premium.subCopy = subCopies[1].textContent;
+      payload.premium.pricingUrl = subCopies[1].querySelector('a').href;
+    }
 
-      if (index === 3) {
-        const lists = $row.querySelectorAll('ul');
-        payload.free.features = Array.from(lists[0].querySelectorAll('li'));
-        payload.premium.features = Array.from(lists[1].querySelectorAll('li'));
-      }
+    if (index === 3) {
+      const lists = $row.querySelectorAll('ul');
+      payload.free.features = lists[0].querySelectorAll('li');
+      payload.premium.features = lists[1].querySelectorAll('li');
+    }
 
-      if (index === 4) {
-        const ctas = $row.querySelectorAll('div');
-        payload.free.ctas = Array.from(ctas[0].querySelectorAll('a'));
-        payload.premium.ctas = Array.from(ctas[1].querySelectorAll('a'));
-      }
-    });
+    if (index === 4) {
+      const ctas = $row.querySelectorAll('div');
+      payload.free.ctas = ctas[0].querySelectorAll('a');
+      payload.premium.ctas = ctas[1].querySelectorAll('a');
+    }
+  });
 
   if (payload && payload.premium && payload.premium.subCopy && payload.premium.pricingUrl) {
     const plan = await fetchPlan(payload.premium.pricingUrl);
@@ -197,15 +196,14 @@ function expandCard($card, payload) {
 function toggleExpandableCard($block, $cardClicked, payload) {
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   const $paginations = $block.querySelectorAll('.pagination-pill');
-  Array.from($cards)
-    .forEach(($card, index) => {
-      if ($card !== $cardClicked) {
-        collapseCard($card, payload);
-        $paginations[index].classList.remove('active');
-      } else {
-        $paginations[index].classList.add('active');
-      }
-    });
+  $cards.forEach(($card, index) => {
+    if ($card !== $cardClicked) {
+      collapseCard($card, payload);
+      $paginations[index].classList.remove('active');
+    } else {
+      $paginations[index].classList.add('active');
+    }
+  });
   expandCard($cardClicked, payload);
 }
 
@@ -291,15 +289,14 @@ function decoratePagination($block, payload) {
   const $paginationWrapper = createTag('div', { class: 'pagination-wrapper' });
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   if ($cards) {
-    Array.from($cards)
-      .forEach(($card) => {
-        const $paginationPill = createTag('span', { class: 'pagination-pill' });
-        $paginationWrapper.append($paginationPill);
+    $cards.forEach(($card) => {
+      const $paginationPill = createTag('span', { class: 'pagination-pill' });
+      $paginationWrapper.append($paginationPill);
 
-        $paginationPill.addEventListener('click', () => {
-          toggleExpandableCard($block, $card, payload);
-        });
+      $paginationPill.addEventListener('click', () => {
+        toggleExpandableCard($block, $card, payload);
       });
+    });
     $block.append($paginationWrapper);
   }
 }
@@ -329,9 +326,7 @@ export default function decorate($block) {
       if ($newBlock) {
         payload = await buildPayload($newBlock);
         $newBlock.innerHTML = payload.mainHeading;
-        $newBlock.querySelector('div')
-          .classList
-          .add('main-heading-wrapper');
+        $newBlock.querySelector('div').classList.add('main-heading-wrapper');
         decorateCards($newBlock, payload);
         decoratePagination($newBlock, payload);
         const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
@@ -343,16 +338,15 @@ export default function decorate($block) {
           toggleExpandableCard($newBlock, $cards[0], payload);
 
           if (window.innerWidth >= 1200) {
-            Array.from($featuresWrappers)
-              .forEach((wrapper) => {
-                wrapper.style.maxHeight = payload.desiredHeight;
-              });
+            $featuresWrappers.forEach((wrapper) => {
+              wrapper.style.maxHeight = payload.desiredHeight;
+            });
           }
 
           $newBlock.classList.add('restrained');
 
           window.addEventListener('resize', () => {
-            Array.from($cards).forEach(($card, index) => {
+            $cards.forEach(($card, index) => {
               if (window.innerWidth >= 1200) {
                 $card.style.maxHeight = '';
                 if ($card.classList.contains('expanded')) {
@@ -366,7 +360,7 @@ export default function decorate($block) {
                   collapseCard($card, payload);
                 }
 
-                Array.from($featuresWrappers).forEach((wrapper) => {
+                $featuresWrappers.forEach((wrapper) => {
                   wrapper.style.maxHeight = payload.desiredHeight;
                 });
               } else {
@@ -377,7 +371,7 @@ export default function decorate($block) {
                   collapseCard($card, payload);
                 }
 
-                Array.from($featuresWrappers).forEach((wrapper) => {
+                $featuresWrappers.forEach((wrapper) => {
                   wrapper.style.maxHeight = 'none';
                 });
               }
