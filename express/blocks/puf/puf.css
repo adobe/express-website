@@ -17,7 +17,7 @@ main .puf.block .carousel-container .carousel-fader-right {
     align-items: flex-start;
 }
 
-main .puf.block .carousel-container span.button.carousel-arrow {
+main .puf.block .carousel-container a.button.carousel-arrow {
     margin-top: calc(100vh / 2);
     position: sticky;
 }

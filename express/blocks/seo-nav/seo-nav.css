@@ -11,7 +11,7 @@ main .seo-nav-container .seo-nav-center-container .carousel-platform {
   padding-top: 6px;
 }
 
-main .seo-nav-container .carousel-container span.button.carousel-arrow {
+main .seo-nav-container .carousel-container a.button.carousel-arrow {
   transform: translateY(-10px);
 }
 

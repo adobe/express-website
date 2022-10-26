@@ -238,7 +238,7 @@ main .premium-plan .premium-plan-card ul li a svg {
     max-height: unset;
   }
 
-  main .premium-plan-cards .carousel-container span.button.carousel-arrow {
+  main .premium-plan-cards .carousel-container a.button.carousel-arrow {
     display: none;
   }
 

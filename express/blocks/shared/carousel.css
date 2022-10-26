@@ -65,7 +65,7 @@ main .carousel-container .carousel-fader-right {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
-main .carousel-container span.button.carousel-arrow {
+main .carousel-container a.button.carousel-arrow {
   cursor: pointer;
   display: block;
   float: left;
@@ -89,12 +89,12 @@ main .carousel-container video {
   pointer-events: none;
 }
 
-main .carousel-container .carousel-fader-left.arrow-hidden span.button.carousel-arrow,
-main .carousel-container .carousel-fader-right.arrow-hidden span.button.carousel-arrow {
+main .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
+main .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
   pointer-events: none;
 }
 
-main .carousel-container span.button.carousel-arrow::before {
+main .carousel-container a.button.carousel-arrow::before {
   content: '';
   position: absolute;
   margin-top: 11px;
@@ -104,16 +104,16 @@ main .carousel-container span.button.carousel-arrow::before {
   border-right: solid 2px var(--color-gray-700);
 }
 
-main .carousel-container span.button.carousel-arrow-left::before {
+main .carousel-container a.button.carousel-arrow-left::before {
   margin-left: 13px;
   transform: rotate(-135deg);
 }
 
-main .carousel-container span.button.carousel-arrow-right {
+main .carousel-container a.button.carousel-arrow-right {
   float: right;
 }
 
-main .carousel-container span.button.carousel-arrow-right::before {
+main .carousel-container a.button.carousel-arrow-right::before {
   margin-left: 9px;
   transform: rotate(45deg);
 }
@@ -128,7 +128,7 @@ main .carousel-container.controls-hidden .carousel-platform {
     display: none;
   }
 
-  main .carousel-container span.button.carousel-arrow {
+  main .carousel-container a.button.carousel-arrow {
     margin: 0 10px;
   }
 
