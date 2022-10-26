@@ -927,6 +927,7 @@ main .template-list-horizontal-apipowered-holiday-container {
 main .template-list-horizontal-apipowered-holiday-container.firework {
   background: var(--color-black);
   color: var(--color-white);
+  padding-top: 0;
 }
 
 main .template-list-horizontal-apipowered-holiday-container.snowing {
