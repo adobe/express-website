@@ -82,7 +82,7 @@ async function processResponse() {
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
-    size: 400,
+    size: 165,
   };
 
   if (templateFetched) {
@@ -97,6 +97,7 @@ async function processResponse() {
         src: template.rendition.href,
         alt: template.title,
         loading: 'lazy',
+        width: '165',
       });
       const $buttonWrapper = createTag('div', { class: 'button-container' });
       const $button = createTag('a', {
