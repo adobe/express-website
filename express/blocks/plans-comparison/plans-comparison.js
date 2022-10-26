@@ -105,7 +105,7 @@ async function buildPayload($block) {
     cardPadding: window.innerWidth >= 1200 ? 64 : 40,
   };
 
-  Array.from($block.children).forEach(($row, index) => {
+  [...$block.children].forEach(($row, index) => {
     if (index === 0) {
       payload.mainHeading = $row.innerHTML;
     }
