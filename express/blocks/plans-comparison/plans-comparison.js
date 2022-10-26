@@ -228,10 +228,11 @@ function decorateToggleButton($block, $card, payload) {
 
 function decorateFeatures($block, payload, value) {
   const $featuresWrapper = createTag('ul', { class: 'features-wrapper' });
-  value.features.forEach((feature) => {
-    $featuresWrapper.append(feature);
-  });
-
+  if (value) {
+    value.features.forEach((feature) => {
+      $featuresWrapper.append(feature);
+    });
+  }
   return $featuresWrapper;
 }
 
@@ -358,39 +359,36 @@ export default function decorate($block) {
           $newBlock.classList.add('restrained');
 
           window.addEventListener('resize', () => {
-            Array.from($cards)
-              .forEach(($card, index) => {
-                if (window.innerWidth >= 1200) {
-                  $card.style.maxHeight = '';
-                  if ($card.classList.contains('expanded')) {
-                    $card.style.maxWidth = `${$card.offsetWidth}px`;
+            Array.from($cards).forEach(($card, index) => {
+              if (window.innerWidth >= 1200) {
+                $card.style.maxHeight = '';
+                if ($card.classList.contains('expanded')) {
+                  $card.style.maxWidth = `${$card.offsetWidth}px`;
 
-                    if ($card.classList.contains('card-premium')) {
-                      $featuresWrappers[index].style.maxHeight = '';
-                      payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
-                    }
-                  } else {
-                    collapseCard($card, payload);
+                  if ($card.classList.contains('card-premium')) {
+                    $featuresWrappers[index].style.maxHeight = '';
+                    payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
                   }
-
-                  Array.from($featuresWrappers)
-                    .forEach((wrapper) => {
-                      wrapper.style.maxHeight = payload.desiredHeight;
-                    });
                 } else {
-                  $card.style.maxWidth = '';
-                  if ($card.classList.contains('expanded')) {
-                    $card.style.maxHeight = `${$card.offsetHeight}px`;
-                  } else {
-                    collapseCard($card, payload);
-                  }
-
-                  Array.from($featuresWrappers)
-                    .forEach((wrapper) => {
-                      wrapper.style.maxHeight = 'none';
-                    });
+                  collapseCard($card, payload);
                 }
-              });
+
+                Array.from($featuresWrappers).forEach((wrapper) => {
+                  wrapper.style.maxHeight = payload.desiredHeight;
+                });
+              } else {
+                $card.style.maxWidth = '';
+                if ($card.classList.contains('expanded')) {
+                  $card.style.maxHeight = `${$card.offsetHeight}px`;
+                } else {
+                  collapseCard($card, payload);
+                }
+
+                Array.from($featuresWrappers).forEach((wrapper) => {
+                  wrapper.style.maxHeight = 'none';
+                });
+              }
+            });
           });
         }
 
