@@ -270,6 +270,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   const $background = createTag('div', { class: 'toolbox-background' });
   const $floatingButton = $wrapper.querySelector('.floating-button');
   const $cta = $floatingButton.querySelector('a');
+  const $toggleButton = createTag('a', { class: 'toggle-button' });
   const $toggleIcon = getIconElement('plus-icon-22');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
 
@@ -297,12 +298,21 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
     }
   }, delayInSeconds * 1000);
 
-  $floatingButton.append($toggleIcon);
+  $toggleButton.append($toggleIcon);
+  $floatingButton.append($toggleButton);
   $notch.append($notchPill);
   $toolBox.append($notch, $appStoreBadge);
   $wrapper.append($toolBox, $background);
 
-  [$cta, $notch, $background].forEach(($element) => {
+  $cta.addEventListener('click', (e) => {
+    if (!$wrapper.classList.contains('toolbox-opened')) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleToolBox($wrapper, $lottie, scrollState);
+    }
+  });
+
+  [$toggleButton, $notch, $background].forEach(($element) => {
     if ($element) {
       $element.addEventListener('click', (e) => {
         e.preventDefault();

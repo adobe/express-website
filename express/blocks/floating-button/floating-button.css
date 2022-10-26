@@ -190,19 +190,19 @@ main .floating-button-wrapper.multifunction .toolbox.hidden {
   display: none;
 }
 
-main .floating-button-wrapper.multifunction .floating-button .icon {
+main .floating-button-wrapper.multifunction .floating-button .toggle-button {
   position: absolute;
-  left: 35px;
+  left: 31px;
   height: 18px;
+  padding: 4px;
   width: 18px;
   bottom: 50%;
   transform: translateY(50%);
   transition: transform 0.2s;
-  pointer-events: none;
   z-index: 2;
 }
 
-main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .icon {
+main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
   transform: translateY(50%) rotate(45deg);
 }
 
