@@ -236,7 +236,7 @@ function decorateFeatures($block, payload, value) {
 }
 
 function decorateCTAs($block, payload, value) {
-  const $buttonsWrapper = createTag('ul', { class: 'ctas-wrapper' });
+  const $buttonsWrapper = createTag('div', { class: 'ctas-wrapper' });
   value.ctas.forEach((cta, index) => {
     $buttonsWrapper.append(cta);
     if (index === 0) {
