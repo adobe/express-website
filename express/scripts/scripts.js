@@ -1363,11 +1363,13 @@ async function decorateTesting() {
   try {
     // let reason = '';
     const usp = new URLSearchParams(window.location.search);
-    const martech = usp.get('martech');
-    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-      // eslint-disable-next-line no-console
-      console.log('rushing martech');
-      loadScript('/express/scripts/instrument.js', null, 'module');
+    if (!window.hlx.lighthouse) {
+      const martech = usp.get('martech');
+      if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+        // eslint-disable-next-line no-console
+        console.log('rushing martech');
+        loadScript('/express/scripts/instrument.js', null, 'module');
+      }
     }
 
     const experiment = getExperiment();
@@ -2008,7 +2010,7 @@ function decorateLegalCopy(main) {
  */
 async function loadEager() {
   setTheme();
-  if (!window.hlx.lighthouse) await decorateTesting();
+  await decorateTesting();
 
   if (window.location.href.includes('/express/templates/')) {
     await import('./templates.js');
