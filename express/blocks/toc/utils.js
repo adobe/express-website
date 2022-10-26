@@ -12,8 +12,11 @@
 import {
   toClassName,
   getIconElement as genericGetIconElement,
-  getMobileOperatingSystem,
 } from '../../scripts/scripts.js';
+
+import {
+  getMobileOperatingSystem,
+} from '../shared/utils.js';
 
 export function getToggleButton() {
   const $toggle = document.querySelector('.default-content-wrapper .button.accent');

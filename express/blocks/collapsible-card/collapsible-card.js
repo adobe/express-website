@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIconElement, getMobileOperatingSystem } from '../../scripts/scripts.js';
+import { createTag, getIconElement } from '../../scripts/scripts.js';
+import { getMobileOperatingSystem } from '../shared/utils.js';
 
 function toggleCollapsibleCard($block) {
   $block.classList.toggle('expanded');
