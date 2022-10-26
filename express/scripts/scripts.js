@@ -370,7 +370,12 @@ export function decorateSections($main) {
       sectionMeta.remove();
     }
 
-    if (section.dataset.audience && !noAudienceFound) {
+    if (section.dataset.audience
+        && document.body.dataset.device
+        && section.dataset.audience !== document.body.dataset.device) {
+      // remove section if audience does not match and will not be displayed
+      section.remove();
+    } else if (section.dataset.audience && !noAudienceFound) {
       section.style.paddingTop = '0';
     } else {
       noAudienceFound = true;
@@ -1298,7 +1303,6 @@ async function replaceInner(path, element) {
  * @param {string} audience
  * @return {boolean} is member of this audience
  */
-
 function checkExperimentAudience(audience) {
   if (audience === 'mobile') {
     return window.innerWidth < 600;
@@ -2021,7 +2025,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
@@ -2042,16 +2046,27 @@ async function loadEager() {
       }
     }
 
-    const lcpCandidate = document.querySelector('main img');
-    await new Promise((resolve) => {
-      if (lcpCandidate && !lcpCandidate.complete) {
-        lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', () => resolve());
-        lcpCandidate.addEventListener('error', () => resolve());
-      } else {
-        resolve();
-      }
-    });
+    let lcpCandidate;
+    if (hasLCPBlock) {
+      // TODO a block must be able to provide the LCP candidate if it is not the "default one",
+      // i.e. the first image.
+      lcpCandidate = block.getAttribute('data-block-name') === 'template-list'
+        ? block.querySelector('.carousel-container img')
+        : block.querySelector('img');
+    }
+    lcpCandidate = lcpCandidate || document.querySelector('main img');
+
+    if (lcpCandidate) {
+      await new Promise((resolve) => {
+        if (lcpCandidate && !lcpCandidate.complete) {
+          lcpCandidate.setAttribute('loading', 'eager');
+          lcpCandidate.addEventListener('load', () => resolve());
+          lcpCandidate.addEventListener('error', () => resolve());
+        } else {
+          resolve();
+        }
+      });
+    }
   }
 }
 
