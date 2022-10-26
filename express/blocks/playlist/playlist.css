@@ -254,7 +254,7 @@ main .playlist-container .carousel-container .carousel-platform {
     align-items: flex-start;
 }
 
-main .playlist-container .carousel-container a.button.carousel-arrow {
+main .playlist-container .carousel-container span.button.carousel-arrow {
     position: absolute;
     top: 25%;
 }
@@ -316,7 +316,7 @@ main .playlist-container .carousel-container a.button.carousel-arrow {
     main .playlist-container .video-player-video-list-wrapper .video-player-video-list .video-button {
         width: 304px;
     }
-    main .playlist-container .carousel-container a.button.carousel-arrow {
+    main .playlist-container .carousel-container span.button.carousel-arrow {
         position: unset;
         top: unset;
     }

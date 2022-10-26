@@ -624,8 +624,8 @@ main .template-list.horizontal .carousel-container.controls-hidden .carousel-fad
   pointer-events: none;
 }
 
-main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
-main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left span.button.carousel-arrow,
+main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right span.button.carousel-arrow {
   pointer-events: none;
 }
 
@@ -665,8 +665,8 @@ main .template-list.horizontal .carousel-platform {
     opacity: unset;
   }
 
-  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left a.button.carousel-arrow,
-  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right a.button.carousel-arrow {
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left span.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right span.button.carousel-arrow {
     pointer-events: auto;
   }
 
@@ -676,8 +676,8 @@ main .template-list.horizontal .carousel-platform {
     pointer-events: none;
   }
 
-  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden a.button.carousel-arrow,
-  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden a.button.carousel-arrow {
+  main .template-list.horizontal .carousel-container .carousel-fader-left.arrow-hidden span.button.carousel-arrow,
+  main .template-list.horizontal .carousel-container .carousel-fader-right.arrow-hidden span.button.carousel-arrow {
     pointer-events: none;
   }
 

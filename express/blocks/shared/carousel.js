@@ -56,8 +56,8 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
   const $faderRight = createTag('div', { class: 'carousel-fader-right' });
   $container.appendChild($faderLeft);
   $container.appendChild($faderRight);
-  const $arrowLeft = createTag('a', { class: 'button carousel-arrow carousel-arrow-left' });
-  const $arrowRight = createTag('a', { class: 'button carousel-arrow carousel-arrow-right' });
+  const $arrowLeft = createTag('span', { class: 'button carousel-arrow carousel-arrow-left' });
+  const $arrowRight = createTag('span', { class: 'button carousel-arrow carousel-arrow-right' });
   $faderLeft.appendChild($arrowLeft);
   $faderRight.appendChild($arrowRight);
 
