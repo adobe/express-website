@@ -39,7 +39,8 @@ main .toc-container .default-content-wrapper .lottie {
   vertical-align: bottom;
 }
 
-main .toc-container .button:any-link {
+main .toc-container .default-content-wrapper .button:any-link,
+main .toc-container .toc-wrapper .button:any-link {
   background: none;
   border: none;
   color: var(--color-info-accent);

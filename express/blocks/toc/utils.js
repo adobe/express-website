@@ -87,10 +87,12 @@ export function attachEventListeners($block, $toggle, $close) {
   });
   $toggle.addEventListener('click', (ev) => {
     ev.stopPropagation();
+    ev.preventDefault();
     toggleToc($toggle, $block);
   });
   $close.addEventListener('click', (ev) => {
     ev.stopPropagation();
+    ev.preventDefault();
     toggleToc($toggle, $block, false);
   });
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$toggle, ...$block.querySelectorAll('a'), $block.parentElement] });
