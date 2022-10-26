@@ -2,9 +2,18 @@
 
 @font-face {
   font-family: 'Trebuchet MS';
-  size-adjust: 90%;
+  size-adjust: 95%;
   src: local('Trebuchet MS'),
-    local('TrebuchetMS');
+       local('TrebuchetMS');
+       font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Trebuchet MS';
+  size-adjust: 87%;
+  src: local('Trebuchet MS'),
+       local('TrebuchetMS');
+       font-weight: 400;
 }
 
 :root {
@@ -372,9 +381,9 @@ a.button.gradient:any-link:focus {
   background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
   background-size: 400% 400%;
   transition: background-color .3s, color .3s, border .3s;
-  -webkit-animation: buttonGradient 45s ease infinite;
+  /* -webkit-animation: buttonGradient 45s ease infinite;
   -moz-animation: buttonGradient 45s ease infinite;
-  animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite; */
 }
 
 @-webkit-keyframes buttonGradient {
