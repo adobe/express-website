@@ -2155,6 +2155,17 @@ export async function addFreePlanWidget(elem) {
   }
 }
 
+function setLang() {
+  const url = new URL(window.location.href);
+  let lang = 'en';
+  const s = url.pathname.split('/');
+  if (s.length > 1 && s[1].length === 2) {
+    // eslint-disable-next-line prefer-destructuring
+    lang = s[1];
+  }
+  document.documentElement.setAttribute('lang', lang);
+}
+
 /**
  * loads everything that doesn't need to be delayed.
  */
@@ -2171,6 +2182,7 @@ async function loadLazy() {
   addPromotion();
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
+  setLang();
   if (!window.hlx.lighthouse) loadMartech();
 
   sampleRUM('lazy');
