@@ -96,6 +96,7 @@ async function processResponse() {
       const $picture = createTag('img', {
         src: template.rendition.href,
         alt: template.title,
+        loading: 'lazy',
       });
       const $buttonWrapper = createTag('div', { class: 'button-container' });
       const $button = createTag('a', {
