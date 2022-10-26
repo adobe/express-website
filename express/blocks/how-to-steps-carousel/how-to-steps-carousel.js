@@ -136,7 +136,7 @@ export default function decorate(block) {
     step: [],
   };
 
-  const numbers = createTag('div', { class: 'tip-numbers', 'aria-role': 'tablist' });
+  const numbers = createTag('div', { class: 'tip-numbers', role: 'tablist' });
   block.prepend(numbers);
   const tips = createTag('div', { class: 'tips' });
   block.append(tips);
@@ -173,7 +173,7 @@ export default function decorate(block) {
       class: `tip-number tip-${i + 1}`,
       tabindex: '0',
       title: `${i + 1}`,
-      'aria-role': 'tab',
+      role: 'tab',
     });
     number.innerHTML = `<span>${i + 1}</span>`;
     number.setAttribute('data-tip-index', i + 1);
