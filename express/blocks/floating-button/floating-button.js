@@ -80,7 +80,7 @@ export async function createFloatingButton($a, audience) {
   if (!$scrollAnchor) {
     hideScrollArrow();
   } else {
-    //lazyLoadLottiePlayer();
+    lazyLoadLottiePlayer();
     let clicked = false;
     $lottieScrollButton.addEventListener('click', () => {
       clicked = true;
