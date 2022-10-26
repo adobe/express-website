@@ -338,16 +338,9 @@ export default function decorate($block) {
         const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
 
         if ($cards) {
-          Array.from($cards)
-            .forEach(($card, index) => {
-              if (index === 0) {
-                toggleExpandableCard($newBlock, $card, payload);
-              }
-
-              if (index === 1) {
-                payload.desiredHeight = `${$featuresWrappers[index].offsetHeight}px`;
-              }
-            });
+          toggleExpandableCard($newBlock, $cards[1], payload);
+          payload.desiredHeight = `${$featuresWrappers[1].offsetHeight}px`;
+          toggleExpandableCard($newBlock, $cards[0], payload);
 
           if (window.innerWidth >= 1200) {
             Array.from($featuresWrappers)
