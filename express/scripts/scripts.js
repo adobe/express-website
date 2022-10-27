@@ -2156,7 +2156,7 @@ export async function addFreePlanWidget(elem) {
 }
 
 function setLang() {
-  document.documentElement.setAttribute('lang', getLanguage(getLocale(window.location.ref)));
+  document.documentElement.setAttribute('lang', getLanguage(getLocale(window.location)));
 }
 
 /**
