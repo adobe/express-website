@@ -74,7 +74,7 @@ main .floating-button a.button:any-link,
 main .floating-button a.button:any-link:hover,
 main .floating-button a.button:any-link:active,
 main .floating-button a.button:any-link:focus {
-  transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out;
+  transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
 }
 
 main .floating-button .floating-button-lottie {
@@ -192,7 +192,7 @@ main .floating-button-wrapper.multifunction .toolbox.hidden {
 
 main .floating-button-wrapper.multifunction .floating-button .toggle-button {
   position: absolute;
-  left: 31px;
+  left: 28px;
   height: 18px;
   padding: 4px;
   width: 18px;
@@ -200,6 +200,10 @@ main .floating-button-wrapper.multifunction .floating-button .toggle-button {
   transform: translateY(50%);
   transition: transform 0.2s;
   z-index: 2;
+}
+
+main .floating-button-wrapper.multifunction.floating-button--above-the-fold:not(.floating-button--scrolled) .button {
+  padding-left: 48px;
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
