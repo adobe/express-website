@@ -19,10 +19,12 @@ export default function decorate($block) {
   const $rows = Array.from($block.children);
   const $header = $rows[0].firstChild;
   const $container = createTag('div', { class: 'quick-action-hub-container' });
+  const $listContainer = createTag('div', { class: 'quick-action-hub-list-container' });
+  const $contentContainer = createTag('div', { class: 'quick-action-hub-content-container' });
 
   $header.classList.add('quick-action-hub-header');
 
-  for (let i = 1; i < $rows.length; i += 1) {
+  for (let i = 2; i < $rows.length; i += 1) {
     const $column = $rows[i].firstChild;
 
     if ($column) {
@@ -38,12 +40,15 @@ export default function decorate($block) {
       });
 
       $column.classList.add('quick-action-hub-column');
-      $container.append($column);
+      $contentContainer.innerHTML = $rows[1].innerHTML;
+      $listContainer.append($column);
     }
   }
 
   $block.innerHTML = '';
 
-  $block.append($header);
   $block.append($container);
+  $block.append($contentContainer);
+  $container.append($header);
+  $container.append($listContainer);
 }
