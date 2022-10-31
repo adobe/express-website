@@ -182,7 +182,9 @@ function initScrollAnimation($block) {
 
     if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
       const totalScroll = $highlightsPlatform.scrollWidth - window.innerWidth;
-      $highlightsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
+      setTimeout(() => {
+        $highlightsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
+      }, 100);
     }
   });
 }
