@@ -18,6 +18,7 @@ import {
   getHelixEnv,
   sampleRUM,
   getCookie,
+  getMetadata,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
@@ -171,6 +172,12 @@ function loadFEDS() {
       otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
       footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
     },
+    jarvis: getMetadata('enable-chat') === 'yes'
+      ? {
+        surfaceName: 'AdobeExpressEducation',
+        surfaceVersion: '1',
+      }
+      : {},
   };
 
   window.addEventListener('feds.events.experience.loaded', async () => {
