@@ -144,6 +144,8 @@ function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
+  const isHomepage = window.location.pathname.endsWith('/express/');
+
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
@@ -154,7 +156,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: 'adobe-express/ax-gnav',
+      experience: getMetadata('gnav') || `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`,
     },
     profile: {
       customSignIn: () => {
