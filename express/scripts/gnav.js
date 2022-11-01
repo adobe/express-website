@@ -154,7 +154,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: `cc-express/${getMetadata('gnav') || 'cc-express-gnav-login-suppressed'}`,
+      experience: 'cc-express/cc-express-gnav',
     },
     profile: {
       customSignIn: () => {
