@@ -154,7 +154,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: 'cc-express/cc-express-gnav',
+      experience: 'adobe-express/ax-gnav',
     },
     profile: {
       customSignIn: () => {
