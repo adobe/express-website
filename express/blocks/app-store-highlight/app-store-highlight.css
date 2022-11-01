@@ -49,8 +49,9 @@ main .app-store-highlight-container .rating-stars .rating-votes {
 }
 
 main .app-store-highlight-container .highlights-platform {
-  overflow: auto;
+  overflow: hidden;
   margin: 0 -32px;
+  position: relative;
   scrollbar-width: none;
   /* Firefox */
 }
@@ -60,6 +61,11 @@ main .app-store-highlight-container .highlights {
   gap: 12px;
   padding: 53px 32px;
   width: max-content;
+}
+
+main .app-store-highlight-container .highlights.animating {
+  position: absolute;
+  transition: left 0.2s;
 }
 
 main .app-store-highlight-container .highlights::-webkit-scrollbar {
