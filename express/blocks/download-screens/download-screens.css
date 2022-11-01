@@ -42,7 +42,7 @@ main .cards .card {
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  transition: top 0.5s;
+  transition: top 0.2s;
 }
 
 main .cards .card .card-image {
