@@ -166,8 +166,11 @@ function decorateAppStoreIcon($block, payload) {
   $block.append($iconWrapper);
 }
 
-function scroll($block, $highlightsPlatform, $highlightsWrapper, height, computedStyles, interval) {
+function scroll($block, height, computedStyles, interval) {
+  const $highlightsPlatform = $block.querySelector('.highlights-platform');
+  const $highlightsWrapper = $highlightsPlatform.querySelector('.highlights');
   const $contentWrapper = $block.querySelector('.content-wrapper');
+
   $highlightsPlatform.style.height = `${height + (53 * 2)}px`;
   $highlightsWrapper.classList.add('animating');
   $contentWrapper.style.transform = 'scale(1.2)';
@@ -206,7 +209,7 @@ function initScrollAnimation($block) {
       height = parseInt(computedStyles.height.replace(/\D/g, ''), 10);
 
       if (height > 0) {
-        scroll($block, $highlightsPlatform, $highlightsWrapper, height, computedStyles, interval);
+        scroll($block, height, computedStyles, interval);
       }
     }, 100);
   }

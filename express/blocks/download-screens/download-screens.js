@@ -44,12 +44,21 @@ function initScrollAnimationMobile($block) {
       return;
     }
     const blockHeight = $block.clientHeight;
+    container.style.height = `${blockHeight + 160}px`;
+    $block.classList.add('animating');
 
     // offset % from center of block to center of view
     const blockMidY = (blockPosition.bottom - blockHeight / 2);
     const offset = (docTargetY - blockMidY) / (docHeight - blockHeight);
-    const totalScroll = $block.scrollWidth - docWidth;
-    container.scrollLeft = (totalScroll / 50) * (offset * 100);
+    const totalScroll = $block.offsetWidth - docWidth;
+    const scrollPosition = (totalScroll / 50) * (offset * 100);
+    if (scrollPosition <= totalScroll && scrollPosition >= 100) {
+      $block.style.left = `-${(totalScroll / 50) * (offset * 100)}px`;
+    } else if (scrollPosition > totalScroll) {
+      $block.style.left = `-${totalScroll}px`;
+    } else if (scrollPosition < 100) {
+      $block.style.left = '0px';
+    }
   }, { passive: true });
 }
 

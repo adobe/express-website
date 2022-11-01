@@ -68,6 +68,10 @@ main .app-store-highlight-container .highlights.animating {
   transition: left 0.2s;
 }
 
+main .app-store-highlight-container .highlights.dragging {
+  transition: unset;
+}
+
 main .app-store-highlight-container .highlights::-webkit-scrollbar {
   display: none;
 }
