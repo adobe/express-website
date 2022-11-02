@@ -53,6 +53,7 @@ main .app-store-highlight-container .highlights-platform {
   margin: 0 -32px;
   position: relative;
   scrollbar-width: none;
+  height: 445px;
   /* Firefox */
 }
 
