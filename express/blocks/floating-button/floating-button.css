@@ -209,6 +209,7 @@ main .floating-button-wrapper.multifunction .floating-button .toggle-button .lot
   transform: translate(-50%, -50%);
   height: 80px;
   width: 120px;
+  pointer-events: none;
   transition: opacity 0.2s;
 }
 
