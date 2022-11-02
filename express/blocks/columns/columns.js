@@ -201,6 +201,21 @@ export default function decorate($block) {
         } else if ($a.classList.contains('light')) {
           $a.classList.replace('accent', 'primary');
         }
+
+        if ($block.classList.contains('fullscreen')) {
+          const $h1 = $block.querySelector('h1');
+          if ($h1) {
+            const $textToColor = $h1.querySelectorAll('em');
+
+            if ($textToColor.length > 0) {
+              $textToColor.forEach((span) => {
+                const $coloredText = createTag('span', { class: 'colorful' });
+                $coloredText.textContent = span.textContent;
+                $h1.replaceChild($coloredText, span);
+              });
+            }
+          }
+        }
       }
 
       // handle history events

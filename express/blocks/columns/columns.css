@@ -769,6 +769,38 @@ main .collapsible-card-wrapper + .columns-wrapper .columns > div {
   }
 }
 
+main .columns-fullscreen-center-container {
+  height: 100vh;
+  width: 100vw;
+  min-height: 460px;
+}
+
+main .columns-fullscreen-center-container:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  background-image: url('https://www.adobe.com/express/media_1aa259dd9ac4c29168d486d36c6c737074d24d756.jpeg#width=1600&height=901');
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+}
+
+main .columns-marquee h1 > span.colorful {
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+  background-size: 400% 400%;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Japanese font sizing styles */
 :lang(ja) main .columns h2.columns-heading-long {
   font-size: var(--heading-font-size-l);
