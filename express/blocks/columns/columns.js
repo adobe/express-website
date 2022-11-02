@@ -215,6 +215,18 @@ export default function decorate($block) {
               });
             }
           }
+
+          const $picture = $block.querySelector('picture');
+          if ($picture) {
+            const $columnWrapper = $picture.parentElement;
+            const $pictureFrame = createTag('div', { class: 'picture-frame' });
+            const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer' });
+
+            $pictureFrame.append($clickableOverlay);
+            $clickableOverlay.append($picture);
+            $columnWrapper.remove();
+            $block.append($pictureFrame);
+          }
         }
       }
 

@@ -801,6 +801,26 @@ main .columns-marquee h1 > span.colorful {
   -webkit-text-fill-color: transparent;
 }
 
+main .columns-marquee .picture-frame {
+  position: relative;
+  background-image: url('https://www.adobe.com/express/media_13a3fd59a11de312ecf6cee8f37b692fb6cdb1c95.png#width=800&height=538');
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 448px;
+}
+
+main .columns-marquee .picture-frame picture {
+  position: absolute;
+  right: 166px;
+  top: 40px;
+  height: 488px;
+}
+
+main .columns-marquee .picture-frame picture img {
+  height: 100%;
+  display: block;
+}
+
 /* Japanese font sizing styles */
 :lang(ja) main .columns h2.columns-heading-long {
   font-size: var(--heading-font-size-l);
