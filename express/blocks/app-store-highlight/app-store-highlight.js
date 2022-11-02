@@ -166,7 +166,7 @@ function decorateAppStoreIcon($block, payload) {
   $block.append($iconWrapper);
 }
 
-function scroll($block, height, computedStyles, interval) {
+function scroll($block, height, computedStyles) {
   const $highlightsPlatform = $block.querySelector('.highlights-platform');
   const $highlightsWrapper = $highlightsPlatform.querySelector('.highlights');
   const $contentWrapper = $block.querySelector('.content-wrapper');
@@ -193,8 +193,6 @@ function scroll($block, height, computedStyles, interval) {
       $highlightsWrapper.style.left = '0px';
     }
   });
-
-  clearInterval(interval);
 }
 
 function initScrollAnimation($block) {
@@ -202,16 +200,15 @@ function initScrollAnimation($block) {
   const $highlightsWrapper = $highlightsPlatform.querySelector('.highlights');
 
   if ($highlightsWrapper) {
-    const computedStyles = window.getComputedStyle($highlightsWrapper);
-    let height;
+    const $firstImg = $highlightsWrapper.querySelector('img');
 
-    const interval = setInterval(() => {
-      height = parseInt(computedStyles.height.replace(/\D/g, ''), 10);
-
-      if (height > 0) {
-        scroll($block, height, computedStyles, interval);
-      }
-    }, 100);
+    if ($firstImg) {
+      $firstImg.addEventListener('load', () => {
+        const computedStyles = window.getComputedStyle($highlightsWrapper);
+        const height = parseInt(computedStyles.height.replace(/\D/g, ''), 10);
+        scroll($block, height, computedStyles);
+      });
+    }
   }
 }
 
