@@ -11,6 +11,133 @@
  */
 import { createTag } from '../../scripts/scripts.js';
 
+// snowing animation code
+const defaultOptions = {
+  color: 'white',
+  radius: [0.5, 3.0],
+  speed: [1, 3],
+  wind: [-1.5, 3.0]
+};
+
+function randomIntFromInterval(min, max) {
+  return Math.random() * (max - min + 1) + min;
+}
+
+const SnowItem = (canvas, drawFn = null, opts) => {
+  const options = { ...defaultOptions, ...opts };
+  const {
+    radius, speed, wind, color,
+  } = options;
+  const params = {
+    color,
+    x: randomIntFromInterval(0, canvas.offsetWidth),
+    y: randomIntFromInterval(-canvas.offsetHeight, 0),
+    radius: randomIntFromInterval(...radius),
+    speed: randomIntFromInterval(...speed),
+    wind: randomIntFromInterval(...wind),
+    isResized: false,
+  };
+  const ctx = canvas.getContext('2d');
+
+  const updateData = () => {
+    params.x = randomIntFromInterval(0, canvas.offsetWidth);
+    params.y = randomIntFromInterval(-canvas.offsetHeight, 0);
+  };
+
+  const resized = () => params.isResized;
+
+  const drawDefault = () => {
+    ctx.beginPath();
+    ctx.arc(params.x, params.y, params.radius, 0, 2 * Math.PI);
+    ctx.fillStyle = params.color;
+    ctx.fill();
+    ctx.closePath();
+  };
+
+  const draw = drawFn
+    ? () => drawFn(ctx, params)
+    : drawDefault;
+
+  const translate = () => {
+    params.y += params.speed;
+    params.x += params.wind;
+  };
+
+  const onDown = () => {
+    if (params.y < canvas.offsetHeight) return;
+
+    if (params.isResized) {
+      updateData();
+      params.isResized = false;
+    } else {
+      params.y = 0;
+      params.x = randomIntFromInterval(0, canvas.offsetWidth);
+    }
+  };
+
+  const update = () => {
+    translate();
+    onDown();
+  };
+
+  return {
+    update,
+    resized,
+    draw,
+  };
+};
+
+const animFrame = window.requestAnimationFrame
+  || window.mozRequestAnimationFrame
+  || window.webkitRequestAnimationFrame
+  || window.msRequestAnimationFrame;
+
+const Snow = (canvas, count, options) => {
+  const ctx = canvas.getContext('2d');
+  const snowflakes = [];
+
+  const add = (item) => snowflakes.push(item(canvas));
+
+  const update = () => snowflakes.forEach((el) => el.update());
+
+  const resize = () => {
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = 300;
+
+    snowflakes.forEach((el) => el.resized());
+  };
+
+  const draw = () => {
+    ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    snowflakes.forEach((el) => el.draw());
+  };
+
+  const events = () => {
+    window.addEventListener('resize', resize);
+  };
+
+  const loop = () => {
+    draw();
+    update();
+    animFrame(loop);
+  };
+
+  const init = () => {
+    for (let i = 0; i < count; i += 1) {
+      add(() => SnowItem(canvas, null, options));
+    }
+    events();
+    loop();
+  };
+
+  init(count);
+  resize();
+
+  return { add, resize };
+};
+
+// snowing animation code end
+
 export default function addBackgroundAnimation($block, animationName) {
   const animations = {
     firework: function startFirework($section) {
@@ -245,14 +372,10 @@ export default function addBackgroundAnimation($block, animationName) {
     },
     snow: function startSnowing($section) {
       $section.classList.add('snowing');
-
-      const $canvas = createTag('div', { class: 'snowflakes' });
-      for (let i = 0; i < 89; i += 1) {
-        const $flake = createTag('i');
-        $canvas.append($flake);
-      }
-
+      const $canvas = createTag('canvas', { class: 'snow-canvas' });
       $section.append($canvas);
+
+      Snow($canvas, 150, { color: 'white' });
     },
   };
 

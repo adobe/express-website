@@ -404,7 +404,10 @@ export async function decorateTemplateList($block) {
         $mobileAnchor.classList.add('mobile-only');
 
         $toggleBar.append($topElements, $bottomElements);
-        $topElements.append($icon, $content[0]);
+        if ($icon) {
+          $topElements.append($icon, $content[0]);
+        }
+        $topElements.append($content[0]);
         $bottomElements.append($content[1], $a);
         $wrapper.prepend($mobileSubtext);
         $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
