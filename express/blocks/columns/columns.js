@@ -19,6 +19,7 @@ import {
   getIconElement,
   addFreePlanWidget,
   addHeaderSizing,
+  createOptimizedPicture,
 } from '../../scripts/scripts.js';
 
 import {
@@ -203,7 +204,19 @@ export default function decorate($block) {
         }
 
         if ($block.classList.contains('fullscreen')) {
+          const $flowers = [
+            'https://main--express-website--adobe.hlx.page/media_1cb8136ac752c1bb70c81e4c6e4f6745c36735d1a.png#width=500&height=437',
+            'https://main--express-website--adobe.hlx.page/media_107e6a2960331b70143bbc3321d6b92ef7f49e9c7.png#width=500&height=498',
+            'https://main--express-website--adobe.hlx.page/media_1544ba4009bb401c6a51a9a1b5e52ec47ba686cab.png#width=500&height=556',
+            'https://main--express-website--adobe.hlx.page/media_1c0098a95dac73540743f7b31fbd1ac7853835261.png#width=500&height=544',
+            'https://main--express-website--adobe.hlx.page/media_1d8381305371e958459da1ab5b9df1f2e5c086dc6.png#width=500&height=514',
+            'https://main--express-website--adobe.hlx.page/media_129a7f284a56bd157c4fbec64ab3cdd032725cd82.png#width=500&height=378',
+          ].map((url) => {
+            return createOptimizedPicture(url);
+          });
           const $h1 = $block.querySelector('h1');
+          const $picture = $block.querySelector('picture');
+
           if ($h1) {
             const $textToColor = $h1.querySelectorAll('em');
 
@@ -216,16 +229,53 @@ export default function decorate($block) {
             }
           }
 
-          const $picture = $block.querySelector('picture');
           if ($picture) {
             const $columnWrapper = $picture.parentElement;
+            const $pictureFrameWrapper = createTag('div', { class: 'picture-frame-wrapper' });
+            const $flowersBoard = createTag('div', { class: 'flowers' });
+            const $pictureFrameBackground = createTag('div', { class: 'picture-frame-background' });
             const $pictureFrame = createTag('div', { class: 'picture-frame' });
+            const $thumbnails = createTag('div', { class: 'picture-frame-thumbnails' });
             const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer' });
+            const $thumbnailImg = createOptimizedPicture('https://www.adobe.com/express/media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
 
-            $pictureFrame.append($clickableOverlay);
-            $clickableOverlay.append($picture);
+            $picture.classList.add('screen-demo');
+            $thumbnailImg.classList.add('leaf-thumbnails');
+            $thumbnails.append($thumbnailImg);
+            $pictureFrame.append($picture);
+            $pictureFrameWrapper.append($pictureFrameBackground, $flowersBoard, $pictureFrame, $thumbnails, $clickableOverlay);
+
+            $flowers.forEach(($flower, index) => {
+              $flowersBoard.append($flower);
+              $flower.className = `flower flower-${index}`;
+            });
+
+            $block.append($pictureFrameWrapper);
+
             $columnWrapper.remove();
-            $block.append($pictureFrame);
+
+            $pictureFrameWrapper.addEventListener('mouseenter', () => {
+              $pictureFrame.style.opacity = '0.5';
+              $flowersBoard.style.opacity = '0.5';
+              $thumbnails.style.opacity = '0.5';
+            });
+
+            $pictureFrameWrapper.addEventListener('mouseleave', () => {
+              $pictureFrame.style.opacity = '1';
+              $flowersBoard.style.opacity = '1';
+              $thumbnails.style.opacity = '1';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+              const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
+              const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
+              $pictureFrameWrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(0deg)`;
+              $pictureFrame.style.transform = `translate3d(${rotateX * 2}px, ${0 - (rotateY * 2)}px, 0px)`;
+              $flowersBoard.style.transform = `translate3d(${0 - (rotateX * 1.2)}px, ${rotateY * 1.2}px, 0px)`;
+              $pictureFrameBackground.style.transform = `translate3d(${rotateX}px, ${0 - rotateY}px, 0px)`;
+              $thumbnails.style.transform = `translate3d(${rotateX * 2.5}px, ${0 - (rotateY * 2.5)}px, 0px)`;
+              $picture.style.transform = `translate3d(${rotateX * 1.5}px, ${0 - (rotateY * 1.5)}px, 0px)`;
+            });
           }
         }
       }
