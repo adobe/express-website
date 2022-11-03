@@ -149,7 +149,7 @@ function loadFEDS() {
     || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
-    : `cc-express/cc-express-gnav${isHomepage ? '' : '-login-suppressed'}`;
+    : 'cc-express/cc-express-gnav';
 
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
