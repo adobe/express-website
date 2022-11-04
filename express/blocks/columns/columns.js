@@ -211,9 +211,7 @@ export default function decorate($block) {
             'https://main--express-website--adobe.hlx.page/media_1c0098a95dac73540743f7b31fbd1ac7853835261.png#width=500&height=544',
             'https://main--express-website--adobe.hlx.page/media_1d8381305371e958459da1ab5b9df1f2e5c086dc6.png#width=500&height=514',
             'https://main--express-website--adobe.hlx.page/media_129a7f284a56bd157c4fbec64ab3cdd032725cd82.png#width=500&height=378',
-          ].map((url) => {
-            return createOptimizedPicture(url);
-          });
+          ].map((url) => createOptimizedPicture(url));
           const $h1 = $block.querySelector('h1');
           const $picture = $block.querySelector('picture');
 
