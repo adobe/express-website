@@ -16,7 +16,7 @@ const defaultOptions = {
   color: 'white',
   radius: [0.5, 3.0],
   speed: [1, 3],
-  wind: [-1.5, 3.0]
+  wind: [-1.5, 3.0],
 };
 
 function randomIntFromInterval(min, max) {
@@ -144,11 +144,10 @@ export default function addBackgroundAnimation($block, animationName) {
       $section.classList.add('firework');
 
       ((() => {
-        const requestAnimationFrame = window.requestAnimationFrame
+        window.requestAnimationFrame = window.requestAnimationFrame
           || window.mozRequestAnimationFrame
           || window.webkitRequestAnimationFrame
           || window.msRequestAnimationFrame;
-        window.requestAnimationFrame = requestAnimationFrame;
       })());
 
       const canvas = createTag('canvas', { class: 'firework-canvas' });
