@@ -375,7 +375,9 @@ export default function addBackgroundAnimation($block, animationName) {
       const $canvas = createTag('canvas', { class: 'snow-canvas' });
       $section.append($canvas);
 
-      Snow($canvas, 150, { color: 'white' });
+      setTimeout(() => {
+        Snow($canvas, 150, { color: 'white' });
+      }, 1000);
     },
   };
 
