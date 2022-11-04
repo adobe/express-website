@@ -838,7 +838,7 @@ main .section.columns-fullscreen-center-container div.columns-marquee > div > di
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper {
-  padding: 12px 18px;
+  padding: 12px 24px;
   height: 528px;
   width: 770px;
   margin: auto;
@@ -858,7 +858,7 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-backgr
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame {
   display: block;
-  z-index: 10;
+  z-index: 1;
   transform-style: preserve-3d;
   transition: transform 0.2s linear, opacity 0.2s;
 }
@@ -868,6 +868,7 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame .scree
   top: 64px;
   right: 66px;
   height: 84%;
+  transform-style: preserve-3d;
   transition: transform 0.2s linear;
 }
 
@@ -876,7 +877,13 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
   height: 100%;
   width: 100%;
   cursor: pointer;
-  z-index: 10;
+  z-index: 2;
+}
+
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .flowers,
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame,
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame-thumbnails {
+  opacity: 50%;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .flowers {
@@ -885,7 +892,6 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
   z-index: -1;
   height: 100%;
   width: 100%;
-  transform: translate3d(0px, 0px, 10px);
   transform-style: preserve-3d;
   transition: transform 0.2s linear;
 }
@@ -935,13 +941,13 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-thumbnails {
   position: absolute;
   display: block;
-  left: 92px;
+  left: 88px;
   bottom: 8px;
   height: 70%;
   width: 180px;
   transform-style: preserve-3d;
   transition: transform 0.2s linear;
-  z-index: 99;
+  z-index: 1;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-thumbnails .leaf-thumbnails {

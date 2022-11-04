@@ -242,11 +242,11 @@ export default function decorate($block) {
             $thumbnails.append($thumbnailImg);
             $pictureFrame.append($picture);
             $pictureFrameWrapper.append(
+              $clickableOverlay,
               $pictureFrameBackground,
               $flowersBoard,
               $pictureFrame,
               $thumbnails,
-              $clickableOverlay,
             );
 
             $flowers.forEach(($flower, index) => {
@@ -258,27 +258,16 @@ export default function decorate($block) {
 
             $columnWrapper.remove();
 
-            $pictureFrameWrapper.addEventListener('mouseenter', () => {
-              $pictureFrame.style.opacity = '0.5';
-              $flowersBoard.style.opacity = '0.5';
-              $thumbnails.style.opacity = '0.5';
-            });
-
-            $pictureFrameWrapper.addEventListener('mouseleave', () => {
-              $pictureFrame.style.opacity = '1';
-              $flowersBoard.style.opacity = '1';
-              $thumbnails.style.opacity = '1';
-            });
-
             window.addEventListener('mousemove', (e) => {
               const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
               const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
-              $pictureFrameWrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(0deg)`;
-              $pictureFrame.style.transform = `perspective(1000px) translate3d(${rotateX * 2}px, ${0 - (rotateY * 2)}px, 0px)`;
-              $flowersBoard.style.transform = `perspective(1000px) translate3d(${0 - (rotateX * 1.2)}px, ${rotateY * 1.2}px, 0px)`;
-              $pictureFrameBackground.style.transform = `perspective(1000px) translate3d(${rotateX}px, ${0 - rotateY}px, 0px)`;
-              $thumbnails.style.transform = `perspective(1000px) translate3d(${rotateX * 2.5}px, ${0 - (rotateY * 2.5)}px, 0px)`;
-              $picture.style.transform = `perspective(1000px) translate3d(${rotateX * 1.5}px, ${0 - (rotateY * 1.5)}px, 0px)`;
+
+              // $pictureFrameWrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+              $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
+              $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -25px)`;
+              $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
+              $thumbnails.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, ${(rotateX + 10) * 3}px)`;
+              $picture.style.transform = `translate3d(0px, 0px, 25px)`;
             });
           }
         }
