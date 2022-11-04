@@ -405,6 +405,7 @@ export async function decorateTemplateList($block) {
 
         $toggleBar.append($topElements, $bottomElements);
         if ($icon) {
+          $parent.classList.add('with-icon');
           $topElements.append($icon, $content[0]);
         }
         $topElements.append($content[0]);

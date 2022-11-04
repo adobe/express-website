@@ -922,6 +922,7 @@ main .template-list.collaboration .carousel-container {
 main .template-list-horizontal-apipowered-holiday-container {
   padding-bottom: 10px;
   position: relative;
+  overflow-x: hidden;
 }
 
 main .template-list-horizontal-apipowered-holiday-container.firework {
@@ -966,14 +967,22 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-button {
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
   width: max-content;
-  margin: auto;
-  margin-left: 190px;
-  transform: translate(-50%, -6px);
-  transition: margin 0.5s;
+  padding: 0 32px;
+  transform: translate(0, -6px);
   font-weight: 400;
+  transition: margin 0.5s;
+}
+
+main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-button.mobile-only {
+  margin: auto auto auto 190px;
+  transform: translate(-50%, -6px);
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only.expanded {
+  margin-left: 42%;
+}
+
+main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-button.mobile-only.expanded {
   margin-left: 50%;
 }
 
@@ -1016,6 +1025,7 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
 }
 
 main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper p.mobile-only{
+  color: var(--color-white);
   font-size: 12px;
   text-align: left;
   margin: 0 0 16px;
@@ -1050,7 +1060,7 @@ main .template-list-horizontal-apipowered-holiday-container .snow-canvas {
   top: 0;
   left: 0;
   height: 100%;
-  width: 100%;
+  width: 100vw;
   z-index: 0;
   pointer-events: none;
   opacity: 0;
