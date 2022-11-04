@@ -1093,7 +1093,6 @@ function decoratePageStyle() {
       } else {
         $heroSection = $h1.closest('.section');
         $heroSection.classList.add('hero');
-        $heroSection.classList.remove('section');
       }
       if ($heroPicture) {
         if (!isBlog) {
