@@ -10,16 +10,16 @@
       "title": "Meta Data Inspector",
       "url": "https://main--express-website--adobe.hlx.page/tools/metadata/inspector.html",
       "environments": [ "edit" ],
-      "exclude_paths": [ "/**" ],
-      "include_paths": [ "**metadata.xlsx**" ]
+      "excludePaths": [ "/**" ],
+      "includePaths": [ "**metadata.xlsx**" ]
     },
     {
       "id": "templates",
       "title": "Templates",
       "url": "https://main--express-website--adobe.hlx.page/tools/templates/picker.html",
       "environments": [ "edit" ],
-      "exclude_paths": [ "/**" ],
-      "include_paths": [ "**.docx**" ]
+      "excludePaths": [ "/**" ],
+      "includePaths": [ "**.docx**" ]
     }
   ]
 }

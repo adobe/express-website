@@ -26,12 +26,15 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
+import addBackgroundAnimation from '../shared/background-animations.js';
+
 const cache = {
   templates: [],
   filters: {
     locales: '(en)',
   },
   tailButton: '',
+  limit: 70,
   total: 0,
   start: '',
   masonry: undefined,
@@ -40,7 +43,8 @@ const cache = {
 
 function fetchTemplates() {
   if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
-    const prunedFilter = Object.entries(cache.filters).filter(([, value]) => value !== '()');
+    const prunedFilter = Object.entries(cache.filters)
+      .filter(([, value]) => value !== '()');
     const filterString = prunedFilter.reduce((string, [key, value]) => {
       if (key === prunedFilter[prunedFilter.length - 1][0]) {
         return `${string}${key}:${value}`;
@@ -49,7 +53,7 @@ function fetchTemplates() {
       }
     }, '');
 
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=70&start=${cache.start}&orderBy=-remixCount&filters=${filterString}`)
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${cache.limit}&start=${cache.start}&orderBy=-remixCount&filters=${filterString}`)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -67,7 +71,8 @@ async function processResponse() {
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
-      const start = new URLSearchParams(nextQuery).get('start').split(',')[0];
+      const start = new URLSearchParams(nextQuery).get('start')
+        .split(',')[0];
       cache.start = start;
     } else {
       cache.start = '';
@@ -168,7 +173,8 @@ async function fetchBlueprint(pathname) {
     return (window.spark.$blueprint);
   }
 
-  const bpPath = pathname.substr(pathname.indexOf('/', 1)).split('.')[0];
+  const bpPath = pathname.substr(pathname.indexOf('/', 1))
+    .split('.')[0];
   const resp = await fetch(`${bpPath}.plain.html`);
   const body = await resp.text();
   const $main = createTag('main');
@@ -219,7 +225,8 @@ function populateTemplates($block, templates) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep).map((e) => +e);
+          const ratios = option.split(sep)
+            .map((e) => +e);
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
             if (ratios[1]) {
@@ -266,7 +273,8 @@ function populateTemplates($block, templates) {
         if (videoLink.includes('/media_')) {
           videoLink = `./media_${videoLink.split('/media_')[1]}`;
         }
-        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
+        $tmplt.querySelectorAll(':scope br')
+          .forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
           const $img = $tmplt.querySelector('img');
@@ -298,30 +306,67 @@ function populateTemplates($block, templates) {
   }
 }
 
+function initToggle($section) {
+  const $bar = $section.querySelector('.toggle-bar');
+  const $wrapper = $section.querySelector('.template-list-wrapper');
+  const $toggleButtons = $section.querySelectorAll('.toggle-button');
+
+  $bar.addEventListener('click', (e) => {
+    e.preventDefault();
+    $wrapper.classList.toggle('expanded');
+    $section.classList.toggle('expanded');
+    Array.from($toggleButtons)
+      .forEach(($button) => {
+        $button.classList.toggle('expanded');
+      });
+  });
+
+  Array.from($toggleButtons)
+    .forEach(($button) => {
+      $button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        $wrapper.classList.toggle('expanded');
+        $section.classList.toggle('expanded');
+        Array.from($toggleButtons)
+          .forEach((b) => {
+            b.classList.toggle('expanded');
+          });
+      });
+    });
+}
+
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
-      Array.from($block.children).forEach((row, index, array) => {
-        const cells = row.querySelectorAll('div');
-        if (index === 0) {
-          if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-            cache.heading = cells[1].textContent;
-          } else {
-            cache.heading = row.textContent;
-          }
-          row.remove();
-        } else if (index < array.length) {
-          if (cells.length >= 2) {
-            if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+      Array.from($block.children)
+        .forEach((row, index, array) => {
+          const cells = row.querySelectorAll('div');
+          if (index === 0) {
+            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
               cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+              cache.heading = cells[1].textContent;
+            } else if ($block.classList.contains('holiday')) {
+              cache.heading = row;
             } else {
-              cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+              cache.heading = row.textContent;
             }
+            row.remove();
+          } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
+            cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
+          } else if (cells[0].textContent.toLowerCase() === 'background animation') {
+            cache.backgroundAnimation = cells[1].textContent;
+          } else if (index < array.length) {
+            if (cells.length >= 2) {
+              if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+                cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+              } else {
+                cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+              }
+            }
+            row.remove();
           }
-          row.remove();
-        }
-      });
+        });
 
       const fetchedTemplates = await processResponse();
 
@@ -337,16 +382,60 @@ export async function decorateTemplateList($block) {
       cache.authoringError = true;
     }
 
-    const $parent = $block.closest('.template-list-fullwidth-apipowered-container');
+    const $parent = $block.closest('.section');
     if ($parent) {
-      const $sectionHeading = $parent.querySelector('div > h2');
-      if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
-        if (cache.authoringError) {
-          $sectionHeading.textContent = cache.heading;
-        } else {
-          const headingEnding = await fetchPlaceholders()
-            .then((placeholders) => placeholders['api-powered-grid-heading']);
-          $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+      if ($block.classList.contains('holiday')) {
+        const $wrapper = $parent.querySelector('.template-list-wrapper');
+        const $icon = cache.heading.querySelector('picture');
+        const $content = Array.from(cache.heading.querySelectorAll('p'))
+          .filter((p) => p.textContent !== '' && p.querySelector('a') === null);
+        const $a = cache.heading.querySelector('a');
+        $a.classList.add('expanded');
+        $a.classList.add('toggle-button');
+        $a.classList.remove('button');
+        $a.classList.remove('accent');
+
+        const $toggleBar = createTag('div', { class: 'toggle-bar' });
+        const $topElements = createTag('div', { class: 'toggle-bar-top' });
+        const $bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
+        const $mobileSubtext = $content[1].cloneNode(true);
+        const $mobileAnchor = $a.cloneNode(true);
+        $mobileSubtext.classList.add('mobile-only');
+        $mobileAnchor.classList.add('mobile-only');
+
+        $toggleBar.append($topElements, $bottomElements);
+        $topElements.append($icon, $content[0]);
+        $bottomElements.append($content[1], $a);
+        $wrapper.prepend($mobileSubtext);
+        $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
+        $wrapper.classList.add('expanded');
+
+        $parent.prepend($toggleBar);
+        $parent.classList.add('expanded');
+        initToggle($parent);
+
+        setTimeout(() => {
+          if ($wrapper.classList.contains('expanded')) {
+            const $toggleButtons = $parent.querySelectorAll('.toggle-button');
+
+            $wrapper.classList.toggle('expanded');
+            $parent.classList.toggle('expanded');
+            Array.from($toggleButtons)
+              .forEach(($button) => {
+                $button.classList.toggle('expanded');
+              });
+          }
+        }, cache.autoCollapseDelay);
+      } else {
+        const $sectionHeading = $parent.querySelector('div > h2');
+        if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+          if (cache.authoringError) {
+            $sectionHeading.textContent = cache.heading;
+          } else {
+            const headingEnding = await fetchPlaceholders()
+              .then((placeholders) => placeholders['api-powered-grid-heading']);
+            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+          }
         }
       }
     }
@@ -360,11 +449,13 @@ export async function decorateTemplateList($block) {
       // author defined localized edit text(s)
       && ($block.firstElementChild.querySelector('p')
         // multiple lines in separate p tags
-        ? Array.from($block.querySelectorAll('p')).map(($p) => $p.textContent.trim())
+        ? Array.from($block.querySelectorAll('p'))
+          .map(($p) => $p.textContent.trim())
         // single text directly in div
         : [$block.firstElementChild.textContent.trim()]);
     $block.innerHTML = '';
-    const tls = Array.from($block.closest('main').querySelectorAll('.template-list'));
+    const tls = Array.from($block.closest('main')
+      .querySelectorAll('.template-list'));
     const i = tls.indexOf($block);
 
     const $blueprint = await fetchBlueprint(window.location.pathname);
@@ -389,9 +480,10 @@ export async function decorateTemplateList($block) {
       if (!templateText) {
         templateText = placeholderText;
       }
-      $block.querySelectorAll('a').forEach(($a, index) => {
-        $a.textContent = index === 0 ? placeholderText : templateText;
-      });
+      $block.querySelectorAll('a')
+        .forEach(($a, index) => {
+          $a.textContent = index === 0 ? placeholderText : templateText;
+        });
     }
 
     const $heroPicture = document.querySelector('.hero-bg');
@@ -419,13 +511,14 @@ export async function decorateTemplateList($block) {
   if (templates[0] && templates[0].children.length === 1) {
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
-      $a.className = 'template-title-link';
-      const p = $a.closest('p');
-      if (p) {
-        p.classList.remove('button-container');
-      }
-    });
+    $titleRow.querySelectorAll(':scope a')
+      .forEach(($a) => {
+        $a.className = 'template-title-link';
+        const p = $a.closest('p');
+        if (p) {
+          p.classList.remove('button-container');
+        }
+      });
 
     if ($block.classList.contains('collaboration')) {
       const $titleHeading = $titleRow.querySelector('h3');
@@ -434,9 +527,10 @@ export async function decorateTemplateList($block) {
         href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
       });
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      fetchPlaceholders().then((placeholders) => {
-        $clipboardTag.textContent = placeholders['tag-copied'];
-      });
+      fetchPlaceholders()
+        .then((placeholders) => {
+          $clipboardTag.textContent = placeholders['tag-copied'];
+        });
 
       $anchorLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -461,13 +555,20 @@ export async function decorateTemplateList($block) {
 
   if (rows === 1) {
     $block.classList.add('large');
-    breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }];
+    breakpoints = [{
+      media: '(min-width: 400px)',
+      width: '2000',
+    }, { width: '750' }];
   }
 
-  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    const { src, alt } = $img;
-    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
-  });
+  $block.querySelectorAll(':scope picture > img')
+    .forEach(($img) => {
+      const {
+        src,
+        alt,
+      } = $img;
+      $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+    });
 
   // find the edit link and turn the template DIV into the A
   // A
@@ -500,15 +601,17 @@ export async function decorateTemplateList($block) {
 
   const $templateLinks = $block.querySelectorAll('a.template');
   let freeInAppText;
-  await fetchPlaceholders().then((placeholders) => {
-    freeInAppText = placeholders['free-in-app'];
-  });
+  await fetchPlaceholders()
+    .then((placeholders) => {
+      freeInAppText = placeholders['free-in-app'];
+    });
   for (const $templateLink of $templateLinks) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div').append($freeInAppBadge);
+      $templateLink.querySelector('div')
+        .append($freeInAppBadge);
     }
   }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
@@ -542,9 +645,10 @@ function decorateLoadMoreButton($block) {
   const $loadMoreButton = createTag('button', { class: 'load-more-button' });
   const $loadMoreText = createTag('p', { class: 'load-more-text' });
   $loadMoreDiv.append($loadMoreButton, $loadMoreText);
-  fetchPlaceholders().then((placeholders) => {
-    $loadMoreText.textContent = placeholders['load-more'];
-  });
+  fetchPlaceholders()
+    .then((placeholders) => {
+      $loadMoreText.textContent = placeholders['load-more'];
+    });
   $block.insertAdjacentElement('afterend', $loadMoreDiv);
   $loadMoreButton.textContent = '+';
 
@@ -580,7 +684,7 @@ function cacheCreatedTemplate($block) {
 }
 
 export default async function decorate($block) {
-  if ($block.classList.contains('apipowered')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
   }
 
@@ -592,11 +696,15 @@ export default async function decorate($block) {
     addAnimationToggle($block);
   }
 
-  if ($block.classList.contains('apipowered')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     decorateLoadMoreButton($block);
   }
 
   if ($block.classList.contains('mini')) {
     decorateTailButton($block);
+  }
+
+  if ($block.classList.contains('holiday') && cache.backgroundAnimation) {
+    addBackgroundAnimation($block, cache.backgroundAnimation);
   }
 }

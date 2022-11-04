@@ -223,11 +223,17 @@ export function getIcon(icons, alt, size = 44) {
     'star-half',
     'star-empty',
   ];
+
+  const size22Icons = [
+    'chevron',
+    'pricingfree',
+    'pricingpremium',
+  ];
+
   if (symbols.includes(icon)) {
     const iconName = icon;
     let sheetSize = size;
-    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
-    if (icon === 'chevron' || icon === 'pricingfree' || icon === 'pricingpremium') sheetSize = 22;
+    if (size22Icons.includes(icon)) sheetSize = 22;
     return `<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-${icon}">
       ${alt ? `<title>${alt}</title>` : ''}
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
@@ -1481,7 +1487,10 @@ export function unwrapBlock($block) {
 
   let $appendTo;
   $elems.forEach(($e) => {
-    if ($e === $block) $appendTo = $blockSection;
+    if ($e === $block || ($e.className === 'section-metadata')) {
+      $appendTo = $blockSection;
+    }
+
     if ($appendTo) {
       $appendTo.appendChild($e);
       $appendTo = $postBlockSection;
@@ -1546,7 +1555,7 @@ function splitSections($main) {
   const multipleColumns = $main.querySelectorAll('.columns--fullsize-center-').length > 1;
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
-    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade'];
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade', 'plans-comparison'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
     if (hasAppStoreBlocks && !multipleColumns) {

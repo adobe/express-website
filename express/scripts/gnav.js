@@ -18,6 +18,7 @@ import {
   getHelixEnv,
   sampleRUM,
   getCookie,
+  getMetadata,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
@@ -143,6 +144,13 @@ function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
+  const isHomepage = window.location.pathname.endsWith('/express/');
+  const isMegaNav = window.location.pathname.startsWith('/express')
+    || window.location.pathname.startsWith('/education');
+  const fedsExp = isMegaNav
+    ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
+    : 'cc-express/cc-express-gnav';
+
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
@@ -153,7 +161,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: 'cc-express/cc-express-gnav',
+      experience: getMetadata('gnav') || fedsExp,
     },
     profile: {
       customSignIn: () => {
@@ -171,6 +179,12 @@ function loadFEDS() {
       otDomainId: '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
       footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
     },
+    jarvis: getMetadata('enable-chat') === 'yes'
+      ? {
+        surfaceName: 'AdobeExpressEducation',
+        surfaceVersion: '1',
+      }
+      : {},
   };
 
   window.addEventListener('feds.events.experience.loaded', async () => {
