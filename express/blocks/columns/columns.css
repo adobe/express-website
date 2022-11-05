@@ -777,19 +777,19 @@ main .columns-fullscreen-center-container {
   height: 100%;
 }
 
-main .columns-fullscreen-center-container:before {
-  content: ' ';
+main .columns-fullscreen-center-container .marquee-background {
+  content: '';
   display: block;
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
+  min-width: 100%;
   height: 100%;
-  opacity: 0.05;
   background-image: url('https://www.adobe.com/express/media_1aa259dd9ac4c29168d486d36c6c737074d24d756.jpeg#width=1600&height=901');
   background-repeat: no-repeat;
-  background-position: 50% 0;
   background-size: cover;
+  opacity: 0.1;
+  transition: opacity 0.1s;
 }
 
 main .columns-fullscreen-center-container .columns-marquee h1 {

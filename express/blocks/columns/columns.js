@@ -126,6 +126,57 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
   }
 }
 
+function styleBackgroundWithScroll($section) {
+  const $background = createTag('div', { class: 'marquee-background' });
+
+  $section.prepend($background);
+
+  const calculate = () => {
+    const viewport = {
+      top: window.scrollY,
+      bottom: window.scrollY + window.innerHeight,
+    };
+
+    const elementBoundingRect = $section.getBoundingClientRect();
+    const elementPos = {
+      top: elementBoundingRect.y + window.scrollY,
+      bottom: elementBoundingRect.y + elementBoundingRect.height + window.scrollY,
+    };
+
+    if (viewport.top > elementPos.bottom || viewport.bottom < elementPos.top) {
+      return 0;
+    }
+
+    // Element is fully within viewport
+    if (viewport.top < elementPos.top && viewport.bottom > elementPos.bottom) {
+      return 100;
+    }
+
+    // Element is bigger than the viewport
+    if (elementPos.top < viewport.top && elementPos.bottom > viewport.bottom) {
+      return 100;
+    }
+
+    const elementHeight = elementBoundingRect.height;
+    let elementHeightInView = elementHeight;
+
+    if (elementPos.top < viewport.top) {
+      elementHeightInView = elementHeight - (window.scrollY - elementPos.top);
+    }
+
+    if (elementPos.bottom > viewport.bottom) {
+      return 100;
+    }
+
+    return (elementHeightInView / window.innerHeight) * 100;
+  }
+
+  window.addEventListener('scroll', () => {
+    const percentageInView = calculate();
+    $background.style.opacity = `${110 - percentageInView}%`;
+    });
+}
+
 export default function decorate($block) {
   const $rows = Array.from($block.children);
 
@@ -214,6 +265,7 @@ export default function decorate($block) {
           ].map((url) => createOptimizedPicture(url));
           const $h1 = $block.querySelector('h1');
           const $picture = $block.querySelector('picture');
+          const $section = $block.closest('.columns-fullscreen-center-container');
 
           if ($h1) {
             const $textToColor = $h1.querySelectorAll('em');
@@ -226,6 +278,8 @@ export default function decorate($block) {
               });
             }
           }
+
+          styleBackgroundWithScroll($section);
 
           if ($picture) {
             const $columnWrapper = $picture.parentElement;
@@ -262,12 +316,11 @@ export default function decorate($block) {
               const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
               const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
 
-              // $pictureFrameWrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
               $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
               $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -25px)`;
               $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
-              $thumbnails.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, ${(rotateX + 10) * 3}px)`;
-              $picture.style.transform = `translate3d(0px, 0px, 25px)`;
+              $thumbnails.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX * 1.5}px, ${(0 - rotateY) / 2}px, ${rotateX + ((rotateX + 10) * 1.5)}px)`;
+              $picture.style.transform = 'translate3d(0px, 0px, 25px)';
             });
           }
         }
