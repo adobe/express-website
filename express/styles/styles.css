@@ -549,7 +549,7 @@ main .section:last-of-type>.default-content-wrapper {
 }
 
 /* hero */
-main .hero {
+main .section.hero {
   color: var(--color-white);
   position: relative;
   padding: 120px 15px;
