@@ -169,12 +169,12 @@ function styleBackgroundWithScroll($section) {
     }
 
     return (elementHeightInView / window.innerHeight) * 100;
-  }
+  };
 
   window.addEventListener('scroll', () => {
     const percentageInView = calculate();
     $background.style.opacity = `${110 - percentageInView}%`;
-    });
+  });
 }
 
 export default function decorate($block) {
