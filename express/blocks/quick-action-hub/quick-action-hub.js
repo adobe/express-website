@@ -12,6 +12,7 @@
 
 import {
   createTag,
+  transformLinkToAnimation,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -23,7 +24,18 @@ export default function decorate($block) {
   const $contentContainer = createTag('div', { class: 'quick-action-hub-content-container' });
 
   $header.classList.add('quick-action-hub-header');
+  $contentContainer.innerHTML = $rows[1].innerHTML;
 
+  const $animations = $contentContainer.querySelectorAll('a');
+
+  if ($animations) {
+    $animations.forEach(($animation) => {
+      if ($animation && $animation.href && $animation.href.includes('.mp4')) {
+        transformLinkToAnimation($animation);
+      }
+    });
+  }
+  
   for (let i = 2; i < $rows.length; i += 1) {
     const $column = $rows[i].firstChild;
 
@@ -50,7 +62,6 @@ export default function decorate($block) {
       });
 
       $column.classList.add('quick-action-hub-column');
-      $contentContainer.innerHTML = $rows[1].innerHTML;
       $listContainer.append($column);
     }
   }

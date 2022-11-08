@@ -78,6 +78,7 @@ main .block.quick-action-hub .quick-action-hub-list-container a {
 
   main .block.quick-action-hub .quick-action-hub-container {
     padding: 40px 54px;
+
   }
 
   main .block.quick-action-hub .quick-action-hub-header p {
@@ -121,6 +122,7 @@ main .block.quick-action-hub .quick-action-hub-list-container a {
   main .block.quick-action-hub .quick-action-hub-content-container {
     display: flex;
     padding: 60px;
+    max-width: 380px;
   }
 
   main .block.quick-action-hub .quick-action-hub-list-container a {
