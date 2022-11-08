@@ -28,15 +28,25 @@ export default function decorate($block) {
     const $column = $rows[i].firstChild;
 
     if ($column) {
-      const $columnRows = $column.querySelectorAll('p');
+      const $columnRows = Array.from($column.children);
 
       $columnRows.forEach(($row) => {
-        const $svg = $row.querySelector('svg');
-        const $link = $row.querySelector('a');
+        if ($row.tagName === 'P') {
+          let $image = $row.querySelector('img');
 
-        $link.prepend($svg);
-        $column.append($link);
-        $row.remove();
+          if (!$image) {
+            $image = $row.querySelector('svg');
+          }
+
+          const $link = $row.querySelector('a');
+
+          $column.append($link);
+          $link.prepend($image);
+
+          $row.remove();
+        } else {
+          $column.append($row);
+        }
       });
 
       $column.classList.add('quick-action-hub-column');
