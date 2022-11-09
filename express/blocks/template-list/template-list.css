@@ -923,16 +923,12 @@ main .template-list-horizontal-apipowered-holiday-container {
   padding-bottom: 10px;
   position: relative;
   overflow-x: hidden;
+  background: var(--color-black);
 }
 
 main .template-list-horizontal-apipowered-holiday-container.firework {
-  background: var(--color-black);
   color: var(--color-white);
   padding-top: 0;
-}
-
-main .template-list-horizontal-apipowered-holiday-container.snowing {
-  background: #000;
 }
 
 main .template-list-horizontal-apipowered-holiday-container p,
