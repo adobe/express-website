@@ -192,3 +192,11 @@ main .toc-container.open .template-title p:first-child {
 main .toc-container.open ~ .floating-button-wrapper {
   background: none;
 }
+
+main .floating-button .floating-button-lottie {
+  display: none;
+}
+
+main .floating-button a.button:any-link {
+  margin-right: 0;
+}
