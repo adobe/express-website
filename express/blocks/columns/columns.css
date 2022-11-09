@@ -835,14 +835,32 @@ main .section.columns-fullscreen-center-container div.columns-marquee > div > di
   height: 100%;
   width: 100%;
   border-radius: 24px;
+  display: block;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-out;
+}
+
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame:before {
+  content: '';
+  position: absolute;
+  border-radius: 24px;
+  height: 100%;
+  width: 100%;
+  background-color: #FFFFFF;
+  z-index: -1;
+  transform: translateZ(26px);
+  transition: opacity 0.2s;
+  opacity: 0;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper {
-  padding: 12px 24px;
+  padding: 16px;
   height: 518px;
   width: 770px;
   margin: auto;
   will-change: transform;
+  border-radius: 24px;
   transition: transform 0.5s ease-out;
 }
 
@@ -856,21 +874,14 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-backgr
   transition: transform 0.5s ease-out;
 }
 
-main .columns-fullscreen-center-container .columns-marquee .picture-frame {
-  height: max-content;
-  display: block;
-  z-index: 1;
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease-out, opacity 0.2s;
-}
-
 main .columns-fullscreen-center-container .columns-marquee .screen-demo {
   position: absolute;
-  top: 72px;
-  right: 92px;
+  top: 64px;
+  right: 72px;
   height: 84%;
   z-index: 2;
   transform-style: preserve-3d;
+  transform: translate3d(0px, 0px, 15px);
   transition: transform 0.5s ease-out, opacity 0.2s;
 }
 
@@ -892,11 +903,9 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
   border-radius: 32px;
 }
 
-main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .flowers,
-main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame,
-main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .screen-demo,
-main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame-thumbnails {
-  opacity: 50%;
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .flowers .flower,
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame:before {
+  opacity: 0.5;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .flowers {
@@ -912,7 +921,7 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .flowers .flower {
   position: absolute;
-  transition: opacity 0.8s;
+  transition: opacity 0.5s ease-out;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .flower.flower-0 {
@@ -955,13 +964,14 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-thumbnails {
   position: absolute;
   display: block;
-  left: 88px;
+  left: 68px;
   bottom: 8px;
   height: 70%;
   width: 180px;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transition: transform 0.5s ease-out;
+  transform: translate3d(0px, 0px, 15px);
   z-index: 1;
 }
 

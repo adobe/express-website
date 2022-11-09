@@ -295,6 +295,8 @@ export default function decorate($block) {
             $picture.classList.add('screen-demo');
             $thumbnailImg.classList.add('leaf-thumbnails');
             $cloneCta.style.display = 'none';
+
+            $pictureFrame.append($picture, $thumbnails);
             $thumbnails.append($thumbnailImg);
             $clickableOverlay.append($cloneCta);
             $pictureFrameWrapper.append(
@@ -302,8 +304,6 @@ export default function decorate($block) {
               $pictureFrameBackground,
               $flowersBoard,
               $pictureFrame,
-              $picture,
-              $thumbnails,
             );
 
             $flowers.forEach(($flower, index) => {
@@ -332,8 +332,6 @@ export default function decorate($block) {
               $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
               $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -100px)`;
               $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
-              $thumbnails.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, ${((rotateX + 10) + ((rotateX + 10) * 2))}px)`;
-              $picture.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 50px)`;
             }, { passive: true });
           }
         }
