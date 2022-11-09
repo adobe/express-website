@@ -13,11 +13,26 @@ main .cards-dark-container>div {
   max-width: 870px;
 }
 
+main .download-screens-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
 main .cards {
   padding: 0;
   display: flex;
   flex-direction: column;
   margin: 56px auto;
+}
+
+main .cards.animating {
+  position: absolute;
+  left: 0;
+  transition: left 0.2s;
+}
+
+main .cards.dragging {
+  transition: unset;
 }
 
 main .cards .card {
@@ -27,6 +42,7 @@ main .cards .card {
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  transition: top 0.2s;
 }
 
 main .cards .card .card-image {
@@ -181,7 +197,6 @@ main .section.dark.download-screens-container {
 main .download-screens-wrapper.scroll {
   max-width: 100vw;
   width: 100vw;
-  overflow: scroll;
   padding: 0;
 }
 
@@ -192,7 +207,6 @@ main .section.large .default-content-wrapper h2 {
 main .cards.download-screens {
   display: inline-flex;
   flex-wrap: nowrap;
-  max-width: 100vw;
   width: max-content;
   gap: 16px;
   margin: 80px auto;
