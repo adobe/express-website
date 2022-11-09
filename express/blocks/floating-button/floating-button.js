@@ -243,7 +243,7 @@ function initNotchDragAction($wrapper) {
     $body.style.overflow = 'hidden';
     $toolBox.style.transition = 'none';
     touchStart = e.changedTouches[0].clientY;
-  });
+  }, { passive: true });
 
   $notch.addEventListener('touchmove', (e) => {
     $toolBox.style.maxHeight = `${initialHeight - (e.changedTouches[0].clientY - touchStart)}px`;
