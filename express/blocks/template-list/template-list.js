@@ -356,6 +356,8 @@ export async function decorateTemplateList($block) {
             cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
           } else if (cells[0].textContent.toLowerCase() === 'background animation') {
             cache.backgroundAnimation = cells[1].textContent;
+          } else if (cells[0].textContent.toLowerCase() === 'background color') {
+            cache.backgroundColor = cells[1].textContent;
           } else if (index < array.length) {
             if (cells.length >= 2) {
               if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
@@ -385,6 +387,9 @@ export async function decorateTemplateList($block) {
     const $parent = $block.closest('.section');
     if ($parent) {
       if ($block.classList.contains('holiday')) {
+        if (cache.backgroundColor) {
+          $parent.style.background = cache.backgroundColor;
+        }
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
         const $content = Array.from(cache.heading.querySelectorAll('p'))
