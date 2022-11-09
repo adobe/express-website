@@ -247,7 +247,7 @@ function initNotchDragAction($wrapper) {
 
   $notch.addEventListener('touchmove', (e) => {
     $toolBox.style.maxHeight = `${initialHeight - (e.changedTouches[0].clientY - touchStart)}px`;
-  });
+  }, { passive: true });
 
   $notch.addEventListener('touchend', (e) => {
     $body.style.removeProperty('overflow');
@@ -259,7 +259,7 @@ function initNotchDragAction($wrapper) {
     }
 
     $toolBox.removeAttribute('style');
-  });
+  }, { passive: true });
 }
 
 function buildTools($wrapper, $tools, delayInSeconds = 3) {
