@@ -200,7 +200,3 @@ main .floating-button .floating-button-lottie {
 main .floating-button a.button:any-link {
   margin-right: 0;
 }
-
-main .toc-container.open ~ .floating-button-wrapper.multifunction::before {
-  display: none;
-}
