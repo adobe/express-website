@@ -35,7 +35,6 @@ export default function decorate($block) {
       }
     });
   }
-  
   for (let i = 2; i < $rows.length; i += 1) {
     const $column = $rows[i].firstChild;
 
