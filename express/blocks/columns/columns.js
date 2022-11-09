@@ -174,7 +174,7 @@ function styleBackgroundWithScroll($section) {
   window.addEventListener('scroll', () => {
     const percentageInView = calculate();
     $background.style.opacity = `${110 - percentageInView}%`;
-  });
+  }, { passive: true });
 }
 
 export default function decorate($block) {
@@ -321,7 +321,7 @@ export default function decorate($block) {
               $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
               $thumbnails.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX * 1.5}px, ${(0 - rotateY) / 2}px, ${rotateX + ((rotateX + 10) * 1.5)}px)`;
               $picture.style.transform = 'translate3d(0px, 0px, 25px)';
-            });
+            }, { passive: true });
           }
         }
       }
