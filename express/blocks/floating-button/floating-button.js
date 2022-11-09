@@ -12,12 +12,12 @@
 
 import {
   createTag,
-  loadCSS,
-  lazyLoadLottiePlayer,
-  getLottie,
   fetchPlaceholders,
   getIconElement,
+  getLottie,
   getMobileOperatingSystem,
+  lazyLoadLottiePlayer,
+  loadCSS,
 } from '../../scripts/scripts.js';
 
 let scrollState = 'withLottie';
@@ -272,7 +272,6 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   const $cta = $floatingButton.querySelector('a');
   const $toggleButton = createTag('a', { class: 'toggle-button' });
   const $toggleIcon = getIconElement('plus-icon-22');
-  const $circleAnimation = getLottie('plus-animation', '/express/icons/plus-animation.json');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
 
   $tools.forEach(($tool) => {
@@ -299,7 +298,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
     }
   }, delayInSeconds * 1000);
 
-  $toggleButton.innerHTML = $circleAnimation;
+  $toggleButton.innerHTML = getLottie('plus-animation', '/express/icons/plus-animation.json');
   $toggleButton.append($toggleIcon);
   $floatingButton.append($toggleButton);
   $notch.append($notchPill);
