@@ -966,7 +966,7 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobil
   padding: 0 32px;
   transform: translate(0, -6px);
   font-weight: 400;
-  transition: margin 0.5s;
+  transition: margin 0.5s, transform 0.5s;
 }
 
 main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-button.mobile-only {
@@ -975,11 +975,13 @@ main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-bu
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only.expanded {
-  margin-left: 42%;
+  transform: translate(-50%, -6px);
+  margin: auto auto auto 50%;
 }
 
 main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-button.mobile-only.expanded {
   margin-left: 50%;
+  transform: translate(-50%, -6px);
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button::after {
