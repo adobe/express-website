@@ -65,7 +65,7 @@ main .toc-container.open .toc-wrapper:before {
   width: 100%;
   z-index: 1;
   content: '';
-  background: rgba(0,0,0,.8);
+  background: linear-gradient(180deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,.8) 82%, rgba(51,51,51,1) 95%);
 }
 
 main .toc-container .toc {
@@ -230,4 +230,8 @@ main .floating-button .floating-button-lottie {
 
 main .floating-button a.button:any-link {
   margin-right: 0;
+}
+
+main .toc-container.open ~ .floating-button-wrapper.multifunction::before {
+  display: none;
 }
