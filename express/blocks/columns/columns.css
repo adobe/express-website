@@ -839,11 +839,11 @@ main .section.columns-fullscreen-center-container div.columns-marquee > div > di
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper {
   padding: 12px 24px;
-  height: 528px;
+  height: 518px;
   width: 770px;
   margin: auto;
   will-change: transform;
-  transition: transform 0.2s;
+  transition: transform 0.5s ease-out;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-background {
@@ -853,23 +853,25 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-backgr
   border-radius: 42px;
   background-color: #f3f3f3;
   box-shadow: 0 0 40px 20px hsl(0deg 0% 63% / 24%);
-  transition: transform 0.2s linear;
+  transition: transform 0.5s ease-out;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame {
+  height: max-content;
   display: block;
   z-index: 1;
   transform-style: preserve-3d;
-  transition: transform 0.2s linear, opacity 0.2s;
+  transition: transform 0.5s ease-out, opacity 0.2s;
 }
 
-main .columns-fullscreen-center-container .columns-marquee .picture-frame .screen-demo {
+main .columns-fullscreen-center-container .columns-marquee .screen-demo {
   position: absolute;
-  top: 64px;
-  right: 66px;
+  top: 72px;
+  right: 92px;
   height: 84%;
+  z-index: 2;
   transform-style: preserve-3d;
-  transition: transform 0.2s linear;
+  transition: transform 0.5s ease-out, opacity 0.2s;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer {
@@ -877,11 +879,22 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
   height: 100%;
   width: 100%;
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
+  transform: translateZ(100px);
+}
+
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer > .button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 32px;
+  border-radius: 32px;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .flowers,
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame,
+main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .screen-demo,
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame-thumbnails {
   opacity: 50%;
 }
@@ -893,7 +906,8 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrappe
   height: 100%;
   width: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.2s linear;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease-out;
 }
 
 main .columns-fullscreen-center-container .columns-marquee .picture-frame-wrapper .flowers .flower {
@@ -946,7 +960,8 @@ main .columns-fullscreen-center-container .columns-marquee .picture-frame-thumbn
   height: 70%;
   width: 180px;
   transform-style: preserve-3d;
-  transition: transform 0.2s linear;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease-out;
   z-index: 1;
 }
 
