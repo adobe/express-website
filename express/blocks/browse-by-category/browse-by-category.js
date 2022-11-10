@@ -23,11 +23,14 @@ export function decorateHeading($block, payload) {
   const $headingSection = createTag('div', { class: 'browse-by-category-heading-section' });
   const $heading = createTag('h3', { class: 'browse-by-category-heading' });
   const $viewAllButtonWrapper = createTag('p', { class: 'browse-by-category-link-wrapper' });
-  const $viewAllButton = createTag('a', { class: 'browse-by-category-link', href: payload.viewAllLink });
+
+  if (payload.viewAllLink.href !== '') {
+    const $viewAllButton = createTag('a', { class: 'browse-by-category-link', href: payload.viewAllLink.href });
+    $viewAllButton.textContent = payload.viewAllLink.text;
+    $viewAllButtonWrapper.append($viewAllButton);
+  }
 
   $heading.textContent = payload.heading;
-  $viewAllButton.textContent = 'View all';
-  $viewAllButtonWrapper.append($viewAllButton);
   $headingSection.append($heading, $viewAllButtonWrapper);
   $block.append($headingSection);
 }
@@ -58,16 +61,19 @@ export default async function decorate($block) {
   const $headingDiv = $rows.shift();
 
   const payload = {
-    heading: $headingDiv.querySelector('h4').textContent,
-    viewAllLink: $headingDiv.querySelector('a.button').href,
+    heading: $headingDiv.querySelector('h4') ? $headingDiv.querySelector('h4').textContent : '',
+    viewAllLink: {
+      text: $headingDiv.querySelector('a.button') ? $headingDiv.querySelector('a.button').textContent : '',
+      href: $headingDiv.querySelector('a.button') ? $headingDiv.querySelector('a.button').href : '',
+    },
     categories: [],
   };
 
   $rows.forEach(($row) => {
     payload.categories.push({
       $image: $row.querySelector('picture'),
-      text: $row.querySelector('a.button').textContent,
-      link: $row.querySelector('a.button').href,
+      text: $row.querySelector('a.button') ? $row.querySelector('a.button').textContent : 'missing category text',
+      link: $row.querySelector('a.button') ? $row.querySelector('a.button').href : 'missing category link',
     });
   });
 
