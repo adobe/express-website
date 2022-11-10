@@ -22,6 +22,7 @@ export default function decorate($block) {
   const $container = createTag('div', { class: 'quick-action-hub-container' });
   const $listContainer = createTag('div', { class: 'quick-action-hub-list-container' });
   const $contentContainer = createTag('div', { class: 'quick-action-hub-content-container' });
+  const $columns = Array.from($rows[2].children);
 
   $header.classList.add('quick-action-hub-header');
   $contentContainer.innerHTML = $rows[1].innerHTML;
@@ -35,35 +36,28 @@ export default function decorate($block) {
       }
     });
   }
-  for (let i = 2; i < $rows.length; i += 1) {
-    const $column = $rows[i].firstChild;
 
-    if ($column) {
-      const $columnRows = Array.from($column.children);
+  $columns.forEach (($column) => {
+    const $columnRows = Array.from($column.children);
 
-      $columnRows.forEach(($row) => {
-        if ($row.tagName === 'P') {
-          let $image = $row.querySelector('img');
-
-          if (!$image) {
-            $image = $row.querySelector('svg');
-          }
-
-          const $link = $row.querySelector('a');
-
-          $column.append($link);
-          $link.prepend($image);
-
-          $row.remove();
-        } else {
-          $column.append($row);
+    $columnRows.forEach(($row) => {
+      if ($row.tagName === 'P') {
+        let $image = $row.querySelector('img');
+        if (!$image) {
+          $image = $row.querySelector('svg');
         }
-      });
+        const $link = $row.querySelector('a');
+        $column.append($link);
+        $link.prepend($image);
+        $row.remove();
+      } else {
+        $column.append($row);
+      }
+    });
 
-      $column.classList.add('quick-action-hub-column');
-      $listContainer.append($column);
-    }
-  }
+    $column.classList.add('quick-action-hub-column');
+    $listContainer.append($column);
+  });
 
   $block.innerHTML = '';
 
