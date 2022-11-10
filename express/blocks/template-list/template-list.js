@@ -432,9 +432,24 @@ export async function decorateTemplateList($block) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
           } else {
-            const headingEnding = await fetchPlaceholders()
-              .then((placeholders) => placeholders['api-powered-grid-heading']);
-            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+            const placeholders = await fetchPlaceholders()
+              .then((response) => response);
+
+            let grammarTemplate = placeholders['template-placeholder'];
+            const localizedWordTemplate = placeholders['api-powered-grid-heading'];
+
+            if (grammarTemplate.indexOf('{{quantity}}')) {
+              grammarTemplate = grammarTemplate.replace('{{quantity}}', cache.total.toLocaleString('en-US'));
+            }
+
+            if (grammarTemplate.indexOf('{{placeholder}}')) {
+              grammarTemplate = grammarTemplate.replace('{{placeholder}}', localizedWordTemplate);
+            }
+
+            if (grammarTemplate.indexOf('{{type}}')) {
+              grammarTemplate = grammarTemplate.replace('{{type}}', cache.heading);
+            }
+            $sectionHeading.textContent = grammarTemplate;
           }
         }
       }
