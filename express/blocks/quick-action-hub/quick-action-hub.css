@@ -57,6 +57,8 @@ main .block.quick-action-hub .quick-action-hub-list-container img,
 main .block.quick-action-hub .quick-action-hub-list-container svg {
   min-width: 18px;
   min-height: 18px;
+  width: 18px;
+  height: 18px;
   padding: 0 12px;
 }
 
