@@ -42,8 +42,10 @@ main .steps .step-image {
   margin-right: 20px;
 }
 
-main .steps .step-image svg {
+main .steps .step-image svg,
+main .steps .step-image img.icon {
   width: 40px;
+  max-width: unset;
   height: 40px;
   margin: 4px 0;
 }
