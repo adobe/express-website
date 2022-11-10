@@ -141,22 +141,24 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
   // Observe all assets added async
   new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      mutation.removedNodes
-        .filter((n) => n.nodeType !== Node.TEXT_NODE)
-        .forEach((n) => {
-          const img = n.querySelector(assetsSelector);
-          if (img) {
-            viewAssetObserver.unobserve(img);
-          }
-        });
-      mutation.addedNodes
-        .filter((n) => n.nodeType !== Node.TEXT_NODE)
-        .forEach((n) => {
-          const img = n.querySelector(assetsSelector);
-          if (img) {
-            viewAssetObserver.observe(img);
-          }
-        });
+      mutation.removedNodes.forEach((n) => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          return;
+        }
+        const img = n.querySelector(assetsSelector);
+        if (img) {
+          viewAssetObserver.unobserve(img);
+        }
+      });
+      mutation.addedNodes.forEach((n) => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          return;
+        }
+        const img = n.querySelector(assetsSelector);
+        if (img) {
+          viewAssetObserver.observe(img);
+        }
+      });
     });
   }).observe(document.body, { childList: true, subtree: true });
 }
