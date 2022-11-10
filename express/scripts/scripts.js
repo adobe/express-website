@@ -119,15 +119,22 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
         // observe only once
         viewAssetObserver.unobserve(el);
 
+        // Get asset detais
         const assetPath = new URL(el.href || el.currentSrc || el.src).pathname;
         const match = assetPath.match(/media_([a-f0-9]+)\./);
         const assetId = match ? match[1] : assetPath;
-
         const details = {
           event: 'viewasset',
           assetId,
           assetPath,
         };
+
+        // Add experiment details
+        const { id, selectedVariant } = (window.hlx.experiment || {});
+        if (selectedVariant) {
+          details.experiment = id;
+          details.variant = selectedVariant;
+        }
 
         window.dataLayer.push(details);
       });
