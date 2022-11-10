@@ -103,6 +103,60 @@ sampleRUM('top');
 window.addEventListener('load', () => sampleRUM('load'));
 document.addEventListener('click', () => sampleRUM('click'));
 
+/**
+ * Track assets in that appear in the viewport and add populate
+ * `viewasset` events to the data layer.
+ */
+function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
+  window.dataLayer = window.dataLayer || [];
+
+  const viewAssetObserver = new IntersectionObserver((entries) => {
+    entries
+      .filter((entry) => entry.isIntersecting)
+      .forEach((entry) => {
+        const el = entry.target;
+
+        // observe only once
+        viewAssetObserver.unobserve(el);
+
+        const assetPath = el.href || el.currentSrc || el.src;
+        const match = assetPath.match(/media_([a-f0-9]+)\./);
+        const assetId = match ? match[1] : new URL(assetPath).pathname;
+
+        const details = {
+          event: 'viewasset',
+          assetId,
+          assetPath,
+        };
+
+        window.dataLayer.push(details);
+      });
+  }, { threshold: 0.25 });
+
+  // Observe all assets in the DOM
+  document.querySelectorAll(assetsSelector).forEach((el) => {
+    viewAssetObserver.observe(el);
+  });
+
+  // Observe all assets added async
+  new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.removedNodes.forEach((n) => {
+        const img = n.querySelector(assetsSelector);
+        if (img) {
+          viewAssetObserver.unobserve(img);
+        }
+      });
+      mutation.addedNodes.forEach((n) => {
+        const img = n.querySelector(assetsSelector);
+        if (img) {
+          viewAssetObserver.observe(img);
+        }
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+}
+
 const postEditorLinksAllowList = ['adobesparkpost.app.link', 'spark.adobe.com/sp/design', 'express.adobe.com/sp/design'];
 
 export function addPublishDependencies(url) {
@@ -2212,6 +2266,7 @@ async function loadLazy() {
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
+  trackViewedAssetsInDataLayer();
 }
 
 /**
