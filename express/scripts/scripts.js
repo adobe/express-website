@@ -152,19 +152,17 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
         if (n.nodeType === Node.TEXT_NODE) {
           return;
         }
-        const img = n.querySelector(assetsSelector);
-        if (img) {
-          viewAssetObserver.unobserve(img);
-        }
+        n.querySelectorAll(assetsSelector).forEach((asset) => {
+          viewAssetObserver.unobserve(asset);
+        });
       });
       mutation.addedNodes.forEach((n) => {
         if (n.nodeType === Node.TEXT_NODE) {
           return;
         }
-        const img = n.querySelector(assetsSelector);
-        if (img) {
-          viewAssetObserver.observe(img);
-        }
+        n.querySelectorAll(assetsSelector).forEach((asset) => {
+          viewAssetObserver.observe(asset);
+        });
       });
     });
   }).observe(document.body, { childList: true, subtree: true });
