@@ -119,9 +119,9 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
         // observe only once
         viewAssetObserver.unobserve(el);
 
-        const assetPath = el.href || el.currentSrc || el.src;
+        const assetPath = new URL(el.href || el.currentSrc || el.src).pathname;
         const match = assetPath.match(/media_([a-f0-9]+)\./);
-        const assetId = match ? match[1] : new URL(assetPath).pathname;
+        const assetId = match ? match[1] : assetPath;
 
         const details = {
           event: 'viewasset',
@@ -141,18 +141,22 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
   // Observe all assets added async
   new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      mutation.removedNodes.forEach((n) => {
-        const img = n.querySelector(assetsSelector);
-        if (img) {
-          viewAssetObserver.unobserve(img);
-        }
-      });
-      mutation.addedNodes.forEach((n) => {
-        const img = n.querySelector(assetsSelector);
-        if (img) {
-          viewAssetObserver.observe(img);
-        }
-      });
+      mutation.removedNodes
+        .filter((n) => n.nodeType !== Node.TEXT_NODE)
+        .forEach((n) => {
+          const img = n.querySelector(assetsSelector);
+          if (img) {
+            viewAssetObserver.unobserve(img);
+          }
+        });
+      mutation.addedNodes
+        .filter((n) => n.nodeType !== Node.TEXT_NODE)
+        .forEach((n) => {
+          const img = n.querySelector(assetsSelector);
+          if (img) {
+            viewAssetObserver.observe(img);
+          }
+        });
     });
   }).observe(document.body, { childList: true, subtree: true });
 }
