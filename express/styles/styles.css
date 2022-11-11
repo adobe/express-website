@@ -450,8 +450,9 @@ h5,
 h6 {
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto; /* safari */
   hyphens: auto;
-  --webkit-hyphens: auto; /* safari */
 }
 
 main h1 {
