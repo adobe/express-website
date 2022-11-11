@@ -119,8 +119,11 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
         // observe only once
         viewAssetObserver.unobserve(el);
 
-        // Get asset detais
-        const assetPath = new URL(el.href || el.currentSrc || el.src).pathname;
+        // Get asset details
+        let assetPath = el.href // the reference for an a/svg tag
+          || el.currentSrc // the active source in a picture/video/audio element
+          || el.src; // the source for an image/video/iframe
+        assetPath = new URL(assetPath).pathname;
         const match = assetPath.match(/media_([a-f0-9]+)\./);
         const assetId = match ? match[1] : assetPath;
         const details = {
