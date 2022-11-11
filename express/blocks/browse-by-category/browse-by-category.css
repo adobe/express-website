@@ -11,6 +11,15 @@ main .browse-by-category-container .browse-by-category-wrapper {
     max-width: none;
 }
 
+main .browse-by-category-container .browse-by-category .carousel-container .carousel-platform {
+    align-items: flex-start;
+}
+
+main .browse-by-category-container .browse-by-category .carousel-container .button.carousel-arrow {
+    position: absolute;
+    top: 46px;
+}
+
 main .browse-by-category-container .browse-by-category-heading-section {
     display: flex;
     justify-content: space-between;
@@ -118,6 +127,7 @@ main .browse-by-category-container .browse-by-category-category-title {
     font-size: 18px;
     line-height: 24px;
     font-weight: 700;
+    max-width: 148px;
 }
 
 @media (min-width: 900px) {
