@@ -41,6 +41,42 @@ const cache = {
   authoringError: false,
 };
 
+function wordStartsWithVowels(word) {
+  return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
+}
+
+async function populateHeadingPlaceholder(locale) {
+  const placeholders = await fetchPlaceholders()
+    .then((response) => response);
+
+  let grammarTemplate = placeholders['template-placeholder'];
+
+  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', cache.total.toLocaleString('en-US'));
+  }
+
+  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{Type}}', cache.heading);
+  }
+
+  if (grammarTemplate.indexOf('{{type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{type}}', cache.heading.charAt(0).toLowerCase() + cache.heading.slice(1));
+  }
+
+  if (locale === 'fr') {
+    grammarTemplate.split(' ').forEach((word, index, words) => {
+      if (index + 1 < words.length) {
+        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+          grammarTemplate = words.join(' ');
+        }
+      }
+    });
+  }
+
+  return grammarTemplate;
+}
+
 function fetchTemplates() {
   if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
     const prunedFilter = Object.entries(cache.filters)
@@ -337,6 +373,8 @@ function initToggle($section) {
 }
 
 export async function decorateTemplateList($block) {
+  const locale = getLocale(window.location);
+
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
       Array.from($block.children)
@@ -432,24 +470,7 @@ export async function decorateTemplateList($block) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
           } else {
-            const placeholders = await fetchPlaceholders()
-              .then((response) => response);
-
-            let grammarTemplate = placeholders['template-placeholder'];
-            const localizedWordTemplate = placeholders['api-powered-grid-heading'];
-
-            if (grammarTemplate.indexOf('{{quantity}}')) {
-              grammarTemplate = grammarTemplate.replace('{{quantity}}', cache.total.toLocaleString('en-US'));
-            }
-
-            if (grammarTemplate.indexOf('{{placeholder}}')) {
-              grammarTemplate = grammarTemplate.replace('{{placeholder}}', localizedWordTemplate);
-            }
-
-            if (grammarTemplate.indexOf('{{type}}')) {
-              grammarTemplate = grammarTemplate.replace('{{type}}', cache.heading);
-            }
-            $sectionHeading.textContent = grammarTemplate;
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
           }
         }
       }
@@ -457,7 +478,6 @@ export async function decorateTemplateList($block) {
   }
 
   let rows = $block.children.length;
-  const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('img').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
