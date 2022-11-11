@@ -931,6 +931,11 @@ main .template-list-horizontal-apipowered-holiday-container.firework {
   padding-top: 0;
 }
 
+main .template-list-horizontal-apipowered-holiday-container.snowing {
+  color: var(--color-white);
+  padding-top: 0;
+}
+
 main .template-list-horizontal-apipowered-holiday-container p,
 main .template-list-horizontal-apipowered-holiday-container picture {
   z-index: 1;
@@ -1019,11 +1024,14 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
   display: none;
+  z-index: 1;
   flex-grow: 1;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper p.mobile-only{
   color: var(--color-white);
+  position: absolute;
+  top: 0;
   font-size: 12px;
   text-align: left;
   margin: 0 0 16px;
@@ -1038,12 +1046,14 @@ main .template-list.holiday .carousel-container {
 
 main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper {
   max-height: 0;
-  transition: max-height 0.5s;
+  position: relative;
+  transition: max-height 0.5s, padding-top 0.5s;
   overflow: hidden;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper.expanded {
   max-height: 300px;
+  padding-top: 16px;
 }
 
 main .template-list.holiday .carousel-container .carousel-platform {
@@ -1053,10 +1063,11 @@ main .template-list.holiday .carousel-container .carousel-platform {
 /* holiday animations */
 
 main .template-list-horizontal-apipowered-holiday-container .firework-canvas,
-main .template-list-horizontal-apipowered-holiday-container .snow-canvas {
+main .template-list-horizontal-apipowered-holiday-container .snow-background {
   position: absolute;
   top: 0;
   left: 0;
+  object-fit: cover;
   height: 100%;
   width: 100vw;
   z-index: 0;
@@ -1066,12 +1077,10 @@ main .template-list-horizontal-apipowered-holiday-container .snow-canvas {
 }
 
 main .template-list-horizontal-apipowered-holiday-container.expanded .firework-canvas,
-main .template-list-horizontal-apipowered-holiday-container.expanded .snow-canvas {
+main .template-list-horizontal-apipowered-holiday-container.expanded .snow-background {
   opacity: 1;
-  transition: opacity 2s;
+  transition: opacity 1s;
 }
-
-
 
 @media (min-width: 600px) {
   main .template-list.horizontal.holiday .carousel-container .carousel-fader-left,
@@ -1095,5 +1104,9 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .snow-canva
 
   main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
     display: flex;
+  }
+
+  main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper.expanded {
+    padding-top: 0;
   }
 }
