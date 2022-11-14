@@ -122,7 +122,7 @@ header {
 
 body.no-brand-header header,
 body.no-desktop-brand-header header {
-  height: var(--header-height-no-brand);
+  height: auto;
   background-image: unset;
 }
 
