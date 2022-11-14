@@ -16,7 +16,7 @@ import {
   addSearchQueryToHref,
   createTag,
   decorateMain,
-  fetchPlaceholders,
+  fetchPlaceholders, getIcon,
   getIconElement,
   getLocale,
   linkImage,
@@ -338,34 +338,33 @@ function initToggle($section) {
 
 async function readRowsFromBlock($block) {
   if ($block.children.length > 0) {
-    Array.from($block.children)
-      .forEach((row, index, array) => {
-        const cells = row.querySelectorAll('div');
-        if (index === 0) {
-          if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-            cache.heading = cells[1].textContent;
-          } else if ($block.classList.contains('holiday')) {
-            cache.heading = row;
-          } else {
-            cache.heading = row.textContent;
-          }
-          row.remove();
-        } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-          cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
-        } else if (cells[0].textContent.toLowerCase() === 'background animation') {
-          cache.backgroundAnimation = cells[1].textContent;
-        } else if (index < array.length) {
-          if (cells.length >= 2) {
-            if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-              cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-            } else {
-              cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
-            }
-          }
-          row.remove();
+    Array.from($block.children).forEach((row, index, array) => {
+      const cells = row.querySelectorAll('div');
+      if (index === 0) {
+        if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+          cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+          cache.heading = cells[1].textContent;
+        } else if ($block.classList.contains('holiday')) {
+          cache.heading = row;
+        } else {
+          cache.heading = row.textContent;
         }
-      });
+        row.remove();
+      } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
+        cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
+      } else if (cells[0].textContent.toLowerCase() === 'background animation') {
+        cache.backgroundAnimation = cells[1].textContent;
+      } else if (index < array.length) {
+        if (cells.length >= 2) {
+          if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+          } else {
+            cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+          }
+        }
+        row.remove();
+      }
+    });
 
     const fetchedTemplates = await processResponse();
 
@@ -382,12 +381,35 @@ async function readRowsFromBlock($block) {
   }
 }
 
-function injectSearchBar($block) {
-  const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+function decorateToolbar($section, placeholders) {
+  const $toolBar = $section.querySelector('.api-templates-toolbar');
+  const $linkList = $section.querySelector('.link-list-wrapper');
+
+  if ($toolBar) {
+    const toolBarFirstWrapper = $toolBar.querySelector('.wrapper-content-search');
+
+    const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+    const $searchBar = createTag('input', { class: 'search-bar', type: 'text', placeholder: placeholders['template-search-placeholder'] });
+    const $searchDropdown = createTag('div', { class: 'search-dropdown' });
+    const $viewsWrapper = createTag('div', { class: 'views' });
+    const $filterSortWrapper = createTag('div', { class: 'filterSort' });
+
+    const lgView = getIconElement('scratch-icon-22');
+    const mdView = getIconElement('scratch-icon-22');
+    const smView = getIconElement('scratch-icon-22');
+
+    $viewsWrapper.append(lgView, mdView, smView);
+    $searchBarWrapper.append(getIconElement('scratch-icon-22'), getIconElement('plus'));
+    $searchBarWrapper.append($searchBar, $searchDropdown);
+    toolBarFirstWrapper.append($searchBarWrapper.cloneNode({ deep: true }));
+    $toolBar.append($viewsWrapper, $filterSortWrapper);
+    $linkList.insertAdjacentElement('beforebegin', $searchBarWrapper);
+  }
 }
 
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
+    const placeholders = await fetchPlaceholders().then((result) => result);
     await readRowsFromBlock($block);
 
     const $parent = $block.closest('.section');
@@ -445,9 +467,7 @@ export async function decorateTemplateList($block) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
           } else {
-            const headingEnding = await fetchPlaceholders()
-              .then((placeholders) => placeholders['api-powered-grid-heading']);
-            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${placeholders['api-powered-grid-heading']}`;
           }
         }
 
@@ -455,11 +475,11 @@ export async function decorateTemplateList($block) {
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
       }
-    }
 
-    const $linkList = document.querySelector('.link-list-wrapper');
-    if ($linkList && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')) {
-      injectSearchBar($block);
+      const $linkList = $parent.querySelector('.link-list-wrapper');
+      if ($linkList && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')) {
+        decorateToolbar($parent, placeholders);
+      }
     }
   }
 

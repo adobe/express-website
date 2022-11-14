@@ -614,6 +614,22 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
   }
 }
 
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
+  background: var(--color-gray-100);
+  margin: 40px;
+  border-radius: 12px;
+  padding: 20px 16px;
+  display: flex;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
+  display: flex;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar h2 {
+  font-size: 22px;
+  line-height: 24px;
+}
 
 /* Carousel styles (Template-list specific) */
 
