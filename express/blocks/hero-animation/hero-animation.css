@@ -123,7 +123,7 @@ main .hero-animation.white-text a:any-link {
   }
 
   body.no-desktop-brand-header header, body.no-brand-header header {
-    /* height: 64px; */
+    height: auto;
     background-image: unset;
   }
 }
