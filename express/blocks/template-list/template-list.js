@@ -336,51 +336,59 @@ function initToggle($section) {
     });
 }
 
+async function readRowsFromBlock($block) {
+  if ($block.children.length > 0) {
+    Array.from($block.children)
+      .forEach((row, index, array) => {
+        const cells = row.querySelectorAll('div');
+        if (index === 0) {
+          if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+            cache.heading = cells[1].textContent;
+          } else if ($block.classList.contains('holiday')) {
+            cache.heading = row;
+          } else {
+            cache.heading = row.textContent;
+          }
+          row.remove();
+        } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
+          cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
+        } else if (cells[0].textContent.toLowerCase() === 'background animation') {
+          cache.backgroundAnimation = cells[1].textContent;
+        } else if (index < array.length) {
+          if (cells.length >= 2) {
+            if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
+              cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+            } else {
+              cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+            }
+          }
+          row.remove();
+        }
+      });
+
+    const fetchedTemplates = await processResponse();
+
+    if (fetchedTemplates) {
+      cache.templates = cache.templates.concat(fetchedTemplates);
+      cache.templates.forEach((template) => {
+        const clone = template.cloneNode(true);
+        $block.append(clone);
+      });
+    }
+  } else {
+    cache.heading = 'Authoring error: first row must specify the template “type”';
+    cache.authoringError = true;
+  }
+}
+
+function injectSearchBar($block) {
+  const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+}
+
 export async function decorateTemplateList($block) {
   if ($block.classList.contains('apipowered')) {
-    if ($block.children.length > 0) {
-      Array.from($block.children)
-        .forEach((row, index, array) => {
-          const cells = row.querySelectorAll('div');
-          if (index === 0) {
-            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-              cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-              cache.heading = cells[1].textContent;
-            } else if ($block.classList.contains('holiday')) {
-              cache.heading = row;
-            } else {
-              cache.heading = row.textContent;
-            }
-            row.remove();
-          } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-            cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
-          } else if (cells[0].textContent.toLowerCase() === 'background animation') {
-            cache.backgroundAnimation = cells[1].textContent;
-          } else if (index < array.length) {
-            if (cells.length >= 2) {
-              if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-                cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-              } else {
-                cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
-              }
-            }
-            row.remove();
-          }
-        });
-
-      const fetchedTemplates = await processResponse();
-
-      if (fetchedTemplates) {
-        cache.templates = cache.templates.concat(fetchedTemplates);
-        cache.templates.forEach((template) => {
-          const clone = template.cloneNode(true);
-          $block.append(clone);
-        });
-      }
-    } else {
-      cache.heading = 'Authoring error: first row must specify the template “type”';
-      cache.authoringError = true;
-    }
+    await readRowsFromBlock($block);
 
     const $parent = $block.closest('.section');
     if ($parent) {
@@ -427,7 +435,12 @@ export async function decorateTemplateList($block) {
           }
         }, cache.autoCollapseDelay);
       } else {
+        const $toolBar = $parent.querySelector('.default-content-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
+
+        const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
+        const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
+
         if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
@@ -437,7 +450,16 @@ export async function decorateTemplateList($block) {
             $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
           }
         }
+
+        $toolBar.classList.add('api-templates-toolbar');
+        $toolBar.append($contentWrapper, $functionsWrapper);
+        $contentWrapper.append($sectionHeading);
       }
+    }
+
+    const $linkList = document.querySelector('.link-list-wrapper');
+    if ($linkList && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')) {
+      injectSearchBar($block);
     }
   }
 
