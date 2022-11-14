@@ -1,12 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
-  <defs>
-    <style>
-      .fill {
-        fill: #444;
-      }
-    </style>
-  </defs>
-  <rect id="Canvas" fill="#ff13dc" opacity="0" width="44" height="44" /><g id="Path">
+  <rect id="Canvas" fill="#000" opacity="0" width="44" height="44" /><g id="Path">
     <circle class="fill" cx="34.2" cy="28.2" r="2.2" />
     <circle class="fill" cx="27.8" cy="28.2" r="2.2" />
     <path class="fill" d="M31,22c4.97058,0,9,4.02942,9,9s-4.02942,9-9,9-9-4.02942-9-9,4.02942-9,9-9Zm0-3c-6.61682,0-12,5.38318-12,12s5.38318,12,12,12,12-5.38318,12-12-5.38318-12-12-12Z" />
