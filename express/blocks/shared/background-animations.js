@@ -32,5 +32,6 @@ export default function addBackgroundAnimation($block, animationName) {
 
   if ($parent) {
     animations[animationName]($parent);
+    $videoBackground.play();
   }
 }
