@@ -26,8 +26,6 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import addBackgroundAnimation from '../shared/background-animations.js';
-
 const cache = {
   templates: [],
   filters: {
@@ -714,6 +712,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('holiday') && cache.backgroundAnimation) {
-    addBackgroundAnimation($block, cache.backgroundAnimation);
+    import('../shared/background-animations.js')
+      .then((js) => js.default($block, cache.backgroundAnimation));
   }
 }
