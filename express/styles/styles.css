@@ -111,7 +111,7 @@ body.appear {
 header {
   box-sizing: border-box;
   border-bottom: 1px solid #EAEAEA;
-  height: var(--header-height);
+  height: auto;
   background-image: url(/express/icons/cc-express-logo.svg);
   background-repeat: no-repeat;
   background-size: auto 32px;
