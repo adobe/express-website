@@ -1,0 +1,13 @@
+<svg id="ICONS" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <path id="Path_607235" data-name="Path 607235" d="M5,8H3A3,3,0,0,1,0,5V3A3,3,0,0,1,3,0H5A3,3,0,0,1,8,3V5A3,3,0,0,1,5,8ZM3,2A1,1,0,0,0,2,3V5A1,1,0,0,0,3,6H5A1,1,0,0,0,6,5V3A1,1,0,0,0,5,2Z"/>
+  <path id="Path_607236" data-name="Path 607236" d="M15,8H13a3,3,0,0,1-3-3V3a3,3,0,0,1,3-3h2a3,3,0,0,1,3,3V5A3,3,0,0,1,15,8ZM13,2a1,1,0,0,0-1,1V5a1,1,0,0,0,1,1h2a1,1,0,0,0,1-1V3a1,1,0,0,0-1-1Z"/>
+  <path id="Path_607237" data-name="Path 607237" d="M5,18H3a3,3,0,0,1-3-3V13a3,3,0,0,1,3-3H5a3,3,0,0,1,3,3v2A3,3,0,0,1,5,18ZM3,12a1,1,0,0,0-1,1v2a1,1,0,0,0,1,1H5a1,1,0,0,0,1-1V13a1,1,0,0,0-1-1Z"/>
+  <rect id="Rectangle_303309" data-name="Rectangle 303309" width="2.973" height="2.973" rx="1" transform="translate(15.027 10)"/>
+  <rect id="Rectangle_303310" data-name="Rectangle 303310" width="2.973" height="2.973" rx="1" transform="translate(15.027 15.027)"/>
+  <rect id="Rectangle_303311" data-name="Rectangle 303311" width="2.976" height="2.976" rx="1" transform="translate(10 10)"/>
+  <rect id="Rectangle_303312" data-name="Rectangle 303312" width="2.973" height="2.973" rx="1" transform="translate(10 15.027)"/>
+  <rect id="Rectangle_303313" data-name="Rectangle 303313" width="2" height="2" rx="0.75" transform="translate(13 3)"/>
+  <rect id="Rectangle_303314" data-name="Rectangle 303314" width="2" height="2" rx="0.75" transform="translate(3 3)"/>
+  <rect id="Rectangle_303315" data-name="Rectangle 303315" width="2" height="2" rx="0.75" transform="translate(3 13)"/>
+  <rect id="Rectangle_303316" data-name="Rectangle 303316" width="2" height="2" rx="0.75" transform="translate(13 13)"/>
+</svg>
