@@ -1573,6 +1573,16 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
+async function fetchFloatingButton(path) {
+  if (!(window.floatingButtons && window.floatingButtons.data)) {
+    window.floatingButtons = {};
+    const resp = await fetch('/drafts/williambsm/floating-buttons.json');
+    window.floatingButtons.data = resp.ok ? (await resp.json()).data : [];
+  }
+
+  return window.floatingButtons.data.find((fb) => fb.path === path && fb.live !== 'N');
+}
+
 function buildAutoBlocks($main) {
   // Load the branch.io banner autoblock...
   if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
@@ -1595,6 +1605,26 @@ function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
     const $plansComparison = buildBlock('plans-comparison', '');
     $main.querySelector(':scope > div:last-of-type').append($plansComparison);
+  }
+}
+
+async function loadMultifunctionButton($main) {
+  const floatingButton = await fetchFloatingButton(window.location.pathname);
+
+  if (floatingButton) {
+    const defaultFloatingButton = await fetchFloatingButton('default');
+    const objectKeys = Object.keys(defaultFloatingButton);
+
+    const floatingButtonParameters = [];
+
+    // eslint-disable-next-line consistent-return
+    objectKeys.forEach((key) => {
+      if (['path', 'live'].includes(key)) return false;
+      floatingButtonParameters.push([key, floatingButton[key] || defaultFloatingButton[key]]);
+    });
+
+    const $multifunctionButton = buildBlock('multifunction-button', floatingButtonParameters);
+    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
 }
 
@@ -1880,6 +1910,7 @@ function decoratePictures(main) {
 
 export async function decorateMain($main) {
   buildAutoBlocks($main);
+  await loadMultifunctionButton($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
