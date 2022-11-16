@@ -463,6 +463,18 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   $closeButton.classList.add('close-drawer');
   $applyButton.textContent = placeholders['apply-filters'];
 
+  $functionContainerMobile.children[0]
+    .querySelector('.current-option-premium')
+    .textContent = `${placeholders.free} ${placeholders['versus-shorthand']} ${placeholders.premium}`;
+
+  $functionContainerMobile.children[1]
+    .querySelector('.current-option-animated')
+    .textContent = `${placeholders.static} ${placeholders['versus-shorthand']} ${placeholders.animated}`;
+
+  Array.from($functionContainerMobile.children).forEach((child) => {
+    child.querySelector('.current-option').className = 'filter-mobile-option-heading';
+  });
+
   $drawer.append(
     $closeButton,
     $functionContainerMobile.children[0],
@@ -531,11 +543,17 @@ function decorateSearchFunctions($toolBar, $section, placeholders) {
   initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
 }
 
+function toggleDrawer($wrapper, maxHeight) {
+
+}
+
 function initFilterDrawer($toolBar) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
   const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
   const $closeDrawer = $toolBar.querySelector('.close-drawer');
+
+  const $functionWrappers = $drawer.querySelectorAll('.function-wrapper');
 
   $filterButton.addEventListener('click', () => {
     $drawer.classList.remove('hidden');
@@ -544,6 +562,12 @@ function initFilterDrawer($toolBar) {
     setTimeout(() => {
       $drawer.classList.remove('retracted');
       $drawerBackground.classList.remove('transparent');
+      $functionWrappers.forEach(($wrapper) => {
+        const $button = $wrapper.querySelector('.button-wrapper');
+        if ($button) {
+          $button.style.maxHeight = `${$button.nextElementSibling.offsetHeight}px`;
+        }
+      });
     }, 10);
   }, { passive: true });
 
@@ -556,6 +580,27 @@ function initFilterDrawer($toolBar) {
       $drawerBackground.classList.add('hidden');
     }, 500);
   }, { passive: true });
+
+  setTimeout(() => {
+    $drawer.classList.remove('hidden');
+    $functionWrappers.forEach(($wrapper) => {
+      const $button = $wrapper.querySelector('.button-wrapper');
+      let maxHeight;
+      if ($button) {
+        if (!maxHeight) {
+          maxHeight = window.getComputedStyle($wrapper).height;
+          $wrapper.style.maxHeight = maxHeight;
+        }
+
+        $button.addEventListener('click', (e) => {
+          e.stopPropagation();
+          $wrapper.classList.toggle('collapsed');
+          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? '24px' : maxHeight;
+        }, { passive: true });
+      }
+    });
+    $drawer.classList.add('hidden');
+  }, 1);
 }
 
 function decorateToolbar($block, $section, placeholders) {
