@@ -16,7 +16,7 @@ import {
   addSearchQueryToHref,
   createTag,
   decorateMain,
-  fetchPlaceholders, getIcon,
+  fetchPlaceholders,
   getIconElement,
   getLocale,
   linkImage,
@@ -225,8 +225,7 @@ function populateTemplates($block, templates) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep)
-            .map((e) => +e);
+          const ratios = option.split(sep).map((e) => +e);
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
             if (ratios[1]) {
@@ -273,8 +272,7 @@ function populateTemplates($block, templates) {
         if (videoLink.includes('/media_')) {
           videoLink = `./media_${videoLink.split('/media_')[1]}`;
         }
-        $tmplt.querySelectorAll(':scope br')
-          .forEach(($br) => $br.remove());
+        $tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const $picture = $tmplt.querySelector('picture');
         if ($picture) {
           const $img = $tmplt.querySelector('img');
@@ -315,25 +313,23 @@ function initToggle($section) {
     e.preventDefault();
     $wrapper.classList.toggle('expanded');
     $section.classList.toggle('expanded');
-    Array.from($toggleButtons)
-      .forEach(($button) => {
-        $button.classList.toggle('expanded');
-      });
+    Array.from($toggleButtons).forEach(($button) => {
+      $button.classList.toggle('expanded');
+    });
   });
 
-  Array.from($toggleButtons)
-    .forEach(($button) => {
-      $button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        $wrapper.classList.toggle('expanded');
-        $section.classList.toggle('expanded');
-        Array.from($toggleButtons)
-          .forEach((b) => {
-            b.classList.toggle('expanded');
-          });
-      });
+  Array.from($toggleButtons).forEach(($button) => {
+    $button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      $wrapper.classList.toggle('expanded');
+      $section.classList.toggle('expanded');
+      Array.from($toggleButtons)
+        .forEach((b) => {
+          b.classList.toggle('expanded');
+        });
     });
+  });
 }
 
 async function readRowsFromBlock($block) {
@@ -381,29 +377,212 @@ async function readRowsFromBlock($block) {
   }
 }
 
-function decorateToolbar($section, placeholders) {
+function makeTemplateFunctions(placeholders) {
+  const functions = {
+    premium: {
+      placeholders: JSON.parse(placeholders['template-filter-premium']),
+      elements: {},
+      icon: 'scratch-icon-22',
+    },
+    animated: {
+      placeholders: JSON.parse(placeholders['template-filter-animated']),
+      elements: {},
+      icon: 'scratch-icon-22',
+    },
+    sort: {
+      placeholders: JSON.parse(placeholders['template-sort']),
+      elements: {},
+      icon: 'scratch-icon-22',
+    },
+  };
+
+  Object.entries(functions).forEach((entry) => {
+    entry[1].elements.wrapper = createTag('div', {
+      class: `function-wrapper function-${Object.values(entry)[0]}`,
+      'data-param': Object.values(entry)[0],
+    });
+
+    entry[1].elements.wrapper.subElements = {
+      button: {
+        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
+        subElements: {
+          icon: getIconElement(entry[1].icon),
+          textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+        },
+      },
+      options: {
+        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
+        subElements: Object.entries(entry[1].placeholders).map((option) => {
+          const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
+          [optionButton.textContent] = Object.values(option);
+          return optionButton;
+        }),
+      },
+    };
+
+    const $span = entry[1].elements.wrapper.subElements.button.subElements.textSpan;
+    [[$span.textContent]] = Object.entries(entry[1].placeholders);
+  });
+
+  return functions;
+}
+
+function decorateFunctionsContainer($block, $section, functions, placeholders) {
+  const $functionsContainer = createTag('div', { class: 'functions-container' });
+  const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
+
+  Object.entries(functions).forEach((filter) => {
+    const $filterWrapper = filter[1].elements.wrapper;
+
+    Object.entries($filterWrapper.subElements).forEach((part) => {
+      const $innerWrapper = part[1].wrapper;
+
+      Object.entries(part[1].subElements).forEach((innerElement, index) => {
+        if (index === 0) {
+          Object.values(innerElement)[1].classList.add('active');
+        }
+        $innerWrapper.append(Object.values(innerElement)[1]);
+      });
+
+      $filterWrapper.append($innerWrapper);
+    });
+    $functionContainerMobile.append($filterWrapper.cloneNode({ deep: true }));
+    $functionsContainer.append($filterWrapper);
+  });
+
+  // restructure drawer for mobile design
+  const $filterContainer = createTag('div', { class: 'filter-container-mobile' });
+  const $mobileFilterButtonWrapper = createTag('div', { class: 'filter-button-mobile-wrapper' });
+  const $mobileFilterButton = createTag('span', { class: 'filter-button-mobile' });
+  const $drawer = createTag('div', { class: 'filter-drawer-mobile hidden retracted' });
+  const $drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
+  const $closeButton = getIconElement('search-clear');
+  const $applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper' });
+  const $applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
+
+  $closeButton.classList.add('close-drawer');
+  $applyButton.textContent = placeholders['apply-filters'];
+
+  $drawer.append(
+    $closeButton,
+    $functionContainerMobile.children[0],
+    $functionContainerMobile.children[1],
+    $applyButtonWrapper,
+  );
+  $mobileFilterButtonWrapper.append(getIconElement('scratch-icon-22'), $mobileFilterButton);
+  $applyButtonWrapper.append($applyButton);
+  $filterContainer.append($mobileFilterButtonWrapper, $drawer, $drawerBackground);
+  $functionContainerMobile.prepend($filterContainer);
+
+  $mobileFilterButton.textContent = placeholders.filter;
+  const $sortButton = $functionContainerMobile.querySelector('.current-option-sort');
+  if ($sortButton) {
+    $sortButton.textContent = placeholders.sort;
+  }
+
+  return { mobile: $functionContainerMobile, desktop: $functionsContainer };
+}
+
+function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
+  const $stickySearchbBar = $stickySearchBarWrapper.querySelector('input.search-bar');
+
+  const searchBarWatcher = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) {
+      $toolBar.classList.add('sticking');
+    } else {
+      $toolBar.classList.remove('sticking');
+    }
+  }, { rootMargin: '0px', threshold: 0 });
+
+  searchBarWatcher.observe($searchBarWrapper);
+
+  $stickySearchBarWrapper.addEventListener('mouseenter', () => {
+    $stickySearchBarWrapper.classList.remove('collapsed');
+  }, { passive: true });
+
+  $stickySearchBarWrapper.addEventListener('mouseleave', () => {
+    if (!$stickySearchbBar || $stickySearchbBar !== document.activeElement) {
+      $stickySearchBarWrapper.classList.add('collapsed');
+    }
+  }, { passive: true });
+
+  $stickySearchbBar.addEventListener('blur', () => {
+    $stickySearchBarWrapper.classList.add('collapsed');
+  }, { passive: true });
+}
+
+function decorateSearchFunctions($toolBar, $section, placeholders) {
+  const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
+  const $inSectionLocation = $section.querySelector('.link-list-wrapper');
+  const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+  const $searchBar = createTag('input', { class: 'search-bar', type: 'text', placeholder: placeholders['template-search-placeholder'] });
+  const $searchDropdown = createTag('div', { class: 'search-dropdown' });
+
+  $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
+  $searchBarWrapper.append($searchBar, $searchDropdown);
+
+  const $stickySearchBarWrapper = $searchBarWrapper.cloneNode({ deep: true });
+
+  $stickySearchBarWrapper.classList.add('sticky-search-bar');
+  $stickySearchBarWrapper.classList.add('collapsed');
+  $inBlockLocation.append($stickySearchBarWrapper);
+  $inSectionLocation.insertAdjacentElement('beforebegin', $searchBarWrapper);
+
+  initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
+}
+
+function initFilterDrawer($toolBar) {
+  const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
+  const $drawerBackground = $toolBar.querySelector('.drawer-background');
+  const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
+  const $closeDrawer = $toolBar.querySelector('.close-drawer');
+
+  $filterButton.addEventListener('click', () => {
+    $drawer.classList.remove('hidden');
+    $drawerBackground.classList.remove('hidden');
+
+    setTimeout(() => {
+      $drawer.classList.remove('retracted');
+      $drawerBackground.classList.remove('transparent');
+    }, 10);
+  }, { passive: true });
+
+  $closeDrawer.addEventListener('click', () => {
+    $drawer.classList.add('retracted');
+    $drawerBackground.classList.add('transparent');
+
+    setTimeout(() => {
+      $drawer.classList.add('hidden');
+      $drawerBackground.classList.add('hidden');
+    }, 500);
+  }, { passive: true });
+}
+
+function decorateToolbar($block, $section, placeholders) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
-  const $linkList = $section.querySelector('.link-list-wrapper');
 
   if ($toolBar) {
     const toolBarFirstWrapper = $toolBar.querySelector('.wrapper-content-search');
+    const functionsWrapper = $toolBar.querySelector('.wrapper-functions');
 
-    const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
-    const $searchBar = createTag('input', { class: 'search-bar', type: 'text', placeholder: placeholders['template-search-placeholder'] });
-    const $searchDropdown = createTag('div', { class: 'search-dropdown' });
     const $viewsWrapper = createTag('div', { class: 'views' });
-    const $filterSortWrapper = createTag('div', { class: 'filterSort' });
 
     const lgView = getIconElement('scratch-icon-22');
     const mdView = getIconElement('scratch-icon-22');
     const smView = getIconElement('scratch-icon-22');
 
+    const functionsObj = makeTemplateFunctions(placeholders);
+    const $functions = decorateFunctionsContainer($block, $section, functionsObj, placeholders);
+
+    lgView.classList.add('active');
+
     $viewsWrapper.append(lgView, mdView, smView);
-    $searchBarWrapper.append(getIconElement('scratch-icon-22'), getIconElement('plus'));
-    $searchBarWrapper.append($searchBar, $searchDropdown);
-    toolBarFirstWrapper.append($searchBarWrapper.cloneNode({ deep: true }));
-    $toolBar.append($viewsWrapper, $filterSortWrapper);
-    $linkList.insertAdjacentElement('beforebegin', $searchBarWrapper);
+    functionsWrapper.append($viewsWrapper, $functions.desktop);
+
+    $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
+
+    decorateSearchFunctions($toolBar, $section, placeholders);
+    initFilterDrawer($toolBar);
   }
 }
 
@@ -478,7 +657,7 @@ export async function decorateTemplateList($block) {
 
       const $linkList = $parent.querySelector('.link-list-wrapper');
       if ($linkList && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')) {
-        decorateToolbar($parent, placeholders);
+        decorateToolbar($block, $parent, placeholders);
       }
     }
   }
