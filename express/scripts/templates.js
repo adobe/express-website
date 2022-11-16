@@ -107,14 +107,13 @@ function updateBlocks(data) {
   if (seoNav) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
 
-    if (window.templates.data && data.topTemplates) {
+    if (data.topTemplates) {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = data.topTemplates.split(', ');
 
       updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
     } else {
-      topTemplatesContainer.innerHTML = ''; //I think we can take out this line?
-      seoNav.style.display = 'none';
+      topTemplatesContainer.innerHTML = '';
     }
 
     if (data.topTemplatesTitle) {
@@ -125,6 +124,10 @@ function updateBlocks(data) {
       seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', data.topTemplatesText);
     } else {
       seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', '');
+    }
+
+    if (!data.topTemplates && !data.topTemplatesTitle && !data.topTemplatesText) {
+      seoNav.remove()
     }
   }
 }
