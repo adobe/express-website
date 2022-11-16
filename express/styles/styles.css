@@ -108,7 +108,7 @@ body.appear {
 
 /* gnav */
 
-header {
+body > header {
   box-sizing: border-box;
   border-bottom: 1px solid #EAEAEA;
   min-height: var(--header-height);
@@ -121,8 +121,8 @@ header {
   background-color: #FFF;
 }
 
-body.no-brand-header header,
-body.no-desktop-brand-header header {
+body.no-brand-header > header,
+body.no-desktop-brand-header > header {
   height: auto;
   padding-bottom: 0;
   background-image: unset;
