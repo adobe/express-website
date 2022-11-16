@@ -107,13 +107,17 @@ function updateBlocks(data) {
   if (seoNav) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
 
+    const buttons = seoNav.querySelector('p')
+    console.log(buttons.innerHTML)
+
     if (window.templates.data && data.topTemplates) {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = data.topTemplates.split(', ');
 
       updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
     } else {
-      topTemplatesContainer.innerHTML = '';
+      topTemplatesContainer.innerHTML = ''; //I think we can take out this line?
+      seoNav.style.display = 'none';
     }
 
     if (data.topTemplatesTitle) {
@@ -125,6 +129,10 @@ function updateBlocks(data) {
     } else {
       seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', '');
     }
+
+    console.log(`Top Templates: ${data.topTemplates}`)
+    console.log(`Top Templates Title: ${data.topTemplatesTitle}`)
+    console.log(`Top Templates Text: ${data.topTemplatesText}`)
   }
 }
 
