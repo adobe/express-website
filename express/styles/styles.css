@@ -109,7 +109,7 @@ body.appear {
 /* gnav */
 
 header {
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   border-bottom: 1px solid #EAEAEA;
   min-height: var(--header-height);
   padding-bottom: var(--brand-header-height);
