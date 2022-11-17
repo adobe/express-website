@@ -37,7 +37,7 @@ export default function decorate($block) {
     });
   }
 
-  $columns.forEach (($column) => {
+  $columns.forEach(($column) => {
     const $columnRows = Array.from($column.children);
 
     $columnRows.forEach(($row) => {
