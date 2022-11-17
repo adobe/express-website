@@ -105,7 +105,7 @@ function updateBlocks(data) {
   }
 
   if (!data.topTemplates && !data.topTemplatesTitle && !data.topTemplatesText) {
-    seoNav.remove()
+    seoNav.remove();
   } else {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
     if (data.topTemplates) {
@@ -127,7 +127,6 @@ function updateBlocks(data) {
       seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', '');
     }
   }
-
 }
 
 const page = await fetchPageContent(window.location.pathname);
