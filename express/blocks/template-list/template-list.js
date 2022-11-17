@@ -457,7 +457,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $drawer = createTag('div', { class: 'filter-drawer-mobile hidden retracted' });
   const $drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
   const $closeButton = getIconElement('search-clear');
-  const $applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper' });
+  const $applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
   const $applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
 
   $closeButton.classList.add('close-drawer');
@@ -471,19 +471,27 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
     .querySelector('.current-option-animated')
     .textContent = `${placeholders.static} ${placeholders['versus-shorthand']} ${placeholders.animated}`;
 
-  Array.from($functionContainerMobile.children).forEach((child) => {
-    child.querySelector('.current-option').className = 'filter-mobile-option-heading';
-  });
-
   $drawer.append(
     $closeButton,
     $functionContainerMobile.children[0],
     $functionContainerMobile.children[1],
-    $applyButtonWrapper,
   );
+
+  const $buttonsInDrawer = $drawer.querySelectorAll('.button-wrapper');
+
+  $buttonsInDrawer.forEach((button) => {
+    button.classList.add('in-drawer');
+    button.querySelector('.current-option').className = 'filter-mobile-option-heading';
+  });
+
   $mobileFilterButtonWrapper.append(getIconElement('scratch-icon-22'), $mobileFilterButton);
   $applyButtonWrapper.append($applyButton);
-  $filterContainer.append($mobileFilterButtonWrapper, $drawer, $drawerBackground);
+  $filterContainer.append(
+    $mobileFilterButtonWrapper,
+    $drawer,
+    $applyButtonWrapper,
+    $drawerBackground,
+  );
   $functionContainerMobile.prepend($filterContainer);
 
   $mobileFilterButton.textContent = placeholders.filter;
@@ -496,7 +504,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
 }
 
 function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
-  const $stickySearchbBar = $stickySearchBarWrapper.querySelector('input.search-bar');
+  const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
@@ -504,21 +512,26 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     } else {
       $toolBar.classList.remove('sticking');
     }
-  }, { rootMargin: '0px', threshold: 0 });
+  }, { rootMargin: '0px', threshold: 1 });
 
   searchBarWatcher.observe($searchBarWrapper);
+
+  $stickySearchBar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    $stickySearchBarWrapper.classList.remove('collapsed');
+  }, { passive: true });
 
   $stickySearchBarWrapper.addEventListener('mouseenter', () => {
     $stickySearchBarWrapper.classList.remove('collapsed');
   }, { passive: true });
 
   $stickySearchBarWrapper.addEventListener('mouseleave', () => {
-    if (!$stickySearchbBar || $stickySearchbBar !== document.activeElement) {
+    if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
       $stickySearchBarWrapper.classList.add('collapsed');
     }
   }, { passive: true });
 
-  $stickySearchbBar.addEventListener('blur', () => {
+  $stickySearchBar.addEventListener('blur', () => {
     $stickySearchBarWrapper.classList.add('collapsed');
   }, { passive: true });
 }
@@ -543,41 +556,42 @@ function decorateSearchFunctions($toolBar, $section, placeholders) {
   initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
 }
 
-function toggleDrawer($wrapper, maxHeight) {
-
-}
-
-function initFilterDrawer($toolBar) {
+function initDrawer($toolBar) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
   const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
   const $closeDrawer = $toolBar.querySelector('.close-drawer');
+  const $applyButton = $toolBar.querySelector('.apply-filter-button-wrapper');
 
   const $functionWrappers = $drawer.querySelectorAll('.function-wrapper');
 
   $filterButton.addEventListener('click', () => {
     $drawer.classList.remove('hidden');
     $drawerBackground.classList.remove('hidden');
+    $applyButton.classList.remove('hidden');
 
     setTimeout(() => {
       $drawer.classList.remove('retracted');
       $drawerBackground.classList.remove('transparent');
+      $applyButton.classList.remove('transparent');
       $functionWrappers.forEach(($wrapper) => {
         const $button = $wrapper.querySelector('.button-wrapper');
         if ($button) {
           $button.style.maxHeight = `${$button.nextElementSibling.offsetHeight}px`;
         }
       });
-    }, 10);
+    }, 100);
   }, { passive: true });
 
   $closeDrawer.addEventListener('click', () => {
     $drawer.classList.add('retracted');
     $drawerBackground.classList.add('transparent');
+    $applyButton.classList.add('transparent');
 
     setTimeout(() => {
       $drawer.classList.add('hidden');
       $drawerBackground.classList.add('hidden');
+      $applyButton.classList.add('hidden');
     }, 500);
   }, { passive: true });
 
@@ -601,6 +615,23 @@ function initFilterDrawer($toolBar) {
     });
     $drawer.classList.add('hidden');
   }, 1);
+}
+
+function initFilterSort($toolBar) {
+  let queryStringPlaceholder = '';
+
+  const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.in-drawer)');
+
+  $buttons.forEach(($button) => {
+    $button.addEventListener('click', () => {
+      $buttons.forEach((b) => {
+        if ($button !== b) {
+          b.parentElement.classList.remove('opened');
+        }
+      });
+      $button.parentElement.classList.toggle('opened');
+    });
+  });
 }
 
 function decorateToolbar($block, $section, placeholders) {
@@ -627,7 +658,8 @@ function decorateToolbar($block, $section, placeholders) {
     $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
 
     decorateSearchFunctions($toolBar, $section, placeholders);
-    initFilterDrawer($toolBar);
+    initDrawer($toolBar);
+    initFilterSort($toolBar);
   }
 }
 
