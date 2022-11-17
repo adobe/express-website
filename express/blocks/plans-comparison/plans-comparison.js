@@ -377,10 +377,6 @@ export default function decorate($block) {
             }
 
             $newBlock.classList.add('restrained');
-
-            window.addEventListener('resize', () => {
-              resizeCards($cards, $featuresWrappers, payload);
-            });
           }, 100);
 
           setTimeout(() => {
@@ -389,6 +385,10 @@ export default function decorate($block) {
             });
           }, 700);
         }
+
+        window.addEventListener('resize', () => {
+          resizeCards($cards, $featuresWrappers, payload);
+        });
 
         fixIcons($newBlock);
       }
