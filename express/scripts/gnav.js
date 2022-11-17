@@ -144,6 +144,13 @@ function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
+  const isHomepage = window.location.pathname.endsWith('/express/');
+  const isMegaNav = window.location.pathname.startsWith('/express')
+    || window.location.pathname.startsWith('/education');
+  const fedsExp = isMegaNav
+    ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
+    : 'cc-express/cc-express-gnav';
+
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
@@ -154,7 +161,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: 'cc-express/cc-express-gnav',
+      experience: getMetadata('gnav') || fedsExp,
     },
     profile: {
       customSignIn: () => {

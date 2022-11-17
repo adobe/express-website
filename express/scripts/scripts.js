@@ -1093,7 +1093,7 @@ function decoratePageStyle() {
       } else {
         $heroSection = $h1.closest('.section');
         $heroSection.classList.add('hero');
-        $heroSection.classList.remove('section');
+        $heroSection.removeAttribute('style');
       }
       if ($heroPicture) {
         if (!isBlog) {
@@ -2084,7 +2084,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);

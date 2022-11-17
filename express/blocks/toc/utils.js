@@ -121,9 +121,9 @@ export function addAppStoreButton($block) {
   const os = getMobileOperatingSystem();
   const $button = document.createElement('a');
   const $container = $icon.parentElement.parentElement.children;
-  $button.href = $container.item(0).href;
-  $button.title = $container.item(0).title;
-  $container.item(1).append($button);
+  $button.href = $container[1].children[0].href;
+  $button.title = $container[1].children[0].title;
+  $container[1].append($button);
   if (os === 'iOS') {
     $button.append(genericGetIconElement('apple-store'));
   } else {
