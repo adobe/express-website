@@ -176,7 +176,6 @@ function expandCard($card, payload, initialLoad) {
   if (!$card.classList.contains('expanded')) {
     $card.classList.add('expanded');
     if (window.innerWidth >= 1200) {
-
       if (!initialLoad) {
         $card.classList.add('clip');
         $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
@@ -280,8 +279,6 @@ function decorateCards($block, payload) {
       $card.append($contentTop, $contentBottom);
 
       decorateToggleButton($block, $card, payload);
-
-
     }
   }
 }
