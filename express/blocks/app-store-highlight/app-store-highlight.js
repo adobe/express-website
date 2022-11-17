@@ -166,25 +166,50 @@ function decorateAppStoreIcon($block, payload) {
   $block.append($iconWrapper);
 }
 
-function initScrollAnimation($block) {
-  const $contentWrapper = $block.querySelector('.content-wrapper');
+function scroll($block, height, computedStyles) {
   const $highlightsPlatform = $block.querySelector('.highlights-platform');
+  const $highlightsWrapper = $highlightsPlatform.querySelector('.highlights');
+  const $contentWrapper = $block.querySelector('.content-wrapper');
 
+  $highlightsPlatform.style.height = `${height + (53 * 2)}px`;
+  $highlightsWrapper.classList.add('animating');
   $contentWrapper.style.transform = 'scale(1.2)';
+
   document.addEventListener('scroll', () => {
     const blockPosition = $block.getBoundingClientRect();
     const blockInViewPercent = (1 - blockPosition.top / blockPosition.height) * 100;
     const blockTopToEdge = Math.round((blockPosition.top / window.innerHeight) * 100);
+    const totalScroll = parseInt(computedStyles.width.replace(/\D/g, ''), 10) - window.innerWidth + 64;
 
     if (blockTopToEdge <= 100 && blockTopToEdge >= 30) {
       $contentWrapper.style.transform = `scale(${1 + ((blockTopToEdge - 30) * (0.2 / 70))})`;
     }
 
     if (blockInViewPercent <= 100 && blockInViewPercent >= 75) {
-      const totalScroll = $highlightsPlatform.scrollWidth - window.innerWidth;
-      $highlightsPlatform.scrollLeft = (totalScroll / 25) * (blockInViewPercent - 75);
+      $highlightsWrapper.style.left = `-${(totalScroll / 25) * (blockInViewPercent - 75)}px`;
+    } else if (blockPosition.top < 0) {
+      $highlightsWrapper.style.left = `-${totalScroll}px`;
+    } else {
+      $highlightsWrapper.style.left = '0px';
     }
   });
+}
+
+function initScrollAnimation($block) {
+  const $highlightsPlatform = $block.querySelector('.highlights-platform');
+  const $highlightsWrapper = $highlightsPlatform.querySelector('.highlights');
+
+  if ($highlightsWrapper) {
+    const $firstImg = $highlightsWrapper.querySelector('img');
+
+    if ($firstImg) {
+      $firstImg.addEventListener('load', () => {
+        const computedStyles = window.getComputedStyle($highlightsWrapper);
+        const height = parseInt(computedStyles.height.replace(/\D/g, ''), 10);
+        scroll($block, height, computedStyles);
+      });
+    }
+  }
 }
 
 export default async function decorate($block) {
