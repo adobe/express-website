@@ -168,7 +168,7 @@ function collapseCard($card, payload) {
   }
 }
 
-function expandCard($card, payload) {
+function expandCard($card, payload, initialLoad) {
   const $heading = $card.querySelector('.plans-comparison-heading');
   const $subcopy = $card.querySelector('.plans-comparison-sub-copy');
   const $featuresWrapper = $card.querySelector('.features-wrapper');
@@ -176,11 +176,18 @@ function expandCard($card, payload) {
   if (!$card.classList.contains('expanded')) {
     $card.classList.add('expanded');
     if (window.innerWidth >= 1200) {
-      $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
-      $card.classList.add('clip');
-      setTimeout(() => {
-        $card.classList.remove('clip');
-      }, 700);
+
+      if (!initialLoad) {
+        $card.classList.add('clip');
+        $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
+        setTimeout(() => {
+          $card.classList.remove('clip');
+        }, 700);
+      } else {
+        $card.style.transition = 'unset';
+        $card.style.maxWidth = `${$card.parentElement.offsetWidth - 354}px`;
+        $card.style.removeProperty('transition');
+      }
     } else {
       $card.style.maxHeight = `${
         $heading.offsetHeight
@@ -193,7 +200,7 @@ function expandCard($card, payload) {
   }
 }
 
-function toggleExpandableCard($block, $cardClicked, payload) {
+function toggleExpandableCard($block, $cardClicked, payload, initial) {
   const $cards = $block.querySelectorAll('.plans-comparison-card');
   const $paginations = $block.querySelectorAll('.pagination-pill');
   $cards.forEach(($card, index) => {
@@ -204,7 +211,7 @@ function toggleExpandableCard($block, $cardClicked, payload) {
       $paginations[index].classList.add('active');
     }
   });
-  expandCard($cardClicked, payload);
+  expandCard($cardClicked, payload, initial);
 }
 
 function decorateToggleButton($block, $card, payload) {
@@ -274,13 +281,7 @@ function decorateCards($block, payload) {
 
       decorateToggleButton($block, $card, payload);
 
-      if (key === 'premium') {
-        expandCard($card, payload);
-        payload.cardHeight = $card.offsetHeight;
-        collapseCard($card, payload);
-      }
 
-      $card.classList.add('transition');
     }
   }
 }
@@ -366,25 +367,30 @@ export default function decorate($block) {
         const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
 
         if ($cards) {
-          $newBlock.classList.add('initial-load');
           setTimeout(() => {
-            $newBlock.classList.remove('initial-load');
-          }, 700);
-          toggleExpandableCard($newBlock, $cards[1], payload);
-          payload.desiredHeight = `${$featuresWrappers[1].offsetHeight}px`;
-          toggleExpandableCard($newBlock, $cards[0], payload);
-
-          if (window.innerWidth >= 1200) {
-            $featuresWrappers.forEach((wrapper) => {
-              wrapper.style.maxHeight = payload.desiredHeight;
-            });
-          }
-
-          $newBlock.classList.add('restrained');
-
-          window.addEventListener('resize', () => {
+            toggleExpandableCard($newBlock, $cards[1], payload, true);
             resizeCards($cards, $featuresWrappers, payload);
-          });
+            payload.desiredHeight = `${$featuresWrappers[1].offsetHeight}px`;
+            toggleExpandableCard($newBlock, $cards[0], payload, true);
+
+            if (window.innerWidth >= 1200) {
+              $featuresWrappers.forEach((wrapper) => {
+                wrapper.style.maxHeight = payload.desiredHeight;
+              });
+            }
+
+            $newBlock.classList.add('restrained');
+
+            window.addEventListener('resize', () => {
+              resizeCards($cards, $featuresWrappers, payload);
+            });
+          }, 100);
+
+          setTimeout(() => {
+            $cards.forEach(($card) => {
+              $card.classList.add('transition');
+            });
+          }, 700);
         }
 
         fixIcons($newBlock);
