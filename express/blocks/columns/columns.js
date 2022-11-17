@@ -239,7 +239,80 @@ export default function decorate($block) {
         }
         if ($a.textContent.startsWith('https://')) {
           if ($a.href.endsWith('.mp4')) {
-            transformLinkToAnimation($a);
+            const $video = transformLinkToAnimation($a);
+
+            if ($video && $block.classList.contains('fullscreen')) {
+              $video.addEventListener('loadstart', () => {
+                const $flowers = [
+                  'https://main--express-website--adobe.hlx.page/media_1cb8136ac752c1bb70c81e4c6e4f6745c36735d1a.png#width=500&height=437',
+                  'https://main--express-website--adobe.hlx.page/media_107e6a2960331b70143bbc3321d6b92ef7f49e9c7.png#width=500&height=498',
+                  'https://main--express-website--adobe.hlx.page/media_1544ba4009bb401c6a51a9a1b5e52ec47ba686cab.png#width=500&height=556',
+                  'https://main--express-website--adobe.hlx.page/media_1c0098a95dac73540743f7b31fbd1ac7853835261.png#width=500&height=544',
+                  'https://main--express-website--adobe.hlx.page/media_1d8381305371e958459da1ab5b9df1f2e5c086dc6.png#width=500&height=514',
+                  'https://main--express-website--adobe.hlx.page/media_129a7f284a56bd157c4fbec64ab3cdd032725cd82.png#width=500&height=378',
+                ].map((url) => createOptimizedPicture(url));
+
+                if ($video) {
+                  const $columnWrapper = $video.parentElement;
+                  const $pictureFrameWrapper = createTag('div', { class: 'picture-frame-wrapper' });
+                  const $flowersBoard = createTag('div', { class: 'flowers' });
+                  const $pictureFrameBackground = createTag('div', { class: 'picture-frame-background' });
+                  const $pictureFrame = createTag('div', { class: 'picture-frame' });
+                  const $thumbnails = createTag('div', { class: 'picture-frame-thumbnails' });
+
+                  const $existingCTA = $block.querySelector('a.button');
+
+                  if ($existingCTA) {
+                    const $cloneCta = $existingCTA.cloneNode({ deep: true });
+                    $cloneCta.style.display = 'none';
+                    const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer', href: $existingCTA.href });
+                    $clickableOverlay.append($cloneCta);
+                    $pictureFrameWrapper.prepend($clickableOverlay);
+
+                    $clickableOverlay.addEventListener('mouseenter', () => {
+                      $existingCTA.style.display = 'none';
+                      $cloneCta.style.display = 'block';
+                    }, { passive: true });
+
+                    $clickableOverlay.addEventListener('mouseleave', () => {
+                      $existingCTA.style.removeProperty('display');
+                      $cloneCta.style.display = 'none';
+                    }, { passive: true });
+                  }
+
+                  const $thumbnailImg = createOptimizedPicture('https://www.adobe.com/express/media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
+
+                  $video.classList.add('screen-demo');
+                  $thumbnailImg.classList.add('leaf-thumbnails');
+
+                  $pictureFrame.append($video, $thumbnails);
+                  $thumbnails.append($thumbnailImg);
+                  $pictureFrameWrapper.append(
+                    $pictureFrameBackground,
+                    $flowersBoard,
+                    $pictureFrame,
+                  );
+
+                  $flowers.forEach(($flower, index) => {
+                    $flowersBoard.append($flower);
+                    $flower.className = `flower flower-${index}`;
+                  });
+
+                  $block.append($pictureFrameWrapper);
+
+                  $columnWrapper.remove();
+
+                  window.addEventListener('mousemove', (e) => {
+                    const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
+                    const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
+
+                    $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
+                    $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -100px)`;
+                    $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
+                  }, { passive: true });
+                }
+              });
+            }
           } else if ($pics[0]) {
             linkImage($cell);
           }
@@ -255,16 +328,7 @@ export default function decorate($block) {
         }
 
         if ($block.classList.contains('fullscreen')) {
-          const $flowers = [
-            'https://main--express-website--adobe.hlx.page/media_1cb8136ac752c1bb70c81e4c6e4f6745c36735d1a.png#width=500&height=437',
-            'https://main--express-website--adobe.hlx.page/media_107e6a2960331b70143bbc3321d6b92ef7f49e9c7.png#width=500&height=498',
-            'https://main--express-website--adobe.hlx.page/media_1544ba4009bb401c6a51a9a1b5e52ec47ba686cab.png#width=500&height=556',
-            'https://main--express-website--adobe.hlx.page/media_1c0098a95dac73540743f7b31fbd1ac7853835261.png#width=500&height=544',
-            'https://main--express-website--adobe.hlx.page/media_1d8381305371e958459da1ab5b9df1f2e5c086dc6.png#width=500&height=514',
-            'https://main--express-website--adobe.hlx.page/media_129a7f284a56bd157c4fbec64ab3cdd032725cd82.png#width=500&height=378',
-          ].map((url) => createOptimizedPicture(url));
           const $h1 = $block.querySelector('h1');
-          const $picture = $block.querySelector('picture');
           const $section = $block.closest('.columns-fullscreen-center-container');
 
           if ($h1) {
@@ -280,60 +344,6 @@ export default function decorate($block) {
           }
 
           styleBackgroundWithScroll($section);
-
-          if ($picture) {
-            const $cloneCta = $a.cloneNode({ deep: true });
-            const $columnWrapper = $picture.parentElement;
-            const $pictureFrameWrapper = createTag('div', { class: 'picture-frame-wrapper' });
-            const $flowersBoard = createTag('div', { class: 'flowers' });
-            const $pictureFrameBackground = createTag('div', { class: 'picture-frame-background' });
-            const $pictureFrame = createTag('div', { class: 'picture-frame' });
-            const $thumbnails = createTag('div', { class: 'picture-frame-thumbnails' });
-            const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer', href: $a.href });
-            const $thumbnailImg = createOptimizedPicture('https://www.adobe.com/express/media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
-
-            $picture.classList.add('screen-demo');
-            $thumbnailImg.classList.add('leaf-thumbnails');
-            $cloneCta.style.display = 'none';
-
-            $pictureFrame.append($picture, $thumbnails);
-            $thumbnails.append($thumbnailImg);
-            $clickableOverlay.append($cloneCta);
-            $pictureFrameWrapper.append(
-              $clickableOverlay,
-              $pictureFrameBackground,
-              $flowersBoard,
-              $pictureFrame,
-            );
-
-            $flowers.forEach(($flower, index) => {
-              $flowersBoard.append($flower);
-              $flower.className = `flower flower-${index}`;
-            });
-
-            $block.append($pictureFrameWrapper);
-
-            $columnWrapper.remove();
-
-            $clickableOverlay.addEventListener('mouseenter', () => {
-              $a.style.display = 'none';
-              $cloneCta.style.display = 'block';
-            }, { passive: true });
-
-            $clickableOverlay.addEventListener('mouseleave', () => {
-              $a.style.removeProperty('display');
-              $cloneCta.style.display = 'none';
-            }, { passive: true });
-
-            window.addEventListener('mousemove', (e) => {
-              const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
-              const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
-
-              $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
-              $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -100px)`;
-              $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
-            }, { passive: true });
-          }
         }
       }
 
