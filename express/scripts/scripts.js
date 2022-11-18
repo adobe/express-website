@@ -1627,6 +1627,7 @@ function setTheme() {
   let theme = getMeta('theme');
   if (!theme && (window.location.pathname.startsWith('/express')
   || window.location.pathname.startsWith('/education'))) {
+    // mega nav, suppress brand header
     theme = 'no-brand-header';
   }
   const $body = document.body;
