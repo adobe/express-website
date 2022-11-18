@@ -1369,48 +1369,6 @@ function checkExperimentAudience(audience) {
   return true;
 }
 
-/**
- * gets the variant id that this visitor has been assigned to if any
- * @param {string} experimentId
- * @return {string} assigned variant or empty string if none set
- */
-
-function getLastExperimentVariant(experimentId) {
-  console.log('get last experiment', experimentId);
-  const experimentsStr = localStorage.getItem('hlx-experiments');
-  if (experimentsStr) {
-    const experiments = JSON.parse(experimentsStr);
-    if (experiments[experimentId]) {
-      return experiments[experimentId].variant;
-    }
-  }
-  return '';
-}
-
-/**
- * sets/updates the variant id that is assigned to this visitor,
- * also cleans up old variant ids
- * @param {string} experimentId
- * @param {variant} variant
- */
-
-function setLastExperimentVariant(experimentId, variant) {
-  const experimentsStr = localStorage.getItem('hlx-experiments');
-  const experiments = experimentsStr ? JSON.parse(experimentsStr) : {};
-
-  const now = new Date();
-  const expKeys = Object.keys(experiments);
-  expKeys.forEach((key) => {
-    const date = new Date(experiments[key].date);
-    if (now - date > (1000 * 86400 * 30)) {
-      delete experiments[key];
-    }
-  });
-  const [date] = now.toISOString().split('T');
-
-  experiments[experimentId] = { variant, date };
-  localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
-}
 
 /**
  * checks if a test is active on this page and if so executes the test
@@ -1439,21 +1397,14 @@ async function decorateTesting() {
 
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
-        if (config.run) {
-          const forced = forcedVariant || getLastExperimentVariant(config.id);
-          if (forced && config.variantNames.includes(forced)) {
-            config.selectedVariant = forced;
+        if (config.run) {                    
+          if (forcedVariant && config.variantNames.includes(forcedVariant)) {
+            config.selectedVariant = forcedVariant;
           } else {
-            let random = Math.random();
-            let i = config.variantNames.length;
-            while (random > 0 && i > 0) {
-              i -= 1;
-              console.log(random, i);
-              random -= +config.variants[config.variantNames[i]].percentageSplit;
-            }
-            config.selectedVariant = config.variantNames[i];
+            const ued = await import('./ued/ued-0.2.0.js');
+            const decision = ued.evaluateDecisionPolicy(getDecisionPolicy(config), {});            
+            config.selectedVariant = decision.items[0].id;
           }
-          setLastExperimentVariant(config.id, config.selectedVariant);
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
           if (config.selectedVariant !== 'control') {
@@ -1476,6 +1427,32 @@ async function decorateTesting() {
   } catch (e) {
     console.log('error testing', e);
   }
+}
+
+function getDecisionPolicy(config) {
+  const decisionPolicy = {
+    id: 'content-experimentation-policy',
+    rootDecisionNodeId: 'n1',
+    decisionNodes: [{
+      id: 'n1',
+      type: 'EXPERIMENTATION',
+      experiment: {
+        id: config.id,
+        identityNamespace: 'ECID',
+        randomizationUnit: 'DEVICE',
+        treatments: Object.entries(config.variants).map(([key, props]) => ({
+          id: key,
+          allocationPercentage: props.percentageSplit
+            ? parseFloat(props.percentageSplit) * 100
+            : 100 - Object.values(config.variants).reduce((result, variant) => {
+              result -= parseFloat(variant.percentageSplit || 0) * 100;
+              return result;
+            }, 100),
+        })),
+      },
+    }],
+  };
+  return decisionPolicy;
 }
 
 export async function fixIcons(block = document) {
