@@ -37,6 +37,7 @@ const cache = {
   limit: 70,
   total: 0,
   start: '',
+  sort: '-remixCount',
   masonry: undefined,
   authoringError: false,
 };
@@ -53,7 +54,9 @@ function fetchTemplates() {
       }
     }, '');
 
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${cache.limit}&start=${cache.start}&orderBy=-remixCount&filters=${filterString}`)
+    cache.queryString = `https://www.adobe.com/cc-express-search-api?limit=${cache.limit}&start=${cache.start}&orderBy=${cache.sort}&filters=${filterString}`;
+
+    return fetch(cache.queryString)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -498,6 +501,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $sortButton = $functionContainerMobile.querySelector('.current-option-sort');
   if ($sortButton) {
     $sortButton.textContent = placeholders.sort;
+    $sortButton.className = 'filter-mobile-option-heading';
   }
 
   return { mobile: $functionContainerMobile, desktop: $functionsContainer };
@@ -617,21 +621,102 @@ function initDrawer($toolBar) {
   }, 1);
 }
 
-function initFilterSort($toolBar) {
-  let queryStringPlaceholder = '';
+function updateQueryString(functionWrapper, option) {
+  const paramType = functionWrapper.dataset.param;
+  const paramValue = option.dataset.value;
 
-  const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.in-drawer)');
-
-  $buttons.forEach(($button) => {
-    $button.addEventListener('click', () => {
-      $buttons.forEach((b) => {
-        if ($button !== b) {
-          b.parentElement.classList.remove('opened');
-        }
-      });
-      $button.parentElement.classList.toggle('opened');
+  if (paramType === 'sort') {
+    // TODO: add sort param update function
+  } else {
+    // TODO: add filter param update function
+    const filtersObj = {};
+    const $stringToCheck = cache.queryString.substring(cache.queryString.indexOf('&filters=') + 9);
+    const $arrayOfFilters = $stringToCheck.split(' AND ');
+    $arrayOfFilters.forEach((filter) => {
+      // eslint-disable-next-line prefer-destructuring
+      filtersObj[filter.split(':')[0]] = filter.split(':')[1];
     });
+
+    if (paramType in filtersObj) {
+      if (paramValue === 'remove') {
+        delete filtersObj[paramType];
+      } else {
+        filtersObj[paramType] = `(${paramValue})`;
+      }
+    } else if (paramValue !== 'remove') {
+      filtersObj[paramType] = `(${paramValue})`;
+    }
+
+    const newQueryString = JSON.stringify(filtersObj)
+      .replaceAll(',', ' AND ')
+      .replaceAll('"', '')
+    console.log(newQueryString);
+  }
+}
+
+function updateButtonStatus($block, $loadMore) {
+  if (cache.start === '') {
+    $loadMore.style.display = 'none';
+  }
+}
+
+async function decorateNewTamplates($block, $loadMore) {
+  const newTemplates = await processResponse();
+
+  cache.templates = cache.templates.concat(newTemplates);
+  populateTemplates($block, newTemplates);
+  newTemplates.forEach((template) => {
+    const clone = template.cloneNode(true);
+    $block.append(clone);
   });
+
+  const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
+  cache.masonry.cells = cache.masonry.cells.concat(newCells);
+  cache.masonry.draw(newCells);
+  updateButtonStatus($block, $loadMore);
+}
+
+function initFilterSort($block, $toolBar) {
+  // for desktop
+  const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.in-drawer)');
+  const $loadMoreButton = $block.querySelector('.load-more-button');
+
+  if ($buttons.length > 0) {
+    $buttons.forEach(($button) => {
+      const $wrapper = $button.parentElement;
+      const $currentOption = $wrapper.querySelector('span.current-option');
+      const $optionsList = $button.nextElementSibling;
+      const $options = $optionsList.querySelectorAll('.option-button');
+
+      $button.addEventListener('click', () => {
+        $buttons.forEach((b) => {
+          if ($button !== b) {
+            b.parentElement.classList.remove('opened');
+          }
+        });
+        $wrapper.classList.toggle('opened');
+      });
+
+      $options.forEach(($option) => {
+        $option.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          $options.forEach((o) => {
+            if ($option !== o) {
+              o.classList.remove('active');
+            }
+          });
+          $option.classList.add('active');
+
+          if ($currentOption) {
+            $currentOption.textContent = $option.textContent;
+          }
+
+          updateQueryString($wrapper, $option);
+          console.log(cache);
+        });
+      });
+    });
+  }
 }
 
 function decorateToolbar($block, $section, placeholders) {
@@ -659,7 +744,7 @@ function decorateToolbar($block, $section, placeholders) {
 
     decorateSearchFunctions($toolBar, $section, placeholders);
     initDrawer($toolBar);
-    initFilterSort($toolBar);
+    initFilterSort($block, $toolBar);
   }
 }
 
@@ -914,28 +999,6 @@ export async function decorateTemplateList($block) {
   }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
   document.dispatchEvent(linksPopulated);
-}
-
-function updateButtonStatus($block, $loadMore) {
-  if (cache.start === '') {
-    $loadMore.style.display = 'none';
-  }
-}
-
-async function decorateNewTamplates($block, $loadMore) {
-  const newTemplates = await processResponse();
-
-  cache.templates = cache.templates.concat(newTemplates);
-  populateTemplates($block, newTemplates);
-  newTemplates.forEach((template) => {
-    const clone = template.cloneNode(true);
-    $block.append(clone);
-  });
-
-  const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
-  cache.masonry.cells = cache.masonry.cells.concat(newCells);
-  cache.masonry.draw(newCells);
-  updateButtonStatus($block, $loadMore);
 }
 
 function decorateLoadMoreButton($block) {
