@@ -28,7 +28,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 import addBackgroundAnimation from '../shared/background-animations.js';
 
-const cache = {
+const props = {
   templates: [],
   filters: {
     locales: '(en)',
@@ -43,8 +43,8 @@ const cache = {
 };
 
 function fetchTemplates() {
-  if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
-    const prunedFilter = Object.entries(cache.filters)
+  if (!props.authoringError && Object.keys(props.filters).length !== 0) {
+    const prunedFilter = Object.entries(props.filters)
       .filter(([, value]) => value !== '()');
     const filterString = prunedFilter.reduce((string, [key, value]) => {
       if (key === prunedFilter[prunedFilter.length - 1][0]) {
@@ -54,9 +54,9 @@ function fetchTemplates() {
       }
     }, '');
 
-    cache.queryString = `https://www.adobe.com/cc-express-search-api?limit=${cache.limit}&start=${cache.start}&orderBy=${cache.sort}&filters=${filterString}`;
+    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
 
-    return fetch(cache.queryString)
+    return fetch(props.queryString)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -76,14 +76,14 @@ async function processResponse() {
       const nextQuery = response._links.next.href;
       const start = new URLSearchParams(nextQuery).get('start')
         .split(',')[0];
-      cache.start = start;
+      props.start = start;
     } else {
-      cache.start = '';
+      props.start = '';
     }
 
-    if (cache.total === 0) {
+    if (props.total === 0) {
       // eslint-disable-next-line no-underscore-dangle
-      cache.total = response._embedded.total;
+      props.total = response._embedded.total;
     }
   }
 
@@ -216,7 +216,7 @@ function populateTemplates($block, templates) {
     }
 
     if ($rowWithLinkInFirstCol && !$tmplt.querySelector('img')) {
-      cache.tailButton = $rowWithLinkInFirstCol;
+      props.tailButton = $rowWithLinkInFirstCol;
       $rowWithLinkInFirstCol.remove();
     }
 
@@ -341,24 +341,24 @@ async function readRowsFromBlock($block) {
       const cells = row.querySelectorAll('div');
       if (index === 0) {
         if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-          cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-          cache.heading = cells[1].textContent;
+          props.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+          props.heading = cells[1].textContent;
         } else if ($block.classList.contains('holiday')) {
-          cache.heading = row;
+          props.heading = row;
         } else {
-          cache.heading = row.textContent;
+          props.heading = row.textContent;
         }
         row.remove();
       } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-        cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
+        props.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
       } else if (cells[0].textContent.toLowerCase() === 'background animation') {
-        cache.backgroundAnimation = cells[1].textContent;
+        props.backgroundAnimation = cells[1].textContent;
       } else if (index < array.length) {
         if (cells.length >= 2) {
           if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-            cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+            props.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
           } else {
-            cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+            props.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
           }
         }
         row.remove();
@@ -368,15 +368,15 @@ async function readRowsFromBlock($block) {
     const fetchedTemplates = await processResponse();
 
     if (fetchedTemplates) {
-      cache.templates = cache.templates.concat(fetchedTemplates);
-      cache.templates.forEach((template) => {
+      props.templates = props.templates.concat(fetchedTemplates);
+      props.templates.forEach((template) => {
         const clone = template.cloneNode(true);
         $block.append(clone);
       });
     }
   } else {
-    cache.heading = 'Authoring error: first row must specify the template “type”';
-    cache.authoringError = true;
+    props.heading = 'Authoring error: first row must specify the template “type”';
+    props.authoringError = true;
   }
 }
 
@@ -621,7 +621,7 @@ function initDrawer($toolBar) {
   }, 1);
 }
 
-function updateQueryString(functionWrapper, option) {
+function updateQueryURL(functionWrapper, option) {
   const paramType = functionWrapper.dataset.param;
   const paramValue = option.dataset.value;
 
@@ -629,13 +629,7 @@ function updateQueryString(functionWrapper, option) {
     // TODO: add sort param update function
   } else {
     // TODO: add filter param update function
-    const filtersObj = {};
-    const $stringToCheck = cache.queryString.substring(cache.queryString.indexOf('&filters=') + 9);
-    const $arrayOfFilters = $stringToCheck.split(' AND ');
-    $arrayOfFilters.forEach((filter) => {
-      // eslint-disable-next-line prefer-destructuring
-      filtersObj[filter.split(':')[0]] = filter.split(':')[1];
-    });
+    const filtersObj = props.filters;
 
     if (paramType in filtersObj) {
       if (paramValue === 'remove') {
@@ -647,23 +641,21 @@ function updateQueryString(functionWrapper, option) {
       filtersObj[paramType] = `(${paramValue})`;
     }
 
-    const newQueryString = JSON.stringify(filtersObj)
-      .replaceAll(',', ' AND ')
-      .replaceAll('"', '')
-    console.log(newQueryString);
+    props.filters = filtersObj;
   }
 }
 
 function updateButtonStatus($block, $loadMore) {
-  if (cache.start === '') {
+  if (props.start === '') {
     $loadMore.style.display = 'none';
   }
 }
 
-async function decorateNewTamplates($block, $loadMore) {
+async function decorateNewTamplates($block) {
   const newTemplates = await processResponse();
+  const $loadMore = $block.querySelector('.load-more');
 
-  cache.templates = cache.templates.concat(newTemplates);
+  props.templates = props.templates.concat(newTemplates);
   populateTemplates($block, newTemplates);
   newTemplates.forEach((template) => {
     const clone = template.cloneNode(true);
@@ -671,15 +663,17 @@ async function decorateNewTamplates($block, $loadMore) {
   });
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
-  cache.masonry.cells = cache.masonry.cells.concat(newCells);
-  cache.masonry.draw(newCells);
-  updateButtonStatus($block, $loadMore);
+  props.masonry.cells = props.masonry.cells.concat(newCells);
+  props.masonry.draw(newCells);
+
+  if ($loadMore) {
+    updateButtonStatus($block, $loadMore);
+  }
 }
 
 function initFilterSort($block, $toolBar) {
   // for desktop
   const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.in-drawer)');
-  const $loadMoreButton = $block.querySelector('.load-more-button');
 
   if ($buttons.length > 0) {
     $buttons.forEach(($button) => {
@@ -711,8 +705,11 @@ function initFilterSort($block, $toolBar) {
             $currentOption.textContent = $option.textContent;
           }
 
-          updateQueryString($wrapper, $option);
-          console.log(cache);
+          updateQueryURL($wrapper, $option);
+          $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
+            $card.remove();
+          });
+          await decorateNewTamplates($block);
         });
       });
     });
@@ -749,18 +746,18 @@ function decorateToolbar($block, $section, placeholders) {
 }
 
 export async function decorateTemplateList($block) {
+  const placeholders = await fetchPlaceholders().then((result) => result);
   if ($block.classList.contains('apipowered')) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
     await readRowsFromBlock($block);
 
     const $parent = $block.closest('.section');
     if ($parent) {
       if ($block.classList.contains('holiday')) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
-        const $icon = cache.heading.querySelector('picture');
-        const $content = Array.from(cache.heading.querySelectorAll('p'))
+        const $icon = props.heading.querySelector('picture');
+        const $content = Array.from(props.heading.querySelectorAll('p'))
           .filter((p) => p.textContent !== '' && p.querySelector('a') === null);
-        const $a = cache.heading.querySelector('a');
+        const $a = props.heading.querySelector('a');
         $a.classList.add('expanded');
         $a.classList.add('toggle-button');
         $a.classList.remove('button');
@@ -796,7 +793,7 @@ export async function decorateTemplateList($block) {
                 $button.classList.toggle('expanded');
               });
           }
-        }, cache.autoCollapseDelay);
+        }, props.autoCollapseDelay);
       } else {
         const $toolBar = $parent.querySelector('.default-content-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
@@ -805,10 +802,10 @@ export async function decorateTemplateList($block) {
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
         if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
-          if (cache.authoringError) {
-            $sectionHeading.textContent = cache.heading;
+          if (props.authoringError) {
+            $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${placeholders['api-powered-grid-heading']}`;
+            $sectionHeading.textContent = `${props.total.toLocaleString('en-US')} ${props.heading} ${placeholders['api-powered-grid-heading']}`;
           }
         }
 
@@ -910,10 +907,7 @@ export async function decorateTemplateList($block) {
         href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
       });
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      fetchPlaceholders()
-        .then((placeholders) => {
-          $clipboardTag.textContent = placeholders['tag-copied'];
-        });
+      $clipboardTag.textContent = placeholders['tag-copied'];
 
       $anchorLink.addEventListener('click', (e) => {
         e.preventDefault();
@@ -944,14 +938,10 @@ export async function decorateTemplateList($block) {
     }, { width: '750' }];
   }
 
-  $block.querySelectorAll(':scope picture > img')
-    .forEach(($img) => {
-      const {
-        src,
-        alt,
-      } = $img;
-      $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
-    });
+  $block.querySelectorAll(':scope picture > img').forEach(($img) => {
+    const { src, alt } = $img;
+    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+  });
 
   // find the edit link and turn the template DIV into the A
   // A
@@ -972,7 +962,7 @@ export async function decorateTemplateList($block) {
       $block.classList.add('flex-masonry');
 
       const masonry = new Masonry($block, cells);
-      cache.masonry = masonry;
+      props.masonry = masonry;
       masonry.draw();
       window.addEventListener('resize', () => {
         masonry.draw();
@@ -983,18 +973,13 @@ export async function decorateTemplateList($block) {
   }
 
   const $templateLinks = $block.querySelectorAll('a.template');
-  let freeInAppText;
-  await fetchPlaceholders()
-    .then((placeholders) => {
-      freeInAppText = placeholders['free-in-app'];
-    });
+  const freeInAppText = placeholders['free-in-app'];
   for (const $templateLink of $templateLinks) {
     const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
     if (!isPremium && !$templateLink.classList.contains('placeholder')) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div')
-        .append($freeInAppBadge);
+      $templateLink.querySelector('div').append($freeInAppBadge);
     }
   }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
@@ -1016,7 +1001,7 @@ function decorateLoadMoreButton($block) {
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
     const scrollPosition = window.scrollY;
-    await decorateNewTamplates($block, $loadMoreDiv);
+    await decorateNewTamplates($block);
     window.scrollTo({
       top: scrollPosition,
       left: 0,
@@ -1031,15 +1016,15 @@ function decorateTailButton($block) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
 
   if ($carouselPlatform) {
-    cache.tailButton.classList.add('tail-cta');
-    $carouselPlatform.append(cache.tailButton);
+    props.tailButton.classList.add('tail-cta');
+    $carouselPlatform.append(props.tailButton);
   }
 }
 
 function cacheCreatedTemplate($block) {
   const lastRow = $block.children[$block.children.length - 1];
   if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
-    cache.templates.push(lastRow.cloneNode(true));
+    props.templates.push(lastRow.cloneNode(true));
     lastRow.remove();
   }
 }
@@ -1065,7 +1050,7 @@ export default async function decorate($block) {
     decorateTailButton($block);
   }
 
-  if ($block.classList.contains('holiday') && cache.backgroundAnimation) {
-    addBackgroundAnimation($block, cache.backgroundAnimation);
+  if ($block.classList.contains('holiday') && props.backgroundAnimation) {
+    addBackgroundAnimation($block, props.backgroundAnimation);
   }
 }
