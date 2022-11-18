@@ -1624,7 +1624,11 @@ function splitSections($main) {
 }
 
 function setTheme() {
-  const theme = getMeta('theme');
+  let theme = getMeta('theme');
+  if (!theme && (window.location.pathname.startsWith('/express')
+  || window.location.pathname.startsWith('/education'))) {
+    theme = 'no-brand-header';
+  }
   const $body = document.body;
   if (theme) {
     let themeClass = toClassName(theme);
