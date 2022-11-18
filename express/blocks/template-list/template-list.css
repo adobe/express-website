@@ -813,14 +813,13 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .options-wrapper,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .function-wrapper:hover .options-wrapper,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .options-wrapper {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .function-wrapper:hover .options-wrapper {
   display: flex;
 }
 
+
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .button-wrapper:after,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .function-wrapper:hover .button-wrapper:after,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .button-wrapper:after {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .function-wrapper:hover .button-wrapper:after {
   transform: rotate(315deg) translate(-2px, 2px);
 }
 
@@ -836,12 +835,15 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:before,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:before {
   content: '•';
-  display: inline-block;
+  display: block;
   height: 14px;
   width: 14px;
+  max-height: 14px;
+  max-width: 14px;
   color: var(--color-white);
   font-size: 4px;
   border: var(--color-black) 2px solid;
+  transition: all 0.2s;
   border-radius: 50%;
   margin-right: 4px;
 }
@@ -849,16 +851,16 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover:before,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover:before {
   border: var(--color-info-accent-light) 6px solid;
-  height: 6px;
-  width: 6px;
+  max-height: 6px;
+  max-width: 6px;
   border-radius: 50%;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button.active:before,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active:before{
   border: var(--color-info-accent) 6px solid;
-  height: 6px;
-  width: 6px;
+  max-height: 6px;
+  max-width: 6px;
   border-radius: 50%;
 }
 
@@ -1159,6 +1161,14 @@ main .template-list.horizontal .carousel-platform {
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
     flex-basis: unset;
     padding-right: 16px;
+  }
+
+  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .options-wrapper {
+    display: flex;
+  }
+
+  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .button-wrapper:after {
+    transform: rotate(315deg) translate(-2px, 2px);
   }
 }
 

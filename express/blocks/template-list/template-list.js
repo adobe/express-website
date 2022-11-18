@@ -580,6 +580,33 @@ function closeDrawer($toolBar) {
   }, 500);
 }
 
+function updateOptionsStatus($toolBar) {
+  const $wrappers = $toolBar.querySelectorAll('.function-wrapper');
+
+  $wrappers.forEach(($wrapper) => {
+    const $currentOption = $wrapper.querySelector('.current-option');
+    const $options = $wrapper.querySelectorAll('.option-button');
+
+    $options.forEach(($option) => {
+      const paramType = $wrapper.dataset.param;
+      const paramValue = paramType === 'sort' ? $option.dataset.value : `(${$option.dataset.value})`;
+      if (props[paramType] === paramValue
+        || props.filters[paramType] === paramValue
+        || (!props[paramType] && paramValue === '(remove)')) {
+        if ($currentOption) {
+          $currentOption.textContent = $option.textContent;
+        }
+        $options.forEach((o) => {
+          if ($option !== o) {
+            o.classList.remove('active');
+          }
+        });
+        $option.classList.add('active');
+      }
+    });
+  });
+}
+
 function initDrawer($toolBar) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
@@ -589,7 +616,10 @@ function initDrawer($toolBar) {
 
   const $functionWrappers = $drawer.querySelectorAll('.function-wrapper');
 
+  let currentFilters;
+
   $filterButton.addEventListener('click', () => {
+    currentFilters = { ...props.filters };
     $drawer.classList.remove('hidden');
     $drawerBackground.classList.remove('hidden');
     $applyButton.classList.remove('hidden');
@@ -608,7 +638,9 @@ function initDrawer($toolBar) {
   }, { passive: true });
 
   $closeDrawer.addEventListener('click', () => {
+    props.filters = { ...currentFilters };
     closeDrawer($toolBar);
+    updateOptionsStatus($toolBar);
   }, { passive: true });
 
   setTimeout(() => {
@@ -638,8 +670,7 @@ function updateQueryURL(functionWrapper, option) {
   const paramValue = option.dataset.value;
 
   if (paramType === 'sort') {
-    // TODO: add sort param update function
-    console.log('time to sort');
+    props.sort = paramValue;
   } else {
     const filtersObj = props.filters;
 
@@ -683,16 +714,17 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
   } else {
     props.masonry.cells = props.masonry.cells.concat(newCells);
   }
-
   props.masonry.draw(newCells);
 
-  updateLoadMoreButton($block, $loadMore);
+  if ($loadMore) {
+    updateLoadMoreButton($block, $loadMore);
+  }
 }
 
 async function redrawTemplates($block, $toolBar) {
   const $heading = $toolBar.querySelector('h2');
   const currentTotal = props.total.toString();
-  props.templates = [];
+  props.templates = [props.templates[0]];
   props.start = '';
   $block.querySelectorAll('.template:not(.placeholder)')
     .forEach(($card) => {
@@ -701,19 +733,12 @@ async function redrawTemplates($block, $toolBar) {
   await decorateNewTemplates($block, { reDrawMasonry: true })
     .then(() => {
       $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toString());
+      updateOptionsStatus($toolBar);
     });
 }
 
-function initSorting($block, $toolBar) {
-  const $buttons = $toolBar.querySelectorAll('.button-wrapper.button-wrapper-sort');
-
-  if ($buttons.length > 0) {
-    // todo: add sorting functions
-  }
-}
-
-function initFiltering($block, $toolBar) {
-  const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.button-wrapper-sort)');
+function initFilterSort($block, $toolBar) {
+  const $buttons = $toolBar.querySelectorAll('.button-wrapper');
   const $applyFilterButton = $toolBar.querySelector('.apply-filter-button');
 
   if ($buttons.length > 0) {
@@ -733,6 +758,9 @@ function initFiltering($block, $toolBar) {
       }, { passive: true });
 
       $options.forEach(($option) => {
+        // sync current filter & sorting method with toolbar current options
+        updateOptionsStatus($toolBar);
+
         $option.addEventListener('click', async (e) => {
           e.stopPropagation();
           $options.forEach((o) => {
@@ -760,7 +788,7 @@ function initFiltering($block, $toolBar) {
         e.preventDefault();
         await redrawTemplates($block, $toolBar);
         closeDrawer($toolBar);
-      }, { passive: true });
+      });
     }
   }
 }
@@ -790,7 +818,7 @@ function decorateToolbar($block, $section, placeholders) {
 
     decorateSearchFunctions($toolBar, $section, placeholders);
     initDrawer($toolBar);
-    initFiltering($block, $toolBar);
+    initFilterSort($block, $toolBar);
   }
 }
 
