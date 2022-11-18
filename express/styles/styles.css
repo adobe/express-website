@@ -452,7 +452,6 @@ h5,
 h6 {
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
-  overflow-wrap: anywhere;
   -webkit-hyphens: auto; /* safari */
   hyphens: auto;
 }
@@ -548,6 +547,16 @@ main .section:last-of-type>.default-content-wrapper {
 }
 
 @media(min-width:1200px) {
+  main h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    -webkit-hyphens: unset; /* safari */
+    hyphens: unset;
+  }
+
   main .section h1 {
     font-size: var(--heading-font-size-l);
   }
