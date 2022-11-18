@@ -66,7 +66,6 @@ function fetchTemplates() {
 async function processResponse() {
   const response = await fetchTemplates();
   let templateFetched;
-  // eslint-disable-next-line no-underscore-dangle
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
     templateFetched = response._embedded.results;
@@ -81,10 +80,8 @@ async function processResponse() {
       props.start = '';
     }
 
-    if (props.total === 0) {
-      // eslint-disable-next-line no-underscore-dangle
-      props.total = response._embedded.total;
-    }
+    // eslint-disable-next-line no-underscore-dangle
+    props.total = response._embedded.total;
   }
 
   const renditionParams = {
@@ -481,10 +478,17 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   );
 
   const $buttonsInDrawer = $drawer.querySelectorAll('.button-wrapper');
+  const $optionsInDrawer = $drawer.querySelectorAll('.options-wrapper');
 
-  $buttonsInDrawer.forEach((button) => {
-    button.classList.add('in-drawer');
-    button.querySelector('.current-option').className = 'filter-mobile-option-heading';
+  [$buttonsInDrawer, $optionsInDrawer].forEach((category) => {
+    category.forEach((element) => {
+      element.classList.add('in-drawer');
+      const heading = element.querySelector('.current-option');
+
+      if (heading) {
+        heading.className = 'filter-mobile-option-heading';
+      }
+    });
   });
 
   $mobileFilterButtonWrapper.append(getIconElement('scratch-icon-22'), $mobileFilterButton);
@@ -560,6 +564,22 @@ function decorateSearchFunctions($toolBar, $section, placeholders) {
   initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
 }
 
+function closeDrawer($toolBar) {
+  const $drawerBackground = $toolBar.querySelector('.drawer-background');
+  const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
+  const $applyButton = $toolBar.querySelector('.apply-filter-button-wrapper');
+
+  $drawer.classList.add('retracted');
+  $drawerBackground.classList.add('transparent');
+  $applyButton.classList.add('transparent');
+
+  setTimeout(() => {
+    $drawer.classList.add('hidden');
+    $drawerBackground.classList.add('hidden');
+    $applyButton.classList.add('hidden');
+  }, 500);
+}
+
 function initDrawer($toolBar) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
@@ -588,15 +608,7 @@ function initDrawer($toolBar) {
   }, { passive: true });
 
   $closeDrawer.addEventListener('click', () => {
-    $drawer.classList.add('retracted');
-    $drawerBackground.classList.add('transparent');
-    $applyButton.classList.add('transparent');
-
-    setTimeout(() => {
-      $drawer.classList.add('hidden');
-      $drawerBackground.classList.add('hidden');
-      $applyButton.classList.add('hidden');
-    }, 500);
+    closeDrawer($toolBar);
   }, { passive: true });
 
   setTimeout(() => {
@@ -627,8 +639,8 @@ function updateQueryURL(functionWrapper, option) {
 
   if (paramType === 'sort') {
     // TODO: add sort param update function
+    console.log('time to sort');
   } else {
-    // TODO: add filter param update function
     const filtersObj = props.filters;
 
     if (paramType in filtersObj) {
@@ -645,15 +657,17 @@ function updateQueryURL(functionWrapper, option) {
   }
 }
 
-function updateButtonStatus($block, $loadMore) {
+function updateLoadMoreButton($block, $loadMore) {
   if (props.start === '') {
     $loadMore.style.display = 'none';
+  } else {
+    $loadMore.style.removeProperty('display');
   }
 }
 
-async function decorateNewTamplates($block) {
+async function decorateNewTemplates($block, options = { reDrawMasonry: false }) {
   const newTemplates = await processResponse();
-  const $loadMore = $block.querySelector('.load-more');
+  const $loadMore = $block.parentElement.querySelector('.load-more');
 
   props.templates = props.templates.concat(newTemplates);
   populateTemplates($block, newTemplates);
@@ -663,17 +677,44 @@ async function decorateNewTamplates($block) {
   });
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
-  props.masonry.cells = props.masonry.cells.concat(newCells);
+
+  if (options.reDrawMasonry) {
+    props.masonry.cells = [props.masonry.cells[0]].concat(newCells);
+  } else {
+    props.masonry.cells = props.masonry.cells.concat(newCells);
+  }
+
   props.masonry.draw(newCells);
 
-  if ($loadMore) {
-    updateButtonStatus($block, $loadMore);
+  updateLoadMoreButton($block, $loadMore);
+}
+
+async function redrawTemplates($block, $toolBar) {
+  const $heading = $toolBar.querySelector('h2');
+  const currentTotal = props.total.toString();
+  props.templates = [];
+  props.start = '';
+  $block.querySelectorAll('.template:not(.placeholder)')
+    .forEach(($card) => {
+      $card.remove();
+    });
+  await decorateNewTemplates($block, { reDrawMasonry: true })
+    .then(() => {
+      $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toString());
+    });
+}
+
+function initSorting($block, $toolBar) {
+  const $buttons = $toolBar.querySelectorAll('.button-wrapper.button-wrapper-sort');
+
+  if ($buttons.length > 0) {
+    // todo: add sorting functions
   }
 }
 
-function initFilterSort($block, $toolBar) {
-  // for desktop
-  const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.in-drawer)');
+function initFiltering($block, $toolBar) {
+  const $buttons = $toolBar.querySelectorAll('.button-wrapper:not(.button-wrapper-sort)');
+  const $applyFilterButton = $toolBar.querySelector('.apply-filter-button');
 
   if ($buttons.length > 0) {
     $buttons.forEach(($button) => {
@@ -689,7 +730,7 @@ function initFilterSort($block, $toolBar) {
           }
         });
         $wrapper.classList.toggle('opened');
-      });
+      }, { passive: true });
 
       $options.forEach(($option) => {
         $option.addEventListener('click', async (e) => {
@@ -706,13 +747,21 @@ function initFilterSort($block, $toolBar) {
           }
 
           updateQueryURL($wrapper, $option);
-          $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
-            $card.remove();
-          });
-          await decorateNewTamplates($block);
-        });
+
+          if (!$button.classList.contains('in-drawer')) {
+            await redrawTemplates($block, $toolBar);
+          }
+        }, { passive: true });
       });
     });
+
+    if ($applyFilterButton) {
+      $applyFilterButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await redrawTemplates($block, $toolBar);
+        closeDrawer($toolBar);
+      }, { passive: true });
+    }
   }
 }
 
@@ -741,7 +790,7 @@ function decorateToolbar($block, $section, placeholders) {
 
     decorateSearchFunctions($toolBar, $section, placeholders);
     initDrawer($toolBar);
-    initFilterSort($block, $toolBar);
+    initFiltering($block, $toolBar);
   }
 }
 
@@ -1001,7 +1050,7 @@ function decorateLoadMoreButton($block) {
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
     const scrollPosition = window.scrollY;
-    await decorateNewTamplates($block);
+    await decorateNewTemplates($block);
     window.scrollTo({
       top: scrollPosition,
       left: 0,
@@ -1009,7 +1058,6 @@ function decorateLoadMoreButton($block) {
     });
     $loadMoreButton.classList.remove('disabled');
   });
-  updateButtonStatus($block, $loadMoreDiv);
 }
 
 function decorateTailButton($block) {
@@ -1043,7 +1091,12 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
+    const $loadMore = $block.parentElement.querySelector('.load-more');
     decorateLoadMoreButton($block);
+
+    if ($loadMore) {
+      updateLoadMoreButton($block, $loadMore);
+    }
   }
 
   if ($block.classList.contains('mini')) {
