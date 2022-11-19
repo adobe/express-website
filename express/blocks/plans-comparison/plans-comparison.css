@@ -89,6 +89,7 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     margin: 0;
     font-size: 28px;
     line-height: 36px;
+    text-align: left;
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .plans-comparison-sub-copy {
@@ -222,6 +223,12 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+main .plans-comparison-container .plans-comparison.initial-load .plans-comparison-cards .plans-comparison-card.card-premium.clip .features-wrapper > li {
+    white-space: unset;
+    overflow: unset;
+    text-overflow: unset;
 }
 
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.clip .plans-comparison-sub-copy {

@@ -26,8 +26,6 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import addBackgroundAnimation from '../shared/background-animations.js';
-
 const props = {
   templates: [],
   filters: {
@@ -41,6 +39,42 @@ const props = {
   masonry: undefined,
   authoringError: false,
 };
+
+function wordStartsWithVowels(word) {
+  return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
+}
+
+async function populateHeadingPlaceholder(locale) {
+  const placeholders = await fetchPlaceholders()
+    .then((response) => response);
+
+  let grammarTemplate = placeholders['template-placeholder'];
+
+  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
+  }
+
+  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{Type}}', props.heading);
+  }
+
+  if (grammarTemplate.indexOf('{{type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{type}}', props.heading.charAt(0).toLowerCase() + props.heading.slice(1));
+  }
+
+  if (locale === 'fr') {
+    grammarTemplate.split(' ').forEach((word, index, words) => {
+      if (index + 1 < words.length) {
+        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+          grammarTemplate = words.join(' ');
+        }
+      }
+    });
+  }
+
+  return grammarTemplate;
+}
 
 function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
@@ -830,6 +864,9 @@ export async function decorateTemplateList($block) {
     const $parent = $block.closest('.section');
     if ($parent) {
       if ($block.classList.contains('holiday')) {
+        if (props.backgroundColor) {
+          $parent.style.background = props.backgroundColor;
+        }
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = props.heading.querySelector('picture');
         const $content = Array.from(props.heading.querySelectorAll('p'))
@@ -849,7 +886,11 @@ export async function decorateTemplateList($block) {
         $mobileAnchor.classList.add('mobile-only');
 
         $toggleBar.append($topElements, $bottomElements);
-        $topElements.append($icon, $content[0]);
+        if ($icon) {
+          $parent.classList.add('with-icon');
+          $topElements.append($icon, $content[0]);
+        }
+        $topElements.append($content[0]);
         $bottomElements.append($content[1], $a);
         $wrapper.prepend($mobileSubtext);
         $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
@@ -882,7 +923,7 @@ export async function decorateTemplateList($block) {
           if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = `${props.total.toLocaleString('en-US')} ${props.heading} ${placeholders['api-powered-grid-heading']}`;
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
           }
         }
 
@@ -899,7 +940,6 @@ export async function decorateTemplateList($block) {
   }
 
   let rows = $block.children.length;
-  const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('img').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
@@ -1132,6 +1172,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
-    addBackgroundAnimation($block, props.backgroundAnimation);
+    import('../shared/background-animations.js')
+      .then((js) => js.default($block, props.backgroundAnimation));
   }
 }
