@@ -394,6 +394,10 @@ main .columns.highlight .column h5 {
   margin-bottom: 8px;
 }
 
+main .columns h2 + h3 {
+  margin-top: 20px;
+}
+
 main .columns.highlight .column h5 + h2,
 main .columns.highlight .column h5 + h3,
 main .columns.highlight .column h5 + h4 {
