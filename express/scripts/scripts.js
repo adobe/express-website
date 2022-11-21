@@ -1624,7 +1624,12 @@ function splitSections($main) {
 }
 
 function setTheme() {
-  const theme = getMeta('theme');
+  let theme = getMeta('theme');
+  if (!theme && (window.location.pathname.startsWith('/express')
+  || window.location.pathname.startsWith('/education'))) {
+    // mega nav, suppress brand header
+    theme = 'no-brand-header';
+  }
   const $body = document.body;
   if (theme) {
     let themeClass = toClassName(theme);
@@ -2134,7 +2139,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);

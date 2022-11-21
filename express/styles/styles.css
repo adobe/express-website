@@ -37,8 +37,8 @@
   --gradient-highlight-diagonal: linear-gradient(45deg, #7c84fc, #ff4dd2);
 
   /* header */
-  --header-height: 143px;
-  --header-height-no-brand: 64px;
+  --header-height: 64px;
+  --brand-header-height: 79px;
 
   /* body */
   --body-background-color: var(--color-white);
@@ -108,10 +108,11 @@ body.appear {
 
 /* gnav */
 
-header {
-  box-sizing: border-box;
+body > header {
+  box-sizing: content-box;
   border-bottom: 1px solid #EAEAEA;
-  height: var(--header-height);
+  min-height: var(--header-height);
+  padding-bottom: var(--brand-header-height);
   background-image: url(/express/icons/cc-express-logo.svg);
   background-repeat: no-repeat;
   background-size: auto 32px;
@@ -120,9 +121,10 @@ header {
   background-color: #FFF;
 }
 
-body.no-brand-header header,
-body.no-desktop-brand-header header {
-  height: var(--header-height-no-brand);
+body.no-brand-header > header,
+body.no-desktop-brand-header > header {
+  height: auto;
+  padding-bottom: 0;
   background-image: unset;
 }
 
@@ -173,10 +175,10 @@ a.button:any-link {
   border-width: 2px;
   border-style: solid;
   margin: 10px;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
+
 }
 
 a.button.xlarge:any-link {
@@ -450,6 +452,9 @@ h5,
 h6 {
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto; /* safari */
+  hyphens: auto;
 }
 
 main h1 {

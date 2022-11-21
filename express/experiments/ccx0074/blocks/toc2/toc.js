@@ -38,7 +38,7 @@ export default async function decorate($block) {
         ev.stopPropagation();
         toggleToc($toggle, $block, false);
         const url = new URL(ev.target.href);
-        if (url.pathname === window.location.pathname) {
+        if (url.origin === window.location.origin) {
           ev.preventDefault();
           window.location.hash = url.hash;
         }

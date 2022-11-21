@@ -26,8 +26,6 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import addBackgroundAnimation from '../shared/background-animations.js';
-
 const cache = {
   templates: [],
   filters: {
@@ -40,6 +38,42 @@ const cache = {
   masonry: undefined,
   authoringError: false,
 };
+
+function wordStartsWithVowels(word) {
+  return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
+}
+
+async function populateHeadingPlaceholder(locale) {
+  const placeholders = await fetchPlaceholders()
+    .then((response) => response);
+
+  let grammarTemplate = placeholders['template-placeholder'];
+
+  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', cache.total.toLocaleString('en-US'));
+  }
+
+  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{Type}}', cache.heading);
+  }
+
+  if (grammarTemplate.indexOf('{{type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{type}}', cache.heading.charAt(0).toLowerCase() + cache.heading.slice(1));
+  }
+
+  if (locale === 'fr') {
+    grammarTemplate.split(' ').forEach((word, index, words) => {
+      if (index + 1 < words.length) {
+        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+          grammarTemplate = words.join(' ');
+        }
+      }
+    });
+  }
+
+  return grammarTemplate;
+}
 
 function fetchTemplates() {
   if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
@@ -337,6 +371,8 @@ function initToggle($section) {
 }
 
 export async function decorateTemplateList($block) {
+  const locale = getLocale(window.location);
+
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
       Array.from($block.children)
@@ -356,6 +392,8 @@ export async function decorateTemplateList($block) {
             cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
           } else if (cells[0].textContent.toLowerCase() === 'background animation') {
             cache.backgroundAnimation = cells[1].textContent;
+          } else if (cells[0].textContent.toLowerCase() === 'background color') {
+            cache.backgroundColor = cells[1].textContent;
           } else if (index < array.length) {
             if (cells.length >= 2) {
               if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
@@ -385,6 +423,9 @@ export async function decorateTemplateList($block) {
     const $parent = $block.closest('.section');
     if ($parent) {
       if ($block.classList.contains('holiday')) {
+        if (cache.backgroundColor) {
+          $parent.style.background = cache.backgroundColor;
+        }
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
         const $content = Array.from(cache.heading.querySelectorAll('p'))
@@ -404,7 +445,11 @@ export async function decorateTemplateList($block) {
         $mobileAnchor.classList.add('mobile-only');
 
         $toggleBar.append($topElements, $bottomElements);
-        $topElements.append($icon, $content[0]);
+        if ($icon) {
+          $parent.classList.add('with-icon');
+          $topElements.append($icon, $content[0]);
+        }
+        $topElements.append($content[0]);
         $bottomElements.append($content[1], $a);
         $wrapper.prepend($mobileSubtext);
         $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
@@ -432,9 +477,7 @@ export async function decorateTemplateList($block) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
           } else {
-            const headingEnding = await fetchPlaceholders()
-              .then((placeholders) => placeholders['api-powered-grid-heading']);
-            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
           }
         }
       }
@@ -442,7 +485,6 @@ export async function decorateTemplateList($block) {
   }
 
   let rows = $block.children.length;
-  const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('img').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
@@ -705,6 +747,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('holiday') && cache.backgroundAnimation) {
-    addBackgroundAnimation($block, cache.backgroundAnimation);
+    import('../shared/background-animations.js')
+      .then((js) => js.default($block, cache.backgroundAnimation));
   }
 }
