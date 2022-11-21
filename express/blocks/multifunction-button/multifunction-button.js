@@ -77,6 +77,9 @@ export async function createFloatingButton($block, data) {
   $floatButton.append($floatButtonLink);
   $floatButton.append($lottieScrollButton);
   $floatButtonWrapper.append($floatButton);
+  $floatButtonWrapper.dataset.audience = 'mobile';
+  
+  $block.remove();
 
   $main.append($floatButtonWrapper);
 
@@ -269,8 +272,8 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   const $notchPill = createTag('div', { class: 'notch-pill' });
   const $appStoreBadge = decorateBadge();
   const $background = createTag('div', { class: 'toolbox-background' });
-  const $floatingButton = $wrapper.querySelector('.multifunction-button');
-  const $cta = $floatingButton.querySelector('a');
+  const $multifunctionButton = $wrapper.querySelector('.multifunction-button');
+  const $cta = $multifunctionButton.querySelector('a');
   const $toggleButton = createTag('a', { class: 'toggle-button' });
   const $toggleIcon = getIconElement('plus-icon-22');
   const $lottie = $wrapper.querySelector('.multifunction-button-lottie');
@@ -290,7 +293,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
 
   $wrapper.classList.add('initial-load');
   $wrapper.classList.add('toolbox-opened');
-  $floatingButton.classList.add('toolbox-opened');
+  $multifunctionButton.classList.add('toolbox-opened');
   hideScrollArrow($wrapper, $lottie);
 
   setTimeout(() => {
@@ -300,7 +303,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   }, delayInSeconds * 1000);
 
   $toggleButton.append($toggleIcon);
-  $floatingButton.append($toggleButton);
+  $multifunctionButton.append($toggleButton);
   $notch.append($notchPill);
   $toolBox.append($notch, $appStoreBadge);
   $wrapper.append($toolBox, $background);
@@ -326,8 +329,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   initNotchDragAction($wrapper);
 }
 
-export async function createMultiFunctionButton($block, data, $parentSection) {
-  let $buttonWrapper;
+export async function createMultiFunctionButton($block, data) {
   const tools = [];
 
   for (let i = 1; i <= 6; i += 1) {
@@ -356,14 +358,7 @@ export async function createMultiFunctionButton($block, data, $parentSection) {
 
   loadCSS('/express/blocks/multifunction-button/multifunction-button.css');
 
-  if ($parentSection) {
-    $buttonWrapper = await createFloatingButton($block, data)
-      .then(((result) => result));
-  } else {
-    $buttonWrapper = await createFloatingButton($block, data)
-      .then(((result) => result));
-  }
-
+  const $buttonWrapper = await createFloatingButton($block, data).then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
 
   buildTools($buttonWrapper, tools, delayInSeconds ?? 0);
@@ -392,6 +387,7 @@ export default function decorateBlock($block) {
 
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper multifunction-button-container"]'));
   const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('multifunction-button-wrapper')));
+
   emptySections.forEach((emptySection) => {
     emptySection.remove();
   });
