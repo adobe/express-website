@@ -548,6 +548,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
 
 function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
+  const $searchBarWrappers = document.querySelectorAll('.search-bar-wrapper');
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
@@ -558,6 +559,34 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   }, { rootMargin: '0px', threshold: 1 });
 
   searchBarWatcher.observe($searchBarWrapper);
+
+  $searchBarWrappers.forEach(($wrapper) => {
+    const $dropdown = $wrapper.querySelector('.search-dropdown');
+    const $searchBar = $wrapper.querySelector('input.search-bar');
+    const $clear = $wrapper.querySelector('.icon-search-clear');
+
+    $searchBar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      $dropdown.classList.remove('hidden');
+    }, { passive: true });
+
+    $searchBar.addEventListener('blur', () => {
+      $dropdown.classList.add('hidden');
+    }, { passive: true });
+
+    $searchBar.addEventListener('keyup', () => {
+      if ($searchBar.value !== '') {
+        $clear.style.display = 'inline-block';
+      } else {
+        $clear.style.display = 'none';
+      }
+    }, { passive: true });
+
+    $clear.addEventListener('click', () => {
+      $searchBar.value = '';
+      $clear.style.display = 'none';
+    }, { passive: true });
+  });
 
   $stickySearchBar.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -582,22 +611,22 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
+  const $templateListBlock = $section.querySelector('.template-list');
+  const $placeholderTemplate = $templateListBlock.querySelector('a:first-of-type');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
   const $searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
     placeholder: placeholders['template-search-placeholder'],
   });
-  const $searchDropdown = createTag('div', { class: 'search-dropdown' });
+  const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
   const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
   const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
-  const $searchScratch = createTag('a', { class: 'search-dropdown-scratch' });
+  const $searchScratch = createTag('a', { class: 'search-dropdown-scratch', href: $placeholderTemplate.href });
   const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
   const $boldedTaskText = createTag('b');
 
-
-  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText);
-  $searchScratchText.append(getIconElement('search'));
+  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('search'));
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
