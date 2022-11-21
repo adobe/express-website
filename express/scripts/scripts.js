@@ -1573,16 +1573,6 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
-async function fetchFloatingButton(path) {
-  if (!(window.floatingButtons && window.floatingButtons.data)) {
-    window.floatingButtons = {};
-    const resp = await fetch('/drafts/williambsm/floating-buttons.json');
-    window.floatingButtons.data = resp.ok ? (await resp.json()).data : [];
-  }
-
-  return window.floatingButtons.data.find((fb) => fb.path === path && fb.live !== 'N');
-}
-
 function buildAutoBlocks($main) {
   // Load the branch.io banner autoblock...
   if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
@@ -1605,26 +1595,6 @@ function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
     const $plansComparison = buildBlock('plans-comparison', '');
     $main.querySelector(':scope > div:last-of-type').append($plansComparison);
-  }
-}
-
-async function loadMultifunctionButton($main) {
-  const floatingButton = await fetchFloatingButton(window.location.pathname);
-
-  if (floatingButton) {
-    const defaultFloatingButton = await fetchFloatingButton('default');
-    const objectKeys = Object.keys(defaultFloatingButton);
-
-    const floatingButtonParameters = [];
-
-    // eslint-disable-next-line consistent-return
-    objectKeys.forEach((key) => {
-      if (['path', 'live'].includes(key)) return false;
-      floatingButtonParameters.push([key, floatingButton[key] || defaultFloatingButton[key]]);
-    });
-
-    const $multifunctionButton = buildBlock('multifunction-button', floatingButtonParameters);
-    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
 }
 
@@ -1906,6 +1876,55 @@ function decoratePictures(main) {
     const picture = img.closest('picture');
     if (picture) picture.parentElement.replaceChild(newPicture, picture);
   });
+}
+
+async function fetchMultifunctionButton(path) {
+  if (!window.multifunctionButton) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch('/express/create/multifunction-button.json');
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.multifunctionButton.length) {
+    const multifunctionButton = window.multifunctionButton.find((p) => path.endsWith(p.path));
+    const env = getHelixEnv();
+
+    if (env && env.name === 'stage') {
+      return multifunctionButton || null;
+    }
+
+    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
+  }
+
+  return null;
+}
+
+async function loadMultifunctionButton($main) {
+  const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
+
+  if (multifunctionButton) {
+    const defaultButton = await fetchMultifunctionButton('default');
+    const objectKeys = Object.keys(defaultButton);
+
+    const buttonParameters = [];
+
+    // eslint-disable-next-line consistent-return
+    objectKeys.forEach((key) => {
+      if (['path', 'live'].includes(key)) return false;
+      buttonParameters.push([key, multifunctionButton[key] || defaultButton[key]]);
+    });
+
+    console.log(buttonParameters);
+
+    const $multifunctionButton = buildBlock('multifunction-button', buttonParameters);
+    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+  }
 }
 
 export async function decorateMain($main) {

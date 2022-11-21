@@ -23,48 +23,53 @@ import {
 let scrollState = 'withLottie';
 
 const hideScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
-  $floatButtonWrapper.classList.add('floating-button--scrolled');
+  $floatButtonWrapper.classList.add('multifunction-button--scrolled');
   if (document.activeElement === $lottieScrollButton) $lottieScrollButton.blur();
   $lottieScrollButton.tabIndex = -1;
 };
 
 const showScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
-  $floatButtonWrapper.classList.remove('floating-button--scrolled');
+  $floatButtonWrapper.classList.remove('multifunction-button--scrolled');
   $lottieScrollButton.removeAttribute('tabIndex');
 };
 
-export async function createFloatingButton($a, audience) {
+const hideDuplicateLinks = ($a) => {
   const main = document.querySelector('main');
-  loadCSS('/express/blocks/floating-button/floating-button.css');
-
-  // Floating button html
-  const $floatButtonLink = $a.cloneNode(true);
-  $floatButtonLink.className = '';
-  $floatButtonLink.classList.add('button', 'gradient', 'xlarge');
 
   // Hide CTAs with same url & text as the Floating CTA && is NOT a Floating CTA (in mobile/tablet)
   const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link'))
     .filter((a) => (a.textContent === $a.textContent || a.href === $a.href)
-      && !a.parentElement.classList.contains('floating-button'));
+      && !a.parentElement.classList.contains('multifunction-button'));
   sameUrlCTAs.forEach((cta) => {
-    cta.classList.add('same-as-floating-button-CTA');
+    cta.classList.add('same-as-multifunction-button-CTA');
   });
+};
 
-  const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
-  const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper' });
-  const $floatButton = createTag('div', { class: 'floating-button' });
-  const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
+export async function createFloatingButton($block, data) {
+  const $main = document.querySelector('main');
+  const $floatButtonWrapper = $block.parentElement;
+  const $floatButton = createTag('div', { class: 'multifunction-button' });
+  const $lottieScrollButton = createTag('button', { class: 'multifunction-button-lottie' });
+  const $floatButtonLink = createTag('a', { href: data['main cta link'] });
 
-  if (audience) {
-    $floatButtonWrapper.dataset.audience = audience;
+  loadCSS('/express/blocks/multifunction-button/multifunction-button.css');
+
+  $floatButtonLink.className = '';
+  $floatButtonLink.classList.add('button', 'gradient', 'xlarge');
+  $floatButtonLink.textContent = data['main cta text'];
+
+  hideDuplicateLinks($floatButtonLink);
+
+  if (data.audience) {
+    $floatButtonWrapper.dataset.audience = data.audience;
     $floatButtonWrapper.dataset.sectionStatus = 'loaded';
   }
 
-  $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
-  fetchPlaceholders()
-    .then((placeholders) => {
-      $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
-    });
+  $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/multifunction-button/purple-arrows.json');
+
+  fetchPlaceholders().then((placeholders) => {
+    $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
+  });
 
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
@@ -72,26 +77,21 @@ export async function createFloatingButton($a, audience) {
   $floatButton.append($floatButtonLink);
   $floatButton.append($lottieScrollButton);
   $floatButtonWrapper.append($floatButton);
-  main.append($floatButtonWrapper);
-  if ($floatButtonWrapperOld) {
-    const $parent = $floatButtonWrapperOld.parentElement;
-    if ($parent && $parent.children.length === 1) {
-      $parent.remove();
-    } else {
-      $floatButtonWrapperOld.remove();
-    }
-  }
+
+  $main.append($floatButtonWrapper);
 
   // Floating button scroll/click events
   const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+
   if (!$scrollAnchor) {
     hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
   } else {
     lazyLoadLottiePlayer();
     let clicked = false;
+
     $lottieScrollButton.addEventListener('click', () => {
       clicked = true;
-      $floatButtonWrapper.classList.add('floating-button--clicked');
+      $floatButtonWrapper.classList.add('multifunction-button--clicked');
       window.scrollTo({
         top: $scrollAnchor.offsetTop,
         behavior: 'smooth',
@@ -99,14 +99,15 @@ export async function createFloatingButton($a, audience) {
       const checkIfScrollToIsFinished = setInterval(() => {
         if ($scrollAnchor.offsetTop <= window.pageYOffset) {
           clicked = false;
-          $floatButtonWrapper.classList.remove('floating-button--clicked');
+          $floatButtonWrapper.classList.remove('multifunction-button--clicked');
           clearInterval(checkIfScrollToIsFinished);
         }
       }, 200);
       hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
     });
+
     window.addEventListener('scroll', () => {
-      scrollState = $floatButtonWrapper.classList.contains('floating-button--scrolled') ? 'withoutLottie' : 'withLottie';
+      scrollState = $floatButtonWrapper.classList.contains('multifunction-button--scrolled') ? 'withoutLottie' : 'withLottie';
       const multiFunctionButtonOpened = $floatButtonWrapper.classList.contains('toolbox-opened');
       if (clicked) return;
       if ($scrollAnchor.getBoundingClientRect().top < 100) {
@@ -123,9 +124,9 @@ export async function createFloatingButton($a, audience) {
     const hideButtonWhenFooter = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (entry.intersectionRatio > 0 || entry.isIntersecting) {
-        $floatButtonWrapper.classList.add('floating-button--hidden');
+        $floatButtonWrapper.classList.add('multifunction-button--hidden');
       } else {
-        $floatButtonWrapper.classList.remove('floating-button--hidden');
+        $floatButtonWrapper.classList.remove('multifunction-button--hidden');
       }
     }, {
       root: null,
@@ -142,21 +143,21 @@ export async function createFloatingButton($a, audience) {
     }
   }
 
-  const $heroCTA = document.querySelector('a.button.same-as-floating-button-CTA');
+  const $heroCTA = document.querySelector('a.button.same-as-multifunction-button-CTA');
   if ($heroCTA) {
     const hideButtonWhenIntersecting = new IntersectionObserver((entries) => {
       const $e = entries[0];
       if ($e.boundingClientRect.top > window.innerHeight - 40 || $e.boundingClientRect.top === 0) {
-        $floatButtonWrapper.classList.remove('floating-button--below-the-fold');
-        $floatButtonWrapper.classList.add('floating-button--above-the-fold');
+        $floatButtonWrapper.classList.remove('multifunction-button--below-the-fold');
+        $floatButtonWrapper.classList.add('multifunction-button--above-the-fold');
       } else {
-        $floatButtonWrapper.classList.add('floating-button--below-the-fold');
-        $floatButtonWrapper.classList.remove('floating-button--above-the-fold');
+        $floatButtonWrapper.classList.add('multifunction-button--below-the-fold');
+        $floatButtonWrapper.classList.remove('multifunction-button--above-the-fold');
       }
       if ($e.intersectionRatio > 0 || $e.isIntersecting) {
-        $floatButtonWrapper.classList.add('floating-button--intersecting');
+        $floatButtonWrapper.classList.add('multifunction-button--intersecting');
       } else {
-        $floatButtonWrapper.classList.remove('floating-button--intersecting');
+        $floatButtonWrapper.classList.remove('multifunction-button--intersecting');
       }
     }, {
       root: null,
@@ -171,7 +172,7 @@ export async function createFloatingButton($a, audience) {
       });
     }
   } else {
-    $floatButtonWrapper.classList.add('floating-button--above-the-fold');
+    $floatButtonWrapper.classList.add('multifunction-button--above-the-fold');
   }
 
   return $floatButtonWrapper;
@@ -197,7 +198,7 @@ function decorateBadge() {
 
 function toggleToolBox($wrapper, $lottie, originalButtonState, userInitiated = true) {
   const $toolbox = $wrapper.querySelector('.toolbox');
-  const $button = $wrapper.querySelector('.floating-button');
+  const $button = $wrapper.querySelector('.multifunction-button');
 
   if (userInitiated) {
     $wrapper.classList.remove('initial-load');
@@ -236,7 +237,7 @@ function initNotchDragAction($wrapper) {
   const $body = document.querySelector('body');
   const $notch = $wrapper.querySelector('.notch');
   const $toolBox = $wrapper.querySelector('.toolbox');
-  const $lottie = $wrapper.querySelector('.floating-button-lottie');
+  const $lottie = $wrapper.querySelector('.multifunction-button-lottie');
   let touchStart = 0;
   const initialHeight = $toolBox.offsetHeight;
   $notch.addEventListener('touchstart', (e) => {
@@ -268,11 +269,11 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   const $notchPill = createTag('div', { class: 'notch-pill' });
   const $appStoreBadge = decorateBadge();
   const $background = createTag('div', { class: 'toolbox-background' });
-  const $floatingButton = $wrapper.querySelector('.floating-button');
+  const $floatingButton = $wrapper.querySelector('.multifunction-button');
   const $cta = $floatingButton.querySelector('a');
   const $toggleButton = createTag('a', { class: 'toggle-button' });
   const $toggleIcon = getIconElement('plus-icon-22');
-  const $lottie = $wrapper.querySelector('.floating-button-lottie');
+  const $lottie = $wrapper.querySelector('.multifunction-button-lottie');
 
   $tools.forEach(($tool) => {
     const iconFound = $tool.querySelector('img') || $tool.querySelector('svg');
@@ -325,52 +326,72 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   initNotchDragAction($wrapper);
 }
 
-export async function createMultiFunctionButton($block, $parentSection) {
-  const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
-  const $ctaContainer = $block.querySelector('.button-container');
-  const tools = $block.querySelectorAll('li');
-  if ($ctaContainer) {
-    const $cta = $ctaContainer.querySelector('a');
-    loadCSS('/express/blocks/floating-button/floating-button.css');
+export async function createMultiFunctionButton($block, data, $parentSection) {
+  let $buttonWrapper;
+  const tools = [];
 
-    let $buttonWrapper;
-    if ($parentSection) {
-      $buttonWrapper = await createFloatingButton($cta, $parentSection.dataset.audience)
-        .then(((result) => result));
-    } else {
-      $buttonWrapper = await createFloatingButton($cta)
-        .then(((result) => result));
-    }
+  for (let i = 1; i <= 6; i += 1) {
+    const tool = {
+      link: data[`cta ${i} link`],
+      text: data[`cta ${i} text`],
+      icon: data[`cta ${i} icon`],
+    };
 
-    $buttonWrapper.classList.add('multifunction');
-    if (delayInSeconds) {
-      buildTools($buttonWrapper, tools, delayInSeconds);
-    } else {
-      buildTools($buttonWrapper, tools);
+    if (tool.link && tool.text) {
+      const $tool = createTag('li', { class: 'tool' });
+      const $link = createTag('a', { href: tool.link });
+      $link.textContent = tool.text;
+
+      if (tool.icon) {
+        const $icon = getIconElement(`${tool.icon}-22`);
+        $tool.append($icon);
+      }
+
+      $tool.append($link);
+      tools.push($tool);
     }
   }
+
+  const delayInSeconds = parseFloat(data.delay);
+
+  loadCSS('/express/blocks/multifunction-button/multifunction-button.css');
+
+  if ($parentSection) {
+    $buttonWrapper = await createFloatingButton($block, data)
+      .then(((result) => result));
+  } else {
+    $buttonWrapper = await createFloatingButton($block, data)
+      .then(((result) => result));
+  }
+
+  $buttonWrapper.classList.add('multifunction');
+
+  buildTools($buttonWrapper, tools, delayInSeconds ?? 0);
 }
 
 export default function decorateBlock($block) {
-  const $a = $block.querySelector('a.button');
   const $parentSection = $block.closest('.section');
+  const $rows = Array.from($block.children);
 
-  if (Array.from($block.children).length > 0) {
-    if (Array.from($block.children).length === 1) {
-      if ($parentSection) {
-        createFloatingButton($a, $parentSection.dataset.audience);
-      } else {
-        createFloatingButton($a);
-      }
-    } else if ($parentSection) {
-      createMultiFunctionButton($block, $parentSection);
-    } else {
-      createMultiFunctionButton($block);
-    }
+  const data = {
+    audience: $parentSection ? $parentSection.dataset.audience : null,
+  };
+
+  $rows.forEach(($row) => {
+    const $columns = Array.from($row.children);
+    data[$columns[0].textContent] = $columns[1].textContent;
+  });
+
+  $block.innerHTML = '';
+
+  if (data.single === 'Y') {
+    createFloatingButton($block, data);
+  } else {
+    createMultiFunctionButton($block, data, $parentSection);
   }
 
-  const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
-  const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('floating-button-wrapper')));
+  const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper multifunction-button-container"]'));
+  const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('multifunction-button-wrapper')));
   emptySections.forEach((emptySection) => {
     emptySection.remove();
   });
