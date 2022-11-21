@@ -12,7 +12,7 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  addAnimationToggle,
+  addAnimationToggle, addFreePlanWidget,
   addSearchQueryToHref,
   createTag,
   decorateMain,
@@ -260,6 +260,7 @@ function populateTemplates($block, templates) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
           const ratios = option.split(sep).map((e) => +e);
+          props.placeholderRatios = ratios;
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
             if (ratios[1]) {
@@ -578,15 +579,39 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   }, { passive: true });
 }
 
-function decorateSearchFunctions($toolBar, $section, placeholders) {
+async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
-  const $searchBar = createTag('input', { class: 'search-bar', type: 'text', placeholder: placeholders['template-search-placeholder'] });
+  const $searchBar = createTag('input', {
+    class: 'search-bar',
+    type: 'text',
+    placeholder: placeholders['template-search-placeholder'],
+  });
   const $searchDropdown = createTag('div', { class: 'search-dropdown' });
+  const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
+  const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
+  const $searchScratch = createTag('a', { class: 'search-dropdown-scratch' });
+  const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
+  const $boldedTaskText = createTag('b');
 
+
+  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText);
+  $searchScratchText.append(getIconElement('search'));
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
+  $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
+  $searchDropdown.append($searchDropdownHeadingWrapper);
   $searchBarWrapper.append($searchBar, $searchDropdown);
+
+  const templateTask = props.filters.tasks.substring(1, props.filters.tasks.length - 1).replaceAll('"', '');
+  $searchDropdownHeading.textContent = placeholders.suggestions;
+  $boldedTaskText.textContent = `${templateTask.charAt(0).toUpperCase() + templateTask.slice(1)} `;
+  $searchDropdownHeading.prepend($boldedTaskText);
+
+  $searchScratchText.textContent = placeholders['search-from-scratch']
+    .replace('{{template-type}}', templateTask);
+
+  await addFreePlanWidget($searchDropdown);
 
   const $stickySearchBarWrapper = $searchBarWrapper.cloneNode({ deep: true });
 
@@ -736,10 +761,6 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
 
   props.templates = props.templates.concat(newTemplates);
   populateTemplates($block, newTemplates);
-  newTemplates.forEach((template) => {
-    const clone = template.cloneNode(true);
-    $block.append(clone);
-  });
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
 
@@ -768,6 +789,16 @@ async function redrawTemplates($block, $toolBar) {
     .then(() => {
       $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toString());
       updateOptionsStatus($toolBar);
+
+      if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
+        const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
+        $viewButtons.forEach(($button) => {
+          $button.classList.remove('active');
+        });
+        ['lg-view', 'md-view', 'sm-view'].forEach((className) => {
+          $block.classList.remove(className);
+        });
+      }
     });
 }
 
@@ -827,6 +858,41 @@ function initFilterSort($block, $toolBar) {
   }
 }
 
+function initViewToggle($block, $toolBar) {
+  const $toggleButtons = $toolBar.querySelectorAll('.view-toggle-button ');
+
+  $toggleButtons.forEach(($button) => {
+    $button.addEventListener('click', () => {
+      const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
+      if (!$button.classList.contains('active') && $templatesToView.length > 0) {
+        $toggleButtons.forEach((b) => {
+          if (b !== $button) {
+            b.classList.remove('active');
+          }
+        });
+
+        ['lg-view', 'md-view', 'sm-view'].forEach((className) => {
+          if (className !== `${$button.dataset.view}-view`) {
+            $block.classList.remove(className);
+          }
+        });
+        $button.classList.add('active');
+        $block.classList.add(`${$button.dataset.view}-view`);
+
+        props.masonry = new Masonry($block, props.masonry.cells);
+        props.masonry.draw();
+      } else {
+        $button.classList.remove('active');
+        ['lg-view', 'md-view', 'sm-view'].forEach((className) => {
+          $block.classList.remove(className);
+        });
+        props.masonry = new Masonry($block, props.masonry.cells);
+        props.masonry.draw();
+      }
+    }, { passive: true });
+  });
+}
+
 function decorateToolbar($block, $section, placeholders) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
 
@@ -836,14 +902,15 @@ function decorateToolbar($block, $section, placeholders) {
 
     const $viewsWrapper = createTag('div', { class: 'views' });
 
-    const lgView = getIconElement('scratch-icon-22');
-    const mdView = getIconElement('scratch-icon-22');
-    const smView = getIconElement('scratch-icon-22');
+    const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
+    lgView.append(getIconElement('scratch-icon-22'));
+    const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
+    mdView.append(getIconElement('scratch-icon-22'));
+    const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
+    smView.append(getIconElement('scratch-icon-22'));
 
     const functionsObj = makeTemplateFunctions(placeholders);
     const $functions = decorateFunctionsContainer($block, $section, functionsObj, placeholders);
-
-    lgView.classList.add('active');
 
     $viewsWrapper.append(lgView, mdView, smView);
     functionsWrapper.append($viewsWrapper, $functions.desktop);
@@ -853,10 +920,12 @@ function decorateToolbar($block, $section, placeholders) {
     decorateSearchFunctions($toolBar, $section, placeholders);
     initDrawer($toolBar);
     initFilterSort($block, $toolBar);
+    initViewToggle($block, $toolBar);
   }
 }
 
 export async function decorateTemplateList($block) {
+  const locale = getLocale(window.location);
   const placeholders = await fetchPlaceholders().then((result) => result);
   if ($block.classList.contains('apipowered')) {
     await readRowsFromBlock($block);
@@ -933,15 +1002,16 @@ export async function decorateTemplateList($block) {
       }
 
       const $linkList = $parent.querySelector('.link-list-wrapper');
-      if ($linkList && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')) {
+      if ($linkList
+        && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')
+        && placeholders['template-filter-premium']) {
         decorateToolbar($block, $parent, placeholders);
       }
     }
   }
 
   let rows = $block.children.length;
-  if ((rows === 0 || $block.querySelectorAll('img').length === 0)
-    && locale !== 'us') {
+  if ((rows === 0 || $block.querySelectorAll('img').length === 0) && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
       // author defined localized edit text(s)
       && ($block.firstElementChild.querySelector('p')

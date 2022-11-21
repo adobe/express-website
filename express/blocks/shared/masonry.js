@@ -46,6 +46,32 @@ export class Masonry {
     const width = this.$block.offsetWidth;
     if (!width) {
       return 0;
+    } else {
+      if (window.innerWidth >= 900) {
+        if (this.$block.classList.contains('lg-view')) {
+          colWidth = width / 7;
+        }
+
+        if (this.$block.classList.contains('md-view')) {
+          colWidth = width / 5;
+        }
+
+        if (this.$block.classList.contains('sm-view')) {
+          colWidth = width / 3;
+        }
+      } else {
+        if (this.$block.classList.contains('lg-view')) {
+          colWidth = width / 3;
+        }
+
+        if (this.$block.classList.contains('md-view')) {
+          colWidth = width / 2;
+        }
+
+        if (this.$block.classList.contains('sm-view')) {
+          colWidth = width;
+        }
+      }
     }
     const usp = new URLSearchParams(window.location.search);
     if (usp.has('debug-template-list')) {

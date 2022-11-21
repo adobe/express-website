@@ -55,9 +55,32 @@ main .template-list.fullwidth {
   justify-content: center;
 }
 
+main .template-list.fullwidth.lg-view,
+main .template-list.fullwidth.md-view,
+main .template-list.fullwidth.sm-view {
+  padding: 0 28px;
+  justify-content: space-evenly;
+}
+
+
 main .template-list.sixcols > .masonry-col,
 main .template-list.fullwidth > .masonry-col {
   max-width: 175px;
+}
+
+main .template-list.fullwidth.lg-view > .masonry-col {
+  max-width: calc(100% / 3);
+  text-align: center;
+}
+
+main .template-list.fullwidth.md-view > .masonry-col {
+  max-width: calc(100% / 2);
+  text-align: center;
+}
+
+main .template-list.fullwidth.sm-view > .masonry-col {
+  max-width: 100%;
+  text-align: center;
 }
 
 main .template-list .template-title {
@@ -150,6 +173,15 @@ main .template-list .template > div:first-child > a:any-link {
 
 main .template-list .template img, main .template-list .template video {
   border-radius: 7px;
+}
+
+main .template-list.lg-view .template img,
+main .template-list.lg-view .template video,
+main .template-list.md-view .template img,
+main .template-list.md-view .template video,
+main .template-list.sm-view .template img,
+main .template-list.sm-view .template video {
+  width: 100%;
 }
 
 main .template-list.large .template {
@@ -293,6 +325,12 @@ main .template-list.fullwidth .template {
   margin: 5px;
 }
 
+main .template-list.fullwidth.lg-view .template,
+main .template-list.fullwidth.md-view .template,
+main .template-list.fullwidth.sm-view .template {
+  width: 92%;
+}
+
 main .template-list.horizontal.fullwidth .template {
   width: auto;
 }
@@ -408,6 +446,13 @@ main .template-list.sixcols .template.placeholder,
 main .template-list.fullwidth .template.placeholder {
   width: 145px;
   margin: 15px auto;
+}
+
+main .template-list.fullwidth.lg-view .template.placeholder,
+main .template-list.fullwidth.md-view .template.placeholder,
+main .template-list.fullwidth.sm-view .template.placeholder {
+  margin: 21px auto;
+  width: 80%;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
@@ -552,6 +597,21 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
     max-width: 187px;
   }
 
+  main .template-list.fullwidth.lg-view > .masonry-col {
+    max-width: calc(100% / 7);
+    text-align: center;
+  }
+
+  main .template-list.fullwidth.md-view > .masonry-col {
+    max-width: calc(100% / 5);
+    text-align: center;
+  }
+
+  main .template-list.fullwidth.sm-view > .masonry-col {
+    max-width: calc(100% / 3);
+    text-align: center;
+  }
+
   main .template-list .template {
     width: 240px;
     margin-left: 20px;
@@ -617,7 +677,6 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper {
   position: relative;
   max-width: 480px;
-  box-sizing: border-box;
   padding: 0 28px;
   height: max-content;
   margin-top: 40px;
@@ -641,7 +700,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus-visible,
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus {
-  outline: var(--color-black) 2px solid;
+  outline: #444444 2px solid;
   outline-offset: -2px;
 }
 
@@ -663,6 +722,19 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.ico
   top: 50%;
   transform: translateY(-50%);
   right: 40px;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown {
+  position: absolute;
+  background: var(--color-white);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 480px;
+  top: calc(100% + 16px);
+  padding: 20px 16px 16px 16px;
+  border-radius: 20px;
+  z-index: 1;
+  box-shadow: 0 0 16px #00000015;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
@@ -719,6 +791,10 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .searc
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .icon-search-clear {
   right: 12px;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon-search-clear.hidden,
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar.collapsed .icon-search-clear {
   display: none;
 }
 
@@ -769,6 +845,10 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .current-option {
   font-size: 14px;
   line-height: 24px;
+  max-width: 88px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper,
@@ -869,14 +949,15 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views
   gap: 8px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .icon {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button {
   opacity: 0.5;
+  height: 22px;
   transition: opacity 0.2s;
   cursor: pointer;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .icon.active,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .icon:hover {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button.active,
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button:hover {
   opacity: 1;
 }
 
