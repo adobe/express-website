@@ -12,7 +12,8 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  addAnimationToggle, addFreePlanWidget,
+  addAnimationToggle,
+  addFreePlanWidget,
   addSearchQueryToHref,
   createTag,
   decorateMain,
@@ -570,10 +571,6 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       $dropdown.classList.remove('hidden');
     }, { passive: true });
 
-    $searchBar.addEventListener('blur', () => {
-      $dropdown.classList.add('hidden');
-    }, { passive: true });
-
     $searchBar.addEventListener('keyup', () => {
       if ($searchBar.value !== '') {
         $clear.style.display = 'inline-block';
@@ -585,6 +582,12 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     $clear.addEventListener('click', () => {
       $searchBar.value = '';
       $clear.style.display = 'none';
+    }, { passive: true });
+
+    document.addEventListener('click', (e) => {
+      if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
+        $dropdown.classList.add('hidden');
+      }
     }, { passive: true });
   });
 
@@ -1177,11 +1180,10 @@ export async function decorateTemplateList($block) {
       $block.classList.remove('masonry');
       $block.classList.add('flex-masonry');
 
-      const masonry = new Masonry($block, cells);
-      props.masonry = masonry;
-      masonry.draw();
+      props.masonry = new Masonry($block, cells);
+      props.masonry.draw();
       window.addEventListener('resize', () => {
-        masonry.draw();
+        props.masonry.draw();
       });
     } else {
       $block.classList.add('template-list-complete');

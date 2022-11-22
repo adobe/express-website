@@ -871,7 +871,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .searc
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon-search-clear,
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar.collapsed .icon-search-clear {
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar.collapsed .icon-search-clear,
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar.collapsed .search-dropdown {
   display: none;
 }
 
