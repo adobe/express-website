@@ -78,7 +78,7 @@ export async function createFloatingButton($block, data) {
   $floatButton.append($lottieScrollButton);
   $floatButtonWrapper.append($floatButton);
   $floatButtonWrapper.dataset.audience = 'mobile';
-  
+
   $block.remove();
 
   $main.append($floatButtonWrapper);
