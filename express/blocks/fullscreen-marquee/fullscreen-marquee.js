@@ -15,6 +15,7 @@ import {
   transformLinkToAnimation,
   createOptimizedPicture,
   addFreePlanWidget,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 function styleBackgroundWithScroll($section) {
@@ -102,21 +103,8 @@ export default function decorate($block) {
                   const $existingCTA = $block.querySelector('a.button');
 
                   if ($existingCTA) {
-                    const $cloneCta = $existingCTA.cloneNode({ deep: true });
-                    $cloneCta.style.display = 'none';
                     const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer', href: $existingCTA.href });
-                    $clickableOverlay.append($cloneCta);
                     $pictureFrameWrapper.prepend($clickableOverlay);
-
-                    $clickableOverlay.addEventListener('mouseenter', () => {
-                      $existingCTA.style.display = 'none';
-                      $cloneCta.style.display = 'block';
-                    }, { passive: true });
-
-                    $clickableOverlay.addEventListener('mouseleave', () => {
-                      $existingCTA.style.removeProperty('display');
-                      $cloneCta.style.display = 'none';
-                    }, { passive: true });
                   }
 
                   const $thumbnailImg = createOptimizedPicture('https://www.adobe.com/express/media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
