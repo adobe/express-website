@@ -1369,6 +1369,37 @@ function checkExperimentAudience(audience) {
   return true;
 }
 
+/**
+ * Generates a decision policy object which is understood by UED from an
+ * experiment configuration.
+ * @param {*} config Experiment configuration
+ * @returns Experiment decision policy object to be passed to UED.
+ */
+function getDecisionPolicy(config) {
+  const decisionPolicy = {
+    id: 'content-experimentation-policy',
+    rootDecisionNodeId: 'n1',
+    decisionNodes: [{
+      id: 'n1',
+      type: 'EXPERIMENTATION',
+      experiment: {
+        id: config.id,
+        identityNamespace: 'ECID',
+        randomizationUnit: 'DEVICE',
+        treatments: Object.entries(config.variants).map(([key, props]) => ({
+          id: key,
+          allocationPercentage: props.percentageSplit
+            ? parseFloat(props.percentageSplit) * 100
+            : 100 - Object.values(config.variants).reduce((result, variant) => {
+              const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
+              return returnResult;
+            }, 100),
+        })),
+      },
+    }],
+  };
+  return decisionPolicy;
+}
 
 /**
  * checks if a test is active on this page and if so executes the test
@@ -1397,12 +1428,12 @@ async function decorateTesting() {
 
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
-        if (config.run) {                    
+        if (config.run) {
           if (forcedVariant && config.variantNames.includes(forcedVariant)) {
             config.selectedVariant = forcedVariant;
           } else {
             const ued = await import('./ued/ued-0.2.0.js');
-            const decision = ued.evaluateDecisionPolicy(getDecisionPolicy(config), {});            
+            const decision = ued.evaluateDecisionPolicy(getDecisionPolicy(config), {});
             config.selectedVariant = decision.items[0].id;
           }
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
@@ -1427,32 +1458,6 @@ async function decorateTesting() {
   } catch (e) {
     console.log('error testing', e);
   }
-}
-
-function getDecisionPolicy(config) {
-  const decisionPolicy = {
-    id: 'content-experimentation-policy',
-    rootDecisionNodeId: 'n1',
-    decisionNodes: [{
-      id: 'n1',
-      type: 'EXPERIMENTATION',
-      experiment: {
-        id: config.id,
-        identityNamespace: 'ECID',
-        randomizationUnit: 'DEVICE',
-        treatments: Object.entries(config.variants).map(([key, props]) => ({
-          id: key,
-          allocationPercentage: props.percentageSplit
-            ? parseFloat(props.percentageSplit) * 100
-            : 100 - Object.values(config.variants).reduce((result, variant) => {
-              result -= parseFloat(variant.percentageSplit || 0) * 100;
-              return result;
-            }, 100),
-        })),
-      },
-    }],
-  };
-  return decisionPolicy;
 }
 
 export async function fixIcons(block = document) {
