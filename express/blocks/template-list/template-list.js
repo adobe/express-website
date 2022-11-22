@@ -22,6 +22,8 @@ import {
   getLocale,
   linkImage,
   toClassName,
+  arrayToObject,
+  titleCase,
 } from '../../scripts/scripts.js';
 import { Masonry } from '../shared/masonry.js';
 
@@ -261,7 +263,7 @@ function populateTemplates($block, templates) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
           const ratios = option.split(sep).map((e) => +e);
-          props.placeholderRatios = ratios;
+          props.placeholderFormat = ratios;
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
             if (ratios[1]) {
@@ -579,6 +581,19 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       }
     }, { passive: true });
 
+    $searchBar.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+        const tasks = props.filters.tasks.substring(1, props.filters.tasks.length - 1).replaceAll('"', '');
+        const locale = getLocale(window.location);
+        if (locale === 'us') {
+          window.location = `${window.location.origin}/express/templates/search?tasks=${tasks}&phformat=${format}&topics=${$searchBar.value}`;
+        } else {
+          window.location = `${window.location.origin}/${locale}/express/templates/search?tasks=${tasks}&phformat=${format}&topics=${$searchBar.value}`;
+        }
+      }
+    }, { passive: true });
+
     $clear.addEventListener('click', () => {
       $searchBar.value = '';
       $clear.style.display = 'none';
@@ -635,13 +650,51 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $searchDropdown.append($searchDropdownHeadingWrapper);
   $searchBarWrapper.append($searchBar, $searchDropdown);
 
-  const templateTask = props.filters.tasks.substring(1, props.filters.tasks.length - 1).replaceAll('"', '');
   $searchDropdownHeading.textContent = placeholders.suggestions;
-  $boldedTaskText.textContent = `${templateTask.charAt(0).toUpperCase() + templateTask.slice(1)} `;
-  $searchDropdownHeading.prepend($boldedTaskText);
 
-  $searchScratchText.textContent = placeholders['search-from-scratch']
-    .replace('{{template-type}}', templateTask);
+  console.log(window.location)
+
+  const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
+
+  if (resp.ok) {
+    const { data } = await resp.json();
+    const path = window.location.pathname;
+    let dataForPage = data.find((p) => p.path === path);
+
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    const dataArray = Object.entries(dataForPage);
+
+    if (params.tasks) {
+      dataArray.forEach((col) => {
+        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
+      });
+    }
+
+    if (params.topics) {
+      dataArray.forEach((col) => {
+        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
+      });
+    }
+
+    dataForPage = arrayToObject(dataArray);
+
+    if (dataForPage) {
+      $boldedTaskText.textContent = `${dataForPage.shortTitle} `;
+      $searchDropdownHeading.prepend($boldedTaskText);
+
+      $searchScratchText.textContent = placeholders['search-from-scratch']
+        .replace('{{template-type}}', dataForPage.shortTitle);
+    } else {
+      $searchScratchText.textContent = placeholders['search-from-scratch']
+        .replace('{{template-type}}', '');
+    }
+  } else {
+    $searchScratchText.textContent = placeholders['search-from-scratch']
+      .replace('{{template-type}}', '');
+  }
 
   await addFreePlanWidget($searchDropdown);
 
@@ -1227,6 +1280,8 @@ function decorateLoadMoreButton($block) {
     });
     $loadMoreButton.classList.remove('disabled');
   });
+
+  return $loadMoreDiv;
 }
 
 function decorateTailButton($block) {
@@ -1260,8 +1315,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
-    const $loadMore = $block.parentElement.querySelector('.load-more');
-    decorateLoadMoreButton($block);
+    const $loadMore = decorateLoadMoreButton($block);
 
     if ($loadMore) {
       updateLoadMoreButton($block, $loadMore);

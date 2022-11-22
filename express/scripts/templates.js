@@ -9,7 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { getHelixEnv } from './scripts.js';
+import {
+  getHelixEnv,
+  arrayToObject,
+  titleCase,
+} from './scripts.js';
 
 async function fetchPageContent(path) {
   if (!(window.templates && window.templates.data)) {
@@ -26,6 +30,38 @@ async function fetchPageContent(path) {
   }
 
   return page && page.live !== 'N' ? page : null;
+}
+
+function formatSearchQuery(data) {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  const dataArray = Object.entries(data);
+
+  if (params.tasks) {
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{queryTasks}}', params.tasks);
+    });
+
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
+    });
+  }
+
+  if (params.topics) {
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
+    });
+  }
+
+  if (params.phformat) {
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
+    });
+  }
+
+  return arrayToObject(dataArray);
 }
 
 async function fetchLinkList() {
@@ -129,7 +165,12 @@ const page = await fetchPageContent(window.location.pathname);
 await fetchLinkList();
 
 if (page) {
-  updateBlocks(page);
+  if (window.location.pathname.split('/').pop() === 'search') {
+    const data = formatSearchQuery(page);
+    updateBlocks(data);
+  } else {
+    updateBlocks(page);
+  }
 } else {
   window.location.replace('/404');
 }
