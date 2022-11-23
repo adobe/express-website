@@ -13,6 +13,7 @@ import {
   getHelixEnv,
   arrayToObject,
   titleCase,
+  createTag,
 } from './scripts.js';
 
 async function fetchPageContent(path) {
@@ -87,6 +88,39 @@ function updateLinkList(container, template, list) {
         container.append(clone);
       }
     });
+  }
+}
+
+function updateMetadata(data) {
+  const $head = document.querySelector('head');
+  const $title = $head.querySelector('title');
+  let $metaTitle = document.querySelector('meta[property="og:title"]');
+  let $twitterTitle = document.querySelector('meta[name="twitter:title"]');
+  let $description = document.querySelector('meta[property="og:description"]');
+
+  if ($title) {
+    $title.textContent = data.metadataTitle;
+
+    if ($metaTitle) {
+      $metaTitle.setAttribute('content', data.metadataTitle);
+    } else {
+      $metaTitle = createTag('meta', { property: 'og:title', content: data.metadataTitle });
+      $head.append($metaTitle);
+    }
+
+    if ($description) {
+      $description.setAttribute('content', data.metadataDescription);
+    } else {
+      $description = createTag('meta', { property: 'og:description', content: data.metadataDescription });
+      $head.append($description);
+    }
+
+    if ($twitterTitle) {
+      $twitterTitle.setAttribute('content', data.metadataTitle);
+    } else {
+      $twitterTitle = createTag('meta', { property: 'twitter:title', content: data.metadataTitle });
+      $head.append($twitterTitle);
+    }
   }
 }
 
@@ -167,6 +201,7 @@ await fetchLinkList();
 if (page) {
   if (window.location.pathname.split('/').pop() === 'search') {
     const data = formatSearchQuery(page);
+    updateMetadata(data);
     updateBlocks(data);
   } else {
     updateBlocks(page);

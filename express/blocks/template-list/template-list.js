@@ -652,8 +652,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
 
   $searchDropdownHeading.textContent = placeholders.suggestions;
 
-  console.log(window.location)
-
   const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
 
   if (resp.ok) {
