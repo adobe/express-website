@@ -15,7 +15,6 @@ import {
   transformLinkToAnimation,
   createOptimizedPicture,
   addFreePlanWidget,
-  getMetadata,
 } from '../../scripts/scripts.js';
 
 function styleBackgroundWithScroll($section) {
