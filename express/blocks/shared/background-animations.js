@@ -11,27 +11,17 @@
  */
 import { createTag } from '../../scripts/scripts.js';
 
-export default function addBackgroundAnimation($block, animationName) {
+export default function addBackgroundAnimation($block, animationUrl) {
   const $videoBackground = createTag('video', {
     class: 'snow-background', autoplay: true, muted: true, loop: true, playsinline: true,
   });
 
-  const animations = {
-    firework: function startFirework($section) {
-      $section.classList.add('firework');
-    },
-    snow: function startSnowing($section) {
-      $section.classList.add('snowing');
-      $videoBackground.classList.add('snow-background');
-      $videoBackground.append(createTag('source', { src: 'https://www.adobe.com/express/media_18115ed8a55cc84ae354bdd375d8057198f3f720e.mp4', type: 'video/mp4' }));
-      $section.prepend($videoBackground);
-    },
-  };
-
   const $parent = $block.closest('.section');
 
   if ($parent) {
-    animations[animationName]($parent);
-    $videoBackground.play();
+    $parent.classList.add('with-animation');
+    $videoBackground.classList.add('snow-background');
+    $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
+    $parent.prepend($videoBackground);
   }
 }
