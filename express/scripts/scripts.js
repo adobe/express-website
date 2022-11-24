@@ -1897,7 +1897,7 @@ async function fetchMultifunctionButton(path) {
   }
 
   if (window.multifunctionButton.length) {
-    const multifunctionButton = window.multifunctionButton.find((p) => path.endsWith(p.path));
+    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
     const env = getHelixEnv();
 
     if (env && env.name === 'stage') {
