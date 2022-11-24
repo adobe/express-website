@@ -1910,29 +1910,32 @@ async function fetchMultifunctionButton(path) {
   return null;
 }
 
-async function loadMultifunctionButton($main) {
-  const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
+async function buildAsyncAutoBlocks($main) {
+  // load the multifunction-button autoblock
+  if (['yes', 'true', 'on'].includes('yes')) {
+    const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
 
-  if (multifunctionButton) {
-    const defaultButton = await fetchMultifunctionButton('default');
-    const objectKeys = Object.keys(defaultButton);
+    if (multifunctionButton) {
+      const defaultButton = await fetchMultifunctionButton('default');
+      const objectKeys = Object.keys(defaultButton);
 
-    const buttonParameters = [];
+      const buttonParameters = [];
 
-    // eslint-disable-next-line consistent-return
-    objectKeys.forEach((key) => {
-      if (['path', 'live'].includes(key)) return false;
-      buttonParameters.push([key, multifunctionButton[key] || defaultButton[key]]);
-    });
+      // eslint-disable-next-line consistent-return
+      objectKeys.forEach((key) => {
+        if (['path', 'live'].includes(key)) return false;
+        buttonParameters.push([key, multifunctionButton[key] || defaultButton[key]]);
+      });
 
-    const $multifunctionButton = buildBlock('multifunction-button', buttonParameters);
-    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+      const $multifunctionButton = buildBlock('multifunction-button', buttonParameters);
+      $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+    }
   }
 }
 
 export async function decorateMain($main) {
   buildAutoBlocks($main);
-  loadMultifunctionButton($main);
+  buildAsyncAutoBlocks($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
