@@ -1603,7 +1603,7 @@ function splitSections($main) {
   const multipleColumns = $main.querySelectorAll('.columns--fullsize-center-').length > 1;
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
-    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade', 'plans-comparison', 'multifunction-button'];
+    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade', 'plans-comparison'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
     if (hasAppStoreBlocks && !multipleColumns) {
@@ -1932,7 +1932,7 @@ async function loadMultifunctionButton($main) {
 
 export async function decorateMain($main) {
   buildAutoBlocks($main);
-  await loadMultifunctionButton($main);
+  loadMultifunctionButton($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
