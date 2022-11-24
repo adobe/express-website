@@ -1912,7 +1912,7 @@ async function fetchMultifunctionButton(path) {
 
 async function buildAsyncAutoBlocks($main) {
   // load the multifunction-button autoblock
-  if (['yes', 'true', 'on'].includes('yes')) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
 
     if (multifunctionButton) {
