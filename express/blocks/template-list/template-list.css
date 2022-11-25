@@ -55,9 +55,9 @@ main .template-list.fullwidth {
   justify-content: center;
 }
 
-main .template-list.fullwidth.lg-view,
+main .template-list.fullwidth.sm-view,
 main .template-list.fullwidth.md-view,
-main .template-list.fullwidth.sm-view {
+main .template-list.fullwidth.lg-view {
   padding: 0 28px;
   justify-content: space-evenly;
 }
@@ -68,18 +68,18 @@ main .template-list.fullwidth > .masonry-col {
   max-width: 175px;
 }
 
-main .template-list.fullwidth.lg-view > .masonry-col {
-  max-width: calc(100% / 3);
+main .template-list.fullwidth.sm-view > .masonry-col {
+  max-width: 165px;
   text-align: center;
 }
 
 main .template-list.fullwidth.md-view > .masonry-col {
-  max-width: calc(100% / 2);
+  max-width: 258.5px;
   text-align: center;
 }
 
-main .template-list.fullwidth.sm-view > .masonry-col {
-  max-width: 100%;
+main .template-list.fullwidth.lg-view > .masonry-col {
+  max-width: 352px;
   text-align: center;
 }
 
@@ -559,6 +559,38 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
   font-size: 18px;
 }
 
+main .template-list.fullwidth.lg-view > .masonry-col {
+  max-width: 335px;
+  text-align: center;
+}
+
+main .template-list.fullwidth.md-view > .masonry-col {
+  max-width: 165.5px;
+  text-align: center;
+}
+
+main .template-list.fullwidth.sm-view > .masonry-col {
+  max-width: 106.33px;
+  text-align: center;
+}
+
+@media (min-width: 600px) {
+  main .template-list.fullwidth.lg-view > .masonry-col {
+    max-width: 352px;
+    text-align: center;
+  }
+
+  main .template-list.fullwidth.md-view > .masonry-col {
+    max-width: 227.33px;
+    text-align: center;
+  }
+
+  main .template-list.fullwidth.sm-view > .masonry-col {
+    max-width: 165px;
+    text-align: center;
+  }
+}
+
 @media (min-width: 900px) {
   main .template-list-container > div,
   main .template-list-fourcols-container > div,
@@ -598,17 +630,17 @@ main .template-list-fullwidth-apipowered-container .load-more-text {
   }
 
   main .template-list.fullwidth.lg-view > .masonry-col {
-    max-width: calc(100% / 7);
+    max-width: 352px;
     text-align: center;
   }
 
   main .template-list.fullwidth.md-view > .masonry-col {
-    max-width: calc(100% / 5);
+    max-width: 258.5px;
     text-align: center;
   }
 
   main .template-list.fullwidth.sm-view > .masonry-col {
-    max-width: calc(100% / 3);
+    max-width: 165px;
     text-align: center;
   }
 
@@ -923,7 +955,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .current-option {
   font-size: 14px;
   line-height: 24px;
-  max-width: 88px;
+  max-width: 108px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1202,6 +1234,14 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.retracted {
   transform: translateX(100%);
+}
+
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list {
+  display: flex;
+}
+
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper {
+  width: 165px;
 }
 
 /* Carousel styles (Template-list specific) */

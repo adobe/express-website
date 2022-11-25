@@ -626,6 +626,61 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   }, { passive: true });
 }
 
+function decorateCategoryList($block, placeholders) {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  if (params.tasks) {
+    const locale = getLocale(window.location);
+    const urlStarter = locale === 'us' ? `${window.location.origin}/express/templates/` : `${window.location.origin}/${locale}/express/templates/`;
+    const $blockWrapper = $block.closest('.template-list-wrapper');
+    const categories = {
+      'Instagram story': 'instagram-story',
+      'Greeting card': 'greeting-card',
+      Poster: 'poster',
+      Flyer: 'flyer',
+      Logo: 'logo',
+      'Facebook post': 'facebook-post',
+      Invitation: 'invitation',
+      Banner: 'banner',
+      'Facebook story': 'facebook-story',
+      Brochure: 'brochure',
+      'Presentation slide': 'presentation-slide',
+      Resume: 'resume',
+      Card: 'card',
+      'Animated graphics': 'animated-graphics',
+    };
+
+    const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper desktop-only' });
+    const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
+    const $categoriesToggleIcon = getIconElement('scratch-icon-22');
+    const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
+    const $categoriesDesktop = createTag('ul', { class: 'category-list' });
+    const $categoriesResizeButton = createTag('a', { class: 'category-list-resize' });
+
+    $categoriesToggle.textContent = placeholders['jump-to-category'];
+    $categoriesResizeButton.textContent = placeholders['show-less'];
+
+    $categoriesDesktopWrapper.append(
+      $categoriesToggleWrapper, $categoriesDesktop, $categoriesResizeButton,
+    );
+    $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
+    Object.entries(categories).forEach((entry) => {
+      const $listItem = createTag('li');
+      const $a = createTag('a', { href: `${urlStarter}${entry[1]}` });
+      [$a.textContent] = entry;
+      $listItem.append($a);
+      $categoriesDesktop.append($listItem);
+    });
+
+    if ($blockWrapper) {
+      $blockWrapper.prepend($categoriesDesktopWrapper);
+      $blockWrapper.classList.add('with-categories-list');
+    }
+  }
+}
+
 async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
@@ -878,7 +933,7 @@ async function redrawTemplates($block, $toolBar) {
         $viewButtons.forEach(($button) => {
           $button.classList.remove('active');
         });
-        ['lg-view', 'md-view', 'sm-view'].forEach((className) => {
+        ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
           $block.classList.remove(className);
         });
       }
@@ -954,7 +1009,7 @@ function initViewToggle($block, $toolBar) {
           }
         });
 
-        ['lg-view', 'md-view', 'sm-view'].forEach((className) => {
+        ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
           if (className !== `${$button.dataset.view}-view`) {
             $block.classList.remove(className);
           }
@@ -966,7 +1021,7 @@ function initViewToggle($block, $toolBar) {
         props.masonry.draw();
       } else {
         $button.classList.remove('active');
-        ['lg-view', 'md-view', 'sm-view'].forEach((className) => {
+        ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
           $block.classList.remove(className);
         });
         props.masonry = new Masonry($block, props.masonry.cells);
@@ -985,17 +1040,17 @@ function decorateToolbar($block, $section, placeholders) {
 
     const $viewsWrapper = createTag('div', { class: 'views' });
 
-    const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
-    lgView.append(getIconElement('scratch-icon-22'));
-    const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
-    mdView.append(getIconElement('scratch-icon-22'));
     const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
     smView.append(getIconElement('scratch-icon-22'));
+    const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
+    mdView.append(getIconElement('scratch-icon-22'));
+    const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
+    lgView.append(getIconElement('scratch-icon-22'));
 
     const functionsObj = makeTemplateFunctions(placeholders);
     const $functions = decorateFunctionsContainer($block, $section, functionsObj, placeholders);
 
-    $viewsWrapper.append(lgView, mdView, smView);
+    $viewsWrapper.append(smView, mdView, lgView);
     functionsWrapper.append($viewsWrapper, $functions.desktop);
 
     $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
@@ -1090,6 +1145,7 @@ export async function decorateTemplateList($block) {
         && placeholders['template-filter-premium']) {
         decorateToolbar($block, $parent, placeholders);
       }
+      decorateCategoryList($block, placeholders);
     }
   }
 
