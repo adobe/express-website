@@ -24,6 +24,8 @@ import {
   toClassName,
   arrayToObject,
   titleCase,
+  getLottie,
+  lazyLoadLottiePlayer,
 } from '../../scripts/scripts.js';
 import { Masonry } from '../shared/masonry.js';
 
@@ -493,6 +495,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $mobileFilterButtonWrapper = createTag('div', { class: 'filter-button-mobile-wrapper' });
   const $mobileFilterButton = createTag('span', { class: 'filter-button-mobile' });
   const $drawer = createTag('div', { class: 'filter-drawer-mobile hidden retracted' });
+  const $drawerInnerWrapper = createTag('div', { class: 'filter-drawer-mobile-inner-wrapper' });
   const $drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
   const $closeButton = getIconElement('search-clear');
   const $applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
@@ -509,11 +512,12 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
     .querySelector('.current-option-animated')
     .textContent = `${placeholders.static} ${placeholders['versus-shorthand']} ${placeholders.animated}`;
 
-  $drawer.append(
-    $closeButton,
+  $drawerInnerWrapper.append(
     $functionContainerMobile.children[0],
     $functionContainerMobile.children[1],
   );
+
+  $drawer.append($closeButton, $drawerInnerWrapper);
 
   const $buttonsInDrawer = $drawer.querySelectorAll('.button-wrapper');
   const $optionsInDrawer = $drawer.querySelectorAll('.options-wrapper');
@@ -602,6 +606,10 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     document.addEventListener('click', (e) => {
       if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
         $dropdown.classList.add('hidden');
+
+        if ($wrapper.classList.contains('sticky-search-bar')) {
+          $wrapper.classList.add('collapsed');
+        }
       }
     }, { passive: true });
   });
@@ -620,13 +628,22 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       $stickySearchBarWrapper.classList.add('collapsed');
     }
   }, { passive: true });
-
-  $stickySearchBar.addEventListener('blur', () => {
-    $stickySearchBarWrapper.classList.add('collapsed');
-  }, { passive: true });
 }
 
-function decorateCategoryList($block, placeholders) {
+function updateLottieStatus($section) {
+  const $drawer = $section.querySelector('.filter-drawer-mobile');
+  const $inWrapper = $drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
+  const $lottieArrows = $drawer.querySelector('.lottie-wrapper');
+  if ($inWrapper.scrollHeight - $inWrapper.scrollTop === $inWrapper.offsetHeight) {
+    $lottieArrows.style.display = 'none';
+    $drawer.classList.remove('scrollable');
+  } else {
+    $lottieArrows.style.removeProperty('display');
+    $drawer.classList.add('scrollable');
+  }
+}
+
+function decorateCategoryList($block, $section, placeholders) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
@@ -635,6 +652,8 @@ function decorateCategoryList($block, placeholders) {
     const locale = getLocale(window.location);
     const urlStarter = locale === 'us' ? `${window.location.origin}/express/templates/` : `${window.location.origin}/${locale}/express/templates/`;
     const $blockWrapper = $block.closest('.template-list-wrapper');
+    const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
+    const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
     const categories = {
       'Instagram story': 'instagram-story',
       'Greeting card': 'greeting-card',
@@ -652,32 +671,89 @@ function decorateCategoryList($block, placeholders) {
       'Animated graphics': 'animated-graphics',
     };
 
-    const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper desktop-only' });
+    const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
     const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
     const $categoriesToggleIcon = getIconElement('scratch-icon-22');
     const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
-    const $categoriesDesktop = createTag('ul', { class: 'category-list' });
+    const $categories = createTag('ul', { class: 'category-list' });
     const $categoriesResizeButton = createTag('a', { class: 'category-list-resize' });
 
     $categoriesToggle.textContent = placeholders['jump-to-category'];
     $categoriesResizeButton.textContent = placeholders['show-less'];
 
-    $categoriesDesktopWrapper.append(
-      $categoriesToggleWrapper, $categoriesDesktop, $categoriesResizeButton,
-    );
     $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
+    $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
+
     Object.entries(categories).forEach((entry) => {
       const $listItem = createTag('li');
       const $a = createTag('a', { href: `${urlStarter}${entry[1]}` });
       [$a.textContent] = entry;
       $listItem.append($a);
-      $categoriesDesktop.append($listItem);
+      $categories.append($listItem);
     });
+
+    const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
+    const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
+    $mobileDrawerWrapper.append($lottieArrows);
+    $inWrapper.append($categoriesMobileWrapper);
+    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+    lazyLoadLottiePlayer();
+
+    $categoriesDesktopWrapper.classList.add('desktop-only');
+    $categoriesDesktopWrapper.append($categoriesResizeButton);
 
     if ($blockWrapper) {
       $blockWrapper.prepend($categoriesDesktopWrapper);
       $blockWrapper.classList.add('with-categories-list');
     }
+
+    const $toggleButtons = $section.querySelectorAll('.category-list-toggle-wrapper');
+    $toggleButtons.forEach(($button) => {
+      $button.addEventListener('click', () => {
+        const $listWrapper = $button.parentElement;
+        $button.classList.toggle('collapsed');
+        if ($button.classList.contains('collapsed')) {
+          if ($listWrapper.classList.contains('desktop-only')) {
+            $listWrapper.style.maxHeight = '48px';
+          } else {
+            $listWrapper.style.maxHeight = '24px';
+          }
+        } else {
+          $listWrapper.style.maxHeight = '1000px';
+        }
+
+        setTimeout(() => {
+          if (!$listWrapper.classList.contains('desktop-only')) {
+            updateLottieStatus($section);
+          }
+        }, 510);
+      }, { passive: true });
+    });
+
+    $lottieArrows.addEventListener('click', () => {
+      $inWrapper.scrollBy({
+        top: 300,
+        behavior: 'smooth',
+      });
+    }, { passive: true });
+
+    $inWrapper.addEventListener('scroll', () => {
+      updateLottieStatus($section);
+    }, { passive: true });
+
+    setTimeout(() => {
+      const categoriesHeight = $categories.offsetHeight;
+      $categoriesResizeButton.addEventListener('click', () => {
+        $categoriesResizeButton.classList.toggle('collapsed');
+        if ($categoriesResizeButton.classList.contains('collapsed')) {
+          $categories.style.maxHeight = '200px';
+          $categoriesResizeButton.textContent = placeholders['show-more'];
+        } else {
+          $categories.style.maxHeight = `${categoriesHeight}px`;
+          $categoriesResizeButton.textContent = placeholders['show-less'];
+        }
+      }, { passive: true });
+    }, 10);
   }
 }
 
@@ -804,7 +880,7 @@ function updateOptionsStatus($toolBar) {
   });
 }
 
-function initDrawer($toolBar) {
+function initDrawer($section, $toolBar) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
   const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
@@ -820,6 +896,7 @@ function initDrawer($toolBar) {
     $drawer.classList.remove('hidden');
     $drawerBackground.classList.remove('hidden');
     $applyButton.classList.remove('hidden');
+    updateLottieStatus($section);
 
     setTimeout(() => {
       $drawer.classList.remove('retracted');
@@ -859,7 +936,7 @@ function initDrawer($toolBar) {
       }
     });
     $drawer.classList.add('hidden');
-  }, 1);
+  }, 10);
 }
 
 function updateQueryURL(functionWrapper, option) {
@@ -1002,6 +1079,7 @@ function initViewToggle($block, $toolBar) {
   $toggleButtons.forEach(($button) => {
     $button.addEventListener('click', () => {
       const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
+      const $blockWrapper = $block.closest('.template-list-wrapper');
       if (!$button.classList.contains('active') && $templatesToView.length > 0) {
         $toggleButtons.forEach((b) => {
           if (b !== $button) {
@@ -1012,10 +1090,12 @@ function initViewToggle($block, $toolBar) {
         ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
           if (className !== `${$button.dataset.view}-view`) {
             $block.classList.remove(className);
+            $blockWrapper.classList.remove(className);
           }
         });
         $button.classList.add('active');
         $block.classList.add(`${$button.dataset.view}-view`);
+        $blockWrapper.classList.add(`${$button.dataset.view}-view`);
 
         props.masonry = new Masonry($block, props.masonry.cells);
         props.masonry.draw();
@@ -1023,6 +1103,7 @@ function initViewToggle($block, $toolBar) {
         $button.classList.remove('active');
         ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
           $block.classList.remove(className);
+          $blockWrapper.classList.remove(className);
         });
         props.masonry = new Masonry($block, props.masonry.cells);
         props.masonry.draw();
@@ -1056,7 +1137,7 @@ function decorateToolbar($block, $section, placeholders) {
     $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
 
     decorateSearchFunctions($toolBar, $section, placeholders);
-    initDrawer($toolBar);
+    initDrawer($section, $toolBar);
     initFilterSort($block, $toolBar);
     initViewToggle($block, $toolBar);
   }
@@ -1145,7 +1226,7 @@ export async function decorateTemplateList($block) {
         && placeholders['template-filter-premium']) {
         decorateToolbar($block, $parent, placeholders);
       }
-      decorateCategoryList($block, placeholders);
+      decorateCategoryList($block, $parent, placeholders);
     }
   }
 

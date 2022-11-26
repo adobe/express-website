@@ -48,39 +48,39 @@ export class Masonry {
       return 0;
     } else if (window.innerWidth >= 900) {
       if (this.$block.classList.contains('sm-view')) {
-        colWidth = 165;
+        colWidth = 172;
       }
 
       if (this.$block.classList.contains('md-view')) {
-        colWidth = 258.5;
+        colWidth = 270;
       }
 
       if (this.$block.classList.contains('lg-view')) {
-        colWidth = 352;
+        colWidth = 364;
       }
     } else if (window.innerWidth >= 600) {
       if (this.$block.classList.contains('sm-view')) {
-        colWidth = 165;
-      }
-
-      if (this.$block.classList.contcd ains('md-view')) {
-        colWidth = 227.33;
-      }
-
-      if (this.$block.classList.contains('lg-view')) {
-        colWidth = 352;
-      }
-    } else {
-      if (this.$block.classList.contains('sm-view')) {
-        colWidth = 106.33;
+        colWidth = 172;
       }
 
       if (this.$block.classList.contains('md-view')) {
-        colWidth = 163.5;
+        colWidth = 240;
       }
 
       if (this.$block.classList.contains('lg-view')) {
-        colWidth = 335;
+        colWidth = 364;
+      }
+    } else {
+      if (this.$block.classList.contains('sm-view')) {
+        colWidth = 128;
+      }
+
+      if (this.$block.classList.contains('md-view')) {
+        colWidth = 180;
+      }
+
+      if (this.$block.classList.contains('lg-view')) {
+        colWidth = 350;
       }
     }
     const usp = new URLSearchParams(window.location.search);
@@ -97,7 +97,9 @@ export class Masonry {
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
     if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
-      this.$block.innerHTML = '';
+      this.$block.querySelectorAll('.masonry-col').forEach((col) => {
+        col.remove();
+      });
       this.columns = [];
       for (let i = 0; i < numCols; i += 1) {
         const $column = createTag('div', { class: 'masonry-col' });
