@@ -1150,16 +1150,16 @@ export function decorateButtons(block = document) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
-        if ($up.children.length === 1 && ($up.tagName === 'P' || $up.tagName === 'DIV')) {
+        if ($up.childNodes.length === 1 && ($up.tagName === 'P' || $up.tagName === 'DIV')) {
           $a.className = 'button accent'; // default
           $up.classList.add('button-container');
         }
-        if ($up.children.length === 1 && $up.tagName === 'STRONG'
+        if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
           && $twoup.children.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
-        if ($up.children.length === 1 && $up.tagName === 'EM'
+        if ($up.childNodes.length === 1 && $up.tagName === 'EM'
           && $twoup.children.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
