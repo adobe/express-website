@@ -194,7 +194,7 @@ export default function decorate($block) {
         }
       }
       if ($a && $a.classList.contains('button')) {
-        if ($block.classList.contains('fullsize')) {
+        if ($block.className.includes('fullsize')) {
           $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
           createFloatingButton($a, $block.closest('.section').dataset.audience);
