@@ -390,6 +390,8 @@ async function readRowsFromBlock($block) {
         props.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
       } else if (cells[0].textContent.toLowerCase() === 'background animation') {
         props.backgroundAnimation = cells[1].textContent;
+      } else if (cells[0].textContent.toLowerCase() === 'background color') {
+        props.backgroundColor = cells[1].textContent;
       } else if (index < array.length) {
         if (cells.length >= 2) {
           if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {

@@ -468,7 +468,7 @@ main .template-list.fullwidth.lg-view .template.placeholder,
 main .template-list.fullwidth.md-view .template.placeholder,
 main .template-list.fullwidth.sm-view .template.placeholder {
   margin: 21px auto;
-  width: 80%;
+  max-width: 80%;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
