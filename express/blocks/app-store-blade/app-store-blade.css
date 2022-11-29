@@ -50,7 +50,6 @@ main .app-store-blade-container .main-container .qr-code {
 main .app-store-blade-container .main-container .qr-code img {
     object-fit: contain;
     max-width: 167px;
-    height: 100%;
     padding-right: 24px;
     display: block;
 }
