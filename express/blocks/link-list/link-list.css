@@ -125,7 +125,6 @@ main .link-list .carousel-platform p.button-container:first-child {
 /* fullwidth variant */
 
 main .section.link-list-fullwidth-container > div.link-list-wrapper {
-  max-width: unset;
   width: fit-content;
   max-width: 100%;
 }
@@ -167,4 +166,32 @@ main .link-list-wrapper .link-list.noarrows p.button-container {
 
 main .link-list-wrapper .link-list.noarrows p.button-container .button.medium.secondary {
   padding: 3px 14px;
+}
+
+
+/* fullwidth + leftalign variant */
+
+main .section.link-list-fullwidth-leftalign-container {
+  padding-top: 0;
+}
+
+main .section.link-list-fullwidth-leftalign-container > div.link-list-wrapper {
+  margin-left: 0;
+}
+
+main .section.link-list-fullwidth-leftalign-container ~ .section {
+  padding-top: 0;
+}
+
+@media (min-width: 900px) {
+  main .section.link-list-fullwidth-leftalign-container > div.link-list-wrapper .link-list,
+  main .section.link-list-fullwidth-leftalign-container > div.link-list-wrapper .link-list h2,
+  main .section.link-list-fullwidth-leftalign-container > div.link-list-wrapper .link-list h3,
+  main .section.link-list-fullwidth-leftalign-container > div.link-list-wrapper .link-list h4 {
+    padding-left: 0;
+  }
+
+  main .section.link-list-fullwidth-leftalign-container .link-list .carousel-platform p.button-container:first-child {
+    margin-left: 10px;
+  }
 }
