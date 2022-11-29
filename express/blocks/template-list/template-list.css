@@ -61,10 +61,6 @@ main .template-list.fullwidth.lg-view {
   padding: 0 28px;
 }
 
-main .template-list.fullwidth {
-  width: 100%;
-}
-
 @media (min-width: 600px) {
   main .template-list.fullwidth {
     width: calc(100% - 172px);
@@ -826,8 +822,12 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   font-weight: 700;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon {
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon.icon-flyer-icon-22 {
   filter: invert(21%) sepia(34%) saturate(36) hue-rotate(-136deg) brightness(119%) contrast(85%);
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon.icon-arrow-right {
+  width: 16px;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .free-plan-widget {

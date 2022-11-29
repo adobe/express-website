@@ -422,17 +422,17 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icon: 'scratch-icon-22',
+      icon: 'template-premium',
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icon: 'scratch-icon-22',
+      icon: 'template-animation',
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-sort']),
       elements: {},
-      icon: 'scratch-icon-22',
+      icon: 'sort',
     },
   };
 
@@ -634,12 +634,14 @@ function updateLottieStatus($section) {
   const $drawer = $section.querySelector('.filter-drawer-mobile');
   const $inWrapper = $drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
   const $lottieArrows = $drawer.querySelector('.lottie-wrapper');
-  if ($inWrapper.scrollHeight - $inWrapper.scrollTop === $inWrapper.offsetHeight) {
-    $lottieArrows.style.display = 'none';
-    $drawer.classList.remove('scrollable');
-  } else {
-    $lottieArrows.style.removeProperty('display');
-    $drawer.classList.add('scrollable');
+  if ($lottieArrows) {
+    if ($inWrapper.scrollHeight - $inWrapper.scrollTop === $inWrapper.offsetHeight) {
+      $lottieArrows.style.display = 'none';
+      $drawer.classList.remove('scrollable');
+    } else {
+      $lottieArrows.style.removeProperty('display');
+      $drawer.classList.add('scrollable');
+    }
   }
 }
 
@@ -775,7 +777,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
   const $boldedTaskText = createTag('b');
 
-  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('search'));
+  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
@@ -1122,11 +1124,11 @@ function decorateToolbar($block, $section, placeholders) {
     const $viewsWrapper = createTag('div', { class: 'views' });
 
     const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
-    smView.append(getIconElement('scratch-icon-22'));
+    smView.append(getIconElement('small_grid'));
     const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
-    mdView.append(getIconElement('scratch-icon-22'));
+    mdView.append(getIconElement('medium_grid'));
     const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
-    lgView.append(getIconElement('scratch-icon-22'));
+    lgView.append(getIconElement('large_grid'));
 
     const functionsObj = makeTemplateFunctions(placeholders);
     const $functions = decorateFunctionsContainer($block, $section, functionsObj, placeholders);

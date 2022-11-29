@@ -72,15 +72,15 @@ export class Masonry {
       }
     } else {
       if (this.$block.classList.contains('sm-view')) {
-        colWidth = 128;
+        colWidth = 120;
       }
 
       if (this.$block.classList.contains('md-view')) {
-        colWidth = 180;
+        colWidth = 172;
       }
 
       if (this.$block.classList.contains('lg-view')) {
-        colWidth = 350;
+        colWidth = 340;
       }
     }
     const usp = new URLSearchParams(window.location.search);
