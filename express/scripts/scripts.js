@@ -300,7 +300,7 @@ export function getIcon(icons, alt, size = 44) {
 export function getIconElement(icons, size, alt) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
-  return ($div.firstChild);
+  return ($div.firstElementChild);
 }
 
 export function transformLinkToAnimation($a) {
@@ -1529,7 +1529,7 @@ export function unwrapBlock($block) {
   const $elems = [...$section.children];
   const $blockSection = createTag('div');
   const $postBlockSection = createTag('div');
-  const $nextSection = $section.nextSibling;
+  const $nextSection = $section.nextElementSibling;
   $section.parentNode.insertBefore($blockSection, $nextSection);
   $section.parentNode.insertBefore($postBlockSection, $nextSection);
 
