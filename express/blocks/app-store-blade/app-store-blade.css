@@ -43,6 +43,10 @@ main .app-store-blade-container .main-container .body {
     z-index: 1;
 }
 
+main .app-store-blade-container .main-container .qr-code picture {
+    min-height: 191px;
+}
+
 main .app-store-blade-container .main-container .qr-code img {
     object-fit: contain;
     max-width: 167px;
