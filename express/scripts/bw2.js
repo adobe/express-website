@@ -194,7 +194,7 @@ export default class BalancedWordWrapper {
     const { children } = el;
     let oriText = '';
     let hasChildElement = false;
-    children.forEach((node) => {
+    [...children]((node) => {
       if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'WBR') {
         hasChildElement = true;
         this.applyElement(node, ratio);

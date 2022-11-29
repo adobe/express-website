@@ -35,7 +35,7 @@ const fragmentToString = (fragment) => {
   }
 
   let html = '';
-  fragment.children.forEach((c) => {
+  [...fragment.children].forEach((c) => {
     html += c.outerHTML;
   });
   return trim(html);

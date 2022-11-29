@@ -696,7 +696,7 @@ export function addBlockClasses($block, classNames) {
 
 // function addDivClasses($element, selector, classes) {
 //   const $children = $element.querySelectorAll(selector);
-//   $children.forEach(($div, i) => {
+//   [...$children](($div, i) => {
 //     $div.classList.add(classes[i]);
 //   });
 // }
