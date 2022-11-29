@@ -77,18 +77,18 @@ function buildStandardPayload($block, payload) {
 function updatePayloadFromBlock($block, payload) {
   Array.from($block.children).forEach(($row) => {
     const $divs = $row.querySelectorAll('div');
-    switch ($divs[0].textContent) {
+    switch ($divs[0].textContent.trim()) {
       default:
         payload.other.push($divs);
         break;
       case 'Heading':
-        payload.heading = $divs[1].textContent;
+        payload.heading = $divs[1].textContent.trim();
         break;
       case 'Copy':
         payload.copyParagraphs = $divs[1].querySelectorAll('p');
         break;
       case 'Show Rating?':
-        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
+        payload.showRating = $divs[1].textContent.trim().toLowerCase() === 'yes' || $divs[1].textContent.trim().toLowerCase() === 'true';
         break;
       case 'Image':
         payload.image = $divs[1].querySelector('picture');
@@ -99,7 +99,7 @@ function updatePayloadFromBlock($block, payload) {
         payload.QRCode.classList.add('qr-code');
         break;
       case 'Badge Link':
-        payload.badgeLink = $divs[1].textContent;
+        payload.badgeLink = $divs[1].trim();
         break;
     }
   });
@@ -115,7 +115,7 @@ function handleClipboard($block) {
   const $orToLink = $block.querySelector('.or-to-link');
   const $innerAnchor = $orToLink.querySelector('a');
   if (!$orToLink.classList.contains('copied')) {
-    navigator.clipboard.writeText($innerAnchor.textContent);
+    navigator.clipboard.writeText($innerAnchor.textContent.trim());
   }
   $orToLink.classList.toggle('copied');
 }

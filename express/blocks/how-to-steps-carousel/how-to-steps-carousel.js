@@ -132,7 +132,7 @@ export default function decorate(block) {
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
-    name: (heading && heading.textContent) || document.title,
+    name: (heading && heading.textContent.trim()) || document.title,
     step: [],
   };
 
@@ -149,7 +149,7 @@ export default function decorate(block) {
     const cells = Array.from(row.children);
 
     const h3 = createTag('h3');
-    h3.innerHTML = cells[0].textContent;
+    h3.innerHTML = cells[0].textContent.trim();
     const text = createTag('div', { class: 'tip-text' });
     text.append(h3);
     text.append(cells[1]);
@@ -162,10 +162,10 @@ export default function decorate(block) {
     schema.step.push({
       '@type': 'HowToStep',
       position: i + 1,
-      name: h3.textContent,
+      name: h3.textContent.trim(),
       itemListElement: {
         '@type': 'HowToDirection',
-        text: text.textContent,
+        text: text.textContent.trim(),
       },
     });
 

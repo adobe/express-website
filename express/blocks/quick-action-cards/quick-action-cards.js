@@ -27,7 +27,7 @@ export default function decorate($block) {
       if ($div.querySelector(':scope > picture:first-child')) {
         $div.classList.add('quick-action-card-image');
         const $a = $div.querySelector('a');
-        if ($a && $a.textContent.startsWith('https://')) {
+        if ($a && $a.textContent.trim().startsWith('https://')) {
           const contents = Array.from($card.children);
           const $wrapper = createTag('a', { href: $a.href });
           $a.remove();

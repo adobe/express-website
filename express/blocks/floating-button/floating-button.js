@@ -44,7 +44,7 @@ export async function createFloatingButton($a, audience) {
 
   // Hide CTAs with same url & text as the Floating CTA && is NOT a Floating CTA (in mobile/tablet)
   const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link'))
-    .filter((a) => (a.textContent === $a.textContent || a.href === $a.href)
+    .filter((a) => (a.textContent === $a.textContent.trim() || a.href === $a.href)
       && !a.parentElement.classList.contains('floating-button'));
   sameUrlCTAs.forEach((cta) => {
     cta.classList.add('same-as-floating-button-CTA');
@@ -326,7 +326,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
 }
 
 export async function createMultiFunctionButton($block, $parentSection) {
-  const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
+  const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent.trim());
   const $ctaContainer = $block.querySelector('.button-container');
   const tools = $block.querySelectorAll('li');
   if ($ctaContainer) {

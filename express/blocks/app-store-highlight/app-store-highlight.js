@@ -48,37 +48,37 @@ function buildStandardPayload($block, payload) {
 function updatePayloadFromBlock($block, payload) {
   for (const $row of Array.from($block.children)) {
     const $divs = $row.querySelectorAll('div');
-    switch ($divs[0].textContent) {
+    switch ($divs[0].textContent.trim()) {
       default:
         payload.other.push($divs);
         break;
       case 'Heading':
         if (payload.userAgent === 'iOS' || payload.userAgent === 'Android') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', payload.userAgent);
+          payload.heading = $divs[1].textContent.trim().replace('{{dynamic-user-agent-text}}', payload.userAgent);
         }
         if (payload.userAgent === 'unknown') {
-          payload.heading = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'your mobile devices');
+          payload.heading = $divs[1].textContent.trim().replace('{{dynamic-user-agent-text}}', 'your mobile devices');
         }
         break;
       case 'Copy':
         if (payload.userAgent === 'iOS') {
-          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
+          payload.copy = $divs[1].textContent.trim().replace('{{dynamic-user-agent-text}}', 'iPad or iPhone');
         }
         if (payload.userAgent === 'Android' || payload.userAgent === 'unknown') {
-          payload.copy = $divs[1].textContent.replace('{{dynamic-user-agent-text}}', 'phone or tablet');
+          payload.copy = $divs[1].textContent.trim().replace('{{dynamic-user-agent-text}}', 'phone or tablet');
         }
         break;
       case 'Show Rating?':
-        payload.showRating = $divs[1].textContent.toLowerCase() === 'yes' || $divs[1].textContent.toLowerCase() === 'true';
+        payload.showRating = $divs[1].textContent.trim().toLowerCase() === 'yes' || $divs[1].textContent.trim().toLowerCase() === 'true';
         break;
       case 'Images':
         payload.images = $divs[1].querySelectorAll('picture');
         break;
       case 'Screen Demo':
-        payload.screenDemo = $divs[1].textContent;
+        payload.screenDemo = $divs[1].textContent.trim();
         break;
       case 'Badge Link':
-        payload.badgeLink = $divs[1].textContent;
+        payload.badgeLink = $divs[1].textContent.trim();
         break;
     }
   }

@@ -26,7 +26,7 @@ describe('Japanese balanced word wrap', () => {
         const e = expects[i];
         if (typeof e === 'string') {
           expect(c.nodeType).to.equal(Node.TEXT_NODE);
-          expect(c.textContent).to.equal(e);
+          expect(c.textContent.trim()).to.equal(e);
         } else {
           expect(c.nodeType).to.equal(Node.ELEMENT_NODE);
           expect(c.nodeName.toLowerCase()).to.equal(e.nodeName.toLowerCase());

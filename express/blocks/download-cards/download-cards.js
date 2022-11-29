@@ -61,7 +61,7 @@ function decorateCardsBase($block) {
         $div.classList.add('card-content');
       }
       const $a = $div.querySelector('a');
-      if ($a && $a.textContent.startsWith('https://')) {
+      if ($a && $a.textContent.trim().startsWith('https://')) {
         const $wrapper = createTag('a', { href: $a.href, class: 'card' });
         $a.remove();
         $wrapper.innerHTML = $card.innerHTML;

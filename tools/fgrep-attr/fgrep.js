@@ -45,13 +45,13 @@ async function loadSitemap(sitemapURL) {
   const subSitemaps = [...sitemap.querySelectorAll('sitemap loc')];
   for (let i = 0; i < subSitemaps.length; i += 1) {
     const loc = subSitemaps[i];
-    const subSitemapURL = new URL(loc.textContent);
+    const subSitemapURL = new URL(loc.textContent.trim());
     // eslint-disable-next-line no-await-in-loop
     await loadSitemap(subSitemapURL.pathname);
   }
   const urlLocs = sitemap.querySelectorAll('url loc');
   urlLocs.forEach((loc) => {
-    const locURL = new URL(loc.textContent);
+    const locURL = new URL(loc.textContent.trim());
     sitemapURLs.push(locURL.pathname);
   });
 }

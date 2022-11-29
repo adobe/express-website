@@ -36,7 +36,7 @@ async function fetchPromotion(name) {
 }
 
 export default async function decorate($block) {
-  const name = $block.textContent;
+  const name = $block.textContent.trim();
   if (!name) return;
 
   const html = await fetchPromotion(name);

@@ -18,7 +18,7 @@ export default function decorate($block) {
   $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
     if ($cells[2]) {
-      const device = toClassName($cells[2].textContent);
+      const device = toClassName($cells[2].textContent.trim());
       if (device) $row.classList.add(`${device}-only`);
       $cells[2].remove();
     }

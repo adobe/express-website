@@ -340,7 +340,7 @@ export function linkPicture($picture) {
   const $nextSib = $picture.parentNode.nextElementSibling;
   if ($nextSib) {
     const $a = $nextSib.querySelector('a');
-    if ($a && $a.textContent.startsWith('https://')) {
+    if ($a && $a.textContent.trim().startsWith('https://')) {
       $a.innerHTML = '';
       $a.className = '';
       $a.appendChild($picture);
@@ -367,7 +367,7 @@ export function readBlockConfig($block) {
       const $cols = [...$row.children];
       if ($cols[1]) {
         const $value = $cols[1];
-        const name = toClassName($cols[0].textContent);
+        const name = toClassName($cols[0].textContent.trim());
         let value = '';
         if ($value.querySelector('a')) {
           const $as = [...$value.querySelectorAll('a')];
@@ -379,11 +379,11 @@ export function readBlockConfig($block) {
         } else if ($value.querySelector('p')) {
           const $ps = [...$value.querySelectorAll('p')];
           if ($ps.length === 1) {
-            value = $ps[0].textContent;
+            value = $ps[0].textContent.trim();
           } else {
-            value = $ps.map(($p) => $p.textContent);
+            value = $ps.map(($p) => $p.textContent.trim());
           }
-        } else value = $row.children[1].textContent;
+        } else value = $row.children[1].textContent.trim();
         config[name] = value;
       }
     }
@@ -740,15 +740,15 @@ export function loadCSS(href, callback) {
 function resolveFragments() {
   Array.from(document.querySelectorAll('main > div div'))
     .filter(($cell) => $cell.childElementCount === 0)
-    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent))
+    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent.trim()))
     .forEach(($cell) => {
-      const marker = $cell.textContent
-        .substring(1, $cell.textContent.length - 1)
+      const marker = $cell.textContent.trim()
+        .substring(1, $cell.textContent.trim().length - 1)
         .toLocaleLowerCase()
         .trim();
       // find the fragment with the marker
       const $marker = Array.from(document.querySelectorAll('main > div h3'))
-        .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
+        .find(($title) => $title.textContent.trim().toLocaleLowerCase() === marker);
       if (!$marker) {
         console.log(`no fragment with marker "${marker}" found`);
         return;
@@ -1137,16 +1137,16 @@ export function decorateButtons(block = document) {
       $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
     }
     $a.href = addSearchQueryToHref($a.href);
-    $a.title = $a.title || $a.textContent;
+    $a.title = $a.title || $a.textContent.trim();
     const $block = $a.closest('div.section > div > div');
     let blockName;
     if ($block) {
       blockName = $block.className;
     }
     if (!noButtonBlocks.includes(blockName)
-      && originalHref !== $a.textContent
-      && !$a.textContent.endsWith(' >')
-      && !$a.textContent.endsWith(' ›')) {
+      && originalHref !== $a.textContent.trim()
+      && !$a.textContent.trim().endsWith(' >')
+      && !$a.textContent.trim().endsWith(' ›')) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -1567,7 +1567,7 @@ export function normalizeHeadings(block, allowedHeadings) {
         }
       }
       if (level !== 7) {
-        tag.outerHTML = `<h${level}>${tag.textContent}</h${level}>`;
+        tag.outerHTML = `<h${level}>${tag.textContent.trim()}</h${level}>`;
       }
     }
   });
@@ -1669,7 +1669,7 @@ export function addFavIcon(href) {
 
 function decorateSocialIcons($main) {
   $main.querySelectorAll(':scope a').forEach(($a) => {
-    if ($a.href === $a.textContent) {
+    if ($a.href === $a.textContent.trim()) {
       let icon = '';
       if ($a.href.startsWith('https://www.instagram.com')) {
         icon = 'instagram';
@@ -2033,8 +2033,8 @@ export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1,
     ];
   headings.forEach((h) => {
     const length = getLocale(window.location) === 'jp'
-      ? getJapaneseTextCharacterCount(h.textContent)
-      : h.textContent.length;
+      ? getJapaneseTextCharacterCount(h.textContent.trim())
+      : h.textContent.trim().length;
     sizes.forEach((size) => {
       if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
     });

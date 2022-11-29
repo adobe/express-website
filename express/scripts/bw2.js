@@ -199,7 +199,7 @@ export default class BalancedWordWrapper {
         hasChildElement = true;
         this.applyElement(node, ratio);
       } else if (node.nodeType === Node.TEXT_NODE) {
-        oriText += node.textContent;
+        oriText += node.textContent.trim();
       } else if (node.nodeName === 'WBR') {
         oriText += '<wbr>';
       }

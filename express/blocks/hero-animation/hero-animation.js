@@ -109,7 +109,7 @@ function transformToVideoLink($cell, $a) {
   $a.addEventListener('click', (e) => {
     e.preventDefault();
   });
-  const title = $a.textContent;
+  const title = $a.textContent.trim();
   // gather video urls from all links in cell
   const vidUrls = [];
   [...$cell.querySelectorAll(':scope a')]

@@ -27,7 +27,7 @@ export default function decorate($block, name, doc) {
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
-    name: ($heading && $heading.textContent) || document.title,
+    name: ($heading && $heading.textContent.trim()) || document.title,
     step: [],
   };
 
@@ -36,14 +36,14 @@ export default function decorate($block, name, doc) {
     schema.step.push({
       '@type': 'HowToStep',
       position: i + 1,
-      name: $cells[0].textContent,
+      name: $cells[0].textContent.trim(),
       itemListElement: {
         '@type': 'HowToDirection',
-        text: $cells[1].textContent,
+        text: $cells[1].textContent.trim(),
       },
     });
     const $h3 = createTag('h3');
-    $h3.innerHTML = $cells[0].textContent;
+    $h3.innerHTML = $cells[0].textContent.trim();
     const $p = createTag('p');
     $p.innerHTML = $cells[1].innerHTML;
     const $text = createTag('div', { class: 'tip-text' });
