@@ -726,7 +726,7 @@ main .section {
 main .section>div {
   margin: auto;
   max-width: 375px;
-  padding: 0 32px;
+  padding: 0;
 }
 
 main .section>div:empty {
