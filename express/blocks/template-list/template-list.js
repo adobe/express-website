@@ -232,7 +232,7 @@ function populateTemplates($block, templates) {
           href: $link.href ? addSearchQueryToHref($link.href) : '#',
         });
 
-        $a.append(...$tmplt.childNodes);
+        $a.append(...$tmplt.children);
         $tmplt.remove();
         $tmplt = $a;
         $block.append($a);

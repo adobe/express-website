@@ -191,7 +191,7 @@ export default class BalancedWordWrapper {
   }
 
   applyElement = (el = document.body, ratio = this.ratio) => {
-    const children = el.childNodes;
+    const { children } = el;
     let oriText = '';
     let hasChildElement = false;
     children.forEach((node) => {

@@ -20,7 +20,7 @@ import BalancedWordWrapper from '../../express/scripts/bw2.js';
 describe('Japanese balanced word wrap', () => {
   describe('BalancedWordWrapper', () => {
     const validate = (target = document.body, expects = []) => {
-      const children = target.childNodes;
+      const { children } = target;
       expect(children.length).to.equal(expects.length, 'number of child nodes mismatch');
       for (const [i, c] of children.entries()) {
         const e = expects[i];
@@ -139,7 +139,7 @@ describe('Japanese balanced word wrap', () => {
       const t1 = createTag('h1');
       t1.innerHTML = '<strong class="foo">aa<wbr>bbbb<wbr>ccc</strong>';
       bw2.applyElement(t1);
-      validate(t1.childNodes[0], [
+      validate(t1.children[0], [
         'aa',
         { nodeName: 'wbr', classList: [2] },
         'bbbb',
@@ -149,14 +149,14 @@ describe('Japanese balanced word wrap', () => {
       t1.innerHTML = '<strong class="foo">aa<wbr>bbbb<wbr>ccc</strong>ddd<wbr>eee';
       // in this case, direct text children of t1 will be ignored by this logic and kept unchanged
       bw2.applyElement(t1);
-      expect(t1.childNodes.length).to.equal(4);
+      expect(t1.children.length).to.equal(4);
       validate(t1, [
         { nodeName: 'strong' },
         'ddd',
         { nodeName: 'wbr', classList: [] },
         'eee',
       ]);
-      validate(t1.childNodes[0], [
+      validate(t1.children[0], [
         'aa',
         { nodeName: 'wbr', classList: [2] },
         'bbbb',
@@ -165,17 +165,17 @@ describe('Japanese balanced word wrap', () => {
       ]);
       t1.innerHTML = '<strong class="foo">aaa\uff3fbbb</strong>';
       bw2.applyElement(t1);
-      validate(t1.childNodes[0], [
+      validate(t1.children[0], [
         'aaa', { nodeName: 'wbr' }, 'bbb',
       ]);
       t1.innerHTML = '<strong class="foo">\uff3faaabbb</strong>';
       bw2.applyElement(t1);
-      validate(t1.childNodes[0], [
+      validate(t1.children[0], [
         'aaabbb',
       ]);
       t1.innerHTML = '<strong class="foo">aaabbb\uff3f</strong>';
       bw2.applyElement(t1);
-      validate(t1.childNodes[0], [
+      validate(t1.children[0], [
         'aaabbb', { nodeName: 'wbr' },
       ]);
     });
