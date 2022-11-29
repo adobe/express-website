@@ -69,7 +69,7 @@ export default async function decorate($block) {
     }
 
     const contentDiv = createTag('div', { class: 'promotion-content' });
-    contentDiv.append(div.firstChild);
+    contentDiv.append(div.firstElementChild);
 
     containerDiv.append(contentDiv);
 

@@ -113,7 +113,7 @@ export default function decorate(block) {
       blockWrapper.remove();
     } else if (i >= 1) {
       // add children from rest of wrappers to first wrapper
-      wrapper.previousSibling.append(...wrapper.children);
+      wrapper.previousElementSibling.append(...wrapper.children);
       wrapper.remove();
     }
   });

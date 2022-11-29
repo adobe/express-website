@@ -89,8 +89,8 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
 
   if (rowNum === 0
     && icons.length === 1
-    && icons[0].closest('p').innerText === ''
-    && !icons[0].closest('p').previousSibling) {
+    && icons[0].closest('p').innerText.trim() === ''
+    && !icons[0].closest('p').previousElementSibling) {
     // treat icon as brand icon if first element in first row cell and no text next to it
     icons[0].classList.add('brand');
     $columnCell.parentElement.classList.add('has-brand');

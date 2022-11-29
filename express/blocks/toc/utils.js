@@ -47,7 +47,7 @@ function getIcon(icons, alt) {
 export function getIconElement(icons, alt) {
   const $div = document.createElement('div');
   $div.innerHTML = getIcon(icons, alt);
-  return ($div.firstChild);
+  return ($div.firstElementChild);
 }
 
 export async function fixIcons($block = document) {
