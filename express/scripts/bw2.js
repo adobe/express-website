@@ -191,15 +191,15 @@ export default class BalancedWordWrapper {
   }
 
   applyElement = (el = document.body, ratio = this.ratio) => {
-    const { children } = el;
+    const children = el.childNodes;
     let oriText = '';
     let hasChildElement = false;
-    [...children]((node) => {
+    children.forEach((node) => {
       if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== 'WBR') {
         hasChildElement = true;
         this.applyElement(node, ratio);
       } else if (node.nodeType === Node.TEXT_NODE) {
-        oriText += node.textContent.trim();
+        oriText += node.textContent;
       } else if (node.nodeName === 'WBR') {
         oriText += '<wbr>';
       }
