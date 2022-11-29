@@ -35,7 +35,6 @@ main .app-store-blade-container .main-container .heading span {
 }
 
 main .app-store-blade-container .main-container .body {
-    display: flex;
     width: 680px;
     max-height: 167px;
     text-align: left;
@@ -43,8 +42,9 @@ main .app-store-blade-container .main-container .body {
     z-index: 1;
 }
 
-main .app-store-blade-container .main-container .qr-code picture {
-    min-height: 191px;
+main .app-store-blade-container .main-container .qr-code {
+    min-width: 191px;
+    display: inline-block;
 }
 
 main .app-store-blade-container .main-container .qr-code img {
@@ -53,6 +53,10 @@ main .app-store-blade-container .main-container .qr-code img {
     height: 100%;
     padding-right: 24px;
     display: block;
+}
+
+main .app-store-blade-container .main-container .body-content-wrapper {
+    display: inline-block;
 }
 
 main .app-store-blade-container .main-container .copy-wrapper p {
