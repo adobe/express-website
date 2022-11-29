@@ -300,7 +300,7 @@ export function getIcon(icons, alt, size = 44) {
 export function getIconElement(icons, size, alt) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
-  return ($div.firstChild);
+  return ($div.firstElementChild);
 }
 
 export function transformLinkToAnimation($a) {
@@ -808,6 +808,8 @@ export function decorateBlock(block) {
   const blockName = block.classList[0];
   if (blockName) {
     let shortBlockName = blockName;
+    const section = block.closest('.section');
+    if (section) section.classList.add(`${[...block.classList].join('-')}-container`.replace(/--/g, '-'));
     block.classList.add('block');
     // begin CCX custom block option class handling
     for (let i = 0; i < blocksWithOptions.length; i += 1) {
@@ -829,8 +831,6 @@ export function decorateBlock(block) {
     block.setAttribute('data-block-status', 'initialized');
     const blockWrapper = block.parentElement;
     blockWrapper.classList.add(`${shortBlockName}-wrapper`);
-    const section = block.closest('.section');
-    if (section) section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
   }
 }
 
@@ -1529,7 +1529,7 @@ export function unwrapBlock($block) {
   const $elems = [...$section.children];
   const $blockSection = createTag('div');
   const $postBlockSection = createTag('div');
-  const $nextSection = $section.nextSibling;
+  const $nextSection = $section.nextElementSibling;
   $section.parentNode.insertBefore($blockSection, $nextSection);
   $section.parentNode.insertBefore($postBlockSection, $nextSection);
 

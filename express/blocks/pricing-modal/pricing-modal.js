@@ -114,7 +114,7 @@ function decoratePricingModal($block) {
       });
     } else if (index === 1) {
       $row.classList.add('modal-content');
-      const $contents = Array.from($row.firstChild.children);
+      const $contents = Array.from($row.firstElementChild.children);
       $contents.forEach(($content, contentIndex) => {
         $content.classList.add(`content-${contentIndex + 1}`);
       });

@@ -84,8 +84,8 @@ export default function decorate($block) {
       window.scrollTo(0, $top.offsetTop);
     });
     const $pButton = document.createElement('p');
-    if ($block.nextSibling) {
-      $block.parentNode.insertBefore($pButton, $block.nextSibling);
+    if ($block.nextElementSibling) {
+      $block.parentNode.insertBefore($pButton, $block.nextElementSibling);
     } else {
       $block.parentNode.appendChild($pButton);
     }
