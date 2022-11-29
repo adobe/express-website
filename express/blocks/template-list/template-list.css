@@ -1862,12 +1862,7 @@ main .template-list-horizontal-apipowered-holiday-container {
   background: var(--color-black);
 }
 
-main .template-list-horizontal-apipowered-holiday-container.firework {
-  color: var(--color-white);
-  padding-top: 0;
-}
-
-main .template-list-horizontal-apipowered-holiday-container.snowing {
+main .template-list-horizontal-apipowered-holiday-container.with-animation {
   color: var(--color-white);
   padding-top: 0;
 }

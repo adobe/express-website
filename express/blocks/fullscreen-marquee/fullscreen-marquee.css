@@ -1,0 +1,232 @@
+main .fullscreen-marquee-container {
+  min-height: 460px;
+  box-sizing: border-box;
+  padding: 160px 0;
+  position: relative;
+  height: 100%;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee > div:first-of-type {
+  padding: 40px 0;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .icon.icon-cc-express-logo {
+  display: unset;
+  height: 32px;
+  width: auto;
+  margin: 0 auto;
+}
+
+main .fullscreen-marquee-container .marquee-background {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  height: 100%;
+  background-image: url('https://www.adobe.com/express/media_1aa259dd9ac4c29168d486d36c6c737074d24d756.jpeg#width=1600&height=901');
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.1;
+  z-index: -1;
+  transition: opacity 0.1s;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee h1 {
+  font-size: 80px;
+  line-height: 90px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee p {
+  justify-content: center;
+  max-width: 650px;
+  margin: 16px auto;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .button-container > a.button {
+  width: 180px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 120px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee h1 > span.colorful {
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+  background-size: 400% 400%;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+main .section.fullscreen-marquee-container div.fullscreen-marquee > div > div.picture-frame {
+  position: relative;
+  box-sizing: border-box;
+  background-image: url('https://www.adobe.com/express/media_13c6a255a99e9ab7a39bdc21ca9b86652c3e59f27.png#width=1600&height=1077');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 100%;
+  width: 100%;
+  border-radius: 24px;
+  display: block;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-out;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .picture-frame:before {
+  content: '';
+  position: absolute;
+  border-radius: 24px;
+  height: 100%;
+  width: 100%;
+  background-color: #FFFFFF;
+  z-index: -1;
+  transform: translateZ(26px);
+  transition: opacity 0.2s;
+  opacity: 0;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper {
+  justify-content: center;
+  flex-direction: row;
+  text-align: left;
+  align-items: center;
+  display: flex;
+  position: relative;
+  padding: 16px;
+  height: 518px;
+  width: 770px;
+  margin: auto;
+  will-change: transform;
+  border-radius: 24px;
+  transition: transform 0.5s ease-out;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 42px;
+  background-color: #f3f3f3;
+  box-shadow: 0 0 40px 20px hsl(0deg 0% 63% / 24%);
+  transition: transform 0.5s ease-out;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .screen-demo {
+  position: absolute;
+  top: 64px;
+  right: 72px;
+  height: 84%;
+  z-index: 2;
+  transform-style: preserve-3d;
+  transform: translate3d(0px, 0px, 15px);
+  transition: transform 0.5s ease-out, opacity 0.2s;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .picture-frame-clickable-layer {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  z-index: 3;
+  transform: translateZ(100px);
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .picture-frame-clickable-layer > .button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 32px;
+  border-radius: 32px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .flowers .flower,
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame:before {
+  opacity: 0.5;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flowers {
+  position: absolute;
+  display: block;
+  z-index: -1;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease-out;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flowers .flower {
+  position: absolute;
+  transition: opacity 0.5s ease-out;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flower.flower-0 {
+  top: 40px;
+  left: -80px;
+  width: 115px;
+  transform: rotate(-50deg);
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flower.flower-1 {
+  top: 130px;
+  left: -156px;
+  width: 223px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flower.flower-2 {
+  bottom: 72px;
+  left: -91px;
+  width: 111px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flower.flower-3 {
+  top: 110px;
+  right: -100px;
+  width: 142px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flower.flower-4 {
+  top: 180px;
+  right: -150px;
+  width: 181px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .flower.flower-5 {
+  bottom: 40px;
+  right: -115px;
+  width: 154px;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-thumbnails {
+  position: absolute;
+  display: block;
+  left: 68px;
+  bottom: 8px;
+  height: 70%;
+  width: 180px;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease-out;
+  transform: translate3d(0px, 0px, 15px);
+  z-index: 1;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-thumbnails .leaf-thumbnails {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+main .fullscreen-marquee-container .fullscreen-marquee .picture-frame picture img {
+  height: 100%;
+  display: block;
+}
