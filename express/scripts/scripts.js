@@ -1107,22 +1107,24 @@ export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
     const originalHref = $a.href;
+    const linkText = $a.textContent.trim();
     if ($a.children.length > 0) {
       // We can use this to eliminate styling so only text
       // propagates to buttons.
       $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
     }
     $a.href = addSearchQueryToHref($a.href);
-    $a.title = $a.title || $a.textContent.trim();
+    $a.title = $a.title || linkText;
     const $block = $a.closest('div.section > div > div');
     let blockName;
     if ($block) {
       blockName = $block.className;
     }
     if (!noButtonBlocks.includes(blockName)
-      && originalHref !== $a.textContent.trim()
-      && !$a.textContent.trim().endsWith(' >')
-      && !$a.textContent.trim().endsWith(' ›')) {
+      && originalHref !== linkText
+      && !(linkText.startsWith('https') && linkText.includes('/media_'))
+      && !linkText.endsWith(' >')
+      && !linkText.endsWith(' ›')) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -1141,8 +1143,8 @@ export function decorateButtons(block = document) {
           $twoup.classList.add('button-container');
         }
       }
-      if ($a.textContent.trim().startsWith('{{icon-') && $a.textContent.trim().endsWith('}}')) {
-        const $iconName = /{{icon-([\w-]+)}}/g.exec($a.textContent.trim())[1];
+      if (linkText.startsWith('{{icon-') && linkText.endsWith('}}')) {
+        const $iconName = /{{icon-([\w-]+)}}/g.exec(linkText)[1];
         if ($iconName) {
           const $icon = getIcon($iconName, `${$iconName} icon`);
           $a.innerHTML = $icon;
@@ -1575,22 +1577,22 @@ function buildAutoBlocks($main) {
 }
 
 function splitSections($main) {
-  // check if there are more than one columns--fullsize-center-. If so, don't split.
-  const multipleColumns = $main.querySelectorAll('.columns--fullsize-center-').length > 1;
+  // check if there are more than one columns.fullsize-center. If so, don't split.
+  const multipleColumns = $main.querySelectorAll('.columns.fullsize-center').length > 1;
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade', 'plans-comparison'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
     if (hasAppStoreBlocks && !multipleColumns) {
-      blocksToSplit.push('columns--fullsize-center-');
+      blocksToSplit.push('columns fullsize-center');
     }
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
 
-    if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
+    if (hasAppStoreBlocks && $block.className.includes('columns fullsize-center')) {
       const $parentNode = $block.parentNode;
       if ($parentNode && !multipleColumns) {
         $parentNode.classList.add('split-by-app-store-highlight');
