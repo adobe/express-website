@@ -792,7 +792,6 @@ export function decorateBlock(block) {
     block.classList.forEach((className, index) => {
       if (index === 0) return; // block name, no split
       const split = className.split('-');
-      console.log('split', split);
       if (split.length > 1) {
         split.forEach((part) => {
           extra.push(part);
