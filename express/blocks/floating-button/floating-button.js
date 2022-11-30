@@ -409,7 +409,7 @@ function makeCTAFromSheet($block, data) {
 }
 
 export async function createMultiFunctionButton($block, data) {
-  const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
+  const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper[data-audience="mobile"]');
   if ($existingFloatingButtons) {
     $existingFloatingButtons.forEach(($button) => {
       $button.remove();
