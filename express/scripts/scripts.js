@@ -1018,6 +1018,10 @@ export async function fetchPlaceholders() {
   return window.placeholders;
 }
 
+export async function fetchPlaceholder(parameter) {
+  return fetchPlaceholders().then((placeholders) => placeholders[parameter] ?? null);
+}
+
 function addPromotion() {
   // check for existing promotion
   if (!document.querySelector('main .promotion')) {
