@@ -62,19 +62,19 @@ main .template-list.fullwidth.lg-view {
 }
 
 @media (min-width: 600px) {
-  main .template-list.fullwidth {
+  main .template-list-wrapper.with-categories-list .template-list.fullwidth {
     width: calc(100% - 172px);
   }
 
-  main .template-list.fullwidth.sm-view {
+  main .template-list-wrapper.with-categories-list .template-list.fullwidth.sm-view {
     max-width: calc(100% - 172px);
   }
 
-  main .template-list.fullwidth.md-view {
+  main .template-list-wrapper.with-categories-list .template-list.fullwidth.md-view {
     max-width: calc(100% - 260px);
   }
 
-  main .template-list.fullwidth.lg-view {
+  main .template-list-wrapper.with-categories-list .template-list.fullwidth.lg-view {
     max-width: calc(100% - 337px);
   }
 }
