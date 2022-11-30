@@ -430,7 +430,7 @@ export default async function decorateBlock($block) {
   let $a = $block.querySelector('a.button');
   const $parentSection = $block.closest('.section');
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button')) || Array.from($block.children).length > 1) {
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-multifunction-button')) || Array.from($block.children).length > 1) {
     const data = collectMultifunctionData($block);
     if (!$a && data.mainCta.href) {
       $a = makeCTAFromSheet($block, data);
