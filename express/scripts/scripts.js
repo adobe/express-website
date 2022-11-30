@@ -809,7 +809,7 @@ export function decorateBlock(block) {
   if (blockName) {
     let shortBlockName = blockName;
     const section = block.closest('.section');
-    if (section) section.classList.add(`${[...block.classList].join('-')}-container`.replace(/--/g, '-'));
+    if (section) section.classList.add(`${[...block.classList].join('-')}-container`;
     block.classList.add('block');
     // begin CCX custom block option class handling
     for (let i = 0; i < blocksWithOptions.length; i += 1) {
