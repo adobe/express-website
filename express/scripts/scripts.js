@@ -1019,7 +1019,7 @@ export async function fetchPlaceholders() {
 }
 
 export async function fetchPlaceholder(parameter) {
-  return fetchPlaceholders().then((placeholders) => placeholders[parameter] ?? null);
+  return fetchPlaceholders().then((placeholders) => placeholders[parameter] || '');
 }
 
 function addPromotion() {
