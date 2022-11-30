@@ -775,31 +775,6 @@ function resolveFragments() {
     });
 }
 
-const blocksWithOptions = [
-  'checker-board',
-  'template-list',
-  'steps',
-  'cards',
-  'quotes',
-  'page-list',
-  'link-list',
-  'hero-animation',
-  'columns',
-  'show-section-only',
-  'image-list',
-  'feature-list',
-  'icon-list',
-  'table-of-contents',
-  'how-to-steps-carousel',
-  'how-to-steps',
-  'banner',
-  'pricing-columns',
-  'ratings',
-  'hero-3d',
-  'download-screens',
-  'download-cards',
-];
-
 /**
  * Decorates a block.
  * @param {Element} block The block element
@@ -807,30 +782,32 @@ const blocksWithOptions = [
 export function decorateBlock(block) {
   const blockName = block.classList[0];
   if (blockName) {
-    let shortBlockName = blockName;
     const section = block.closest('.section');
     if (section) section.classList.add(`${[...block.classList].join('-')}-container`);
-    block.classList.add('block');
+
     // begin CCX custom block option class handling
-    for (let i = 0; i < blocksWithOptions.length; i += 1) {
-      const b = blocksWithOptions[i];
-      if (shortBlockName.startsWith(`${b}-`)) {
-        const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-        shortBlockName = b;
-        block.classList.add(b);
-        block.classList.add(...options);
-        break;
-      } else if (shortBlockName === b) {
-        // case: block with option but no option provided
-        // and potentially substring of another block
-        break;
+    // split and add options with a dash
+    // (fullscreen-center -> fullscreen-center + fullscreen + center)
+    const extra = [];
+    block.classList.forEach((className, index) => {
+      if (index === 0) return; // block name, no split
+      const split = className.split('-');
+      console.log('split', split);
+      if (split.length > 1) {
+        split.forEach((part) => {
+          extra.push(part);
+        });
       }
-    }
+    });
+    block.classList.add(...extra);
     // end CCX custom block option class handling
-    block.setAttribute('data-block-name', shortBlockName);
+
+    block.classList.add('block');
+
+    block.setAttribute('data-block-name', blockName);
     block.setAttribute('data-block-status', 'initialized');
     const blockWrapper = block.parentElement;
-    blockWrapper.classList.add(`${shortBlockName}-wrapper`);
+    blockWrapper.classList.add(`${blockName}-wrapper`);
   }
 }
 
