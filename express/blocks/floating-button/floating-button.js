@@ -18,6 +18,7 @@ import {
   fetchPlaceholders,
   getIconElement,
   getMobileOperatingSystem,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 let scrollState = 'withLottie';
@@ -262,7 +263,7 @@ function initNotchDragAction($wrapper) {
   });
 }
 
-function buildTools($wrapper, $tools, delayInSeconds = 3) {
+function buildToolBox($wrapper, data) {
   const $toolBox = createTag('div', { class: 'toolbox' });
   const $notch = createTag('a', { class: 'notch' });
   const $notchPill = createTag('div', { class: 'notch-pill' });
@@ -274,18 +275,13 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   const $toggleIcon = getIconElement('plus-icon-22');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
 
-  $tools.forEach(($tool) => {
-    const iconFound = $tool.querySelector('img') || $tool.querySelector('svg');
-    if (iconFound) {
-      $tool.classList.add('tool');
-      $toolBox.append($tool);
-    } else {
-      const $badgeAnchor = $tool.querySelector('a');
-      if ($badgeAnchor) {
-        $appStoreBadge.href = $badgeAnchor.href;
-      }
-    }
+  data.tools.forEach((tool) => {
+    const $tool = createTag('div', { class: 'tool' });
+    $tool.append(tool.icon, tool.anchor);
+    $toolBox.append($tool);
   });
+
+  $appStoreBadge.href = data.appStore.href ? data.appStore.href : data.tools[0].anchor.href;
 
   $wrapper.classList.add('initial-load');
   $wrapper.classList.add('toolbox-opened');
@@ -296,7 +292,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
     if ($wrapper.classList.contains('initial-load')) {
       toggleToolBox($wrapper, $lottie, 'withLottie', false);
     }
-  }, delayInSeconds * 1000);
+  }, data.delay * 1000);
 
   $toggleButton.append($toggleIcon);
   $floatingButton.append($toggleButton);
@@ -325,48 +321,128 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
   initNotchDragAction($wrapper);
 }
 
-export async function createMultiFunctionButton($block, $parentSection) {
-  const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
-  const $ctaContainer = $block.querySelector('.button-container');
-  const tools = $block.querySelectorAll('li');
-  if ($ctaContainer) {
-    const $cta = $ctaContainer.querySelector('a');
-    loadCSS('/express/blocks/floating-button/floating-button.css');
+function collectMultifunctionData($block) {
+  const data = {
+    single: 'N',
+    delay: 3,
+    tools: [],
+    appStore: {},
+    mainCta: {},
+  };
 
-    let $buttonWrapper;
-    if ($parentSection) {
-      $buttonWrapper = await createFloatingButton($cta, $parentSection.dataset.audience)
-        .then(((result) => result));
-    } else {
-      $buttonWrapper = await createFloatingButton($cta)
-        .then(((result) => result));
-    }
+  if ($block.className.includes('spreadsheet-powered')) {
+    // TODO: build tools using data from sheet
+    const $cols = $block.querySelectorAll(':scope > div');
+    $cols.forEach(($col, index, array) => {
+      const fields = $col.querySelectorAll(':scope > div');
+      const key = fields[0].textContent;
+      const value = fields[1].textContent;
 
-    $buttonWrapper.classList.add('multifunction');
+      if (key === 'single') {
+        data.single = value;
+      }
+
+      if (key === 'delay') {
+        data.delay = value;
+      }
+
+      if (key === 'main cta link') {
+        data.mainCta.href = value;
+      }
+
+      if (key === 'main cta text') {
+        data.mainCta.text = value;
+      }
+
+      for (let i = 1; i < 7; i += 1) {
+        if (key === `cta ${i} icon`) {
+          const href = array[index + 1].querySelector(':scope > div:last-of-type').textContent;
+          const text = array[index + 2].querySelector(':scope > div:last-of-type').textContent;
+          const $icon = getIconElement(value);
+          const $a = createTag('a', { title: text, href });
+          $a.textContent = text;
+          data.tools.push({
+            icon: $icon,
+            anchor: $a,
+          });
+        }
+      }
+    });
+  } else {
+    const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
+    const $tools = $block.querySelectorAll('li');
+
+    $tools.forEach(($tool) => {
+      const iconFound = $tool.querySelector('img') || $tool.querySelector('svg');
+      const anchorFound = $tool.querySelector('a');
+      if (iconFound) {
+        if (anchorFound) {
+          data.tools.push({
+            icon: iconFound,
+            anchor: anchorFound,
+          });
+        }
+      } else {
+        const $badgeAnchor = $tool.querySelector('a');
+        if ($badgeAnchor) {
+          data.appStore.href = $badgeAnchor.href;
+        }
+      }
+    });
+
     if (delayInSeconds) {
-      buildTools($buttonWrapper, tools, delayInSeconds);
-    } else {
-      buildTools($buttonWrapper, tools);
+      data.delay = delayInSeconds;
     }
   }
+
+  return data;
 }
 
-export default function decorateBlock($block) {
-  const $a = $block.querySelector('a.button');
+function makeCTAFromSheet($block, data) {
+  const $buttonContainer = createTag('div', { class: 'button-container' });
+  const ctaFromSheet = createTag('a', { href: data.mainCta.href, title: data.mainCta.text });
+  ctaFromSheet.textContent = data.mainCta.text;
+  $buttonContainer.append(ctaFromSheet);
+  $block.append($buttonContainer);
+
+  return ctaFromSheet;
+}
+
+export async function createMultiFunctionButton($block, data) {
+  const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
+  if ($existingFloatingButtons) {
+    $existingFloatingButtons.forEach(($button) => {
+      $button.remove();
+    });
+  }
+  const $ctaContainer = $block.querySelector('.button-container');
+  const $cta = $ctaContainer.querySelector('a');
+  const $buttonWrapper = await createFloatingButton(
+    $cta,
+    'mobile',
+  ).then(((result) => result));
+
+  $buttonWrapper.classList.add('multifunction');
+  buildToolBox($buttonWrapper, data);
+}
+
+export default async function decorateBlock($block) {
+  let $a = $block.querySelector('a.button');
   const $parentSection = $block.closest('.section');
 
-  if (Array.from($block.children).length > 0) {
-    if (Array.from($block.children).length === 1) {
-      if ($parentSection) {
-        createFloatingButton($a, $parentSection.dataset.audience);
-      } else {
-        createFloatingButton($a);
-      }
-    } else if ($parentSection) {
-      createMultiFunctionButton($block, $parentSection);
-    } else {
-      createMultiFunctionButton($block);
+  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button')) || Array.from($block.children).length > 1) {
+    const data = collectMultifunctionData($block);
+    if (!$a && data.mainCta.href) {
+      $a = makeCTAFromSheet($block, data);
     }
+
+    if (['yes', 'true', 'on', 'Y'].includes(data.single)) {
+      await createFloatingButton($a, $parentSection ? $parentSection.dataset.audience : null);
+    } else {
+      await createMultiFunctionButton($block, data);
+    }
+  } else if (Array.from($block.children).length > 0 && $parentSection && $a) {
+    await createFloatingButton($a, $parentSection ? $parentSection.dataset.audience : null);
   }
 
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
