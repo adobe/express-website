@@ -212,7 +212,11 @@ export default function decorate($block) {
         }
       });
 
-      $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
+      $cell.querySelectorAll(':scope p:empty').forEach(($p) => {
+        if ($p.innerHTML.trim() === '') {
+          $p.remove();
+        }
+      });
 
       $cell.classList.add('column');
       if ($cell.firstElementChild && $cell.firstElementChild.tagName === 'PICTURE') {
