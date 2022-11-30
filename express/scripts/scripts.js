@@ -826,7 +826,7 @@ function decorateMarqueeColumns($main) {
   const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
 
   if ($sectionSplitByHighlight) {
-    $sectionSplitByHighlight.querySelector('.columns--fullsize-center-').classList.add('columns-marquee');
+    $sectionSplitByHighlight.querySelector('.columns.fullsize.center').classList.add('columns-marquee');
   } else if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
   }
