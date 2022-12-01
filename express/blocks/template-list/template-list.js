@@ -662,12 +662,10 @@ function decorateCategoryList($block, $section, placeholders) {
   });
 
   if (params.tasks) {
-    const locale = getLocale(window.location);
-    const urlStarter = locale === 'us' ? `${window.location.origin}/express/templates/` : `${window.location.origin}/${locale}/express/templates/`;
     const $blockWrapper = $block.closest('.template-list-wrapper');
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
-    const categories = JSON.parse(placeholders['task-categories']);
+    const categories = placeholders['task-categories'].split(',');
 
     const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
     const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
@@ -682,10 +680,10 @@ function decorateCategoryList($block, $section, placeholders) {
     $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
     $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
 
-    Object.entries(categories).forEach((entry) => {
+    categories.forEach((task) => {
       const $listItem = createTag('li');
-      const $a = createTag('a', { 'data-task': entry[1] });
-      [$a.textContent] = entry;
+      const $a = createTag('a', { 'data-task': task });
+      $a.textContent = task;
 
       $a.addEventListener('click', () => {
         redirectSearch(null, $a.dataset.task);
@@ -696,6 +694,15 @@ function decorateCategoryList($block, $section, placeholders) {
     });
 
     const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
+
+    const $mobileCategoryButtons = $categoriesMobileWrapper.querySelectorAll(':scope > .category-list > li > a');
+
+    $mobileCategoryButtons.forEach(($button) => {
+      $button.addEventListener('click', () => {
+        redirectSearch(null, $button.dataset.task);
+      }, { passive: true });
+    });
+
     const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
     $mobileDrawerWrapper.append($lottieArrows);
     $inWrapper.append($categoriesMobileWrapper);
