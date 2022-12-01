@@ -1363,6 +1363,10 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   display: flex;
 }
 
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .template-list {
+  width: 100%;
+}
+
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper {
   text-align: left;
   padding-top: 32px;
