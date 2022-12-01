@@ -770,7 +770,8 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
-    placeholder: placeholders['template-search-placeholder'],
+    placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
+    enterKeyHint: placeholders.search ?? 'Search',
   });
   const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
   const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
@@ -1101,7 +1102,6 @@ function initViewToggle($block, $toolBar) {
         $block.classList.add(`${$button.dataset.view}-view`);
         $blockWrapper.classList.add(`${$button.dataset.view}-view`);
 
-        props.masonry = new Masonry($block, props.masonry.cells);
         props.masonry.draw();
       } else {
         $button.classList.remove('active');
@@ -1109,11 +1109,26 @@ function initViewToggle($block, $toolBar) {
           $block.classList.remove(className);
           $blockWrapper.classList.remove(className);
         });
-        props.masonry = new Masonry($block, props.masonry.cells);
+        
         props.masonry.draw();
       }
     }, { passive: true });
   });
+}
+
+function attachFreeInAppPills($block, placeholders) {
+  const $templateLinks = $block.querySelectorAll('a.template');
+  const freeInAppText = placeholders['free-in-app'];
+  for (const $templateLink of $templateLinks) {
+    if (!$block.classList.contains('apipowered')
+      && $templateLink.querySelectorAll('.icon-premium').length <= 0
+      && !$templateLink.classList.contains('placeholder')
+      && !$templateLink.querySelector('.icon-free-badge')) {
+      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
+      $freeInAppBadge.textContent = freeInAppText;
+      $templateLink.querySelector('div').append($freeInAppBadge);
+    }
+  }
 }
 
 function decorateToolbar($block, $section, placeholders) {
@@ -1382,29 +1397,21 @@ export async function decorateTemplateList($block) {
     }
   }
 
+  attachFreeInAppPills($block, placeholders);
+
   const $templateLinks = $block.querySelectorAll('a.template');
-  const freeInAppText = placeholders['free-in-app'];
-  for (const $templateLink of $templateLinks) {
-    const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
-    if (!isPremium && !$templateLink.classList.contains('placeholder')) {
-      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div').append($freeInAppBadge);
-    }
-  }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
   document.dispatchEvent(linksPopulated);
 }
 
-function decorateLoadMoreButton($block) {
+async function decorateLoadMoreButton($block) {
+  const placeholders = await fetchPlaceholders()
+    .then((result) => result);
   const $loadMoreDiv = createTag('div', { class: 'load-more' });
   const $loadMoreButton = createTag('button', { class: 'load-more-button' });
   const $loadMoreText = createTag('p', { class: 'load-more-text' });
   $loadMoreDiv.append($loadMoreButton, $loadMoreText);
-  fetchPlaceholders()
-    .then((placeholders) => {
-      $loadMoreText.textContent = placeholders['load-more'];
-    });
+  $loadMoreText.textContent = placeholders['load-more'];
   $block.insertAdjacentElement('afterend', $loadMoreDiv);
   $loadMoreButton.textContent = '+';
 
@@ -1446,6 +1453,7 @@ export default async function decorate($block) {
   }
 
   await decorateTemplateList($block);
+
   if ($block.classList.contains('horizontal')) {
     const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
     buildCarousel(':scope > .template', $block, requireInfiniteScroll);
@@ -1454,7 +1462,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
-    const $loadMore = decorateLoadMoreButton($block);
+    const $loadMore = await decorateLoadMoreButton($block);
 
     if ($loadMore) {
       updateLoadMoreButton($block, $loadMore);
