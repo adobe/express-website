@@ -1109,7 +1109,7 @@ function initViewToggle($block, $toolBar) {
           $block.classList.remove(className);
           $blockWrapper.classList.remove(className);
         });
-        
+
         props.masonry.draw();
       }
     }, { passive: true });
