@@ -61,6 +61,10 @@ main .template-list.fullwidth.lg-view {
   padding: 0 28px;
 }
 
+main .template-list-wrapper.with-categories-list .template-list.fullwidth {
+  width: 100%;
+}
+
 @media (min-width: 600px) {
   main .template-list-wrapper.with-categories-list .template-list.fullwidth {
     width: calc(100% - 172px);
@@ -1361,10 +1365,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .lotti
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list {
   display: flex;
-}
-
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .template-list {
-  width: 100%;
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper {
