@@ -103,7 +103,18 @@ export default function decorate($block) {
 
                   if ($existingCTA) {
                     const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer', href: $existingCTA.href });
+                    const $cloneCta = $existingCTA.cloneNode({ deep: true });
+                    $cloneCta.style.display = 'none';
+
+                    $clickableOverlay.append($cloneCta);
                     $pictureFrameWrapper.prepend($clickableOverlay);
+
+                    $clickableOverlay.addEventListener('mouseenter', () => {
+                      $cloneCta.style.display = 'block';
+                    }, { passive: true });
+                    $clickableOverlay.addEventListener('mouseleave', () => {
+                      $cloneCta.style.display = 'none';
+                    }, { passive: true });
                   }
 
                   const $thumbnailImg = createOptimizedPicture('./media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
