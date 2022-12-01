@@ -1448,6 +1448,7 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
+  cursor: pointer;
   user-select: none;
 }
 

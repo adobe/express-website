@@ -419,6 +419,22 @@ async function readRowsFromBlock($block) {
   }
 }
 
+function redirectSearch($searchBar, targetTask) {
+  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+  const currentTasks = props.filters.tasks.substring(1, props.filters.tasks.length - 1).replaceAll('"', '');
+  const currentTopic = props.filters.topics.substring(1, props.filters.topics.length - 1).replaceAll('"', '');
+  const locale = getLocale(window.location);
+
+  const topicToSearch = $searchBar ? $searchBar.value : currentTopic;
+  const taskToSearch = targetTask || currentTasks;
+
+  if (locale === 'us') {
+    window.location = `${window.location.origin}/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
+  } else {
+    window.location = `${window.location.origin}/${locale}/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
+  }
+}
+
 function makeTemplateFunctions(placeholders) {
   const functions = {
     premium: {
@@ -589,14 +605,7 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     $searchBar.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-        const tasks = props.filters.tasks.substring(1, props.filters.tasks.length - 1).replaceAll('"', '');
-        const locale = getLocale(window.location);
-        if (locale === 'us') {
-          window.location = `${window.location.origin}/express/templates/search?tasks=${tasks}&phformat=${format}&topics=${$searchBar.value}`;
-        } else {
-          window.location = `${window.location.origin}/${locale}/express/templates/search?tasks=${tasks}&phformat=${format}&topics=${$searchBar.value}`;
-        }
+        redirectSearch($searchBar);
       }
     }, { passive: true });
 
@@ -658,22 +667,7 @@ function decorateCategoryList($block, $section, placeholders) {
     const $blockWrapper = $block.closest('.template-list-wrapper');
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
-    const categories = {
-      'Instagram story': 'instagram-story',
-      'Greeting card': 'greeting-card',
-      Poster: 'poster',
-      Flyer: 'flyer',
-      Logo: 'logo',
-      'Facebook post': 'facebook-post',
-      Invitation: 'invitation',
-      Banner: 'banner',
-      'Facebook story': 'facebook-story',
-      Brochure: 'brochure',
-      'Presentation slide': 'presentation-slide',
-      Resume: 'resume',
-      Card: 'card',
-      'Animated graphics': 'animated-graphics',
-    };
+    const categories = JSON.parse(placeholders['task-categories']);
 
     const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
     const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
@@ -690,8 +684,13 @@ function decorateCategoryList($block, $section, placeholders) {
 
     Object.entries(categories).forEach((entry) => {
       const $listItem = createTag('li');
-      const $a = createTag('a', { href: `${urlStarter}${entry[1]}` });
+      const $a = createTag('a', { 'data-task': entry[1] });
       [$a.textContent] = entry;
+
+      $a.addEventListener('click', () => {
+        redirectSearch(null, $a.dataset.task);
+      }, { passive: true });
+
       $listItem.append($a);
       $categories.append($listItem);
     });
