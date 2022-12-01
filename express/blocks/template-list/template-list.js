@@ -916,11 +916,13 @@ function initDrawer($section, $toolBar) {
     }, 100);
   }, { passive: true });
 
-  $closeDrawer.addEventListener('click', () => {
-    props.filters = { ...currentFilters };
-    closeDrawer($toolBar);
-    updateOptionsStatus($toolBar);
-  }, { passive: true });
+  [$drawerBackground, $closeDrawer].forEach(($element) => {
+    $element.addEventListener('click', () => {
+      props.filters = { ...currentFilters };
+      closeDrawer($toolBar);
+      updateOptionsStatus($toolBar);
+    }, { passive: true });
+  });
 
   setTimeout(() => {
     $drawer.classList.remove('hidden');
