@@ -409,12 +409,18 @@ function makeCTAFromSheet($block, data) {
 }
 
 export async function createMultiFunctionButton($block, data) {
-  const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper[data-audience="mobile"]');
+  const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
   if ($existingFloatingButtons) {
     $existingFloatingButtons.forEach(($button) => {
-      $button.remove();
+      if (!$button.dataset.audience) {
+        $button.dataset.audience = 'desktop';
+        $button.dataset.sectionStatus = 'loaded';
+      } else if ($button.dataset.audience === 'mobile') {
+        $button.remove();
+      }
     });
   }
+
   const $ctaContainer = $block.querySelector('.button-container');
   const $cta = $ctaContainer.querySelector('a');
   const $buttonWrapper = await createFloatingButton(
@@ -432,6 +438,7 @@ export default async function decorateBlock($block) {
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button')) || Array.from($block.children).length > 1) {
     const data = collectMultifunctionData($block);
+
     if (!$a && data.mainCta.href) {
       $a = makeCTAFromSheet($block, data);
     }
