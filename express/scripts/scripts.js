@@ -1887,11 +1887,11 @@ async function fetchMultifunctionButton(path) {
   if (!window.multifunctionButton) {
     try {
       const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const urlPrefix = locale === 'us' ? '' : `./${locale}`;
       const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     } catch {
-      const resp = await fetch('/express/create/multifunction-button.json');
+      const resp = await fetch('./express/create/multifunction-button.json');
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     }
   }
