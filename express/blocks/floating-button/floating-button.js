@@ -12,12 +12,12 @@
 
 import {
   createTag,
-  loadCSS,
-  lazyLoadLottiePlayer,
-  getLottie,
   fetchPlaceholders,
   getIconElement,
+  getLottie,
   getMobileOperatingSystem,
+  lazyLoadLottiePlayer,
+  loadCSS,
 } from '../../scripts/scripts.js';
 
 let scrollState = 'withLottie';
@@ -243,11 +243,11 @@ function initNotchDragAction($wrapper) {
     $body.style.overflow = 'hidden';
     $toolBox.style.transition = 'none';
     touchStart = e.changedTouches[0].clientY;
-  });
+  }, { passive: true });
 
   $notch.addEventListener('touchmove', (e) => {
     $toolBox.style.maxHeight = `${initialHeight - (e.changedTouches[0].clientY - touchStart)}px`;
-  });
+  }, { passive: true });
 
   $notch.addEventListener('touchend', (e) => {
     $body.style.removeProperty('overflow');
@@ -259,7 +259,7 @@ function initNotchDragAction($wrapper) {
     }
 
     $toolBox.removeAttribute('style');
-  });
+  }, { passive: true });
 }
 
 function buildTools($wrapper, $tools, delayInSeconds = 3) {
@@ -298,6 +298,7 @@ function buildTools($wrapper, $tools, delayInSeconds = 3) {
     }
   }, delayInSeconds * 1000);
 
+  $toggleButton.innerHTML = getLottie('plus-animation', '/express/icons/plus-animation.json');
   $toggleButton.append($toggleIcon);
   $floatingButton.append($toggleButton);
   $notch.append($notchPill);
