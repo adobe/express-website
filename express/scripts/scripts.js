@@ -2141,7 +2141,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
