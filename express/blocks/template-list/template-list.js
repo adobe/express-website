@@ -1006,7 +1006,7 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
 
 async function redrawTemplates($block, $toolBar) {
   const $heading = $toolBar.querySelector('h2');
-  const currentTotal = props.total.toString();
+  const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
   props.start = '';
   $block.querySelectorAll('.template:not(.placeholder)')
@@ -1015,7 +1015,7 @@ async function redrawTemplates($block, $toolBar) {
     });
   await decorateNewTemplates($block, { reDrawMasonry: true })
     .then(() => {
-      $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toString());
+      $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
       updateOptionsStatus($toolBar);
 
       if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
