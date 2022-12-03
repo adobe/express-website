@@ -125,6 +125,7 @@ main .link-list .carousel-platform p.button-container:first-child {
 /* fullwidth variant */
 
 main .section.link-list-fullwidth-container > div.link-list-wrapper {
+  box-sizing: border-box;
   width: fit-content;
   max-width: 100%;
 }

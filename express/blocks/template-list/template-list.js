@@ -95,6 +95,7 @@ function fetchTemplates() {
 }
 
 async function processResponse() {
+  const placeholders = await fetchPlaceholders().then((result) => result);
   const response = await fetchTemplates();
   let templateFetched;
   // eslint-disable-next-line no-underscore-dangle
@@ -139,11 +140,11 @@ async function processResponse() {
       const $buttonWrapper = createTag('div', { class: 'button-container' });
       const $button = createTag('a', {
         href: template.branchURL,
-        title: 'Edit this template',
+        title: placeholders['edit-this-template'] ?? 'Edit this template',
         class: 'button accent',
       });
 
-      $button.textContent = 'Edit this template';
+      $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
       $pictureWrapper.insertAdjacentElement('beforeend', $picture);
       $buttonWrapper.insertAdjacentElement('beforeend', $button);
       $template.insertAdjacentElement('beforeend', $pictureWrapper);
@@ -271,7 +272,7 @@ function populateTemplates($block, templates) {
               }
             }
           } else {
-            const width = $block.classList.contains('sixcols') ? 165 : 200;
+            const width = $block.classList.contains('sixcols') || $block.classList.contains('fullwidth') ? 165 : 200;
             if (ratios[1]) {
               const height = (ratios[1] / ratios[0]) * width;
               $tmplt.style = `height: ${height - 21}px`;
