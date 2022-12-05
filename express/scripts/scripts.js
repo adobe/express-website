@@ -1883,8 +1883,60 @@ function decoratePictures(main) {
   });
 }
 
+async function fetchMultifunctionButton(path) {
+  if (!window.multifunctionButton) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `./${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch('./express/create/multifunction-button.json');
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.multifunctionButton.length) {
+    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
+    const env = getHelixEnv();
+
+    if (env && env.name === 'stage') {
+      return multifunctionButton || null;
+    }
+
+    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
+  }
+
+  return null;
+}
+
+async function buildAsyncAutoBlocks($main) {
+  // load the multifunction-button autoblock
+  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+    const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
+
+    if (multifunctionButton) {
+      const defaultButton = await fetchMultifunctionButton('default');
+      const objectKeys = Object.keys(defaultButton);
+
+      const buttonParameters = [];
+
+      // eslint-disable-next-line consistent-return
+      objectKeys.forEach((key) => {
+        if (['path', 'live'].includes(key)) return false;
+        buttonParameters.push([key, multifunctionButton[key] || defaultButton[key]]);
+      });
+
+      const $multifunctionButton = buildBlock('floating-button', buttonParameters);
+      $multifunctionButton.classList.add('spreadsheet-powered');
+      $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+    }
+  }
+}
+
 export async function decorateMain($main) {
   buildAutoBlocks($main);
+  await buildAsyncAutoBlocks($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
