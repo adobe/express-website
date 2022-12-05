@@ -95,7 +95,7 @@ function fetchTemplates() {
 }
 
 async function processResponse() {
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   const response = await fetchTemplates();
   let templateFetched;
   // eslint-disable-next-line no-underscore-dangle
