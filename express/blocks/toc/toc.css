@@ -9,10 +9,229 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+ main .toc-container {
+  position: relative;
+}
+
 main .toc-container .default-content-wrapper {
+  position: absolute;
+  top: -12px;
+  right: 2px;
+  z-index: 10;
+}
+
+main .toc-container.sticky .default-content-wrapper {
+  position: fixed;
+  top: 0;
+}
+
+.feds-header-wrapper--sticky + main .toc-container .default-content-wrapper {
+  top: 72px;
+  position: fixed;
+}
+
+.feds-header-wrapper--retracted + main .toc-container .default-content-wrapper {
+  top: 0px;  
+}
+
+main .toc-container .default-content-wrapper .button {
+  display: block;
+  padding: 2px 1em;
+  background: var(--color-brand-title);
+  border-color: var(--color-brand-title);
+  font-size: .7em;
+  font-weight: normal;
+}
+
+main .toc-container .lottie {
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 0 -2px -8px;
+}
+
+main .toc-container .default-content-wrapper .lottie {
+  margin: -2px 0 -2px -8px;
+}
+
+main .toc-container.open .toc-wrapper {
+  display: block;
+}
+
+main .toc-container.open .toc-wrapper:before {
+  position: fixed;
+  display: block;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 1;
+  content: '';
+  background: linear-gradient(180deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,.8) 82%, rgba(51,51,51,1) 95%);
+}
+
+main .toc-container .toc {
+  position: fixed;
+  right: 0;
+  top: 64px;
+  box-sizing: border-box;
+  z-index: 2;
+  margin: 12px 12px 12px auto;
+  background-color: var(--color-brand-title);
+  border-radius: 32px;
+  font-weight: bold;
+  text-align: left;
+  z-index: 10;
+  padding: 30px 40px;
+  width: calc(100vw - 24px);
+}
+
+main .toc-container .toc-handle {
+  position: absolute;
+  display: block;
+  height: 4px;
+  width: 40px;
+  left: 50%;
+  bottom: 8px;
+  margin-top: -24px;
+  margin-left: -20px;
+  content: '';
+  background: var(--color-gray-700);
+  border-radius: 4px;
+}
+
+main .toc-container.sticky .toc {
+  top: 0;
+}
+
+main .toc-container .toc-heading {
+  color: var(--color-white);
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+main .toc-container .toc-heading .lottie {
+  margin: 0 12px 0 -6px;
+}
+
+main .toc-container .toc div div {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+main .toc-container .toc .icon {
+  display: inline-block;
+  margin: 10px 0;
+  height: 18px;
+  width: 18px;
+}
+
+main .toc-container .toc > div:nth-child(2) .icon { fill: #2b92f8; }
+main .toc-container .toc > div:nth-child(3) .icon { fill: #7777fa; }
+main .toc-container .toc > div:nth-child(4) .icon { fill: #d464fe; }
+main .toc-container .toc > div:nth-child(5) .icon { fill: #fc1f6d; }
+main .toc-container .toc > div:nth-child(6) .icon { fill: #fc4c00; }
+main .toc-container .toc > div:nth-child(7) .icon { fill: #bbde2e; }
+
+main .toc-container .toc .icon[class*='-store'] {
+  position: absolute;
+  right: 38px;
+  height: auto;
+  width: 120px;
+  margin-top: 0;
+}
+
+main .toc-container .toc .button {
+  background: none;
+  border: none;
+  margin: 0;
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+main .toc-container .toc-close {
+  position: absolute;
+  right: 18px;
+  top: 24px;
+  font-size: var(--body-font-size-l);
+  font-weight: 600;
+}
+
+main .toc-container .toc-close .icon {
+  color: #eb1000;
+  height: 20px;
+  width: 20px;
+  margin: 4px 4px 4px 0;
+}
+
+/* Animations */
+
+main .toc-container .default-content-wrapper {
+  transition: top .3s ease;
+}
+
+main .toc-container .toc {
+  transition: opacity .1s ease .1s, transform .3s linear;
+  overflow: hidden;
+  transform: translate(45%, -45%) scale(.1);
+  opacity: 0;
+}
+
+main .toc-container .toc > div {
+  transition: margin-left .3s ease, opacity .2s ease .3s;
+  opacity: 0;
+}
+main .toc-container .toc > div:nth-child(2) { margin-left: 0px; }
+main .toc-container .toc > div:nth-child(3) { margin-left: 10px; }
+main .toc-container .toc > div:nth-child(4) { margin-left: 20px; }
+main .toc-container .toc > div:nth-child(5) { margin-left: 30px; }
+main .toc-container .toc > div:nth-child(6) { margin-left: 40px; }
+main .toc-container .toc > div:nth-child(7) { margin-left: 50px; }
+
+main .toc-container .toc-close {
+  transition: top .3s ease, right .3s ease;
+  top: 14px;
+  right: 10px;
   display: none;
 }
 
-main .toc-wrapper {
+main .toc-container.open .toc {
+  transition: opacity .3s ease, transform .3s linear;
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+main .toc-container.open .toc > div {
+  transition: margin-left .3s ease .2s, opacity .3s ease;
+  opacity: 1;
+}
+main .toc-container.open .toc > div:nth-child(2) { margin-left: 0px; }
+main .toc-container.open .toc > div:nth-child(3) { margin-left: 0px; }
+main .toc-container.open .toc > div:nth-child(4) { margin-left: 0px; }
+main .toc-container.open .toc > div:nth-child(5) { margin-left: 0px; }
+main .toc-container.open .toc > div:nth-child(6) { margin-left: 0px; }
+main .toc-container.open .toc > div:nth-child(7) { margin-left: 0px; }
+
+main .toc-container.open .toc-close {
+  top: 24px;
+  right: 18px;
+  display: block;
+}
+
+/* Side effects on rest of the page */
+
+main .toc-container.open ~ .floating-button-wrapper {
+  background: none;
+}
+
+main .floating-button .floating-button-lottie {
+  display: none;
+}
+
+main .floating-button a.button:any-link {
+  margin-right: 0;
+}
+
+main .toc-container.open ~ .floating-button-wrapper.multifunction::before {
   display: none;
 }

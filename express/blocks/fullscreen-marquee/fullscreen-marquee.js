@@ -83,12 +83,12 @@ export default function decorate($block) {
             if ($video) {
               $video.addEventListener('loadstart', () => {
                 const $flowers = [
-                  'https://main--express-website--adobe.hlx.page/media_1cb8136ac752c1bb70c81e4c6e4f6745c36735d1a.png#width=500&height=437',
-                  'https://main--express-website--adobe.hlx.page/media_107e6a2960331b70143bbc3321d6b92ef7f49e9c7.png#width=500&height=498',
-                  'https://main--express-website--adobe.hlx.page/media_1544ba4009bb401c6a51a9a1b5e52ec47ba686cab.png#width=500&height=556',
-                  'https://main--express-website--adobe.hlx.page/media_1c0098a95dac73540743f7b31fbd1ac7853835261.png#width=500&height=544',
-                  'https://main--express-website--adobe.hlx.page/media_1d8381305371e958459da1ab5b9df1f2e5c086dc6.png#width=500&height=514',
-                  'https://main--express-website--adobe.hlx.page/media_129a7f284a56bd157c4fbec64ab3cdd032725cd82.png#width=500&height=378',
+                  './media_1cb8136ac752c1bb70c81e4c6e4f6745c36735d1a.png#width=500&height=437',
+                  './media_107e6a2960331b70143bbc3321d6b92ef7f49e9c7.png#width=500&height=498',
+                  './media_1544ba4009bb401c6a51a9a1b5e52ec47ba686cab.png#width=500&height=556',
+                  './media_1c0098a95dac73540743f7b31fbd1ac7853835261.png#width=500&height=544',
+                  './media_1d8381305371e958459da1ab5b9df1f2e5c086dc6.png#width=500&height=514',
+                  './media_129a7f284a56bd157c4fbec64ab3cdd032725cd82.png#width=500&height=378',
                 ].map((url) => createOptimizedPicture(url));
 
                 if ($video) {
@@ -103,10 +103,21 @@ export default function decorate($block) {
 
                   if ($existingCTA) {
                     const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer', href: $existingCTA.href });
+                    const $cloneCta = $existingCTA.cloneNode({ deep: true });
+                    $cloneCta.style.display = 'none';
+
+                    $clickableOverlay.append($cloneCta);
                     $pictureFrameWrapper.prepend($clickableOverlay);
+
+                    $clickableOverlay.addEventListener('mouseenter', () => {
+                      $cloneCta.style.display = 'block';
+                    }, { passive: true });
+                    $clickableOverlay.addEventListener('mouseleave', () => {
+                      $cloneCta.style.display = 'none';
+                    }, { passive: true });
                   }
 
-                  const $thumbnailImg = createOptimizedPicture('https://www.adobe.com/express/media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
+                  const $thumbnailImg = createOptimizedPicture('./media_1662d0e0741d0c9b7b2573bb197f95cdd35465f54.png#width=500&height=1026');
 
                   $video.classList.add('screen-demo');
                   $thumbnailImg.classList.add('leaf-thumbnails');
