@@ -1596,6 +1596,12 @@ function buildAutoBlocks($main) {
     const $plansComparison = buildBlock('plans-comparison', '');
     $main.querySelector(':scope > div:last-of-type').append($plansComparison);
   }
+
+  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+    const $multifunctionButton = buildBlock('floating-button', '');
+    $multifunctionButton.classList.add('spreadsheet-powered');
+    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+  }
 }
 
 function splitSections($main) {
@@ -1883,7 +1889,7 @@ function decoratePictures(main) {
   });
 }
 
-async function fetchMultifunctionButton(path) {
+export async function fetchMultifunctionButton(path) {
   if (!window.multifunctionButton) {
     try {
       const locale = getLocale(window.location);
@@ -1910,33 +1916,8 @@ async function fetchMultifunctionButton(path) {
   return null;
 }
 
-async function buildAsyncAutoBlocks($main) {
-  // load the multifunction-button autoblock
-  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
-    const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
-
-    if (multifunctionButton) {
-      const defaultButton = await fetchMultifunctionButton('default');
-      const objectKeys = Object.keys(defaultButton);
-
-      const buttonParameters = [];
-
-      // eslint-disable-next-line consistent-return
-      objectKeys.forEach((key) => {
-        if (['path', 'live'].includes(key)) return false;
-        buttonParameters.push([key, multifunctionButton[key] || defaultButton[key]]);
-      });
-
-      const $multifunctionButton = buildBlock('floating-button', buttonParameters);
-      $multifunctionButton.classList.add('spreadsheet-powered');
-      $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
-    }
-  }
-}
-
 export async function decorateMain($main) {
   buildAutoBlocks($main);
-  await buildAsyncAutoBlocks($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
