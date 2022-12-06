@@ -442,6 +442,7 @@ body.light-grey {
 
 main {
   text-align: center;
+  overflow-x: hidden;
 }
 
 main h1,
