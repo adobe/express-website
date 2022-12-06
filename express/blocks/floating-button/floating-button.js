@@ -19,6 +19,7 @@ import {
   getMetadata,
   lazyLoadLottiePlayer,
   loadCSS,
+  fetchMultifunctionButton,
 } from '../../scripts/scripts.js';
 
 let scrollState = 'withLottie';
@@ -322,7 +323,7 @@ function buildToolBox($wrapper, data) {
   initNotchDragAction($wrapper);
 }
 
-function collectMultifunctionData($block) {
+function collectMultifunctionData($block, dataArray) {
   const data = {
     single: 'N',
     delay: 3,
@@ -332,12 +333,9 @@ function collectMultifunctionData($block) {
   };
 
   if ($block.className.includes('spreadsheet-powered')) {
-    // TODO: build tools using data from sheet
-    const $cols = $block.querySelectorAll(':scope > div');
-    $cols.forEach(($col, index, array) => {
-      const fields = $col.querySelectorAll(':scope > div');
-      const key = fields[0].textContent;
-      const value = fields[1].textContent;
+    dataArray.forEach((col, index, array) => {
+      const key = col[0];
+      const value = col[1];
 
       if (key === 'single') {
         data.single = value;
@@ -357,8 +355,8 @@ function collectMultifunctionData($block) {
 
       for (let i = 1; i < 7; i += 1) {
         if (key === `cta ${i} icon`) {
-          const href = array[index + 1].querySelector(':scope > div:last-of-type').textContent;
-          const text = array[index + 2].querySelector(':scope > div:last-of-type').textContent;
+          const [, href] = array[index + 1];
+          const [, text] = array[index + 2];
           const $icon = getIconElement(value);
           const $a = createTag('a', { title: text, href });
           $a.textContent = text;
@@ -410,27 +408,29 @@ function makeCTAFromSheet($block, data) {
 }
 
 export async function createMultiFunctionButton($block, data) {
-  const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
-  if ($existingFloatingButtons) {
-    $existingFloatingButtons.forEach(($button) => {
-      if (!$button.dataset.audience) {
-        $button.dataset.audience = 'desktop';
-        $button.dataset.sectionStatus = 'loaded';
-      } else if ($button.dataset.audience === 'mobile') {
-        $button.remove();
-      }
-    });
+  if (data.tools.length > 0) {
+    const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
+    if ($existingFloatingButtons) {
+      $existingFloatingButtons.forEach(($button) => {
+        if (!$button.dataset.audience) {
+          $button.dataset.audience = 'desktop';
+          $button.dataset.sectionStatus = 'loaded';
+        } else if ($button.dataset.audience === 'mobile') {
+          $button.remove();
+        }
+      });
+    }
+
+    const $ctaContainer = $block.querySelector('.button-container');
+    const $cta = $ctaContainer.querySelector('a');
+    const $buttonWrapper = await createFloatingButton(
+      $cta,
+      'mobile',
+    ).then(((result) => result));
+
+    $buttonWrapper.classList.add('multifunction');
+    buildToolBox($buttonWrapper, data);
   }
-
-  const $ctaContainer = $block.querySelector('.button-container');
-  const $cta = $ctaContainer.querySelector('a');
-  const $buttonWrapper = await createFloatingButton(
-    $cta,
-    'mobile',
-  ).then(((result) => result));
-
-  $buttonWrapper.classList.add('multifunction');
-  buildToolBox($buttonWrapper, data);
 }
 
 export default async function decorateBlock($block) {
@@ -438,7 +438,21 @@ export default async function decorateBlock($block) {
   const $parentSection = $block.closest('.section');
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button')) || Array.from($block.children).length > 1) {
-    const data = collectMultifunctionData($block);
+    const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
+    const buttonParameters = [];
+
+    if (multifunctionButton) {
+      const defaultButton = await fetchMultifunctionButton('default');
+      const objectKeys = Object.keys(defaultButton);
+
+      // eslint-disable-next-line consistent-return
+      objectKeys.forEach((key) => {
+        if (['path', 'live'].includes(key)) return false;
+        buttonParameters.push([key, multifunctionButton[key] || defaultButton[key]]);
+      });
+    }
+
+    const data = collectMultifunctionData($block, buttonParameters);
 
     if (!$a && data.mainCta.href) {
       $a = makeCTAFromSheet($block, data);
