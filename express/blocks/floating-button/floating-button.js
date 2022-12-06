@@ -355,8 +355,8 @@ function collectMultifunctionData($block, dataArray) {
 
       for (let i = 1; i < 7; i += 1) {
         if (key === `cta ${i} icon`) {
-          const href = array[index + 1][1];
-          const text = array[index + 2][1];
+          const [, href] = array[index + 1];
+          const [, text] = array[index + 2];
           const $icon = getIconElement(value);
           const $a = createTag('a', { title: text, href });
           $a.textContent = text;
