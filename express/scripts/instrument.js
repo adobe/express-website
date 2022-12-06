@@ -662,6 +662,28 @@ loadScript(martechURL, () => {
       sparkEventName = 'landing:ctaPressed';
     }
 
+    if (w.location.pathname === '/express/') {
+      if ($a.closest('.hero-animation')) {
+        sparkButtonId = 'getExpressMain';
+      } else if ($a.closest('.make-a-project-item')) {
+        sparkButtonId = 'useCase';
+      } else if ($a.closest('.floating-button')) {
+        sparkButtonId = 'getExpressFloating';
+      } else if ($a.closest('.banner')) {
+        sparkButtonId = 'startForFree';
+      } else if ($a.closest('.columns')) {
+        sparkButtonId = 'browseAllTemplates';
+      } else if ($a.closest('.card-free')) {
+        sparkButtonId = 'getExpressFreePlan';
+      } else if ($a.closest('.card-premium')) {
+        if ($a.classList.contains('primary')) {
+          sparkButtonId = 'getExpressPremiumPlan';
+        } else {
+          sparkButtonId = 'seePlansAndPricing';
+        }
+      }
+    }
+
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
