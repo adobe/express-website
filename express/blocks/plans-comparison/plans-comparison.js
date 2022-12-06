@@ -391,6 +391,13 @@ export default function decorate($block) {
         });
 
         fixIcons($newBlock);
+
+        const $blockLinks = $newBlock.querySelectorAll('a');
+
+        if ($blockLinks) {
+          const linksPopulated = new CustomEvent('linkspopulated', { detail: $blockLinks });
+          document.dispatchEvent(linksPopulated);
+        }
       }
     }
   });
