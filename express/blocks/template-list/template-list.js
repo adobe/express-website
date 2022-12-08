@@ -1113,6 +1113,49 @@ function initFilterSort($block, $toolBar) {
   }
 }
 
+function getPlaceholderWidth($block) {
+  let width;
+  if (window.innerWidth >= 900) {
+    if ($block.classList.contains('sm-view')) {
+      width = 165;
+    }
+
+    if ($block.classList.contains('md-view')) {
+      width = 258.5;
+    }
+
+    if ($block.classList.contains('lg-view')) {
+      width = 352;
+    }
+  } else if (window.innerWidth >= 600) {
+    if ($block.classList.contains('sm-view')) {
+      width = 165;
+    }
+
+    if ($block.classList.contains('md-view')) {
+      width = 227.33;
+    }
+
+    if ($block.classList.contains('lg-view')) {
+      width = 352;
+    }
+  } else {
+    if ($block.classList.contains('sm-view')) {
+      width = 106.33;
+    }
+
+    if ($block.classList.contains('md-view')) {
+      width = 165.5;
+    }
+
+    if ($block.classList.contains('lg-view')) {
+      width = 335;
+    }
+  }
+
+  return width;
+}
+
 function toggleMasonryView($block, $button, $toggleButtons) {
   const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
   const $blockWrapper = $block.closest('.template-list-wrapper');
@@ -1142,6 +1185,18 @@ function toggleMasonryView($block, $button, $toggleButtons) {
     });
 
     props.masonry.draw();
+  }
+
+  const placeholder = $block.querySelector('.template.placeholder');
+  const ratios = props.placeholderFormat;
+  const width = getPlaceholderWidth($block);
+
+  if (ratios[1]) {
+    const height = (ratios[1] / ratios[0]) * width;
+    placeholder.style = `height: ${height - 21}px`;
+    if (width / height > 1.3) {
+      placeholder.classList.add('wide');
+    }
   }
 }
 

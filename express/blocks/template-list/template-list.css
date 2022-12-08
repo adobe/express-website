@@ -472,7 +472,9 @@ main .template-list.fullwidth.lg-view .template.placeholder,
 main .template-list.fullwidth.md-view .template.placeholder,
 main .template-list.fullwidth.sm-view .template.placeholder {
   margin: 21px auto;
+  width: auto;
   max-width: 80%;
+  max-height: 30vh;
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
@@ -504,6 +506,13 @@ main .template-list .template.placeholder > div:first-of-type > svg {
   width: 44px;
   height: 44px;
 }
+
+main .template-list.fullwidth.sm-view .template.placeholder > div:first-of-type > img,
+main .template-list.fullwidth.sm-view .template.placeholder > div:first-of-type > svg {
+  width: 22px;
+  height: 22px;
+}
+
 
 main .template-list .template.placeholder .template-link::after {
   display: none;
@@ -608,6 +617,18 @@ main .template-list.fullwidth.sm-view > .masonry-col {
   main .template-list.fullwidth.sm-view > .masonry-col {
     max-width: 165px;
     text-align: center;
+  }
+
+  main .template-list.fullwidth.sm-view .template.placeholder > div:first-of-type > img,
+  main .template-list.fullwidth.sm-view .template.placeholder > div:first-of-type > svg {
+    width: 44px;
+    height: 44px;
+  }
+
+  main .template-list.fullwidth.lg-view .template.placeholder,
+  main .template-list.fullwidth.md-view .template.placeholder,
+  main .template-list.fullwidth.sm-view .template.placeholder {
+    max-height: unset;
   }
 }
 
