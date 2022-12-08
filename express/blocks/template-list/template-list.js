@@ -440,17 +440,17 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icon: 'template-premium',
+      icons: ['template-premium', 'template-free'],
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icon: 'template-animation',
+      icons: ['template-animation', 'template-static'],
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-sort']),
       elements: {},
-      icon: 'sort',
+      icons: ['sort'],
     },
   };
 
@@ -464,7 +464,8 @@ function makeTemplateFunctions(placeholders) {
       button: {
         wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
         subElements: {
-          icon: getIconElement(entry[1].icon),
+          primaryIcon: getIconElement(entry[1].icons[0], null, null, 'primary-icon'),
+          secondaryIcon: entry[1].icons[1] ? getIconElement(entry[1].icons[1], null, null, 'secondary-icon') : null,
           textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
         },
       },
@@ -485,6 +486,27 @@ function makeTemplateFunctions(placeholders) {
   return functions;
 }
 
+function updateFilterIcon(block) {
+  const section = block.closest('.section.template-list-fullwidth-apipowered-container');
+  const functionWrapper = section.querySelectorAll('.function-wrapper');
+
+  functionWrapper.forEach((wrap) => {
+    const primaryIcon = wrap.querySelector('.primary-icon');
+    const secondaryIcon = wrap.querySelector('.secondary-icon');
+    const currentOption = wrap.querySelector('.option-button.active');
+
+    if (primaryIcon && secondaryIcon && currentOption) {
+      if (currentOption.dataset.value === 'false') {
+        secondaryIcon.style.display = 'unset';
+        primaryIcon.style.display = 'none';
+      } else {
+        secondaryIcon.style.display = 'none';
+        primaryIcon.style.display = 'unset';
+      }
+    }
+  });
+}
+
 function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $functionsContainer = createTag('div', { class: 'functions-container' });
   const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
@@ -495,11 +517,10 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
     Object.entries($filterWrapper.subElements).forEach((part) => {
       const $innerWrapper = part[1].wrapper;
 
-      Object.entries(part[1].subElements).forEach((innerElement, index) => {
-        if (index === 0) {
-          Object.values(innerElement)[1].classList.add('active');
+      Object.entries(part[1].subElements).forEach((innerElement) => {
+        if (Object.values(innerElement)[1]) {
+          $innerWrapper.append(Object.values(innerElement)[1]);
         }
-        $innerWrapper.append(Object.values(innerElement)[1]);
       });
 
       $filterWrapper.append($innerWrapper);
@@ -864,7 +885,7 @@ function closeDrawer($toolBar) {
   }, 500);
 }
 
-function updateOptionsStatus($toolBar) {
+function updateOptionsStatus($block, $toolBar) {
   const $wrappers = $toolBar.querySelectorAll('.function-wrapper');
 
   $wrappers.forEach(($wrapper) => {
@@ -888,10 +909,12 @@ function updateOptionsStatus($toolBar) {
         $option.classList.add('active');
       }
     });
+
+    updateFilterIcon($block);
   });
 }
 
-function initDrawer($section, $toolBar) {
+function initDrawer($block, $section, $toolBar) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
   const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
@@ -926,7 +949,7 @@ function initDrawer($section, $toolBar) {
     $element.addEventListener('click', () => {
       props.filters = { ...currentFilters };
       closeDrawer($toolBar);
-      updateOptionsStatus($toolBar);
+      updateOptionsStatus($block, $toolBar);
     }, { passive: true });
   });
 
@@ -1016,7 +1039,7 @@ async function redrawTemplates($block, $toolBar) {
   await decorateNewTemplates($block, { reDrawMasonry: true })
     .then(() => {
       $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-      updateOptionsStatus($toolBar);
+      updateOptionsStatus($block, $toolBar);
 
       if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
         const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
@@ -1052,7 +1075,7 @@ function initFilterSort($block, $toolBar) {
 
       $options.forEach(($option) => {
         // sync current filter & sorting method with toolbar current options
-        updateOptionsStatus($toolBar);
+        updateOptionsStatus($block, $toolBar);
 
         $option.addEventListener('click', async (e) => {
           e.stopPropagation();
@@ -1068,6 +1091,7 @@ function initFilterSort($block, $toolBar) {
           }
 
           updateQueryURL($wrapper, $option);
+          updateFilterIcon($block);
 
           if (!$button.classList.contains('in-drawer')) {
             await redrawTemplates($block, $toolBar);
@@ -1083,43 +1107,53 @@ function initFilterSort($block, $toolBar) {
         closeDrawer($toolBar);
       });
     }
+
+    updateFilterIcon($block);
+  }
+}
+
+function toggleMasonryView($block, $button, $toggleButtons) {
+  const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
+  const $blockWrapper = $block.closest('.template-list-wrapper');
+  if (!$button.classList.contains('active') && $templatesToView.length > 0) {
+    $toggleButtons.forEach((b) => {
+      if (b !== $button) {
+        b.classList.remove('active');
+      }
+    });
+
+    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+      if (className !== `${$button.dataset.view}-view`) {
+        $block.classList.remove(className);
+        $blockWrapper.classList.remove(className);
+      }
+    });
+    $button.classList.add('active');
+    $block.classList.add(`${$button.dataset.view}-view`);
+    $blockWrapper.classList.add(`${$button.dataset.view}-view`);
+
+    props.masonry.draw();
+  } else {
+    $button.classList.remove('active');
+    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+      $block.classList.remove(className);
+      $blockWrapper.classList.remove(className);
+    });
+
+    props.masonry.draw();
   }
 }
 
 function initViewToggle($block, $toolBar) {
   const $toggleButtons = $toolBar.querySelectorAll('.view-toggle-button ');
 
-  $toggleButtons.forEach(($button) => {
+  $toggleButtons.forEach(($button, index) => {
+    if (index === 0) {
+      toggleMasonryView($block, $button, $toggleButtons);
+    }
+
     $button.addEventListener('click', () => {
-      const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
-      const $blockWrapper = $block.closest('.template-list-wrapper');
-      if (!$button.classList.contains('active') && $templatesToView.length > 0) {
-        $toggleButtons.forEach((b) => {
-          if (b !== $button) {
-            b.classList.remove('active');
-          }
-        });
-
-        ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-          if (className !== `${$button.dataset.view}-view`) {
-            $block.classList.remove(className);
-            $blockWrapper.classList.remove(className);
-          }
-        });
-        $button.classList.add('active');
-        $block.classList.add(`${$button.dataset.view}-view`);
-        $blockWrapper.classList.add(`${$button.dataset.view}-view`);
-
-        props.masonry.draw();
-      } else {
-        $button.classList.remove('active');
-        ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-          $block.classList.remove(className);
-          $blockWrapper.classList.remove(className);
-        });
-
-        props.masonry.draw();
-      }
+      toggleMasonryView($block, $button, $toggleButtons);
     }, { passive: true });
   });
 }
@@ -1164,7 +1198,7 @@ function decorateToolbar($block, $section, placeholders) {
     $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
 
     decorateSearchFunctions($toolBar, $section, placeholders);
-    initDrawer($section, $toolBar);
+    initDrawer($block, $section, $toolBar);
     initFilterSort($block, $toolBar);
     initViewToggle($block, $toolBar);
   }
@@ -1251,7 +1285,9 @@ export async function decorateTemplateList($block) {
       if ($linkList
         && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')
         && placeholders['template-filter-premium']) {
-        decorateToolbar($block, $parent, placeholders);
+        document.addEventListener('linkspopulated', () => {
+          decorateToolbar($block, $parent, placeholders);
+        });
       }
       decorateCategoryList($block, $parent, placeholders);
     }

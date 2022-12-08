@@ -888,7 +888,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking {
   padding: 16px;
-  box-shadow: 1px 3px 3px rgb(0 0 0 / 20%);
+  box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
@@ -982,7 +982,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .current-option {
   font-size: 14px;
   line-height: 24px;
-  max-width: 108px;
+  text-align: left;
+  width: 108px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1087,7 +1088,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button {
-  opacity: 0.5;
+  opacity: 0.16;
   height: 22px;
   transition: opacity 0.2s;
   cursor: pointer;

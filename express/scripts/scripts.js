@@ -297,9 +297,11 @@ export function getIcon(icons, alt, size = 44) {
   }
 }
 
-export function getIconElement(icons, size, alt) {
+export function getIconElement(icons, size, alt, additionalClassName) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
+
+  if (additionalClassName) $div.firstChild.classList.add(additionalClassName);
   return ($div.firstChild);
 }
 
