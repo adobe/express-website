@@ -1576,27 +1576,43 @@ export function normalizeHeadings(block, allowedHeadings) {
 }
 
 function buildAutoBlocks($main) {
+  const $lastDiv = $main.querySelector(':scope > div:last-of-type');
+
   // Load the branch.io banner autoblock...
   if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
     const branchio = buildBlock('branch-io', '');
-    $main.querySelector(':scope > div:last-of-type').append(branchio);
+    if ($lastDiv) {
+      $lastDiv.append(branchio);
+    }
   }
 
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     if ($main.querySelector('.app-store-highlight') === null) {
       const $highlight = buildBlock('app-store-highlight', '');
-      $main.querySelector(':scope > div:last-of-type').append($highlight);
+      if ($lastDiv) {
+        $lastDiv.append($highlight);
+      }
     }
     if ($main.querySelector('.app-store-blade') === null) {
       const $blade = buildBlock('app-store-blade', '');
-      $main.querySelector(':scope > div:last-of-type').append($blade);
+      if ($lastDiv) {
+        $lastDiv.append($blade);
+      }
     }
   }
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
     const $plansComparison = buildBlock('plans-comparison', '');
-    $main.querySelector(':scope > div:last-of-type').append($plansComparison);
+    if ($lastDiv) {
+      $lastDiv.append($plansComparison);
+    }
+  }
+
+  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+    const $multifunctionButton = buildBlock('floating-button', '');
+    $multifunctionButton.classList.add('spreadsheet-powered');
+    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
 }
 
@@ -1885,6 +1901,33 @@ function decoratePictures(main) {
   });
 }
 
+export async function fetchMultifunctionButton(path) {
+  if (!window.multifunctionButton) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `./${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch('./express/create/multifunction-button.json');
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.multifunctionButton.length) {
+    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
+    const env = getHelixEnv();
+
+    if (env && env.name === 'stage') {
+      return multifunctionButton || null;
+    }
+
+    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
+  }
+
+  return null;
+}
+
 export async function decorateMain($main) {
   buildAutoBlocks($main);
   splitSections($main);
@@ -2091,7 +2134,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);

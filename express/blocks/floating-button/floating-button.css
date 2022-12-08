@@ -202,12 +202,27 @@ main .floating-button-wrapper.multifunction .floating-button .toggle-button {
   z-index: 2;
 }
 
+main .floating-button-wrapper.multifunction .floating-button .toggle-button .lottie-plus-animation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80px;
+  width: 120px;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
 main .floating-button-wrapper.multifunction.floating-button--above-the-fold:not(.floating-button--scrolled) .button {
   padding-left: 48px;
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
   transform: translateY(50%) rotate(45deg);
+}
+
+main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button .lottie-plus-animation {
+  opacity: 0;
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .toolbox {
@@ -313,6 +328,10 @@ main .floating-button-wrapper.multifunction.floating-button--hidden .toolbox-bac
     margin-bottom: 24px;
   }
   body.branch-banner-is-active .floating-button-wrapper {
+    height: 150px;
+  }
+
+  main.branch-banner-is-active .floating-button-wrapper {
     height: 150px;
   }
 
