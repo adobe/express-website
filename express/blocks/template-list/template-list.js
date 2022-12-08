@@ -1343,9 +1343,9 @@ export async function decorateTemplateList($block) {
         && placeholders['template-filter-premium']) {
         document.addEventListener('linkspopulated', () => {
           decorateToolbar($block, $parent, placeholders);
+          decorateCategoryList($block, $parent, placeholders);
         });
       }
-      decorateCategoryList($block, $parent, placeholders);
     }
   }
 
