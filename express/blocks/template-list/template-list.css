@@ -472,9 +472,40 @@ main .template-list.fullwidth.lg-view .template.placeholder,
 main .template-list.fullwidth.md-view .template.placeholder,
 main .template-list.fullwidth.sm-view .template.placeholder {
   margin: 21px auto;
-  width: auto;
   max-width: 80%;
   max-height: 30vh;
+}
+
+main .template-list.fullwidth.lg-view .template.placeholder {
+  width: 335px;
+}
+
+main .template-list.fullwidth.md-view .template.placeholder {
+  width: 165.5px;
+}
+
+main .template-list.fullwidth.sm-view .template.placeholder {
+  width: 106.33px;
+}
+
+@media (min-width: 600px) {
+  main .template-list.fullwidth.lg-view .template.placeholder {
+    width: 352px;
+  }
+
+  main .template-list.fullwidth.md-view .template.placeholder {
+    width: 227.33px;
+  }
+
+  main .template-list.fullwidth.sm-view .template.placeholder {
+    width: 165px;
+  }
+}
+
+@media (min-width: 900px) {
+  main .template-list.fullwidth.md-view .template.placeholder {
+    width: 258.5px;
+  }
 }
 
 main .template-list .template.placeholder div:nth-of-type(2) {
@@ -670,18 +701,8 @@ main .template-list.fullwidth.sm-view > .masonry-col {
     max-width: 187px;
   }
 
-  main .template-list.fullwidth.lg-view > .masonry-col {
-    max-width: 352px;
-    text-align: center;
-  }
-
   main .template-list.fullwidth.md-view > .masonry-col {
     max-width: 258.5px;
-    text-align: center;
-  }
-
-  main .template-list.fullwidth.sm-view > .masonry-col {
-    max-width: 165px;
     text-align: center;
   }
 
@@ -1004,7 +1025,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   font-size: 14px;
   line-height: 24px;
   text-align: left;
-  width: 108px;
+  width: 72px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
