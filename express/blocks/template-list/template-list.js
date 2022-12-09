@@ -745,7 +745,7 @@ function addBackgroundAnimation($block, animationUrl) {
     $parent.classList.add('with-animation');
     const $videoBackground = createTag('video', {
       class: 'animation-background',
-      oncanplay: 'this.muted=true',
+      preload: 'auto',
     });
     $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
     $videoBackground.setAttribute('autoplay', '');
