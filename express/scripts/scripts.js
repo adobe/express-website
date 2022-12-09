@@ -1123,6 +1123,7 @@ export function decorateButtons(block = document) {
     if (!noButtonBlocks.includes(blockName)
       && originalHref !== linkText
       && !(linkText.startsWith('https') && linkText.includes('/media_'))
+      && !linkText.includes('hlx.blob.core.windows.net')
       && !linkText.endsWith(' >')
       && !linkText.endsWith(' ›')) {
       const $up = $a.parentElement;
