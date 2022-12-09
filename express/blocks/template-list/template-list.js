@@ -747,12 +747,12 @@ function addBackgroundAnimation($block, animationUrl) {
     $parent.classList.add('with-animation');
     const $videoBackground = createTag('video', {
       class: 'animation-background',
-      autoplay: '',
-      mutes: '',
-      loop: '',
-      playsinline: '',
     });
     $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
+    $videoBackground.setAttribute('autoplay', '');
+    $videoBackground.setAttribute('muted', '');
+    $videoBackground.setAttribute('loop', '');
+    $videoBackground.setAttribute('playsinline', '');
     $parent.prepend($videoBackground);
   }
 }
