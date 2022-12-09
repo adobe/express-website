@@ -268,7 +268,7 @@ loadScript(martechURL, () => {
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
   if (pathname.includes('/create/video/animation')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createAnimation');
+    set('spark.eventData.contextualData1', 'quickActionType:animateFromAudio');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/create/video/animation/instagram')) {
     set('spark.eventData.contextualData1', 'quickActionType:createInstagramAnimation');
@@ -307,7 +307,7 @@ loadScript(martechURL, () => {
     set('spark.eventData.contextualData1', 'quickActionType:convertToSVG');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/video/animate/audio')) {
-    set('spark.eventData.contextualData1', 'quickActionType:animateAudio');
+    set('spark.eventData.contextualData1', 'quickActionType:animateFromAudio');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/video/trim')) {
     set('spark.eventData.contextualData1', 'quickActionType:trimVideo');
