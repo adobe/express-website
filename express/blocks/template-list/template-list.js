@@ -739,18 +739,19 @@ function cacheCreatedTemplate($block) {
 }
 
 function addBackgroundAnimation($block, animationUrl) {
-  const $videoBackground = createTag('video', {
-    class: 'animation-background',
-    autoplay: true,
-    muted: true,
-    loop: true,
-    playsinline: true,
-  });
+
 
   const $parent = $block.closest('.template-list-horizontal-apipowered-holiday-container');
 
   if ($parent) {
     $parent.classList.add('with-animation');
+    const $videoBackground = createTag('video', {
+      class: 'animation-background',
+      autoplay: '',
+      mutes: '',
+      loop: '',
+      playsinline: '',
+    });
     $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
     $parent.prepend($videoBackground);
   }
