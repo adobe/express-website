@@ -116,18 +116,18 @@ export default async function decorate(block) {
 
   // fallback images
   rows.forEach((row) => {
-    const description = row.firstChild.innerText.trim().toLowerCase();
+    const description = row.firstElementChild.innerText.trim().toLowerCase();
     if (description !== 'desktop' && description !== 'mobile') return;
 
     if (description === 'desktop') {
-      const descriptor = row.firstChild;
-      const imDiv = descriptor.nextSibling;
+      const descriptor = row.firstElementChild;
+      const imDiv = descriptor.nextElementSibling;
       imDiv.classList.add('fallback', 'desktop');
       block.append(imDiv);
       row.remove();
     } else if (description === 'mobile') {
-      const descriptor = row.firstChild;
-      const imDiv = descriptor.nextSibling;
+      const descriptor = row.firstElementChild;
+      const imDiv = descriptor.nextElementSibling;
       imDiv.classList.add('fallback', 'mobile');
       block.append(imDiv);
       row.remove();

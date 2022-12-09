@@ -233,14 +233,14 @@ function populateTemplates($block, templates) {
           href: $link.href ? addSearchQueryToHref($link.href) : '#',
         });
 
-        $a.append(...$tmplt.childNodes);
+        $a.append(...$tmplt.children);
         $tmplt.remove();
         $tmplt = $a;
         $block.append($a);
 
         // convert A to SPAN
         const $newLink = createTag('span', { class: 'template-link' });
-        $newLink.append($link.textContent);
+        $newLink.append($link.textContent.trim());
 
         $linkContainer.innerHTML = '';
         $linkContainer.append($newLink);
@@ -380,27 +380,27 @@ export async function decorateTemplateList($block) {
         .forEach((row, index, array) => {
           const cells = row.querySelectorAll('div');
           if (index === 0) {
-            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-              cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-              cache.heading = cells[1].textContent;
+            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.trim().toLowerCase())) {
+              cache.filters.tasks = `(${cells[1].textContent.trim().toLowerCase()})`;
+              cache.heading = cells[1].textContent.trim();
             } else if ($block.classList.contains('holiday')) {
               cache.heading = row;
             } else {
-              cache.heading = row.textContent;
+              cache.heading = row.textContent.trim();
             }
             row.remove();
-          } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-            cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
-          } else if (cells[0].textContent.toLowerCase() === 'background animation') {
-            cache.backgroundAnimation = cells[1].textContent;
-          } else if (cells[0].textContent.toLowerCase() === 'background color') {
-            cache.backgroundColor = cells[1].textContent;
+          } else if (cells[0].textContent.trim().toLowerCase() === 'auto-collapse delay') {
+            cache.autoCollapseDelay = parseFloat(cells[1].textContent.trim()) * 1000;
+          } else if (cells[0].textContent.trim().toLowerCase() === 'background animation') {
+            cache.backgroundAnimation = cells[1].textContent.trim();
+          } else if (cells[0].textContent.trim().toLowerCase() === 'background color') {
+            cache.backgroundColor = cells[1].textContent.trim();
           } else if (index < array.length) {
             if (cells.length >= 2) {
-              if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-                cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+              if (['type*', 'type'].includes(cells[0].textContent.trim().toLowerCase())) {
+                cache.filters.tasks = `(${cells[1].textContent.trim().toLowerCase()})`;
               } else {
-                cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+                cache.filters[`${cells[0].textContent.trim().toLowerCase()}`] = `(${cells[1].textContent.trim().toLowerCase()})`;
               }
             }
             row.remove();
@@ -430,7 +430,7 @@ export async function decorateTemplateList($block) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
         const $content = Array.from(cache.heading.querySelectorAll('p'))
-          .filter((p) => p.textContent !== '' && p.querySelector('a') === null);
+          .filter((p) => p.textContent.trim() !== '' && p.querySelector('a') === null);
         const $a = cache.heading.querySelector('a');
         $a.classList.add('expanded');
         $a.classList.add('toggle-button');
@@ -474,7 +474,7 @@ export async function decorateTemplateList($block) {
         }, cache.autoCollapseDelay);
       } else {
         const $sectionHeading = $parent.querySelector('div > h2');
-        if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+        if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
           } else {

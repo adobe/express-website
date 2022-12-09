@@ -22,7 +22,7 @@ export default function decorate($block) {
   const $layouts = Array.from($block.children);
   const layouts = [];
   $layouts.forEach(($layout) => {
-    const row = Array.from($layout.children).map(($e) => $e.textContent);
+    const row = Array.from($layout.children).map(($e) => $e.textContent.trim());
     const layout = {
       name: row[0],
       res: row[1],

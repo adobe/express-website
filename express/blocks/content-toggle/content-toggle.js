@@ -22,9 +22,9 @@ export default function decorate($block) {
 
   Array.from($toggleContainer.children).forEach(($toggle, index) => {
     const $button = createTag('button');
-    const section = $toggle.textContent;
+    const section = $toggle.textContent.trim();
 
-    $button.textContent = $toggle.textContent;
+    $button.textContent = $toggle.textContent.trim();
 
     $button.addEventListener('click', () => {
       const $activeButton = $block.querySelector('button.active');

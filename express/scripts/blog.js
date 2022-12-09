@@ -67,7 +67,7 @@ async function fetchAuthorImage($image, author) {
 
 function decorateBlogLinkedImages() {
   document.querySelectorAll('main div.section > div > p > a').forEach((a) => {
-    if (a.textContent.startsWith('https://')) {
+    if (a.textContent.trim().startsWith('https://')) {
       const prevSib = a.parentElement.previousElementSibling;
       if (prevSib) {
         const picture = prevSib.lastElementChild;

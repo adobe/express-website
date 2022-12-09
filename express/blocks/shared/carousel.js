@@ -130,7 +130,7 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
 
   const infinityScroll = ($children) => {
     const duplicateContent = () => {
-      $children.forEach(($child) => {
+      [...$children].forEach(($child) => {
         const $duplicate = $child.cloneNode(true);
         const $duplicateLinks = $duplicate.querySelectorAll('a');
         $platform.append($duplicate);

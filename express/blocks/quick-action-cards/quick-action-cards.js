@@ -27,7 +27,7 @@ export default function decorate($block) {
       if ($div.querySelector(':scope > picture:first-child')) {
         $div.classList.add('quick-action-card-image');
         const $a = $div.querySelector('a');
-        if ($a && $a.textContent.startsWith('https://')) {
+        if ($a && $a.textContent.trim().startsWith('https://')) {
           const contents = Array.from($card.children);
           const $wrapper = createTag('a', { href: $a.href });
           $a.remove();
@@ -84,8 +84,8 @@ export default function decorate($block) {
       window.scrollTo(0, $top.offsetTop);
     });
     const $pButton = document.createElement('p');
-    if ($block.nextSibling) {
-      $block.parentNode.insertBefore($pButton, $block.nextSibling);
+    if ($block.nextElementSibling) {
+      $block.parentNode.insertBefore($pButton, $block.nextElementSibling);
     } else {
       $block.parentNode.appendChild($pButton);
     }

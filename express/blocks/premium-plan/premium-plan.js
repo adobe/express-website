@@ -64,7 +64,7 @@ export default function decorate($block) {
     $container.append($cards);
     let failsafe = 20;
     while ($block.children.length > 2) {
-      const device = $block.children[2].children[0].textContent.toLowerCase().trim();
+      const device = $block.children[2].children[0].textContent.trim().toLowerCase();
       const $cardDiv = $block.children[2].children[1];
       const $cardLink = $cardDiv.children[0].querySelector('a');
       let $card;
@@ -99,7 +99,7 @@ export default function decorate($block) {
       const $links = $card.querySelectorAll('li a');
       if ($links) {
         $links.forEach(($link) => {
-          const iconName = $link.textContent.toLowerCase().trim();
+          const iconName = $link.textContent.trim().toLowerCase();
           $link.innerHTML = getIcon(iconName);
         });
       }

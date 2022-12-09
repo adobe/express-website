@@ -124,9 +124,9 @@ function filterPages() {
       let matched = false;
       let textContent = '';
       if (f.scope === 'global') {
-        textContent = $tr.textContent.toLowerCase();
+        textContent = $tr.textContent.trim().toLowerCase();
       } else if (headerColsLookup[f.scope]) {
-        textContent = $tr.children[headerColsLookup[f.scope]].textContent.toLowerCase();
+        textContent = $tr.children[headerColsLookup[f.scope]].textContent.trim().toLowerCase();
       }
 
       if (textContent.includes(f.filter.toLowerCase())) {
@@ -367,7 +367,7 @@ document.getElementById('copy').addEventListener('click', () => {
   $pages.forEach(($tr) => {
     const row = [];
     [...$tr.children].forEach(($cell, i) => {
-      let data = $cell.textContent;
+      let data = $cell.textContent.trim();
       if (!i) data = data.replace('EditPublish', '').trim();
       row.push(data);
     });
@@ -396,7 +396,7 @@ $buttons.forEach(($button) => {
     $buttons.forEach(($b) => {
       $b.className = $button === $b ? 'pressed' : '';
     });
-    currentView = $button.textContent;
+    currentView = $button.textContent.trim();
     displayPages(pageData, currentView);
   });
 });

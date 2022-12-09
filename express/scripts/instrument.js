@@ -511,8 +511,8 @@ loadScript(martechURL, () => {
     let alt;
     let newEventName;
 
-    if ($a.textContent) {
-      newEventName = eventName + textToName($a.textContent);
+    if ($a.textContent.trim()) {
+      newEventName = eventName + textToName($a.textContent.trim());
     } else {
       $img = $a.querySelector('img');
       alt = $img && $img.getAttribute('alt');
@@ -561,25 +561,25 @@ loadScript(martechURL, () => {
       }
       // Button in the FAQ
     } else if ($tutorialContainer) {
-      const videoName = textToName($a.querySelector('h3').textContent);
+      const videoName = textToName($a.querySelector('h3').textContent.trim());
       adobeEventName = `${adobeEventName}tutorials:${videoName}:tutorialPressed`;
       sparkEventName = 'landing:tutorialPressed';
     } else if ($chooseYourPathContainer) {
       const $slideTitle = $a.querySelector('.choose-your-path-slide-title');
-      const slideName = $slideTitle ? textToName($slideTitle.textContent) : 'slide';
+      const slideName = $slideTitle ? textToName($slideTitle.textContent.trim()) : 'slide';
 
       adobeEventName = `${adobeEventName}chooseYourPath:${slideName}:slidePressed`;
       sparkEventName = 'landing:chooseYourPathSlidePressed';
     } else if ($contentToggleContainer) {
-      const toggleName = textToName($a.textContent);
+      const toggleName = textToName($a.textContent.trim());
       adobeEventName = `${adobeEventName}contentToggle:${toggleName}:buttonPressed`;
       sparkEventName = 'landing:contentToggleButtonPressed';
     } else if ($a.classList.contains('floating-button-lottie')) {
       adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
       sparkEventName = 'landing:floatingButtonScrollPressed';
     } else if ($a.classList.contains('video-player-inline-player-overlay')) {
-      const sessionName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-session-number').textContent;
-      const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent;
+      const sessionName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-session-number').textContent.trim();
+      const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent.trim();
       adobeEventName = `${adobeEventName}playing:${sessionName}-${videoName}`;
       sparkEventName = `playing:${sessionName}-${videoName}`;
     } else if ($a.classList.contains('notch')) {

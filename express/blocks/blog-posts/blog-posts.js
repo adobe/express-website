@@ -22,7 +22,7 @@ import {
 
 async function fetchBlogIndex() {
   let prefix = `/${window.location.pathname.split('/')[1]}`;
-  if (prefix === '/express' || prefix === '/drafts') prefix = '';
+  if (prefix === '/express' || prefix === '/drafts' || prefix === '/documentation') prefix = '';
 
   const resp = await fetch(`${prefix}/express/learn/blog/query-index.json`);
   const json = await resp.json();
