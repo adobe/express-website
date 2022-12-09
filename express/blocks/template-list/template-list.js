@@ -1341,9 +1341,11 @@ export async function decorateTemplateList($block) {
       if ($linkList
         && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')
         && placeholders['template-filter-premium']) {
-        document.addEventListener('linkspopulated', () => {
-          decorateToolbar($block, $parent, placeholders);
-          decorateCategoryList($block, $parent, placeholders);
+        document.addEventListener('linkspopulated', (e) => {
+          if (e.detail.length > 0 && e.detail[0].parentElement.classList.contains('template-list')) {
+            decorateToolbar($block, $parent, placeholders);
+            decorateCategoryList($block, $parent, placeholders);
+          }
         });
       }
     }
