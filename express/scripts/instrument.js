@@ -267,20 +267,9 @@ loadScript(martechURL, () => {
     set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
+
   if (pathname.includes('/create/video/animation')) {
     set('spark.eventData.contextualData1', 'quickActionType:animateFromAudio');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/instagram')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createInstagramAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/social')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createSocialAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/tiktok')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createTiktokAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/youtube')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createYoutubeAnimation');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/image/resize')) {
     set('spark.eventData.contextualData1', 'quickActionType:imageResize');
