@@ -739,14 +739,13 @@ function cacheCreatedTemplate($block) {
 }
 
 function addBackgroundAnimation($block, animationUrl) {
-
-
   const $parent = $block.closest('.template-list-horizontal-apipowered-holiday-container');
 
   if ($parent) {
     $parent.classList.add('with-animation');
     const $videoBackground = createTag('video', {
       class: 'animation-background',
+      oncanplay: 'this.muted=true',
     });
     $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
     $videoBackground.setAttribute('autoplay', '');
