@@ -381,7 +381,7 @@ async function attachFreeInAppPills($block) {
       && $templateLink.querySelectorAll('.icon-premium').length <= 0
       && !$templateLink.classList.contains('placeholder')
       && !$templateLink.querySelector('.icon-free-badge')
-      && freeInAppText) {
+      && freeInAppText !== '') {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       $freeInAppBadge.textContent = freeInAppText;
       $templateLink.querySelector('div').append($freeInAppBadge);
