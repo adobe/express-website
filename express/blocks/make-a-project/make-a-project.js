@@ -31,7 +31,7 @@ export default function decorate($block) {
         $marquee.appendChild($row);
         $block.classList.add('dark');
         $row.querySelectorAll(':scope ul li a').forEach(($link) => {
-          const $icon = $link.previousSibling;
+          const $icon = $link.previousElementSibling;
           if ($icon) {
             if ($icon.firstElementChild) {
               // remove title from SVG

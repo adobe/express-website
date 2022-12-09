@@ -125,9 +125,9 @@ function updateMetadata(data) {
 }
 
 function updateBlocks(data) {
-  const heroAnimation = document.querySelector('.hero-animation--wide-');
-  const linkList = document.querySelector('.link-list--fullwidth-');
-  const templateList = document.querySelector('.template-list--fullwidth--apipowered-');
+  const heroAnimation = document.querySelector('.hero-animation.wide');
+  const linkList = document.querySelector('.link-list.fullwidth');
+  const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const seoNav = document.querySelector('.seo-nav');
 
   if (heroAnimation) {

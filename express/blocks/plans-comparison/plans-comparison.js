@@ -118,8 +118,8 @@ async function buildPayload($block) {
 
     if (index === 2) {
       const subCopies = $row.querySelectorAll('div');
-      payload.free.subCopy = subCopies[0].textContent;
-      payload.premium.subCopy = subCopies[1].textContent;
+      payload.free.subCopy = subCopies[0].textContent.trim();
+      payload.premium.subCopy = subCopies[1].textContent.trim();
       payload.premium.pricingUrl = subCopies[1].querySelector('a').href;
     }
 
@@ -391,6 +391,13 @@ export default function decorate($block) {
         });
 
         fixIcons($newBlock);
+
+        const $blockLinks = $newBlock.querySelectorAll('a');
+
+        if ($blockLinks) {
+          const linksPopulated = new CustomEvent('linkspopulated', { detail: $blockLinks });
+          document.dispatchEvent(linksPopulated);
+        }
       }
     }
   });

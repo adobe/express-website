@@ -89,7 +89,7 @@ export function buildUrl(optionUrl, country, language) {
 function decorateIconList($pricingRight) {
   let $iconList = createTag('div', { class: 'pricing-iconlist' });
   let $iconListDescription;
-  [...$pricingRight.firstChild.childNodes].forEach(($e) => {
+  [...$pricingRight.firstElementChild.children].forEach(($e) => {
     const $img = $e.querySelector('img.icon, svg.icon');
     if ($img) {
       const $iconListRow = createTag('div');

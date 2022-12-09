@@ -312,8 +312,8 @@ export default function decorate($block) {
       const $sessionDescription = $row.querySelector('h2');
 
       payload.sessions.push({
-        title: $sessionTitle.textContent,
-        description: $sessionDescription.textContent,
+        title: $sessionTitle.textContent.trim(),
+        description: $sessionDescription.textContent.trim(),
         thumbnail: $sessionThumbnail,
         videos: [],
       });
@@ -322,9 +322,9 @@ export default function decorate($block) {
     if ($videos.length > 0) {
       const $videosThumbnail = $row.querySelector('picture');
       const $nodes = $row.querySelectorAll('div>div');
-      const $videoDuration = $nodes[2].textContent;
+      const $videoDuration = $nodes[2].textContent.trim();
       payload.sessions[payload.sessions.length - 1].videos.push({
-        title: $videos[0].textContent,
+        title: $videos[0].textContent.trim(),
         files: Array.from($videos, (a) => ({
           href: a.href,
           type: a.href.split('.')
@@ -332,7 +332,7 @@ export default function decorate($block) {
         })),
         thumbnail: $videosThumbnail.querySelector('img').src,
         duration: $videoDuration,
-        hideTitle: $nodes[$nodes.length - 1].textContent.toLowerCase() === 'hide title',
+        hideTitle: $nodes[$nodes.length - 1].textContent.trim().toLowerCase() === 'hide title',
       });
     }
   });

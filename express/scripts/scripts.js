@@ -120,7 +120,7 @@ export function addPublishDependencies(url) {
 
 export function toClassName(name) {
   return name && typeof name === 'string'
-    ? name.toLowerCase().replace(/[^0-9a-z]/gi, '-')
+    ? name.trim().toLowerCase().replace(/[^0-9a-z]/gi, '-')
     : '';
 }
 
@@ -301,8 +301,8 @@ export function getIconElement(icons, size, alt, additionalClassName) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
 
-  if (additionalClassName) $div.firstChild.classList.add(additionalClassName);
-  return ($div.firstChild);
+  if (additionalClassName) $div.firstElementChild.classList.add(additionalClassName);
+  return ($div.firstElementChild);
 }
 
 export function transformLinkToAnimation($a) {
@@ -342,7 +342,7 @@ export function linkPicture($picture) {
   const $nextSib = $picture.parentNode.nextElementSibling;
   if ($nextSib) {
     const $a = $nextSib.querySelector('a');
-    if ($a && $a.textContent.startsWith('https://')) {
+    if ($a && $a.textContent.trim().startsWith('https://')) {
       $a.innerHTML = '';
       $a.className = '';
       $a.appendChild($picture);
@@ -357,7 +357,7 @@ export function linkImage($elem) {
     $a.remove();
     $a.className = '';
     $a.innerHTML = '';
-    $a.append(...$parent.childNodes);
+    $a.append(...$parent.children);
     $parent.append($a);
   }
 }
@@ -369,7 +369,7 @@ export function readBlockConfig($block) {
       const $cols = [...$row.children];
       if ($cols[1]) {
         const $value = $cols[1];
-        const name = toClassName($cols[0].textContent);
+        const name = toClassName($cols[0].textContent.trim());
         let value = '';
         if ($value.querySelector('a')) {
           const $as = [...$value.querySelectorAll('a')];
@@ -381,11 +381,11 @@ export function readBlockConfig($block) {
         } else if ($value.querySelector('p')) {
           const $ps = [...$value.querySelectorAll('p')];
           if ($ps.length === 1) {
-            value = $ps[0].textContent;
+            value = $ps[0].textContent.trim();
           } else {
-            value = $ps.map(($p) => $p.textContent);
+            value = $ps.map(($p) => $p.textContent.trim());
           }
-        } else value = $row.children[1].textContent;
+        } else value = $row.children[1].textContent.trim();
         config[name] = value;
       }
     }
@@ -742,15 +742,15 @@ export function loadCSS(href, callback) {
 function resolveFragments() {
   Array.from(document.querySelectorAll('main > div div'))
     .filter(($cell) => $cell.childElementCount === 0)
-    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent))
+    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent.trim()))
     .forEach(($cell) => {
-      const marker = $cell.textContent
-        .substring(1, $cell.textContent.length - 1)
+      const marker = $cell.textContent.trim()
+        .substring(1, $cell.textContent.trim().length - 1)
         .toLocaleLowerCase()
         .trim();
       // find the fragment with the marker
       const $marker = Array.from(document.querySelectorAll('main > div h3'))
-        .find(($title) => $title.textContent.toLocaleLowerCase() === marker);
+        .find(($title) => $title.textContent.trim().toLocaleLowerCase() === marker);
       if (!$marker) {
         console.log(`no fragment with marker "${marker}" found`);
         return;
@@ -777,31 +777,6 @@ function resolveFragments() {
     });
 }
 
-const blocksWithOptions = [
-  'checker-board',
-  'template-list',
-  'steps',
-  'cards',
-  'quotes',
-  'page-list',
-  'link-list',
-  'hero-animation',
-  'columns',
-  'show-section-only',
-  'image-list',
-  'feature-list',
-  'icon-list',
-  'table-of-contents',
-  'how-to-steps-carousel',
-  'how-to-steps',
-  'banner',
-  'pricing-columns',
-  'ratings',
-  'hero-3d',
-  'download-screens',
-  'download-cards',
-];
-
 /**
  * Decorates a block.
  * @param {Element} block The block element
@@ -809,30 +784,31 @@ const blocksWithOptions = [
 export function decorateBlock(block) {
   const blockName = block.classList[0];
   if (blockName) {
-    let shortBlockName = blockName;
-    block.classList.add('block');
+    const section = block.closest('.section');
+    if (section) section.classList.add(`${[...block.classList].join('-')}-container`);
+
     // begin CCX custom block option class handling
-    for (let i = 0; i < blocksWithOptions.length; i += 1) {
-      const b = blocksWithOptions[i];
-      if (shortBlockName.startsWith(`${b}-`)) {
-        const options = shortBlockName.substring(b.length + 1).split('-').filter((opt) => !!opt);
-        shortBlockName = b;
-        block.classList.add(b);
-        block.classList.add(...options);
-        break;
-      } else if (shortBlockName === b) {
-        // case: block with option but no option provided
-        // and potentially substring of another block
-        break;
+    // split and add options with a dash
+    // (fullscreen-center -> fullscreen-center + fullscreen + center)
+    const extra = [];
+    block.classList.forEach((className, index) => {
+      if (index === 0) return; // block name, no split
+      const split = className.split('-');
+      if (split.length > 1) {
+        split.forEach((part) => {
+          extra.push(part);
+        });
       }
-    }
+    });
+    block.classList.add(...extra);
     // end CCX custom block option class handling
-    block.setAttribute('data-block-name', shortBlockName);
+
+    block.classList.add('block');
+
+    block.setAttribute('data-block-name', blockName);
     block.setAttribute('data-block-status', 'initialized');
     const blockWrapper = block.parentElement;
-    blockWrapper.classList.add(`${shortBlockName}-wrapper`);
-    const section = block.closest('.section');
-    if (section) section.classList.add(`${blockName}-container`.replace(/--/g, '-'));
+    blockWrapper.classList.add(`${blockName}-wrapper`);
   }
 }
 
@@ -852,7 +828,7 @@ function decorateMarqueeColumns($main) {
   const $firstColumnsBlock = $main.querySelector('.section:first-of-type .columns:first-of-type');
 
   if ($sectionSplitByHighlight) {
-    $sectionSplitByHighlight.querySelector('.columns--fullsize-center-').classList.add('columns-marquee');
+    $sectionSplitByHighlight.querySelector('.columns.fullsize.center').classList.add('columns-marquee');
   } else if ($firstColumnsBlock) {
     $firstColumnsBlock.classList.add('columns-marquee');
   }
@@ -1133,22 +1109,25 @@ export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
     const originalHref = $a.href;
+    const linkText = $a.textContent.trim();
     if ($a.children.length > 0) {
       // We can use this to eliminate styling so only text
       // propagates to buttons.
       $a.innerHTML = $a.innerHTML.replaceAll('<u>', '').replaceAll('</u>', '');
     }
     $a.href = addSearchQueryToHref($a.href);
-    $a.title = $a.title || $a.textContent;
+    $a.title = $a.title || linkText;
     const $block = $a.closest('div.section > div > div');
     let blockName;
     if ($block) {
       blockName = $block.className;
     }
     if (!noButtonBlocks.includes(blockName)
-      && originalHref !== $a.textContent
-      && !$a.textContent.endsWith(' >')
-      && !$a.textContent.endsWith(' ›')) {
+      && originalHref !== linkText
+      && !(linkText.startsWith('https') && linkText.includes('/media_'))
+      && !linkText.includes('hlx.blob.core.windows.net')
+      && !linkText.endsWith(' >')
+      && !linkText.endsWith(' ›')) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -1157,18 +1136,18 @@ export function decorateButtons(block = document) {
           $up.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.children.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
         if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-          && $twoup.childNodes.length === 1 && $twoup.tagName === 'P') {
+          && $twoup.children.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
         }
       }
-      if ($a.textContent.trim().startsWith('{{icon-') && $a.textContent.trim().endsWith('}}')) {
-        const $iconName = /{{icon-([\w-]+)}}/g.exec($a.textContent.trim())[1];
+      if (linkText.startsWith('{{icon-') && linkText.endsWith('}}')) {
+        const $iconName = /{{icon-([\w-]+)}}/g.exec(linkText)[1];
         if ($iconName) {
           const $icon = getIcon($iconName, `${$iconName} icon`);
           $a.innerHTML = $icon;
@@ -1531,7 +1510,7 @@ export function unwrapBlock($block) {
   const $elems = [...$section.children];
   const $blockSection = createTag('div');
   const $postBlockSection = createTag('div');
-  const $nextSection = $section.nextSibling;
+  const $nextSection = $section.nextElementSibling;
   $section.parentNode.insertBefore($blockSection, $nextSection);
   $section.parentNode.insertBefore($postBlockSection, $nextSection);
 
@@ -1569,7 +1548,7 @@ export function normalizeHeadings(block, allowedHeadings) {
         }
       }
       if (level !== 7) {
-        tag.outerHTML = `<h${level}>${tag.textContent}</h${level}>`;
+        tag.outerHTML = `<h${level}>${tag.textContent.trim()}</h${level}>`;
       }
     }
   });
@@ -1617,22 +1596,22 @@ function buildAutoBlocks($main) {
 }
 
 function splitSections($main) {
-  // check if there are more than one columns--fullsize-center-. If so, don't split.
-  const multipleColumns = $main.querySelectorAll('.columns--fullsize-center-').length > 1;
+  // check if there are more than one columns.fullsize-center. If so, don't split.
+  const multipleColumns = $main.querySelectorAll('.columns.fullsize-center').length > 1;
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
     const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade', 'plans-comparison'];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
     if (hasAppStoreBlocks && !multipleColumns) {
-      blocksToSplit.push('columns--fullsize-center-');
+      blocksToSplit.push('columns fullsize-center');
     }
 
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
 
-    if (hasAppStoreBlocks && $block.className === 'columns--fullsize-center-') {
+    if (hasAppStoreBlocks && $block.className.includes('columns fullsize-center')) {
       const $parentNode = $block.parentNode;
       if ($parentNode && !multipleColumns) {
         $parentNode.classList.add('split-by-app-store-highlight');
@@ -1687,7 +1666,7 @@ export function addFavIcon(href) {
 
 function decorateSocialIcons($main) {
   $main.querySelectorAll(':scope a').forEach(($a) => {
-    if ($a.href === $a.textContent) {
+    if ($a.href === $a.textContent.trim()) {
       let icon = '';
       if ($a.href.startsWith('https://www.instagram.com')) {
         icon = 'instagram';
@@ -2078,8 +2057,8 @@ export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1,
     ];
   headings.forEach((h) => {
     const length = getLocale(window.location) === 'jp'
-      ? getJapaneseTextCharacterCount(h.textContent)
-      : h.textContent.length;
+      ? getJapaneseTextCharacterCount(h.textContent.trim())
+      : h.textContent.trim().length;
     sizes.forEach((size) => {
       if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
     });

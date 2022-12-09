@@ -16,7 +16,7 @@ export default function decorate($block) {
 
   // Remove submit-email block wrapping div
   const $blockParentDiv = $block.parentElement;
-  $container.insertBefore($block, $container.firstChild);
+  $container.insertBefore($block, $container.firstElementChild);
   $container.removeChild($blockParentDiv);
 
   const $form = document.createElement('form');

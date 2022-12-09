@@ -23,7 +23,7 @@ function decorateFAQBlocks($block) {
     const $cells = Array.from($row.children);
     const $question = $cells[0];
     const $answer = $cells[1];
-    const question = $question.textContent;
+    const question = $question.textContent.trim();
     const answer = $answer.innerHTML;
     faqs.push({
       question, answer,

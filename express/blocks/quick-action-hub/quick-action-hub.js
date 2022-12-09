@@ -18,7 +18,7 @@ import {
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  const $header = $rows[0].firstChild;
+  const $header = $rows[0].firstElementChild;
   const $container = createTag('div', { class: 'quick-action-hub-container' });
   const $listContainer = createTag('div', { class: 'quick-action-hub-list-container' });
   const $contentContainer = createTag('div', { class: 'quick-action-hub-content-container' });

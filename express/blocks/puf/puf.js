@@ -242,8 +242,8 @@ function buildPlans($plans) {
     if ($planLink) {
       plans.push({
         url: $planLink.href,
-        plan: $planLink.textContent,
-        text: $plan.textContent,
+        plan: $planLink.textContent.trim(),
+        text: $plan.textContent.trim(),
       });
     }
   });
@@ -285,7 +285,7 @@ function decorateCard($block, cardClass) {
   $cardTop.prepend($cardPricingHeader);
   $cardTop.prepend($cardHeader);
 
-  if (!$cardBanner.textContent) {
+  if (!$cardBanner.textContent.trim()) {
     $cardBanner.style.display = 'none';
   }
 
@@ -303,7 +303,7 @@ function decorateCard($block, cardClass) {
 
   const $ctaTextContainer = $cardTop.querySelector('strong');
   if ($ctaTextContainer) {
-    $cardCta.textContent = $ctaTextContainer.textContent;
+    $cardCta.textContent = $ctaTextContainer.textContent.trim();
     $ctaTextContainer.parentNode.remove();
   } else {
     $cardCta.textContent = 'Start your trial';

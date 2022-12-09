@@ -267,20 +267,9 @@ loadScript(martechURL, () => {
     set('spark.eventData.contextualData1', `quickActionType:${sparkContextualData}`);
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   }
+
   if (pathname.includes('/create/video/animation')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/instagram')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createInstagramAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/social')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createSocialAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/tiktok')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createTiktokAnimation');
-    set('spark.eventData.contextualData2', 'actionLocation:seo');
-  } else if (pathname.includes('/create/video/animation/youtube')) {
-    set('spark.eventData.contextualData1', 'quickActionType:createYoutubeAnimation');
+    set('spark.eventData.contextualData1', 'quickActionType:animateFromAudio');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/image/resize')) {
     set('spark.eventData.contextualData1', 'quickActionType:imageResize');
@@ -307,7 +296,7 @@ loadScript(martechURL, () => {
     set('spark.eventData.contextualData1', 'quickActionType:convertToSVG');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/video/animate/audio')) {
-    set('spark.eventData.contextualData1', 'quickActionType:animateAudio');
+    set('spark.eventData.contextualData1', 'quickActionType:animateFromAudio');
     set('spark.eventData.contextualData2', 'actionLocation:seo');
   } else if (pathname.includes('/feature/video/trim')) {
     set('spark.eventData.contextualData1', 'quickActionType:trimVideo');
@@ -511,8 +500,8 @@ loadScript(martechURL, () => {
     let alt;
     let newEventName;
 
-    if ($a.textContent) {
-      newEventName = eventName + textToName($a.textContent);
+    if ($a.textContent.trim()) {
+      newEventName = eventName + textToName($a.textContent.trim());
     } else {
       $img = $a.querySelector('img');
       alt = $img && $img.getAttribute('alt');
@@ -561,25 +550,25 @@ loadScript(martechURL, () => {
       }
       // Button in the FAQ
     } else if ($tutorialContainer) {
-      const videoName = textToName($a.querySelector('h3').textContent);
+      const videoName = textToName($a.querySelector('h3').textContent.trim());
       adobeEventName = `${adobeEventName}tutorials:${videoName}:tutorialPressed`;
       sparkEventName = 'landing:tutorialPressed';
     } else if ($chooseYourPathContainer) {
       const $slideTitle = $a.querySelector('.choose-your-path-slide-title');
-      const slideName = $slideTitle ? textToName($slideTitle.textContent) : 'slide';
+      const slideName = $slideTitle ? textToName($slideTitle.textContent.trim()) : 'slide';
 
       adobeEventName = `${adobeEventName}chooseYourPath:${slideName}:slidePressed`;
       sparkEventName = 'landing:chooseYourPathSlidePressed';
     } else if ($contentToggleContainer) {
-      const toggleName = textToName($a.textContent);
+      const toggleName = textToName($a.textContent.trim());
       adobeEventName = `${adobeEventName}contentToggle:${toggleName}:buttonPressed`;
       sparkEventName = 'landing:contentToggleButtonPressed';
     } else if ($a.classList.contains('floating-button-lottie')) {
       adobeEventName = `${adobeEventName}floatingButton:scrollPressed`;
       sparkEventName = 'landing:floatingButtonScrollPressed';
     } else if ($a.classList.contains('video-player-inline-player-overlay')) {
-      const sessionName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-session-number').textContent;
-      const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent;
+      const sessionName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-session-number').textContent.trim();
+      const videoName = $a.parentNode.parentNode.parentNode.querySelector('.video-player-video-title').textContent.trim();
       adobeEventName = `${adobeEventName}playing:${sessionName}-${videoName}`;
       sparkEventName = `playing:${sessionName}-${videoName}`;
     } else if ($a.classList.contains('notch')) {
@@ -660,6 +649,28 @@ loadScript(martechURL, () => {
     } else {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'landing:ctaPressed';
+    }
+
+    if (w.location.pathname === '/express/') {
+      if ($a.closest('.hero-animation')) {
+        sparkButtonId = 'getExpressMain';
+      } else if ($a.closest('.make-a-project-item')) {
+        sparkButtonId = 'useCase';
+      } else if ($a.closest('.floating-button')) {
+        sparkButtonId = 'getExpressFloating';
+      } else if ($a.closest('.banner')) {
+        sparkButtonId = 'startForFree';
+      } else if ($a.closest('.columns')) {
+        sparkButtonId = 'browseAllTemplates';
+      } else if ($a.closest('.card-free')) {
+        sparkButtonId = 'getExpressFreePlan';
+      } else if ($a.closest('.card-premium')) {
+        if ($a.classList.contains('primary')) {
+          sparkButtonId = 'getExpressPremiumPlan';
+        } else {
+          sparkButtonId = 'seePlansAndPricing';
+        }
+      }
     }
 
     if (useAlloy) {

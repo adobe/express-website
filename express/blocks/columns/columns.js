@@ -33,7 +33,7 @@ import {
 
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;
-  const title = $a.textContent;
+  const title = $a.textContent.trim();
   // gather video urls from all links in cell
   const vidUrls = [];
   $cell.querySelectorAll(':scope a.button').forEach(($button) => {
@@ -89,8 +89,8 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
 
   if (rowNum === 0
     && icons.length === 1
-    && icons[0].closest('p').innerText === ''
-    && !icons[0].closest('p').previousSibling) {
+    && icons[0].closest('p').innerText.trim() === ''
+    && !icons[0].closest('p').previousElementSibling) {
     // treat icon as brand icon if first element in first row cell and no text next to it
     icons[0].classList.add('brand');
     $columnCell.parentElement.classList.add('has-brand');
@@ -103,7 +103,7 @@ function decorateIconList($columnCell, rowNum, blockClasses) {
       const imgs = $e.querySelectorAll('img.icon, svg.icon');
       // only build icon list if single icon plus text
       const $img = imgs.length === 1 ? imgs[0] : null;
-      const hasText = $img ? $img.closest('p').textContent !== '' : false;
+      const hasText = $img ? $img.closest('p').textContent.trim() !== '' : false;
       if ($img && hasText) {
         const $iconListRow = createTag('div');
         const $iconDiv = createTag('div', { class: 'columns-iconlist-icon' });
@@ -185,7 +185,7 @@ export default function decorate($block) {
             e.preventDefault();
           });
         }
-        if ($a.textContent.startsWith('https://')) {
+        if ($a.textContent.trim().startsWith('https://')) {
           if ($a.href.endsWith('.mp4')) {
             transformLinkToAnimation($a);
           } else if ($pics[0]) {
@@ -194,7 +194,7 @@ export default function decorate($block) {
         }
       }
       if ($a && $a.classList.contains('button')) {
-        if ($block.classList.contains('fullsize')) {
+        if ($block.className.includes('fullsize')) {
           $a.classList.add('xlarge');
           $a.classList.add('primaryCTA');
           createFloatingButton($a, $block.closest('.section').dataset.audience);
@@ -212,7 +212,11 @@ export default function decorate($block) {
         }
       });
 
-      $cell.querySelectorAll(':scope p:empty').forEach(($p) => $p.remove());
+      $cell.querySelectorAll(':scope p:empty').forEach(($p) => {
+        if ($p.innerHTML.trim() === '') {
+          $p.remove();
+        }
+      });
 
       $cell.classList.add('column');
       if ($cell.firstElementChild && $cell.firstElementChild.tagName === 'PICTURE') {

@@ -238,14 +238,14 @@ function populateTemplates($block, templates) {
           href: $link.href ? addSearchQueryToHref($link.href) : '#',
         });
 
-        $a.append(...$tmplt.childNodes);
+        $a.append(...$tmplt.children);
         $tmplt.remove();
         $tmplt = $a;
         $block.append($a);
 
         // convert A to SPAN
         const $newLink = createTag('span', { class: 'template-link' });
-        $newLink.append($link.textContent);
+        $newLink.append($link.textContent.trim());
 
         $linkContainer.innerHTML = '';
         $linkContainer.append($newLink);
@@ -378,27 +378,27 @@ async function readRowsFromBlock($block) {
     Array.from($block.children).forEach((row, index, array) => {
       const cells = row.querySelectorAll('div');
       if (index === 0) {
-        if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-          props.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-          props.heading = cells[1].textContent;
+        if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.trim().toLowerCase())) {
+          props.filters.tasks = `(${cells[1].textContent.trim().toLowerCase()})`;
+          props.heading = cells[1].textContent.trim();
         } else if ($block.classList.contains('holiday')) {
           props.heading = row;
         } else {
-          props.heading = row.textContent;
+          props.heading = row.textContent.trim();
         }
         row.remove();
       } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-        props.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
+        props.autoCollapseDelay = parseFloat(cells[1].textContent.trim()) * 1000;
       } else if (cells[0].textContent.toLowerCase() === 'background animation') {
-        props.backgroundAnimation = cells[1].textContent;
+        props.backgroundAnimation = cells[1].textContent.trim();
       } else if (cells[0].textContent.toLowerCase() === 'background color') {
-        props.backgroundColor = cells[1].textContent;
+        props.backgroundColor = cells[1].textContent.trim();
       } else if (index < array.length) {
         if (cells.length >= 2) {
-          if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-            props.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+          if (['type*', 'type'].includes(cells[0].textContent.trim().toLowerCase())) {
+            props.filters.tasks = `(${cells[1].textContent.trim().toLowerCase()})`;
           } else {
-            props.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+            props.filters[`${cells[0].textContent.trim().toLowerCase()}`] = `(${cells[1].textContent.trim().toLowerCase()})`;
           }
         }
         row.remove();
@@ -1275,7 +1275,7 @@ export async function decorateTemplateList($block) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = props.heading.querySelector('picture');
         const $content = Array.from(props.heading.querySelectorAll('p'))
-          .filter((p) => p.textContent !== '' && p.querySelector('a') === null);
+          .filter((p) => p.textContent.trim() !== '' && p.querySelector('a') === null);
         const $a = props.heading.querySelector('a');
         $a.classList.add('expanded');
         $a.classList.add('toggle-button');
@@ -1324,7 +1324,7 @@ export async function decorateTemplateList($block) {
         const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
-        if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+        if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
           if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {

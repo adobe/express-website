@@ -38,7 +38,7 @@ export default function decorate(block) {
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
-    name: (heading && heading.textContent) || document.title,
+    name: (heading && heading.textContent.trim()) || document.title,
     step: [],
   };
 
@@ -50,10 +50,10 @@ export default function decorate(block) {
       schema.step.push({
         '@type': 'HowToStep',
         position: i + 1,
-        name: h.textContent,
+        name: h.textContent.trim(),
         itemListElement: {
           '@type': 'HowToDirection',
-          text: p.textContent,
+          text: p.textContent.trim(),
         },
       });
     }

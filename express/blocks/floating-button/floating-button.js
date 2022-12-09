@@ -46,7 +46,7 @@ export async function createFloatingButton($a, audience) {
 
   // Hide CTAs with same url & text as the Floating CTA && is NOT a Floating CTA (in mobile/tablet)
   const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link'))
-    .filter((a) => (a.textContent === $a.textContent || a.href === $a.href)
+    .filter((a) => (a.textContent.trim() === $a.textContent.trim() || a.href === $a.href)
       && !a.parentElement.classList.contains('floating-button'));
   sameUrlCTAs.forEach((cta) => {
     cta.classList.add('same-as-floating-button-CTA');
@@ -468,7 +468,7 @@ export default async function decorateBlock($block) {
   }
 
   const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
-  const emptySections = sections.filter((s) => s.childNodes.length === 0 || (s.childNodes.length === 1 && s.childNodes[0].classList.contains('floating-button-wrapper')));
+  const emptySections = sections.filter((s) => s.children.length === 0 || (s.children.length === 1 && s.children[0].classList.contains('floating-button-wrapper')));
   emptySections.forEach((emptySection) => {
     emptySection.remove();
   });

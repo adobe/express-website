@@ -24,7 +24,7 @@ function decorateContactBlocks($block) {
     const $phone = $cells[1];
     const $text = $cells[2];
 
-    const title = $title.textContent;
+    const title = $title.textContent.trim();
     const phone = $phone.innerHTML.replace('https://tel/', 'tel:');
     const text = $text.innerHTML;
 
