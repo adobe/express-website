@@ -2235,21 +2235,17 @@ function dynamicTypekit(kitId, $el = document) {
  *
  * @param {string} locale the locale details
  */
-function loadFonts(locale) {
+function loadLanguageSpecificFonts(locale) {
   const TK_IDS = {
-    default: { tk: '/express/styles/adobe-clean.css' },
-    jp: { tk: 'dvg6awq' },
-    kr: { tk: 'qjs5sfm' },
-    cn: { tk: 'puu3xkp' },
-    tw: { tk: 'jay0ecd' },
+    jp: { tk: 'dvg6awq', css: '/express/styles/adobe-clean-ja.css' },
+    // kr: { tk: 'qjs5sfm' },
+    // cn: { tk: 'puu3xkp' },
+    // tw: { tk: 'jay0ecd' },
   };
-  const tkObj = Object.keys(TK_IDS).includes(locale) ? TK_IDS[locale] : TK_IDS.default;
-
-  const tkSplit = tkObj.tk.split('.');
-  if (tkSplit[1] === 'css') {
-    loadCSS(tkObj.tk);
-  } else {
-    dynamicTypekit(tkObj.tk);
+  if (Object.keys(TK_IDS).includes(locale)) {
+    const tkObj = TK_IDS[locale];
+    if (tkObj.tk) dynamicTypekit(tkObj.tk);
+    loadCSS(tkObj.css);
   }
 }
 
@@ -2264,7 +2260,7 @@ async function loadLazy() {
 
   loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
-  loadFonts(getLocale(window.location));
+  loadLanguageSpecificFonts(getLocale(window.location));
   scrollToHash();
   resolveFragments();
   addPromotion();

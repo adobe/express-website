@@ -78,22 +78,6 @@
   /* 22px */
 }
 
-:lang(ja):root {
-  --body-font-family: 'adobe-clean-han-japanese', 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
-}
-
-:lang(zh-Hant):root {
-  --body-font-family: 'adobe-clean-han-traditional', 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
-}
-
-:lang(zh-Hans):root {
-  --body-font-family: 'adobe-clean-han-simplified-c', 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
-}
-
-:lang(ko):root {
-  --body-font-family: 'adobe-clean-han-korean', 'adobe-clean', 'Adobe Clean', 'Trebuchet MS', sans-serif;
-}
-
 @media (min-width: 900px) {
   :root {
     --heading-font-size-xxxl: 3.75rem;
