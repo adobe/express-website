@@ -966,7 +966,8 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-button a:hov
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
   width: max-content;
-  padding: 0 32px;
+  padding: 0 30px;
+  margin-left: 0;
   transform: translate(0, -6px);
   font-weight: 400;
   transition: margin 0.5s, transform 0.5s;
