@@ -9,10 +9,6 @@
     font-family: var(--body-serif-font-family);
   }
 
-  [lang="ja"] .blog main .section > div > p {
-    font-family: var(--body-font-family);
-  }
-
   .blog main .section > div > p .button {
     font-family: var(--body-font-family);
   }
@@ -186,7 +182,19 @@
     }
 }
 
-/* Japanese font sizing styles */
-:lang(ja).blog main .section h3 {
+/* Japanese font styles */
+:lang(ja) .blog main .section h3 {
   font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) .blog main .hero-animation p {
+  font-family: var(--body-font-family);
+}
+
+:lang(ja) .blog main .section > div > p {
+  font-family: var(--body-font-family);
+}
+
+:lang(ja) .blog main .hero .blog-header {
+  font-family: var(--body-font-family);
 }

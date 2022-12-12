@@ -101,7 +101,7 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
     text-align: left;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow: hidden;
     grid-area: title;
     margin-bottom: 16px;
@@ -123,12 +123,12 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
     font-family: var(--body-serif-font-family);
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;  
+    -webkit-box-orient: vertical;
     overflow: hidden;
     grid-area: teaser;
   }
 
-  
+
   main .blog-posts .blog-hero-card p.blog-card-teaser {
     font-family: var(--body-serif-font-family);
     font-size: var(--body-font-size-l);
@@ -161,7 +161,7 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
     margin-left: 0;
   }
 
-  
+
 
 @media (min-width: 900px) {
 
@@ -210,9 +210,9 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
   }
 
   main .blog-posts-container > div {
-    max-width: 900px;  
+    max-width: 900px;
   }
-  
+
   .blog main .blog-posts-container > div > h2, main .blog-posts-container div.blog-posts-decoration {
     max-width: 700px;
   }
@@ -220,16 +220,38 @@ main .blog-posts .blog-card, main .blog-posts .blog-hero-card {
 
 @media (min-width: 1200px) {
   main .blog-posts-container > div {
-    max-width: 1200px;  
+    max-width: 1200px;
   }
 
   main .blog-posts .blog-hero-card .blog-card-image img {
     max-width: 600px;
   }
 
-  
+
   .blog main .blog-posts-container > div > h2, main .blog-posts-container div.blog-posts-decoration {
     max-width: 1088px;
   }
-  
+
+}
+
+/* Japanese font styles */
+:lang(ja) main .blog-posts-container div.blog-posts-decoration p {
+  font-family: var(--body-font-family);
+}
+
+:lang(ja) main .blog-posts .blog-card p.blog-card-teaser {
+  font-family: var(--body-font-family);
+}
+
+:lang(ja) main .blog-posts .blog-hero-card p.blog-card-teaser {
+  font-family: var(--body-font-family);
+}
+
+:lang(ja) main .blog-posts p.blog-card-date {
+  font-family: var(--body-font-family);
+  font-weight: var(--body-font-weight);
+}
+
+:lang(ja) main .blog-posts-container div.blog-posts-decoration p {
+  font-family: var(--body-font-family);
 }
