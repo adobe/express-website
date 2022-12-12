@@ -358,7 +358,14 @@ function initToggle($section) {
 
   Array.from($toggleButtons)
     .forEach(($button) => {
-      $button.addEventListener('click', (e) => {
+      const chev = $button.querySelector('.toggle-button-chev');
+      const a = $button.querySelector('a');
+
+      a.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      chev.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         $wrapper.classList.toggle('expanded');
@@ -393,6 +400,7 @@ export async function decorateTemplateList($block) {
             cache.autoCollapseDelay = parseFloat(cells[1].textContent.trim()) * 1000;
           } else if (cells[0].textContent.trim().toLowerCase() === 'background animation') {
             cache.backgroundAnimation = cells[1].textContent.trim();
+            cells[1].remove();
           } else if (cells[0].textContent.trim().toLowerCase() === 'background color') {
             cache.backgroundColor = cells[1].textContent.trim();
           } else if (index < array.length) {
@@ -431,19 +439,18 @@ export async function decorateTemplateList($block) {
         const $icon = cache.heading.querySelector('picture');
         const $content = Array.from(cache.heading.querySelectorAll('p'))
           .filter((p) => p.textContent.trim() !== '' && p.querySelector('a') === null);
-        const $a = cache.heading.querySelector('a');
-        $a.classList.add('expanded');
-        $a.classList.add('toggle-button');
-        $a.classList.remove('button');
-        $a.classList.remove('accent');
+        const $seeTemplatesLink = cache.heading.querySelector('a');
 
         const $toggleBar = createTag('div', { class: 'toggle-bar' });
+        const $toggle = createTag('div', { class: 'expanded toggle-button' });
+        const $toggleChev = createTag('div', { class: 'toggle-button-chev' });
         const $topElements = createTag('div', { class: 'toggle-bar-top' });
         const $bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
         const $mobileSubtext = $content[1].cloneNode(true);
-        const $mobileAnchor = $a.cloneNode(true);
+
+        $seeTemplatesLink.classList.remove('button');
+        $seeTemplatesLink.classList.remove('accent');
         $mobileSubtext.classList.add('mobile-only');
-        $mobileAnchor.classList.add('mobile-only');
 
         $toggleBar.append($topElements, $bottomElements);
         if ($icon) {
@@ -451,9 +458,14 @@ export async function decorateTemplateList($block) {
           $topElements.append($icon, $content[0]);
         }
         $topElements.append($content[0]);
-        $bottomElements.append($content[1], $a);
+        $toggle.append($seeTemplatesLink, $toggleChev);
+        $bottomElements.append($content[1], $toggle);
         $wrapper.prepend($mobileSubtext);
-        $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
+
+        const $mobileToggle = $toggle.cloneNode(true);
+        $mobileToggle.classList.add('mobile-only');
+
+        $wrapper.insertAdjacentElement('afterend', $mobileToggle);
         $wrapper.classList.add('expanded');
 
         $parent.prepend($toggleBar);
@@ -726,6 +738,24 @@ function cacheCreatedTemplate($block) {
   }
 }
 
+function addBackgroundAnimation($block, animationUrl) {
+  const $parent = $block.closest('.template-list-horizontal-apipowered-holiday-container');
+
+  if ($parent) {
+    $parent.classList.add('with-animation');
+    const $videoBackground = createTag('video', {
+      class: 'animation-background',
+    });
+    $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
+    $videoBackground.setAttribute('autoplay', '');
+    $videoBackground.setAttribute('muted', '');
+    $videoBackground.setAttribute('loop', '');
+    $videoBackground.setAttribute('playsinline', '');
+    $parent.prepend($videoBackground);
+    $videoBackground.muted = true;
+  }
+}
+
 export default async function decorate($block) {
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
@@ -748,7 +778,6 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('holiday') && cache.backgroundAnimation) {
-    import('../shared/background-animations.js')
-      .then((js) => js.default($block, cache.backgroundAnimation));
+    addBackgroundAnimation($block, cache.backgroundAnimation);
   }
 }
