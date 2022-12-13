@@ -264,6 +264,26 @@ function initNotchDragAction($wrapper) {
   }, { passive: true });
 }
 
+function calculateHexGrid(data) {
+  const num = 24;
+
+  // todo: find the best formula to build a hexagon of hexagon
+}
+
+function decorateBubbleUI($boxBottom, data) {
+  $boxBottom.classList.add('bubble-ui');
+
+  const bubbleContainer = createTag('div', { class: 'bubble-viewport-container' });
+  const bubbleViewport = createTag('div', { class: 'bubble-viewport' });
+  const bubbleRowContainer = createTag('div', { class: 'bubble-row-container' });
+
+  $boxBottom.append(bubbleContainer);
+  bubbleContainer.append(bubbleViewport);
+  bubbleViewport.append(bubbleRowContainer);
+
+  calculateHexGrid(data)
+}
+
 function buildToolBox($wrapper, data) {
   const $toolBox = createTag('div', { class: 'toolbox' });
   const $notch = createTag('a', { class: 'notch' });
@@ -275,12 +295,33 @@ function buildToolBox($wrapper, data) {
   const $toggleButton = createTag('a', { class: 'toggle-button' });
   const $toggleIcon = getIconElement('plus-icon-22');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
+  const $boxTop = createTag('div', { class: 'toolbox-top' });
+  const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
 
-  data.tools.forEach((tool) => {
-    const $tool = createTag('div', { class: 'tool' });
-    $tool.append(tool.icon, tool.anchor);
-    $toolBox.append($tool);
-  });
+  if (data.bubbleSheetUrl) {
+    data.tools.forEach((tool, index) => {
+      if (index < data.toolsToStash) {
+        const $tool = createTag('div', { class: 'tool' });
+        $tool.append(tool.icon, tool.anchor);
+        $boxTop.append($tool);
+      }
+    });
+
+    decorateBubbleUI($boxBottom, data);
+  } else {
+    data.tools.forEach((tool, index) => {
+      const $tool = createTag('div', { class: 'tool' });
+      $tool.append(tool.icon, tool.anchor);
+
+      if (index < data.toolsToStash) {
+        $boxTop.append($tool);
+      } else {
+        $boxBottom.append($tool);
+      }
+    });
+  }
+
+  $toolBox.append($boxTop, $boxBottom);
 
   $appStoreBadge.href = data.appStore.href ? data.appStore.href : data.tools[0].anchor.href;
 
@@ -330,6 +371,9 @@ function collectMultifunctionData($block, dataArray) {
     tools: [],
     appStore: {},
     mainCta: {},
+    toolsToStash: 2,
+    // todo: add real sheet url later
+    bubbleSheetUrl: true,
   };
 
   if ($block.className.includes('spreadsheet-powered')) {
@@ -343,6 +387,14 @@ function collectMultifunctionData($block, dataArray) {
 
       if (key === 'delay') {
         data.delay = value;
+      }
+
+      if (key === 'tools to stash') {
+        data.toolsToStash = value;
+      }
+
+      if (key === 'bubble sheet url') {
+        data.bubbleSheetUrl = value;
       }
 
       if (key === 'main cta link') {
@@ -423,10 +475,7 @@ export async function createMultiFunctionButton($block, data) {
 
     const $ctaContainer = $block.querySelector('.button-container');
     const $cta = $ctaContainer.querySelector('a');
-    const $buttonWrapper = await createFloatingButton(
-      $cta,
-      'mobile',
-    ).then(((result) => result));
+    const $buttonWrapper = await createFloatingButton($cta, 'mobile').then(((result) => result));
 
     $buttonWrapper.classList.add('multifunction');
     buildToolBox($buttonWrapper, data);
