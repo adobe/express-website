@@ -36,7 +36,6 @@ const bubbleUI = {
             target = target.closest('[data-href]');
           }
           if (target && !target.classList.contains('small-bubble') && !target.classList.contains('tiny-bubble')) {
-            this.trackCustomLink(`${target.parentNode.id} clicked`);
             window.location = target.getAttribute('data-href');
           }
         });
@@ -549,7 +548,7 @@ async function buildToolBox($wrapper, data) {
     await decorateBubbleUI($boxBottom, data);
     setTimeout(() => {
       initBubbleUI($boxBottom);
-    }, 100)
+    }, 100);
   } else {
     data.tools.forEach((tool, index) => {
       const $tool = createTag('div', { class: 'tool' });
