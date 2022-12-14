@@ -513,7 +513,10 @@ async function decorateBubbleUI($boxBottom, data) {
       bubbleContainer.classList.add('center-piece');
     }
 
-    bubble.append(img);
+    if (img) {
+      bubble.append(img);
+    }
+
     bubbleContainer.append(bubble);
   });
 
