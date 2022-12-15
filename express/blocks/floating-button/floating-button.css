@@ -280,7 +280,7 @@ main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom {
 }
 
 main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom.bubble-ui {
-  margin: 0 16px;
+  margin: 0;
   flex-grow: 1;
   height: 350px;
   position: relative;
