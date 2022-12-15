@@ -1024,8 +1024,6 @@ loadScript(martechURL, () => {
     });
   }
 
-  
-
   const processed = {};
   function initHemingway() {
     // poll the dataLayer every 2 seconds
