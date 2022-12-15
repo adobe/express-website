@@ -352,8 +352,8 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble {
   height: 100%;
 }
 
-main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece.small-bubble,
-main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece.tiny-bubble {
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .small-bubble,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .tiny-bubble {
   background: linear-gradient(320deg, #ff4dd2, #7c84f3, #ff4dd2, #7c84f3, #ff4dd2) !important;
   background-size: 400% 400% !important;
   -webkit-animation: buttonGradient 45s ease infinite;
