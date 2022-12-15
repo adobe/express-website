@@ -826,7 +826,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     enterKeyHint: placeholders.search ?? 'Search',
   });
 
-  // suggestions removed for now
+  // Suggestions Dropdown
   const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
   const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
   const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
@@ -834,11 +834,22 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
   const $boldedTaskText = createTag('b');
 
+  // Tasks Dropdown
+
+  const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
+  const $taskDropdownWrapper = createTag('div', { class: 'task-dropdown-wrapper' });
+  const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
+  const $taskDropdownList = createTag('div', { class: 'task-dropdown-list' });
+
+  console.log(placeholders['task-categories']);
+
   $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
+  $taskDropdownContainer.append($taskDropdownWrapper);
+  $taskDropdownWrapper.append($taskDropdownToggle, $taskDropdownList);
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
-  $searchBarWrapper.append($searchBar, $searchDropdown);
+  $searchBarWrapper.append($searchBar, $searchDropdown, $taskDropdownContainer);
 
   $searchDropdownHeading.textContent = placeholders.suggestions;
 

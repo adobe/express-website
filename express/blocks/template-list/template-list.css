@@ -790,12 +790,14 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar::placeholder {
   transition: color 0.5s;
+  font-family: 'Adobe Clean', 'Trebuchet MS';
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus-visible,
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus {
-  outline: #444444 2px solid;
+  border: #444444 2px solid;
   outline-offset: -2px;
+  outline: none;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon {
@@ -910,6 +912,22 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   fill: var(--color-white);
   width: 8px;
   max-height: 8px;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
+  position: absolute;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-wrapper {
+  position: absolute;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown- {
+  position: absolute;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
+  position: absolute;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
