@@ -380,8 +380,7 @@ function initToggle($section) {
 }
 
 async function attachFreeInAppPills($block) {
-  const freeInAppText = await fetchPlaceholders()
-    .then((json) => json['free-in-app']);
+  const freeInAppText = await fetchPlaceholders().then((json) => json['free-in-app']);
 
   const $templateLinks = $block.querySelectorAll('a.template');
   for (const $templateLink of $templateLinks) {
@@ -415,6 +414,7 @@ async function readRowsFromBlock($block) {
         props.autoCollapseDelay = parseFloat(cells[1].textContent.trim()) * 1000;
       } else if (cells[0].textContent.toLowerCase() === 'background animation') {
         props.backgroundAnimation = cells[1].textContent.trim();
+        cells[1].remove();
       } else if (cells[0].textContent.toLowerCase() === 'background color') {
         props.backgroundColor = cells[1].textContent.trim();
       } else if (index < array.length) {
@@ -632,13 +632,13 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   searchBarWatcher.observe($searchBarWrapper);
 
   $searchBarWrappers.forEach(($wrapper) => {
-    const $dropdown = $wrapper.querySelector('.search-dropdown');
+    // const $dropdown = $wrapper.querySelector('.search-dropdown');
     const $searchBar = $wrapper.querySelector('input.search-bar');
     const $clear = $wrapper.querySelector('.icon-search-clear');
 
     $searchBar.addEventListener('click', (e) => {
       e.stopPropagation();
-      $dropdown.classList.remove('hidden');
+      // $dropdown.classList.remove('hidden');
     }, { passive: true });
 
     $searchBar.addEventListener('keyup', () => {
@@ -662,7 +662,7 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     document.addEventListener('click', (e) => {
       if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
-        $dropdown.classList.add('hidden');
+        // $dropdown.classList.add('hidden');
 
         if ($wrapper.classList.contains('sticky-search-bar')) {
           $wrapper.classList.add('collapsed');
@@ -825,6 +825,8 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
     enterKeyHint: placeholders.search ?? 'Search',
   });
+
+  // suggestions removed for now
   const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
   const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
   const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
@@ -882,7 +884,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
       .replace('{{template-type}}', '');
   }
 
-  await addFreePlanWidget($searchDropdown);
+  await addFreePlanWidget($searchDropdown, true);
 
   const $stickySearchBarWrapper = $searchBarWrapper.cloneNode({ deep: true });
 
@@ -1238,21 +1240,6 @@ function initViewToggle($block, $toolBar) {
   });
 }
 
-function attachFreeInAppPills($block, placeholders) {
-  const $templateLinks = $block.querySelectorAll('a.template');
-  const freeInAppText = placeholders['free-in-app'];
-  for (const $templateLink of $templateLinks) {
-    if (!$block.classList.contains('apipowered')
-      && $templateLink.querySelectorAll('.icon-premium').length <= 0
-      && !$templateLink.classList.contains('placeholder')
-      && !$templateLink.querySelector('.icon-free-badge')) {
-      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div').append($freeInAppBadge);
-    }
-  }
-}
-
 function decorateToolbar($block, $section, placeholders) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
 
@@ -1300,12 +1287,7 @@ export async function decorateTemplateList($block) {
         const $icon = props.heading.querySelector('picture');
         const $content = Array.from(props.heading.querySelectorAll('p'))
           .filter((p) => p.textContent.trim() !== '' && p.querySelector('a') === null);
-        const $seeTemplatesLink = cache.heading.querySelector('a');
-        const $a = props.heading.querySelector('a');
-        $a.classList.add('expanded');
-        $a.classList.add('toggle-button');
-        $a.classList.remove('button');
-        $a.classList.remove('accent');
+        const $seeTemplatesLink = props.heading.querySelector('a');
 
         const $toggleBar = createTag('div', { class: 'toggle-bar' });
         const $toggle = createTag('div', { class: 'expanded toggle-button' });

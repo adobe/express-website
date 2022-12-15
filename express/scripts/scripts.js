@@ -2155,8 +2155,8 @@ function removeMetadata() {
   });
 }
 
-export async function addFreePlanWidget(elem) {
-  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+export async function addFreePlanWidget(elem, forced) {
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase()) || forced) {
     const placeholders = await fetchPlaceholders();
     const checkmark = getIcon('checkmark');
     const widget = createTag('div', { class: 'free-plan-widget' });
