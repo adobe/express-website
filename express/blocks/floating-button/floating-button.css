@@ -382,12 +382,6 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bub
   opacity: 0;
 }
 
-@media screen and (min-width: 765px) {
-  .bubble-viewport {
-    justify-content: center;
-  }
-}
-
 main .floating-button-wrapper.multifunction .toolbox .tool img,
 main .floating-button-wrapper.multifunction .toolbox .tool svg {
   color: var(--color-black);
