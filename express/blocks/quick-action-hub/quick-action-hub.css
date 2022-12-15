@@ -8,6 +8,10 @@ main .block.quick-action-hub {
   border-radius: 16px;
 }
 
+main .section > .quick-action-hub-wrapper:not(:first-child) {
+  margin-top: 60px;
+}
+
 main .block.quick-action-hub .quick-action-hub-container {
   background-color: #FBFBFB;
   padding: 40px 24px 18px 24px;
