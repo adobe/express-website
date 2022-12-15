@@ -510,6 +510,7 @@ async function decorateBubbleUI($boxBottom, data) {
 
     if (['yes', 'true', 'on', 'Y'].includes(bubblesArray[i].centerPiece)) {
       bubbleContainer.classList.add('center-piece');
+      bubble.style.backgroundColor = 'transparent';
     }
 
     if (img) {
