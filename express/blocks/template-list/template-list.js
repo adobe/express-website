@@ -378,6 +378,24 @@ function initToggle($section) {
     });
 }
 
+async function attachFreeInAppPills($block) {
+  const freeInAppText = await fetchPlaceholders()
+    .then((json) => json['free-in-app']);
+
+  const $templateLinks = $block.querySelectorAll('a.template');
+  for (const $templateLink of $templateLinks) {
+    if (!$block.classList.contains('apipowered')
+      && $templateLink.querySelectorAll('.icon-premium').length <= 0
+      && !$templateLink.classList.contains('placeholder')
+      && !$templateLink.querySelector('.icon-free-badge')
+      && freeInAppText) {
+      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
+      $freeInAppBadge.textContent = freeInAppText;
+      $templateLink.querySelector('div').append($freeInAppBadge);
+    }
+  }
+}
+
 export async function decorateTemplateList($block) {
   const locale = getLocale(window.location);
 
@@ -654,21 +672,9 @@ export async function decorateTemplateList($block) {
     }
   }
 
+  await attachFreeInAppPills($block);
+
   const $templateLinks = $block.querySelectorAll('a.template');
-  let freeInAppText;
-  await fetchPlaceholders()
-    .then((placeholders) => {
-      freeInAppText = placeholders['free-in-app'];
-    });
-  for (const $templateLink of $templateLinks) {
-    const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
-    if (!isPremium && !$templateLink.classList.contains('placeholder')) {
-      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div')
-        .append($freeInAppBadge);
-    }
-  }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
   document.dispatchEvent(linksPopulated);
 }
