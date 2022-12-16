@@ -972,6 +972,10 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   cursor: pointer;
 }
 
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-bridge {
+  padding-top: 8px;
+}
+
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
   position: absolute;
   display: flex;
@@ -984,7 +988,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   align-items: stretch;
   gap: 8px;
   background: var(--color-white);
-  margin-top: 8px;
+  margin-top: 0;
   padding: 0 12px;
   border-radius: 8px;
   box-shadow: 0 0 16px #00000015;
@@ -1025,6 +1029,18 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   max-height: 6px;
   max-width: 6px;
   border-radius: 50%;
+}
+
+main .template-list-fullwidth-apipowered-container .animated-template-text {
+  margin-top: -28px;
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+  transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
 }
 
 @media (min-width: 600px) {

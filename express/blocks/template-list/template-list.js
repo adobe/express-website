@@ -638,13 +638,28 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   return { mobile: $functionContainerMobile, desktop: $functionsContainer };
 }
 
+function resetTaskDropdowns($section) {
+  const $taskDropdowns = $section.querySelectorAll('.task-dropdown');
+  const $taskDropdownLists = $section.querySelectorAll('.task-dropdown-list');
+
+  $taskDropdowns.forEach((dropdown) => {
+    dropdown.classList.remove('active');
+  });
+
+  $taskDropdownLists.forEach((list) => {
+    list.classList.remove('active');
+  });
+}
+
 function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
+  const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
-  const $searchBarWrappers = document.querySelectorAll('.search-bar-wrapper');
+  const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
       $toolBar.classList.add('sticking');
+      resetTaskDropdowns($section);
     } else {
       $toolBar.classList.remove('sticking');
     }
@@ -729,6 +744,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   $stickySearchBarWrapper.addEventListener('mouseleave', () => {
     if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
       $stickySearchBarWrapper.classList.add('collapsed');
+      resetTaskDropdowns($section);
     }
   }, { passive: true });
 }
@@ -887,6 +903,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
   const $taskDropdown = createTag('div', { class: 'task-dropdown' });
   const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
+  const $taskDropdownBridge = createTag('div', { class: 'task-dropdown-bridge' });
   const $taskDropdownList = createTag('ul', { class: 'task-dropdown-list' });
   const categories = JSON.parse(placeholders['task-categories']);
 
@@ -907,7 +924,8 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
-  $taskDropdown.append($taskDropdownToggle, $taskDropdownList);
+  $taskDropdownBridge.append($taskDropdownList);
+  $taskDropdown.append($taskDropdownToggle, $taskDropdownBridge);
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
   $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
@@ -1131,25 +1149,43 @@ async function redrawTemplates($block, $toolBar) {
   const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
   props.start = '';
-  $block.querySelectorAll('.template:not(.placeholder)')
-    .forEach(($card) => {
-      $card.remove();
-    });
-  await decorateNewTemplates($block, { reDrawMasonry: true })
-    .then(() => {
-      $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-      updateOptionsStatus($block, $toolBar);
+  $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
+    $card.remove();
+  });
 
-      if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
-        const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
-        $viewButtons.forEach(($button) => {
-          $button.classList.remove('active');
-        });
-        ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-          $block.classList.remove(className);
-        });
-      }
-    });
+  await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
+    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+    updateOptionsStatus($block, $toolBar);
+
+    if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
+      const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
+      $viewButtons.forEach(($button) => {
+        $button.classList.remove('active');
+      });
+      ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+        $block.classList.remove(className);
+      });
+    }
+  });
+}
+
+async function toggleAnimatedText($block, $toolBar) {
+  const section = $block.closest('.section.template-list-fullwidth-apipowered-container');
+
+  if (section) {
+    const placeholders = await fetchPlaceholders();
+    const existingText = section.querySelector('.animated-template-text');
+    const animatedTemplateText = createTag('h5', { class: 'animated-template-text' });
+    animatedTemplateText.textContent = placeholders['open-to-see-animation'];
+
+    if (existingText) {
+      existingText.remove();
+    }
+
+    if (props.filters.animated === '(true)') {
+      $toolBar.insertAdjacentElement('afterend', animatedTemplateText);
+    }
+  }
 }
 
 function initFilterSort($block, $toolBar) {
@@ -1192,6 +1228,10 @@ function initFilterSort($block, $toolBar) {
           updateQueryURL($wrapper, $option);
           updateFilterIcon($block);
 
+          if (!$optionsList.classList.contains('in-drawer')) {
+            toggleAnimatedText($block, $toolBar);
+          }
+
           if (!$button.classList.contains('in-drawer')) {
             await redrawTemplates($block, $toolBar);
           }
@@ -1204,6 +1244,7 @@ function initFilterSort($block, $toolBar) {
         e.preventDefault();
         await redrawTemplates($block, $toolBar);
         closeDrawer($toolBar);
+        toggleAnimatedText($block, $toolBar);
       });
     }
 
