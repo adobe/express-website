@@ -770,7 +770,7 @@ main .template-list.fullwidth.sm-view > .masonry-col {
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper {
   position: relative;
-  max-width: 480px;
+  max-width: 560px;
   padding: 0 28px;
   height: max-content;
   margin-top: 40px;
@@ -780,10 +780,10 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper {
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar {
   box-sizing: border-box;
   font-size: 16px;
-  padding: 10px 40px;
+  padding: 10px 40px 10px 160px;
   border: var(--color-gray-200) 2px solid;
   border-radius: 100px;
-  max-width: 480px;
+  max-width: 560px;
   width: 100%;
   transition: max-width 0.5s, padding-right 0.5s, padding-left 0.5s;
 }
@@ -811,7 +811,8 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon {
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.icon-search {
   top: 50%;
   transform: translateY(-50%);
-  left: 40px;
+  transition: left 0.5s;
+  left: 160px;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.icon-search-clear {
@@ -916,18 +917,124 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
   position: absolute;
+  border: solid 2px transparent;
+  max-width: 120px;
+  top: 0;
+  transition: max-width 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-wrapper {
-  position: absolute;
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar .task-dropdown-container {
+  z-index: 2;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown- {
-  position: absolute;
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper.collapsed .task-dropdown-container {
+  max-width: 0;
+  overflow-x: hidden;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
+  position: relative;
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
+  width: 116px;
+  height: 38px;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown:after {
+  content: '';
+  height: 6px;
+  width: 6px;
+  border-top: 2px solid var(--color-black);
+  border-right: 2px solid var(--color-black);
   position: absolute;
+  right: 8px;
+  top: 12px;
+  transform: rotate(135deg) translate(2px);
+  pointer-events: none;
+  transition: transform 0.2s;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown.active:after {
+  transform: rotate(315deg) translate(-2px, 2px);
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-toggle {
+  border: none;
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 50px 0 0 50px;
+  text-align: left;
+  padding: 0 24px 0 16px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
+  position: absolute;
+  display: flex;
+  width: max-content;
+  height: max-content;
+  box-sizing: border-box;
+  max-height: 0;
+  overflow-y: auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--color-white);
+  margin-top: 8px;
+  padding: 0 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 16px #00000015;
+  z-index: 2;
+  transition: max-height 0.2s, padding 0.2s;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list.active {
+  max-height: 235px;
+  padding: 12px;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li {
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option:before {
+  content: '•';
+  display: block;
+  height: 14px;
+  width: 14px;
+  max-height: 14px;
+  max-width: 14px;
+  color: var(--color-white);
+  font-size: 4px;
+  border: var(--color-black) 2px solid;
+  transition: all 0.2s;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option.active:before {
+  border: var(--color-info-accent) 6px solid;
+  max-height: 6px;
+  max-width: 6px;
+  border-radius: 50%;
+}
+
+@media (min-width: 600px) {
+  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
+    z-index: 2;
+  }
+
+  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
+    right: 0;
+  }
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
@@ -981,8 +1088,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .searc
   padding: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .icon-search {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed .icon-search {
   left: 12px;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .icon-search {
+  left: 132px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .icon-search-clear {
@@ -1041,6 +1152,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .current-option {
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
   font-size: 14px;
   line-height: 24px;
   text-align: left;
@@ -1105,6 +1217,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button {
   font-size: 14px;
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
   line-height: 24px;
   cursor: pointer;
   display: flex;

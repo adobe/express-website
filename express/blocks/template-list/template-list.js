@@ -49,7 +49,14 @@ function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
 }
 
+function trimFormattedFilterText(attr, capitalize) {
+  const resultString = attr.substring(1, attr.length - 1).replaceAll('"', '');
+
+  return capitalize ? resultString.charAt(0).toUpperCase() + resultString.slice(1) : resultString;
+}
+
 async function populateHeadingPlaceholder(locale) {
+  const heading = props.heading.replace("''", '');
   const placeholders = await fetchPlaceholders()
     .then((response) => response);
 
@@ -60,11 +67,11 @@ async function populateHeadingPlaceholder(locale) {
   }
 
   if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', props.heading);
+    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
   }
 
   if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', props.heading.charAt(0).toLowerCase() + props.heading.slice(1));
+    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
   }
 
   if (locale === 'fr') {
@@ -445,18 +452,32 @@ async function readRowsFromBlock($block) {
 }
 
 function redirectSearch($searchBar, targetTask) {
+  if ($searchBar) {
+    const wrapper = $searchBar.closest('.search-bar-wrapper');
+    const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
+    props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
+  }
+
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-  const currentTasks = props.filters.tasks.substring(1, props.filters.tasks.length - 1).replaceAll('"', '');
-  const currentTopic = props.filters.topics.substring(1, props.filters.topics.length - 1).replaceAll('"', '');
+  const currentTasks = trimFormattedFilterText(props.filters.tasks);
+  const currentTopic = trimFormattedFilterText(props.filters.topics);
   const locale = getLocale(window.location);
 
   const topicToSearch = $searchBar ? $searchBar.value : currentTopic;
   const taskToSearch = targetTask || currentTasks;
 
-  if (locale === 'us') {
-    window.location = `${window.location.origin}/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
+  let searchUrlTemplate;
+
+  if (currentTasks === 'all' && !targetTask) {
+    searchUrlTemplate = `/express/templates/search?tasks=''&phformat=${format}&topics=${topicToSearch}`;
   } else {
-    window.location = `${window.location.origin}/${locale}/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
+    searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
+  }
+
+  if (locale === 'us') {
+    window.location = `${window.location.origin}${searchUrlTemplate}`;
+  } else {
+    window.location = `${window.location.origin}/${locale}${searchUrlTemplate}`;
   }
 }
 
@@ -617,7 +638,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   return { mobile: $functionContainerMobile, desktop: $functionsContainer };
 }
 
-function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
+function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
   const $searchBarWrappers = document.querySelectorAll('.search-bar-wrapper');
 
@@ -633,8 +654,13 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
   $searchBarWrappers.forEach(($wrapper) => {
     // const $dropdown = $wrapper.querySelector('.search-dropdown');
+    const $searchForm = $wrapper.querySelector('.search-form');
     const $searchBar = $wrapper.querySelector('input.search-bar');
     const $clear = $wrapper.querySelector('.icon-search-clear');
+    const $taskDropdown = $wrapper.querySelector('.task-dropdown');
+    const $taskDropdownToggle = $taskDropdown.querySelector('.task-dropdown-toggle');
+    const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
+    const $taskOptions = $taskDropdownList.querySelectorAll('.option');
 
     $searchBar.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -649,16 +675,36 @@ function initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       }
     }, { passive: true });
 
-    $searchBar.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        redirectSearch($searchBar);
-      }
-    }, { passive: true });
+    $searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      redirectSearch($searchBar);
+    });
 
     $clear.addEventListener('click', () => {
       $searchBar.value = '';
       $clear.style.display = 'none';
     }, { passive: true });
+
+    $taskDropdownToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      $taskDropdown.classList.toggle('active');
+      $taskDropdownList.classList.toggle('active');
+    }, { passive: true });
+
+    $taskOptions.forEach((option) => {
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        $taskOptions.forEach((o) => {
+          if (o !== option) {
+            o.classList.remove('active');
+          }
+        });
+
+        option.classList.add('active');
+        props.filters.tasks = `(${option.dataset.tasks})`;
+        $taskDropdownToggle.textContent = option.textContent.trim();
+      }, { passive: true });
+    });
 
     document.addEventListener('click', (e) => {
       if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
@@ -711,11 +757,11 @@ function decorateCategoryList($block, $section, placeholders) {
     const $blockWrapper = $block.closest('.template-list-wrapper');
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
-    const categories = placeholders['task-categories'].split(',');
+    const categories = JSON.parse(placeholders['task-categories']);
 
     const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
     const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
-    const $categoriesToggleIcon = getIconElement('scratch-icon-22');
+    const $categoriesToggleIcon = getIconElement('template-free');
     const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
     const $categories = createTag('ul', { class: 'category-list' });
     const $categoriesResizeButton = createTag('a', { class: 'category-list-resize' });
@@ -726,13 +772,13 @@ function decorateCategoryList($block, $section, placeholders) {
     $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
     $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
 
-    categories.forEach((task) => {
+    Object.entries(categories).forEach((category) => {
       const $listItem = createTag('li');
-      const $a = createTag('a', { 'data-task': task });
-      $a.textContent = task;
+      const $a = createTag('a', { 'data-tasks': category[1] });
+      [$a.textContent] = category;
 
       $a.addEventListener('click', () => {
-        redirectSearch(null, $a.dataset.task);
+        redirectSearch(null, $a.dataset.tasks);
       }, { passive: true });
 
       $listItem.append($a);
@@ -745,7 +791,7 @@ function decorateCategoryList($block, $section, placeholders) {
 
     $mobileCategoryButtons.forEach(($button) => {
       $button.addEventListener('click', () => {
-        redirectSearch(null, $button.dataset.task);
+        redirectSearch(null, $button.dataset.tasks);
       }, { passive: true });
     });
 
@@ -819,11 +865,13 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $templateListBlock = $section.querySelector('.template-list');
   const $placeholderTemplate = $templateListBlock.querySelector('a:first-of-type');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+  const $searchForm = createTag('form', { class: 'search-form' });
   const $searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
     placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
     enterKeyHint: placeholders.search ?? 'Search',
+    required: true,
   });
 
   // Suggestions Dropdown
@@ -837,19 +885,32 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   // Tasks Dropdown
 
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
-  const $taskDropdownWrapper = createTag('div', { class: 'task-dropdown-wrapper' });
+  const $taskDropdown = createTag('div', { class: 'task-dropdown' });
   const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
-  const $taskDropdownList = createTag('div', { class: 'task-dropdown-list' });
+  const $taskDropdownList = createTag('ul', { class: 'task-dropdown-list' });
+  const categories = JSON.parse(placeholders['task-categories']);
 
-  console.log(placeholders['task-categories']);
+  const $optionAll = createTag('li', { class: 'option', 'data-tasks': 'all' });
+  $optionAll.textContent = placeholders.all;
+  $optionAll.classList.add('active');
+  $taskDropdownList.append($optionAll);
+
+  Object.entries(categories).forEach((category) => {
+    const $listItem = createTag('li', { class: 'option', 'data-tasks': category[1] });
+    [$listItem.textContent] = category;
+    $taskDropdownList.append($listItem);
+  });
+
+  $taskDropdownToggle.textContent = $optionAll.textContent;
 
   $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
+  $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
-  $taskDropdownContainer.append($taskDropdownWrapper);
-  $taskDropdownWrapper.append($taskDropdownToggle, $taskDropdownList);
+  $taskDropdownContainer.append($taskDropdown);
+  $taskDropdown.append($taskDropdownToggle, $taskDropdownList);
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
-  $searchBarWrapper.append($searchBar, $searchDropdown, $taskDropdownContainer);
+  $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
 
   $searchDropdownHeading.textContent = placeholders.suggestions;
 
@@ -904,7 +965,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $inBlockLocation.append($stickySearchBarWrapper);
   $inSectionLocation.insertAdjacentElement('beforebegin', $searchBarWrapper);
 
-  initSearchfunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
+  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
 }
 
 function closeDrawer($toolBar) {
