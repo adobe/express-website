@@ -832,11 +832,14 @@ function decorateCategoryList($block, $section, placeholders) {
         $button.classList.toggle('collapsed');
         if ($button.classList.contains('collapsed')) {
           if ($listWrapper.classList.contains('desktop-only')) {
-            $listWrapper.style.maxHeight = '48px';
+            $listWrapper.classList.add('collapsed');
+            $listWrapper.style.maxHeight = '40px';
           } else {
+            $listWrapper.classList.add('collapsed');
             $listWrapper.style.maxHeight = '24px';
           }
         } else {
+          $listWrapper.classList.remove('collapsed');
           $listWrapper.style.maxHeight = '1000px';
         }
 
