@@ -537,7 +537,8 @@ async function buildToolBox($wrapper, data) {
   const $boxTop = createTag('div', { class: 'toolbox-top' });
   const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
 
-  if (data.bubbleSheet) {
+  if (['yes', 'true', 'on', 'Y'].includes(data.bubbleUI)) {
+    console.log(data)
     data.tools.forEach((tool, index) => {
       if (index < data.toolsToStash) {
         const $tool = createTag('div', { class: 'tool' });
@@ -636,6 +637,10 @@ function collectMultifunctionData($block, dataArray) {
 
       if (key === 'bubble sheet') {
         data.bubbleSheet = value;
+      }
+
+      if (key === 'bubble UI') {
+        data.bubbleUI = value;
       }
 
       if (key === 'main cta link') {
