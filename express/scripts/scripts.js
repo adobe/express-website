@@ -103,6 +103,74 @@ sampleRUM('top');
 window.addEventListener('load', () => sampleRUM('load'));
 document.addEventListener('click', () => sampleRUM('click'));
 
+/**
+ * Track assets in that appear in the viewport and add populate
+ * `viewasset` events to the data layer.
+ */
+function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
+  window.dataLayer = window.dataLayer || [];
+
+  const viewAssetObserver = new IntersectionObserver((entries) => {
+    entries
+      .filter((entry) => entry.isIntersecting)
+      .forEach((entry) => {
+        const el = entry.target;
+
+        // observe only once
+        viewAssetObserver.unobserve(el);
+
+        // Get asset details
+        let assetPath = el.href // the reference for an a/svg tag
+          || el.currentSrc // the active source in a picture/video/audio element
+          || el.src; // the source for an image/video/iframe
+        assetPath = new URL(assetPath).pathname;
+        const match = assetPath.match(/media_([a-f0-9]+)\.\w+/);
+        const assetFilename = match ? match[0] : assetPath;
+        const details = {
+          event: 'viewasset',
+          assetId: assetFilename,
+          assetPath,
+        };
+
+        // Add experiment details
+        const { id, selectedVariant } = (window.hlx.experiment || {});
+        if (selectedVariant) {
+          details.experiment = id;
+          details.variant = selectedVariant;
+        }
+
+        window.dataLayer.push(details);
+      });
+  }, { threshold: 0.25 });
+
+  // Observe all assets in the DOM
+  document.querySelectorAll(assetsSelector).forEach((el) => {
+    viewAssetObserver.observe(el);
+  });
+
+  // Observe all assets added async
+  new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.removedNodes.forEach((n) => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          return;
+        }
+        n.querySelectorAll(assetsSelector).forEach((asset) => {
+          viewAssetObserver.unobserve(asset);
+        });
+      });
+      mutation.addedNodes.forEach((n) => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          return;
+        }
+        n.querySelectorAll(assetsSelector).forEach((asset) => {
+          viewAssetObserver.observe(asset);
+        });
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+}
+
 const postEditorLinksAllowList = ['adobesparkpost.app.link', 'spark.adobe.com/sp/design', 'express.adobe.com/sp/design'];
 
 export function addPublishDependencies(url) {
@@ -2212,6 +2280,7 @@ async function loadLazy() {
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
+  trackViewedAssetsInDataLayer();
 }
 
 /**
