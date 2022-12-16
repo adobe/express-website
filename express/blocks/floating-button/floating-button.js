@@ -613,9 +613,8 @@ function collectMultifunctionData($block, dataArray) {
     tools: [],
     appStore: {},
     mainCta: {},
-    toolsToStash: 2,
-    // todo: add real sheet url later
-    bubbleSheet: 'test-bubbles-sheet',
+    toolsToStash: 1,
+    bubbleSheet: 'fallback-bubbles-sheet',
   };
 
   if ($block.className.includes('spreadsheet-powered')) {
@@ -635,7 +634,7 @@ function collectMultifunctionData($block, dataArray) {
         data.toolsToStash = value;
       }
 
-      if (key === 'bubble sheet url') {
+      if (key === 'bubble sheet') {
         data.bubbleSheet = value;
       }
 
