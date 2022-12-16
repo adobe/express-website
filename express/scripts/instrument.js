@@ -1025,7 +1025,7 @@ loadScript(martechURL, () => {
   }
 
   const processed = {};
-  function initDataLayerPoller() {
+  function initHemingway() {
     // poll the dataLayer every 2 seconds
     setInterval(() => {
       // loop through each of the events in the dataLayer
@@ -1077,7 +1077,7 @@ loadScript(martechURL, () => {
   }
 
   decorateAnalyticsEvents();
-  initDataLayerPoller();
+  initHemingway();
 
   const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
   const RETURNING_VISITOR_SEGMENT_ID = 23153796;
