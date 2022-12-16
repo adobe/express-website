@@ -779,6 +779,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper {
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar {
   box-sizing: border-box;
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
   font-size: 16px;
   padding: 10px 40px 10px 160px;
   border: var(--color-gray-200) 2px solid;
@@ -790,13 +791,11 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar::placeholder {
   transition: color 0.5s;
-  font-family: 'Adobe Clean', 'Trebuchet MS';
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus-visible,
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus {
   border: #444444 2px solid;
-  outline-offset: -2px;
   outline: none;
 }
 
@@ -934,13 +933,18 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper.collapsed
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
   position: relative;
-  border: 1px solid var(--color-gray-200);
   background-color: var(--color-gray-200);
   border-radius: 100px 0 0 100px;
   font-family: 'Adobe Clean', 'Trebuchet MS', serif;
   width: 116px;
-  height: 38px;
+  height: 37px;
 }
+
+@media not all and (min-resolution:.001dpcm) { @media {
+  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
+    height: 42px;
+  }
+}}
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown:after {
   content: '';
@@ -1544,6 +1548,11 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
   margin-bottom: 12px;
 }
 
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list li > .category-list-template-count {
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
+  margin-left: 2px;
+}
+
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list li a {
   color: var(--color-black);
   font-weight: 400;
@@ -1654,6 +1663,11 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   line-height: 24px;
   cursor: pointer;
   user-select: none;
+}
+
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > .category-list-template-count {
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
+  margin-left: 2px;
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-resize {

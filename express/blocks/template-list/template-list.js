@@ -88,7 +88,11 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function fetchTemplates() {
+function fetchTemplates(tasks) {
+  if (tasks) {
+    props.filters.tasks = `(${tasks})`;
+  }
+
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
     const prunedFilter = Object.entries(props.filters)
       .filter(([, value]) => value !== '()');
@@ -107,6 +111,22 @@ function fetchTemplates() {
       .then((response) => response);
   }
   return null;
+}
+
+async function appendCategoryTemplatesCount($section) {
+  const categories = $section.querySelectorAll('ul.category-list > li');
+
+  for (const li of categories) {
+    const anchor = li.querySelector('a');
+    if (anchor) {
+      // eslint-disable-next-line no-await-in-loop
+      const json = await fetchTemplates(anchor.dataset.tasks);
+      const countSpan = createTag('span', { class: 'category-list-template-count' });
+      // eslint-disable-next-line no-underscore-dangle
+      countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
+      li.append(countSpan);
+    }
+  }
 }
 
 async function processResponse() {
@@ -1476,6 +1496,7 @@ export async function decorateTemplateList($block) {
           if (e.detail.length > 0 && e.detail[0].parentElement.classList.contains('template-list')) {
             decorateToolbar($block, $parent, placeholders);
             decorateCategoryList($block, $parent, placeholders);
+            appendCategoryTemplatesCount($parent);
           }
         });
       }
