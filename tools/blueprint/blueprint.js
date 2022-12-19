@@ -70,7 +70,10 @@ function createTable(urls, filter) {
         const href = e.hreflangs[allLangsArr[i]];
         const { pathname } = new URL(href);
         const ref = sitemapURLs[pathname];
-        console.log(pathname);
+        if (!ref) {
+          // eslint-disable-next-line no-console
+          console.log(`page not found for: ${pathname}`);
+        }
         const refLastMod = new Date(ref.lastMod);
         let color;
         if (lastMod > refLastMod) color = 'older';
