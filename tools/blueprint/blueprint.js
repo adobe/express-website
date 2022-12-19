@@ -70,7 +70,7 @@ function createTable(urls, filter) {
         const href = e.hreflangs[allLangsArr[i]];
         const { pathname } = new URL(href);
         const ref = sitemapURLs[pathname];
-        console.log(ref);
+        console.log(pathname);
         const refLastMod = new Date(ref.lastMod);
         let color;
         if (lastMod > refLastMod) color = 'older';
