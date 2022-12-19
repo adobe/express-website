@@ -27,6 +27,7 @@ async function loadSitemap(sitemapURL) {
   const urlLocs = sitemap.querySelectorAll('url loc');
   urlLocs.forEach((loc) => {
     const locURL = new URL(loc.textContent.trim());
+    console.log(locURL.pathname);
     const lastMod = loc.parentElement.querySelector('lastmod') ? loc.parentElement.querySelector('lastmod').textContent.trim() : '';
     const hreflangs = {};
     loc.parentElement.querySelectorAll('[hreflang]').forEach((link) => {
