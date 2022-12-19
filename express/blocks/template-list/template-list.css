@@ -943,14 +943,16 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 /* targets safari only */
 @media not all and (min-resolution:.001dpcm) { @media {
   main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
-    height: 42px;
+    top: 2px;
+    height: 40px;
   }
 }}
 
 /* targets ios only */
-@supports (-webkit-text-size-adjust:none) and (not (-ms-ime-align:auto)) and (not (-moz-appearance:none)) {
+@supports (-webkit-touch-callout: none) {
   main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
-    height: 42px;
+    top: 2px;
+    height: 40px;
   }
 }
 
