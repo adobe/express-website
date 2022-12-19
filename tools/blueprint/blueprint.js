@@ -73,13 +73,13 @@ function createTable(urls, filter) {
         if (!ref) {
           // eslint-disable-next-line no-console
           console.log(`page not found for: ${pathname}`);
+        } else {
+          const refLastMod = new Date(ref.lastMod);
+          let color;
+          if (lastMod > refLastMod) color = 'older';
+          if (lastMod < refLastMod) color = 'newer';  
+          return `<a href="${pathname}"><span class="dot ${color}"></span></a>`;
         }
-        const refLastMod = new Date(ref.lastMod);
-        let color;
-        if (lastMod > refLastMod) color = 'older';
-        if (lastMod < refLastMod) color = 'newer';
-
-        return `<a href="${pathname}"><span class="dot ${color}"></span></a>`;
       }
       return '';
     });
