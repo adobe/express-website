@@ -27,7 +27,6 @@ async function loadSitemap(sitemapURL) {
   const urlLocs = sitemap.querySelectorAll('url loc');
   urlLocs.forEach((loc) => {
     const locURL = new URL(loc.textContent.trim());
-    console.log(locURL.pathname);
     const lastMod = loc.parentElement.querySelector('lastmod') ? loc.parentElement.querySelector('lastmod').textContent.trim() : '';
     const hreflangs = {};
     loc.parentElement.querySelectorAll('[hreflang]').forEach((link) => {
@@ -71,6 +70,7 @@ function createTable(urls, filter) {
         const href = e.hreflangs[allLangsArr[i]];
         const { pathname } = new URL(href);
         const ref = sitemapURLs[pathname];
+        console.log(ref);
         const refLastMod = new Date(ref.lastMod);
         let color;
         if (lastMod > refLastMod) color = 'older';
