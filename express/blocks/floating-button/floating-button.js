@@ -646,7 +646,7 @@ function collectMultifunctionData($block, dataArray) {
         data.delay = value;
       }
 
-      if (key === 'tools to stash') {
+      if (key === 'ctas above divider') {
         data.toolsToStash = value;
       }
 
