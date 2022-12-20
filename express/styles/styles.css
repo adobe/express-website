@@ -848,6 +848,7 @@ main .columns.columns-marquee {
 
 /* free plan widget */
 main .block .button-container.free-plan-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -859,6 +860,7 @@ main .block.center .button-container.free-plan-container {
 
 main .block .button-container.free-plan-container a.button {
   max-height: 24px;
+  z-index: 1;
 }
 
 main .block .free-plan-widget {
@@ -904,7 +906,8 @@ main .block .free-plan-widget>div>div:first-child {
   border-radius: 50%;
 }
 
-main .block .free-plan-widget .icon.icon-checkmark {
+main .block .free-plan-widget .icon.icon-checkmark,
+main .block .free-plan-bullet .icon.icon-checkmark {
   position: absolute;
   top: 3px;
   left: 3px;
@@ -913,12 +916,61 @@ main .block .free-plan-widget .icon.icon-checkmark {
   max-height: 8px;
 }
 
-@media (min-width:900px) {
+main .block .free-plan-bullet {
+  position: absolute;
+  border-radius: 100px;
+  background-color: var(--color-gray-200);
+  height: 100%;
+  display: none;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-container {
+  max-width: 561px;
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-tray {
+  width: max-content;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
+  position: relative;
+  margin-top: 5px;
+  margin-right: 6px;
+  width: 14px;
+  height: 14px;
+  background: #33AB84;
+  border-radius: 50%;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
+  display: flex;
+  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
+  font-style: italic;
+  font-size: 16px;
 }
 
 @media (min-width: 1200px) {
+  main .block .free-plan-widget {
+    display: none;
+  }
+
+  main .block .free-plan-bullet {
+    display: inline-block;
+  }
+
   main .block .button-container.free-plan-container {
     flex-direction: row;
+    width: max-content;
   }
 
   main .block .free-plan-widget {

@@ -2225,13 +2225,29 @@ export async function addFreePlanWidget(elem) {
   if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
     const checkmark = getIcon('checkmark');
+    const bullet = createTag('div', { class: 'free-plan-bullet' });
     const widget = createTag('div', { class: 'free-plan-widget' });
     widget.innerHTML = `
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
     `;
+    bullet.innerHTML = `
+      <div class="free-plan-bullet-container">
+        <div class="free-plan-bullet-tray">
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+        </div>
+      </div>
+    `;
     document.addEventListener('planscomparisonloaded', () => {
       const $learnMoreButton = createTag('a', { class: 'learn-more-button', href: '#plans-comparison-container' });
+
       const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
       $learnMoreButton.textContent = placeholders['learn-more'];
       lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
@@ -2249,7 +2265,9 @@ export async function addFreePlanWidget(elem) {
         $html.style.removeProperty('scroll-behavior');
       });
     });
+
     elem.append(widget);
+    elem.append(bullet);
     elem.classList.add('free-plan-container');
     // stack CTA and free plan widget if country not US, CN, KR or TW
     const cta = elem.querySelector('.button.accent');
