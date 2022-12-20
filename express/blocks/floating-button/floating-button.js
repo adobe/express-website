@@ -630,7 +630,6 @@ function collectMultifunctionData($block, dataArray) {
     appStore: {},
     mainCta: {},
     toolsToStash: 1,
-    bubbleSheet: 'fallback-bubbles-sheet',
   };
 
   if ($block.className.includes('spreadsheet-powered')) {
@@ -651,7 +650,7 @@ function collectMultifunctionData($block, dataArray) {
       }
 
       if (key === 'bubble sheet') {
-        data.bubbleSheet = value;
+        data.bubbleSheet = value || 'fallback-bubbles-sheet';
       }
 
       if (key === 'bubble UI') {
