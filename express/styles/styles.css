@@ -868,6 +868,8 @@ main .block .button-container.free-plan-container.fixed {
 main .block .button-container.free-plan-container a.button {
   max-height: 24px;
   margin: 0;
+  display: flex;
+  align-items: center;
   z-index: 2;
 }
 

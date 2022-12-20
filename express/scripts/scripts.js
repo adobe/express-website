@@ -2224,9 +2224,11 @@ function removeMetadata() {
 export async function addFreePlanWidget(elem) {
   if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
+    const mainCta = elem.querySelector('a.button');
     const checkmark = getIcon('checkmark');
     const bullet = createTag('div', { class: 'free-plan-bullet' });
     const widget = createTag('div', { class: 'free-plan-widget' });
+    const lottieArrowUp = createTag('span', { class: 'lottie-upload' });
     const optoutButton = createTag('button', { class: 'free-plan-optout' });
 
     widget.innerHTML = `
@@ -2255,10 +2257,13 @@ export async function addFreePlanWidget(elem) {
         </div>
       </div>
     `;
+
+    lottieArrowUp.innerHTML = getLottie('arrow-up-animated', '/express/icons/arrow-up-animated.json');
+
     document.addEventListener('planscomparisonloaded', () => {
       const $learnMoreButton = createTag('a', { class: 'learn-more-button', href: '#plans-comparison-container' });
-
       const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
+
       $learnMoreButton.textContent = placeholders['learn-more'];
       lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
       $learnMoreButton.append(lottieWrapper);
@@ -2277,6 +2282,7 @@ export async function addFreePlanWidget(elem) {
     });
 
     elem.append(widget, bullet, optoutButton);
+    mainCta.prepend(lottieArrowUp);
     optoutButton.append(getIconElement('close-white'));
     elem.classList.add('free-plan-container');
     // stack CTA and free plan widget if country not US, CN, KR or TW
