@@ -858,9 +858,17 @@ main .block.center .button-container.free-plan-container {
   justify-content: center;
 }
 
+main .block .button-container.free-plan-container.fixed {
+  position: fixed;
+  top: -8px;
+  margin-top: 16px;
+  z-index: 10;
+}
+
 main .block .button-container.free-plan-container a.button {
   max-height: 24px;
-  z-index: 1;
+  margin: 0;
+  z-index: 2;
 }
 
 main .block .free-plan-widget {
@@ -919,7 +927,6 @@ main .block .free-plan-bullet .icon.icon-checkmark {
 main .block .free-plan-bullet {
   position: absolute;
   border-radius: 100px;
-  background-color: var(--color-gray-200);
   height: 100%;
   display: none;
   top: 0;
@@ -928,9 +935,20 @@ main .block .free-plan-bullet {
 }
 
 main .block .free-plan-bullet .free-plan-bullet-container {
-  max-width: 561px;
+  background-color: var(--color-gray-200);
+  max-width: 400px;
   width: 100vw;
   height: 100%;
+  border-radius: 100px;
+  transition: transform 0.5s, max-width 0.5s, border-radius 0.5s;
+  overflow: hidden;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-bullet-container {
+  max-width: 100vw;
+  width: 100vw;
+  height: calc(100% + 16px);
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -940,6 +958,11 @@ main .block .free-plan-bullet .free-plan-bullet-tray {
   display: flex;
   align-items: center;
   gap: 40px;
+  transition: transform 0.2s linear;
+  animation-name: freePlanHighlight;
+  animation-timing-function: linear;
+  animation-duration: 16s;
+  animation-iteration-count: infinite;
 }
 
 main .block .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
@@ -959,7 +982,34 @@ main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   font-size: 16px;
 }
 
-@media (min-width: 1200px) {
+main .block .free-plan-optout {
+  appearance: none;
+  display: none;
+  border: none;
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  height: 45px;
+  width: 45px;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.5s, transform 0.5s;
+  background: var(--color-black);
+  z-index: 1;
+}
+
+main .block .free-plan-optout .icon {
+  margin: 0;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-optout {
+  left: -56px;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+@media (min-width: 900px) {
   main .block .free-plan-widget {
     display: none;
   }
@@ -969,8 +1019,19 @@ main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   }
 
   main .block .button-container.free-plan-container {
-    flex-direction: row;
     width: max-content;
+  }
+
+  main .block .free-plan-optout {
+    display: flex;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .block .button-container.free-plan-container {
+    flex-direction: row;
+    width: 400px;
+    justify-content: left;
   }
 
   main .block .free-plan-widget {
@@ -1015,9 +1076,38 @@ main .template-list-sixcols-container>div {
   padding: 0;
 }
 
+@-webkit-keyframes freePlanHighlight {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-25.3%);
+  }
+}
+
+@-moz-keyframes freePlanHighlight {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-25.3%);
+  }
+}
+
+@keyframes freePlanHighlight {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-25.3%);
+  }
+}
+
 /* disable budoux on small screens  */
 @media (max-width: 600px) {
-
   h1.budoux,
   h2.budoux,
   h3.budoux,

@@ -2227,6 +2227,8 @@ export async function addFreePlanWidget(elem) {
     const checkmark = getIcon('checkmark');
     const bullet = createTag('div', { class: 'free-plan-bullet' });
     const widget = createTag('div', { class: 'free-plan-widget' });
+    const optoutButton = createTag('button', { class: 'free-plan-optout' });
+
     widget.innerHTML = `
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
@@ -2234,6 +2236,14 @@ export async function addFreePlanWidget(elem) {
     bullet.innerHTML = `
       <div class="free-plan-bullet-container">
         <div class="free-plan-bullet-tray">
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
           <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
           <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
           <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
@@ -2266,14 +2276,43 @@ export async function addFreePlanWidget(elem) {
       });
     });
 
-    elem.append(widget);
-    elem.append(bullet);
+    elem.append(widget, bullet, optoutButton);
+    optoutButton.append(getIconElement('close-white'));
     elem.classList.add('free-plan-container');
     // stack CTA and free plan widget if country not US, CN, KR or TW
     const cta = elem.querySelector('.button.accent');
     if (cta && !['us', 'cn', 'kr', 'tw'].includes(getLocale(window.location))) {
       elem.classList.add('stacked');
     }
+
+    optoutButton.addEventListener('click', () => {
+      const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+      elem.classList.add('highlight-optout');
+      elem.classList.remove('fixed');
+      highlightContainer.style.removeProperty('transform');
+    }, { passive: true });
+    // start watching for free-plan-highlight scroll
+    setTimeout(() => {
+      const ctaPositionY = elem.offsetTop;
+
+      ['scroll', 'resize'].forEach((event) => {
+        window.addEventListener(event, () => {
+          const ctaPositionX = elem.getBoundingClientRect().left;
+          const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+
+          if (window.innerWidth > 900 && window.scrollY >= ctaPositionY) {
+            if (!elem.classList.contains('highlight-optout')) {
+              elem.classList.add('fixed');
+              highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
+            }
+          } else {
+            elem.classList.remove('fixed');
+            highlightContainer.style.removeProperty('transform');
+          }
+        }, { passive: true });
+      })
+
+    }, 100);
   }
 }
 
