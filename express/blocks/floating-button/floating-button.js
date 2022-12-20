@@ -396,6 +396,10 @@ function toggleToolBox($wrapper, $lottie, originalButtonState, userInitiated = t
     setTimeout(() => {
       $wrapper.classList.add('toolbox-opened');
     }, 10);
+
+    setTimeout(() => {
+      bubbleUI.resizeBubbles($wrapper.querySelector('.bubble-ui'));
+    }, 500);
   }
 }
 
@@ -465,6 +469,18 @@ function buildHexagon(values) {
 function initBubbleUI(boxBottom) {
   bubbleUI.centerBubbles(boxBottom);
   bubbleUI.addEventListeners(boxBottom);
+
+  const vp = boxBottom.querySelector('.bubble-viewport');
+  if (vp) {
+    setTimeout(() => {
+      vp.addEventListener('scroll', () => {
+        const parent = boxBottom.closest('.floating-button-wrapper');
+        if (parent) {
+          parent.classList.remove('initial-load');
+        }
+      }, { passive: true });
+    }, 100);
+  }
 }
 
 async function decorateBubbleUI($boxBottom, data) {
@@ -538,7 +554,6 @@ async function buildToolBox($wrapper, data) {
   const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
 
   if (['yes', 'true', 'on', 'Y'].includes(data.bubbleUI)) {
-    console.log(data)
     data.tools.forEach((tool, index) => {
       if (index < data.toolsToStash) {
         const $tool = createTag('div', { class: 'tool' });
