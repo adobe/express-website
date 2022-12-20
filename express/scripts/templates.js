@@ -228,5 +228,9 @@ if (page) {
     updateBlocks(page);
   }
 } else {
-  window.location.replace('/404');
+  const env = getHelixEnv();
+
+  if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
+    window.location.replace('/404');
+  }
 }
