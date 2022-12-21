@@ -222,8 +222,11 @@ export default function decorate(block) {
 
   const img = picture.querySelector('img');
   const run = () => {
-    activate(block, block.querySelector('.tip-number.tip-1'));
-    initRotation(window, document);
+    // slgiht delay to allow panel to size correctly
+    window.setTimout(() => {
+      activate(block, block.querySelector('.tip-number.tip-1'));
+      initRotation(window, document);
+    }, 200);
   };
 
   if (!img.complete) {
