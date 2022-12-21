@@ -932,16 +932,18 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
 
   const $optionAll = createTag('li', { class: 'option', 'data-tasks': 'all' });
   $optionAll.textContent = placeholders.all;
-  $optionAll.classList.add('active');
   $taskDropdownList.append($optionAll);
 
   Object.entries(categories).forEach((category) => {
     const $listItem = createTag('li', { class: 'option', 'data-tasks': category[1] });
     [$listItem.textContent] = category;
     $taskDropdownList.append($listItem);
-  });
 
-  $taskDropdownToggle.textContent = $optionAll.textContent;
+    if ($listItem.dataset.tasks === trimFormattedFilterText(props.filters.tasks)) {
+      $listItem.classList.add('active');
+      $taskDropdownToggle.textContent = $listItem.textContent;
+    }
+  });
 
   $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchForm.append($searchBar);
