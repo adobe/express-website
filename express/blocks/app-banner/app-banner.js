@@ -10,12 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag,
-  removeDomLevelBelow,
-  replaceParentwChild,
-  getIcon,
-} from '../../scripts/scripts.js';
+import { createTag, getIcon } from '../../scripts/scripts.js';
+
+// Pass in the parent of the elements you want to remove, will be removed with children unaffected
+export function removeDomLevelBelow(target) {
+  [...target.children].forEach((child) => {
+    [...child.children].forEach((e) => {
+      target.appendChild(e);
+    });
+    child.remove();
+  });
+}
+
+export function replaceParentwChild(parent) {
+  parent.replaceWith(parent.firstElementChild);
+}
 
 function getCurrentRatingStars(rating = 5) {
   const star = getIcon('star');
@@ -40,7 +49,6 @@ function addCloseBtn(block) {
   const $clostBtnImg = createTag('img', { class: 'closeBtnImg', src: '/express/icons/close-icon.svg' });
   $clostBtnDiv.append($clostBtnImg);
   block.append($clostBtnDiv);
-
   $clostBtnDiv.addEventListener('click', () => {
     block.remove();
   });
@@ -48,7 +56,7 @@ function addCloseBtn(block) {
 
 export default function decorate($block) {
   const $logo = $block.querySelector('p');
-  const $cta = $block.querySelectr('a');
+  const $cta = $block.querySelector('a');
   $cta.classList.add('cta');
 
   // Remove unecesary divs

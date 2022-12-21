@@ -7,7 +7,7 @@ main .app-banner-wrapper {
   justify-content: center;
 }
 
-main > .app-banner-container .app-banner-wrapper .app-banner.block {
+main .app-banner.block {
   background-color: #00091B;
   display: flex;
   padding-left: 13px;
@@ -77,7 +77,7 @@ main .app-banner .icon-icon-creative-cloud {
   border-radius: 10px;
 }
 
-main .app-banner .icon-icon-editors-choice {
+main .app-banner .icon-icon-editor-choice {
   width: 23%;
   height: auto;
   align-self: flex-end;
