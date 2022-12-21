@@ -223,7 +223,7 @@ export default function decorate(block) {
   const img = picture.querySelector('img');
   const run = () => {
     // slgiht delay to allow panel to size correctly
-    window.setTimout(() => {
+    window.setTimeout(() => {
       activate(block, block.querySelector('.tip-number.tip-1'));
       initRotation(window, document);
     }, 200);
