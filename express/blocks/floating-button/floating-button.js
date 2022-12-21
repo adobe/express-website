@@ -115,7 +115,7 @@ export async function createFloatingButton($a, audience) {
   }
 
   // Floating button scroll/click events
-  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)) .template-list, .section:not(:nth-child(1)) .layouts, .section:not(:nth-child(1)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
   if (!$scrollAnchor) {
     hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
   } else {
@@ -434,14 +434,6 @@ export async function createMultiFunctionButton($block, data) {
 
     $buttonWrapper.classList.add('multifunction');
     buildToolBox($buttonWrapper, data);
-
-    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
-    if ($scrollAnchor) {
-      const $lottieScrollButton = $block.querySelector('.floating-button-lottie');
-      const $floatButtonWrapper = $block.querySelector('.floating-button-wrapper');
-      lazyLoadLottiePlayer();
-      initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor);
-    }
   }
 }
 
