@@ -35,6 +35,36 @@ const showScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
   $lottieScrollButton.removeAttribute('tabIndex');
 };
 
+function initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor) {
+  let clicked = false;
+  $lottieScrollButton.addEventListener('click', () => {
+    clicked = true;
+    $floatButtonWrapper.classList.add('floating-button--clicked');
+    window.scrollTo({
+      top: $scrollAnchor.offsetTop,
+      behavior: 'smooth',
+    });
+    const checkIfScrollToIsFinished = setInterval(() => {
+      if ($scrollAnchor.offsetTop <= window.pageYOffset) {
+        clicked = false;
+        $floatButtonWrapper.classList.remove('floating-button--clicked');
+        clearInterval(checkIfScrollToIsFinished);
+      }
+    }, 200);
+    hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
+  });
+  window.addEventListener('scroll', () => {
+    scrollState = $floatButtonWrapper.classList.contains('floating-button--scrolled') ? 'withoutLottie' : 'withLottie';
+    const multiFunctionButtonOpened = $floatButtonWrapper.classList.contains('toolbox-opened');
+    if (clicked) return;
+    if ($scrollAnchor.getBoundingClientRect().top < 100) {
+      hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
+    } else if (!multiFunctionButtonOpened) {
+      showScrollArrow($floatButtonWrapper, $lottieScrollButton);
+    }
+  }, { passive: true });
+}
+
 export async function createFloatingButton($a, audience) {
   const main = document.querySelector('main');
   loadCSS('/express/blocks/floating-button/floating-button.css');
@@ -53,7 +83,7 @@ export async function createFloatingButton($a, audience) {
   });
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
-  const $floatButtonWrapper = createTag('div', { class: ' floating-button-wrapper' });
+  const $floatButtonWrapper = createTag('div', { class: 'floating-button-wrapper' });
   const $floatButton = createTag('div', { class: 'floating-button' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
 
@@ -90,33 +120,7 @@ export async function createFloatingButton($a, audience) {
     hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
   } else {
     lazyLoadLottiePlayer();
-    let clicked = false;
-    $lottieScrollButton.addEventListener('click', () => {
-      clicked = true;
-      $floatButtonWrapper.classList.add('floating-button--clicked');
-      window.scrollTo({
-        top: $scrollAnchor.offsetTop,
-        behavior: 'smooth',
-      });
-      const checkIfScrollToIsFinished = setInterval(() => {
-        if ($scrollAnchor.offsetTop <= window.pageYOffset) {
-          clicked = false;
-          $floatButtonWrapper.classList.remove('floating-button--clicked');
-          clearInterval(checkIfScrollToIsFinished);
-        }
-      }, 200);
-      hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
-    });
-    window.addEventListener('scroll', () => {
-      scrollState = $floatButtonWrapper.classList.contains('floating-button--scrolled') ? 'withoutLottie' : 'withLottie';
-      const multiFunctionButtonOpened = $floatButtonWrapper.classList.contains('toolbox-opened');
-      if (clicked) return;
-      if ($scrollAnchor.getBoundingClientRect().top < 100) {
-        hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
-      } else if (!multiFunctionButtonOpened) {
-        showScrollArrow($floatButtonWrapper, $lottieScrollButton);
-      }
-    }, { passive: true });
+    initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor);
   }
 
   // Intersection observer - hide button when scrolled to footer
@@ -409,7 +413,6 @@ function makeCTAFromSheet($block, data) {
 
 export async function createMultiFunctionButton($block, data) {
   if (data.tools.length > 0) {
-    lazyLoadLottiePlayer();
     const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
     if ($existingFloatingButtons) {
       $existingFloatingButtons.forEach(($button) => {
@@ -431,6 +434,14 @@ export async function createMultiFunctionButton($block, data) {
 
     $buttonWrapper.classList.add('multifunction');
     buildToolBox($buttonWrapper, data);
+
+    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+    if ($scrollAnchor) {
+      const $lottieScrollButton = $block.querySelector('.floating-button-lottie');
+      const $floatButtonWrapper = $block.querySelector('.floating-button-wrapper');
+      lazyLoadLottiePlayer();
+      initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor);
+    }
   }
 }
 
