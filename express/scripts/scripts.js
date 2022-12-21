@@ -495,7 +495,7 @@ export function decorateSections($main) {
           section.dataset[key] = meta[key];
         }
       });
-      sectionMeta.remove();
+      sectionMeta.parentNode.remove();
     }
 
     if (section.dataset.audience && !noAudienceFound) {
