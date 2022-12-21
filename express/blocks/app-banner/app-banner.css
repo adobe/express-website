@@ -1,0 +1,107 @@
+main .app-banner * {
+  color: #FFFFFF;
+}
+
+main .app-banner-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+main > .app-banner-container .app-banner-wrapper .app-banner.block {
+  background-color: #00091B;
+  display: flex;
+  padding-left: 13px;
+  gap: 12px;
+  height: 10vh;
+  width: 94vw;
+  border-radius: 26px;
+  font-size: 14px;
+  position: relative;
+  margin-top: 16px;
+}
+
+main .app-banner .colTwo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px
+  
+}
+
+main .app-banner .details > .cta {
+  margin: 0;
+  width: 76px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+main .app-banner .colTwo h2 {
+  font-size: 14px;
+}
+
+main .app-banner .colTwo p {
+  font-size: 10px;
+  margin: 0;
+}
+
+main .app-banner .ratings {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+main .app-banner .rating-stars {
+  height: 11px;
+}
+
+main .app-banner .details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+main .app-banner .details .button-container .button {
+  margin: 0;
+}
+
+main .app-banner .icon-icon-creative-cloud {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+  border: solid #333C4A 1px;
+  border-radius: 10px;
+}
+
+main .app-banner .icon-icon-editors-choice {
+  width: 23%;
+  height: auto;
+  align-self: flex-end;
+}
+
+main .app-banner .closeBtnDiv {
+  background-color: #333A49;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+main .app-banner .closeBtnImg {
+  height: 9px;
+  width: auto;
+}
+
+main .app-banner .rating-stars >svg > use {
+  color: #EBCF2D;
+}
