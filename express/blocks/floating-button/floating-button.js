@@ -409,6 +409,7 @@ function makeCTAFromSheet($block, data) {
 
 export async function createMultiFunctionButton($block, data) {
   if (data.tools.length > 0) {
+    lazyLoadLottiePlayer();
     const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
     if ($existingFloatingButtons) {
       $existingFloatingButtons.forEach(($button) => {
