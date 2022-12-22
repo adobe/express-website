@@ -115,11 +115,11 @@ export async function createFloatingButton($a, audience) {
   }
 
   // Floating button scroll/click events
-  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)) .template-list, .section:not(:nth-child(1)) .layouts, .section:not(:nth-child(1)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+  lazyLoadLottiePlayer();
+  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
   if (!$scrollAnchor) {
     hideScrollArrow($floatButtonWrapper, $lottieScrollButton);
   } else {
-    lazyLoadLottiePlayer();
     initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor);
   }
 
@@ -210,7 +210,8 @@ function toggleToolBox($wrapper, $lottie, originalButtonState, userInitiated = t
   }
 
   if ($wrapper.classList.contains('toolbox-opened')) {
-    if (originalButtonState === 'withLottie') {
+    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+    if (originalButtonState === 'withLottie' && $scrollAnchor) {
       showScrollArrow($wrapper, $lottie);
     }
     $wrapper.classList.remove('toolbox-opened');
