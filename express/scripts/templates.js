@@ -15,9 +15,18 @@ import {
 } from './scripts.js';
 
 async function fetchPageContent(path) {
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev)) {
+    sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
+  } else {
+    sheet = '/express/templates/content.json?sheet=seo-templates&limit=10000';
+  }
+
   if (!(window.templates && window.templates.data)) {
     window.templates = {};
-    const resp = await fetch('/express/templates/content.json?sheet=seo-templates&limit=10000');
+    const resp = await fetch(sheet);
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
