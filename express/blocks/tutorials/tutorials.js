@@ -52,8 +52,8 @@ function decorateTutorials($block) {
     const [$link, $time, $picture] = [...$tutorial.children];
     const $a = $link.querySelector('a');
     const url = $a && $a.href;
-    const title = $link.textContent;
-    const time = $time.textContent;
+    const title = $link.textContent.trim();
+    const time = $time.textContent.trim();
     const $card = createTutorialCard(title, url, time, $picture);
     $block.appendChild($card);
     $tutorial.remove();

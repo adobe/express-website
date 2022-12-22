@@ -26,7 +26,7 @@ export default function decorate($block) {
       }
       const $authorSummary = createTag('div', { class: 'summary' });
       Array.from($author.querySelectorAll('p'))
-        .filter(($p) => !!$p.textContent)
+        .filter(($p) => !!$p.textContent.trim())
         .forEach(($p) => $authorSummary.appendChild($p));
       $author.appendChild($authorSummary);
     }

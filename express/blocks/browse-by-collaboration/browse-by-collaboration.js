@@ -59,16 +59,16 @@ export default async function decorate($block) {
   const $headingDiv = $rows.shift();
 
   const payload = {
-    heading: $headingDiv.querySelector('h4').textContent,
+    heading: $headingDiv.querySelector('h4').textContent.trim(),
     categories: [],
   };
 
   $rows.forEach(($row) => {
     payload.categories.push({
       $image: $row.querySelector('picture'),
-      text: $row.querySelectorAll('div')[1].textContent,
+      text: $row.querySelectorAll('div')[1].textContent.trim(),
       link: $row.querySelector('a.button').href,
-      linkText: $row.querySelector('a.button').textContent,
+      linkText: $row.querySelector('a.button').textContent.trim(),
     });
   });
 

@@ -15,14 +15,23 @@ import {
 } from './scripts.js';
 
 async function fetchPageContent(path) {
+  const env = getHelixEnv();
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
+  } else {
+    sheet = '/express/templates/content.json?sheet=seo-templates&limit=10000';
+  }
+
   if (!(window.templates && window.templates.data)) {
     window.templates = {};
-    const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
+    const resp = await fetch(sheet);
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
   const page = window.templates.data.find((p) => p.path === path);
-  const env = getHelixEnv();
 
   if (env && env.name === 'stage') {
     return page || null;
@@ -58,9 +67,9 @@ function updateLinkList(container, template, list) {
 }
 
 function updateBlocks(data) {
-  const heroAnimation = document.querySelector('.hero-animation--wide-');
-  const linkList = document.querySelector('.link-list--fullwidth-');
-  const templateList = document.querySelector('.template-list--fullwidth--apipowered-');
+  const heroAnimation = document.querySelector('.hero-animation.wide');
+  const linkList = document.querySelector('.link-list.fullwidth');
+  const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const seoNav = document.querySelector('.seo-nav');
 
   if (heroAnimation) {
@@ -137,5 +146,9 @@ await fetchLinkList();
 if (page) {
   updateBlocks(page);
 } else {
-  window.location.replace('/404');
+  const env = getHelixEnv();
+
+  if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
+    window.location.replace('/404');
+  }
 }

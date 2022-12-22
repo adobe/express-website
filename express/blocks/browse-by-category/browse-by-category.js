@@ -61,9 +61,9 @@ export default async function decorate($block) {
   const $headingDiv = $rows.shift();
 
   const payload = {
-    heading: $headingDiv.querySelector('h4') ? $headingDiv.querySelector('h4').textContent : '',
+    heading: $headingDiv.querySelector('h4') ? $headingDiv.querySelector('h4').textContent.trim() : '',
     viewAllLink: {
-      text: $headingDiv.querySelector('a.button') ? $headingDiv.querySelector('a.button').textContent : '',
+      text: $headingDiv.querySelector('a.button') ? $headingDiv.querySelector('a.button').textContent.trim() : '',
       href: $headingDiv.querySelector('a.button') ? $headingDiv.querySelector('a.button').href : '',
     },
     categories: [],
@@ -72,7 +72,7 @@ export default async function decorate($block) {
   $rows.forEach(($row) => {
     payload.categories.push({
       $image: $row.querySelector('picture'),
-      text: $row.querySelector('a.button') ? $row.querySelector('a.button').textContent : 'missing category text',
+      text: $row.querySelector('a.button') ? $row.querySelector('a.button').textContent.trim() : 'missing category text',
       link: $row.querySelector('a.button') ? $row.querySelector('a.button').href : 'missing category link',
     });
   });

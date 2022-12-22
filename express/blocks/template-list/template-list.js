@@ -39,6 +39,42 @@ const cache = {
   authoringError: false,
 };
 
+function wordStartsWithVowels(word) {
+  return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
+}
+
+async function populateHeadingPlaceholder(locale) {
+  const placeholders = await fetchPlaceholders()
+    .then((response) => response);
+
+  let grammarTemplate = placeholders['template-placeholder'];
+
+  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', cache.total.toLocaleString('en-US'));
+  }
+
+  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{Type}}', cache.heading);
+  }
+
+  if (grammarTemplate.indexOf('{{type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{type}}', cache.heading.charAt(0).toLowerCase() + cache.heading.slice(1));
+  }
+
+  if (locale === 'fr') {
+    grammarTemplate.split(' ').forEach((word, index, words) => {
+      if (index + 1 < words.length) {
+        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+          grammarTemplate = words.join(' ');
+        }
+      }
+    });
+  }
+
+  return grammarTemplate;
+}
+
 function fetchTemplates() {
   if (!cache.authoringError && Object.keys(cache.filters).length !== 0) {
     const prunedFilter = Object.entries(cache.filters)
@@ -59,6 +95,7 @@ function fetchTemplates() {
 }
 
 async function processResponse() {
+  const placeholders = await fetchPlaceholders();
   const response = await fetchTemplates();
   let templateFetched;
   // eslint-disable-next-line no-underscore-dangle
@@ -103,11 +140,11 @@ async function processResponse() {
       const $buttonWrapper = createTag('div', { class: 'button-container' });
       const $button = createTag('a', {
         href: template.branchURL,
-        title: 'Edit this template',
+        title: placeholders['edit-this-template'] ?? 'Edit this template',
         class: 'button accent',
       });
 
-      $button.textContent = 'Edit this template';
+      $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
       $pictureWrapper.insertAdjacentElement('beforeend', $picture);
       $buttonWrapper.insertAdjacentElement('beforeend', $button);
       $template.insertAdjacentElement('beforeend', $pictureWrapper);
@@ -196,14 +233,14 @@ function populateTemplates($block, templates) {
           href: $link.href ? addSearchQueryToHref($link.href) : '#',
         });
 
-        $a.append(...$tmplt.childNodes);
+        $a.append(...$tmplt.children);
         $tmplt.remove();
         $tmplt = $a;
         $block.append($a);
 
         // convert A to SPAN
         const $newLink = createTag('span', { class: 'template-link' });
-        $newLink.append($link.textContent);
+        $newLink.append($link.textContent.trim());
 
         $linkContainer.innerHTML = '';
         $linkContainer.append($newLink);
@@ -235,7 +272,7 @@ function populateTemplates($block, templates) {
               }
             }
           } else {
-            const width = $block.classList.contains('sixcols') ? 165 : 200;
+            const width = $block.classList.contains('sixcols') || $block.classList.contains('fullwidth') ? 165 : 200;
             if (ratios[1]) {
               const height = (ratios[1] / ratios[0]) * width;
               $tmplt.style = `height: ${height - 21}px`;
@@ -321,7 +358,14 @@ function initToggle($section) {
 
   Array.from($toggleButtons)
     .forEach(($button) => {
-      $button.addEventListener('click', (e) => {
+      const chev = $button.querySelector('.toggle-button-chev');
+      const a = $button.querySelector('a');
+
+      a.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      chev.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         $wrapper.classList.toggle('expanded');
@@ -334,34 +378,55 @@ function initToggle($section) {
     });
 }
 
+async function attachFreeInAppPills($block) {
+  const freeInAppText = await fetchPlaceholders()
+    .then((json) => json['free-in-app']);
+
+  const $templateLinks = $block.querySelectorAll('a.template');
+  for (const $templateLink of $templateLinks) {
+    if (!$block.classList.contains('apipowered')
+      && $templateLink.querySelectorAll('.icon-premium').length <= 0
+      && !$templateLink.classList.contains('placeholder')
+      && !$templateLink.querySelector('.icon-free-badge')
+      && freeInAppText) {
+      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
+      $freeInAppBadge.textContent = freeInAppText;
+      $templateLink.querySelector('div').append($freeInAppBadge);
+    }
+  }
+}
+
 export async function decorateTemplateList($block) {
+  const locale = getLocale(window.location);
+
   if ($block.classList.contains('apipowered')) {
     if ($block.children.length > 0) {
       Array.from($block.children)
         .forEach((row, index, array) => {
           const cells = row.querySelectorAll('div');
           if (index === 0) {
-            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-              cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
-              cache.heading = cells[1].textContent;
+            if (cells.length >= 2 && ['type*', 'type'].includes(cells[0].textContent.trim().toLowerCase())) {
+              cache.filters.tasks = `(${cells[1].textContent.trim().toLowerCase()})`;
+              cache.heading = cells[1].textContent.trim();
             } else if ($block.classList.contains('holiday')) {
               cache.heading = row;
             } else {
-              cache.heading = row.textContent;
+              cache.heading = row.textContent.trim();
             }
             row.remove();
-          } else if (cells[0].textContent.toLowerCase() === 'auto-collapse delay') {
-            cache.autoCollapseDelay = parseFloat(cells[1].textContent) * 1000;
-          } else if (cells[0].textContent.toLowerCase() === 'background animation') {
-            cache.backgroundAnimation = cells[1].textContent;
-          } else if (cells[0].textContent.toLowerCase() === 'background color') {
-            cache.backgroundColor = cells[1].textContent;
+          } else if (cells[0].textContent.trim().toLowerCase() === 'auto-collapse delay') {
+            cache.autoCollapseDelay = parseFloat(cells[1].textContent.trim()) * 1000;
+          } else if (cells[0].textContent.trim().toLowerCase() === 'background animation') {
+            cache.backgroundAnimation = cells[1].textContent.trim();
+            cells[1].remove();
+          } else if (cells[0].textContent.trim().toLowerCase() === 'background color') {
+            cache.backgroundColor = cells[1].textContent.trim();
           } else if (index < array.length) {
             if (cells.length >= 2) {
-              if (['type*', 'type'].includes(cells[0].textContent.toLowerCase())) {
-                cache.filters.tasks = `(${cells[1].textContent.toLowerCase()})`;
+              if (['type*', 'type'].includes(cells[0].textContent.trim().toLowerCase())) {
+                cache.filters.tasks = `(${cells[1].textContent.trim().toLowerCase()})`;
               } else {
-                cache.filters[`${cells[0].textContent.toLowerCase()}`] = `(${cells[1].textContent.toLowerCase()})`;
+                cache.filters[`${cells[0].textContent.trim().toLowerCase()}`] = `(${cells[1].textContent.trim().toLowerCase()})`;
               }
             }
             row.remove();
@@ -391,20 +456,19 @@ export async function decorateTemplateList($block) {
         const $wrapper = $parent.querySelector('.template-list-wrapper');
         const $icon = cache.heading.querySelector('picture');
         const $content = Array.from(cache.heading.querySelectorAll('p'))
-          .filter((p) => p.textContent !== '' && p.querySelector('a') === null);
-        const $a = cache.heading.querySelector('a');
-        $a.classList.add('expanded');
-        $a.classList.add('toggle-button');
-        $a.classList.remove('button');
-        $a.classList.remove('accent');
+          .filter((p) => p.textContent.trim() !== '' && p.querySelector('a') === null);
+        const $seeTemplatesLink = cache.heading.querySelector('a');
 
         const $toggleBar = createTag('div', { class: 'toggle-bar' });
+        const $toggle = createTag('div', { class: 'expanded toggle-button' });
+        const $toggleChev = createTag('div', { class: 'toggle-button-chev' });
         const $topElements = createTag('div', { class: 'toggle-bar-top' });
         const $bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
         const $mobileSubtext = $content[1].cloneNode(true);
-        const $mobileAnchor = $a.cloneNode(true);
+
+        $seeTemplatesLink.classList.remove('button');
+        $seeTemplatesLink.classList.remove('accent');
         $mobileSubtext.classList.add('mobile-only');
-        $mobileAnchor.classList.add('mobile-only');
 
         $toggleBar.append($topElements, $bottomElements);
         if ($icon) {
@@ -412,9 +476,14 @@ export async function decorateTemplateList($block) {
           $topElements.append($icon, $content[0]);
         }
         $topElements.append($content[0]);
-        $bottomElements.append($content[1], $a);
+        $toggle.append($seeTemplatesLink, $toggleChev);
+        $bottomElements.append($content[1], $toggle);
         $wrapper.prepend($mobileSubtext);
-        $wrapper.insertAdjacentElement('afterend', $mobileAnchor);
+
+        const $mobileToggle = $toggle.cloneNode(true);
+        $mobileToggle.classList.add('mobile-only');
+
+        $wrapper.insertAdjacentElement('afterend', $mobileToggle);
         $wrapper.classList.add('expanded');
 
         $parent.prepend($toggleBar);
@@ -435,13 +504,11 @@ export async function decorateTemplateList($block) {
         }, cache.autoCollapseDelay);
       } else {
         const $sectionHeading = $parent.querySelector('div > h2');
-        if ($sectionHeading.textContent.indexOf('{{heading_placeholder}}') >= 0) {
+        if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
           if (cache.authoringError) {
             $sectionHeading.textContent = cache.heading;
           } else {
-            const headingEnding = await fetchPlaceholders()
-              .then((placeholders) => placeholders['api-powered-grid-heading']);
-            $sectionHeading.textContent = `${cache.total.toLocaleString('en-US')} ${cache.heading} ${headingEnding}`;
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
           }
         }
       }
@@ -449,7 +516,6 @@ export async function decorateTemplateList($block) {
   }
 
   let rows = $block.children.length;
-  const locale = getLocale(window.location);
   if ((rows === 0 || $block.querySelectorAll('img').length === 0)
     && locale !== 'us') {
     const i18nTexts = $block.firstElementChild
@@ -606,21 +672,9 @@ export async function decorateTemplateList($block) {
     }
   }
 
+  await attachFreeInAppPills($block);
+
   const $templateLinks = $block.querySelectorAll('a.template');
-  let freeInAppText;
-  await fetchPlaceholders()
-    .then((placeholders) => {
-      freeInAppText = placeholders['free-in-app'];
-    });
-  for (const $templateLink of $templateLinks) {
-    const isPremium = $templateLink.querySelectorAll('.icon-premium').length > 0;
-    if (!isPremium && !$templateLink.classList.contains('placeholder')) {
-      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = freeInAppText;
-      $templateLink.querySelector('div')
-        .append($freeInAppBadge);
-    }
-  }
   const linksPopulated = new CustomEvent('linkspopulated', { detail: $templateLinks });
   document.dispatchEvent(linksPopulated);
 }
@@ -690,6 +744,24 @@ function cacheCreatedTemplate($block) {
   }
 }
 
+function addBackgroundAnimation($block, animationUrl) {
+  const $parent = $block.closest('.template-list-horizontal-apipowered-holiday-container');
+
+  if ($parent) {
+    $parent.classList.add('with-animation');
+    const $videoBackground = createTag('video', {
+      class: 'animation-background',
+    });
+    $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
+    $videoBackground.setAttribute('autoplay', '');
+    $videoBackground.setAttribute('muted', '');
+    $videoBackground.setAttribute('loop', '');
+    $videoBackground.setAttribute('playsinline', '');
+    $parent.prepend($videoBackground);
+    $videoBackground.muted = true;
+  }
+}
+
 export default async function decorate($block) {
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
@@ -712,7 +784,6 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('holiday') && cache.backgroundAnimation) {
-    import('../shared/background-animations.js')
-      .then((js) => js.default($block, cache.backgroundAnimation));
+    addBackgroundAnimation($block, cache.backgroundAnimation);
   }
 }

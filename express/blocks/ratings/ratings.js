@@ -459,7 +459,7 @@ export default async function decorate($block) {
   const $CTA = $rows[0].querySelector('a');
   if ($CTA) $CTA.classList.add('xlarge');
   const $sheet = $rows[1].firstElementChild;
-  actionTitle = ($heading) ? $heading.textContent : defaultTitle;
+  actionTitle = ($heading) ? $heading.textContent.trim() : defaultTitle;
   sheet = $sheet.textContent.trim();
   sheetCamelCase = sheet.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase())).replace(/\s+|-+|\/+/g, '');
   $block.innerHTML = '';

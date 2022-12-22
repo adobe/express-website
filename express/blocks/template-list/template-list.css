@@ -739,11 +739,6 @@ main .template-list.horizontal .carousel-platform {
     max-width: unset;
   }
 
-  main .template-list.horizontal .carousel-container {
-    margin-left: 12px;
-    margin-right: 12px;
-  }
-
   main .template-list.horizontal {
     max-width: 800px;
   }
@@ -926,12 +921,7 @@ main .template-list-horizontal-apipowered-holiday-container {
   background: var(--color-black);
 }
 
-main .template-list-horizontal-apipowered-holiday-container.firework {
-  color: var(--color-white);
-  padding-top: 0;
-}
-
-main .template-list-horizontal-apipowered-holiday-container.snowing {
+main .template-list-horizontal-apipowered-holiday-container.with-animation {
   color: var(--color-white);
   padding-top: 0;
 }
@@ -943,6 +933,7 @@ main .template-list-horizontal-apipowered-holiday-container picture {
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
   display: flex;
+  padding: 0 30px;
   justify-content: space-between;
   gap: 20px;
   max-width: none;
@@ -962,13 +953,21 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar img {
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button {
-  color: var(--color-white);
   display: flex;
+}
+
+main .template-list-horizontal-apipowered-holiday-container .toggle-button a {
+  color: var(--color-white);
+}
+
+main .template-list-horizontal-apipowered-holiday-container .toggle-button a:hover {
+  text-decoration: underline;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
   width: max-content;
-  padding: 0 32px;
+  padding: 0 30px;
+  margin-left: 0;
   transform: translate(0, -6px);
   font-weight: 400;
   transition: margin 0.5s, transform 0.5s;
@@ -989,7 +988,7 @@ main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-bu
   transform: translate(-50%, -6px);
 }
 
-main .template-list-horizontal-apipowered-holiday-container .toggle-button::after {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button .toggle-button-chev {
   display: flex;
   width: 6px;
   height: 6px;
@@ -1001,14 +1000,13 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-button::afte
   border-color: var(--color-white);
   transform-origin: 75% 75%;
   transform: rotate(45deg);
-  content: "";
   margin-top: 5px;
   margin-left: 5px;
   margin-right: 2.25px;
   transition: transform 0.2s;
 }
 
-main .template-list-horizontal-apipowered-holiday-container .toggle-button.expanded::after {
+main .template-list-horizontal-apipowered-holiday-container .toggle-button.expanded .toggle-button-chev {
   transform: rotate(-135deg);
 }
 
@@ -1028,13 +1026,14 @@ main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
   flex-grow: 1;
 }
 
-main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper p.mobile-only{
+main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper p.mobile-only {
   color: var(--color-white);
   position: absolute;
   top: 0;
   font-size: 12px;
   text-align: left;
   margin: 0 0 16px;
+  padding: 0 30px;
 }
 
 main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper,
@@ -1062,8 +1061,7 @@ main .template-list.holiday .carousel-container .carousel-platform {
 
 /* holiday animations */
 
-main .template-list-horizontal-apipowered-holiday-container .firework-canvas,
-main .template-list-horizontal-apipowered-holiday-container .snow-background {
+main .template-list-horizontal-apipowered-holiday-container .animation-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -1076,8 +1074,7 @@ main .template-list-horizontal-apipowered-holiday-container .snow-background {
   transition: opacity 0.2s;
 }
 
-main .template-list-horizontal-apipowered-holiday-container.expanded .firework-canvas,
-main .template-list-horizontal-apipowered-holiday-container.expanded .snow-background {
+main .template-list-horizontal-apipowered-holiday-container.expanded .animation-background {
   opacity: 1;
   transition: opacity 1s;
 }

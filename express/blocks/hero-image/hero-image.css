@@ -90,10 +90,10 @@ main .hero-image .hero-image-overlay p.button-container a.button:any-link {
 
 @media (min-width: 740px) {
     
-    body.no-desktop-brand-header header, body.no-brand-header header {
+    /* body.no-desktop-brand-header header, body.no-brand-header header {
         height: 64px;
         background-image: unset;
-    }
+    } */
 
     main .hero-image {
         padding-top: 0;

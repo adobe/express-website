@@ -24,8 +24,8 @@ function decorateList($block) {
     const $text = $cells[1];
 
     if ($title && $text) {
-      const title = $title.textContent;
-      const text = $text.textContent;
+      const title = $title.textContent.trim();
+      const text = $text.textContent.trim();
       list.push({
         title, text,
       });
