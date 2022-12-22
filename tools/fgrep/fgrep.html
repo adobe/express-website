@@ -2,6 +2,12 @@
     <head>
         <title>fgrep</title>
         <script type="module" src="fgrep.js"></script>
+        <script>
+            // only run on .hlx.live
+            if (window.location.hostname.endsWith('.hlx.page')) {
+                window.location.href = window.location.href.replace('.hlx.page', '.hlx.live');
+            }
+        </script>
         <style>
 body, input {
   background-color: black;
