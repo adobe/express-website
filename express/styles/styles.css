@@ -999,6 +999,7 @@ main .block .free-plan-optout {
   justify-content: center;
   transition: left 0.5s, transform 0.5s;
   background: var(--color-black);
+  cursor: pointer;
   z-index: 1;
 }
 
