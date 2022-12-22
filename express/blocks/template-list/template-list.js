@@ -471,6 +471,11 @@ async function readRowsFromBlock($block) {
   }
 }
 
+function findMatchExistingSEOPage(path) {
+  const pathMatch = (e) => e.path === path;
+  return (window.templates && window.templates.data.some(pathMatch));
+}
+
 function redirectSearch($searchBar, targetTask) {
   if ($searchBar) {
     const wrapper = $searchBar.closest('.search-bar-wrapper');
@@ -493,11 +498,13 @@ function redirectSearch($searchBar, targetTask) {
   } else {
     searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
   }
+  const targetPath = locale === 'us' ? `/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}` : `/${locale}/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}`;
+  const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
 
-  if (locale === 'us') {
-    window.location = `${window.location.origin}${searchUrlTemplate}`;
+  if (findMatchExistingSEOPage(targetPath)) {
+    window.location = `${window.location.origin}${targetPath}`;
   } else {
-    window.location = `${window.location.origin}/${locale}${searchUrlTemplate}`;
+    window.location = searchUrl;
   }
 }
 
