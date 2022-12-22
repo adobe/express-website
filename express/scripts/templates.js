@@ -40,7 +40,7 @@ function formatSearchQuery(data) {
 
   const dataArray = Object.entries(data);
 
-  if (params.tasks) {
+  if (params.tasks && params.topics && params.phformat) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{queryTasks}}', params.tasks);
     });
@@ -48,18 +48,16 @@ function formatSearchQuery(data) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
     });
-  }
 
-  if (params.topics) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
     });
-  }
 
-  if (params.phformat) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
     });
+  } else {
+    return false;
   }
 
   return arrayToObject(dataArray);
@@ -219,11 +217,16 @@ const page = await fetchPageContent(window.location.pathname);
 await fetchLinkList();
 
 if (page) {
-  if (window.location.pathname.split('/').pop() === 'search') {
+  if (window.location.pathname === '/express/templates/search') {
     const data = formatSearchQuery(page);
-    const purgedData = purgeAllTaskText(data);
-    updateMetadata(purgedData);
-    updateBlocks(purgedData);
+
+    if (!data) {
+      window.location.replace('/404');
+    } else {
+      const purgedData = purgeAllTaskText(data);
+      updateMetadata(purgedData);
+      updateBlocks(purgedData);
+    }
   } else {
     updateBlocks(page);
   }
