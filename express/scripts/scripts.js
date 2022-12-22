@@ -2238,22 +2238,22 @@ export async function addFreePlanWidget(elem) {
     bullet.innerHTML = `
       <div class="free-plan-bullet-container">
         <div class="free-plan-bullet-tray">
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
         </div>
       </div>
     `;

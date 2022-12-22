@@ -963,7 +963,7 @@ main .block .free-plan-bullet .free-plan-bullet-tray {
   transition: transform 0.2s linear;
   animation-name: freePlanHighlight;
   animation-timing-function: linear;
-  animation-duration: 16s;
+  animation-duration: 32s;
   animation-iteration-count: infinite;
 }
 
@@ -979,7 +979,7 @@ main .block .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
 
 main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
-  font-family: 'Adobe Clean', 'Trebuchet MS', serif;
+  font-family: var(--body-serif-font-family);
   font-style: italic;
   font-size: 16px;
 }
@@ -1009,6 +1009,14 @@ main .block .free-plan-optout .icon {
 main .block .button-container.free-plan-container.fixed .free-plan-optout {
   left: -56px;
   transform: translateY(-50%) rotate(-90deg);
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-tag > div:first-child {
+  display: none;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-tag {
+  font-size: 22px;
 }
 
 @media (min-width: 900px) {
