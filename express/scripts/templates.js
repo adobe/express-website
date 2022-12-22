@@ -118,6 +118,7 @@ function updateBlocks(data) {
       seoNav.remove();
     } else {
       const topTemplatesContainer = seoNav.querySelector('p').parentElement;
+      
       if (data.topTemplates) {
         const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
         const topTemplatesData = data.topTemplates.split(', ');
