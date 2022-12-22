@@ -15,10 +15,11 @@ import {
 } from './scripts.js';
 
 async function fetchPageContent(path) {
+  const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
 
-  if (['yes', 'true', 'on'].includes(dev)) {
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
     sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
   } else {
     sheet = '/express/templates/content.json?sheet=seo-templates&limit=10000';
@@ -31,7 +32,6 @@ async function fetchPageContent(path) {
   }
 
   const page = window.templates.data.find((p) => p.path === path);
-  const env = getHelixEnv();
 
   if (env && env.name === 'stage') {
     return page || null;
