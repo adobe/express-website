@@ -10,66 +10,15 @@ main .app-banner-wrapper {
 main .app-banner.block {
   background-color: #00091B;
   display: flex;
+  position: relative;
   padding-left: 13px;
   gap: 12px;
   height: 10vh;
   width: 94vw;
   border-radius: 26px;
-  font-size: 14px;
-  position: relative;
-  margin-top: 16px;
 }
 
-main .app-banner .colTwo {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 6px
-  
-}
-
-main .app-banner .details > .cta {
-  margin: 0;
-  width: 76px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  padding: 0;
-}
-
-main .app-banner .colTwo h2 {
-  font-size: 14px;
-}
-
-main .app-banner .colTwo p {
-  font-size: 10px;
-  margin: 0;
-}
-
-main .app-banner .ratings {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-main .app-banner .rating-stars {
-  height: 11px;
-}
-
-main .app-banner .details {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-main .app-banner .details .button-container .button {
-  margin: 0;
-}
-
-main .app-banner .icon-icon-creative-cloud {
+main .app-banner .main-img {
   width: 50px;
   height: 50px;
   align-self: center;
@@ -77,8 +26,53 @@ main .app-banner .icon-icon-creative-cloud {
   border-radius: 10px;
 }
 
-main .app-banner .icon-icon-editor-choice {
-  width: 23%;
+main .app-banner .contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px
+}
+
+main .app-banner h2 {
+  font-size: 14px;
+}
+
+main .app-banner .app-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+main .app-banner .button.small {
+  margin: 0;
+}
+
+main .app-banner .ratings {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+main .app-banner .rating-stars {
+  height: 11px;
+}
+
+main .app-banner .rating-stars > svg {
+  font-size: 12px;
+}
+
+main .app-banner .rating-text {
+  font-size: 12px;
+}
+
+main .app-banner .rating-stars >svg > use {
+  color: #EBCF2D;
+}
+
+main .app-banner .sub-text-img {
+  width: 70px;
   height: auto;
   align-self: flex-end;
 }
@@ -88,7 +82,6 @@ main .app-banner .closeBtnDiv {
   height: 22px;
   width: 22px;
   border-radius: 50%;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,8 +93,4 @@ main .app-banner .closeBtnDiv {
 main .app-banner .closeBtnImg {
   height: 9px;
   width: auto;
-}
-
-main .app-banner .rating-stars >svg > use {
-  color: #EBCF2D;
 }

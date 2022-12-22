@@ -12,24 +12,10 @@
 
 import { createTag, getIcon } from '../../scripts/scripts.js';
 
-// Pass in the parent of the elements you want to remove, will be removed with children unaffected
-export function removeDomLevelBelow(target) {
-  [...target.children].forEach((child) => {
-    [...child.children].forEach((e) => {
-      target.appendChild(e);
-    });
-    child.remove();
-  });
-}
-
-export function replaceParentwChild(parent) {
-  parent.replaceWith(parent.firstElementChild);
-}
-
 function getCurrentRatingStars(rating = 5) {
-  const star = getIcon('star');
-  const starHalf = getIcon('star-half');
-  const starEmpty = getIcon('star-empty');
+  const star = getIcon('star', 'Full star');
+  const starHalf = getIcon('star-half', 'Half star');
+  const starEmpty = getIcon('star-empty', 'Empty star');
   const stars = createTag('span', { class: 'rating-stars' });
   let newRating = rating;
   if (newRating > 5) newRating = 5;
@@ -45,52 +31,42 @@ function getCurrentRatingStars(rating = 5) {
 }
 
 function addCloseBtn(block) {
-  const $clostBtnDiv = createTag('div', { class: 'closeBtnDiv' });
-  const $clostBtnImg = createTag('img', { class: 'closeBtnImg', src: '/express/icons/close-icon.svg' });
-  $clostBtnDiv.append($clostBtnImg);
-  block.append($clostBtnDiv);
-  $clostBtnDiv.addEventListener('click', () => {
+  const $closeBtnDiv = createTag('div', { class: 'closeBtnDiv' });
+  const $closeBtnImg = createTag('img', { class: 'closeBtnImg', src: '/express/icons/close-icon.svg', alt: 'Close banner' });
+  $closeBtnDiv.append($closeBtnImg);
+  block.append($closeBtnDiv);
+  $closeBtnDiv.addEventListener('click', () => {
     block.remove();
   });
 }
 
 export default function decorate($block) {
-  const $logo = $block.querySelector('p');
+  const $logo = $block.querySelector('img');
+  $logo.classList.add('main-img');
+  const $title = $block.querySelector('h2');
   const $cta = $block.querySelector('a');
-  $cta.classList.add('cta');
-
-  // Remove unecesary divs
-  removeDomLevelBelow($block);
-  removeDomLevelBelow($block);
-
-  // Create a div for the second column
-  const $colTwo = createTag('div', { class: 'colTwo' });
-  [...$block.children].slice(1).forEach((child) => {
-    $colTwo.appendChild(child);
-  });
-  $block.appendChild($colTwo);
-
-  // Wrap the app details in a div
-  const $pTags = $colTwo.querySelectorAll('p');
-  const $details = createTag('div', { class: 'details' });
-  $pTags.forEach((pTag) => {
-    $details.appendChild(pTag);
-  });
-  $colTwo.appendChild($details);
-
-  // remove p tag from the logo
-  replaceParentwChild($logo);
-  replaceParentwChild($cta.parentElement);
-
-  // Move imgs out of p tag to the end of the 'details' div
-  $details.querySelectorAll('img').forEach((image) => {
-    $details.appendChild(image);
-  });
-
-  const $ratings = $details.querySelector('p');
-  $ratings.classList.add('ratings');
+  $cta.classList.add('small');
+  const $ratings = createTag('div', { class: 'ratings' });
+  const $ratingText = createTag('span', { class: 'rating-text' });
+  const $addDetails = $block.querySelector('p:last-of-type');
+  $ratingText.textContent = $addDetails.textContent;
+  $ratings.append($ratingText);
   const ratingNumber = $ratings.textContent.split(' ')[0];
-  $ratings.prepend(getCurrentRatingStars(ratingNumber));
+  const $secondImage = $addDetails.querySelector('img');
+  $secondImage.classList.add('sub-text-img');
+  $block.innerHTML = '';
 
+  $block.append($logo);
+  const $colTwo = createTag('div', { class: 'contents' });
+  const $details = createTag('div', { class: 'app-details' });
+
+  $colTwo.append($title);
+  $details.append($cta);
+  $details.append($ratings);
+  $details.append($secondImage);
+  $colTwo.append($details);
+  $block.append($colTwo);
+
+  $ratings.prepend(getCurrentRatingStars(ratingNumber));
   addCloseBtn($block);
 }
