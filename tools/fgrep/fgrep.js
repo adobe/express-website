@@ -187,4 +187,9 @@ input.addEventListener('keyup', (event) => {
   }
 });
 
+// only run on .hlx.live
+if (window.location.hostname.endsWith('.hlx.page')) {
+  window.location.href = window.location.href.replace('.hlx.page', '.hlx.live');
+}
+
 document.getElementById('export').addEventListener('click', exportResults);
