@@ -2316,8 +2316,7 @@ export async function addFreePlanWidget(elem) {
             highlightContainer.style.removeProperty('transform');
           }
         }, { passive: true });
-      })
-
+      });
     }, 100);
   }
 }
