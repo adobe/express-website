@@ -1033,6 +1033,11 @@ main .block .button-container.free-plan-container.fixed .free-plan-tag {
     width: max-content;
   }
 
+  main .block.fullscreen-marquee .button-container.free-plan-container {
+    width: 400px;
+    align-items: flex-start;
+  }
+
   main .block .free-plan-optout {
     display: flex;
   }
@@ -1043,6 +1048,15 @@ main .block .button-container.free-plan-container.fixed .free-plan-tag {
     flex-direction: row;
     width: 400px;
     justify-content: left;
+  }
+
+  main .block.center .button-container.free-plan-container {
+    justify-content: unset;
+    margin: 40px auto 0 auto;
+  }
+
+  main .block.center .button-container.free-plan-container.fixed {
+    margin-top: 16px;
   }
 
   main .block .free-plan-widget {
