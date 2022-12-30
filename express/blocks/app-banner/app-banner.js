@@ -56,16 +56,12 @@ export default function decorate($block) {
   $secondImage.classList.add('sub-text-img');
   $block.innerHTML = '';
 
-  $block.append($logo);
   const $colTwo = createTag('div', { class: 'contents' });
   const $details = createTag('div', { class: 'app-details' });
 
-  $colTwo.append($title);
-  $details.append($cta);
-  $details.append($ratings);
-  $details.append($secondImage);
-  $colTwo.append($details);
-  $block.append($colTwo);
+  $details.append($cta, $ratings, $secondImage);
+  $colTwo.append($title, $details);
+  $block.append($logo, $colTwo);
 
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
   addCloseBtn($block);
