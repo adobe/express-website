@@ -30,13 +30,27 @@ function getCurrentRatingStars(rating = 5) {
   return stars;
 }
 
-function addCloseBtn(block) {
+function addCloseBtn(section, block, floatingButton) {
+  const $background = section.querySelector('.gradient-background');
   const $closeBtnDiv = createTag('div', { class: 'closeBtnDiv' });
-  const $closeBtnImg = createTag('img', { class: 'closeBtnImg', src: '/express/icons/close-icon.svg', alt: 'Close banner' });
+  const $closeBtnImg = createTag('img', {
+    class: 'closeBtnImg',
+    src: '/express/icons/close-icon.svg',
+    alt: 'Close banner',
+  });
+
   $closeBtnDiv.append($closeBtnImg);
   block.append($closeBtnDiv);
+
   $closeBtnDiv.addEventListener('click', () => {
+    section.classList.add('block-removed');
+    floatingButton.classList.remove('push-up');
     block.remove();
+
+    setTimeout(() => {
+      $background.remove();
+      floatingButton.classList.remove('no-background');
+    }, 600);
   });
 }
 
@@ -45,30 +59,32 @@ function scrollDirection(section, block, floatingButton) {
   let lastScrollTop = 0;
 
   document.addEventListener('scroll', () => {
-    const { scrollTop } = document.documentElement;
-    if (scrollTop > lastScrollTop) {
-      block.classList.remove('appear');
-      floatingButton.classList.remove('push-up');
-      setTimeout(() => {
-        if (!block.classList.contains('appear')) {
-          floatingButton.classList.remove('no-background');
-          background.classList.remove('show');
-          block.classList.remove('show');
-        }
-      }, 600);
-    } else {
-      block.classList.add('show');
-      floatingButton.classList.add('push-up');
-      floatingButton.classList.add('no-background');
-      background.classList.add('show');
-      setTimeout(() => {
-        if (block.classList.contains('show')) {
-          block.classList.add('appear');
-        }
-      }, 10);
+    if (!section.classList.contains('block-removed')) {
+      const { scrollTop } = document.documentElement;
+      if (scrollTop < lastScrollTop) {
+        block.classList.remove('appear');
+        floatingButton.classList.remove('push-up');
+        setTimeout(() => {
+          if (!block.classList.contains('appear')) {
+            floatingButton.classList.remove('no-background');
+            background.classList.remove('show');
+            block.classList.remove('show');
+          }
+        }, 600);
+      } else {
+        block.classList.add('show');
+        floatingButton.classList.add('push-up');
+        floatingButton.classList.add('no-background');
+        background.classList.add('show');
+        setTimeout(() => {
+          if (block.classList.contains('show')) {
+            block.classList.add('appear');
+          }
+        }, 10);
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
     }
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-  }, false);
+  }, { passive: true });
 }
 
 export default function decorate($block) {
@@ -99,6 +115,6 @@ export default function decorate($block) {
   $section.prepend($background);
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
 
-  addCloseBtn($block);
+  addCloseBtn($section, $block, $floatingButton);
   scrollDirection($section, $block, $floatingButton);
 }

@@ -20,6 +20,7 @@ main .section-wrapper.app-banner-container .gradient-background {
   bottom: 0;
   display: none;
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
+  max-width: none;
 }
 
 main .section-wrapper.app-banner-container .gradient-background.show {
@@ -37,7 +38,7 @@ main .app-banner.block {
   position: relative;
   padding-left: 13px;
   gap: 12px;
-  height: 10vh;
+  height: 80px;
   width: 94vw;
   border-radius: 26px;
   transform: translateY(120px);
