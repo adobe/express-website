@@ -2300,6 +2300,7 @@ export async function addFreePlanWidget(elem) {
     // start watching for free-plan-highlight scroll
     setTimeout(() => {
       const ctaPositionY = elem.offsetTop;
+      console.log(ctaPositionY);
 
       ['scroll', 'resize'].forEach((event) => {
         window.addEventListener(event, () => {
