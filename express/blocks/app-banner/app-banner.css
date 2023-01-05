@@ -13,6 +13,19 @@ main .section-wrapper.app-banner-container {
   display: inline-block;
 }
 
+main .section-wrapper.app-banner-container .gradient-background {
+  position: fixed;
+  height: 150px;
+  width: 100%;
+  bottom: 0;
+  display: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
+}
+
+main .section-wrapper.app-banner-container .gradient-background.show {
+  display: block;
+}
+
 main .app-banner-wrapper {
   display: flex;
   justify-content: center;

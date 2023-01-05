@@ -40,39 +40,45 @@ function addCloseBtn(block) {
   });
 }
 
-function scrollDirection(block, floatingButton) {
-  let $previousTouchPosition = 0;
-  document.addEventListener('touchmove', (event) => {
-    const $currentTouchPosition = event.touches[0].clientY;
-    if ($currentTouchPosition < $previousTouchPosition) {
-      block.classList.add('show');
-      floatingButton.classList.add('push-up');
-      floatingButton.classList.add('no-background');
-      setTimeout(() => {
-        if (block.classList.contains('show')) {
-          block.classList.add('appear');
-        }
-      }, 10);
-    } else if ($currentTouchPosition > $previousTouchPosition) {
+function scrollDirection(section, block, floatingButton) {
+  const background = section.querySelector('.gradient-background');
+  let lastScrollTop = 0;
+
+  document.addEventListener('scroll', () => {
+    const { scrollTop } = document.documentElement;
+    if (scrollTop > lastScrollTop) {
       block.classList.remove('appear');
       floatingButton.classList.remove('push-up');
       setTimeout(() => {
         if (!block.classList.contains('appear')) {
           floatingButton.classList.remove('no-background');
+          background.classList.remove('show');
           block.classList.remove('show');
         }
       }, 600);
+    } else {
+      block.classList.add('show');
+      floatingButton.classList.add('push-up');
+      floatingButton.classList.add('no-background');
+      background.classList.add('show');
+      setTimeout(() => {
+        if (block.classList.contains('show')) {
+          block.classList.add('appear');
+        }
+      }, 10);
     }
-    $previousTouchPosition = $currentTouchPosition;
-  });
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }, false);
 }
 
 export default function decorate($block) {
   const $logo = $block.querySelector('img');
   const $title = $block.querySelector('h2');
   const $cta = $block.querySelector('a');
+  const $section = $block.closest('.section');
   const $ratings = createTag('div', { class: 'ratings' });
   const $ratingText = createTag('span', { class: 'rating-text' });
+  const $background = createTag('div', { class: 'gradient-background' });
   const $addDetails = $block.querySelector('p:last-of-type');
   $ratingText.textContent = $addDetails.textContent;
   $ratings.append($ratingText);
@@ -90,8 +96,9 @@ export default function decorate($block) {
   $details.append($cta, $ratings, $secondImage);
   $colTwo.append($title, $details);
   $block.append($logo, $colTwo);
+  $section.prepend($background);
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
 
   addCloseBtn($block);
-  scrollDirection($block, $floatingButton);
+  scrollDirection($section, $block, $floatingButton);
 }
