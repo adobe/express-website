@@ -2,6 +2,17 @@ main .app-banner * {
   color: #FFFFFF;
 }
 
+main .section-wrapper.app-banner-container {
+  padding: 0;
+  position: fixed;
+  right: 0;
+  bottom: 16px;
+  left: 0;
+  z-index: 2;
+  margin: auto;
+  display: inline-block;
+}
+
 main .app-banner-wrapper {
   display: flex;
   justify-content: center;
@@ -9,13 +20,23 @@ main .app-banner-wrapper {
 
 main .app-banner.block {
   background-color: #00091B;
-  display: flex;
+  display: none;
   position: relative;
   padding-left: 13px;
   gap: 12px;
   height: 10vh;
   width: 94vw;
   border-radius: 26px;
+  transform: translateY(120px);
+  transition: transform 0.6s;
+}
+
+main .app-banner.block.appear {
+  transform: translateY(0);
+}
+
+main .app-banner.block.show {
+  display: flex;
 }
 
 main .app-banner .main-img {

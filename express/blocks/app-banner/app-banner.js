@@ -40,29 +40,56 @@ function addCloseBtn(block) {
   });
 }
 
+function scrollDirection(block, floatingButton) {
+  let $previousTouchPosition = 0;
+  document.addEventListener('touchmove', (event) => {
+    const $currentTouchPosition = event.touches[0].clientY;
+    if ($currentTouchPosition < $previousTouchPosition) {
+      block.classList.add('show');
+      floatingButton.classList.add('push-up');
+      setTimeout(() => {
+        if (block.classList.contains('show')) {
+          block.classList.add('appear');
+        }
+      }, 10);
+    } else {
+      block.classList.remove('appear');
+      floatingButton.classList.remove('push-up');
+      setTimeout(() => {
+        if (!block.classList.contains('appear')) {
+          block.classList.remove('show');
+        }
+      }, 500);
+    }
+    $previousTouchPosition = $currentTouchPosition;
+  });
+}
+
 export default function decorate($block) {
   const $logo = $block.querySelector('img');
-  $logo.classList.add('main-img');
   const $title = $block.querySelector('h2');
   const $cta = $block.querySelector('a');
-  $cta.classList.add('small');
   const $ratings = createTag('div', { class: 'ratings' });
   const $ratingText = createTag('span', { class: 'rating-text' });
   const $addDetails = $block.querySelector('p:last-of-type');
-  $ratingText.textContent = $addDetails.textContent;
-  $ratings.append($ratingText);
   const ratingNumber = $ratings.textContent.split(' ')[0];
   const $secondImage = $addDetails.querySelector('img');
-  $secondImage.classList.add('sub-text-img');
-  $block.innerHTML = '';
-
   const $colTwo = createTag('div', { class: 'contents' });
   const $details = createTag('div', { class: 'app-details' });
+  const $floatingButton = document.querySelector('.floating-button-wrapper:not([data-audience="desktop"])');
+
+  $logo.classList.add('main-img');
+  $cta.classList.add('small');
+  $ratingText.textContent = $addDetails.textContent;
+  $ratings.append($ratingText);
+  $secondImage.classList.add('sub-text-img');
+  $block.innerHTML = '';
 
   $details.append($cta, $ratings, $secondImage);
   $colTwo.append($title, $details);
   $block.append($logo, $colTwo);
-
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
+
   addCloseBtn($block);
+  scrollDirection($block, $floatingButton);
 }

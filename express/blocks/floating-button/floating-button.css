@@ -24,8 +24,13 @@ main .floating-button-wrapper {
   pointer-events: none;
   background: -webkit-linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
-  transition: bottom 0.6s ease-out, opacity 0.6s ease-out, height 0.6s ease-out;
+  transition: bottom 0.6s ease-out, opacity 0.6s ease-out, height 0.6s ease-out, background 0.6s;
   height: 150px;
+}
+
+main .floating-button-wrapper.push-up {
+  bottom: 93px;
+  background: transparent;
 }
 
 body.branch-banner-is-active .floating-button-wrapper {
