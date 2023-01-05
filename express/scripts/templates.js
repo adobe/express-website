@@ -226,7 +226,7 @@ if (page) {
     const data = formatSearchQuery(page);
 
     if (!data) {
-      window.location.replace('/404');
+      window.location.replace('/express/templates/');
     } else {
       const purgedData = purgeAllTaskText(data);
       updateMetadata(purgedData);
