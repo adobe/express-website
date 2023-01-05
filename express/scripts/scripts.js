@@ -2299,7 +2299,7 @@ export async function addFreePlanWidget(elem) {
     }, { passive: true });
     // start watching for free-plan-highlight scroll
     setTimeout(() => {
-      const ctaPositionY = elem.offsetTop;
+      const ctaPositionY = elem.offsetTop + 65;
       console.log(ctaPositionY);
 
       ['scroll', 'resize'].forEach((event) => {
