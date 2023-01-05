@@ -29,7 +29,10 @@ main .floating-button-wrapper {
 }
 
 main .floating-button-wrapper.push-up {
-  bottom: 93px;
+  bottom: 85px;
+}
+
+main .floating-button-wrapper.no-background {
   background: transparent;
 }
 

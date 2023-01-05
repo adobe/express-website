@@ -47,19 +47,21 @@ function scrollDirection(block, floatingButton) {
     if ($currentTouchPosition < $previousTouchPosition) {
       block.classList.add('show');
       floatingButton.classList.add('push-up');
+      floatingButton.classList.add('no-background');
       setTimeout(() => {
         if (block.classList.contains('show')) {
           block.classList.add('appear');
         }
       }, 10);
-    } else {
+    } else if ($currentTouchPosition > $previousTouchPosition) {
       block.classList.remove('appear');
       floatingButton.classList.remove('push-up');
       setTimeout(() => {
         if (!block.classList.contains('appear')) {
+          floatingButton.classList.remove('no-background');
           block.classList.remove('show');
         }
-      }, 500);
+      }, 600);
     }
     $previousTouchPosition = $currentTouchPosition;
   });
@@ -72,6 +74,8 @@ export default function decorate($block) {
   const $ratings = createTag('div', { class: 'ratings' });
   const $ratingText = createTag('span', { class: 'rating-text' });
   const $addDetails = $block.querySelector('p:last-of-type');
+  $ratingText.textContent = $addDetails.textContent;
+  $ratings.append($ratingText);
   const ratingNumber = $ratings.textContent.split(' ')[0];
   const $secondImage = $addDetails.querySelector('img');
   const $colTwo = createTag('div', { class: 'contents' });
@@ -80,8 +84,6 @@ export default function decorate($block) {
 
   $logo.classList.add('main-img');
   $cta.classList.add('small');
-  $ratingText.textContent = $addDetails.textContent;
-  $ratings.append($ratingText);
   $secondImage.classList.add('sub-text-img');
   $block.innerHTML = '';
 
