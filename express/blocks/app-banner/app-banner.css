@@ -1,23 +1,23 @@
 main .app-banner * {
-  color: #FFFFFF;
+  color: var(--color-white);
 }
 
 main .section-wrapper.app-banner-container {
   padding: 0;
   position: fixed;
-  right: 0;
   bottom: 16px;
   left: 0;
+  right: 0;
   z-index: 2;
   margin: auto;
 }
 
 main .section-wrapper.app-banner-container .gradient-background {
   position: fixed;
+  display: none;
   height: 150px;
   width: 100%;
   bottom: 0;
-  display: none;
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
   max-width: none;
 }
@@ -32,9 +32,9 @@ main .app-banner-wrapper {
 }
 
 main .app-banner.block {
-  background-color: #00091B;
-  display: none;
   position: relative;
+  display: none;
+  background-color: #00091B;
   padding-left: 13px;
   gap: 12px;
   height: 80px;
@@ -120,8 +120,8 @@ main .app-banner .closeBtnDiv {
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
 }
 
 main .app-banner .closeBtnImg {
