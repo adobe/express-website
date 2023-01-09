@@ -92,14 +92,9 @@ function updateLinkList(container, template, list) {
 function updateMetadata(data) {
   const $head = document.querySelector('head');
   const $title = $head.querySelector('title');
-  const $canonical = $head.querySelector('link[rel="canonical"]');
   let $metaTitle = document.querySelector('meta[property="og:title"]');
   let $twitterTitle = document.querySelector('meta[name="twitter:title"]');
   let $description = document.querySelector('meta[property="og:description"]');
-
-  if ($canonical) {
-    $canonical.setAttribute('href', 'https://www.adobe.com/express/templates/');
-  }
 
   if ($title) {
     $title.textContent = data.metadataTitle;
