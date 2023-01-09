@@ -10,7 +10,6 @@ main .section-wrapper.app-banner-container {
   left: 0;
   z-index: 2;
   margin: auto;
-  display: inline-block;
 }
 
 main .section-wrapper.app-banner-container .gradient-background {
