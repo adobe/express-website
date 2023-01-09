@@ -73,8 +73,7 @@ function scrollDirection(section, block, floatingButton) {
         }, 600);
       } else {
         block.classList.add('show');
-        floatingButton.classList.add('push-up');
-        floatingButton.classList.add('no-background');
+        floatingButton.classList.add('push-up', 'no-background');
         background.classList.add('show');
         setTimeout(() => {
           if (block.classList.contains('show')) {
