@@ -553,7 +553,7 @@ async function buildToolBox($wrapper, data) {
   const $boxTop = createTag('div', { class: 'toolbox-top' });
   const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
 
-  if (['yes', 'true', 'on', 'Y'].includes(data.bubbleUI)) {
+  if (data.type === 'bubble ui') {
     data.tools.forEach((tool, index) => {
       if (index < data.toolsToStash) {
         const $tool = createTag('div', { class: 'tool' });
@@ -625,6 +625,7 @@ async function buildToolBox($wrapper, data) {
 function collectMultifunctionData($block, dataArray) {
   const data = {
     single: 'N',
+    type: 'multifunction',
     delay: 3,
     tools: [],
     appStore: {},
@@ -639,6 +640,10 @@ function collectMultifunctionData($block, dataArray) {
 
       if (key === 'single') {
         data.single = value;
+      }
+
+      if (key === 'type') {
+        data.type = value.toLowerCase();
       }
 
       if (key === 'delay') {
@@ -767,7 +772,7 @@ export default async function decorateBlock($block) {
       $a = makeCTAFromSheet($block, data);
     }
 
-    if (['yes', 'true', 'on', 'Y'].includes(data.single)) {
+    if (['yes', 'true', 'on', 'Y'].includes(data.single) || data.type === 'single') {
       await createFloatingButton($a, $parentSection ? $parentSection.dataset.audience : null);
     } else {
       await createMultiFunctionButton($block, data);
