@@ -745,6 +745,14 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       $taskDropdownList.classList.toggle('active');
     }, { passive: true });
 
+    document.addEventListener('click', (e) => {
+      const { target } = e;
+      if (target !== $taskDropdown && !$taskDropdown.contains(target)) {
+        $taskDropdown.classList.remove('active');
+        $taskDropdownList.classList.remove('active');
+      }
+    }, { passive: true });
+
     $taskOptions.forEach((option) => {
       option.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1266,7 +1274,7 @@ function initFilterSort($block, $toolBar) {
         updateOptionsStatus($block, $toolBar);
 
         $option.addEventListener('click', async (e) => {
-          e.stopPropagation();
+          // e.stopPropagation();
           $options.forEach((o) => {
             if ($option !== o) {
               o.classList.remove('active');
@@ -1290,6 +1298,15 @@ function initFilterSort($block, $toolBar) {
           }
         }, { passive: true });
       });
+
+      document.addEventListener('click', (e) => {
+        const { target } = e;
+        if (target !== $wrapper && !$wrapper.contains(target)) {
+          $wrapper.classList.remove('opened');
+        } else {
+          $wrapper.classList.add('opened');
+        }
+      }, { passive: true });
     });
 
     if ($applyFilterButton) {
