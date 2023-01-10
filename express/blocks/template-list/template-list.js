@@ -678,6 +678,17 @@ function resetTaskDropdowns($section) {
   });
 }
 
+function closeTaskDropdown($toolBar) {
+  const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
+  const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  $searchBarWrappers.forEach(($wrapper) => {
+    const $taskDropdown = $wrapper.querySelector('.task-dropdown');
+    const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
+    $taskDropdown.classList.remove('active');
+    $taskDropdownList.classList.remove('active');
+  });
+}
+
 function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
@@ -707,6 +718,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     $searchBar.addEventListener('click', (e) => {
       e.stopPropagation();
       // $dropdown.classList.remove('hidden');
+      closeTaskDropdown($toolBar);
     }, { passive: true });
 
     $searchBar.addEventListener('keyup', () => {
@@ -745,6 +757,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
         option.classList.add('active');
         props.filters.tasks = `(${option.dataset.tasks})`;
         $taskDropdownToggle.textContent = option.textContent.trim();
+        closeTaskDropdown($toolBar);
       }, { passive: true });
     });
 
@@ -929,7 +942,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $boldedTaskText = createTag('b');
 
   // Tasks Dropdown
-
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
   const $taskDropdown = createTag('div', { class: 'task-dropdown' });
   const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
@@ -1087,6 +1099,7 @@ function initDrawer($block, $section, $toolBar) {
     $drawerBackground.classList.remove('hidden');
     $applyButton.classList.remove('hidden');
     updateLottieStatus($section);
+    closeTaskDropdown($toolBar);
 
     setTimeout(() => {
       $drawer.classList.remove('retracted');
@@ -1245,6 +1258,7 @@ function initFilterSort($block, $toolBar) {
           }
         });
         $wrapper.classList.toggle('opened');
+        closeTaskDropdown($toolBar);
       }, { passive: true });
 
       $options.forEach(($option) => {
