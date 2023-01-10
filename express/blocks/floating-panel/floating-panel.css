@@ -2,9 +2,15 @@ main .section.floating-panel-container {
     padding: 16px 0 16px 0;
     position: fixed;
     background: white;
-    bottom: 0;
+    bottom: -100px;
     width: 100%;
     display: none;
+    transition: bottom 0.3s;
+    box-shadow: 0 -8px 8px 2px rgb(102 102 102 / 15%);
+}
+
+main .section.floating-panel-container.appear {
+    bottom: 0;
 }
 
 @media screen and (min-width: 900px) {
@@ -91,7 +97,7 @@ main .section.floating-panel-container .floating-panel .button-container:last-of
     box-sizing: border-box;
     position: relative;
     border-radius: 100px;
-    background-color: transparent;
+    background-color: var(--color-gray-200);
     z-index: 2;
     width: 269px;
     pointer-events: auto;
@@ -106,7 +112,7 @@ main .section.floating-panel-container .floating-panel .button-container:last-of
     justify-content: center;
     margin: 0;
     height: 40px;
-    max-width: 269px;
+    max-width: 172px;
     font-size: 16px;
     line-height: 24px;
     border-radius: 50px;
@@ -121,16 +127,16 @@ main .section.floating-panel-container .floating-panel .button-container:last-of
 }
 
 main .section.floating-panel-container .floating-panel .button-container:last-of-type.scrolled {
-    background-color: var(--color-gray-200);
+    background-color: transparent;
 }
 
 main .section.floating-panel-container .floating-panel .button-container:last-of-type.scrolled a.button {
-    max-width: 172px;
+    max-width: 269px;
 }
 
 main .section.floating-panel-container .floating-panel .floating-panel-lottie {
     z-index: 0;
-    display: none;
+    display: block;
     position: absolute;
     right: 6px;
     top: 6px;
@@ -145,7 +151,7 @@ main .section.floating-panel-container .floating-panel .floating-panel-lottie {
 }
 
 main .section.floating-panel-container .floating-panel .button-container:last-of-type.scrolled .floating-panel-lottie {
-    display: block;
+    display: none;
 }
 
 main .section.floating-panel-container .floating-panel .floating-panel-lottie .lottie-purple-arrows {
