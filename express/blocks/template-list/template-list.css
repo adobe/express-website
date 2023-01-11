@@ -928,6 +928,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper.collapsed
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
   position: relative;
+  margin: 2px;
   background-color: var(--color-gray-200);
   border-radius: 100px 0 0 100px;
   font-family: 'Adobe Clean', 'Trebuchet MS', serif;
@@ -938,15 +939,14 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 /* targets safari only */
 @media not all and (min-resolution:.001dpcm) { @media {
   main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
-    top: 2px;
+    margin-left: 0;
     height: 40px;
   }
 }}
-
 /* targets ios only */
 @supports (-webkit-touch-callout: none) {
   main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
-    top: 2px;
+    margin-left: 0;
     height: 40px;
   }
 }
