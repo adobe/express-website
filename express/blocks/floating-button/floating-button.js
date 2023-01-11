@@ -45,7 +45,7 @@ function initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor
       behavior: 'smooth',
     });
     const checkIfScrollToIsFinished = setInterval(() => {
-      if ($scrollAnchor.offsetTop <= window.pageYOffset) {
+      if ($scrollAnchor.offsetTop <= window.scrollY) {
         clicked = false;
         $floatButtonWrapper.classList.remove('floating-button--clicked');
         clearInterval(checkIfScrollToIsFinished);
