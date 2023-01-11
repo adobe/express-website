@@ -1929,14 +1929,24 @@ function decoratePictures(main) {
 }
 
 export async function fetchMultifunctionButton(path) {
+  const env = getHelixEnv();
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/express/floating-cta-dev.json?limit=10000';
+  } else {
+    sheet = '/express/create/multifunction-button.json?limit=10000';
+  }
+
   if (!window.multifunctionButton) {
     try {
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
+      const resp = await fetch(`${urlPrefix}${sheet}`);
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     } catch {
-      const resp = await fetch('/express/create/multifunction-button.json');
+      const resp = await fetch(sheet);
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     }
   }
