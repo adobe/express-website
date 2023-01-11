@@ -14,12 +14,13 @@ import { loadScript, readBlockConfig } from '../../scripts/scripts.js';
 
 async function fetchDependency(url, api) {
   const usp = new URLSearchParams(window.location.search);
-  let sharedScriptUrl = usp.get(api) || 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js';
-  if (!sharedScriptUrl) {
+  let dependencyUrl = usp.get(api);
+  if (!dependencyUrl) {
     const response = await fetch(url);
     const json = await response.json();
-    sharedScriptUrl = json.find((api) => api.id === api).entry;
+    dependencyUrl = json.find((api) => api.id === api).entry;
   }
+  return dependencyUrl;
 }
 
 export default async function decorate(block) {
@@ -32,7 +33,7 @@ export default async function decorate(block) {
 
   // FIXME: remove hardcoded fallback once PR is merged to main
   const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-00e7f443.js'
-    || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', 'host-sharedremove-background');
+    || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', 'remove-background');
 
   window.qtHost = {
     async qtLoaded(QuickTask) {
