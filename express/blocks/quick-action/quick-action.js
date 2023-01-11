@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { loadScript } from '../../scripts/scripts.js';
+import { loadScript, readBlockConfig } from '../../scripts/scripts.js';
 
 async function fetchDependency(url, api) {
+  const usp = new URLSearchParams(window.location.search);
   let sharedScriptUrl = usp.get(api) || 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js';
   if (!sharedScriptUrl) {
     const response = await fetch(url);
@@ -22,7 +23,8 @@ async function fetchDependency(url, api) {
 }
 
 export default async function decorate(block) {
-  const usp = new URLSearchParams(window.location.search);
+  const blockConfig = readBlockConfig(block);
+  block.innerHTML = '';
   
   // FIXME: remove hardcoded fallback once PR is merged to main
   const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
@@ -42,8 +44,8 @@ export default async function decorate(block) {
         sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
         navigationData: {
           config: {
-          'should-use-cloud-storage': true,
-          'preview-only': true
+            'should-use-cloud-storage': true,
+            'preview-only': true
           }
         },
         hostType: 'standalone',
