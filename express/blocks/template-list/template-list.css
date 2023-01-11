@@ -938,21 +938,6 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   height: 37px;
 }
 
-/*!* targets safari only *!*/
-/*@media not all and (min-resolution:.001dpcm) { @media {*/
-/*  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {*/
-/*    margin-left: 0;*/
-/*    height: 40px;*/
-/*  }*/
-/*}}*/
-/*!* targets ios only *!*/
-/*@supports (-webkit-touch-callout: none) {*/
-/*  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {*/
-/*    margin-left: 0;*/
-/*    height: 40px;*/
-/*  }*/
-/*}*/
-
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown:after {
   content: '';
   height: 6px;
