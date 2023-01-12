@@ -582,6 +582,7 @@ export async function decorateTemplateList($block) {
   const templates = Array.from($block.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
+    const $parent = $block.closest('.section');
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
     $titleRow.querySelectorAll(':scope a')
@@ -593,6 +594,15 @@ export async function decorateTemplateList($block) {
         }
       });
 
+    if ($parent.classList.contains('toc-container')) {
+      const $tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
+      const $tocSlot = createTag('div', { class: 'toc-slot' });
+      const h2 = $titleRow.querySelector('h2');
+      if (h2) {
+        h2.parentElement.prepend($tocCollidingArea);
+        $tocCollidingArea.append($tocSlot, h2);
+      }
+    }
     if ($block.classList.contains('collaboration')) {
       const $titleHeading = $titleRow.querySelector('h3');
       const $anchorLink = createTag('a', {
