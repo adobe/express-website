@@ -10,7 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIcon } from '../../scripts/scripts.js';
+import {
+  createTag,
+  getIcon,
+  getMobileOperatingSystem,
+  fetchPlaceholders,
+} from '../../scripts/scripts.js';
 
 function getCurrentRatingStars(rating = 5) {
   const star = getIcon('star', 'Full star');
@@ -86,28 +91,46 @@ function scrollDirection(section, block, floatingButton) {
   }, { passive: true });
 }
 
-export default function decorate($block) {
+export default async function decorate($block) {
+  const payload = {
+    userAgent: getMobileOperatingSystem(),
+    ratingScore: 0,
+    ratingCount: '',
+  };
+
+  await fetchPlaceholders().then((placeholders) => {
+    if (payload.userAgent === 'iOS') {
+      payload.ratingScore = placeholders['apple-store-rating-score'];
+      payload.ratingCount = placeholders['apple-store-rating-count'];
+    } else {
+      payload.ratingScore = placeholders['google-store-rating-score'];
+      payload.ratingCount = placeholders['google-store-rating-count'];
+    }
+  });
+
   const $logo = $block.querySelector('img');
   const $title = $block.querySelector('h2');
   const $cta = $block.querySelector('a');
+  const $addDetails = $block.querySelector('p:last-of-type');
   const $section = $block.closest('.section');
+  const $secondImage = $addDetails.querySelector('img');
+  const $floatingButton = document.querySelector('.floating-button-wrapper:not([data-audience="desktop"])');
+
   const $ratings = createTag('div', { class: 'ratings' });
   const $ratingText = createTag('span', { class: 'rating-text' });
   const $background = createTag('div', { class: 'gradient-background' });
-  const $addDetails = $block.querySelector('p:last-of-type');
-  $ratingText.textContent = $addDetails.textContent;
-  $ratings.append($ratingText);
-  const ratingNumber = $ratings.textContent.split(' ')[0];
-  const $secondImage = $addDetails.querySelector('img');
   const $colTwo = createTag('div', { class: 'contents' });
   const $details = createTag('div', { class: 'app-details' });
-  const $floatingButton = document.querySelector('.floating-button-wrapper:not([data-audience="desktop"])');
+
+  $ratingText.textContent = `${payload.ratingScore} • ${payload.ratingCount} ${$addDetails.textContent}`;
+  const ratingNumber = payload.ratingScore;
 
   $logo.classList.add('main-img');
   $cta.classList.add('small');
   $secondImage.classList.add('sub-text-img');
   $block.innerHTML = '';
 
+  $ratings.append($ratingText);
   $details.append($cta, $ratings, $secondImage);
   $colTwo.append($title, $details);
   $block.append($logo, $colTwo);
