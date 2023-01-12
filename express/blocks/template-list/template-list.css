@@ -776,8 +776,17 @@ main .template-list-horizontal-fullwidth-mini-container .template-list .template
   margin-bottom: 8px;
 }
 
-main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list .template-title {
-  margin-right: 128px;
+main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list .template-title h2 {
+  -webkit-hyphens: none; /* safari */
+  hyphens: none;
+  display: inline;
+}
+
+main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list .template-title .toc-slot {
+  display: inline;
+  width: 116px;
+  height: 44px;
+  float: right;
 }
 
 main .template-list-horizontal-fullwidth-mini-container .template-list .template-title p:last-of-type {
