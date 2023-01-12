@@ -12,6 +12,18 @@
 
 import { loadScript, readBlockConfig } from '../../scripts/scripts.js';
 
+function createButton(label, cb) {
+  const btn = document.createElement('a');
+  btn.className = 'button'
+  btn.href = '';
+  btn.innerText = label;
+  btn.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    window.qtHost.task.triggerExport(btn.dataset.action);
+  });
+  return btn;
+}
+
 async function fetchDependency(url, api) {
   const usp = new URLSearchParams(window.location.search);
   let dependencyUrl = usp.get(api);
@@ -23,9 +35,45 @@ async function fetchDependency(url, api) {
   return dependencyUrl;
 }
 
+function navigateToPostEditor(data) {
+  const action = 'remove-background';
+  const { repositoryId, transientToken } = data;
+  const path = '/sp/design/post/new';
+  const params = new URLSearchParams();
+  params.append('workflow', 'quicktask');
+  params.append('r', 'qtImaging');
+  params.append('qId', action);
+  params.append('actionLocation', 'seo');
+  params.append('autoDownload', true);
+  params.append('repositoryId', repositoryId);
+  params.append('transientToken', transientToken);
+  const url = `${path}?${params.toString()}`;
+  console.log(url);
+  // FIXME: verify if this is the right URL
+  // window.location.href = url;
+}
+
+function downloadImage(fileData) {
+  const a = document.createElement('a')
+  a.download = fileData.fileName;
+  a.href = fileData.base64URL;
+  a.click()
+}
+
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
-  block.innerHTML = '<sp-theme><div id="qt-host" /></sp-theme>';
+  block.innerHTML = '';
+
+  const btnEdit = createButton('Customize');
+  btnEdit.dataset.action = 'Editor';
+  btnEdit.style.display = 'none';
+  block.append(btnEdit);
+
+  const btnDl = createButton('Download');
+  btnDl.classList.add('reverse');
+  btnDl.dataset.action = 'Download';
+  btnDl.style.display = 'none';
+  block.append(btnDl);
   
   // FIXME: remove hardcoded fallback once PR is merged to main
   const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
@@ -37,11 +85,21 @@ export default async function decorate(block) {
 
   window.qtHost = {
     async qtLoaded(QuickTask) {
-      const task = new QuickTask(document.querySelector('#qt-host'), {
+      const task = new QuickTask(block, {
         close() { console.log('[CCLQT CB]', 'close'); },
         done(options) { console.log('[CCLQT CB]', 'done', options); },
-        navigate(dest, data, file) { console.log('[CCLQT CB]', 'navigate', dest, data, file); },
-        sendEditorStateToHost(state) { console.log('[CCLQT CB]', 'editor-state', state); },
+        navigate(dest, data, file) {
+          console.log('[CCLQT CB]', 'navigate', dest, data, file);
+          if (dest.id === 'post-editor') {
+            navigateToPostEditor(data);
+          } else {
+            downloadImage(file);
+          }
+        },
+        sendEditorStateToHost(state) {
+          console.log('[CCLQT CB]', 'editor-state', state);
+          [btnEdit, btnDl].forEach((btn) => btn.style.display = state.exportEnabled ? 'unset' : 'none')
+        },
         sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
         navigationData: {
           config: {
@@ -52,17 +110,11 @@ export default async function decorate(block) {
         hostType: 'standalone',
         browserInfo: { isMobile: false },
       })
-      window.qtHost.qt = task;
+      window.qtHost.task = task;
       await task.render();
       const taskId = task.qtEle.qtId;
-      task.qtEle.addEventListener(`${taskId}__navigate-to-download`, (ev) => {
-        console.log('[CCLQT EVT]', 'navigate-to-download', ev.detail);
-      });
       task.qtEle.addEventListener(`${taskId}__navigate-to-task`, (ev) => {
         console.log('[CCLQT EVT]', 'navigate-to-task', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__navigate-to-post-editor`, (ev) => {
-        console.log('[CCLQT EVT]', 'navigate-to-post-editor', ev.detail);
       });
       task.qtEle.addEventListener(`${taskId}__navigate-to-host`, (ev) => {
         console.log('[CCLQT EVT]', 'navigate-to-host', ev.detail);
