@@ -25,7 +25,7 @@ async function fetchDependency(url, api) {
 
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
-  block.innerHTML = '';
+  block.innerHTML = '<sp-theme><div id="qt-host" /></sp-theme>';
   
   // FIXME: remove hardcoded fallback once PR is merged to main
   const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
@@ -37,7 +37,7 @@ export default async function decorate(block) {
 
   window.qtHost = {
     async qtLoaded(QuickTask) {
-      const task = new QuickTask(document.querySelector('.block.quick-action'), {
+      const task = new QuickTask(document.querySelector('#qt-host'), {
         close() { console.log('[CCLQT CB]', 'close'); },
         done(options) { console.log('[CCLQT CB]', 'done', options); },
         navigate(dest, data, file) { console.log('[CCLQT CB]', 'navigate', dest, data, file); },
@@ -52,9 +52,9 @@ export default async function decorate(block) {
         hostType: 'standalone',
         browserInfo: { isMobile: false },
       })
-      window.qtHost.task = task;
+      window.qtHost.qt = task;
       await task.render();
-      const taskId = window.qtHost.task.qtEle.qtId;
+      const taskId = task.qtEle.qtId;
       task.qtEle.addEventListener(`${taskId}__navigate-to-download`, (ev) => {
         console.log('[CCLQT EVT]', 'navigate-to-download', ev.detail);
       });
