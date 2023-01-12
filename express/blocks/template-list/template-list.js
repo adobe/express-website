@@ -603,7 +603,7 @@ export async function decorateTemplateList($block) {
         $tocCollidingArea.append($tocSlot, h2);
       }
     }
-    
+
     if ($block.classList.contains('collaboration')) {
       const $titleHeading = $titleRow.querySelector('h3');
       const $anchorLink = createTag('a', {
