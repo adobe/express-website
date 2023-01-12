@@ -777,6 +777,11 @@ main .template-list-horizontal-fullwidth-mini-container .template-list .template
 }
 
 main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list .template-title {
+  -webkit-hyphens: none; /* safari */
+  hyphens: none;
+}
+
+main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list .template-title::first-line {
   margin-right: 128px;
 }
 
