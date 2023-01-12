@@ -594,7 +594,7 @@ export async function decorateTemplateList($block) {
         }
       });
 
-    if ($parent.classList.contains('toc-container')) {
+    if ($parent && $parent.classList.contains('toc-container')) {
       const $tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
       const $tocSlot = createTag('div', { class: 'toc-slot' });
       const h2 = $titleRow.querySelector('h2');
