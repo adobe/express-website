@@ -98,7 +98,7 @@ export default async function decorate(block) {
         },
         sendEditorStateToHost(state) {
           console.log('[CCLQT CB]', 'editor-state', state);
-          [btnEdit, btnDl].forEach((btn) => btn.style.display = state.exportEnabled ? 'unset' : 'none')
+          [btnEdit, btnDl].forEach((btn) => btn.style.display = state.exportEnabled ? 'inline-block' : 'none')
         },
         sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
         navigationData: {
