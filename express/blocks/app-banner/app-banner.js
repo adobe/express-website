@@ -15,7 +15,39 @@ import {
   getIcon,
   getMobileOperatingSystem,
   fetchPlaceholders,
+  getIconElement,
 } from '../../scripts/scripts.js';
+
+async function buildPayload($block) {
+  const payload = {
+    userAgent: getMobileOperatingSystem(),
+    ratingScore: 0,
+    ratingCount: '',
+  };
+
+  const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
+  const $section = $block.closest('.section');
+
+  if ($floatingButton) {
+    payload.floatingButton = $floatingButton;
+  }
+
+  if ($section) {
+    payload.section = $section;
+  }
+
+  await fetchPlaceholders().then((placeholders) => {
+    if (payload.userAgent === 'iOS') {
+      payload.ratingScore = placeholders['apple-store-rating-score'];
+      payload.ratingCount = placeholders['apple-store-rating-count'];
+    } else {
+      payload.ratingScore = placeholders['google-store-rating-score'];
+      payload.ratingCount = placeholders['google-store-rating-count'];
+    }
+  });
+
+  return payload;
+}
 
 function getCurrentRatingStars(rating = 5) {
   const star = getIcon('star', 'Full star');
@@ -35,50 +67,46 @@ function getCurrentRatingStars(rating = 5) {
   return stars;
 }
 
-function addCloseBtn(section, block, floatingButton) {
-  const $background = section.querySelector('.gradient-background');
-  const $closeBtnDiv = createTag('div', { class: 'closeBtnDiv' });
-  const $closeBtnImg = createTag('img', {
-    class: 'closeBtnImg',
-    src: '/express/icons/close-icon.svg',
-    alt: 'Close banner',
-  });
+function addCloseBtn(block, payload) {
+  const $background = payload.section.querySelector('.gradient-background');
+  const $closeBtnDiv = createTag('div', { class: 'close-btn-div' });
+  const $closeBtnImg = getIconElement('close-icon');
 
   $closeBtnDiv.append($closeBtnImg);
   block.append($closeBtnDiv);
 
   $closeBtnDiv.addEventListener('click', () => {
-    section.classList.add('block-removed');
-    floatingButton.classList.remove('push-up');
+    payload.section.classList.add('block-removed');
+    payload.floatingButton.classList.remove('push-up');
     block.remove();
 
     setTimeout(() => {
       $background.remove();
-      floatingButton.classList.remove('no-background');
+      payload.floatingButton.classList.remove('no-background');
     }, 600);
   });
 }
 
-function scrollDirection(section, block, floatingButton) {
-  const background = section.querySelector('.gradient-background');
+function initScrollDirection(block, payload) {
+  const background = payload.section.querySelector('.gradient-background');
   let lastScrollTop = 0;
 
   document.addEventListener('scroll', () => {
-    if (!section.classList.contains('block-removed')) {
+    if (!payload.section.classList.contains('block-removed')) {
       const { scrollTop } = document.documentElement;
       if (scrollTop < lastScrollTop) {
         block.classList.remove('appear');
-        floatingButton.classList.remove('push-up');
+        payload.floatingButton.classList.remove('push-up');
         setTimeout(() => {
           if (!block.classList.contains('appear')) {
-            floatingButton.classList.remove('no-background');
+            payload.floatingButton.classList.remove('no-background');
             background.classList.remove('show');
             block.classList.remove('show');
           }
         }, 600);
       } else {
         block.classList.add('show');
-        floatingButton.classList.add('push-up', 'no-background');
+        payload.floatingButton.classList.add('push-up', 'no-background');
         background.classList.add('show');
         setTimeout(() => {
           if (block.classList.contains('show')) {
@@ -91,30 +119,12 @@ function scrollDirection(section, block, floatingButton) {
   }, { passive: true });
 }
 
-export default async function decorate($block) {
-  const payload = {
-    userAgent: getMobileOperatingSystem(),
-    ratingScore: 0,
-    ratingCount: '',
-  };
-
-  await fetchPlaceholders().then((placeholders) => {
-    if (payload.userAgent === 'iOS') {
-      payload.ratingScore = placeholders['apple-store-rating-score'];
-      payload.ratingCount = placeholders['apple-store-rating-count'];
-    } else {
-      payload.ratingScore = placeholders['google-store-rating-score'];
-      payload.ratingCount = placeholders['google-store-rating-count'];
-    }
-  });
-
+function decorateBanner($block, payload) {
   const $logo = $block.querySelector('img');
   const $title = $block.querySelector('h2');
   const $cta = $block.querySelector('a');
   const $addDetails = $block.querySelector('p:last-of-type');
-  const $section = $block.closest('.section');
   const $secondImage = $addDetails.querySelector('img');
-  const $floatingButton = document.querySelector('.floating-button-wrapper:not([data-audience="desktop"])');
 
   const $ratings = createTag('div', { class: 'ratings' });
   const $ratingText = createTag('span', { class: 'rating-text' });
@@ -134,9 +144,13 @@ export default async function decorate($block) {
   $details.append($cta, $ratings, $secondImage);
   $colTwo.append($title, $details);
   $block.append($logo, $colTwo);
-  $section.prepend($background);
+  payload.section.prepend($background);
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
+}
 
-  addCloseBtn($section, $block, $floatingButton);
-  scrollDirection($section, $block, $floatingButton);
+export default async function decorate($block) {
+  const payload = await buildPayload($block);
+  decorateBanner($block, payload);
+  addCloseBtn($block, payload);
+  initScrollDirection($block, payload);
 }

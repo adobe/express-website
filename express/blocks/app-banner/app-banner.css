@@ -114,7 +114,7 @@ main .app-banner .sub-text-img {
   align-self: flex-end;
 }
 
-main .app-banner .closeBtnDiv {
+main .app-banner .close-btn-div {
   background-color: #333A49;
   height: 22px;
   width: 22px;
@@ -123,11 +123,12 @@ main .app-banner .closeBtnDiv {
   align-items: center;
   justify-content: center;
   position: absolute;
+  cursor: pointer;
   top: 0;
   right: 0;
 }
 
-main .app-banner .closeBtnImg {
+main .app-banner .icon-close-icon {
   height: 9px;
   width: auto;
 }
