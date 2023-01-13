@@ -14,7 +14,7 @@ import {
   createTag,
   transformLinkToAnimation,
   createOptimizedPicture,
-  addFreePlanWidget,
+  addFreePlanWidget, getMetadata,
 } from '../../scripts/scripts.js';
 
 function styleBackgroundWithScroll($section) {
@@ -110,7 +110,7 @@ export default function decorate($block) {
                     $pictureFrameWrapper.prepend($clickableOverlay);
 
                     $clickableOverlay.addEventListener('mouseenter', () => {
-                      $cloneCta.style.display = 'block';
+                      $cloneCta.style.display = 'flex';
                     }, { passive: true });
                     $clickableOverlay.addEventListener('mouseleave', () => {
                       $cloneCta.style.display = 'none';
