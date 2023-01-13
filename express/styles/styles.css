@@ -933,7 +933,7 @@ main .block .free-plan-bullet {
   display: none;
   top: 0;
   left: 0;
-  z-index: 0;
+  z-index: 1;
 }
 
 main .block .free-plan-bullet .free-plan-bullet-container {
@@ -942,7 +942,8 @@ main .block .free-plan-bullet .free-plan-bullet-container {
   width: 100vw;
   height: 100%;
   border-radius: 100px;
-  transition: max-width 0.5s, border-radius 0.5s;
+  transform: translate(0px, 0px);
+  transition: transform 0.5s ease-in, max-width 0.5s ease-in, border-radius 0.5s ease-in;
   overflow: hidden;
 }
 
@@ -982,6 +983,7 @@ main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   font-family: var(--body-serif-font-family);
   font-style: italic;
   font-size: 16px;
+  transition: font-size 0.5s;
 }
 
 main .block .free-plan-optout {
@@ -997,8 +999,7 @@ main .block .free-plan-optout {
   width: 45px;
   align-items: center;
   justify-content: center;
-  transition: left 0.5s, transform 0.5s;
-  background: var(--color-black);
+  transition: left 0.5s ease-in, transform 0.5s ease-in;
   cursor: pointer;
   z-index: 1;
 }
@@ -1010,6 +1011,30 @@ main .block .free-plan-optout .icon {
 main .block .button-container.free-plan-container.fixed .free-plan-optout {
   left: -56px;
   transform: translateY(-50%) rotate(-90deg);
+}
+
+main .block .button-container.free-plan-container .free-plan-optout::before {
+  content: '';
+  position: absolute;
+  border-radius: 50px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-gray-200);
+  transition: none;
+  z-index: -1;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-optout::before {
+  transition: padding 0.5s ease-in;
+  padding: 12px;
+}
+
+main .block .free-plan-optout img {
+  height: 16px;
+  width: 16px;
+  padding: 12px;
+  border-radius: 50px;
+  background: var(--color-black);
 }
 
 main .block .button-container.free-plan-container.fixed .free-plan-tag > div:first-child {

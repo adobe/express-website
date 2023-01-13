@@ -2291,34 +2291,60 @@ export async function addFreePlanWidget(elem) {
       elem.classList.add('stacked');
     }
 
+    // start watching for free-plan-highlight scroll
+    const parent = elem.parentElement;
+    const previousSibling = elem.previousElementSibling;
+
     optoutButton.addEventListener('click', () => {
       const highlightContainer = elem.querySelector('.free-plan-bullet-container');
       elem.classList.add('highlight-optout');
       elem.classList.remove('fixed');
       highlightContainer.style.removeProperty('transform');
+      elem.style.removeProperty('left');
+      parent.querySelectorAll('.free-plan-widget-placeholder').forEach((el) => {
+        el.remove();
+      });
     }, { passive: true });
-    // start watching for free-plan-highlight scroll
-    setTimeout(() => {
-      const ctaPositionY = elem.offsetTop + 65;
-      console.log(ctaPositionY);
+    let initialCtaPositionX = elem.getBoundingClientRect().left;
 
+    if (parent && previousSibling) {
       ['scroll', 'resize'].forEach((event) => {
         window.addEventListener(event, () => {
+          if (initialCtaPositionX === 0) {
+            initialCtaPositionX = elem.getBoundingClientRect().left;
+          }
+
+          const elemMT = parseInt(getComputedStyle(elem).marginTop.replace(/\D/g, ''), 10);
+          const triggerPoint = previousSibling.getBoundingClientRect().bottom + elemMT;
           const ctaPositionX = elem.getBoundingClientRect().left;
           const highlightContainer = elem.querySelector('.free-plan-bullet-container');
 
-          if (window.innerWidth > 900 && window.scrollY >= ctaPositionY) {
+          const placeHolder = createTag('div', {
+            style: `height: ${getComputedStyle(elem).height}`,
+            class: 'free-plan-widget-placeholder',
+          });
+
+          if (window.innerWidth > 900 && triggerPoint <= 0) {
             if (!elem.classList.contains('highlight-optout')) {
               elem.classList.add('fixed');
+              elem.style.left = `${initialCtaPositionX}px`;
               highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
+
+              if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
+                previousSibling.insertAdjacentElement('afterend', placeHolder);
+              }
             }
           } else {
+            parent.querySelectorAll('.free-plan-widget-placeholder').forEach((el) => {
+              el.remove();
+            });
             elem.classList.remove('fixed');
             highlightContainer.style.removeProperty('transform');
+            elem.style.removeProperty('left');
           }
         }, { passive: true });
       });
-    }, 100);
+    }
   }
 }
 
