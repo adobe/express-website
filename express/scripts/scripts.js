@@ -1602,7 +1602,80 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
-function buildAutoBlocks($main) {
+export function getHelixEnv() {
+  let envName = sessionStorage.getItem('helix-env');
+  if (!envName) {
+    envName = 'stage';
+    if (window.spark.hostname === 'www.adobe.com') envName = 'prod';
+  }
+  const envs = {
+    stage: {
+      commerce: 'commerce-stg.adobe.com',
+      adminconsole: 'stage.adminconsole.adobe.com',
+      spark: 'express-stage.adobeprojectm.com',
+    },
+    prod: {
+      commerce: 'commerce.adobe.com',
+      spark: 'express.adobe.com',
+      adminconsole: 'adminconsole.adobe.com',
+    },
+  };
+  const env = envs[envName];
+
+  const overrideItem = sessionStorage.getItem('helix-env-overrides');
+  if (overrideItem) {
+    const overrides = JSON.parse(overrideItem);
+    const keys = Object.keys(overrides);
+    env.overrides = keys;
+
+    for (const a of keys) {
+      env[a] = overrides[a];
+    }
+  }
+
+  if (env) {
+    env.name = envName;
+  }
+  return env;
+}
+
+export async function fetchMultifunctionButton(path) {
+  const env = getHelixEnv();
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/express/floating-cta-dev.json?limit=10000';
+  } else {
+    sheet = '/express/create/multifunction-button.json?limit=10000';
+  }
+
+  if (!window.multifunctionButton) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}${sheet}`);
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch(sheet);
+      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.multifunctionButton.length) {
+    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
+
+    if (env && env.name === 'stage') {
+      return multifunctionButton || null;
+    }
+
+    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
+  }
+
+  return null;
+}
+
+async function buildAutoBlocks($main) {
   const $lastDiv = $main.querySelector(':scope > div:last-of-type');
 
   // Load the branch.io banner autoblock...
@@ -1637,9 +1710,17 @@ function buildAutoBlocks($main) {
   }
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
-    const $multifunctionButton = buildBlock('floating-button', '');
-    $multifunctionButton.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+    const floatingCTAData = await fetchMultifunctionButton('default');
+    const desktopButton = buildBlock(floatingCTAData.desktop, '');
+    const mobileButton = buildBlock(floatingCTAData.mobile, '');
+
+    desktopButton.dataset.audience = 'desktop';
+    mobileButton.dataset.audience = 'mobile';
+
+    [desktopButton, mobileButton].forEach((button) => {
+      button.classList.add('spreadsheet-powered');
+      $main.querySelector(':scope > div:last-of-type').append(button);
+    });
   }
 }
 
@@ -1781,43 +1862,6 @@ function makeRelativeLinks($main) {
   });
 }
 
-export function getHelixEnv() {
-  let envName = sessionStorage.getItem('helix-env');
-  if (!envName) {
-    envName = 'stage';
-    if (window.spark.hostname === 'www.adobe.com') envName = 'prod';
-  }
-  const envs = {
-    stage: {
-      commerce: 'commerce-stg.adobe.com',
-      adminconsole: 'stage.adminconsole.adobe.com',
-      spark: 'express-stage.adobeprojectm.com',
-    },
-    prod: {
-      commerce: 'commerce.adobe.com',
-      spark: 'express.adobe.com',
-      adminconsole: 'adminconsole.adobe.com',
-    },
-  };
-  const env = envs[envName];
-
-  const overrideItem = sessionStorage.getItem('helix-env-overrides');
-  if (overrideItem) {
-    const overrides = JSON.parse(overrideItem);
-    const keys = Object.keys(overrides);
-    env.overrides = keys;
-
-    for (const a of keys) {
-      env[a] = overrides[a];
-    }
-  }
-
-  if (env) {
-    env.name = envName;
-  }
-  return env;
-}
-
 function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
@@ -1921,52 +1965,15 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
  * @param {Element} main The main element
  */
 function decoratePictures(main) {
-  main.querySelectorAll('img[src*="/media_"').forEach((img, i) => {
+  main.querySelectorAll('img[src*="/media_"]').forEach((img, i) => {
     const newPicture = createOptimizedPicture(img.src, img.alt, !i);
     const picture = img.closest('picture');
     if (picture) picture.parentElement.replaceChild(newPicture, picture);
   });
 }
 
-export async function fetchMultifunctionButton(path) {
-  const env = getHelixEnv();
-  const dev = new URLSearchParams(window.location.search).get('dev');
-  let sheet;
-
-  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/express/floating-cta-dev.json?limit=10000';
-  } else {
-    sheet = '/express/create/multifunction-button.json?limit=10000';
-  }
-
-  if (!window.multifunctionButton) {
-    try {
-      const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}${sheet}`);
-      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
-    } catch {
-      const resp = await fetch(sheet);
-      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
-    }
-  }
-
-  if (window.multifunctionButton.length) {
-    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
-    const env = getHelixEnv();
-
-    if (env && env.name === 'stage') {
-      return multifunctionButton || null;
-    }
-
-    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
-  }
-
-  return null;
-}
-
 export async function decorateMain($main) {
-  buildAutoBlocks($main);
+  await buildAutoBlocks($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);
