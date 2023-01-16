@@ -63,10 +63,10 @@ main .floating-button-wrapper.floating-button--hidden .floating-button {
 main .floating-button a.button:any-link {
   position: relative;
   display: block;
-  margin: 0;
   z-index: 2;
+  width: max-content;
   min-width: 200px;
-  margin-right: 50px;
+  margin: 0 50px 0 0;
   pointer-events: auto;
 }
 

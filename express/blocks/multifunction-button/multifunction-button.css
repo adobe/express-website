@@ -63,10 +63,10 @@ main .floating-button-wrapper.floating-button--hidden .floating-button {
 main .floating-button a.button:any-link {
   position: relative;
   display: block;
-  margin: 0;
   z-index: 2;
+  width: max-content;
   min-width: 200px;
-  margin-right: 50px;
+  margin: 0 50px 0 0;
   pointer-events: auto;
 }
 
@@ -158,7 +158,7 @@ main .floating-button-wrapper.multifunction .toolbox {
   pointer-events: auto;
   background-color: var(--color-white);
   box-sizing: border-box;
-  padding: 30px 32px;
+  padding: 30px 0;
   transform: translateY(72px);
   width: 100%;
   max-height: 0;
@@ -213,8 +213,12 @@ main .floating-button-wrapper.multifunction .floating-button .toggle-button .lot
   transition: opacity 0.2s;
 }
 
-main .floating-button-wrapper.multifunction .button {
+main .floating-button-wrapper.multifunction.floating-button--above-the-fold:not(.floating-button--scrolled) .button {
   padding-left: 48px;
+}
+
+main .floating-button-wrapper.multifunction.clamped {
+  width: auto;
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
@@ -226,7 +230,7 @@ main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .tog
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .toolbox {
-  max-height: 400px;
+  max-height: 500px;
   padding-bottom: 64px;
   transform: translateY(64px);
   z-index: 1;
@@ -264,15 +268,22 @@ main .floating-button-wrapper.multifunction .toolbox .badge {
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool {
-  max-width: 72%;
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
 
-main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
-  padding-bottom: 12px;
+main .floating-button-wrapper.multifunction .toolbox .toolbox-top {
+  margin: 0 32px 12px 32px;
   border-bottom: 1px solid var(--color-gray-300);
+}
+
+main .floating-button-wrapper.multifunction .toolbox .toolbox-top .tool:first-of-type {
+  padding-right: 100px;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom {
+  margin: 0 32px;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool img,

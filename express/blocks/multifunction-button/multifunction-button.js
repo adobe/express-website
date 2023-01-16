@@ -15,7 +15,6 @@ import {
   getIconElement,
   getLottie,
   getMobileOperatingSystem,
-  lazyLoadLottiePlayer,
 } from '../../scripts/scripts.js';
 
 import {
@@ -60,19 +59,24 @@ function toggleToolBox($wrapper, $lottie, data, userInitiated = true) {
     $wrapper.classList.remove('toolbox-opened');
     if (userInitiated) {
       setTimeout(() => {
-        $toolbox.classList.add('hidden');
-        $button.classList.remove('toolbox-opened');
+        if (!$wrapper.classList.contains('toolbox-opened')) {
+          $toolbox.classList.add('hidden');
+          $wrapper.classList.remove('clamped');
+          $button.classList.remove('toolbox-opened');
+        }
       }, 500);
     } else {
       setTimeout(() => {
         if ($wrapper.classList.contains('initial-load')) {
           $toolbox.classList.add('hidden');
+          $wrapper.classList.remove('clamped');
           $button.classList.remove('toolbox-opened');
         }
       }, 2000);
     }
   } else {
     $toolbox.classList.remove('hidden');
+    $wrapper.classList.add('clamped');
     $button.classList.add('toolbox-opened');
     hideScrollArrow($wrapper, $lottie);
 
@@ -123,16 +127,24 @@ function buildToolBox($wrapper, data) {
   const $toggleButton = createTag('a', { class: 'toggle-button' });
   const $toggleIcon = getIconElement('plus-icon-22');
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
+  const $boxTop = createTag('div', { class: 'toolbox-top' });
+  const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
 
-  data.tools.forEach((tool) => {
+  data.tools.forEach((tool, index) => {
     const $tool = createTag('div', { class: 'tool' });
     $tool.append(tool.icon, tool.anchor);
-    $toolBox.append($tool);
+
+    if (index < data.toolsToStash) {
+      $boxTop.append($tool);
+    } else {
+      $boxBottom.append($tool);
+    }
   });
 
   $appStoreBadge.href = data.appStore.href ? data.appStore.href : data.tools[0].anchor.href;
 
   $wrapper.classList.add('initial-load');
+  $wrapper.classList.add('clamped');
   $wrapper.classList.add('toolbox-opened');
   $floatingButton.classList.add('toolbox-opened');
   hideScrollArrow($wrapper, $lottie);
@@ -144,6 +156,7 @@ function buildToolBox($wrapper, data) {
   }, data.delay * 1000);
 
   $toggleButton.innerHTML = getLottie('plus-animation', '/express/icons/plus-animation.json');
+  $toolBox.append($boxTop, $boxBottom);
   $toggleButton.append($toggleIcon);
   $floatingButton.append($toggleButton);
   $notch.append($notchPill);
@@ -172,7 +185,8 @@ function buildToolBox($wrapper, data) {
 }
 
 export async function createMultiFunctionButton($block, data, audience) {
-  const $buttonWrapper = await createFloatingButton($block, audience, data).then(((result) => result));
+  const $buttonWrapper = await createFloatingButton($block, audience, data)
+    .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
   buildToolBox($buttonWrapper, data);
 }

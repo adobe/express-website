@@ -17,7 +17,6 @@ import {
   getIconElement,
   getLottie,
   lazyLoadLottiePlayer,
-  loadCSS,
 } from '../../scripts/scripts.js';
 
 export const hideScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
@@ -41,7 +40,7 @@ export function initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrol
       behavior: 'smooth',
     });
     const checkIfScrollToIsFinished = setInterval(() => {
-      if ($scrollAnchor.offsetTop <= window.pageYOffset) {
+      if ($scrollAnchor.offsetTop <= window.scrollY) {
         clicked = false;
         $floatButtonWrapper.classList.remove('floating-button--clicked');
         clearInterval(checkIfScrollToIsFinished);
@@ -74,7 +73,6 @@ function makeCTAFromSheet($block, data) {
 export async function createFloatingButton($block, audience, data) {
   const $a = makeCTAFromSheet($block, data);
   const main = document.querySelector('main');
-  loadCSS('/express/blocks/floating-button/floating-button.css');
 
   // Floating button html
   const $floatButtonLink = $a.cloneNode(true);
@@ -227,6 +225,10 @@ export async function collectFloatingButtonData($block) {
 
     if (key === 'main cta text') {
       data.mainCta.text = value;
+    }
+
+    if (key === 'ctas above divider') {
+      data.toolsToStash = value;
     }
 
     for (let i = 1; i < 7; i += 1) {
