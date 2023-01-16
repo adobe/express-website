@@ -21,7 +21,6 @@ import {
   createFloatingButton,
   showScrollArrow,
   hideScrollArrow,
-  removeEmptySections,
   collectFloatingButtonData,
 } from '../shared/floating-cta.js';
 
@@ -193,7 +192,10 @@ export async function createMultiFunctionButton($block, data, audience) {
 
 export default async function decorateBlock($block) {
   const audience = $block.querySelector(':scope > div').textContent.trim();
-  const data = await collectFloatingButtonData($block);
+  if (audience === 'mobile') {
+    $block.closest('.section').remove();
+  }
+
+  const data = await collectFloatingButtonData();
   await createMultiFunctionButton($block, data, audience);
-  removeEmptySections();
 }

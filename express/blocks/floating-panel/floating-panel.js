@@ -12,9 +12,9 @@
 
 import {
   createTag,
-  fetchPlaceholders,
+  fetchPlaceholders, getLocale,
   getLottie,
-  lazyLoadLottiePlayer,
+  lazyLoadLottiePlayer, loadBlocks,
 } from '../../scripts/scripts.js';
 
 const hideScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
@@ -106,7 +106,7 @@ function togglePanel(section, otherCTAs) {
   }
 }
 function initCTAWatcher(section) {
-  const buttons = section.querySelectorAll('a.button');
+  const buttons = section.querySelectorAll('a');
 
   if (buttons.length > 0) {
     const ctaInBlock = buttons[buttons.length - 1];
@@ -121,28 +121,69 @@ function initCTAWatcher(section) {
   }
 }
 
-export default async function decorateBlock(block) {
-  const button = block.querySelector('p.button-container');
-  const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
-  const section = block.closest('.section.floating-panel-container');
-
-  if (button) {
-    button.parentElement.classList.add('buttons-container');
-  }
-
-  if (heading) {
-    heading.parentElement.classList.add('content-container');
-  }
-
-  lazyLoadLottiePlayer();
-  const ctaElements = await decorateLottieButton(block);
-
-  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
-  if (!$scrollAnchor) {
-    hideScrollArrow(ctaElements.cta, ctaElements.lottie);
+async function fetchPlainBlockFromFragment($block, content) {
+  const location = new URL(window.location);
+  const locale = getLocale(location);
+  let fragmentUrl;
+  if (locale === 'us') {
+    fragmentUrl = `${location.origin}${content}`;
   } else {
-    initLottieArrow(ctaElements.lottie, ctaElements.cta, $scrollAnchor, section);
+    fragmentUrl = `${location.origin}/${locale}${content}`;
   }
 
-  initCTAWatcher(section);
+  const path = new URL(fragmentUrl).pathname.split('.')[0];
+  const resp = await fetch(`${path}.plain.html`);
+  if (resp.status === 404) {
+    $block.parentElement.parentElement.remove();
+  } else {
+    const html = await resp.text();
+    const $newBlock = createTag('div');
+    $newBlock.innerHTML = html;
+    $newBlock.className = 'floating-panel-container';
+    $newBlock.id = 'floating-panel-container';
+    const img = $newBlock.querySelector('img');
+    if (img) {
+      img.setAttribute('loading', 'lazy');
+    }
+    const loadedBlocks = await loadBlocks($newBlock);
+    await Promise.all(loadedBlocks);
+    const $section = $block.closest('.section');
+    $section.parentNode.replaceChild($newBlock, $section);
+    return $newBlock;
+  }
+  return null;
+}
+
+export default async function decorateBlock(block) {
+  const container = await fetchPlainBlockFromFragment(block, '/drafts/qiyundai/fragments/default-floating-panel');
+
+  console.log(container)
+  if (container) {
+    const buttons = container.querySelector('a');
+    const heading = container.querySelector('h1, h2, h3, h4, h5, h6');
+
+    if (buttons.length > 0) {
+      buttons.forEach((button) => {
+        const buttonWrapper = button.parentElement;
+        buttonWrapper.classList.add('button-container');
+        buttonWrapper.parentElement.parentElement.classList.add('buttons-container');
+      });
+    }
+
+    if (heading) {
+      heading.parentElement.classList.add('content-container');
+    }
+
+    lazyLoadLottiePlayer();
+    const ctaElements = await decorateLottieButton(container);
+
+    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+    if (!$scrollAnchor) {
+      hideScrollArrow(ctaElements.cta, ctaElements.lottie);
+    } else {
+      initLottieArrow(ctaElements.lottie, ctaElements.cta, $scrollAnchor, container);
+    }
+
+    initCTAWatcher(container);
+  }
 }

@@ -12,12 +12,15 @@
 
 import {
   createFloatingButton,
-  removeEmptySections,
   collectFloatingButtonData,
 } from '../shared/floating-cta.js';
 
 export default async function decorateBlock($block) {
   const audience = $block.querySelector(':scope > div').textContent.trim();
+  if (audience === 'mobile') {
+    $block.closest('.section').remove();
+  }
+
   const $parentSection = $block.closest('.section');
   const data = await collectFloatingButtonData($block);
 
@@ -26,6 +29,4 @@ export default async function decorateBlock($block) {
     $parentSection ? audience : null,
     data,
   );
-
-  removeEmptySections();
 }

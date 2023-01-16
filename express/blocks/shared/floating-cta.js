@@ -188,7 +188,7 @@ export async function createFloatingButton($block, audience, data) {
   return $floatButtonWrapper;
 }
 
-export async function collectFloatingButtonData($block) {
+export async function collectFloatingButtonData() {
   const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
   const dataArray = [];
 
@@ -249,10 +249,12 @@ export async function collectFloatingButtonData($block) {
   return data;
 }
 
-export function removeEmptySections() {
-  const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
-  const emptySections = sections.filter((s) => s.children.length === 0 || (s.children.length === 1 && s.children[0].classList.contains('floating-button-wrapper')));
-  emptySections.forEach((emptySection) => {
-    emptySection.remove();
-  });
+export function removeEmptySections(audience) {
+  if (audience === 'mobile') {
+    const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
+    const emptySections = sections.filter((s) => s.children.length === 0 || (s.children.length === 1 && s.children[0].classList.contains('floating-button-wrapper')));
+    emptySections.forEach((emptySection) => {
+      emptySection.remove();
+    });
+  }
 }
