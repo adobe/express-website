@@ -47,9 +47,9 @@ function initLottieArrow($lottieScrollButton, buttonWrapper, $scrollAnchor, sect
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 10) {
-      section.classList.add('appear');
+      section.style.bottom = '0px';
     } else {
-      section.classList.remove('appear');
+      section.style.bottom = `-${section.offsetHeight}px`;
     }
 
     if (clicked) return;
@@ -100,9 +100,9 @@ function togglePanel(section, otherCTAs) {
   }
 
   if (CTAsOffBounds === otherCTAs.length) {
-    section.classList.add('appear');
+    section.style.bottom = '0px';
   } else {
-    section.classList.remove('appear');
+    section.style.bottom = `-${section.offsetHeight}px`;
   }
 }
 function initCTAWatcher(section) {
@@ -139,7 +139,7 @@ async function fetchPlainBlockFromFragment($block, content) {
     const html = await resp.text();
     const $newBlock = createTag('div');
     $newBlock.innerHTML = html;
-    $newBlock.className = 'floating-panel-container';
+    $newBlock.className = 'section section-wrapper floating-panel-container';
     $newBlock.id = 'floating-panel-container';
     const img = $newBlock.querySelector('img');
     if (img) {
@@ -154,25 +154,36 @@ async function fetchPlainBlockFromFragment($block, content) {
   return null;
 }
 
+function standardizeSection(section, audience) {
+  const wrapperDiv = section.querySelector(':scope > div');
+  const block = section.querySelector('.floating-panel');
+  const buttons = block.querySelectorAll('a');
+  const heading = block.querySelector('h1, h2, h3, h4, h5, h6');
+
+  section.dataset.audience = audience;
+  block.classList.add('block');
+  wrapperDiv.classList.add('floating-panel-wrapper');
+
+  if (buttons.length > 0) {
+    buttons.forEach((button) => {
+      const buttonWrapper = button.parentElement;
+      button.classList.add('button');
+      buttonWrapper.classList.add('button-container');
+      buttonWrapper.parentElement.classList.add('buttons-container');
+    });
+  }
+
+  if (heading) {
+    heading.parentElement.classList.add('content-container');
+  }
+}
+
 export default async function decorateBlock(block) {
+  const audience = block.querySelector(':scope > div').textContent.trim();
   const container = await fetchPlainBlockFromFragment(block, '/drafts/qiyundai/fragments/default-floating-panel');
 
-  console.log(container)
   if (container) {
-    const buttons = container.querySelector('a');
-    const heading = container.querySelector('h1, h2, h3, h4, h5, h6');
-
-    if (buttons.length > 0) {
-      buttons.forEach((button) => {
-        const buttonWrapper = button.parentElement;
-        buttonWrapper.classList.add('button-container');
-        buttonWrapper.parentElement.parentElement.classList.add('buttons-container');
-      });
-    }
-
-    if (heading) {
-      heading.parentElement.classList.add('content-container');
-    }
+    standardizeSection(container, audience);
 
     lazyLoadLottiePlayer();
     const ctaElements = await decorateLottieButton(container);

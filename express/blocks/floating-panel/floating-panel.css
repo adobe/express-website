@@ -2,15 +2,10 @@ main .section.floating-panel-container {
     padding: 16px 0 16px 0;
     position: fixed;
     background: white;
-    bottom: -100px;
     width: 100%;
     display: none;
     transition: bottom 0.3s;
     box-shadow: 0 -8px 8px 2px rgb(102 102 102 / 15%);
-}
-
-main .section.floating-panel-container.appear {
-    bottom: 0;
 }
 
 @media screen and (min-width: 900px) {
