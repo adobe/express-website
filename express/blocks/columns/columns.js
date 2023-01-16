@@ -29,7 +29,7 @@ import {
 
 import {
   createFloatingButton,
-} from '../shared/floatingButton.js';
+} from '../shared/floating-cta.js';
 
 function transformToVideoColumn($cell, $a) {
   const $parent = $cell.parentElement;

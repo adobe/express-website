@@ -24,7 +24,7 @@ import {
   hideScrollArrow,
   removeEmptySections,
   collectFloatingButtonData,
-} from '../shared/floatingButton.js';
+} from '../shared/floating-cta.js';
 
 function decorateBadge() {
   const $anchor = createTag('a');

@@ -207,74 +207,42 @@ export async function collectFloatingButtonData($block) {
 
   const data = {
     scrollState: 'withLottie',
-    single: 'N',
     delay: 3,
     tools: [],
     appStore: {},
     mainCta: {},
   };
 
-  if ($block.className.includes('spreadsheet-powered')) {
-    dataArray.forEach((col, index, array) => {
-      const key = col[0];
-      const value = col[1];
+  dataArray.forEach((col, index, array) => {
+    const key = col[0];
+    const value = col[1];
 
-      if (key === 'single') {
-        data.single = value;
-      }
-
-      if (key === 'delay') {
-        data.delay = value;
-      }
-
-      if (key === 'main cta link') {
-        data.mainCta.href = value;
-      }
-
-      if (key === 'main cta text') {
-        data.mainCta.text = value;
-      }
-
-      for (let i = 1; i < 7; i += 1) {
-        if (key === `cta ${i} icon`) {
-          const [, href] = array[index + 1];
-          const [, text] = array[index + 2];
-          const $icon = getIconElement(value);
-          const $a = createTag('a', { title: text, href });
-          $a.textContent = text;
-          data.tools.push({
-            icon: $icon,
-            anchor: $a,
-          });
-        }
-      }
-    });
-  } else {
-    const delayInSeconds = parseFloat(Array.from($block.children)[0].textContent);
-    const $tools = $block.querySelectorAll('li');
-
-    $tools.forEach(($tool) => {
-      const iconFound = $tool.querySelector('img') || $tool.querySelector('svg');
-      const anchorFound = $tool.querySelector('a');
-      if (iconFound) {
-        if (anchorFound) {
-          data.tools.push({
-            icon: iconFound,
-            anchor: anchorFound,
-          });
-        }
-      } else {
-        const $badgeAnchor = $tool.querySelector('a');
-        if ($badgeAnchor) {
-          data.appStore.href = $badgeAnchor.href;
-        }
-      }
-    });
-
-    if (delayInSeconds) {
-      data.delay = delayInSeconds;
+    if (key === 'delay') {
+      data.delay = value;
     }
-  }
+
+    if (key === 'main cta link') {
+      data.mainCta.href = value;
+    }
+
+    if (key === 'main cta text') {
+      data.mainCta.text = value;
+    }
+
+    for (let i = 1; i < 7; i += 1) {
+      if (key === `cta ${i} icon`) {
+        const [, href] = array[index + 1];
+        const [, text] = array[index + 2];
+        const $icon = getIconElement(value);
+        const $a = createTag('a', { title: text, href });
+        $a.textContent = text;
+        data.tools.push({
+          icon: $icon,
+          anchor: $a,
+        });
+      }
+    }
+  });
 
   return data;
 }

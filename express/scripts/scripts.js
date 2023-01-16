@@ -1711,11 +1711,8 @@ async function buildAutoBlocks($main) {
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const floatingCTAData = await fetchMultifunctionButton('default');
-    const desktopButton = buildBlock(floatingCTAData.desktop, '');
-    const mobileButton = buildBlock(floatingCTAData.mobile, '');
-
-    desktopButton.dataset.audience = 'desktop';
-    mobileButton.dataset.audience = 'mobile';
+    const desktopButton = buildBlock(floatingCTAData.desktop, 'desktop');
+    const mobileButton = buildBlock(floatingCTAData.mobile, 'mobile');
 
     [desktopButton, mobileButton].forEach((button) => {
       button.classList.add('spreadsheet-powered');

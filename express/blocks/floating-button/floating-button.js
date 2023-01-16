@@ -14,15 +14,16 @@ import {
   createFloatingButton,
   removeEmptySections,
   collectFloatingButtonData,
-} from '../shared/floatingButton.js';
+} from '../shared/floating-cta.js';
 
 export default async function decorateBlock($block) {
+  const audience = $block.querySelector(':scope > div').textContent.trim();
   const $parentSection = $block.closest('.section');
   const data = await collectFloatingButtonData($block);
 
   await createFloatingButton(
     $block,
-    $parentSection ? $parentSection.dataset.audience : null,
+    $parentSection ? audience : null,
     data,
   );
 

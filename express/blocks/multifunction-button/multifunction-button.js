@@ -24,7 +24,7 @@ import {
   hideScrollArrow,
   removeEmptySections,
   collectFloatingButtonData,
-} from '../shared/floatingButton.js';
+} from '../shared/floating-cta.js';
 
 function decorateBadge() {
   const $anchor = createTag('a');
@@ -139,7 +139,7 @@ function buildToolBox($wrapper, data) {
 
   setTimeout(() => {
     if ($wrapper.classList.contains('initial-load')) {
-      toggleToolBox($wrapper, $lottie, 'withLottie', false);
+      toggleToolBox($wrapper, $lottie, data, false);
     }
   }, data.delay * 1000);
 
@@ -168,33 +168,18 @@ function buildToolBox($wrapper, data) {
     }
   });
 
-  initNotchDragAction($wrapper);
+  initNotchDragAction($wrapper, data);
 }
 
-export async function createMultiFunctionButton($block, data) {
-  if (data.tools.length > 0) {
-    lazyLoadLottiePlayer();
-    const $existingFloatingButtons = document.querySelectorAll('.floating-button-wrapper');
-    if ($existingFloatingButtons) {
-      $existingFloatingButtons.forEach(($button) => {
-        if (!$button.dataset.audience) {
-          $button.dataset.audience = 'desktop';
-          $button.dataset.sectionStatus = 'loaded';
-        } else if ($button.dataset.audience === 'mobile') {
-          $button.remove();
-        }
-      });
-    }
-
-    const $buttonWrapper = await createFloatingButton($block, 'mobile', data).then(((result) => result));
-
-    $buttonWrapper.classList.add('multifunction');
-    buildToolBox($buttonWrapper, data);
-  }
+export async function createMultiFunctionButton($block, data, audience) {
+  const $buttonWrapper = await createFloatingButton($block, audience, data).then(((result) => result));
+  $buttonWrapper.classList.add('multifunction');
+  buildToolBox($buttonWrapper, data);
 }
 
 export default async function decorateBlock($block) {
+  const audience = $block.querySelector(':scope > div').textContent.trim();
   const data = await collectFloatingButtonData($block);
-  await createMultiFunctionButton($block, data);
+  await createMultiFunctionButton($block, data, audience);
   removeEmptySections();
 }
