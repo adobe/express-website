@@ -12,10 +12,14 @@
 
 import {
   createTag,
-  fetchPlaceholders, getLocale,
+  fetchPlaceholders,
+  getLocale,
   getLottie,
-  lazyLoadLottiePlayer, loadBlocks,
+  lazyLoadLottiePlayer,
+  loadBlocks,
 } from '../../scripts/scripts.js';
+
+import { collectFloatingButtonData } from '../shared/floating-cta.js';
 
 const hideScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
   $floatButtonWrapper.classList.add('scrolled');
@@ -36,7 +40,7 @@ function initLottieArrow($lottieScrollButton, buttonWrapper, $scrollAnchor, sect
     window.scrollTo({ top: $scrollAnchor.offsetTop, behavior: 'smooth' });
 
     const checkIfScrollToIsFinished = setInterval(() => {
-      if ($scrollAnchor.offsetTop <= window.pageYOffset) {
+      if ($scrollAnchor.offsetTop <= window.scrollY) {
         clicked = false;
         buttonWrapper.classList.remove('floating-button--clicked');
         clearInterval(checkIfScrollToIsFinished);
@@ -49,7 +53,7 @@ function initLottieArrow($lottieScrollButton, buttonWrapper, $scrollAnchor, sect
     if (window.scrollY > 10) {
       section.style.bottom = '0px';
     } else {
-      section.style.bottom = `-${section.offsetHeight}px`;
+      section.style.bottom = `-${section.offsetHeight + 8}px`;
     }
 
     if (clicked) return;
@@ -180,7 +184,8 @@ function standardizeSection(section, audience) {
 
 export default async function decorateBlock(block) {
   const audience = block.querySelector(':scope > div').textContent.trim();
-  const container = await fetchPlainBlockFromFragment(block, '/drafts/qiyundai/fragments/default-floating-panel');
+  const data = await collectFloatingButtonData();
+  const container = await fetchPlainBlockFromFragment(block, `/drafts/qiyundai/fragments/${data.panelFragment}`);
 
   if (container) {
     standardizeSection(container, audience);

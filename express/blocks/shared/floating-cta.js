@@ -17,6 +17,7 @@ import {
   getIconElement,
   getLottie,
   lazyLoadLottiePlayer,
+  loadCSS,
 } from '../../scripts/scripts.js';
 
 export const hideScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
@@ -73,6 +74,7 @@ function makeCTAFromSheet($block, data) {
 export async function createFloatingButton($block, audience, data) {
   const $a = makeCTAFromSheet($block, data);
   const main = document.querySelector('main');
+  loadCSS('/express/blocks/shared/floating-cta.css');
 
   // Floating button html
   const $floatButtonLink = $a.cloneNode(true);
@@ -229,6 +231,14 @@ export async function collectFloatingButtonData() {
 
     if (key === 'ctas above divider') {
       data.toolsToStash = value;
+    }
+
+    if (key === 'panel fragment') {
+      data.panelFragment = value;
+    }
+
+    if (key === 'bubble sheet') {
+      data.bubbleSheet = value || 'fallback-bubbles-sheet';
     }
 
     for (let i = 1; i < 7; i += 1) {

@@ -1711,13 +1711,22 @@ async function buildAutoBlocks($main) {
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const floatingCTAData = await fetchMultifunctionButton(window.location.pathname);
-    const desktopButton = buildBlock(floatingCTAData.desktop, 'desktop');
-    const mobileButton = buildBlock(floatingCTAData.mobile, 'mobile');
 
-    [desktopButton, mobileButton].forEach((button) => {
-      button.classList.add('spreadsheet-powered');
-      $main.querySelector(':scope > div:last-of-type').append(button);
-    });
+    if (floatingCTAData) {
+      const defaultButton = await fetchMultifunctionButton('default');
+
+      const buttonTypes = {
+        desktop: floatingCTAData.desktop || defaultButton.desktop,
+        mobile: floatingCTAData.mobile || defaultButton.mobile,
+      };
+
+      const desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
+      const mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
+
+      [desktopButton, mobileButton].forEach((button) => {
+        $main.querySelector(':scope > div:last-of-type').append(button);
+      });
+    }
   }
 }
 

@@ -115,7 +115,7 @@ function initNotchDragAction($wrapper, data) {
   }, { passive: true });
 }
 
-function buildToolBox($wrapper, data) {
+function buildMultifunctionToolBox($wrapper, data) {
   const $toolBox = createTag('div', { class: 'toolbox' });
   const $notch = createTag('a', { class: 'notch' });
   const $notchPill = createTag('div', { class: 'notch-pill' });
@@ -187,7 +187,7 @@ export async function createMultiFunctionButton($block, data, audience) {
   const $buttonWrapper = await createFloatingButton($block, audience, data)
     .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
-  buildToolBox($buttonWrapper, data);
+  buildMultifunctionToolBox($buttonWrapper, data);
 }
 
 export default async function decorateBlock($block) {

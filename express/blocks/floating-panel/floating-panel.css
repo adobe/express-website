@@ -21,8 +21,17 @@ main .section.floating-panel-container .floating-panel-wrapper {
 
 main .section.floating-panel-container .floating-panel {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
     justify-content: space-between;
 }
+
+@media screen and (min-width: 900px) {
+    main .section.floating-panel-container .floating-panel {
+        flex-direction: unset;
+    }
+}
+
 main .section.floating-panel-container .floating-panel .content-container {
     height: 100%;
     display: flex;
