@@ -1273,7 +1273,7 @@ function initFilterSort($block, $toolBar) {
         // sync current filter & sorting method with toolbar current options
         updateOptionsStatus($block, $toolBar);
 
-        $option.addEventListener('click', async (e) => {
+        $option.addEventListener('click', async () => {
           // e.stopPropagation();
           $options.forEach((o) => {
             if ($option !== o) {
