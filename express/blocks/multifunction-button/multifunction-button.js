@@ -12,8 +12,6 @@
 
 import {
   createTag,
-  getIconElement,
-  getLottie,
 } from '../../scripts/scripts.js';
 
 import {
@@ -21,7 +19,8 @@ import {
   showScrollArrow,
   hideScrollArrow,
   collectFloatingButtonData,
-  decorateBadge,
+  buildToolBoxStructure,
+  initToolBox,
 } from '../shared/floating-cta.js';
 
 function toggleMultifunctionToolBox($wrapper, $lottie, data, userInitiated = true) {
@@ -98,18 +97,11 @@ function initNotchDragAction($wrapper, data) {
 }
 
 function buildMultifunctionToolBox($wrapper, data) {
-  const $toolBox = createTag('div', { class: 'toolbox' });
-  const $notch = createTag('a', { class: 'notch' });
-  const $notchPill = createTag('div', { class: 'notch-pill' });
-  const $appStoreBadge = decorateBadge();
-  const $background = createTag('div', { class: 'toolbox-background' });
-  const $floatingButton = $wrapper.querySelector('.floating-button');
-  const $cta = $floatingButton.querySelector('a');
-  const $toggleButton = createTag('a', { class: 'toggle-button' });
-  const $toggleIcon = getIconElement('plus-icon-22');
+  buildToolBoxStructure($wrapper, data);
+
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
-  const $boxTop = createTag('div', { class: 'toolbox-top' });
-  const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
+  const $boxTop = $wrapper.querySelector('.toolbox-top');
+  const $boxBottom = $wrapper.querySelector('.toolbox-bottom');
 
   data.tools.forEach((tool, index) => {
     const $tool = createTag('div', { class: 'tool' });
@@ -122,46 +114,8 @@ function buildMultifunctionToolBox($wrapper, data) {
     }
   });
 
-  $appStoreBadge.href = data.appStore.href ? data.appStore.href : data.tools[0].anchor.href;
-
-  $wrapper.classList.add('initial-load');
-  $wrapper.classList.add('clamped');
-  $wrapper.classList.add('toolbox-opened');
-  $floatingButton.classList.add('toolbox-opened');
   hideScrollArrow($wrapper, $lottie);
-
-  setTimeout(() => {
-    if ($wrapper.classList.contains('initial-load')) {
-      toggleMultifunctionToolBox($wrapper, $lottie, data, false);
-    }
-  }, data.delay * 1000);
-
-  $toggleButton.innerHTML = getLottie('plus-animation', '/express/icons/plus-animation.json');
-  $toolBox.append($boxTop, $boxBottom);
-  $toggleButton.append($toggleIcon);
-  $floatingButton.append($toggleButton);
-  $notch.append($notchPill);
-  $toolBox.append($notch, $appStoreBadge);
-  $wrapper.append($toolBox, $background);
-
-  $cta.addEventListener('click', (e) => {
-    if (!$wrapper.classList.contains('toolbox-opened')) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleMultifunctionToolBox($wrapper, $lottie, data);
-    }
-  });
-
-  [$toggleButton, $notch, $background].forEach(($element) => {
-    if ($element) {
-      $element.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleMultifunctionToolBox($wrapper, $lottie, data);
-      });
-    }
-  });
-
+  initToolBox($wrapper, data, toggleMultifunctionToolBox);
   initNotchDragAction($wrapper, data);
 }
 

@@ -277,3 +277,65 @@ export function decorateBadge() {
 
   return $anchor;
 }
+
+export function buildToolBoxStructure($wrapper, data) {
+  const $toolBox = createTag('div', { class: 'toolbox' });
+  const $notch = createTag('a', { class: 'notch' });
+  const $notchPill = createTag('div', { class: 'notch-pill' });
+  const $appStoreBadge = decorateBadge();
+  const $background = createTag('div', { class: 'toolbox-background' });
+  const $toggleButton = createTag('a', { class: 'toggle-button' });
+  const $toggleIcon = getIconElement('plus-icon-22');
+  const $boxTop = createTag('div', { class: 'toolbox-top' });
+  const $boxBottom = createTag('div', { class: 'toolbox-bottom' });
+
+  const $floatingButton = $wrapper.querySelector('.floating-button');
+
+  $toggleButton.innerHTML = getLottie('plus-animation', '/express/icons/plus-animation.json');
+  $toolBox.append($boxTop, $boxBottom);
+  $toggleButton.append($toggleIcon);
+  $floatingButton.append($toggleButton);
+  $notch.append($notchPill);
+  $toolBox.append($notch, $appStoreBadge);
+  $wrapper.append($toolBox, $background);
+
+  $appStoreBadge.href = data.appStore.href ? data.appStore.href : data.tools[0].anchor.href;
+
+  $wrapper.classList.add('initial-load');
+  $wrapper.classList.add('clamped');
+  $wrapper.classList.add('toolbox-opened');
+  $floatingButton.classList.add('toolbox-opened');
+}
+
+export function initToolBox($wrapper, data, toggleFunction) {
+  const $floatingButton = $wrapper.querySelector('.floating-button');
+  const $cta = $floatingButton.querySelector('a');
+  const $toggleButton = $wrapper.querySelector('.toggle-button');
+  const $lottie = $wrapper.querySelector('.floating-button-lottie');
+  const $notch = $wrapper.querySelector('.notch');
+  const $background = $wrapper.querySelector('.toolbox-background');
+
+  setTimeout(() => {
+    if ($wrapper.classList.contains('initial-load')) {
+      toggleFunction($wrapper, $lottie, data, false);
+    }
+  }, data.delay * 1000);
+
+  $cta.addEventListener('click', (e) => {
+    if (!$wrapper.classList.contains('toolbox-opened')) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleFunction($wrapper, $lottie, data);
+    }
+  });
+
+  [$toggleButton, $notch, $background].forEach(($element) => {
+    if ($element) {
+      $element.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFunction($wrapper, $lottie, data);
+      });
+    }
+  });
+}
