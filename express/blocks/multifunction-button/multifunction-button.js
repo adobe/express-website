@@ -14,7 +14,6 @@ import {
   createTag,
   getIconElement,
   getLottie,
-  getMobileOperatingSystem,
 } from '../../scripts/scripts.js';
 
 import {
@@ -22,27 +21,10 @@ import {
   showScrollArrow,
   hideScrollArrow,
   collectFloatingButtonData,
+  decorateBadge,
 } from '../shared/floating-cta.js';
 
-function decorateBadge() {
-  const $anchor = createTag('a');
-  const OS = getMobileOperatingSystem();
-
-  if ($anchor) {
-    $anchor.textContent = '';
-    $anchor.classList.add('badge');
-
-    if (OS === 'iOS') {
-      $anchor.append(getIconElement('apple-store'));
-    } else {
-      $anchor.append(getIconElement('google-store'));
-    }
-  }
-
-  return $anchor;
-}
-
-function toggleToolBox($wrapper, $lottie, data, userInitiated = true) {
+function toggleMultifunctionToolBox($wrapper, $lottie, data, userInitiated = true) {
   const $toolbox = $wrapper.querySelector('.toolbox');
   const $button = $wrapper.querySelector('.floating-button');
 
@@ -106,7 +88,7 @@ function initNotchDragAction($wrapper, data) {
     $body.style.removeProperty('overflow');
 
     if (e.changedTouches[0].clientY - touchStart > 100) {
-      toggleToolBox($wrapper, $lottie, data);
+      toggleMultifunctionToolBox($wrapper, $lottie, data);
     } else {
       $toolBox.style.maxHeight = `${initialHeight}px`;
     }
@@ -150,7 +132,7 @@ function buildMultifunctionToolBox($wrapper, data) {
 
   setTimeout(() => {
     if ($wrapper.classList.contains('initial-load')) {
-      toggleToolBox($wrapper, $lottie, data, false);
+      toggleMultifunctionToolBox($wrapper, $lottie, data, false);
     }
   }, data.delay * 1000);
 
@@ -166,7 +148,7 @@ function buildMultifunctionToolBox($wrapper, data) {
     if (!$wrapper.classList.contains('toolbox-opened')) {
       e.preventDefault();
       e.stopPropagation();
-      toggleToolBox($wrapper, $lottie, data);
+      toggleMultifunctionToolBox($wrapper, $lottie, data);
     }
   });
 
@@ -175,7 +157,7 @@ function buildMultifunctionToolBox($wrapper, data) {
       $element.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleToolBox($wrapper, $lottie, data);
+        toggleMultifunctionToolBox($wrapper, $lottie, data);
       });
     }
   });

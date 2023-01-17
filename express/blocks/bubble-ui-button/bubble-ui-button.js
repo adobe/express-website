@@ -14,7 +14,6 @@ import {
   createTag,
   getIconElement,
   getLottie,
-  getMobileOperatingSystem,
   getLocale,
 } from '../../scripts/scripts.js';
 
@@ -23,6 +22,7 @@ import {
   showScrollArrow,
   hideScrollArrow,
   collectFloatingButtonData,
+  decorateBadge,
 } from '../shared/floating-cta.js';
 
 const bubbleUI = {
@@ -190,25 +190,7 @@ const bubbleUI = {
   },
 };
 
-function decorateBadge() {
-  const $anchor = createTag('a');
-  const OS = getMobileOperatingSystem();
-
-  if ($anchor) {
-    $anchor.textContent = '';
-    $anchor.classList.add('badge');
-
-    if (OS === 'iOS') {
-      $anchor.append(getIconElement('apple-store'));
-    } else {
-      $anchor.append(getIconElement('google-store'));
-    }
-  }
-
-  return $anchor;
-}
-
-function toggleToolBox($wrapper, $lottie, data, userInitiated = true) {
+function toggleBubblesToolBox($wrapper, $lottie, data, userInitiated = true) {
   const $toolbox = $wrapper.querySelector('.toolbox');
   const $button = $wrapper.querySelector('.floating-button');
 
@@ -382,7 +364,7 @@ function initNotchDragAction($wrapper, data) {
     $body.style.removeProperty('overflow');
 
     if (e.changedTouches[0].clientY - touchStart > 100) {
-      toggleToolBox($wrapper, $lottie, data);
+      toggleBubblesToolBox($wrapper, $lottie, data);
     } else {
       $toolBox.style.maxHeight = `${initialHeight}px`;
     }
@@ -428,7 +410,7 @@ async function buildBubblesToolBox($wrapper, data) {
 
   setTimeout(() => {
     if ($wrapper.classList.contains('initial-load')) {
-      toggleToolBox($wrapper, $lottie, data, false);
+      toggleBubblesToolBox($wrapper, $lottie, data, false);
     }
   }, data.delay * 1000);
 
@@ -444,7 +426,7 @@ async function buildBubblesToolBox($wrapper, data) {
     if (!$wrapper.classList.contains('toolbox-opened')) {
       e.preventDefault();
       e.stopPropagation();
-      toggleToolBox($wrapper, $lottie, data);
+      toggleBubblesToolBox($wrapper, $lottie, data);
     }
   });
 
@@ -453,7 +435,7 @@ async function buildBubblesToolBox($wrapper, data) {
       $element.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleToolBox($wrapper, $lottie, data);
+        toggleBubblesToolBox($wrapper, $lottie, data);
       });
     }
   });

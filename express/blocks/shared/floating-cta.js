@@ -16,6 +16,7 @@ import {
   fetchPlaceholders,
   getIconElement,
   getLottie,
+  getMobileOperatingSystem,
   lazyLoadLottiePlayer,
   loadCSS,
 } from '../../scripts/scripts.js';
@@ -259,12 +260,20 @@ export async function collectFloatingButtonData() {
   return data;
 }
 
-export function removeEmptySections(audience) {
-  if (audience === 'mobile') {
-    const sections = Array.from(document.querySelectorAll('[class="section section-wrapper"], [class="section section-wrapper floating-button-container"]'));
-    const emptySections = sections.filter((s) => s.children.length === 0 || (s.children.length === 1 && s.children[0].classList.contains('floating-button-wrapper')));
-    emptySections.forEach((emptySection) => {
-      emptySection.remove();
-    });
+export function decorateBadge() {
+  const $anchor = createTag('a');
+  const OS = getMobileOperatingSystem();
+
+  if ($anchor) {
+    $anchor.textContent = '';
+    $anchor.classList.add('badge');
+
+    if (OS === 'iOS') {
+      $anchor.append(getIconElement('apple-store'));
+    } else {
+      $anchor.append(getIconElement('google-store'));
+    }
   }
+
+  return $anchor;
 }
