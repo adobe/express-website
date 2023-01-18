@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIconElement, getMobileOperatingSystem } from '../../scripts/scripts.js';
+import {createTag, fetchRelevantRows, getIconElement, getMobileOperatingSystem} from '../../scripts/scripts.js';
 
 function toggleCollapsibleCard($block) {
   $block.classList.toggle('expanded');
@@ -67,7 +67,15 @@ function decorateBadge($block) {
   }
 }
 
-export default function decorate($block) {
+export default async function decorate($block) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+
+    if (relevantRowsData && (!relevantRowsData.collapsibleCard || relevantRowsData.collapsibleCard !== 'Y')) {
+      $block.remove();
+    }
+  }
+
   decorateBadge($block);
   decorateToggleButton($block);
   initToggleState($block);
