@@ -91,7 +91,7 @@ function updateLinkList(container, template, list) {
       if (templatePageData) {
         const clone = template.cloneNode(true);
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replace('Default', templatePageData.shortTitle);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
         container.append(clone);
       }
     });
