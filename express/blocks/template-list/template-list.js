@@ -16,7 +16,7 @@ import {
   addSearchQueryToHref,
   createTag,
   decorateMain,
-  fetchPlaceholders,
+  fetchPlaceholders, fetchRelevantRows,
   getIconElement,
   getLocale,
   linkImage,
@@ -763,7 +763,7 @@ function addBackgroundAnimation($block, animationUrl) {
     const $videoBackground = createTag('video', {
       class: 'animation-background',
     });
-    $videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
+    $videoBackground.append(createTag('source', {src: animationUrl, type: 'video/mp4'}));
     $videoBackground.setAttribute('autoplay', '');
     $videoBackground.setAttribute('muted', '');
     $videoBackground.setAttribute('loop', '');
@@ -774,6 +774,16 @@ function addBackgroundAnimation($block, animationUrl) {
 }
 
 export default async function decorate($block) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+
+    if (relevantRowsData) {
+
+    } else {
+      $block.remove();
+    }
+  }
+
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
   }

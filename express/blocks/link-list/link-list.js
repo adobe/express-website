@@ -11,13 +11,44 @@
  */
 
 // eslint-disable-next-line import/no-unresolved
-import { normalizeHeadings } from '../../scripts/scripts.js';
+import {fetchRelevantRows, normalizeHeadings} from '../../scripts/scripts.js';
 // eslint-disable-next-line import/no-unresolved
 import { buildCarousel } from '../shared/carousel.js';
 
-export default function decorate(block) {
-  normalizeHeadings(block, ['h3']);
-  const links = [...block.querySelectorAll('p.button-container')];
+async function loadSpreadsheetData($block, relevantRowsData) {
+  const $default = $block.querySelector('.button-container');
+  const $defaultParent = $default.parentElement;
+
+  $defaultParent.innerHTML = '';
+
+  if (relevantRowsData.subheader) {
+    $block.innerHTML = $block.innerHTML.replaceAll('template-list-description', relevantRowsData.subheader.trim());
+  }
+
+  relevantRowsData.categories.split('\n').forEach((listData) => {
+    const list = listData.split(',');
+    const $list = $default.cloneNode(true);
+
+    $list.innerHTML = $list.innerHTML.replaceAll('Default', list[0].trim());
+    $list.innerHTML = $list.innerHTML.replace('/express/templates/default', list[1].trim());
+
+    $defaultParent.append($list);
+  });
+}
+
+export default async function decorate($block) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+
+    if (relevantRowsData && relevantRowsData.categories) {
+      await loadSpreadsheetData($block, relevantRowsData);
+    } else {
+      $block.remove();
+    }
+  }
+
+  normalizeHeadings($block, ['h3']);
+  const links = [...$block.querySelectorAll('p.button-container')];
   if (links.length) {
     links.forEach((p) => {
       const link = p.querySelector('a');
