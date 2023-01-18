@@ -21,11 +21,7 @@ async function loadSpreadsheetData($block, relevantRowsData) {
 
   $defaultParent.innerHTML = '';
 
-  if (relevantRowsData.subheader) {
-    $block.innerHTML = $block.innerHTML.replaceAll('template-list-description', relevantRowsData.subheader.trim());
-  }
-
-  relevantRowsData.categories.split('\n').forEach((listData) => {
+  relevantRowsData.linkListCategories.split('\n').forEach((listData) => {
     const list = listData.split(',');
     const $list = $default.cloneNode(true);
 
@@ -34,13 +30,17 @@ async function loadSpreadsheetData($block, relevantRowsData) {
 
     $defaultParent.append($list);
   });
+
+  if (relevantRowsData.linkListTitle) {
+    $block.innerHTML = $block.innerHTML.replaceAll('template-list-description', relevantRowsData.linkListTitle.trim());
+  }
 }
 
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     const relevantRowsData = await fetchRelevantRows(window.location.pathname);
 
-    if (relevantRowsData && relevantRowsData.categories) {
+    if (relevantRowsData && relevantRowsData.linkListCategories) {
       await loadSpreadsheetData($block, relevantRowsData);
     } else {
       $block.remove();
