@@ -19,8 +19,6 @@ async function loadSpreadsheetData($block, relevantRowsData) {
   const $default = $block.querySelector('.button-container');
   const $defaultParent = $default.parentElement;
 
-  $defaultParent.innerHTML = '';
-
   relevantRowsData.linkListCategories.split('\n').forEach((listData) => {
     const list = listData.split(',');
     const $list = $default.cloneNode(true);
@@ -31,8 +29,10 @@ async function loadSpreadsheetData($block, relevantRowsData) {
     $defaultParent.append($list);
   });
 
+  $default.remove();
+
   if (relevantRowsData.linkListTitle) {
-    $block.innerHTML = $block.innerHTML.replaceAll('template-list-description', relevantRowsData.linkListTitle.trim());
+    $block.innerHTML = $block.innerHTML.replaceAll('link-list-title', relevantRowsData.linkListTitle.trim());
   }
 }
 

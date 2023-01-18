@@ -1782,7 +1782,21 @@ export default async function decorate($block) {
     const relevantRowsData = await fetchRelevantRows(window.location.pathname);
 
     if (relevantRowsData) {
+      $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-locale', relevantRowsData.templateLocale || 'en');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-premium', relevantRowsData.templatePremium || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-animated', relevantRowsData.templateAnimated || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
 
+      if (relevantRowsData.templateTasks === '') {
+        const placeholders = await fetchPlaceholders().then((result) => result);
+        $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+      } else {
+        $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
+      }
     } else {
       $block.remove();
     }
@@ -1801,7 +1815,7 @@ export default async function decorate($block) {
     addAnimationToggle($block);
   }
 
-  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday') && !$block.classList.contains('mini')) {
     const $loadMore = await decorateLoadMoreButton($block);
 
     if ($loadMore) {
