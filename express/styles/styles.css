@@ -870,7 +870,7 @@ main .block .button-container.free-plan-container a.button {
   margin: 0;
   display: flex;
   align-items: center;
-  z-index: 2;
+  z-index: 4;
 }
 
 main .block .free-plan-widget {
@@ -1001,6 +1001,7 @@ main .block .free-plan-optout {
   justify-content: center;
   transition: left 0.5s ease-in, transform 0.5s ease-in;
   cursor: pointer;
+  background: var(--color-black);
   z-index: 1;
 }
 
@@ -1010,31 +1011,32 @@ main .block .free-plan-optout .icon {
 
 main .block .button-container.free-plan-container.fixed .free-plan-optout {
   left: -56px;
-  transform: translateY(-50%) rotate(-90deg);
-}
-
-main .block .button-container.free-plan-container .free-plan-optout::before {
-  content: '';
-  position: absolute;
   border-radius: 50px;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-gray-200);
-  transition: none;
-  z-index: -1;
+  transform: translateY(-50%) rotate(-90deg);
+  z-index: 3;
 }
 
-main .block .button-container.free-plan-container.fixed .free-plan-optout::before {
-  transition: padding 0.5s ease-in;
-  padding: 12px;
+main .block .button-container.free-plan-container::before {
+  content: '';
+  height: 100%;
+  max-height: 0;
+  left: 0;
+  width: 80px;
+  position: absolute;
+  transition: max-height 0.5s ease-in, left 0.5s ease-in;
+  z-index: 2;
+}
+
+main .block .button-container.free-plan-container.fixed::before {
+  max-height: 100%;
+  left: -68px;
+  background-color: var(--color-gray-200);
 }
 
 main .block .free-plan-optout img {
   height: 16px;
   width: 16px;
   padding: 12px;
-  border-radius: 50px;
-  background: var(--color-black);
 }
 
 main .block .button-container.free-plan-container.fixed .free-plan-tag > div:first-child {
