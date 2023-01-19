@@ -13,10 +13,9 @@
 import {
   createTag,
   fetchPlaceholders,
-  getLocale,
+  fetchPlainBlockFromFragment,
   getLottie,
   lazyLoadLottiePlayer,
-  loadBlocks,
 } from '../../scripts/scripts.js';
 
 import { collectFloatingButtonData } from '../shared/floating-cta.js';
@@ -125,39 +124,6 @@ function initCTAWatcher(section) {
   }
 }
 
-async function fetchPlainBlockFromFragment($block, content) {
-  const location = new URL(window.location);
-  const locale = getLocale(location);
-  let fragmentUrl;
-  if (locale === 'us') {
-    fragmentUrl = `${location.origin}${content}`;
-  } else {
-    fragmentUrl = `${location.origin}/${locale}${content}`;
-  }
-
-  const path = new URL(fragmentUrl).pathname.split('.')[0];
-  const resp = await fetch(`${path}.plain.html`);
-  if (resp.status === 404) {
-    $block.parentElement.parentElement.remove();
-  } else {
-    const html = await resp.text();
-    const $newBlock = createTag('div');
-    $newBlock.innerHTML = html;
-    $newBlock.className = 'section section-wrapper floating-panel-container';
-    $newBlock.id = 'floating-panel-container';
-    const img = $newBlock.querySelector('img');
-    if (img) {
-      img.setAttribute('loading', 'lazy');
-    }
-    const loadedBlocks = await loadBlocks($newBlock);
-    await Promise.all(loadedBlocks);
-    const $section = $block.closest('.section');
-    $section.parentNode.replaceChild($newBlock, $section);
-    return $newBlock;
-  }
-  return null;
-}
-
 function standardizeSection(section, audience) {
   const wrapperDiv = section.querySelector(':scope > div');
   const block = section.querySelector('.floating-panel');
@@ -186,8 +152,7 @@ export default async function decorateBlock(block) {
   if (block.classList.contains('spreadsheet-powered')) {
     const audience = block.querySelector(':scope > div').textContent.trim();
     const data = await collectFloatingButtonData();
-    // const container = await fetchPlainBlockFromFragment(block, `/express/fragments/floating-panel/${data.panelFragment}`);
-    const container = await fetchPlainBlockFromFragment(block, `/drafts/qiyundai/fragments/${data.panelFragment}`);
+    const container = await fetchPlainBlockFromFragment(block, `/express/fragments/floating-panel/${data.panelFragment}`);
 
     if (container) {
       standardizeSection(container, audience);

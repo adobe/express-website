@@ -1639,13 +1639,53 @@ export function getHelixEnv() {
   return env;
 }
 
+function convertGlobToRe(glob) {
+  let reString = glob.replace(/\*\*/g, '_');
+  reString = reString.replace(/\*/g, '[0-9a-z-]*');
+  reString = reString.replace(/_/g, '.*');
+  return (new RegExp(reString));
+}
+
+export async function fetchPlainBlockFromFragment($block, content) {
+  const location = new URL(window.location);
+  const locale = getLocale(location);
+  let fragmentUrl;
+  if (locale === 'us') {
+    fragmentUrl = `${location.origin}${content}`;
+  } else {
+    fragmentUrl = `${location.origin}/${locale}${content}`;
+  }
+
+  const path = new URL(fragmentUrl).pathname.split('.')[0];
+  const resp = await fetch(`${path}.plain.html`);
+  if (resp.status === 404) {
+    $block.parentElement.parentElement.remove();
+  } else {
+    const html = await resp.text();
+    const $newBlock = createTag('div');
+    $newBlock.innerHTML = html;
+    $newBlock.className = 'section section-wrapper floating-panel-container';
+    $newBlock.id = 'floating-panel-container';
+    const img = $newBlock.querySelector('img');
+    if (img) {
+      img.setAttribute('loading', 'lazy');
+    }
+    const loadedBlocks = await loadBlocks($newBlock);
+    await Promise.all(loadedBlocks);
+    const $section = $block.closest('.section');
+    $section.parentNode.replaceChild($newBlock, $section);
+    return $newBlock;
+  }
+  return null;
+}
+
 export async function fetchMultifunctionButton(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/express/floating-cta-dev.json?limit=10000';
+    sheet = '/express/create/floating-cta-dev.json?limit=10000';
   } else {
     sheet = '/express/create/floating-cta.json?limit=10000';
   }
@@ -1663,7 +1703,10 @@ export async function fetchMultifunctionButton(path) {
   }
 
   if (window.multifunctionButton.length) {
-    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
+    const multifunctionButton = window.multifunctionButton.find((p) => {
+      const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
+      return path.match(urlToMatch);
+    });
 
     if (env && env.name === 'stage') {
       return multifunctionButton || null;
