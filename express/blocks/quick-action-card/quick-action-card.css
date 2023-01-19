@@ -13,13 +13,13 @@ main .block.quick-action-card {
   justify-content: space-around;
   margin-top: 36px;
   height: 415px;
-  width: 307px;
+  width: 100%;
   text-align: left;
 }
 
-main .quick-action-card > span {
-  text-align: left;
-  font-size: 20px;
+.quick-action-card > *:not(.carousel-container) {
+  padding-left: 32px;
+  padding-right: 32px;
 }
 
 main .quick-action-card .feature-image-wrapper {
@@ -33,6 +33,11 @@ main .quick-action-card .feature-image-wrapper {
   margin-bottom: 6px;
 }
 
+main .quick-action-card > span {
+  text-align: left;
+  font-size: 20px;
+}
+
 main .quick-action-card .app-badge img {
   margin: 0;
   width: 147px;
@@ -42,6 +47,7 @@ main .quick-action-card .app-badge img {
 main .quick-action-card .free-plan-logo-container {
   display: flex;
   justify-content: space-between;
+  box-sizing: border-box;
   width: 100%;
 }
 
@@ -49,11 +55,6 @@ main .quick-action-card .free-plan-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-main .quick-action-card .free-plan-container img {
-  width: 8px;
-  height: 7px;
 }
 
 main .quick-action-card .free-plan-container div {
@@ -74,6 +75,11 @@ main .quick-action-card .free-plan-container div:nth-of-type(1) .check-wrapper {
   background-color: #D861F3;
 }
 
+main .quick-action-card .free-plan-container img {
+  width: 8px;
+  height: 7px;
+}
+
 main .quick-action-card .adobe-logo-wrapper {
   border: solid #333C4A 1px;
   border-radius: 10px;
@@ -84,18 +90,15 @@ main .quick-action-card .free-plan-logo-container .icon-adobe-express-rebrand-lo
   width: auto;
 }
 
-/* Carousel */
-
 main .quick-action-card .carousel-container {
   margin: 0;
 }
 
 main .quick-action-card .carousel-container .carousel-platform {
-  position: relative;
   align-items: flex-start;
-  width: 125%;
   gap: 15px;
   font-size: 16px;
+  padding-bottom: 12px;
 }
 
 main .quick-action-card .carousel-platform a {
@@ -106,18 +109,28 @@ main .quick-action-card .carousel-platform a {
   color: var(--color-white)
 }
 
+main .quick-action-card .carousel-platform a:first-of-type {
+  padding-left: 32px;
+}
+
+main .quick-action-card .carousel-platform a:last-of-type {
+  padding-right: 32px;
+}
+
 main .quick-action-card .carousel-platform svg {
   height: 20px;
   width: 20px;
 }
 
 main .quick-action-card .carousel-platform span {
+  display: flex;
+  justify-content: center;
   font-size: 16px;
   text-align: center;
   max-width: 66px;
 }
 
-/* main .quick-action-card .carousel-platform::before {
+main .quick-action-card .carousel-platform::before {
   content: "";
   position: absolute;
   top: 0;
@@ -125,7 +138,7 @@ main .quick-action-card .carousel-platform span {
   width: 12%;
   height: 100%;
   background: linear-gradient(to left, #010B1D00, #010B1DCC);
-} */
+}
 
 main .quick-action-card .carousel-platform::after {
   content: "";

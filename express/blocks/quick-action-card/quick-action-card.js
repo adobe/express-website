@@ -16,7 +16,7 @@ import { buildCarousel } from '../shared/carousel.js';
 function updatePayload(block, payload) {
   Array.from(block.children).forEach(($row) => {
     const $columns = $row.querySelectorAll('div');
-    const $featureCarousel = createTag('div');
+    const $featureCarousel = createTag('div', { class: 'feature-carousel' });
     switch ($columns[0].textContent.trim()) {
       default:
         payload.other.push($columns);
@@ -90,6 +90,8 @@ function buildStandardPayload(block, payload) {
   buildCarousel(':scope > a', payload.featureCarousel);
   block.querySelector('.carousel-fader-left').remove();
   block.querySelector('.carousel-fader-right').remove();
+  const $featureCarousel = block.querySelector('.feature-carousel');
+  $featureCarousel.replaceWith($featureCarousel.firstElementChild);
 }
 
 export default function decorate($block) {
