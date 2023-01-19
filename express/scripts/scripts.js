@@ -1712,6 +1712,8 @@ async function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const floatingCTAData = await fetchMultifunctionButton(window.location.pathname);
     const defaultButton = await fetchMultifunctionButton('default');
+    let desktopButton;
+    let mobileButton;
 
     if (floatingCTAData) {
       const buttonTypes = {
@@ -1719,22 +1721,17 @@ async function buildAutoBlocks($main) {
         mobile: floatingCTAData.mobile || defaultButton.mobile,
       };
 
-      const desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
-      const mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
-
-      [desktopButton, mobileButton].forEach((button) => {
-        button.classList.add('spreadsheet-powered');
-        $main.querySelector(':scope > div:last-of-type').append(button);
-      });
+      desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
+      mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
     } else {
-      const desktopButton = buildBlock(defaultButton.desktop, 'desktop');
-      const mobileButton = buildBlock(defaultButton.mobile, 'mobile');
-
-      [desktopButton, mobileButton].forEach((button) => {
-        button.classList.add('spreadsheet-powered');
-        $main.querySelector(':scope > div:last-of-type').append(button);
-      });
+      desktopButton = buildBlock(defaultButton.desktop, 'desktop');
+      mobileButton = buildBlock(defaultButton.mobile, 'mobile');
     }
+
+    [desktopButton, mobileButton].forEach((button) => {
+      button.classList.add('spreadsheet-powered');
+      $main.querySelector(':scope > div:last-of-type').append(button);
+    });
   }
 }
 
