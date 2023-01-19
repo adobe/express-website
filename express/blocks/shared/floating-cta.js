@@ -192,17 +192,23 @@ export async function createFloatingButton($block, audience, data) {
 }
 
 export async function collectFloatingButtonData() {
+  const defaultButton = await fetchMultifunctionButton('default');
   const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
   const dataArray = [];
 
   if (multifunctionButton) {
-    const defaultButton = await fetchMultifunctionButton('default');
     const objectKeys = Object.keys(defaultButton);
-
     // eslint-disable-next-line consistent-return
     objectKeys.forEach((key) => {
       if (['path', 'live'].includes(key)) return false;
       dataArray.push([key, multifunctionButton[key] || defaultButton[key]]);
+    });
+  } else {
+    const objectKeys = Object.keys(defaultButton);
+    // eslint-disable-next-line consistent-return
+    objectKeys.forEach((key) => {
+      if (['path', 'live'].includes(key)) return false;
+      dataArray.push([key, defaultButton[key]]);
     });
   }
 

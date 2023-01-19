@@ -30,5 +30,7 @@ export default async function decorateBlock($block) {
       $parentSection ? audience : null,
       data,
     );
+  } else {
+    $block.parentElement.remove();
   }
 }

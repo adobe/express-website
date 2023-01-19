@@ -183,23 +183,26 @@ function standardizeSection(section, audience) {
 }
 
 export default async function decorateBlock(block) {
-  const audience = block.querySelector(':scope > div').textContent.trim();
-  const data = await collectFloatingButtonData();
-  const container = await fetchPlainBlockFromFragment(block, `/drafts/qiyundai/fragments/${data.panelFragment}`);
+  if (block.classList.contains('spreadsheet-powered')) {
+    const audience = block.querySelector(':scope > div').textContent.trim();
+    const data = await collectFloatingButtonData();
+    // const container = await fetchPlainBlockFromFragment(block, `/express/fragments/floating-panel/${data.panelFragment}`);
+    const container = await fetchPlainBlockFromFragment(block, `/drafts/qiyundai/fragments/${data.panelFragment}`);
 
-  if (container) {
-    standardizeSection(container, audience);
+    if (container) {
+      standardizeSection(container, audience);
 
-    lazyLoadLottiePlayer();
-    const ctaElements = await decorateLottieButton(container);
+      lazyLoadLottiePlayer();
+      const ctaElements = await decorateLottieButton(container);
 
-    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
-    if (!$scrollAnchor) {
-      hideScrollArrow(ctaElements.cta, ctaElements.lottie);
-    } else {
-      initLottieArrow(ctaElements.lottie, ctaElements.cta, $scrollAnchor, container);
+      const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+      if (!$scrollAnchor) {
+        hideScrollArrow(ctaElements.cta, ctaElements.lottie);
+      } else {
+        initLottieArrow(ctaElements.lottie, ctaElements.cta, $scrollAnchor, container);
+      }
+
+      initCTAWatcher(container);
     }
-
-    initCTAWatcher(container);
   }
 }
