@@ -1724,6 +1724,7 @@ async function buildAutoBlocks($main) {
       const mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
 
       [desktopButton, mobileButton].forEach((button) => {
+        button.classList.add('spreadsheet-powered');
         $main.querySelector(':scope > div:last-of-type').append(button);
       });
     }

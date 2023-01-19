@@ -16,17 +16,19 @@ import {
 } from '../shared/floating-cta.js';
 
 export default async function decorateBlock($block) {
-  const audience = $block.querySelector(':scope > div').textContent.trim();
-  if (audience === 'mobile') {
-    $block.closest('.section').remove();
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const audience = $block.querySelector(':scope > div').textContent.trim();
+    if (audience === 'mobile') {
+      $block.closest('.section').remove();
+    }
+
+    const $parentSection = $block.closest('.section');
+    const data = await collectFloatingButtonData($block);
+
+    await createFloatingButton(
+      $block,
+      $parentSection ? audience : null,
+      data,
+    );
   }
-
-  const $parentSection = $block.closest('.section');
-  const data = await collectFloatingButtonData($block);
-
-  await createFloatingButton(
-    $block,
-    $parentSection ? audience : null,
-    data,
-  );
 }
