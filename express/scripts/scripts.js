@@ -1709,7 +1709,7 @@ async function buildAutoBlocks($main) {
     }
   }
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+  if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase())) {
     const floatingCTAData = await fetchMultifunctionButton(window.location.pathname);
 
     if (floatingCTAData) {
