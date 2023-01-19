@@ -1,9 +1,22 @@
-main .quick-action-card-wrapper {
+@media (min-width: 900px) {
+  main .section .quick-action-card-wrapper {
+    display: none !important;
+  }
+}
+main .section .quick-action-card-wrapper {
   display: flex;
   justify-content: center;
   color: var(--color-white);
   background-color: #010B1D;
-  height: 538px;
+  max-width: unset;
+}
+
+main .section .quick-action-card-wrapper {
+  display: flex;
+  justify-content: center;
+  color: var(--color-white);
+  background-color: #010B1D;
+  max-width: unset;
 }
 
 main .block.quick-action-card {
@@ -11,8 +24,9 @@ main .block.quick-action-card {
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-around;
+  gap: 20px;
   margin-top: 36px;
-  height: 415px;
+  margin-bottom: 62px;
   width: 100%;
   text-align: left;
 }
@@ -33,13 +47,17 @@ main .quick-action-card .feature-image-wrapper {
   margin-bottom: 6px;
 }
 
+main .quick-action-card h3 {
+  text-align: left;
+}
+
 main .quick-action-card > span {
   text-align: left;
   font-size: 20px;
 }
 
 main .quick-action-card .app-badge img {
-  margin: 0;
+  margin: 6px 0 6px 0;
   width: 147px;
   height: 43px;
 }
@@ -48,6 +66,7 @@ main .quick-action-card .free-plan-logo-container {
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
+  max-width: 674px;
   width: 100%;
 }
 
@@ -101,6 +120,10 @@ main .quick-action-card .carousel-container .carousel-platform {
   padding-bottom: 12px;
 }
 
+main .quick-action-card .carousel-platform::-webkit-scrollbar {
+  display: none;
+}
+
 main .quick-action-card .carousel-platform a {
   display: flex;
   flex-direction: column;
@@ -130,12 +153,12 @@ main .quick-action-card .carousel-platform span {
   max-width: 66px;
 }
 
-main .quick-action-card .carousel-platform::before {
+main .quick-action-card .carousel-container::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  width: 12%;
+  width: 32px;
   height: 100%;
   background: linear-gradient(to left, #010B1D00, #010B1DCC);
 }
@@ -145,7 +168,7 @@ main .quick-action-card .carousel-platform::after {
   position: absolute;
   top: 0;
   right: 0;
-  width: 12%;
+  width: 32px;
   height: 100%;
   background: linear-gradient(to right, #010B1D00, #010B1DCC);
 }
