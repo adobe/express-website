@@ -1647,7 +1647,7 @@ export async function fetchMultifunctionButton(path) {
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
     sheet = '/express/floating-cta-dev.json?limit=10000';
   } else {
-    sheet = '/express/create/multifunction-button.json?limit=10000';
+    sheet = '/express/create/floating-cta.json?limit=10000';
   }
 
   if (!window.multifunctionButton) {
