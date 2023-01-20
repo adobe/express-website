@@ -12,9 +12,9 @@
 
 import { loadScript, readBlockConfig } from '../../scripts/scripts.js';
 
-function createButton(label, cb) {
+function createButton(label) {
   const btn = document.createElement('a');
-  btn.className = 'button'
+  btn.className = 'button';
   btn.href = '';
   btn.innerText = label;
   btn.addEventListener('click', (ev) => {
@@ -24,18 +24,19 @@ function createButton(label, cb) {
   return btn;
 }
 
-async function fetchDependency(url, api) {
+async function fetchDependency(url, id) {
   const usp = new URLSearchParams(window.location.search);
-  let dependencyUrl = usp.get(api);
+  let dependencyUrl = usp.get(id);
   if (!dependencyUrl) {
     const response = await fetch(url);
     const json = await response.json();
-    dependencyUrl = json.find((api) => api.id === api).entry;
+    dependencyUrl = json.find((api) => api.id === id).entry;
   }
   return dependencyUrl;
 }
 
-function navigateToPostEditor(data) {
+function navigateToPostEditor(data, autoDownload = false) {
+  const host = 'https://project-marvel-theo-web-8513.fracture.adobeprojectm.com';
   const action = 'remove-background';
   const { repositoryId, transientToken } = data;
   const path = '/sp/design/post/new';
@@ -44,20 +45,18 @@ function navigateToPostEditor(data) {
   params.append('r', 'qtImaging');
   params.append('qId', action);
   params.append('actionLocation', 'seo');
-  params.append('autoDownload', true);
+  params.append('autoDownload', autoDownload);
   params.append('repositoryId', repositoryId);
   params.append('transientToken', transientToken);
-  const url = `${path}?${params.toString()}`;
-  console.log(url);
-  // FIXME: verify if this is the right URL
-  // window.location.href = url;
+  const url = `${host}${path}?${params.toString()}`;
+  window.location.href = url;
 }
 
 function downloadImage(fileData) {
-  const a = document.createElement('a')
+  const a = document.createElement('a');
   a.download = fileData.fileName;
   a.href = fileData.base64URL;
-  a.click()
+  a.click();
 }
 
 export default async function decorate(block) {
@@ -74,7 +73,7 @@ export default async function decorate(block) {
   btnDl.dataset.action = 'Download';
   btnDl.style.display = 'none';
   block.append(btnDl);
-  
+
   // FIXME: remove hardcoded fallback once PR is merged to main
   const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
     || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api/host-entries/host-shared', 'host-shared');
@@ -91,25 +90,27 @@ export default async function decorate(block) {
         navigate(dest, data, file) {
           console.log('[CCLQT CB]', 'navigate', dest, data, file);
           if (dest.id === 'post-editor') {
-            navigateToPostEditor(data);
+            navigateToPostEditor(data, false);
           } else {
             downloadImage(file);
           }
         },
         sendEditorStateToHost(state) {
           console.log('[CCLQT CB]', 'editor-state', state);
-          [btnEdit, btnDl].forEach((btn) => btn.style.display = state.exportEnabled ? 'inline-block' : 'none')
+          [btnEdit, btnDl].forEach((btn) => {
+            btn.style.display = state.exportEnabled ? 'inline-block' : 'none';
+          });
         },
         sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
         navigationData: {
           config: {
             'should-use-cloud-storage': true,
-            'preview-only': true
-          }
+            'preview-only': true,
+          },
         },
         hostType: 'standalone',
         browserInfo: { isMobile: false },
-      })
+      });
       window.qtHost.task = task;
       await task.render();
       const taskId = task.qtEle.qtId;
@@ -134,8 +135,8 @@ export default async function decorate(block) {
       task.qtEle.addEventListener(`${taskId}__authenticate-from-host`, (ev) => {
         console.log('[CCLQT EVT]', 'authenticate-from-host', ev.detail);
       });
-    }
-  }
+    },
+  };
   loadScript(sharedScriptUrl);
   loadScript(actionScriptUrl);
 }
