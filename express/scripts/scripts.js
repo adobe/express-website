@@ -365,9 +365,11 @@ export function getIcon(icons, alt, size = 44) {
   }
 }
 
-export function getIconElement(icons, size, alt) {
+export function getIconElement(icons, size, alt, additionalClassName) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
+
+  if (additionalClassName) $div.firstElementChild.classList.add(additionalClassName);
   return ($div.firstElementChild);
 }
 
@@ -2115,6 +2117,7 @@ async function wordBreakJapanese() {
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
   document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    el.classList.add('budoux');
     parser.applyElement(el);
   });
 
@@ -2276,8 +2279,8 @@ function removeMetadata() {
   });
 }
 
-export async function addFreePlanWidget(elem) {
-  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+export async function addFreePlanWidget(elem, forced) {
+  if ((elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) || forced) {
     const placeholders = await fetchPlaceholders();
     const checkmark = getIcon('checkmark');
     const widget = createTag('div', { class: 'free-plan-widget' });
@@ -2491,4 +2494,35 @@ export function getMobileOperatingSystem() {
   }
 
   return 'unknown';
+}
+
+export function titleCase(str) {
+  const splitStr = str.toLowerCase().split(' ');
+  for (let i = 0; i < splitStr.length; i += 1) {
+    // You do not need to check if i is larger than splitStr length, as your for does that for you
+    // Assign it back to the array
+    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  // Directly return the joined string
+  return splitStr.join(' ');
+}
+
+export function arrayToObject(arr) {
+  return arr.reduce(
+    (acc, curr) => {
+      // Extract the key and the value
+      const key = curr[0];
+      const value = curr[1];
+
+      // Assign key and value
+      // to the accumulator
+      acc[key] = value;
+
+      // Return the accumulator
+      return acc;
+    },
+
+    // Initialize with an empty object
+    {},
+  );
 }
