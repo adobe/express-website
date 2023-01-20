@@ -103,22 +103,12 @@ function buildStandardPayload(block, payload) {
   $featureCarousel.replaceWith($featureCarousel.firstElementChild);
 }
 
-export default async function decorate($block) {
-  const payload = {
-    userAgent: getMobileOperatingSystem(),
-    heading: '',
-    copy: '',
-    appBadge: {},
-    freePlanTags: [],
-    adobeLogo: '',
-    other: [],
-  };
-
+async function buildBlockFromFragment($block) {
   const fragmentName = $block.querySelector('div').textContent.trim();
   const section = await fetchPlainBlockFromFragment($block, `/drafts/casey/fragments/${fragmentName}`, 'quick-action-card');
   const newBlock = section.querySelector('.quick-action-card');
-
   const sectionMeta = section.querySelector('div.section-metadata');
+
   if (sectionMeta) {
     const metadata = readBlockConfig(sectionMeta);
     const keys = Object.keys(metadata);
@@ -135,7 +125,24 @@ export default async function decorate($block) {
   }
 
   await fixIcons(newBlock);
-  updatePayload(newBlock, payload);
-  newBlock.innerText = '';
-  buildStandardPayload(newBlock, payload);
+
+  return newBlock;
+}
+
+export default async function decorate($block) {
+  const payload = {
+    userAgent: getMobileOperatingSystem(),
+    heading: '',
+    copy: '',
+    appBadge: {},
+    freePlanTags: [],
+    adobeLogo: '',
+    other: [],
+  };
+
+  const block = $block.classList.contains('spreadsheet-powered') ? await buildBlockFromFragment($block) : $block;
+
+  updatePayload(block, payload);
+  block.innerText = '';
+  buildStandardPayload(block, payload);
 }
