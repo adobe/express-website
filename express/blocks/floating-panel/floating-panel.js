@@ -152,7 +152,7 @@ export default async function decorateBlock(block) {
   if (block.classList.contains('spreadsheet-powered')) {
     const audience = block.querySelector(':scope > div').textContent.trim();
     const data = await collectFloatingButtonData();
-    const container = await fetchPlainBlockFromFragment(block, `/express/fragments/floating-panel/${data.panelFragment}`);
+    const container = await fetchPlainBlockFromFragment(block, `/express/fragments/floating-panel/${data.panelFragment}`, 'floating-panel');
 
     if (container) {
       standardizeSection(container, audience);

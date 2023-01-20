@@ -1646,14 +1646,14 @@ function convertGlobToRe(glob) {
   return (new RegExp(reString));
 }
 
-export async function fetchPlainBlockFromFragment($block, content) {
+export async function fetchPlainBlockFromFragment($block, url, blockName) {
   const location = new URL(window.location);
   const locale = getLocale(location);
   let fragmentUrl;
   if (locale === 'us') {
-    fragmentUrl = `${location.origin}${content}`;
+    fragmentUrl = `${location.origin}${url}`;
   } else {
-    fragmentUrl = `${location.origin}/${locale}${content}`;
+    fragmentUrl = `${location.origin}/${locale}${url}`;
   }
 
   const path = new URL(fragmentUrl).pathname.split('.')[0];
@@ -1662,19 +1662,21 @@ export async function fetchPlainBlockFromFragment($block, content) {
     $block.parentElement.parentElement.remove();
   } else {
     const html = await resp.text();
-    const $newBlock = createTag('div');
-    $newBlock.innerHTML = html;
-    $newBlock.className = 'section section-wrapper floating-panel-container';
-    $newBlock.id = 'floating-panel-container';
-    const img = $newBlock.querySelector('img');
+    const section = createTag('div');
+    section.innerHTML = html;
+    section.className = `section section-wrapper ${blockName}-container`;
+    const block = section.querySelector(`.${blockName}`);
+    block.parentElement.className = `${blockName}-wrapper`;
+    block.classList.add('block');
+    const img = section.querySelector('img');
     if (img) {
       img.setAttribute('loading', 'lazy');
     }
-    const loadedBlocks = await loadBlocks($newBlock);
+    const loadedBlocks = await loadBlocks(section);
     await Promise.all(loadedBlocks);
     const $section = $block.closest('.section');
-    $section.parentNode.replaceChild($newBlock, $section);
-    return $newBlock;
+    $section.parentNode.replaceChild(section, $section);
+    return section;
   }
   return null;
 }
