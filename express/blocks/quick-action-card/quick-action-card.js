@@ -10,7 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getMobileOperatingSystem, getIconElement } from '../../scripts/scripts.js';
+import {
+  createTag,
+  getMobileOperatingSystem,
+  getIconElement,
+  fetchPlainBlockFromFragment,
+  fixIcons,
+  readBlockConfig,
+  toClassName,
+} from '../../scripts/scripts.js';
+
 import { buildCarousel } from '../shared/carousel.js';
 
 function updatePayload(block, payload) {
@@ -94,7 +103,33 @@ function buildStandardPayload(block, payload) {
   $featureCarousel.replaceWith($featureCarousel.firstElementChild);
 }
 
-export default function decorate($block) {
+async function buildBlockFromFragment($block) {
+  const fragmentName = $block.querySelector('div').textContent.trim();
+  const section = await fetchPlainBlockFromFragment($block, `/drafts/casey/fragments/${fragmentName}`, 'quick-action-card');
+  const newBlock = section.querySelector('.quick-action-card');
+  const sectionMeta = section.querySelector('div.section-metadata');
+
+  if (sectionMeta) {
+    const metadata = readBlockConfig(sectionMeta);
+    const keys = Object.keys(metadata);
+    keys.forEach((key) => {
+      if (key === 'style') {
+        section.classList.add(...metadata.style.split(', ').map(toClassName));
+      } else if (key === 'anchor') {
+        section.id = toClassName(metadata.anchor);
+      } else {
+        section.dataset[key] = metadata[key];
+      }
+    });
+    sectionMeta.remove();
+  }
+
+  await fixIcons(newBlock);
+
+  return newBlock;
+}
+
+export default async function decorate($block) {
   const payload = {
     userAgent: getMobileOperatingSystem(),
     heading: '',
@@ -105,7 +140,9 @@ export default function decorate($block) {
     other: [],
   };
 
-  updatePayload($block, payload);
-  $block.innerText = '';
-  buildStandardPayload($block, payload);
+  const block = $block.classList.contains('spreadsheet-powered') ? await buildBlockFromFragment($block) : $block;
+
+  updatePayload(block, payload);
+  block.innerText = '';
+  buildStandardPayload(block, payload);
 }
