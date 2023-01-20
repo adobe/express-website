@@ -1674,8 +1674,6 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
     if (img) {
       img.setAttribute('loading', 'lazy');
     }
-    const loadedBlocks = await loadBlocks(section);
-    await Promise.all(loadedBlocks);
     const $section = $block.closest('.section');
     $section.parentNode.replaceChild(section, $section);
     return section;
