@@ -105,7 +105,7 @@ function buildStandardPayload(block, payload) {
 
 async function buildBlockFromFragment($block) {
   const fragmentName = $block.querySelector('div').textContent.trim();
-  const section = await fetchPlainBlockFromFragment($block, `/drafts/casey/fragments/${fragmentName}`, 'quick-action-card');
+  const section = await fetchPlainBlockFromFragment($block, `/express/fragments/quick-action-card/${fragmentName}`, 'quick-action-card');
   if (!section) {
     return false;
   }
