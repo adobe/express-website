@@ -106,6 +106,9 @@ function buildStandardPayload(block, payload) {
 async function buildBlockFromFragment($block) {
   const fragmentName = $block.querySelector('div').textContent.trim();
   const section = await fetchPlainBlockFromFragment($block, `/drafts/casey/fragments/${fragmentName}`, 'quick-action-card');
+  if (!section) {
+    return false;
+  }
   const newBlock = section.querySelector('.quick-action-card');
   const sectionMeta = section.querySelector('div.section-metadata');
 
@@ -143,11 +146,14 @@ export default async function decorate($block) {
   let block = $block;
   if ($block.classList.contains('spreadsheet-powered')) {
     block = await buildBlockFromFragment($block);
-    const $stepsSection = document.querySelector('.steps-highlight-schema-container');
+    const $stepsSection = document.querySelector('.steps-highlight-schema-container, .section:nth-child(2)');
+    if (!$stepsSection) {
+      block.closest('.quick-action-card-container').remove();
+    }
     $stepsSection.insertAdjacentElement('beforebegin', block.closest('.quick-action-card-container'));
   }
 
   updatePayload(block, payload);
-  block.innerText = '';
+  block.innerHTML = '';
   buildStandardPayload(block, payload);
 }
