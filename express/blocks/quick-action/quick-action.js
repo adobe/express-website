@@ -12,15 +12,13 @@
 
 import { loadScript, readBlockConfig } from '../../scripts/scripts.js';
 
+const ELEMENT_NAME = 'ccl-quick-action';
+
 function createButton(label) {
   const btn = document.createElement('a');
   btn.className = 'button';
   btn.href = '';
   btn.innerText = label;
-  btn.addEventListener('click', (ev) => {
-    ev.preventDefault();
-    window.qtHost.task.triggerExport(btn.dataset.action);
-  });
   return btn;
 }
 
@@ -35,108 +33,177 @@ async function fetchDependency(url, id) {
   return dependencyUrl;
 }
 
-function navigateToPostEditor(data, autoDownload = false) {
-  const host = 'https://project-marvel-theo-web-8513.fracture.adobeprojectm.com';
-  const action = 'remove-background';
-  const { repositoryId, transientToken } = data;
-  const path = '/sp/design/post/new';
-  const params = new URLSearchParams();
-  params.append('workflow', 'quicktask');
-  params.append('r', 'qtImaging');
-  params.append('qId', action);
-  params.append('actionLocation', 'seo');
-  params.append('autoDownload', autoDownload);
-  params.append('repositoryId', repositoryId);
-  params.append('transientToken', transientToken);
-  const url = `${host}${path}?${params.toString()}`;
-  window.location.href = url;
-}
+class CCXQuickActionElement extends HTMLElement {
+  static get elementName() { return ''; }
 
-function downloadImage(fileData) {
-  const a = document.createElement('a');
-  a.download = fileData.fileName;
-  a.href = fileData.base64URL;
-  a.click();
+  static get observedAttributes() { return ['action']; }
+
+  constructor() {
+    super();
+    this.action = this.attributes.getNamedItem('action').value;
+    this.isLoading = true;
+
+    this.taskContext = {
+      close() { console.log('[CCLQT CB]', 'close'); },
+      done(options) { console.log('[CCLQT CB]', 'done', options); },
+      navigate: (dest, data, file) => {
+        console.log('[CCLQT CB]', 'navigate', dest, data, file);
+        if (dest.id === 'post-editor') {
+          this.handleNavigateToPostEditor(data, false);
+        } else {
+          this.handleDownloadImage(file);
+        }
+      },
+      sendEditorStateToHost: (state) => {
+        console.log('[CCLQT CB]', 'editor-state', state);
+        if (state.isSampleImageUploaded) {
+          // TODO: show upload image button
+          return;
+        }
+        [this.btnEdit, this.btnDl].forEach((btn) => {
+          btn.style.display = state.exportEnabled ? 'inline-block' : 'none';
+        });
+      },
+      sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
+      navigationData: {
+        config: {
+          'should-use-cloud-storage': true,
+          'preview-only': true,
+        },
+      },
+      hostType: 'standalone',
+      browserInfo: { isMobile: false },
+    };
+    window.qtHost = {
+      qtLoaded: async (QuickTask) => {
+        console.debug('loaded:');
+        this.task = new QuickTask(this, this.taskContext);
+        this.isLoading = false;
+        await this.render();
+        this.attachListeners();
+      },
+    };
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async connectedCallback() {
+    // FIXME: remove hardcoded fallback once PR is merged to main
+    const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
+      || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api/host-entries/host-shared', 'host-shared');
+    loadScript(sharedScriptUrl);
+
+    // FIXME: remove hardcoded fallback once PR is merged to main
+    const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-641bf078.js'
+      || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', this.action);
+    loadScript(actionScriptUrl);
+  }
+
+  disconnectedCallback() {
+    console.debug('disconnected:');
+    if (this.buttonClickListener) {
+      this.removeEventListener('click', this.buttonClickListener);
+    }
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (!this.isConnected || this.isLoading) {
+      return;
+    }
+    console.debug('attr:', name, oldValue, newValue, this);
+    this.render();
+  }
+
+  attachListeners() {
+    this.buttonClickListener = (ev) => {
+      if (!ev.target.matches('.button[data-action]')) {
+        return;
+      }
+
+      ev.preventDefault();
+      this.handleAction(ev.target.dataset.action);
+    };
+    this.addEventListener('click', this.buttonClickListener);
+
+    const taskId = this.task.qtEle.qtId;
+    this.task.qtEle.addEventListener(`${taskId}__navigate-to-task`, (ev) => {
+      console.log('[CCLQT EVT]', 'navigate-to-task', ev.detail);
+    });
+    this.task.qtEle.addEventListener(`${taskId}__navigate-to-host`, (ev) => {
+      console.log('[CCLQT EVT]', 'navigate-to-host', ev.detail);
+    });
+    this.task.qtEle.addEventListener(`${taskId}__navigate-to-done-modal`, (ev) => {
+      console.log('[CCLQT EVT]', 'navigate-to-done-modal', ev.detail);
+    });
+    this.task.qtEle.addEventListener(`${taskId}__downloadable-image`, (ev) => {
+      console.log('[CCLQT EVT]', 'downloadable-image', ev.detail);
+    });
+    this.task.qtEle.addEventListener(`${taskId}__close-full-screen-modal`, (ev) => {
+      console.log('[CCLQT EVT]', 'close-full-screen-modal', ev.detail);
+    });
+    this.task.qtEle.addEventListener(`${taskId}__send-error-to-host`, (ev) => {
+      console.log('[CCLQT EVT]', 'send-error-to-host', ev.detail);
+    });
+    this.task.qtEle.addEventListener(`${taskId}__authenticate-from-host`, (ev) => {
+      console.log('[CCLQT EVT]', 'authenticate-from-host', ev.detail);
+    });
+  }
+
+  handleAction(action) {
+    this.task.triggerExport(action);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  handleNavigateToPostEditor(data, autoDownload = false) {
+    const host = 'https://project-marvel-theo-web-8513.fracture.adobeprojectm.com';
+    const action = 'remove-background';
+    const { repositoryId, transientToken } = data;
+    const path = '/sp/design/post/new';
+    const params = new URLSearchParams();
+    params.append('workflow', 'quicktask');
+    params.append('r', 'qtImaging');
+    params.append('qId', action);
+    params.append('actionLocation', 'seo');
+    params.append('autoDownload', autoDownload);
+    params.append('repositoryId', repositoryId);
+    params.append('transientToken', transientToken);
+    const url = `${host}${path}?${params.toString()}`;
+    // FIXME: verify if this is the right URL
+    window.location.replace(url);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  handleDownloadImage(fileData) {
+    const a = document.createElement('a');
+    a.download = fileData.fileName;
+    a.href = fileData.base64URL;
+    a.click();
+  }
+
+  async render() {
+    console.debug('render:');
+    if (!this.btnEdit) {
+      this.btnEdit = createButton('Customize');
+      this.btnEdit.dataset.action = 'Editor';
+      this.btnEdit.style.display = 'none';
+      this.append(this.btnEdit);
+    }
+
+    if (!this.btnDl) {
+      this.btnDl = createButton('Download');
+      this.btnDl.classList.add('reverse');
+      this.btnDl.dataset.action = 'Download';
+      this.btnDl.style.display = 'none';
+      this.append(this.btnDl);
+    }
+
+    if (this.task) {
+      await this.task.render();
+    }
+  }
 }
+window.customElements.define(ELEMENT_NAME, CCXQuickActionElement);
 
 export default async function decorate(block) {
-  const blockConfig = readBlockConfig(block);
-  block.innerHTML = '';
-
-  const btnEdit = createButton('Customize');
-  btnEdit.dataset.action = 'Editor';
-  btnEdit.style.display = 'none';
-  block.append(btnEdit);
-
-  const btnDl = createButton('Download');
-  btnDl.classList.add('reverse');
-  btnDl.dataset.action = 'Download';
-  btnDl.style.display = 'none';
-  block.append(btnDl);
-
-  // FIXME: remove hardcoded fallback once PR is merged to main
-  const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
-    || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api/host-entries/host-shared', 'host-shared');
-
-  // FIXME: remove hardcoded fallback once PR is merged to main
-  const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-00e7f443.js'
-    || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', 'remove-background');
-
-  window.qtHost = {
-    async qtLoaded(QuickTask) {
-      const task = new QuickTask(block, {
-        close() { console.log('[CCLQT CB]', 'close'); },
-        done(options) { console.log('[CCLQT CB]', 'done', options); },
-        navigate(dest, data, file) {
-          console.log('[CCLQT CB]', 'navigate', dest, data, file);
-          if (dest.id === 'post-editor') {
-            navigateToPostEditor(data, false);
-          } else {
-            downloadImage(file);
-          }
-        },
-        sendEditorStateToHost(state) {
-          console.log('[CCLQT CB]', 'editor-state', state);
-          [btnEdit, btnDl].forEach((btn) => {
-            btn.style.display = state.exportEnabled ? 'inline-block' : 'none';
-          });
-        },
-        sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
-        navigationData: {
-          config: {
-            'should-use-cloud-storage': true,
-            'preview-only': true,
-          },
-        },
-        hostType: 'standalone',
-        browserInfo: { isMobile: false },
-      });
-      window.qtHost.task = task;
-      await task.render();
-      const taskId = task.qtEle.qtId;
-      task.qtEle.addEventListener(`${taskId}__navigate-to-task`, (ev) => {
-        console.log('[CCLQT EVT]', 'navigate-to-task', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__navigate-to-host`, (ev) => {
-        console.log('[CCLQT EVT]', 'navigate-to-host', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__navigate-to-done-modal`, (ev) => {
-        console.log('[CCLQT EVT]', 'navigate-to-done-modal', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__downloadable-image`, (ev) => {
-        console.log('[CCLQT EVT]', 'downloadable-image', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__close-full-screen-modal`, (ev) => {
-        console.log('[CCLQT EVT]', 'close-full-screen-modal', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__send-error-to-host`, (ev) => {
-        console.log('[CCLQT EVT]', 'send-error-to-host', ev.detail);
-      });
-      task.qtEle.addEventListener(`${taskId}__authenticate-from-host`, (ev) => {
-        console.log('[CCLQT EVT]', 'authenticate-from-host', ev.detail);
-      });
-    },
-  };
-  loadScript(sharedScriptUrl);
-  loadScript(actionScriptUrl);
+  const config = readBlockConfig(block);
+  block.innerHTML = `<${ELEMENT_NAME} action="${config.action || 'remove-background'}"></${ELEMENT_NAME}>`;
 }
