@@ -1,9 +1,9 @@
-main .section .quick-action-card-wrapper {
-  display: flex;
-  justify-content: center;
-  color: var(--color-white);
-  background-color: #010B1D;
-  max-width: unset;
+main .quick-action-card-container {
+  padding: 0;
+}
+
+main .quick-action-card-container + .section.steps-highlight-container  {
+  margin-top: 0;
 }
 
 main .section .quick-action-card-wrapper {
@@ -44,6 +44,7 @@ main .quick-action-card .feature-image-wrapper {
 
 main .quick-action-card h3 {
   text-align: left;
+  hyphens: none;
 }
 
 main .quick-action-card > span {

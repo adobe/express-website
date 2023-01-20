@@ -140,7 +140,12 @@ export default async function decorate($block) {
     other: [],
   };
 
-  const block = $block.classList.contains('spreadsheet-powered') ? await buildBlockFromFragment($block) : $block;
+  let block = $block;
+  if ($block.classList.contains('spreadsheet-powered')) {
+    block = await buildBlockFromFragment($block);
+    const $stepsSection = document.querySelector('.steps-highlight-schema-container');
+    $stepsSection.insertAdjacentElement('beforebegin', block.closest('.quick-action-card-container'));
+  }
 
   updatePayload(block, payload);
   block.innerText = '';
