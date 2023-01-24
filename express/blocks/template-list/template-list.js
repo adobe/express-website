@@ -115,6 +115,7 @@ function fetchTemplates(tasks) {
 
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
+  const currentTask = props.filters.tasks;
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
@@ -127,6 +128,8 @@ async function appendCategoryTemplatesCount($section) {
       li.append(countSpan);
     }
   }
+
+  props.filters.tasks = currentTask;
 }
 
 async function processResponse() {
@@ -540,13 +543,16 @@ function makeTemplateFunctions(placeholders) {
           primaryIcon: getIconElement(entry[1].icons[0], null, null, 'primary-icon'),
           secondaryIcon: entry[1].icons[1] ? getIconElement(entry[1].icons[1], null, null, 'secondary-icon') : null,
           textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+          chevIcon: getIconElement('drop-down-arrow'),
         },
       },
       options: {
         wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
         subElements: Object.entries(entry[1].placeholders).map((option) => {
+          const radio = createTag('span', { class: 'option-radio', tabindex: 0 });
           const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
           [optionButton.textContent] = Object.values(option);
+          optionButton.prepend(radio);
           return optionButton;
         }),
       },
@@ -754,8 +760,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     }, { passive: true });
 
     $taskOptions.forEach((option) => {
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
+      const updateTaskOptions = () => {
         $taskOptions.forEach((o) => {
           if (o !== option) {
             o.classList.remove('active');
@@ -766,6 +771,19 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
         props.filters.tasks = `(${option.dataset.tasks})`;
         $taskDropdownToggle.textContent = option.textContent.trim();
         closeTaskDropdown($toolBar);
+      };
+
+      const radio = option.querySelector('.option-radio');
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateTaskOptions();
+      }, { passive: true });
+
+      radio.addEventListener('keydown', (e) => {
+        e.stopPropagation();
+        if (e.keyCode === 13) {
+          updateTaskOptions();
+        }
       }, { passive: true });
     });
 
@@ -828,10 +846,8 @@ function decorateCategoryList($block, $section, placeholders) {
     const $categoriesToggleIcon = getIconElement('template-free');
     const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
     const $categories = createTag('ul', { class: 'category-list' });
-    const $categoriesResizeButton = createTag('a', { class: 'category-list-resize' });
 
     $categoriesToggle.textContent = placeholders['jump-to-category'];
-    $categoriesResizeButton.textContent = placeholders['show-less'];
 
     $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
     $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
@@ -866,38 +882,36 @@ function decorateCategoryList($block, $section, placeholders) {
     lazyLoadLottiePlayer();
 
     $categoriesDesktopWrapper.classList.add('desktop-only');
-    $categoriesDesktopWrapper.append($categoriesResizeButton);
 
     if ($blockWrapper) {
       $blockWrapper.prepend($categoriesDesktopWrapper);
       $blockWrapper.classList.add('with-categories-list');
     }
 
-    const $toggleButtons = $section.querySelectorAll('.category-list-toggle-wrapper');
-    $toggleButtons.forEach(($button) => {
-      $button.addEventListener('click', () => {
-        const $listWrapper = $button.parentElement;
-        $button.classList.toggle('collapsed');
-        if ($button.classList.contains('collapsed')) {
-          if ($listWrapper.classList.contains('desktop-only')) {
-            $listWrapper.classList.add('collapsed');
-            $listWrapper.style.maxHeight = '40px';
-          } else {
-            $listWrapper.classList.add('collapsed');
-            $listWrapper.style.maxHeight = '24px';
-          }
+    const $toggleButton = $categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
+    $toggleButton.append(getIconElement('drop-down-arrow'));
+    $toggleButton.addEventListener('click', () => {
+      const $listWrapper = $toggleButton.parentElement;
+      $toggleButton.classList.toggle('collapsed');
+      if ($toggleButton.classList.contains('collapsed')) {
+        if ($listWrapper.classList.contains('desktop-only')) {
+          $listWrapper.classList.add('collapsed');
+          $listWrapper.style.maxHeight = '40px';
         } else {
-          $listWrapper.classList.remove('collapsed');
-          $listWrapper.style.maxHeight = '1000px';
+          $listWrapper.classList.add('collapsed');
+          $listWrapper.style.maxHeight = '24px';
         }
+      } else {
+        $listWrapper.classList.remove('collapsed');
+        $listWrapper.style.maxHeight = '1000px';
+      }
 
-        setTimeout(() => {
-          if (!$listWrapper.classList.contains('desktop-only')) {
-            updateLottieStatus($section);
-          }
-        }, 510);
-      }, { passive: true });
-    });
+      setTimeout(() => {
+        if (!$listWrapper.classList.contains('desktop-only')) {
+          updateLottieStatus($section);
+        }
+      }, 510);
+    }, { passive: true });
 
     $lottieArrows.addEventListener('click', () => {
       $inWrapper.scrollBy({
@@ -909,20 +923,6 @@ function decorateCategoryList($block, $section, placeholders) {
     $inWrapper.addEventListener('scroll', () => {
       updateLottieStatus($section);
     }, { passive: true });
-
-    setTimeout(() => {
-      const categoriesHeight = $categories.offsetHeight;
-      $categoriesResizeButton.addEventListener('click', () => {
-        $categoriesResizeButton.classList.toggle('collapsed');
-        if ($categoriesResizeButton.classList.contains('collapsed')) {
-          $categories.style.maxHeight = '200px';
-          $categoriesResizeButton.textContent = placeholders['show-more'];
-        } else {
-          $categories.style.maxHeight = `${categoriesHeight}px`;
-          $categoriesResizeButton.textContent = placeholders['show-less'];
-        }
-      }, { passive: true });
-    }, 10);
   }
 }
 
@@ -952,19 +952,24 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   // Tasks Dropdown
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
   const $taskDropdown = createTag('div', { class: 'task-dropdown' });
+  const $taskDropdownChev = getIconElement('drop-down-arrow');
   const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
   const $taskDropdownBridge = createTag('div', { class: 'task-dropdown-bridge' });
   const $taskDropdownList = createTag('ul', { class: 'task-dropdown-list' });
   const categories = JSON.parse(placeholders['task-categories']);
 
   let optionMatched = false;
+  const $radio = createTag('span', { class: 'option-radio', tabindex: 0 });
   const $optionAll = createTag('li', { class: 'option', 'data-tasks': 'all' });
   $optionAll.textContent = placeholders.all;
+  $optionAll.prepend($radio);
   $taskDropdownList.append($optionAll);
 
   Object.entries(categories).forEach((category) => {
+    const $itemRadio = createTag('span', { class: 'option-radio', tabindex: 0 });
     const $listItem = createTag('li', { class: 'option', 'data-tasks': category[1] });
     [$listItem.textContent] = category;
+    $listItem.prepend($itemRadio);
     $taskDropdownList.append($listItem);
 
     if ($listItem.dataset.tasks === trimFormattedFilterText(props.filters.tasks)) {
@@ -984,7 +989,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
   $taskDropdownBridge.append($taskDropdownList);
-  $taskDropdown.append($taskDropdownToggle, $taskDropdownBridge);
+  $taskDropdown.append($taskDropdownToggle, $taskDropdownBridge, $taskDropdownChev);
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
   $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
@@ -1270,11 +1275,7 @@ function initFilterSort($block, $toolBar) {
       }, { passive: true });
 
       $options.forEach(($option) => {
-        // sync current filter & sorting method with toolbar current options
-        updateOptionsStatus($block, $toolBar);
-
-        $option.addEventListener('click', async () => {
-          // e.stopPropagation();
+        const updateOptions = async () => {
           $options.forEach((o) => {
             if ($option !== o) {
               o.classList.remove('active');
@@ -1296,6 +1297,21 @@ function initFilterSort($block, $toolBar) {
           if (!$button.classList.contains('in-drawer')) {
             await redrawTemplates($block, $toolBar);
           }
+        };
+
+        // sync current filter & sorting method with toolbar current options
+        updateOptionsStatus($block, $toolBar);
+        const radio = $option.querySelector('.option-radio');
+        radio.addEventListener('keydown', async (e) => {
+          e.stopPropagation();
+          if (e.keyCode === 13) {
+            await updateOptions();
+          }
+        }, { passive: true });
+
+        $option.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          await updateOptions();
         }, { passive: true });
       });
 
@@ -1725,7 +1741,7 @@ async function decorateLoadMoreButton($block) {
   $loadMoreDiv.append($loadMoreButton, $loadMoreText);
   $loadMoreText.textContent = placeholders['load-more'];
   $block.insertAdjacentElement('afterend', $loadMoreDiv);
-  $loadMoreButton.textContent = '+';
+  $loadMoreButton.append(getIconElement('plus-icon'));
 
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
