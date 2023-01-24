@@ -17,14 +17,23 @@ import {
 } from './scripts.js';
 
 async function fetchPageContent(path) {
+  const env = getHelixEnv();
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
+  } else {
+    sheet = '/express/templates/content.json?sheet=seo-templates&limit=10000';
+  }
+
   if (!(window.templates && window.templates.data)) {
     window.templates = {};
-    const resp = await fetch('/express/templates/content.json?sheet=seo-templates&limit=10000');
+    const resp = await fetch(sheet);
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
 
   const page = window.templates.data.find((p) => p.path === path);
-  const env = getHelixEnv();
 
   if (env && env.name === 'stage') {
     return page || null;
@@ -82,7 +91,7 @@ function updateLinkList(container, template, list) {
       if (templatePageData) {
         const clone = template.cloneNode(true);
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replace('Default', templatePageData.shortTitle);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
         container.append(clone);
       }
     });
