@@ -17,7 +17,13 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function decorateCards($headers, $cards) {
+function decorateCards($headersContainer, $cardsContainer) {
+  const $headers = Array.from($headersContainer.children);
+  const $cards = Array.from($cardsContainer.children);
+
+  $cardsContainer.classList.add('pricing-hub-cards');
+  $cards[0].remove();
+
   for (let i = 1; i < 4; i += 1) {
     const $header = $headers[i];
     const $card = $cards[i];
@@ -35,12 +41,12 @@ function decorateCards($headers, $cards) {
       $card.classList.add('pricing-hub-card-highlight');
     }
   }
+
+  $headersContainer.remove();
 }
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  const $headers = Array.from($rows[0].children);
-  const $cards = Array.from($rows[1].children);
 
-  decorateCards($headers, $cards);
+  decorateCards($rows[0], $rows[1]);
 }
