@@ -75,11 +75,13 @@ function updatePayload(block, payload) {
 }
 
 function buildStandardPayload(block, payload) {
+  const $appBadgeWrapper = createTag('div', { class: 'app-badge-wrapper' });
   const $appBadge = createTag('a', { class: 'app-badge', href: payload.appBadge.link });
   const $freePlanLogoContainer = createTag('div', { class: 'free-plan-logo-container' });
   const $freePlanContainer = createTag('div', { class: 'free-plan-container' });
 
-  $appBadge.append(payload.appBadge.image);
+  $appBadgeWrapper.append(payload.appBadge.image);
+  $appBadge.append($appBadgeWrapper);
   payload.freePlanTags.forEach((tag) => {
     const $tagWrapper = createTag('div');
     const $checkWrapper = createTag('div', { class: 'check-wrapper' });

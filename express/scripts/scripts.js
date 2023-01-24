@@ -1675,7 +1675,7 @@ function buildAutoBlocks($main) {
     $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
 
-  if (getMetadata('show-quick-action-card')) {
+  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
     const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
     quickActionCardBlock.classList.add('spreadsheet-powered');
@@ -1694,7 +1694,6 @@ function splitSections($main) {
     if (hasAppStoreBlocks && !multipleColumns) {
       blocksToSplit.push('columns fullsize-center');
     }
-
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }

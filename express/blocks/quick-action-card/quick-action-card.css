@@ -53,9 +53,20 @@ main .quick-action-card > span {
 }
 
 main .quick-action-card .app-badge img {
-  margin: 6px 0 6px 0;
   width: 147px;
   height: 43px;
+  outline-offset: -4px;
+  outline: 5px solid black;
+  border-radius: 4px;
+  margin: 0;
+}
+
+main .quick-action-card .app-badge-wrapper {
+  background: linear-gradient(to right top, #5F7BF7, #DA6BF5);
+  border-radius: 5px;
+  height: 43px;
+  width: 147px;
+  padding: 3px;
 }
 
 main .quick-action-card .free-plan-logo-container {
