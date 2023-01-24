@@ -2229,31 +2229,27 @@ export async function addFreePlanWidget(elem) {
     const widget = createTag('div', { class: 'free-plan-widget' });
     const optoutButton = createTag('button', { class: 'free-plan-optout' });
 
+    const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
+    const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
+
+    for (let i = 0; i < 16; i += 1) {
+      const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
+      const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
+      const tag = createTag('div', { class: 'free-plan-tag' });
+      const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
+      tag.innerText = placeholder;
+      innerDiv.innerHTML = checkmark;
+
+      tag.prepend(innerDiv);
+      freePlanBulletTray.append(tag);
+    }
+
+    freePlanBulletContainer.append(freePlanBulletTray);
+    bullet.append(freePlanBulletContainer);
+
     widget.innerHTML = `
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-    `;
-    bullet.innerHTML = `
-      <div class="free-plan-bullet-container">
-        <div class="free-plan-bullet-tray">
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #c457f0;">${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-          <div class="free-plan-tag"><div style="background-color: #f06dad;">${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-        </div>
-      </div>
     `;
 
     document.addEventListener('planscomparisonloaded', () => {
@@ -2300,13 +2296,13 @@ export async function addFreePlanWidget(elem) {
         el.remove();
       });
     }, { passive: true });
-    let initialCtaPositionX = elem.getBoundingClientRect().left;
+    let supposedCtaPositionX = elem.getBoundingClientRect().left;
 
     if (parent && previousSibling) {
       ['scroll', 'resize'].forEach((event) => {
         window.addEventListener(event, () => {
-          if (initialCtaPositionX === 0) {
-            initialCtaPositionX = elem.getBoundingClientRect().left;
+          if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
+            supposedCtaPositionX = elem.getBoundingClientRect().left;
           }
 
           const elemMT = parseInt(getComputedStyle(elem).marginTop.replace(/\D/g, ''), 10);
@@ -2322,7 +2318,7 @@ export async function addFreePlanWidget(elem) {
           if (window.innerWidth > 900 && triggerPoint <= 0) {
             if (!elem.classList.contains('highlight-optout')) {
               elem.classList.add('fixed');
-              elem.style.left = `${initialCtaPositionX}px`;
+              elem.style.left = `${supposedCtaPositionX}px`;
               highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
 
               if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
