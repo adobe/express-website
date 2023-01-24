@@ -785,7 +785,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
   font-weight: 400;
   font-size: 14px;
   padding: 10px 40px 10px 160px;
-  border: var(--color-gray-500) 2px solid;
+  border: var(--color-gray-200) 2px solid;
   border-radius: 100px;
   max-width: 560px;
   width: 100%;
@@ -947,11 +947,11 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown .icon.icon-drop-down-arrow {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   position: absolute;
   right: 8px;
-  top: 12px;
+  top: 14px;
   transform: rotate(0deg);
   pointer-events: none;
   transition: transform 0.2s;
@@ -1005,24 +1005,25 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--color-gray-100);
+  border: 2px var(--color-gray-100) solid;
   border-radius: 0 12px 12px 0;
 }
 
 /* Handle */
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb {
-  background: var(--color-gray-500);
-  border: 2px #f1f1f1 solid;
+  background: var(--color-gray-300);
+  border: 2px var(--color-gray-100) solid;
   border-radius: 12px;
 }
 
 /* Handle on hover */
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-600);
+  background: var(--color-gray-400);
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list.active {
@@ -1034,7 +1035,6 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   font-size: 14px;
   font-weight: 400;
   font-family: var(--body-font-family);
-  color: #242424;
   line-height: 24px;
   cursor: pointer;
   display: flex;
@@ -1216,7 +1216,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .current-option {
   font-family: var(--body-font-family);
   font-size: 14px;
-  padding-right: 8px;
   line-height: 24px;
   text-align: left;
   white-space: nowrap;
@@ -1340,7 +1339,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button:hover {
-  opacity: 0.35;
+  opacity: 0.86;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button.active {
@@ -1352,12 +1351,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .butto
   gap: 4px;
   align-items: center;
   position: relative;
-  padding-right: 16px;
+  padding-right: 24px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .button-wrapper .icon.icon-drop-down-arrow {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   position: absolute;
   right: 3px;
   transform: rotate(0deg);
@@ -1446,10 +1445,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   align-items: center;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper.button-wrapper-sort > .icon-drop-down-arrow {
-  display: none;
-}
-
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper {
   margin-bottom: 22px;
 }
@@ -1468,8 +1463,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper .icon.icon-drop-down-arrow,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper .icon.icon-drop-down-arrow {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .function-wrapper {
@@ -1580,8 +1575,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper .icon-drop-down-arrow {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   position: absolute;
   right: 3px;
   transform: rotate(0deg);
@@ -1697,7 +1692,6 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > a {
-  color: var(--color-black);
   font-family: var(--body-font-family);
   font-weight: 400;
   font-size: 14px;
@@ -1888,8 +1882,8 @@ main .template-list.horizontal .carousel-platform {
     display: flex;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .button-wrapper:after {
-    transform: rotate(315deg) translate(-2px, 2px);
+  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .button-wrapper .icon.icon-drop-down-arrow {
+    transform: rotate(180deg);
   }
 }
 

@@ -526,7 +526,7 @@ function makeTemplateFunctions(placeholders) {
     sort: {
       placeholders: JSON.parse(placeholders['template-sort']),
       elements: {},
-      icons: ['sort'],
+      icons: ['sort', 'eye'],
     },
   };
 
@@ -575,7 +575,7 @@ function updateFilterIcon(block) {
     const currentOption = wrap.querySelector('.option-button.active');
 
     if (primaryIcon && secondaryIcon && currentOption) {
-      if (currentOption.dataset.value === 'false') {
+      if (currentOption.dataset.value === 'false' || currentOption.dataset.value === '-remixCount') {
         secondaryIcon.style.display = 'unset';
         primaryIcon.style.display = 'none';
       } else {
