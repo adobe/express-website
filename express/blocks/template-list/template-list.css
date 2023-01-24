@@ -1339,7 +1339,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button:hover {
-  opacity: 0.86;
+  opacity: 0.27;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button.active {
