@@ -2210,14 +2210,37 @@ export async function addFreePlanWidget(elem, forced) {
   if ((elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) || forced) {
     const placeholders = await fetchPlaceholders();
     const checkmark = getIcon('checkmark');
+    const bullet = createTag('div', { class: 'free-plan-bullet' });
     const widget = createTag('div', { class: 'free-plan-widget' });
+    const optoutButton = createTag('button', { class: 'free-plan-optout' });
+
+    const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
+    const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
+
+    for (let i = 0; i < 16; i += 1) {
+      const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
+      const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
+      const tag = createTag('div', { class: 'free-plan-tag' });
+      const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
+      tag.innerText = placeholder;
+      innerDiv.innerHTML = checkmark;
+
+      tag.prepend(innerDiv);
+      freePlanBulletTray.append(tag);
+    }
+
+    freePlanBulletContainer.append(freePlanBulletTray);
+    bullet.append(freePlanBulletContainer);
+
     widget.innerHTML = `
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
       <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
     `;
+
     document.addEventListener('planscomparisonloaded', () => {
       const $learnMoreButton = createTag('a', { class: 'learn-more-button', href: '#plans-comparison-container' });
       const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
+
       $learnMoreButton.textContent = placeholders['learn-more'];
       lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
       $learnMoreButton.append(lottieWrapper);
@@ -2234,12 +2257,69 @@ export async function addFreePlanWidget(elem, forced) {
         $html.style.removeProperty('scroll-behavior');
       });
     });
-    elem.append(widget);
+
+    elem.append(widget, bullet, optoutButton);
+    optoutButton.append(getIconElement('close-white'));
     elem.classList.add('free-plan-container');
     // stack CTA and free plan widget if country not US, CN, KR or TW
     const cta = elem.querySelector('.button.accent');
     if (cta && !['us', 'cn', 'kr', 'tw'].includes(getLocale(window.location))) {
       elem.classList.add('stacked');
+    }
+
+    // start watching for free-plan-highlight scroll
+    const parent = elem.parentElement;
+    const previousSibling = elem.previousElementSibling;
+
+    optoutButton.addEventListener('click', () => {
+      const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+      elem.classList.add('highlight-optout');
+      elem.classList.remove('fixed');
+      highlightContainer.style.removeProperty('transform');
+      elem.style.removeProperty('left');
+      parent.querySelectorAll('.free-plan-widget-placeholder').forEach((el) => {
+        el.remove();
+      });
+    }, { passive: true });
+    let supposedCtaPositionX = elem.getBoundingClientRect().left;
+
+    if (parent && previousSibling) {
+      ['scroll', 'resize'].forEach((event) => {
+        window.addEventListener(event, () => {
+          if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
+            supposedCtaPositionX = elem.getBoundingClientRect().left;
+          }
+
+          const elemMT = parseInt(getComputedStyle(elem).marginTop.replace(/\D/g, ''), 10);
+          const triggerPoint = previousSibling.getBoundingClientRect().bottom + elemMT;
+          const ctaPositionX = elem.getBoundingClientRect().left;
+          const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+
+          const placeHolder = createTag('div', {
+            style: `height: ${getComputedStyle(elem).height}`,
+            class: 'free-plan-widget-placeholder',
+          });
+
+          if (window.innerWidth > 900 && triggerPoint <= 0) {
+            if (!elem.classList.contains('highlight-optout')) {
+              elem.classList.add('fixed');
+              elem.style.left = `${supposedCtaPositionX}px`;
+              highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
+
+              if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
+                previousSibling.insertAdjacentElement('afterend', placeHolder);
+              }
+            }
+          } else {
+            parent.querySelectorAll('.free-plan-widget-placeholder').forEach((el) => {
+              el.remove();
+            });
+            elem.classList.remove('fixed');
+            highlightContainer.style.removeProperty('transform');
+            elem.style.removeProperty('left');
+          }
+        }, { passive: true });
+      });
     }
   }
 }

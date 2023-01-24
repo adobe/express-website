@@ -848,6 +848,7 @@ main .columns.columns-marquee {
 
 /* free plan widget */
 main .block .button-container.free-plan-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -857,8 +858,19 @@ main .block.center .button-container.free-plan-container {
   justify-content: center;
 }
 
+main .block .button-container.free-plan-container.fixed {
+  position: fixed;
+  top: -8px;
+  margin-top: 16px;
+  z-index: 10;
+}
+
 main .block .button-container.free-plan-container a.button {
   max-height: 24px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  z-index: 4;
 }
 
 main .block .free-plan-widget {
@@ -904,7 +916,8 @@ main .block .free-plan-widget>div>div:first-child {
   border-radius: 50%;
 }
 
-main .block .free-plan-widget .icon.icon-checkmark {
+main .block .free-plan-widget .icon.icon-checkmark,
+main .block .free-plan-bullet .icon.icon-checkmark {
   position: absolute;
   top: 3px;
   left: 3px;
@@ -913,12 +926,164 @@ main .block .free-plan-widget .icon.icon-checkmark {
   max-height: 8px;
 }
 
-@media (min-width:900px) {
+main .block .free-plan-bullet {
+  position: absolute;
+  border-radius: 100px;
+  height: 100%;
+  display: none;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-container {
+  background-color: var(--color-gray-200);
+  max-width: 400px;
+  width: 100vw;
+  height: 100%;
+  border-radius: 100px;
+  transform: translate(0px, 0px);
+  transition: transform 0.5s ease-in, max-width 0.5s ease-in, border-radius 0.5s ease-in;
+  overflow: hidden;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-bullet-container {
+  max-width: 100vw;
+  width: 100vw;
+  height: calc(100% + 16px);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-tray {
+  width: max-content;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  transition: transform 0.2s linear;
+  animation-name: freePlanHighlight;
+  animation-timing-function: linear;
+  animation-duration: 32s;
+  animation-iteration-count: infinite;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
+  position: relative;
+  margin-top: 5px;
+  margin-right: 6px;
+  width: 14px;
+  height: 14px;
+  background: #33AB84;
+  border-radius: 50%;
+}
+
+main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
+  display: flex;
+  font-family: var(--body-serif-font-family);
+  font-style: italic;
+  font-size: 16px;
+  transition: font-size 0.5s;
+}
+
+main .block .free-plan-optout {
+  appearance: none;
+  display: none;
+  border: none;
+  border-radius: 100px;
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  height: 45px;
+  width: 45px;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.5s ease-in, transform 0.5s ease-in;
+  cursor: pointer;
+  background: var(--color-black);
+  z-index: 1;
+}
+
+main .block .free-plan-optout .icon {
+  margin: 0;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-optout {
+  left: -56px;
+  border-radius: 50px;
+  transform: translateY(-50%) rotate(-90deg);
+  z-index: 3;
+}
+
+main .block .button-container.free-plan-container::before {
+  content: '';
+  height: 100%;
+  max-height: 0;
+  left: 0;
+  width: 80px;
+  position: absolute;
+  transition: max-height 0.5s ease-in, left 0.5s ease-in;
+  z-index: 2;
+}
+
+main .block .button-container.free-plan-container.fixed::before {
+  max-height: 100%;
+  left: -68px;
+  background-color: var(--color-gray-200);
+}
+
+main .block .free-plan-optout img {
+  height: 16px;
+  width: 16px;
+  padding: 12px;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-tag > div:first-child {
+  display: none;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-tag {
+  font-size: 22px;
+}
+
+@media (min-width: 900px) {
+  main .block .free-plan-widget {
+    display: none;
+  }
+
+  main .block .free-plan-bullet {
+    display: inline-block;
+  }
+
+  main .block .button-container.free-plan-container {
+    width: max-content;
+  }
+
+  main .block.fullscreen-marquee .button-container.free-plan-container {
+    width: 400px;
+    align-items: flex-start;
+  }
+
+  main .block .free-plan-optout {
+    display: flex;
+  }
 }
 
 @media (min-width: 1200px) {
   main .block .button-container.free-plan-container {
     flex-direction: row;
+    width: 400px;
+    justify-content: left;
+  }
+
+  main .block.center .button-container.free-plan-container {
+    justify-content: unset;
+    margin: 40px auto 0 auto;
+  }
+
+  main .block.center .button-container.free-plan-container.fixed {
+    margin-top: 16px;
   }
 
   main .block .free-plan-widget {
@@ -963,9 +1128,38 @@ main .template-list-sixcols-container>div {
   padding: 0;
 }
 
+@-webkit-keyframes freePlanHighlight {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-25.3%);
+  }
+}
+
+@-moz-keyframes freePlanHighlight {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-25.3%);
+  }
+}
+
+@keyframes freePlanHighlight {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-25.3%);
+  }
+}
+
 /* disable budoux on small screens  */
 @media (max-width: 600px) {
-
   h1.budoux,
   h2.budoux,
   h3.budoux,
