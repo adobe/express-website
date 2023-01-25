@@ -955,7 +955,7 @@ main .block .button-container.free-plan-container.fixed .free-plan-bullet-contai
   overflow: hidden;
 }
 
-main .block .free-plan-bullet .free-plan-bullet-tray {
+main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray {
   width: max-content;
   height: 100%;
   display: flex;
@@ -968,7 +968,7 @@ main .block .free-plan-bullet .free-plan-bullet-tray {
   animation-iteration-count: infinite;
 }
 
-main .block .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
+main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
   position: relative;
   margin-top: 5px;
   margin-right: 6px;
@@ -978,7 +978,7 @@ main .block .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
   border-radius: 50%;
 }
 
-main .block .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
+main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
   font-family: var(--body-serif-font-family);
   font-style: italic;
@@ -1005,7 +1005,7 @@ main .block .free-plan-optout {
   z-index: 1;
 }
 
-main .block .free-plan-optout .icon {
+main .block .button-container.free-plan-container .free-plan-optout .icon {
   margin: 0;
 }
 
@@ -1033,7 +1033,7 @@ main .block .button-container.free-plan-container.fixed::before {
   background-color: var(--color-gray-200);
 }
 
-main .block .free-plan-optout img {
+main .block .button-container.free-plan-container .free-plan-optout img {
   height: 16px;
   width: 16px;
   padding: 12px;
@@ -1048,11 +1048,11 @@ main .block .button-container.free-plan-container.fixed .free-plan-tag {
 }
 
 @media (min-width: 900px) {
-  main .block .free-plan-widget {
+  main .block .button-container.free-plan-container .free-plan-widget {
     display: none;
   }
 
-  main .block .free-plan-bullet {
+  main .block .button-container.free-plan-container .free-plan-bullet {
     display: inline-block;
   }
 
@@ -1065,7 +1065,7 @@ main .block .button-container.free-plan-container.fixed .free-plan-tag {
     align-items: flex-start;
   }
 
-  main .block .free-plan-optout {
+  main .block .button-container.free-plan-container .free-plan-optout {
     display: flex;
   }
 }
