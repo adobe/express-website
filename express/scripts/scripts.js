@@ -2207,156 +2207,153 @@ function removeMetadata() {
 }
 
 export async function addFreePlanWidget(elem) {
-  if (elem) {
-    if (['yes', 'true'].includes(getMetadata('show-free-plan')
-      .toLowerCase())) {
-      const placeholders = await fetchPlaceholders();
-      const checkmark = getIcon('checkmark');
-      const bullet = createTag('div', { class: 'free-plan-bullet' });
-      const widget = createTag('div', { class: 'free-plan-widget' });
+  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+    const placeholders = await fetchPlaceholders();
+    const checkmark = getIcon('checkmark');
+    const bullet = createTag('div', { class: 'free-plan-bullet' });
+    const widget = createTag('div', { class: 'free-plan-widget' });
 
-      widget.innerHTML = `
-      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-    `;
+    widget.innerHTML = `
+    <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+    <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+  `;
 
-      document.addEventListener('planscomparisonloaded', () => {
-        const $learnMoreButton = createTag('a', {
-          class: 'learn-more-button',
-          href: '#plans-comparison-container',
-        });
-        const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
-
-        $learnMoreButton.textContent = placeholders['learn-more'];
-        lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
-        $learnMoreButton.append(lottieWrapper);
-        lazyLoadLottiePlayer();
-        widget.append($learnMoreButton);
-
-        $learnMoreButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          // temporarily disabling smooth scroll for accurate location
-          const $html = document.querySelector('html');
-          $html.style.scrollBehavior = 'unset';
-          const $plansComparison = document.querySelector('.plans-comparison-container');
-          $plansComparison.scrollIntoView();
-          $html.style.removeProperty('scroll-behavior');
-        });
+    document.addEventListener('planscomparisonloaded', () => {
+      const $learnMoreButton = createTag('a', {
+        class: 'learn-more-button',
+        href: '#plans-comparison-container',
       });
+      const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
 
-      elem.append(widget);
+      $learnMoreButton.textContent = placeholders['learn-more'];
+      lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+      $learnMoreButton.append(lottieWrapper);
+      lazyLoadLottiePlayer();
+      widget.append($learnMoreButton);
 
-      // add the free plan bullet if there's a CTA to attach to
-      if (elem.classList.contains('button-container')) {
-        if (sessionStorage.getItem('highlight-optout')) {
-          elem.classList.add('highlight-optout');
-        }
-        const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
-        const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
-        const optoutButton = createTag('button', { class: 'free-plan-optout' });
-        optoutButton.append(getIconElement('close-white'));
-        let highlightWidth = 400;
-        const a = elem.querySelector('a');
+      $learnMoreButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        // temporarily disabling smooth scroll for accurate location
+        const $html = document.querySelector('html');
+        $html.style.scrollBehavior = 'unset';
+        const $plansComparison = document.querySelector('.plans-comparison-container');
+        $plansComparison.scrollIntoView();
+        $html.style.removeProperty('scroll-behavior');
+      });
+    });
 
-        for (let i = 0; i < 24; i += 1) {
-          const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
-          const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
-          const tag = createTag('div', { class: 'free-plan-tag' });
-          const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
-          tag.innerText = placeholder;
-          innerDiv.innerHTML = checkmark;
+    elem.append(widget);
 
-          tag.prepend(innerDiv);
-          freePlanBulletTray.append(tag);
-        }
+    // add the free plan bullet if there's a CTA to attach to
+    if (elem.classList.contains('button-container')) {
+      if (sessionStorage.getItem('highlight-optout')) {
+        elem.classList.add('highlight-optout');
+      }
+      const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
+      const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
+      const optoutButton = createTag('button', { class: 'free-plan-optout' });
+      optoutButton.append(getIconElement('close-white'));
+      let highlightWidth = 400;
+      const a = elem.querySelector('a');
 
-        freePlanBulletContainer.append(freePlanBulletTray);
-        bullet.append(freePlanBulletContainer);
-        elem.append(bullet, optoutButton);
+      for (let i = 0; i < 40; i += 1) {
+        const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
+        const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
+        const tag = createTag('div', { class: 'free-plan-tag' });
+        const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
+        tag.innerText = placeholder;
+        innerDiv.innerHTML = checkmark;
 
-        const captureCtaWidth = setInterval(() => {
-          if (a.offsetWidth > 0) {
-            highlightWidth = a.offsetWidth + 200;
-            freePlanBulletContainer.style.maxWidth = `${highlightWidth}px`;
-            clearInterval(captureCtaWidth);
-          }
-        }, 200);
-
-        // start watching for free-plan-highlight scroll
-        const parent = elem.parentElement;
-        const previousSibling = elem.previousElementSibling;
-
-        optoutButton.addEventListener('click', () => {
-          const highlightContainer = elem.querySelector('.free-plan-bullet-container');
-          elem.classList.add('highlight-optout');
-          sessionStorage.setItem('highlight-optout', true);
-          elem.classList.remove('fixed');
-          highlightContainer.style.removeProperty('transform');
-          elem.style.removeProperty('left');
-          parent.querySelectorAll('.free-plan-widget-placeholder')
-            .forEach((el) => {
-              el.remove();
-            });
-        }, { passive: true });
-        let supposedCtaPositionX = elem.getBoundingClientRect().left;
-
-        if (parent && previousSibling) {
-          ['scroll', 'resize'].forEach((event) => {
-            window.addEventListener(event, () => {
-              if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
-                supposedCtaPositionX = elem.getBoundingClientRect().left;
-              }
-
-              const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace(/\D/g, ''), 10);
-              const elmt = parseInt(getComputedStyle(elem).marginTop.replace(/\D/g, ''), 10);
-              const elh = parseInt(getComputedStyle(elem).height.replace(/\D/g, ''), 10);
-
-              let roomNeeded;
-              if (getComputedStyle(parent).display === 'flex') {
-                roomNeeded = psmb + elmt - 8;
-              } else {
-                roomNeeded = psmb >= elmt ? psmb : elmt - 8;
-              }
-
-              const triggerPoint = previousSibling.getBoundingClientRect().bottom + roomNeeded;
-              const ctaPositionX = elem.getBoundingClientRect().left;
-              const highlightContainer = elem.querySelector('.free-plan-bullet-container');
-
-              const placeHolder = createTag('div', {
-                style: `height: ${elh + elmt}px`,
-                class: 'free-plan-widget-placeholder',
-              });
-
-              if (window.innerWidth > 900 && triggerPoint <= 0) {
-                if (!elem.classList.contains('highlight-optout')) {
-                  elem.classList.add('fixed');
-                  elem.style.left = `${supposedCtaPositionX}px`;
-                  highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
-                  highlightContainer.style.maxWidth = '100vw';
-
-                  if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
-                    previousSibling.insertAdjacentElement('afterend', placeHolder);
-                  }
-                }
-              } else {
-                parent.querySelectorAll('.free-plan-widget-placeholder')
-                  .forEach((el) => {
-                    el.remove();
-                  });
-                elem.classList.remove('fixed');
-                highlightContainer.style.removeProperty('transform');
-                elem.style.removeProperty('left');
-                highlightContainer.style.maxWidth = `${highlightWidth}px`;
-              }
-            }, { passive: true });
-          });
-        }
+        tag.prepend(innerDiv);
+        freePlanBulletTray.append(tag);
       }
 
-      // end of free plan bullet code block
+      freePlanBulletContainer.append(freePlanBulletTray);
+      bullet.append(freePlanBulletContainer);
+      elem.append(bullet, optoutButton);
 
-      elem.classList.add('free-plan-container');
+      const captureCtaWidth = setInterval(() => {
+        if (a.offsetWidth > 0) {
+          highlightWidth = a.offsetWidth + 200;
+          freePlanBulletContainer.style.maxWidth = `${highlightWidth}px`;
+          clearInterval(captureCtaWidth);
+        }
+      }, 200);
+
+      // start watching for free-plan-highlight scroll
+      const parent = elem.parentElement;
+      const previousSibling = elem.previousElementSibling;
+
+      optoutButton.addEventListener('click', () => {
+        const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+        elem.classList.add('highlight-optout');
+        sessionStorage.setItem('highlight-optout', true);
+        elem.classList.remove('fixed');
+        highlightContainer.style.removeProperty('transform');
+        elem.style.removeProperty('left');
+        parent.querySelectorAll('.free-plan-widget-placeholder')
+          .forEach((el) => {
+            el.remove();
+          });
+      }, { passive: true });
+      let supposedCtaPositionX = elem.getBoundingClientRect().left;
+
+      if (parent && previousSibling) {
+        ['scroll', 'resize'].forEach((event) => {
+          window.addEventListener(event, () => {
+            if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
+              supposedCtaPositionX = elem.getBoundingClientRect().left;
+            }
+
+            const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace(/\D/g, ''), 10);
+            const elmt = parseInt(getComputedStyle(elem).marginTop.replace(/\D/g, ''), 10);
+            const elh = parseInt(getComputedStyle(elem).height.replace(/\D/g, ''), 10);
+
+            let roomNeeded;
+            if (getComputedStyle(parent).display === 'flex') {
+              roomNeeded = psmb + elmt - 8;
+            } else {
+              roomNeeded = psmb >= elmt ? psmb - 8 : elmt - 8;
+            }
+
+            const triggerPoint = previousSibling.getBoundingClientRect().bottom + roomNeeded;
+            const ctaPositionX = elem.getBoundingClientRect().left;
+            const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+
+            const placeHolder = createTag('div', {
+              style: `height: ${elh + elmt}px`,
+              class: 'free-plan-widget-placeholder',
+            });
+
+            if (window.innerWidth > 900 && triggerPoint <= 0) {
+              if (!elem.classList.contains('highlight-optout')) {
+                elem.classList.add('fixed');
+                elem.style.left = `${supposedCtaPositionX}px`;
+                highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
+                highlightContainer.style.maxWidth = '100vw';
+
+                if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
+                  previousSibling.insertAdjacentElement('afterend', placeHolder);
+                }
+              }
+            } else {
+              parent.querySelectorAll('.free-plan-widget-placeholder')
+                .forEach((el) => {
+                  el.remove();
+                });
+              elem.classList.remove('fixed');
+              highlightContainer.style.removeProperty('transform');
+              elem.style.removeProperty('left');
+              highlightContainer.style.maxWidth = `${highlightWidth}px`;
+            }
+          }, { passive: true });
+        });
+      }
     }
+
+    // end of free plan bullet code block
+
+    elem.classList.add('free-plan-container');
   }
 }
 
