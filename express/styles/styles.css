@@ -947,6 +947,11 @@ main .block .free-plan-bullet .free-plan-bullet-container {
   overflow: hidden;
 }
 
+main .block .button-container.free-plan-container.highlight-optout .free-plan-bullet-container,
+main .block .button-container.free-plan-container.highlight-optout .free-plan-bullet-tray {
+  transition: none;
+}
+
 main .block .button-container.free-plan-container.fixed .free-plan-bullet-container {
   max-width: 100vw;
   width: 100vw;
@@ -964,7 +969,7 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
   transition: transform 0.2s linear;
   animation-name: freePlanHighlight;
   animation-timing-function: linear;
-  animation-duration: 32s;
+  animation-duration: 40s;
   animation-iteration-count: infinite;
 }
 
@@ -1039,11 +1044,11 @@ main .block .button-container.free-plan-container .free-plan-optout img {
   padding: 12px;
 }
 
-main .block .button-container.free-plan-container.fixed .free-plan-tag > div:first-child {
+main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag > div:first-child {
   display: none;
 }
 
-main .block .button-container.free-plan-container.fixed .free-plan-tag {
+main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   font-size: 22px;
 }
 
