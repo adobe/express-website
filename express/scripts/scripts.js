@@ -2291,10 +2291,9 @@ export async function addFreePlanWidget(elem) {
         elem.classList.remove('fixed');
         highlightContainer.style.removeProperty('transform');
         elem.style.removeProperty('left');
-        parent.querySelectorAll('.free-plan-widget-placeholder')
-          .forEach((el) => {
-            el.remove();
-          });
+        parent.querySelectorAll('.free-plan-widget-placeholder').forEach((el) => {
+          el.remove();
+        });
       }, { passive: true });
       let supposedCtaPositionX = elem.getBoundingClientRect().left;
 
@@ -2342,8 +2341,8 @@ export async function addFreePlanWidget(elem) {
                   el.remove();
                 });
               elem.classList.remove('fixed');
-              highlightContainer.style.removeProperty('transform');
               elem.style.removeProperty('left');
+              highlightContainer.style.removeProperty('transform');
               highlightContainer.style.maxWidth = `${highlightWidth}px`;
             }
           }, { passive: true });
