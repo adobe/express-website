@@ -969,7 +969,7 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
   transition: transform 0.2s linear;
   animation-name: freePlanHighlight;
   animation-timing-function: linear;
-  animation-duration: 40s;
+  animation-duration: 64s;
   animation-iteration-count: infinite;
 }
 
