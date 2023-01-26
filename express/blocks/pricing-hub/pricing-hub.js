@@ -17,10 +17,10 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function decorateCards($headersContainer, $cardsContainer, $buttonContainers) {
+function decorateCards($headersContainer, $cardsContainer, $buttonsContainer) {
   const $headers = Array.from($headersContainer.children);
   const $cards = Array.from($cardsContainer.children);
-  const $buttonDivs = Array.from($buttonContainers.children);
+  const $buttonDivs = Array.from($buttonsContainer.children);
 
   $cardsContainer.classList.add('pricing-hub-cards');
   $cards[0].remove();
@@ -64,10 +64,51 @@ function decorateCards($headersContainer, $cardsContainer, $buttonContainers) {
   }
 
   $headersContainer.remove();
+  $buttonsContainer.remove();
+}
+
+function decorateFeatures($block, $rows) {
+  const $features = createTag('div', { class: 'pricing-hub-features' });
+
+  for (let i = 3; i < $rows.length; i += 1) {
+    const $feature = $rows[i];
+    const $columns = Array.from($feature.children);
+    const $columnsContainer = createTag('div', { class: 'pricing-hub-feature-columns' });
+    const $title = $feature.querySelector('h3');
+    const $icon = $feature.querySelector('svg, img');
+
+    if ($title && $icon) {
+      $icon.parentElement.remove();
+      $title.prepend($icon);
+    }
+
+    const $tooltip = $feature.querySelector('p');
+
+    if ($tooltip) {
+      $tooltip.remove();
+    }
+
+    $feature.classList.add('pricing-hub-feature');
+    $features.append($feature);
+
+    $columns[0].classList.add('pricing-hub-feature-title');
+    $columns[1].classList.add('pricing-hub-feature-column');
+    $columns[2].classList.add('pricing-hub-feature-column', 'pricing-hub-feature-column-highlight');
+    $columns[3].classList.add('pricing-hub-feature-column');
+
+    $columnsContainer.append($columns[1]);
+    $columnsContainer.append($columns[2]);
+    $columnsContainer.append($columns[3]);
+
+    $feature.append($columnsContainer);
+  }
+
+  $block.append($features);
 }
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
 
   decorateCards($rows[0], $rows[1], $rows[2]);
+  decorateFeatures($block, $rows);
 }

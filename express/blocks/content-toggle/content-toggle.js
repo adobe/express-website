@@ -9,10 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  createTag,
 // eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
+import { buildCarousel } from '../shared/carousel.js';
 
 export default function decorate($block) {
   const $sections = document.querySelectorAll('[data-toggle]');
@@ -64,4 +63,6 @@ export default function decorate($block) {
       }
     });
   }
+
+  buildCarousel('.content-toggle > *', $block);
 }
