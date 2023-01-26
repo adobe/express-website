@@ -13,11 +13,170 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  createTag,
+  createTag, getHelixEnv, getOffer,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function decorateCards($headersContainer, $cardsContainer, $buttonsContainer) {
+function replaceUrlParam(url, paramName, paramValue) {
+  const params = url.searchParams;
+  params.set(paramName, paramValue);
+  url.search = params.toString();
+  return url;
+}
+
+function buildUrl(optionUrl, country, language) {
+  const currentUrl = new URL(window.location.href);
+  let planUrl = new URL(optionUrl);
+
+  if (!planUrl.hostname.includes('commerce')) {
+    return planUrl.href;
+  }
+  planUrl = replaceUrlParam(planUrl, 'co', country);
+  planUrl = replaceUrlParam(planUrl, 'lang', language);
+  let rUrl = planUrl.searchParams.get('rUrl');
+  if (currentUrl.searchParams.has('host')) {
+    const hostParam = currentUrl.searchParams.get('host');
+    if (hostParam === 'express.adobe.com') {
+      planUrl.hostname = 'commerce.adobe.com';
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
+    } else if (hostParam.includes('qa.adobeprojectm.com')) {
+      planUrl.hostname = 'commerce.adobe.com';
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
+    } else if (hostParam.includes('.adobeprojectm.com')) {
+      planUrl.hostname = 'commerce-stg.adobe.com';
+      if (rUrl) rUrl = rUrl.replace('adminconsole.adobe.com', 'stage.adminconsole.adobe.com');
+      if (rUrl) rUrl = rUrl.replace('express.adobe.com', hostParam);
+    }
+  }
+
+  const env = getHelixEnv();
+  if (env && env.commerce && planUrl.hostname.includes('commerce')) planUrl.hostname = env.commerce;
+  if (env && env.spark && rUrl) {
+    const url = new URL(rUrl);
+    url.hostname = env.spark;
+    rUrl = url.toString();
+  }
+
+  if (rUrl) {
+    rUrl = new URL(rUrl);
+
+    if (currentUrl.searchParams.has('touchpointName')) {
+      rUrl = replaceUrlParam(rUrl, 'touchpointName', currentUrl.searchParams.get('touchpointName'));
+    }
+    if (currentUrl.searchParams.has('destinationUrl')) {
+      rUrl = replaceUrlParam(rUrl, 'destinationUrl', currentUrl.searchParams.get('destinationUrl'));
+    }
+    if (currentUrl.searchParams.has('srcUrl')) {
+      rUrl = replaceUrlParam(rUrl, 'srcUrl', currentUrl.searchParams.get('srcUrl'));
+    }
+  }
+
+  if (currentUrl.searchParams.has('code')) {
+    planUrl.searchParams.set('code', currentUrl.searchParams.get('code'));
+  }
+
+  if (currentUrl.searchParams.get('rUrl')) {
+    rUrl = currentUrl.searchParams.get('rUrl');
+  }
+
+  if (rUrl) planUrl.searchParams.set('rUrl', rUrl.toString());
+  return planUrl.href;
+}
+
+function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
+  const url = new URL(window.location.href);
+  const sparkTouchpoint = url.searchParams.get('touchpointName');
+
+  /* eslint-disable no-underscore-dangle */
+  /* global digitalData _satellite */
+  digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+  digitalData._set('spark.eventData.eventName', sparkEventName);
+  digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
+  digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
+  digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
+  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+  digitalData._set('spark.eventData.trigger', sparkTouchpoint);
+
+  _satellite.track('event', {
+    digitalData: digitalData._snapshot(),
+  });
+
+  digitalData._delete('primaryEvent.eventInfo.eventName');
+  digitalData._delete('spark.eventData.eventName');
+  digitalData._delete('spark.eventData.contextualData4');
+  digitalData._delete('spark.eventData.contextualData6');
+  digitalData._delete('spark.eventData.contextualData7');
+  digitalData._delete('spark.eventData.contextualData9');
+  digitalData._delete('spark.eventData.contextualData10');
+  digitalData._delete('spark.eventData.contextualData12');
+  digitalData._delete('spark.eventData.contextualData14');
+}
+
+async function fetchPlan(planUrl) {
+  if (!window.pricingPlans) {
+    window.pricingPlans = {};
+  }
+
+  let plan = window.pricingPlans[planUrl];
+
+  if (!plan) {
+    plan = {};
+    const link = new URL(planUrl);
+    const params = link.searchParams;
+
+    plan.url = planUrl;
+    plan.country = 'us';
+    plan.language = 'en';
+    plan.price = '9.99';
+    plan.currency = 'US';
+    plan.symbol = '$';
+
+    if (planUrl.includes('/sp/')) {
+      plan.offerId = 'FREE0';
+      plan.frequency = 'monthly';
+      plan.name = 'Free';
+      plan.stringId = 'free-trial';
+    } else {
+      plan.offerId = params.get('items[0][id]');
+      plan.frequency = null;
+      plan.name = 'Premium';
+      plan.stringId = '3-month-trial';
+    }
+
+    if (plan.offerId === '70C6FDFC57461D5E449597CC8F327CF1' || plan.offerId === 'CFB1B7F391F77D02FE858C43C4A5C64F') {
+      plan.frequency = 'Monthly';
+    } else if (plan.offerId === 'E963185C442F0C5EEB3AE4F4AAB52C24' || plan.offerId === 'BADDACAB87D148A48539B303F3C5FA92') {
+      plan.frequency = 'Annual';
+    } else {
+      plan.frequency = null;
+    }
+
+    const countryOverride = new URLSearchParams(window.location.search).get('country');
+    const offer = await getOffer(plan.offerId, countryOverride);
+
+    if (offer) {
+      plan.currency = offer.currency;
+      plan.price = offer.unitPrice;
+      plan.formatted = `${offer.unitPriceCurrencyFormatted}`;
+      plan.country = offer.country;
+      plan.vatInfo = offer.vatInfo;
+      plan.language = offer.lang;
+      plan.rawPrice = offer.unitPriceCurrencyFormatted.match(/[\d\s,.+]+/g);
+      plan.prefix = offer.prefix ?? '';
+      plan.suffix = offer.suffix ?? '';
+      plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.prefix}${plan.rawPrice[0]}${plan.suffix}</strong>`);
+    }
+
+    window.pricingPlans[planUrl] = plan;
+  }
+
+  return plan;
+}
+
+async function decorateCards($headersContainer, $cardsContainer, $buttonsContainer) {
   const $headers = Array.from($headersContainer.children);
   const $cards = Array.from($cardsContainer.children);
   const $buttonDivs = Array.from($buttonsContainer.children);
@@ -59,6 +218,23 @@ function decorateCards($headersContainer, $cardsContainer, $buttonsContainer) {
         $button.classList.add('large', 'dark');
       } else {
         $button.classList.add('large', 'reverse');
+      }
+
+      // eslint-disable-next-line no-await-in-loop
+      const plan = await fetchPlan($button.href);
+
+      if (plan) {
+        Array.from($card.children).forEach(($row) => {
+          if ($row.textContent.includes('{{ Pricing }}')) {
+            if (plan.name !== 'Free') {
+              plan.formatted += '*';
+            }
+
+            $row.classList.add('pricing-hub-card-pricing-text');
+            $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', plan.formatted);
+            $button.href = buildUrl(plan.url, plan.country, plan.language);
+          }
+        });
       }
     }
   }
@@ -106,9 +282,9 @@ function decorateFeatures($block, $rows) {
   $block.append($features);
 }
 
-export default function decorate($block) {
+export default async function decorate($block) {
   const $rows = Array.from($block.children);
 
-  decorateCards($rows[0], $rows[1], $rows[2]);
+  await decorateCards($rows[0], $rows[1], $rows[2]);
   decorateFeatures($block, $rows);
 }

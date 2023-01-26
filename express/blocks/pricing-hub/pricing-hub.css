@@ -57,6 +57,19 @@ main .pricing-hub .pricing-hub-card .button-container {
     display: flex;
 }
 
+main .pricing-hub .pricing-hub-card .pricing-hub-card-pricing-text {
+    display: flex;
+    justify-content: center;
+    font-size: var(--body-font-size-s);
+    font-weight: var(--heading-font-weight);
+}
+
+main .pricing-hub .pricing-hub-card .pricing-hub-card-pricing-text strong {
+    font-size: var(--heading-font-size-s);
+    font-weight: var(--heading-font-weight);
+    margin-top: -3px;
+}
+
 main .pricing-hub .pricing-hub-card .button {
     width: 100%;
 }
