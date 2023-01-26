@@ -2342,7 +2342,7 @@ export async function addFreePlanWidget(elem) {
             if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
               supposedCtaPositionX = elem.getBoundingClientRect().left;
             }
-            
+
             const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace('px', ''), 10);
             const elmt = parseInt(getComputedStyle(elem).marginTop.replace('px', ''), 10);
             const elh = parseInt(getComputedStyle(elem).height.replace('px', ''), 10);
