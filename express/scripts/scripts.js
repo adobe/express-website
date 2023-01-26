@@ -1604,6 +1604,39 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
+export async function fetchPlainBlockFromFragment($block, url, blockName) {
+  const location = new URL(window.location);
+  const locale = getLocale(location);
+  let fragmentUrl;
+  if (locale === 'us') {
+    fragmentUrl = `${location.origin}${url}`;
+  } else {
+    fragmentUrl = `${location.origin}/${locale}${url}`;
+  }
+
+  const path = new URL(fragmentUrl).pathname.split('.')[0];
+  const resp = await fetch(`${path}.plain.html`);
+  if (resp.status === 404) {
+    $block.parentElement.parentElement.remove();
+  } else {
+    const html = await resp.text();
+    const section = createTag('div');
+    section.innerHTML = html;
+    section.className = `section section-wrapper ${blockName}-container`;
+    const block = section.querySelector(`.${blockName}`);
+    block.parentElement.className = `${blockName}-wrapper`;
+    block.classList.add('block');
+    const img = section.querySelector('img');
+    if (img) {
+      img.setAttribute('loading', 'lazy');
+    }
+    const $section = $block.closest('.section');
+    $section.parentNode.replaceChild(section, $section);
+    return section;
+  }
+  return null;
+}
+
 function buildAutoBlocks($main) {
   const $lastDiv = $main.querySelector(':scope > div:last-of-type');
 
@@ -1643,6 +1676,13 @@ function buildAutoBlocks($main) {
     $multifunctionButton.classList.add('spreadsheet-powered');
     $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
+
+  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+    const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
+    const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
+    quickActionCardBlock.classList.add('spreadsheet-powered');
+    $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+  }
 }
 
 function splitSections($main) {
@@ -1656,7 +1696,6 @@ function splitSections($main) {
     if (hasAppStoreBlocks && !multipleColumns) {
       blocksToSplit.push('columns fullsize-center');
     }
-
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
@@ -2303,7 +2342,7 @@ export async function addFreePlanWidget(elem) {
             if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
               supposedCtaPositionX = elem.getBoundingClientRect().left;
             }
-
+            
             const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace('px', ''), 10);
             const elmt = parseInt(getComputedStyle(elem).marginTop.replace('px', ''), 10);
             const elh = parseInt(getComputedStyle(elem).height.replace('px', ''), 10);
