@@ -365,9 +365,11 @@ export function getIcon(icons, alt, size = 44) {
   }
 }
 
-export function getIconElement(icons, size, alt) {
+export function getIconElement(icons, size, alt, additionalClassName) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
+
+  if (additionalClassName) $div.firstElementChild.classList.add(additionalClassName);
   return ($div.firstElementChild);
 }
 
@@ -495,7 +497,7 @@ export function decorateSections($main) {
           section.dataset[key] = meta[key];
         }
       });
-      sectionMeta.remove();
+      sectionMeta.parentNode.remove();
     }
 
     if (section.dataset.audience && !noAudienceFound) {
@@ -1417,46 +1419,35 @@ function checkExperimentAudience(audience) {
 }
 
 /**
- * gets the variant id that this visitor has been assigned to if any
- * @param {string} experimentId
- * @return {string} assigned variant or empty string if none set
+ * Generates a decision policy object which is understood by UED from an
+ * experiment configuration.
+ * @param {*} config Experiment configuration
+ * @returns Experiment decision policy object to be passed to UED.
  */
-
-function getLastExperimentVariant(experimentId) {
-  console.log('get last experiment', experimentId);
-  const experimentsStr = localStorage.getItem('hlx-experiments');
-  if (experimentsStr) {
-    const experiments = JSON.parse(experimentsStr);
-    if (experiments[experimentId]) {
-      return experiments[experimentId].variant;
-    }
-  }
-  return '';
-}
-
-/**
- * sets/updates the variant id that is assigned to this visitor,
- * also cleans up old variant ids
- * @param {string} experimentId
- * @param {variant} variant
- */
-
-function setLastExperimentVariant(experimentId, variant) {
-  const experimentsStr = localStorage.getItem('hlx-experiments');
-  const experiments = experimentsStr ? JSON.parse(experimentsStr) : {};
-
-  const now = new Date();
-  const expKeys = Object.keys(experiments);
-  expKeys.forEach((key) => {
-    const date = new Date(experiments[key].date);
-    if (now - date > (1000 * 86400 * 30)) {
-      delete experiments[key];
-    }
-  });
-  const [date] = now.toISOString().split('T');
-
-  experiments[experimentId] = { variant, date };
-  localStorage.setItem('hlx-experiments', JSON.stringify(experiments));
+function getDecisionPolicy(config) {
+  const decisionPolicy = {
+    id: 'content-experimentation-policy',
+    rootDecisionNodeId: 'n1',
+    decisionNodes: [{
+      id: 'n1',
+      type: 'EXPERIMENTATION',
+      experiment: {
+        id: config.id,
+        identityNamespace: 'ECID',
+        randomizationUnit: 'DEVICE',
+        treatments: Object.entries(config.variants).map(([key, props]) => ({
+          id: key,
+          allocationPercentage: props.percentageSplit
+            ? parseFloat(props.percentageSplit) * 100
+            : 100 - Object.values(config.variants).reduce((result, variant) => {
+              const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
+              return returnResult;
+            }, 100),
+        })),
+      },
+    }],
+  };
+  return decisionPolicy;
 }
 
 /**
@@ -1487,20 +1478,13 @@ async function decorateTesting() {
         window.hlx = window.hlx || {};
         window.hlx.experiment = config;
         if (config.run) {
-          const forced = forcedVariant || getLastExperimentVariant(config.id);
-          if (forced && config.variantNames.includes(forced)) {
-            config.selectedVariant = forced;
+          if (forcedVariant && config.variantNames.includes(forcedVariant)) {
+            config.selectedVariant = forcedVariant;
           } else {
-            let random = Math.random();
-            let i = config.variantNames.length;
-            while (random > 0 && i > 0) {
-              i -= 1;
-              console.log(random, i);
-              random -= +config.variants[config.variantNames[i]].percentageSplit;
-            }
-            config.selectedVariant = config.variantNames[i];
+            const ued = await import('./ued/ued-0.2.0.js');
+            const decision = ued.evaluateDecisionPolicy(getDecisionPolicy(config), {});
+            config.selectedVariant = decision.items[0].id;
           }
-          setLastExperimentVariant(config.id, config.selectedVariant);
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
           if (config.selectedVariant !== 'control') {
@@ -1950,11 +1934,11 @@ export async function fetchMultifunctionButton(path) {
   if (!window.multifunctionButton) {
     try {
       const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `./${locale}`;
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
       const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     } catch {
-      const resp = await fetch('./express/create/multifunction-button.json');
+      const resp = await fetch('/express/create/multifunction-button.json');
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     }
   }
@@ -2060,6 +2044,7 @@ async function wordBreakJapanese() {
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
   document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    el.classList.add('budoux');
     parser.applyElement(el);
   });
 
@@ -2552,4 +2537,35 @@ export function getMobileOperatingSystem() {
   }
 
   return 'unknown';
+}
+
+export function titleCase(str) {
+  const splitStr = str.toLowerCase().split(' ');
+  for (let i = 0; i < splitStr.length; i += 1) {
+    // You do not need to check if i is larger than splitStr length, as your for does that for you
+    // Assign it back to the array
+    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  // Directly return the joined string
+  return splitStr.join(' ');
+}
+
+export function arrayToObject(arr) {
+  return arr.reduce(
+    (acc, curr) => {
+      // Extract the key and the value
+      const key = curr[0];
+      const value = curr[1];
+
+      // Assign key and value
+      // to the accumulator
+      acc[key] = value;
+
+      // Return the accumulator
+      return acc;
+    },
+
+    // Initialize with an empty object
+    {},
+  );
 }

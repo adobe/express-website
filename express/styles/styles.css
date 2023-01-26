@@ -442,7 +442,7 @@ body.light-grey {
 
 main {
   text-align: center;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 main h1,
