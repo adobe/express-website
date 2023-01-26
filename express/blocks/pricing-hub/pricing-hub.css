@@ -171,6 +171,92 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column p {
     main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight h2 {
         margin-top: 20px;
     }
+
+    main .pricing-hub .pricing-hub-features {
+        width: 828px;
+    }
+
+    main .pricing-hub .pricing-hub-feature {
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0;
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
+        font-size: var(--body-font-size-m);
+        color: var(--color-gray-800);
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
+        width: 44px;
+        height: 44px;
+        margin-right: 16px;
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
+        width: 600px;
+        margin: 0;
+        gap: 20px;
+        border: none;
+        border-radius: 0;
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
+        outline: none;
+    }
+
+    main .pricing-hub .pricing-hub-feature:first-child .pricing-hub-feature-column {
+        border-radius: 24px 24px 0 0;
+        border-top: 2px var(--color-gray-200) solid;
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
+        width: 200px;
+        border-left: 2px var(--color-gray-200) solid;
+        border-right: 2px var(--color-gray-200) solid;
+    }
+
+    main .pricing-hub .pricing-hub-feature:last-child .pricing-hub-feature-column {
+        border-radius: 0 0 24px 24px;
+        border-bottom: 2px var(--color-gray-200) solid;
+    }
+
+    main .pricing-hub .pricing-hub-feature:not(:last-child)::after {
+        display: none;
+    }
+
+    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-title {
+        position: relative;
+        flex: 1;
+    }
+
+    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 90%;
+        height: 1px;
+        background-color: var(--color-gray-200);
+    }
+
+    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-column {
+        position: relative;
+    }
+
+    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-column::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 90%;
+        height: 1px;
+        background-color: var(--color-gray-200);
+        transform: translateX(-50%);
+    }
 }
 
 @media (min-width: 1200px) {
@@ -189,5 +275,26 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column p {
         display: flex;
         align-items: flex-end;
         flex: 1;
+    }
+
+    main .pricing-hub .pricing-hub-features {
+        width: 1200px;
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
+        font-size: var(--body-font-size-l);
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
+        margin-right: 20px;
+    }
+
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
+        width: 900px;
+    }
+
+    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
+        width: 290px;
     }
 }
