@@ -33,14 +33,13 @@ export default async function getData(env = '', data = {}) {
   const endpoint = endpoints[env];
   // Default options are marked with *
   const response = await fetch(endpoint.url, {
-    method: 'GET',
-    mode: 'no-cors',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/vnd.adobe.search-request+json',
       'x-api-key': endpoint.key,
       'x-app-token': endpoint.token,
     },
-    dataRaw: JSON.stringify(data),
+    body: JSON.stringify(data),
   });
 
   if (response.ok) {
