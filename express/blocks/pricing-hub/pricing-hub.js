@@ -168,6 +168,10 @@ async function fetchPlan(planUrl) {
       plan.prefix = offer.prefix ?? '';
       plan.suffix = offer.suffix ?? '';
       plan.formatted = plan.formatted.replace(plan.rawPrice[0], `<strong>${plan.prefix}${plan.rawPrice[0]}${plan.suffix}</strong>`);
+
+      if (plan.name !== 'Free') {
+        plan.formatted += '*';
+      }
     }
 
     window.pricingPlans[planUrl] = plan;
@@ -226,10 +230,6 @@ async function decorateCards($headersContainer, $cardsContainer, $buttonsContain
       if (plan) {
         Array.from($card.children).forEach(($row) => {
           if ($row.textContent.includes('{{ Pricing }}')) {
-            if (plan.name !== 'Free') {
-              plan.formatted += '*';
-            }
-
             $row.classList.add('pricing-hub-card-pricing-text');
             $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', plan.formatted);
             $button.href = buildUrl(plan.url, plan.country, plan.language);
