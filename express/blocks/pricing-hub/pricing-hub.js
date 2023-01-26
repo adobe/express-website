@@ -17,9 +17,10 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-function decorateCards($headersContainer, $cardsContainer) {
+function decorateCards($headersContainer, $cardsContainer, $buttonContainers) {
   const $headers = Array.from($headersContainer.children);
   const $cards = Array.from($cardsContainer.children);
+  const $buttonDivs = Array.from($buttonContainers.children);
 
   $cardsContainer.classList.add('pricing-hub-cards');
   $cards[0].remove();
@@ -27,6 +28,10 @@ function decorateCards($headersContainer, $cardsContainer) {
   for (let i = 1; i < 4; i += 1) {
     const $header = $headers[i];
     const $card = $cards[i];
+    const $buttonContainer = $buttonDivs[i];
+    const $button = $buttonContainer.querySelector('a');
+    const $svg = $card.querySelector('svg');
+    const $title = $card.querySelector('h2');
 
     if ($header.textContent) {
       $header.classList.add('pricing-hub-card-header');
@@ -35,10 +40,26 @@ function decorateCards($headersContainer, $cardsContainer) {
       $header.remove();
     }
 
+    if ($title && $svg) {
+      $svg.parentElement.remove();
+      $title.prepend($svg);
+    }
+
     $card.classList.add('pricing-hub-card');
 
     if (i === 2) {
       $card.classList.add('pricing-hub-card-highlight');
+    }
+
+    if ($buttonContainer && $button) {
+      $card.append($buttonContainer);
+
+      if ($card.classList.contains('pricing-hub-card-highlight')) {
+        $button.classList.remove('accent');
+        $button.classList.add('large', 'dark');
+      } else {
+        $button.classList.add('large', 'reverse');
+      }
     }
   }
 
@@ -48,5 +69,5 @@ function decorateCards($headersContainer, $cardsContainer) {
 export default function decorate($block) {
   const $rows = Array.from($block.children);
 
-  decorateCards($rows[0], $rows[1]);
+  decorateCards($rows[0], $rows[1], $rows[2]);
 }

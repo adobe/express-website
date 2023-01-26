@@ -1,18 +1,65 @@
-.pricing-hub {
+main .pricing-hub {
     width: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.pricing-hub-cards {
+main .pricing-hub .pricing-hub-cards {
     width: 336px;
 }
 
-.pricing-hub-card {
+main .pricing-hub .pricing-hub-card {
+    display: flex;
+    flex-direction: column;
     width: 336px;
+    max-width: 336px;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    padding: 20px;
 }
 
-.pricing-hub-card .pricing-hub-card-recommended {
+main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight {
+    background: var(--gradient-highlight-diagonal);
+    color: var(--color-gray-100);
+}
+
+main .pricing-hub .pricing-hub-card .pricing-hub-card-header {
+    background-color: var(--color-gray-800);
+    color: var(--color-white);
+    padding: 8px;
+    margin: -20px -21px 10px -21px;
+    border-radius: 20px 20px 0 0;
+    font-size: var(--body-font-size-s);
+}
+
+main .pricing-hub .pricing-hub-card h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--heading-font-size-m);
+    margin: 10px 0;
+}
+
+main .pricing-hub .pricing-hub-card h2 svg {
+    margin-right: 10px;
+}
+
+main .pricing-hub .pricing-hub-card p {
+    font-size: var(--body-font-size-s);
+    margin: 10px 0;
+}
+
+main .pricing-hub .pricing-hub-card .button-container {
+    display: flex;
+}
+
+main .pricing-hub .pricing-hub-card .button {
+    width: 100%;
+}
+
+main .pricing-hub .pricing-hub-card .pricing-hub-card-recommended {
 
 }
