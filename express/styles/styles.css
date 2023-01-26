@@ -943,7 +943,7 @@ main .block .free-plan-bullet .free-plan-bullet-container {
   height: 100%;
   border-radius: 100px;
   transform: translate(0px, 0px);
-  transition: transform 0.2s ease-in, max-width 0.2s ease-in, border-radius 0.2s ease-in;
+  transition: transform 0.1s ease-in, max-width 0.1s ease-in, border-radius 0.1s ease-in;
   overflow: hidden;
 }
 
@@ -1005,7 +1005,7 @@ main .block .free-plan-optout {
   width: 45px;
   align-items: center;
   justify-content: center;
-  transition: left 0.2s ease-in, transform 0.2s ease-in;
+  transition: left 0.1s ease-in, transform 0.1s ease-in;
   cursor: pointer;
   background: var(--color-black);
   z-index: 1;
