@@ -6,6 +6,8 @@ main .pricing-hub {
 }
 
 main .pricing-hub .pricing-hub-cards {
+    display: flex;
+    flex-direction: column;
     width: 336px;
     margin-bottom: 40px;
 }
@@ -153,4 +155,39 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column .icon {
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column p {
     margin: 0;
     font-size: 11px;
+}
+
+@media (min-width: 900px) {
+    main .pricing-hub .pricing-hub-cards {
+        flex-direction: row;
+        width: 828px;
+        gap: 10px;
+    }
+
+    main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight {
+        margin-top: -34px;
+    }
+
+    main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight h2 {
+        margin-top: 20px;
+    }
+}
+
+@media (min-width: 1200px) {
+    main .pricing-hub .pricing-hub-cards {
+        width: 1200px;
+        gap: 20px;
+        min-height: 338px;
+        justify-content: center;
+    }
+
+    main .pricing-hub .pricing-hub-card {
+        min-width: 390px;
+    }
+
+    main .pricing-hub .pricing-hub-card .button-container {
+        display: flex;
+        align-items: flex-end;
+        flex: 1;
+    }
 }
