@@ -2343,9 +2343,9 @@ export async function addFreePlanWidget(elem) {
               supposedCtaPositionX = elem.getBoundingClientRect().left;
             }
 
-            const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace(/\D/g, ''), 10);
-            const elmt = parseInt(getComputedStyle(elem).marginTop.replace(/\D/g, ''), 10);
-            const elh = parseInt(getComputedStyle(elem).height.replace(/\D/g, ''), 10);
+            const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace('px', ''), 10);
+            const elmt = parseInt(getComputedStyle(elem).marginTop.replace('px', ''), 10);
+            const elh = parseInt(getComputedStyle(elem).height.replace('px', ''), 10);
 
             let roomNeeded;
             if (getComputedStyle(parent).display === 'flex') {
