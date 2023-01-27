@@ -88,11 +88,7 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function fetchTemplates(tasks) {
-  if (tasks) {
-    props.filters.tasks = `(${tasks})`;
-  }
-
+function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
     const prunedFilter = Object.entries(props.filters)
       .filter(([, value]) => value !== '()');
@@ -113,23 +109,47 @@ function fetchTemplates(tasks) {
   return null;
 }
 
+function fetchTemplatesByTasks(tasks) {
+  const tempFilters = { ...props.filters };
+  if (tasks) {
+    tempFilters.tasks = `(${tasks})`;
+  }
+
+  if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
+    const prunedFilter = Object.entries(tempFilters)
+      .filter(([, value]) => value !== '()');
+    const filterString = prunedFilter.reduce((string, [key, value]) => {
+      if (key === prunedFilter[prunedFilter.length - 1][0]) {
+        return `${string}${key}:${value}`;
+      } else {
+        return `${string}${key}:${value} AND `;
+      }
+    }, '');
+
+    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+
+    return fetch(props.queryString)
+      .then((response) => response.json())
+      .then((response) => response);
+  }
+
+  return null;
+}
+
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
-  const currentTask = props.filters.tasks;
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
     if (anchor) {
       // eslint-disable-next-line no-await-in-loop
-      const json = await fetchTemplates(anchor.dataset.tasks);
+      const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
       countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
       li.append(countSpan);
     }
   }
-
-  props.filters.tasks = currentTask;
 }
 
 async function processResponse() {
