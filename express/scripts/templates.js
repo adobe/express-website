@@ -13,8 +13,11 @@ import {
   getHelixEnv,
   arrayToObject,
   titleCase,
-  createTag, fetchPlaceholders,
+  createTag,
+  fetchPlaceholders,
 } from './scripts.js';
+
+import getData from './api-v3-controller.js';
 
 async function fetchPageContent(path) {
   const env = getHelixEnv();
@@ -72,11 +75,61 @@ function formatSearchQuery(data) {
   return arrayToObject(dataArray);
 }
 
-async function fetchLinkList() {
+async function fetchLInkListFromCKGApi(pageData) {
+  const dataRaw = {
+    experienceId: 'templates-browse-v1',
+    locale: 'en_US',
+    queries: [
+      {
+        id: 'ccx-search-1',
+        start: 0,
+        limit: 40,
+        scope: {
+          entities: [
+            'HzTemplate',
+          ],
+        },
+        filters: [
+          {
+            categories: [
+              `ckg:DESIGN_TYPE:${pageData}`,
+            ],
+          },
+        ],
+        facets: [
+          {
+            facet: 'categories',
+            limit: 10,
+          },
+        ],
+      },
+    ],
+  };
+
+  const env = getHelixEnv();
+  const result = await getData(env.name, dataRaw).then((data) => data);
+
+  if (result.status.httpCode === 200) {
+    return result;
+  }
+  return false;
+}
+
+async function fetchLinkList(data) {
   if (!(window.linkLists && window.linkLists.data)) {
     window.linkLists = {};
-    const resp = await fetch('/express/templates/top-priority-categories.json');
-    window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+    const response = await fetchLInkListFromCKGApi(data);
+    if (response && response.queryResults[0].facets) {
+      window.linkLists.data = response.queryResults[0].facets[0].buckets.map((intent) => {
+        return {
+          parent: titleCase(data.templateTasks),
+          'child-siblings': `${titleCase(intent.displayValue)} ${titleCase(data.templateTasks)}`,
+        };
+      });
+    } else {
+      const resp = await fetch('/express/templates/top-priority-categories.json');
+      window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+    }
   }
 }
 
@@ -86,7 +139,7 @@ function updateLinkList(container, template, list) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.shortTitle === d && p.live === 'Y');
+      const templatePageData = templatePages.find((p) => p.shortTitle.toLowerCase() === d.toLowerCase() && p.live === 'Y');
 
       if (templatePageData) {
         const clone = template.cloneNode(true);
@@ -162,9 +215,9 @@ async function updateBlocks(data) {
   const linkListContainer = linkList.querySelector('p').parentElement;
 
   if (linkList && window.templates.data) {
-    const linkListTemplate = linkList.querySelector('p')
-      .cloneNode(true);
+    const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
+
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
       window.linkLists.data.forEach((row) => {
@@ -201,8 +254,7 @@ async function updateBlocks(data) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
 
     if (window.templates.data && data.topTemplates) {
-      const topTemplatesTemplate = seoNav.querySelector('p')
-        .cloneNode(true);
+      const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = data.topTemplates.split(', ');
 
       updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
@@ -223,21 +275,20 @@ async function updateBlocks(data) {
 }
 
 const page = await fetchPageContent(window.location.pathname);
-await fetchLinkList();
 
 if (page) {
+  await fetchLinkList(page);
   if (window.location.pathname === '/express/templates/search') {
     const data = formatSearchQuery(page);
-
     if (!data) {
       window.location.replace('/express/templates/');
     } else {
       const purgedData = purgeAllTaskText(data);
       updateMetadata(purgedData);
-      updateBlocks(purgedData);
+      await updateBlocks(purgedData);
     }
   } else {
-    updateBlocks(page);
+    await updateBlocks(page);
   }
 } else {
   const env = getHelixEnv();

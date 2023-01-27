@@ -20,7 +20,7 @@ const endpoints = {
     cdn: 'https://www.stage.adobe.com/ax-uss-api/',
     url: 'https://uss-templates-stage.adobe.io/uss/v3/query',
     token: 'db7a3d14-5aaa-4a3d-99c3-52a0f0dbb459',
-    key: 'templatelistapikey',
+    key: 'express-ckg-stage',
   },
   prod: {
     cdn: '',

@@ -25,13 +25,11 @@ import {
   arrayToObject,
   titleCase,
   getLottie,
-  lazyLoadLottiePlayer, getHelixEnv,
+  lazyLoadLottiePlayer,
 } from '../../scripts/scripts.js';
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
-
-import getData from '../../scripts/ckg-api-controller.js';
 
 const props = {
   templates: [],
@@ -46,40 +44,6 @@ const props = {
   masonry: undefined,
   authoringError: false,
 };
-
-const dataRaw = {
-  'experienceId': 'templates-browse-v1',
-  'queries': [
-    {
-      'id': 'ccx-search-1',
-      'start': 0,
-      'limit': 20,
-      'scope': {
-        'entities': [
-          'HzTemplate'
-        ]
-      },
-      'filters': [
-        {
-          'categories': [
-            'ckg:DESIGN_TYPE:1603'
-          ]
-        }
-      ],
-      'facets': [
-        {
-          'facet': 'categories',
-          'limit': 10
-        }
-      ]
-    }
-  ]
-}
-
-const env = getHelixEnv();
-getData(env.name, dataRaw).then((data) => {
-  console.log(data); // JSON data parsed by `data.json()` call
-});
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
