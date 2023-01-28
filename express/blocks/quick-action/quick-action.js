@@ -108,7 +108,6 @@ class CCXQuickActionElement extends HTMLElement {
         config: {
           'should-use-cloud-storage': true,
           'preview-only': true,
-          'should-download-in-editor': true,
         },
       },
       hostType: 'standalone',
