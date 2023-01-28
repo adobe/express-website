@@ -13,6 +13,7 @@
 import { loadScript, readBlockConfig } from '../../scripts/scripts.js';
 
 const ELEMENT_NAME = 'ccl-quick-action';
+const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 
 function createButton(label) {
   const btn = document.createElement('a');
@@ -31,6 +32,43 @@ async function fetchDependency(url, id) {
     dependencyUrl = json.find((api) => api.id === id).entry;
   }
   return dependencyUrl;
+}
+
+function showQuickAction(display) {
+  const quickActionEle = document.getElementsByTagName(ELEMENT_NAME);
+  if (display) {
+    document.getElementsByClassName(MOCK_ELEMENT_NAME)[0].style.display = 'none';
+  }
+  quickActionEle[0].style.display = display ? 'block' : 'none';
+}
+
+function createMockQuickAction() {
+  const ele = document.createElement('div');
+  ele.className = MOCK_ELEMENT_NAME;
+  ele.innerHTML = '<div class="dropzone" ><div class="dropzone__bg" '
+  + 'style="-webkit-mask-image: url(https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/0109f683d747753d3f6b.svg)"></div>'
+  + '<div class="dropzone__content">'
+  + '<div class="dropzone__illustration">'
+      + '<span class="dropzone__icon" style="background-image: var(--quick-action-dropzone-illustration-background-image, url(&quot;https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/85fb3920e4277b8cb854.svg&quot;))"></span>'
+      + '<h4><!---->Drag &amp; drop an image <br> or <span class="browse-to-upload">browse to upload. <span><!----></h4>'
+      + '<p class="restrictions"> File must be .jpg and less than 17MB.</p>'
+    + '<button class="upload-your-photo">'
+        + 'Upload your photo'
+    + '</button>'
+  + '</div>'
+  + '</div> </div>';
+  return ele;
+}
+
+function addListenersOnMockElements(ele) {
+  ele.addEventListener('click', () => {
+    // trigger click on the main ccl action
+    document.querySelector('cclqt-remove-background').shadowRoot.querySelector('cclqt-image-upload').shadowRoot.querySelector('button').click();
+  });
+  ele.addEventListener('dragover', (ev) => {
+    ev.preventDefault();
+    showQuickAction(true);
+  });
 }
 
 class CCXQuickActionElement extends HTMLElement {
@@ -55,6 +93,7 @@ class CCXQuickActionElement extends HTMLElement {
         }
       },
       sendEditorStateToHost: (state) => {
+        showQuickAction(true);
         console.log('[CCLQT CB]', 'editor-state', state);
         if (state.isSampleImageUploaded) {
           // TODO: show upload image button
@@ -69,6 +108,7 @@ class CCXQuickActionElement extends HTMLElement {
         config: {
           'should-use-cloud-storage': true,
           'preview-only': true,
+          'should-download-in-editor': true,
         },
       },
       hostType: 'standalone',
@@ -206,4 +246,8 @@ window.customElements.define(ELEMENT_NAME, CCXQuickActionElement);
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   block.innerHTML = `<${ELEMENT_NAME} action="${config.action || 'remove-background'}"></${ELEMENT_NAME}>`;
+  showQuickAction(false);
+  const mockQuickActionEle = createMockQuickAction();
+  block.append(mockQuickActionEle);
+  addListenersOnMockElements(mockQuickActionEle);
 }
