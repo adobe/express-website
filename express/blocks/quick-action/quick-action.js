@@ -108,6 +108,7 @@ class CCXQuickActionElement extends HTMLElement {
         config: {
           'should-use-cloud-storage': true,
           'preview-only': true,
+          'should-download-in-editor': true,
         },
       },
       hostType: 'standalone',
@@ -132,7 +133,7 @@ class CCXQuickActionElement extends HTMLElement {
     loadScript(sharedScriptUrl);
 
     // FIXME: remove hardcoded fallback once PR is merged to main
-    const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-641bf078.js'
+    const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-cca9b376.js'
       || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', this.action);
     loadScript(actionScriptUrl);
   }
