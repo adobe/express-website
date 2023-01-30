@@ -1,26 +1,146 @@
-main .content-toggle-wrapper {
-    margin: 0 auto;
-    padding: 0!important;
+main .section.content-toggle-small-no-dash-container {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+main .content-toggle.dark {
+    position: relative;
 }
 
 main [data-toggle] {
     background-color: #F8F8F8;
 }
 
-main .content-toggle {
-    display: inline-block;
-    background-color: #EDEDED;
-    border-radius: 25px;
-    padding: 6px;
-    margin-bottom: 40px;
+main .content-toggle-wrapper {
+    margin: 0 auto;
+    padding: 0!important;
+}
+
+main .content-toggle-small-no-dash-container .content-toggle-wrapper {
+    max-width: 420px;
+}
+
+main .block.content-toggle {
+  display: inline-block;
+  background-color: #EDEDED;
+  border-radius: 25px;
+  padding: 6px;
+  margin-bottom: 40px;
+}
+
+main .block.content-toggle.small {
+  width: 100%;
+  margin-top: 10px;
+  margin-left: 15px;
+  height: 20px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+main .block.content-toggle.small.margin-left-zero {
+    margin-left: 0;
+}
+
+/* CAROUSEL!!!! */
+  
+main .content-toggle .carousel-container {
+    margin: 0;
+    height: 100%;
+}
+
+main .content-toggle.small .carousel-container {
+    display: flex;
+    align-items: center;
+}
+
+main .content-toggle .carousel-container .carousel-platform {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+main .content-toggle.small .carousel-container .carousel-platform {
+    height: 24px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    width: 100%;
+    gap: 6px;
+}
+
+/* Carousel --> Arrows */
+
+main .content-toggle.small .carousel-fader-left {
+  width: 64px;
+}
+
+main .content-toggle.small .carousel-fader-right {
+  width: 64px;
+  right: 17px;
+}
+  
+main .content-toggle.small .carousel-fader-left::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: -19px;
+    width: 85px;
+    height: 39px;
+    background: linear-gradient(270deg, #F8F8F800 0%, #F8F8F8 100%);
+}
+
+main .content-toggle.small .carousel-fader-right::after {
+    content: "";
+    position: absolute;
+    top: -7px;
+    right: 0;
+    width: 72px;
+    height: 33px;
+    background: linear-gradient(90deg, #F8F8F800 0%, #F8F8F8 100%) 0% 0% no-repeat padding-box;
+}
+
+main .content-toggle.small  a.button.carousel-arrow {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+}
+
+main .content-toggle.small button:first-child {
+    margin: 0;
+  }
+  
+main .content-toggle.small button:last-child {
+    margin: 0;
+}
+  
+
+main .content-toggle.small .carousel-container a.button.carousel-arrow::before {
+    margin-top: 0;
+    margin-left: 12px;
+}
+
+main .content-toggle.small .carousel-container a.button.carousel-arrow.carousel-arrow-left::before {
+    margin-left: 16px;
+}
+
+main .content-toggle.small .carousel-platform button:not('.active'):hover {
+    background-color: #D4D4D4;
+}
+
+main .content-toggle.small .carousel-container a.button.carousel-arrow {
+    margin-right: 17px;
+    z-index: 1;
+}
+
+main .content-toggle.small .carousel-platform::-webkit-scrollbar {
+    display: none;
 }
 
 main .content-toggle button {
+    display: block;
     list-style-type: none;
-    display: inline-block;
     background-color: #EDEDED;
     border-radius: 25px;
-    padding: 10px 18px;
+    padding: 13px 18px;
     font-size: 13px;
     font-weight: 600;
     margin: 0 5px;
@@ -30,17 +150,43 @@ main .content-toggle button {
     border: none;
     font-family: var(--body-font-family);
 }
-
+  
+main .content-toggle.small button {
+    padding: 5px 16px;
+}
+  
 main .content-toggle button:hover {
     background-color: var(--color-gray-300);
 }
-
+  
 main .content-toggle button.active {
     position: relative;
     background-color: white;
 }
 
-main .content-toggle button.active::after {
+main .content-toggle.dark button.active {
+    position: relative;
+    background-color: #242424;
+    color: white;
+}
+
+main .content-toggle.dark .tag {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: -15px;
+    right: -15px;
+    z-index: 1;
+    font-size: 12px;
+    background-color: #33AB84;
+    color: white;
+    height: 20px;
+    width: 61px;
+    border-radius: 4px;
+}
+  
+main .content-toggle:not(.no-dash) button.active::after {
     position: absolute;
     content: '';
     display: block;
@@ -51,12 +197,4 @@ main .content-toggle button.active::after {
     transform: translateX(-50%) rotate(45deg);
     bottom: -80px;
     z-index: -1;
-}
-
-main .content-toggle button:first-child {
-    margin: 0 3px 0 0;
-}
-
-main .content-toggle button:last-child {
-    margin: 0 0 0 3px;
-}
+  }
