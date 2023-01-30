@@ -697,16 +697,13 @@ loadScript(martechURL, () => {
     }
 
     if ($a.href.includes('/express/')) {
-      sparkEventDestination = 'Internal';
+      sparkEventDestination = 'internalLink';
     } else if ($a.href.includes('adobesparkpost.app.link')) {
-      sparkEventDestination = 'Product';
+      sparkEventDestination = 'product';
     } else {
-      sparkEventDestination = 'External';
+      sparkEventDestination = 'externalLink';
     }
 
-    console.log(sparkEventName);
-    console.log(sparkButtonId);
-    console.log(sparkEventDestination);
 
     if (useAlloy) {
       _satellite.track('event', {
