@@ -365,9 +365,11 @@ export function getIcon(icons, alt, size = 44) {
   }
 }
 
-export function getIconElement(icons, size, alt) {
+export function getIconElement(icons, size, alt, additionalClassName) {
   const $div = createTag('div');
   $div.innerHTML = getIcon(icons, alt, size);
+
+  if (additionalClassName) $div.firstElementChild.classList.add(additionalClassName);
   return ($div.firstElementChild);
 }
 
@@ -1602,6 +1604,39 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
+export async function fetchPlainBlockFromFragment($block, url, blockName) {
+  const location = new URL(window.location);
+  const locale = getLocale(location);
+  let fragmentUrl;
+  if (locale === 'us') {
+    fragmentUrl = `${location.origin}${url}`;
+  } else {
+    fragmentUrl = `${location.origin}/${locale}${url}`;
+  }
+
+  const path = new URL(fragmentUrl).pathname.split('.')[0];
+  const resp = await fetch(`${path}.plain.html`);
+  if (resp.status === 404) {
+    $block.parentElement.parentElement.remove();
+  } else {
+    const html = await resp.text();
+    const section = createTag('div');
+    section.innerHTML = html;
+    section.className = `section section-wrapper ${blockName}-container`;
+    const block = section.querySelector(`.${blockName}`);
+    block.parentElement.className = `${blockName}-wrapper`;
+    block.classList.add('block');
+    const img = section.querySelector('img');
+    if (img) {
+      img.setAttribute('loading', 'lazy');
+    }
+    const $section = $block.closest('.section');
+    $section.parentNode.replaceChild(section, $section);
+    return section;
+  }
+  return null;
+}
+
 function buildAutoBlocks($main) {
   const $lastDiv = $main.querySelector(':scope > div:last-of-type');
 
@@ -1641,6 +1676,13 @@ function buildAutoBlocks($main) {
     $multifunctionButton.classList.add('spreadsheet-powered');
     $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
+
+  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+    const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
+    const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
+    quickActionCardBlock.classList.add('spreadsheet-powered');
+    $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+  }
 }
 
 function splitSections($main) {
@@ -1654,7 +1696,6 @@ function splitSections($main) {
     if (hasAppStoreBlocks && !multipleColumns) {
       blocksToSplit.push('columns fullsize-center');
     }
-
     if (blocksToSplit.includes($block.className)) {
       unwrapBlock($block);
     }
@@ -2042,6 +2083,7 @@ async function wordBreakJapanese() {
   const { loadDefaultJapaneseParser } = await import('./budoux-index-ja.min.js');
   const parser = loadDefaultJapaneseParser();
   document.querySelectorAll('h1, h2, h3, h4, h5').forEach((el) => {
+    el.classList.add('budoux');
     parser.applyElement(el);
   });
 
@@ -2207,14 +2249,21 @@ export async function addFreePlanWidget(elem) {
   if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
     const checkmark = getIcon('checkmark');
+    const bullet = createTag('div', { class: 'free-plan-bullet' });
     const widget = createTag('div', { class: 'free-plan-widget' });
+
     widget.innerHTML = `
-      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
-      <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
-    `;
+    <div><div>${checkmark}</div><div>${placeholders['free-plan-check-1']}</div></div>
+    <div><div>${checkmark}</div><div>${placeholders['free-plan-check-2']}</div></div>
+  `;
+
     document.addEventListener('planscomparisonloaded', () => {
-      const $learnMoreButton = createTag('a', { class: 'learn-more-button', href: '#plans-comparison-container' });
+      const $learnMoreButton = createTag('a', {
+        class: 'learn-more-button',
+        href: '#plans-comparison-container',
+      });
       const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
+
       $learnMoreButton.textContent = placeholders['learn-more'];
       lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
       $learnMoreButton.append(lottieWrapper);
@@ -2231,13 +2280,118 @@ export async function addFreePlanWidget(elem) {
         $html.style.removeProperty('scroll-behavior');
       });
     });
+
     elem.append(widget);
-    elem.classList.add('free-plan-container');
-    // stack CTA and free plan widget if country not US, CN, KR or TW
-    const cta = elem.querySelector('.button.accent');
-    if (cta && !['us', 'cn', 'kr', 'tw'].includes(getLocale(window.location))) {
-      elem.classList.add('stacked');
+
+    // add the free plan bullet if there's a CTA to attach to
+    if (elem.classList.contains('button-container')) {
+      if (sessionStorage.getItem('highlight-optout')) {
+        elem.classList.add('highlight-optout');
+      }
+      const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
+      const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
+      const optoutButton = createTag('button', { class: 'free-plan-optout' });
+      optoutButton.append(getIconElement('close-white'));
+      let highlightWidth = 400;
+      const a = elem.querySelector('a');
+
+      for (let i = 0; i < 40; i += 1) {
+        const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
+        const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
+        const tag = createTag('div', { class: 'free-plan-tag' });
+        const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
+        tag.innerText = placeholder;
+        innerDiv.innerHTML = checkmark;
+
+        tag.prepend(innerDiv);
+        freePlanBulletTray.append(tag);
+      }
+
+      freePlanBulletContainer.append(freePlanBulletTray);
+      bullet.append(freePlanBulletContainer);
+      elem.append(bullet, optoutButton);
+
+      const captureCtaWidth = setInterval(() => {
+        if (a.offsetWidth > 0) {
+          highlightWidth = a.offsetWidth + 200;
+          freePlanBulletContainer.style.maxWidth = `${highlightWidth}px`;
+          clearInterval(captureCtaWidth);
+        }
+      }, 200);
+
+      // start watching for free-plan-highlight scroll
+      const parent = elem.parentElement;
+      const previousSibling = elem.previousElementSibling;
+
+      optoutButton.addEventListener('click', () => {
+        const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+        elem.classList.add('highlight-optout');
+        sessionStorage.setItem('highlight-optout', true);
+        elem.classList.remove('fixed');
+        highlightContainer.style.removeProperty('transform');
+        elem.style.removeProperty('left');
+        parent.querySelectorAll('.free-plan-widget-placeholder').forEach((el) => {
+          el.remove();
+        });
+      }, { passive: true });
+      let supposedCtaPositionX = elem.getBoundingClientRect().left;
+
+      if (parent && previousSibling) {
+        ['scroll', 'resize'].forEach((event) => {
+          window.addEventListener(event, () => {
+            if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
+              supposedCtaPositionX = elem.getBoundingClientRect().left;
+            }
+
+            const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace('px', ''), 10);
+            const elmt = parseInt(getComputedStyle(elem).marginTop.replace('px', ''), 10);
+            const elh = parseInt(getComputedStyle(elem).height.replace('px', ''), 10);
+
+            let roomNeeded;
+            if (getComputedStyle(parent).display === 'flex') {
+              roomNeeded = psmb + elmt - 8;
+            } else {
+              roomNeeded = psmb >= elmt ? psmb - 8 : elmt - 8;
+            }
+
+            const triggerPoint = previousSibling.getBoundingClientRect().bottom + roomNeeded;
+            const ctaPositionX = elem.getBoundingClientRect().left;
+            const highlightContainer = elem.querySelector('.free-plan-bullet-container');
+
+            const placeHolder = createTag('div', {
+              style: `height: ${elh + elmt}px`,
+              class: 'free-plan-widget-placeholder',
+            });
+
+            if (window.innerWidth > 900 && triggerPoint <= 0) {
+              if (!elem.classList.contains('highlight-optout')) {
+                elem.classList.add('fixed');
+                elem.style.left = `${supposedCtaPositionX}px`;
+                highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
+                highlightContainer.style.maxWidth = '100vw';
+
+                if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
+                  previousSibling.insertAdjacentElement('afterend', placeHolder);
+                }
+              }
+            } else {
+              parent.querySelectorAll('.free-plan-widget-placeholder')
+                .forEach((el) => {
+                  el.remove();
+                });
+              elem.classList.remove('fixed');
+              elem.style.removeProperty('left');
+              highlightContainer.style.removeProperty('transform');
+              highlightContainer.style.maxWidth = `${highlightWidth}px`;
+            }
+          }, { passive: true });
+        });
+      }
     }
+
+    // end of free plan bullet code block
+
+    elem.classList.add('free-plan-container');
   }
 }
 
@@ -2418,4 +2572,35 @@ export function getMobileOperatingSystem() {
   }
 
   return 'unknown';
+}
+
+export function titleCase(str) {
+  const splitStr = str.toLowerCase().split(' ');
+  for (let i = 0; i < splitStr.length; i += 1) {
+    // You do not need to check if i is larger than splitStr length, as your for does that for you
+    // Assign it back to the array
+    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  // Directly return the joined string
+  return splitStr.join(' ');
+}
+
+export function arrayToObject(arr) {
+  return arr.reduce(
+    (acc, curr) => {
+      // Extract the key and the value
+      const key = curr[0];
+      const value = curr[1];
+
+      // Assign key and value
+      // to the accumulator
+      acc[key] = value;
+
+      // Return the accumulator
+      return acc;
+    },
+
+    // Initialize with an empty object
+    {},
+  );
 }

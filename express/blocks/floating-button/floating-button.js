@@ -45,7 +45,7 @@ function initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor
       behavior: 'smooth',
     });
     const checkIfScrollToIsFinished = setInterval(() => {
-      if ($scrollAnchor.offsetTop <= window.pageYOffset) {
+      if ($scrollAnchor.offsetTop <= window.scrollY) {
         clicked = false;
         $floatButtonWrapper.classList.remove('floating-button--clicked');
         clearInterval(checkIfScrollToIsFinished);
@@ -214,22 +214,29 @@ function toggleToolBox($wrapper, $lottie, originalButtonState, userInitiated = t
     if (originalButtonState === 'withLottie' && $scrollAnchor) {
       showScrollArrow($wrapper, $lottie);
     }
+
     $wrapper.classList.remove('toolbox-opened');
+
     if (userInitiated) {
       setTimeout(() => {
-        $toolbox.classList.add('hidden');
-        $button.classList.remove('toolbox-opened');
+        if (!$wrapper.classList.contains('toolbox-opened')) {
+          $toolbox.classList.add('hidden');
+          $wrapper.classList.remove('clamped');
+          $button.classList.remove('toolbox-opened');
+        }
       }, 500);
     } else {
       setTimeout(() => {
         if ($wrapper.classList.contains('initial-load')) {
           $toolbox.classList.add('hidden');
+          $wrapper.classList.remove('clamped');
           $button.classList.remove('toolbox-opened');
         }
       }, 2000);
     }
   } else {
     $toolbox.classList.remove('hidden');
+    $wrapper.classList.add('clamped');
     $button.classList.add('toolbox-opened');
     hideScrollArrow($wrapper, $lottie);
 
@@ -290,6 +297,7 @@ function buildToolBox($wrapper, data) {
   $appStoreBadge.href = data.appStore.href ? data.appStore.href : data.tools[0].anchor.href;
 
   $wrapper.classList.add('initial-load');
+  $wrapper.classList.add('clamped');
   $wrapper.classList.add('toolbox-opened');
   $floatingButton.classList.add('toolbox-opened');
   hideScrollArrow($wrapper, $lottie);

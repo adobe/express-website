@@ -11,7 +11,9 @@
  */
 import {
   getHelixEnv,
-  // eslint-disable-next-line import/no-unresolved
+  arrayToObject,
+  titleCase,
+  createTag, fetchPlaceholders,
 } from './scripts.js';
 
 async function fetchPageContent(path) {
@@ -40,6 +42,36 @@ async function fetchPageContent(path) {
   return page && page.live !== 'N' ? page : null;
 }
 
+function formatSearchQuery(data) {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  const dataArray = Object.entries(data);
+
+  if (params.tasks && params.topics && params.phformat) {
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{queryTasks}}', params.tasks);
+    });
+
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
+    });
+
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
+    });
+
+    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
+    });
+  } else {
+    return false;
+  }
+
+  return arrayToObject(dataArray);
+}
+
 async function fetchLinkList() {
   if (!(window.linkLists && window.linkLists.data)) {
     window.linkLists = {};
@@ -59,14 +91,59 @@ function updateLinkList(container, template, list) {
       if (templatePageData) {
         const clone = template.cloneNode(true);
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replace('Default', templatePageData.shortTitle);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
         container.append(clone);
       }
     });
   }
 }
 
-function updateBlocks(data) {
+function updateMetadata(data) {
+  const $head = document.querySelector('head');
+  const $title = $head.querySelector('title');
+  let $metaTitle = document.querySelector('meta[property="og:title"]');
+  let $twitterTitle = document.querySelector('meta[name="twitter:title"]');
+  let $description = document.querySelector('meta[property="og:description"]');
+
+  if ($title) {
+    $title.textContent = data.metadataTitle;
+
+    if ($metaTitle) {
+      $metaTitle.setAttribute('content', data.metadataTitle);
+    } else {
+      $metaTitle = createTag('meta', { property: 'og:title', content: data.metadataTitle });
+      $head.append($metaTitle);
+    }
+
+    if ($description) {
+      $description.setAttribute('content', data.metadataDescription);
+    } else {
+      $description = createTag('meta', { property: 'og:description', content: data.metadataDescription });
+      $head.append($description);
+    }
+
+    if ($twitterTitle) {
+      $twitterTitle.setAttribute('content', data.metadataTitle);
+    } else {
+      $twitterTitle = createTag('meta', { property: 'twitter:title', content: data.metadataTitle });
+      $head.append($twitterTitle);
+    }
+  }
+}
+
+function purgeAllTaskText(data) {
+  const purgedData = data;
+
+  if (purgedData.templateTasks === "''") {
+    Object.entries(purgedData).forEach((entry) => {
+      purgedData[entry[0]] = entry[1].replace("''", '');
+    });
+  }
+
+  return purgedData;
+}
+
+async function updateBlocks(data) {
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const linkList = document.querySelector('.link-list.fullwidth');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
@@ -85,7 +162,8 @@ function updateBlocks(data) {
   const linkListContainer = linkList.querySelector('p').parentElement;
 
   if (linkList && window.templates.data) {
-    const linkListTemplate = linkList.querySelector('p').cloneNode(true);
+    const linkListTemplate = linkList.querySelector('p')
+      .cloneNode(true);
     const linkListData = [];
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
@@ -108,16 +186,23 @@ function updateBlocks(data) {
     templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale || 'en');
     templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium || '');
     templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
     templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
     templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat || '');
+
+    if (data.templateTasks === '') {
+      const placeholders = await fetchPlaceholders().then((result) => result);
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
+    }
   }
 
   if (seoNav) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
 
     if (window.templates.data && data.topTemplates) {
-      const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
+      const topTemplatesTemplate = seoNav.querySelector('p')
+        .cloneNode(true);
       const topTemplatesData = data.topTemplates.split(', ');
 
       updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
@@ -141,7 +226,19 @@ const page = await fetchPageContent(window.location.pathname);
 await fetchLinkList();
 
 if (page) {
-  updateBlocks(page);
+  if (window.location.pathname === '/express/templates/search') {
+    const data = formatSearchQuery(page);
+
+    if (!data) {
+      window.location.replace('/express/templates/');
+    } else {
+      const purgedData = purgeAllTaskText(data);
+      updateMetadata(purgedData);
+      updateBlocks(purgedData);
+    }
+  } else {
+    updateBlocks(page);
+  }
 } else {
   const env = getHelixEnv();
 
