@@ -13,7 +13,8 @@ import {
   getHelixEnv,
   arrayToObject,
   titleCase,
-  createTag, fetchPlaceholders,
+  createTag,
+  fetchPlaceholders,
 } from './scripts.js';
 
 async function fetchPageContent(path) {
