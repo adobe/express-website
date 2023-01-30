@@ -82,7 +82,6 @@ function addCloseBtn(block, payload) {
 
     setTimeout(() => {
       $background.remove();
-      payload.floatingButton.classList.remove('no-background');
     }, 600);
   });
 }
@@ -92,21 +91,20 @@ function initScrollDirection(block, payload) {
   let lastScrollTop = 0;
 
   document.addEventListener('scroll', () => {
-    if (!payload.section.classList.contains('block-removed')) {
+    if (!payload.section.classList.contains('block-removed') && !payload.floatingButton.classList.contains('toolbox-opened')) {
       const { scrollTop } = document.documentElement;
       if (scrollTop < lastScrollTop) {
         block.classList.remove('appear');
         payload.floatingButton.classList.remove('push-up');
+        background.classList.remove('show');
         setTimeout(() => {
           if (!block.classList.contains('appear')) {
-            payload.floatingButton.classList.remove('no-background');
-            background.classList.remove('show');
             block.classList.remove('show');
           }
         }, 600);
       } else {
         block.classList.add('show');
-        payload.floatingButton.classList.add('push-up', 'no-background');
+        payload.floatingButton.classList.add('push-up');
         background.classList.add('show');
         setTimeout(() => {
           if (block.classList.contains('show')) {
@@ -148,9 +146,39 @@ function decorateBanner($block, payload) {
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
 }
 
+function watchFloatingButtonState(block, payload) {
+  const config = { attributes: true, childList: false, subtree: false };
+
+  const callback = (mutationList) => {
+    for (const mutation of mutationList) {
+      if (mutation.type === 'attributes'
+        && mutation.target.classList.contains('toolbox-opened')
+        && payload.floatingButton.classList.contains('push-up')) {
+        const background = payload.section.querySelector('.gradient-background');
+        block.classList.remove('appear');
+        payload.floatingButton.classList.remove('push-up');
+        background.classList.remove('show');
+        setTimeout(() => {
+          if (!block.classList.contains('appear')) {
+            block.classList.remove('show');
+          }
+        }, 600);
+      }
+    }
+  };
+
+  const observer = new MutationObserver(callback);
+
+  // Start observing the target node for configured mutations
+  observer.observe(payload.floatingButton, config);
+}
+
 export default async function decorate($block) {
-  const payload = await buildPayload($block);
-  decorateBanner($block, payload);
-  addCloseBtn($block, payload);
-  initScrollDirection($block, payload);
+  setTimeout(async () => {
+    const payload = await buildPayload($block);
+    decorateBanner($block, payload);
+    addCloseBtn($block, payload);
+    initScrollDirection($block, payload);
+    watchFloatingButtonState($block, payload);
+  }, 100);
 }
