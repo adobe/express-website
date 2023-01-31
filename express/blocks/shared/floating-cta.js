@@ -92,7 +92,11 @@ export async function createFloatingButton($block, audience, data) {
 
   const $floatButtonWrapperOld = $a.closest('.floating-button-wrapper');
   const $floatButtonWrapper = createTag('div', { class: 'floating-button-wrapper' });
-  const $floatButton = createTag('div', { class: 'floating-button' });
+  const $floatButton = createTag('div', {
+    class: 'floating-button block',
+    'data-block-name': 'floating-button',
+    'data-block-status': 'loaded',
+  });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
 
   if (audience) {

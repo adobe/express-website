@@ -1668,6 +1668,8 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
     section.innerHTML = html;
     section.className = `section section-wrapper ${blockName}-container`;
     const block = section.querySelector(`.${blockName}`);
+    block.dataset.blockName = blockName;
+    block.dataset.blockStatus = 'loaded';
     block.parentElement.className = `${blockName}-wrapper`;
     block.classList.add('block');
     const img = section.querySelector('img');

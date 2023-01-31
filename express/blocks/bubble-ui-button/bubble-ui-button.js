@@ -388,16 +388,7 @@ async function buildBubblesToolBox($wrapper, data) {
   });
 
   await decorateBubbleUI($boxBottom, data);
-  setTimeout(() => {
-    initBubbleUI($boxBottom);
-  }, 100);
-
-  setTimeout(() => {
-    if ($wrapper.classList.contains('initial-load')) {
-      toggleBubblesToolBox($wrapper, $lottie, data, false);
-    }
-  }, data.delay * 1000);
-
+  initBubbleUI($boxBottom);
   hideScrollArrow($wrapper, $lottie);
   initToolBox($wrapper, data, toggleBubblesToolBox);
   initNotchDragAction($wrapper, data);
