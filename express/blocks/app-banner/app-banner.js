@@ -180,5 +180,5 @@ export default async function decorate($block) {
     addCloseBtn($block, payload);
     initScrollDirection($block, payload);
     watchFloatingButtonState($block, payload);
-  }, 100);
+  }, 1000);
 }
