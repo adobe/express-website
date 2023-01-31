@@ -704,7 +704,6 @@ loadScript(martechURL, () => {
       sparkEventDestination = 'externalLink';
     }
 
-
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
