@@ -12,7 +12,7 @@
 
 import {
   createTag,
-  fetchMultifunctionButton,
+  fetchFloatingCta,
   fetchPlaceholders,
   getIconElement,
   getLottie,
@@ -196,8 +196,8 @@ export async function createFloatingButton($block, audience, data) {
 }
 
 export async function collectFloatingButtonData() {
-  const defaultButton = await fetchMultifunctionButton('default');
-  const multifunctionButton = await fetchMultifunctionButton(window.location.pathname);
+  const defaultButton = await fetchFloatingCta('default');
+  const multifunctionButton = await fetchFloatingCta(window.location.pathname);
   const dataArray = [];
 
   if (multifunctionButton) {

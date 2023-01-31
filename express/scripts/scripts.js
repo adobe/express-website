@@ -1661,6 +1661,8 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
     section.innerHTML = html;
     section.className = `section section-wrapper ${blockName}-container`;
     const block = section.querySelector(`.${blockName}`);
+    block.dataset.blockName = blockName;
+    block.dataset.blockStatus = 'loaded';
     block.parentElement.className = `${blockName}-wrapper`;
     block.classList.add('block');
     const img = section.querySelector('img');
@@ -1674,22 +1676,34 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
   return null;
 }
 
-export async function fetchMultifunctionButton(path) {
+export async function fetchFloatingCta(path) {
+  const env = getHelixEnv();
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/express/create/floating-cta-dev.json?limit=10000';
+  } else {
+    sheet = '/express/create/floating-cta.json?limit=10000';
+  }
+
   if (!window.multifunctionButton) {
     try {
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
+      const resp = await fetch(`${urlPrefix}${sheet}`);
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     } catch {
-      const resp = await fetch('/express/create/multifunction-button.json');
+      const resp = await fetch(sheet);
       window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
     }
   }
 
   if (window.multifunctionButton.length) {
-    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
-    const env = getHelixEnv();
+    const multifunctionButton = window.multifunctionButton.find((p) => {
+      const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
+      return path.match(urlToMatch);
+    });
 
     if (env && env.name === 'stage') {
       return multifunctionButton || null;
@@ -1736,8 +1750,8 @@ async function buildAutoBlocks($main) {
   }
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
-    const floatingCTAData = await fetchMultifunctionButton(window.location.pathname);
-    const defaultButton = await fetchMultifunctionButton('default');
+    const floatingCTAData = await fetchFloatingCta(window.location.pathname);
+    const defaultButton = await fetchFloatingCta('default');
     let desktopButton;
     let mobileButton;
 
