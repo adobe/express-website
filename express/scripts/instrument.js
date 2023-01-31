@@ -696,7 +696,7 @@ loadScript(martechURL, () => {
       sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
     }
 
-    if ($a.href.match(/adobe\.com\/[a-zA-Z-]*\/?express/g)) {
+    if ($a.href.includes('/express/')) {
       sparkEventDestination = 'internalLink';
     } else if ($a.href.includes('adobesparkpost.app.link')) {
       sparkEventDestination = 'product';
@@ -704,9 +704,6 @@ loadScript(martechURL, () => {
       sparkEventDestination = 'externalLink';
     }
 
-    console.log(`eventName: ${sparkEventName}`);
-    console.log(`buttonId: ${sparkButtonId}`);
-    console.log(`contextualData1: ${sparkEventDestination}`);
 
     if (useAlloy) {
       _satellite.track('event', {
@@ -789,39 +786,34 @@ loadScript(martechURL, () => {
 
     // for tracking all of the links
     $links.forEach(($a) => {
-      $a.addEventListener('click', (e) => {
-        e.preventDefault();
+      $a.addEventListener('click', () => {
         trackButtonClick($a);
       });
     });
 
     // for tracking the faq
     d.querySelectorAll('main .faq-accordion').forEach(($a) => {
-      $a.addEventListener('click', (e) => {
-        e.preventDefault();
+      $a.addEventListener('click', () => {
         trackButtonClick($a);
       });
     });
 
     // for tracking the content toggle buttons
     d.querySelectorAll('main .content-toggle button').forEach(($button) => {
-      $button.addEventListener('click', (e) => {
-        e.preventDefault();
+      $button.addEventListener('click', () => {
         trackButtonClick($button);
       });
     });
 
     // for tracking the choose your path links
     d.querySelectorAll('main .choose-your-path div.choose-your-path-slide').forEach(($slide) => {
-      $slide.addEventListener('click', (e) => {
-        e.preventDefault();
+      $slide.addEventListener('click', () => {
         trackButtonClick($slide);
       });
     });
 
     // for tracking split action block notch and underlay background
-    document.addEventListener('splitactionloaded', (e) => {
-      e.preventDefault();
+    document.addEventListener('splitactionloaded', () => {
       const $notch = d.querySelector('main .split-action-container .notch');
       const $underlay = d.querySelector('main .split-action-container .underlay');
 
@@ -832,8 +824,7 @@ loadScript(martechURL, () => {
       }
 
       if ($underlay) {
-        $underlay.addEventListener('click', (e) => {
-          e.preventDefault();
+        $underlay.addEventListener('click', () => {
           trackButtonClick($underlay);
         });
       }
