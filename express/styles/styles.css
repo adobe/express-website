@@ -986,7 +986,6 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
 
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
-  font-family: var(--body-serif-font-family);
   font-style: italic;
   font-size: 16px;
   transition: font-size 0.5s;
