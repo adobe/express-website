@@ -1641,6 +1641,13 @@ export function getHelixEnv() {
   return env;
 }
 
+function convertGlobToRe(glob) {
+  let reString = glob.replace(/\*\*/g, '_');
+  reString = reString.replace(/\*/g, '[0-9a-z-]*');
+  reString = reString.replace(/_/g, '.*');
+  return (new RegExp(reString));
+}
+
 export async function fetchPlainBlockFromFragment($block, url, blockName) {
   const location = new URL(window.location);
   const locale = getLocale(location);
@@ -1687,29 +1694,29 @@ export async function fetchFloatingCta(path) {
     sheet = '/express/create/floating-cta.json?limit=10000';
   }
 
-  if (!window.multifunctionButton) {
+  if (!window.floatingCta) {
     try {
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
       const resp = await fetch(`${urlPrefix}${sheet}`);
-      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+      window.floatingCta = resp.ok ? (await resp.json()).data : [];
     } catch {
       const resp = await fetch(sheet);
-      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
+      window.floatingCta = resp.ok ? (await resp.json()).data : [];
     }
   }
 
-  if (window.multifunctionButton.length) {
-    const multifunctionButton = window.multifunctionButton.find((p) => {
+  if (window.floatingCta.length) {
+    const floatingCta = window.floatingCta.find((p) => {
       const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
       return path.match(urlToMatch);
     });
 
     if (env && env.name === 'stage') {
-      return multifunctionButton || null;
+      return floatingCta || null;
     }
 
-    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
+    return floatingCta && floatingCta.live !== 'N' ? floatingCta : null;
   }
 
   return null;
