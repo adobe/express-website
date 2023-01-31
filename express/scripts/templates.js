@@ -92,7 +92,7 @@ async function fetchLInkListFromCKGApi(pageData) {
         filters: [
           {
             categories: [
-              `ckg:DESIGN_TYPE:${pageData}`,
+              `ckg:DESIGN_TYPE:1603`,
             ],
           },
         ],
@@ -217,7 +217,6 @@ async function updateBlocks(data) {
   if (linkList && window.templates.data) {
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
-
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
       window.linkLists.data.forEach((row) => {
