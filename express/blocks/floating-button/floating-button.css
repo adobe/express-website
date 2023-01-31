@@ -71,10 +71,10 @@ main .floating-button-wrapper.floating-button--hidden .floating-button {
 main .floating-button a.button:any-link {
   position: relative;
   display: block;
-  margin: 0;
   z-index: 2;
+  width: max-content;
   min-width: 200px;
-  margin-right: 50px;
+  margin: 0 50px 0 0;
   pointer-events: auto;
 }
 
@@ -225,6 +225,10 @@ main .floating-button-wrapper.multifunction .button {
   padding-left: 48px;
 }
 
+main .floating-button-wrapper.multifunction.clamped {
+  width: auto;
+}
+
 main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
   transform: translateY(50%) rotate(45deg);
 }
@@ -272,13 +276,13 @@ main .floating-button-wrapper.multifunction .toolbox .badge {
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool {
-  max-width: 72%;
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
+  padding-right: 100px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--color-gray-300);
 }
