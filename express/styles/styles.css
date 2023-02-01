@@ -10,6 +10,7 @@
 :root {
   --color-white: #FFF;
   --color-gray-100: #F8F8F8;
+  --color-gray-150: #F3F3F3;
   --color-gray-200: #E8E8E8;
   --color-gray-300: #D4D4D4;
   --color-gray-400: #B6B6B6;
@@ -937,7 +938,7 @@ main .block .free-plan-bullet {
 }
 
 main .block .free-plan-bullet .free-plan-bullet-container {
-  background-color: #f3f3f3;
+  background-color: var(--color-gray-150);
   max-width: 400px;
   width: 100vw;
   height: 100%;
@@ -1035,7 +1036,7 @@ main .block .button-container.free-plan-container::before {
 main .block .button-container.free-plan-container.fixed::before {
   max-height: 100%;
   left: -68px;
-  background-color: #f3f3f3;
+  background-color: var(--color-gray-150);
 }
 
 main .block .button-container.free-plan-container .free-plan-optout img {
