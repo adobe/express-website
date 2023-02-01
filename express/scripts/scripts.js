@@ -2291,7 +2291,7 @@ export async function addFreePlanWidget(elem) {
       const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
       const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
       const optoutButton = createTag('button', { class: 'free-plan-optout' });
-      optoutButton.append(getIconElement('close-white'));
+      optoutButton.append(getIconElement('close-black'));
       let highlightWidth = 400;
       const a = elem.querySelector('a');
 
@@ -2358,7 +2358,7 @@ export async function addFreePlanWidget(elem) {
             const ctaPositionX = elem.getBoundingClientRect().left;
             const highlightContainer = elem.querySelector('.free-plan-bullet-container');
 
-            const placeHolder = createTag('div', {
+            const clone = createTag('div', {
               style: `height: ${elh + elmt}px`,
               class: 'free-plan-widget-placeholder',
             });
@@ -2371,7 +2371,7 @@ export async function addFreePlanWidget(elem) {
                 highlightContainer.style.maxWidth = '100vw';
 
                 if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
-                  previousSibling.insertAdjacentElement('afterend', placeHolder);
+                  previousSibling.insertAdjacentElement('afterend', clone);
                 }
               }
             } else {
@@ -2384,6 +2384,10 @@ export async function addFreePlanWidget(elem) {
               highlightContainer.style.removeProperty('transform');
               highlightContainer.style.maxWidth = `${highlightWidth}px`;
             }
+
+            const currentClone = parent.querySelector('.free-plan-widget-placeholder');
+            supposedCtaPositionX = currentClone.getBoundingClientRect().left;
+            elem.style.left = supposedCtaPositionX;
           }, { passive: true });
         });
       }

@@ -937,7 +937,7 @@ main .block .free-plan-bullet {
 }
 
 main .block .free-plan-bullet .free-plan-bullet-container {
-  background-color: var(--color-gray-200);
+  background-color: #f3f3f3;
   max-width: 400px;
   width: 100vw;
   height: 100%;
@@ -986,7 +986,6 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
 
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
-  font-style: italic;
   font-size: 16px;
   transition: font-size 0.5s;
 }
@@ -1006,7 +1005,7 @@ main .block .free-plan-optout {
   justify-content: center;
   transition: left 0.1s ease-in, transform 0.1s ease-in;
   cursor: pointer;
-  background: var(--color-black);
+  background: var(--color-gray-200);
   z-index: 1;
 }
 
@@ -1036,7 +1035,7 @@ main .block .button-container.free-plan-container::before {
 main .block .button-container.free-plan-container.fixed::before {
   max-height: 100%;
   left: -68px;
-  background-color: var(--color-gray-200);
+  background-color: #f3f3f3;
 }
 
 main .block .button-container.free-plan-container .free-plan-optout img {
