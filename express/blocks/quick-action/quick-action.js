@@ -23,6 +23,17 @@ function createButton(label) {
   return btn;
 }
 
+function createTag(label) {
+  const tag = document.createElement('div');
+  tag.className = 'quick-action-tag';
+  tag.innerHTML = '<img class="icon icon-checkmark" src="/express/icons/checkmark.svg" alt="checkmark">';
+  const tagContainer = document.createElement('div');
+  tagContainer.className = 'quick-action-tag-container';
+  tagContainer.innerText = label;
+  tagContainer.prepend(tag);
+  return tagContainer;
+}
+
 async function fetchDependency(url, id) {
   const usp = new URLSearchParams(window.location.search);
   let dependencyUrl = usp.get(id);
@@ -45,7 +56,8 @@ function showQuickAction(display) {
 function createMockQuickAction() {
   const ele = document.createElement('div');
   ele.className = MOCK_ELEMENT_NAME;
-  ele.innerHTML = '<div class="dropzone" ><div class="dropzone__bg" '
+  ele.innerHTML = '<video autoplay muted><source src="./media_10a5fc7550207834c815407ef40db97a13f1a977a.mp4" type="video/mp4"></video>'
+  + '<div class="dropzone" style="display:none;"><div class="dropzone__bg" '
   + 'style="-webkit-mask-image: url(https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/0109f683d747753d3f6b.svg)"></div>'
   + '<div class="dropzone__content">'
   + '<div class="dropzone__illustration">'
@@ -60,6 +72,12 @@ function createMockQuickAction() {
   return ele;
 }
 
+function hideVideoAndShowMock() {
+  document.querySelector(`.${MOCK_ELEMENT_NAME} video`).style.display = 'none';
+  document.querySelector(`.${MOCK_ELEMENT_NAME} .dropzone`).style.display = 'block';
+  document.querySelector(`.${MOCK_ELEMENT_NAME}`).removeEventListener('mouseover', hideVideoAndShowMock);
+}
+
 function addListenersOnMockElements(ele) {
   ele.addEventListener('click', () => {
     // trigger click on the main ccl action
@@ -67,7 +85,17 @@ function addListenersOnMockElements(ele) {
   });
   ele.addEventListener('dragover', (ev) => {
     ev.preventDefault();
-    showQuickAction(true);
+  });
+  ele.addEventListener('drop', (ev) => {
+    ev.preventDefault();
+    const file = ev.dataTransfer.files[0];
+    window.qtHost.task.uploadImageFile(file);
+    // showQuickAction(true);
+  });
+  ele.addEventListener('mouseover', hideVideoAndShowMock);
+  document.querySelector(`.${MOCK_ELEMENT_NAME} video`).addEventListener('ended', (event) => {
+    event.target.style.display = 'none';
+    document.querySelector(`.${MOCK_ELEMENT_NAME} .dropzone`).style.display = 'block';
   });
 }
 
@@ -87,7 +115,7 @@ class CCXQuickActionElement extends HTMLElement {
       navigate: (dest, data, file) => {
         console.log('[CCLQT CB]', 'navigate', dest, data, file);
         if (dest.id === 'post-editor') {
-          this.handleNavigateToPostEditor(data, false);
+          this.handleNavigateToPostEditor(data, data.autoDownloadInEditor);
         } else {
           this.handleDownloadImage(file);
         }
@@ -119,6 +147,7 @@ class CCXQuickActionElement extends HTMLElement {
       qtLoaded: async (QuickTask) => {
         console.debug('loaded:');
         this.task = new QuickTask(this, this.taskContext);
+        window.qtHost.task = this.task;
         this.isLoading = false;
         await this.render();
         this.attachListeners();
@@ -207,7 +236,11 @@ class CCXQuickActionElement extends HTMLElement {
     params.append('autoDownload', autoDownload);
     params.append('repositoryId', repositoryId);
     params.append('transientToken', transientToken);
-    const url = `${host}${path}?${params.toString()}`;
+    let url = `${host}${path}?${params.toString()}`;
+    if (autoDownload) {
+      const encodeUrl = encodeURIComponent(url);
+      url = `${host}/sp/login?destination=${encodeUrl}`;
+    }
     // FIXME: verify if this is the right URL
     window.location.replace(url);
   }
@@ -222,12 +255,6 @@ class CCXQuickActionElement extends HTMLElement {
 
   async render() {
     console.debug('render:');
-    if (!this.btnEdit) {
-      this.btnEdit = createButton('Customize');
-      this.btnEdit.dataset.action = 'Editor';
-      this.btnEdit.style.display = 'none';
-      this.append(this.btnEdit);
-    }
 
     if (!this.btnDl) {
       this.btnDl = createButton('Download');
@@ -236,7 +263,20 @@ class CCXQuickActionElement extends HTMLElement {
       this.btnDl.style.display = 'none';
       this.append(this.btnDl);
     }
-
+    if (!this.btnEdit) {
+      this.btnEdit = createButton('Customize in Adobe Express for free');
+      this.btnEdit.dataset.action = 'Editor';
+      this.btnEdit.style.display = 'none';
+      this.append(this.btnEdit);
+    }
+    if (!this.freeUseTag) {
+      this.freeUseTag = createTag('Free use forever');
+      this.append(this.freeUseTag);
+    }
+    if (!this.noCreditCardTag) {
+      this.noCreditCardTag = createTag('No credit card required');
+      this.append(this.noCreditCardTag);
+    }
     if (this.task) {
       await this.task.render();
     }

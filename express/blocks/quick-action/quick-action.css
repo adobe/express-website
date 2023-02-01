@@ -91,3 +91,28 @@
     transition: 0.3s ease-in-out;
     margin: 1rem 0 0 0;
 }
+
+.quick-action-tag {
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+    background: #f06dad;
+    border-radius: 50%;
+}
+
+.quick-action-tag img {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    max-height: 8px;
+}
+
+.quick-action-tag-container {
+    display: inline-block;
+    margin: 10px;
+    vertical-align: top;
+}
