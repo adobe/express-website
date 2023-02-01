@@ -1190,7 +1190,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   justify-content: space-between;
   flex-grow: 1;
   align-items: center;
-  padding: 8px 0;
   gap: 24px;
 }
 
@@ -1226,6 +1225,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   cursor: pointer;
   user-select: none;
   position: relative;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper {
+  background-color: var(--color-gray-200);
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper,
@@ -1327,6 +1332,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views {
   display: flex;
   gap: 8px;
+  min-width: 82px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button {
