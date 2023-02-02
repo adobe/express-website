@@ -1266,6 +1266,10 @@ function initFilterSort($block, $toolBar) {
 
       $options.forEach(($option) => {
         const updateOptions = async () => {
+          $buttons.forEach((b) => {
+            b.parentElement.classList.remove('opened');
+          });
+
           if ($currentOption) {
             $currentOption.textContent = $option.textContent;
           }
