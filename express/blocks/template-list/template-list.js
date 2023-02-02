@@ -1084,8 +1084,6 @@ function updateOptionsStatus($block, $toolBar) {
       }
     });
 
-
-
     updateFilterIcon($block);
   });
 }
