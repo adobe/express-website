@@ -754,7 +754,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     document.addEventListener('click', (e) => {
       if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
         if ($wrapper.classList.contains('sticky-search-bar')) {
-          $stickySearchBarWrapper.classList.remove('collapsed');
+          $wrapper.classList.remove('ready');
           $wrapper.classList.add('collapsed');
         }
       }
