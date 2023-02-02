@@ -151,6 +151,17 @@ function loadFEDS() {
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
+  const currentURL = new URL(window.location);
+  const origin = currentURL.origin
+  const linkList = currentURL.pathname.split('/');
+  linkList.shift();
+  const breadcrumbList = [];
+  let buildPath = `${origin}/`;
+  linkList.forEach((pathName) => {
+    buildPath += `${pathName}/`;
+    breadcrumbList.push({ title: pathName, url: buildPath });
+  });
+
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
@@ -185,6 +196,10 @@ function loadFEDS() {
         surfaceVersion: '1',
       }
       : {},
+    breadcrumbs: {
+      showLogo: true,
+      links: breadcrumbList,
+    },
   };
 
   window.addEventListener('feds.events.experience.loaded', async () => {
