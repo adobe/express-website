@@ -522,10 +522,10 @@ function makeTemplateFunctions(placeholders) {
       options: {
         wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
         subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
-          const radio = getIconElement(entry[1].icons[subIndex]);
+          const icon = getIconElement(entry[1].icons[subIndex]);
           const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
           [optionButton.textContent] = Object.values(option);
-          optionButton.prepend(radio);
+          optionButton.prepend(icon);
           return optionButton;
         }),
       },
@@ -546,7 +546,7 @@ function updateFilterIcon(block) {
   functionWrapper.forEach((wrap, index) => {
     const iconHolder = wrap.querySelector('.icon-holder');
     const activeOption = optionsWrapper[index].querySelector('.option-button.active');
-    if (activeOption) {
+    if (iconHolder && activeOption) {
       const activeIcon = activeOption.querySelector('.icon');
       if (activeIcon) {
         iconHolder.innerHTML = activeIcon.outerHTML;
@@ -613,9 +613,12 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
     category.forEach((element) => {
       element.classList.add('in-drawer');
       const heading = element.querySelector('.current-option');
-
+      const iconHolder = element.querySelector('.icon-holder');
       if (heading) {
         heading.className = 'filter-mobile-option-heading';
+      }
+      if (iconHolder) {
+        iconHolder.remove();
       }
     });
   });
@@ -635,21 +638,6 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   if ($sortButton) {
     $sortButton.textContent = placeholders.sort;
     $sortButton.className = 'filter-mobile-option-heading';
-  }
-
-  const $sortInDrawer = $functionContainerMobile.querySelector('.function-sort');
-  if ($sortInDrawer) {
-    const $sortOptions = $sortInDrawer.querySelectorAll('.option-button');
-    $sortOptions.forEach((opt) => {
-      const icon = opt.querySelector('.icon');
-      const radio = createTag('div', { class: 'option-radio' });
-
-      console.log(opt)
-      if (icon) {
-        icon.remove();
-        opt.prepend(radio);
-      }
-    });
   }
 
   return { mobile: $functionContainerMobile, desktop: $functionsContainer };
@@ -1048,6 +1036,7 @@ function updateOptionsStatus($block, $toolBar) {
   $wrappers.forEach(($wrapper) => {
     const $currentOption = $wrapper.querySelector('.current-option');
     const $options = $wrapper.querySelectorAll('.option-button');
+    let selected;
 
     $options.forEach(($option) => {
       const paramType = $wrapper.dataset.param;
@@ -1055,20 +1044,30 @@ function updateOptionsStatus($block, $toolBar) {
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
         || (!props[paramType] && paramValue === '(remove)')) {
+        selected = $option;
+
         if ($currentOption) {
           $currentOption.textContent = $option.textContent;
         }
+
         $options.forEach((o) => {
           if ($option !== o) {
             o.classList.remove('active');
           }
         });
         $option.classList.add('active');
-        if (!$wrapper.parentElement.classList.contains('functions-drawer')) {
-          $option.parentElement.prepend($option);
-        }
       }
     });
+
+    const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
+    let toReorder = false;
+    if (drawerCs.every((className) => !$wrapper.parentElement.classList.contains(className))) {
+      toReorder = true;
+    }
+    console.log(selected.textContent, props.filters);
+    if (toReorder) {
+      selected.parentElement.prepend(selected);
+    }
 
     updateFilterIcon($block);
   });
@@ -1280,9 +1279,6 @@ function initFilterSort($block, $toolBar) {
           }
         };
 
-        // sync current filter & sorting method with toolbar current options
-        updateOptionsStatus($block, $toolBar);
-
         const radio = $option.querySelector('.option-radio');
         if (radio) {
           radio.addEventListener('keydown', async (e) => {
@@ -1305,6 +1301,9 @@ function initFilterSort($block, $toolBar) {
           $wrapper.classList.remove('opened');
         }
       }, { passive: true });
+
+      // sync current filter & sorting method with toolbar current options
+      updateOptionsStatus($block, $toolBar);
     });
 
     if ($applyFilterButton) {
