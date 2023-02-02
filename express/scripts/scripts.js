@@ -1666,8 +1666,11 @@ function buildAutoBlocks($main) {
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
     if (!window.relevantRowsLoaded) {
+      const $relevantRowsSection = createTag('div');
       const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
-      $main.querySelector(':scope > div:last-of-type').append($fragment);
+      $relevantRowsSection.dataset.audience = 'mobile';
+      $relevantRowsSection.append($fragment);
+      $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
       window.relevantRowsLoaded = true;
     }
   }

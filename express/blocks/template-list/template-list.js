@@ -43,6 +43,7 @@ const props = {
   sort: '-remixCount',
   masonry: undefined,
   authoringError: false,
+  headingTitle: null,
 };
 
 function wordStartsWithVowels(word) {
@@ -1526,7 +1527,9 @@ export async function decorateTemplateList($block) {
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
         if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
-          if (props.authoringError) {
+          if ($block.classList.contains('spreadsheet-powered') && props.headingTitle) {
+            $sectionHeading.textContent = props.headingTitle || '';
+          } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
             $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
@@ -1745,10 +1748,20 @@ async function decorateLoadMoreButton($block) {
   return $loadMoreDiv;
 }
 
-function decorateTailButton($block) {
+async function decorateTailButton($block) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
 
-  if ($carouselPlatform) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const placeholders = await fetchPlaceholders().then((result) => result);
+
+    if (placeholders['relevant-rows-view-all'] && placeholders['relevant-rows-view-all-link']) {
+      props.tailButton = createTag('a', { class: 'button accent tail-cta' });
+      props.tailButton.innerText = placeholders['relevant-rows-view-all'];
+      props.tailButton.href = placeholders['relevant-rows-view-all-link'];
+    }
+  }
+
+  if ($carouselPlatform && props.tailButton) {
     props.tailButton.classList.add('tail-cta');
     $carouselPlatform.append(props.tailButton);
   }
@@ -1782,9 +1795,15 @@ function addBackgroundAnimation($block, animationUrl) {
 
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
+    const placeholders = await fetchPlaceholders().then((result) => result);
     const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+    props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
 
     if (relevantRowsData) {
+      $block.closest('.section').dataset.audience = 'mobile';
+
+      props.headingTitle = relevantRowsData.header || null;
+
       $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
       $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
       $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
@@ -1795,7 +1814,6 @@ export default async function decorate($block) {
       $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
 
       if (relevantRowsData.templateTasks === '') {
-        const placeholders = await fetchPlaceholders().then((result) => result);
         $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
       } else {
         $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
@@ -1826,7 +1844,7 @@ export default async function decorate($block) {
     }
   }
 
-  if ($block.classList.contains('mini')) {
+  if ($block.classList.contains('mini') || $block.classList.contains('apipowered')) {
     decorateTailButton($block);
   }
 
