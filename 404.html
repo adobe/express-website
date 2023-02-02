@@ -91,7 +91,7 @@
 		
 		if (redirectMapping){
 			let localeCookie = userLocale;
-			// make sure the right string is replaced in the URL.
+			// making sure just the specific string between the forward slashes are replaced.
 			userLocale = "/"+ userLocale +"/";
 			let redirectURL = href.replace(userLocale, redirectMapping);
 			doc.cookie = " international = "+ localeCookie + ";" + "Path = /; domain = adobe.com";
