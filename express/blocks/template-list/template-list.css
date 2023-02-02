@@ -919,7 +919,6 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
   position: absolute;
-  overflow: hidden;
   max-width: 120px;
   top: 0;
   transition: max-width 0.5s;
@@ -927,12 +926,16 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar .task-dropdown-container {
   z-index: 2;
+  overflow: hidden;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper.collapsed .task-dropdown-container {
   max-width: 0;
   margin: 0;
-  overflow-x: hidden;
+}
+
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container.ready {
+  overflow: unset;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {

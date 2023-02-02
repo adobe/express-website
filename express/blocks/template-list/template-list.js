@@ -753,9 +753,8 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     document.addEventListener('click', (e) => {
       if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
-        // $dropdown.classList.add('hidden');
-
         if ($wrapper.classList.contains('sticky-search-bar')) {
+          $stickySearchBarWrapper.classList.remove('collapsed');
           $wrapper.classList.add('collapsed');
         }
       }
@@ -764,15 +763,27 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
   $stickySearchBar.addEventListener('click', (e) => {
     e.stopPropagation();
+
     $stickySearchBarWrapper.classList.remove('collapsed');
+    setTimeout(() => {
+      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
+        $stickySearchBarWrapper.classList.add('ready');
+      }
+    }, 500);
   }, { passive: true });
 
   $stickySearchBarWrapper.addEventListener('mouseenter', () => {
     $stickySearchBarWrapper.classList.remove('collapsed');
+    setTimeout(() => {
+      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
+        $stickySearchBarWrapper.classList.add('ready');
+      }
+    }, 500);
   }, { passive: true });
 
   $stickySearchBarWrapper.addEventListener('mouseleave', () => {
     if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
+      $stickySearchBarWrapper.classList.remove('ready');
       $stickySearchBarWrapper.classList.add('collapsed');
       resetTaskDropdowns($section);
     }
