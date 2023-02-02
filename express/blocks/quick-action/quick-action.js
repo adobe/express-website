@@ -58,7 +58,7 @@ function createMockQuickAction() {
   ele.className = MOCK_ELEMENT_NAME;
   ele.innerHTML = '<video autoplay muted><source src="./media_10a5fc7550207834c815407ef40db97a13f1a977a.mp4" type="video/mp4"></video>'
   + '<div class="dropzone" style="display:none;"><div class="dropzone__bg" '
-  + 'style="-webkit-mask-image: url(https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/0109f683d747753d3f6b.svg)"></div>'
+  + 'style="-webkit-mask-image: url(/express/icons/dash-square.svg)"></div>'
   + '<div class="dropzone__content">'
   + '<div class="dropzone__illustration">'
       + '<span class="dropzone__icon" style="background-image: var(--quick-action-dropzone-illustration-background-image, url(&quot;https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/85fb3920e4277b8cb854.svg&quot;))"></span>'
@@ -228,6 +228,7 @@ class CCXQuickActionElement extends HTMLElement {
     const action = 'remove-background';
     const { repositoryId, transientToken } = data;
     const path = '/sp/design/post/new';
+    const loginUrl = '/sp/login?destination=';
     const params = new URLSearchParams();
     params.append('workflow', 'quicktask');
     params.append('r', 'qtImaging');
@@ -236,11 +237,8 @@ class CCXQuickActionElement extends HTMLElement {
     params.append('autoDownload', autoDownload);
     params.append('repositoryId', repositoryId);
     params.append('transientToken', transientToken);
-    let url = `${host}${path}?${params.toString()}`;
-    if (autoDownload) {
-      const encodeUrl = encodeURIComponent(url);
-      url = `${host}/sp/login?destination=${encodeUrl}`;
-    }
+    const encodeUrl = encodeURIComponent(`${host}${path}?${params.toString()}`);
+    const url = `${host}${loginUrl}${encodeUrl}`;
     // FIXME: verify if this is the right URL
     window.location.replace(url);
   }

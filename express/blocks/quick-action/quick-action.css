@@ -2,8 +2,8 @@
     display: flex;
     margin: 0 auto 3.25rem auto;
     background-color: #f8f8f8;
-    width: 608px;
-    height: 480px;
+    width: 600px;
+    height: 475px;
     justify-content: center;
     align-items: center;
     border-radius: 0.75rem;
@@ -16,6 +16,7 @@
 
 .mock-ccl-quick-action .restrictions {
     font-size: 0.825rem;
+    margin: 24px 0 32px 0;
 }
 
 .mock-ccl-quick-action .upload-your-photo {
@@ -32,12 +33,13 @@
     min-width: 90px;
     border-radius: 20px;
     cursor: pointer;
+    margin-bottom: 56px;
 }
 
 .mock-ccl-quick-action .dropzone {
     display: flex;
     max-width: 90%;
-    max-height: 74%;
+    max-height: 90%;
     width: 36.25rem;
     height: 36.25rem;
     position: relative;
@@ -51,6 +53,7 @@
     background-color: transparent;
     background-repeat: no-repeat;
     text-align: center;
+    margin: 40px 0;
 }
 
 .mock-ccl-quick-action .dropzone__bg {
@@ -89,7 +92,7 @@
     font-weight: 900;
     color: #242424;
     transition: 0.3s ease-in-out;
-    margin: 1rem 0 0 0;
+    margin: 0 0 0 0;
 }
 
 .quick-action-tag {
