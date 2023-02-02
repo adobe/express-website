@@ -11,7 +11,7 @@
  */
 
 import {
-  createTag, fixIcons, getIconElement, getLocale, getOffer, loadBlocks,
+  createTag, fixIcons, getIconElement, getLocale, getOffer,
 } from '../../scripts/scripts.js';
 
 async function decorateAsFragment($block, content) {
