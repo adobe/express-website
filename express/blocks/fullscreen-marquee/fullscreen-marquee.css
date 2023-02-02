@@ -45,8 +45,7 @@ main .fullscreen-marquee-container .fullscreen-marquee p {
 }
 
 main .fullscreen-marquee-container .fullscreen-marquee .button-container > a.button {
-  width: 180px;
-  padding: 12px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,6 +140,8 @@ main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .p
 
 main .fullscreen-marquee-container .fullscreen-marquee .picture-frame-wrapper .picture-frame-clickable-layer > .button {
   position: absolute;
+  justify-content: center;
+  align-items: center;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

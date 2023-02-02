@@ -1,0 +1,137 @@
+main .app-banner * {
+  color: var(--color-white);
+}
+
+main .section-wrapper.app-banner-container {
+  padding: 0;
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  margin: auto;
+}
+
+main .section-wrapper.app-banner-container .gradient-background {
+  position: fixed;
+  opacity: 0;
+  height: 150px;
+  width: 100%;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
+  max-width: none;
+  z-index: -1;
+  transition: opacity 0.6s;
+  pointer-events: none;
+}
+
+main .section-wrapper.app-banner-container .gradient-background.show {
+  opacity: 1;
+}
+
+main .app-banner-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+main .app-banner.block {
+  position: relative;
+  display: none;
+  background-color: #00091B;
+  padding-left: 13px;
+  gap: 12px;
+  height: 80px;
+  width: 94vw;
+  border-radius: 26px;
+  transform: translateY(120px);
+  transition: transform 0.6s;
+}
+
+main .app-banner.block.appear {
+  transform: translateY(0);
+}
+
+
+@media only screen and (max-width: 900px) {
+  main .app-banner.block.show {
+    display: flex;
+  }
+}
+
+main .app-banner .main-img {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+  border: solid #333C4A 1px;
+  border-radius: 10px;
+}
+
+main .app-banner .contents {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px
+}
+
+main .app-banner h2 {
+  font-size: 14px;
+}
+
+main .app-banner .app-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+main .app-banner .button.small {
+  margin: 0;
+}
+
+main .app-banner .ratings {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+main .app-banner .rating-stars {
+  height: 11px;
+}
+
+main .app-banner .rating-stars > svg {
+  font-size: 12px;
+}
+
+main .app-banner .rating-text {
+  font-size: 12px;
+}
+
+main .app-banner .rating-stars >svg > use {
+  color: #EBCF2D;
+}
+
+main .app-banner .sub-text-img {
+  width: 70px;
+  height: auto;
+  align-self: flex-end;
+}
+
+main .app-banner .close-btn-div {
+  background-color: #333A49;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+}
+
+main .app-banner .icon-close-icon {
+  height: 9px;
+  width: auto;
+}
