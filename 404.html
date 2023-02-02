@@ -6,8 +6,6 @@
 	window.isErrorPage = true;
 	window.errorCode = '404';
 
-	//for debugging
-	console.log("LOCATION ---> " + window.location);
 	const redirectMap = new Map(
 		[
 			['ae_ar', '/'],
@@ -76,7 +74,6 @@
 			['uk', '/'],
 			['vn_en', '/'],
 			['vn_vi', '/'],
-
 		]	
 	);
 	
@@ -94,6 +91,7 @@
 		
 		if (redirectMapping){
 			let localeCookie = userLocale;
+			// make sure the right string is replaced in the URL.
 			userLocale = "/"+ userLocale +"/";
 			let redirectURL = href.replace(userLocale, redirectMapping);
 			doc.cookie = " international = "+ localeCookie + ";" + "Path = /; domain = adobe.com";
