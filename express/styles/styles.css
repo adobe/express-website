@@ -967,7 +967,7 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 20px;
   transition: transform 0.2s linear;
   animation-name: freePlanHighlight;
   animation-timing-function: linear;
@@ -988,6 +988,11 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
   font-size: 16px;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag::before {
+  content: '・';
+  padding-right: 20px;
 }
 
 main .block .free-plan-optout {
@@ -1135,7 +1140,7 @@ main .template-list-sixcols-container>div {
   }
 
   100% {
-    transform: translateX(-25.3%);
+    transform: translateX(-25%);
   }
 }
 
@@ -1145,7 +1150,7 @@ main .template-list-sixcols-container>div {
   }
 
   100% {
-    transform: translateX(-25.3%);
+    transform: translateX(-25%);
   }
 }
 
@@ -1155,7 +1160,7 @@ main .template-list-sixcols-container>div {
   }
 
   100% {
-    transform: translateX(-25.3%);
+    transform: translateX(-25%);
   }
 }
 
