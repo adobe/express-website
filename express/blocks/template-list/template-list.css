@@ -1400,7 +1400,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   position: fixed;
   box-sizing: border-box;
   overflow-x: hidden;
-  z-index: 3;
+  z-index: 4;
   top: 0;
   right: 0;
   height: 100%;
@@ -1443,7 +1443,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background {
-  z-index: 1;
+  z-index: 3;
   position: fixed;
   background: var(--color-gray-600);
   top: 0;
@@ -1525,7 +1525,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 3;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
