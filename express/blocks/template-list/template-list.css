@@ -1142,7 +1142,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .searc
   width: 100%;
   position: absolute;
   left: 0;
-  z-index: 1;
+  z-index: 3;
   display: none;
   padding: 0;
 }
@@ -1209,7 +1209,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container {
