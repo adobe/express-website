@@ -1444,6 +1444,16 @@ function initViewToggle($block, $toolBar) {
   });
 }
 
+function initToolbarShadow($block, $toolbar) {
+  document.addEventListener('scroll', () => {
+    if ($toolbar.getBoundingClientRect().top <= 0) {
+      $toolbar.classList.add('with-box-shadow');
+    } else {
+      $toolbar.classList.remove('with-box-shadow');
+    }
+  });
+}
+
 function decorateToolbar($block, $section, placeholders) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
 
@@ -1472,6 +1482,7 @@ function decorateToolbar($block, $section, placeholders) {
     initDrawer($block, $section, $toolBar);
     initFilterSort($block, $toolBar);
     initViewToggle($block, $toolBar);
+    initToolbarShadow($block, $toolBar);
   }
 }
 

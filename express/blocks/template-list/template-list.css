@@ -1124,9 +1124,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticki
   box-sizing: border-box;
   border-radius: 0;
   padding: 16px;
-  box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
   margin: 0;
   width: 100%;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar.with-box-shadow {
+  box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
@@ -1853,7 +1856,7 @@ main .template-list.horizontal .carousel-platform {
   scroll-padding: 12px;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1200px) {
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
     opacity: unset;
