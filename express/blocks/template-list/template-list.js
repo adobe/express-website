@@ -490,17 +490,17 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icons: ['template-premium', 'template-free'],
+      icons: ['template-premium', 'template-free', 'template-premium'],
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icons: ['template-animation', 'template-static'],
+      icons: ['template-animation', 'template-static', 'template-animation'],
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-sort']),
       elements: {},
-      icons: ['sort', 'eye'],
+      icons: ['sort', 'eye', 'eye', 'eye'],
     },
   };
 
@@ -514,16 +514,15 @@ function makeTemplateFunctions(placeholders) {
       button: {
         wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
         subElements: {
-          primaryIcon: getIconElement(entry[1].icons[0], null, null, 'primary-icon'),
-          secondaryIcon: entry[1].icons[1] ? getIconElement(entry[1].icons[1], null, null, 'secondary-icon') : null,
+          iconHolder: createTag('span', { class: 'icon-holder' }),
           textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
           chevIcon: getIconElement('drop-down-arrow'),
         },
       },
       options: {
         wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
-        subElements: Object.entries(entry[1].placeholders).map((option) => {
-          const radio = createTag('span', { class: 'option-radio', tabindex: 0 });
+        subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
+          const radio = getIconElement(entry[1].icons[subIndex]);
           const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
           [optionButton.textContent] = Object.values(option);
           optionButton.prepend(radio);
@@ -542,19 +541,15 @@ function makeTemplateFunctions(placeholders) {
 function updateFilterIcon(block) {
   const section = block.closest('.section.template-list-fullwidth-apipowered-container');
   const functionWrapper = section.querySelectorAll('.function-wrapper');
+  const optionsWrapper = section.querySelectorAll('.options-wrapper');
 
-  functionWrapper.forEach((wrap) => {
-    const primaryIcon = wrap.querySelector('.primary-icon');
-    const secondaryIcon = wrap.querySelector('.secondary-icon');
-    const currentOption = wrap.querySelector('.option-button.active');
-
-    if (primaryIcon && secondaryIcon && currentOption) {
-      if (currentOption.dataset.value === 'false' || currentOption.dataset.value === '-remixCount') {
-        secondaryIcon.style.display = 'unset';
-        primaryIcon.style.display = 'none';
-      } else {
-        secondaryIcon.style.display = 'none';
-        primaryIcon.style.display = 'unset';
+  functionWrapper.forEach((wrap, index) => {
+    const iconHolder = wrap.querySelector('.icon-holder');
+    const activeOption = optionsWrapper[index].querySelector('.option-button.active');
+    if (activeOption) {
+      const activeIcon = activeOption.querySelector('.icon');
+      if (activeIcon) {
+        iconHolder.innerHTML = activeIcon.outerHTML;
       }
     }
   });
@@ -640,6 +635,21 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   if ($sortButton) {
     $sortButton.textContent = placeholders.sort;
     $sortButton.className = 'filter-mobile-option-heading';
+  }
+
+  const $sortInDrawer = $functionContainerMobile.querySelector('.function-sort');
+  if ($sortInDrawer) {
+    const $sortOptions = $sortInDrawer.querySelectorAll('.option-button');
+    $sortOptions.forEach((opt) => {
+      const icon = opt.querySelector('.icon');
+      const radio = createTag('div', { class: 'option-radio' });
+
+      console.log(opt)
+      if (icon) {
+        icon.remove();
+        opt.prepend(radio);
+      }
+    });
   }
 
   return { mobile: $functionContainerMobile, desktop: $functionsContainer };
@@ -747,17 +757,9 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
         closeTaskDropdown($toolBar);
       };
 
-      const radio = option.querySelector('.option-radio');
       option.addEventListener('click', (e) => {
         e.stopPropagation();
         updateTaskOptions();
-      }, { passive: true });
-
-      radio.addEventListener('keydown', (e) => {
-        e.stopPropagation();
-        if (e.keyCode === 13) {
-          updateTaskOptions();
-        }
       }, { passive: true });
     });
 
@@ -1062,6 +1064,9 @@ function updateOptionsStatus($block, $toolBar) {
           }
         });
         $option.classList.add('active');
+        if (!$wrapper.parentElement.classList.contains('functions-drawer')) {
+          $option.parentElement.prepend($option);
+        }
       }
     });
 
@@ -1195,7 +1200,6 @@ async function redrawTemplates($block, $toolBar) {
   await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
     $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
     updateOptionsStatus($block, $toolBar);
-
     if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
       $viewButtons.forEach(($button) => {
@@ -1253,6 +1257,10 @@ function initFilterSort($block, $toolBar) {
 
       $options.forEach(($option) => {
         const updateOptions = async () => {
+          if ($currentOption) {
+            $currentOption.textContent = $option.textContent;
+          }
+
           $options.forEach((o) => {
             if ($option !== o) {
               o.classList.remove('active');
@@ -1260,15 +1268,11 @@ function initFilterSort($block, $toolBar) {
           });
           $option.classList.add('active');
 
-          if ($currentOption) {
-            $currentOption.textContent = $option.textContent;
-          }
-
           updateQueryURL($wrapper, $option);
           updateFilterIcon($block);
 
           if (!$optionsList.classList.contains('in-drawer')) {
-            toggleAnimatedText($block, $toolBar);
+            await toggleAnimatedText($block, $toolBar);
           }
 
           if (!$button.classList.contains('in-drawer')) {
@@ -1278,13 +1282,16 @@ function initFilterSort($block, $toolBar) {
 
         // sync current filter & sorting method with toolbar current options
         updateOptionsStatus($block, $toolBar);
+
         const radio = $option.querySelector('.option-radio');
-        radio.addEventListener('keydown', async (e) => {
-          e.stopPropagation();
-          if (e.keyCode === 13) {
-            await updateOptions();
-          }
-        }, { passive: true });
+        if (radio) {
+          radio.addEventListener('keydown', async (e) => {
+            e.stopPropagation();
+            if (e.keyCode === 13) {
+              await updateOptions();
+            }
+          }, { passive: true });
+        }
 
         $option.addEventListener('click', async (e) => {
           e.stopPropagation();

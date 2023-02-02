@@ -1110,7 +1110,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
   align-items: center;
   justify-content: space-between;
   transition: box-shadow 0.2s, margin 0.2s;
-  gap: 8px;
+  gap: 16px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking {
@@ -1194,6 +1194,13 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .icon {
+  display: block;
+  padding-right: 4px;
+  height: 18px;
+  width: 18px;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .views .icon {
   height: 22px;
   width: 22px;
 }
@@ -1231,32 +1238,44 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   background-color: var(--color-gray-200);
   padding: 4px 8px;
   border-radius: 8px;
+  width: 100vw;
+  max-width: 160px;
+  position: relative;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper,
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 1;
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+  top: 0;
+  left: 0;
+  background: var(--color-white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px #00000016;
+}
+
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper {
   position: absolute;
+  box-sizing: border-box;
   z-index: 1;
-  width: max-content;
+  width: 100vw;
   display: none;
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
   top: 48px;
-  left: 0;
+  right: -16px;
   background: var(--color-white);
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 3px 6px #00000016;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper:last-of-type .options-wrapper,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:last-of-type .options-wrapper {
-  left: unset;
-  right: 0;
-}
-
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper:before,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper:before {
   position: absolute;
   content: '';
@@ -1267,14 +1286,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   height: 100%;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .options-wrapper,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .function-wrapper:hover .options-wrapper {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .options-wrapper {
   display: flex;
 }
 
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .button-wrapper .icon.icon-drop-down-arrow,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .function-wrapper:hover .button-wrapper .icon.icon-drop-down-arrow {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .button-wrapper .icon.icon-drop-down-arrow {
   transform: rotate(180deg);
 }
 
@@ -1286,6 +1303,14 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   cursor: pointer;
   display: flex;
   align-items: center;
+  padding: 4px 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover,
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover {
+  background-color: var(--color-gray-200);
+  color: var(--color-info-accent);
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .option-radio,
@@ -1352,7 +1377,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .button-wrapper {
   display: flex;
-  gap: 4px;
   align-items: center;
   position: relative;
   padding-right: 24px;
@@ -1364,6 +1388,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .butto
   position: absolute;
   right: 3px;
   transform: rotate(0deg);
+  z-index: 2;
+  padding-right: 0;
   transition: transform 0.2s;
 }
 
@@ -1371,7 +1397,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   position: fixed;
   box-sizing: border-box;
   overflow-x: hidden;
-  z-index: 2;
+  z-index: 3;
   top: 0;
   right: 0;
   height: 100%;
@@ -1494,7 +1520,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   padding-left: 26px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .options-wrapper .option-button:before {
