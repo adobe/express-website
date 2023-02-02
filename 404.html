@@ -5,6 +5,105 @@
   <script type="text/javascript">
 	window.isErrorPage = true;
 	window.errorCode = '404';
+
+	//for debugging
+	console.log("LOCATION ---> " + window.location);
+	const redirectMap = new Map(
+		[
+			['ae_ar', '/'],
+			['ae_en', '/'],
+			['africa', '/'],
+			['ar', '/es/'],
+			['at', '/de/'],
+			['au','/'],
+			['be_en', '/'],
+			['be_fr/', '/fr/'],
+			['be_nl', '/nl/'],
+			['bg', '/'],
+			['ca', '/'],
+			['ca_fr', '/fr/'],
+			['ch_de', '/de/'],
+			['ch_fr', '/fr/'],
+			['ch_it', '/it/'],
+			['cis_en', '/'],
+			['cis_ru', '/'],
+			['cl', '/es/'],
+			['co', '/es/'],
+			['cy_en', '/'],
+			['cz', '/'],
+			['ee', '/'],
+			['gr_en', '/'],
+			['hk_en', '/'],
+			['hk_zh', '/tw/'],
+			['hu', '/'],
+			['id_en', '/'],
+			['id_id', '/'],
+			['ie', '/'],
+			['il_en', '/'],
+			['il_he', '/'],
+			['in', '/'],
+			['in_hi', '/'],
+			['la', '/es/'],
+			['lt', '/'],
+			['lu_de', '/de/'],
+			['lu_en', '/'],
+			['lu_fr', '/fr/'],
+			['lv', '/'],
+			['mena_ar', '/'],
+			['mena_en', '/'],
+			['mt', '/'],
+			['mx', '/es/'],
+			['my_en', '/'],
+			['my_ms', '/'],
+			['nz', '/'],
+			['pe', '/es/'],
+			['ph_en', '/'],
+			['ph_fil', '/'],
+			['pl', '/'],
+			['pt', '/br/'],
+			['ro', '/'],
+			['ru', '/'],
+			['sa_ar', '/'],
+			['sa_en', '/'],
+			['sea', '/'],
+			['sg', '/'],
+			['si', '/'],
+			['sk', '/'],
+			['th_en', '/'],
+			['th_th', '/'],
+			['tr', '/'],
+			['ua', '/'],
+			['uk', '/'],
+			['vn_en', '/'],
+			['vn_vi', '/'],
+
+		]	
+	);
+	
+	(function (win, doc) {
+		const { host, hostname, href, origin, pathname, port, protocol} = win.location;	
+
+		let originalPath = pathname.split("/");
+		let userLocale = originalPath[1]; 
+		let redirectMapping = redirectMap.get(userLocale);
+		// for debugging 
+		console.log("USER LOCALE :" + userLocale);
+		console.log("ORIGIN:"  + origin );
+		console.log("URL: " + href); 
+		console.log("REDIRECT MAPPPING:" + redirectMapping );
+		
+		if (redirectMapping){
+			let localeCookie = userLocale;
+			userLocale = "/"+ userLocale +"/";
+			let redirectURL = href.replace(userLocale, redirectMapping);
+			doc.cookie = " international = "+ localeCookie + ";" + "Path = /; domain = adobe.com";
+			win.location.replace(redirectURL);
+			// for debugging
+			console.log("REDIRECT URL: " + redirectURL);
+		} 
+		 
+  }(window, document));
+  
   </script>
   <style>
 	
