@@ -1099,6 +1099,10 @@ main .template-list-fullwidth-apipowered-container .animated-template-text {
   main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
     right: 0;
   }
+
+  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .task-dropdown-list {
+    left: 0;
+  }
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
@@ -1117,8 +1121,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking {
+  box-sizing: border-box;
+  border-radius: 0;
   padding: 16px;
   box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
+  margin: 0;
+  width: 100%;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
@@ -1178,7 +1186,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .searc
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar {
-  height: 42px;
   padding: 0;
   max-width: 42px;
 }
@@ -1967,12 +1974,10 @@ main .template-list.horizontal .carousel-platform {
   }
 
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking .wrapper-content-search {
-    padding-left: 0;
     width: auto;
   }
 
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search .search-bar-wrapper {
-    left: 100%;
     width: 480px;
   }
 
