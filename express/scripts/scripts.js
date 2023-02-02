@@ -1638,50 +1638,49 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
 }
 
 function buildAutoBlocks($main) {
-  const $lastDiv = $main.querySelector(':scope > div:last-of-type');
+  if (!$main.classList.contains('fragment')) {
+    const $lastDiv = $main.querySelector(':scope > div:last-of-type');
 
-  // Load the branch.io banner autoblock...
-  if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
-    const branchio = buildBlock('branch-io', '');
-    if ($lastDiv) {
-      $lastDiv.append(branchio);
+    // Load the branch.io banner autoblock...
+    if (['yes', 'true', 'on'].includes(getMetadata('show-banner').toLowerCase())) {
+      const branchio = buildBlock('branch-io', '');
+      if ($lastDiv) {
+        $lastDiv.append(branchio);
+      }
     }
-  }
 
-  // Load the app store autoblocks...
-  if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
-    if ($main.querySelector('.app-store-highlight') === null) {
+    // Load the app store autoblocks...
+    if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
       const $highlight = buildBlock('app-store-highlight', '');
       if ($lastDiv) {
         $lastDiv.append($highlight);
       }
-    }
-    if ($main.querySelector('.app-store-blade') === null) {
+
       const $blade = buildBlock('app-store-blade', '');
       if ($lastDiv) {
         $lastDiv.append($blade);
       }
     }
-  }
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
-    const $plansComparison = buildBlock('plans-comparison', '');
-    if ($lastDiv) {
-      $lastDiv.append($plansComparison);
+    if (['yes', 'true', 'on'].includes(getMetadata('show-plans-comparison').toLowerCase())) {
+      const $plansComparison = buildBlock('plans-comparison', '');
+      if ($lastDiv) {
+        $lastDiv.append($plansComparison);
+      }
     }
-  }
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
-    const $multifunctionButton = buildBlock('floating-button', '');
-    $multifunctionButton.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
-  }
+    if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+      const $multifunctionButton = buildBlock('floating-button', '');
+      $multifunctionButton.classList.add('spreadsheet-powered');
+      $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+    }
 
-  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
-    const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
-    const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
-    quickActionCardBlock.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+    if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+      const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
+      const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
+      quickActionCardBlock.classList.add('spreadsheet-powered');
+      $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+    }
   }
 }
 

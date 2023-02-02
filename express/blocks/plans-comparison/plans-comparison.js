@@ -29,8 +29,6 @@ async function decorateAsFragment($block, content) {
     if (img) {
       img.setAttribute('loading', 'lazy');
     }
-    const loadedBlocks = await loadBlocks($newBlock);
-    await Promise.all(loadedBlocks);
     const $section = $block.closest('.section');
     $section.parentNode.replaceChild($newBlock, $section);
     document.dispatchEvent(new Event('planscomparisonloaded'));
@@ -232,7 +230,7 @@ function decorateToggleButton($block, $card, payload) {
 
 function decorateFeatures($block, payload, value) {
   const $featuresWrapper = createTag('ul', { class: 'features-wrapper' });
-  if (value) {
+  if (value && value.features) {
     value.features.forEach((feature) => {
       $featuresWrapper.append(feature);
     });
@@ -242,16 +240,18 @@ function decorateFeatures($block, payload, value) {
 
 function decorateCTAs($block, payload, value) {
   const $buttonsWrapper = createTag('ul', { class: 'ctas-wrapper' });
-  value.ctas.forEach((cta, index) => {
-    $buttonsWrapper.append(cta);
-    if (index === 0) {
-      cta.classList.add('primary');
-    }
+  if (value && value.ctas) {
+    value.ctas.forEach((cta, index) => {
+      $buttonsWrapper.append(cta);
+      if (index === 0) {
+        cta.classList.add('primary');
+      }
 
-    cta.addEventListener('click', (e) => {
-      e.stopPropagation();
+      cta.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
     });
-  });
+  }
 
   return $buttonsWrapper;
 }

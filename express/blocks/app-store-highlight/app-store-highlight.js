@@ -11,7 +11,12 @@
  */
 
 import {
-  createOptimizedPicture, createTag, fetchPlaceholders, getIcon, getIconElement, getMetadata,
+  createOptimizedPicture,
+  createTag,
+  fetchPlaceholders,
+  getIcon,
+  getIconElement,
+  getMetadata,
   getMobileOperatingSystem,
 } from '../../scripts/scripts.js';
 
