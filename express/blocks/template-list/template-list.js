@@ -490,17 +490,17 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icons: ['template-premium', 'template-free', 'template-premium'],
+      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icons: ['template-animation', 'template-static', 'template-animation'],
+      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-sort']),
       elements: {},
-      icons: ['sort', 'eye', 'eye', 'eye'],
+      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
     },
   };
 
@@ -804,20 +804,28 @@ function decorateCategoryList($block, $section, placeholders) {
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
     const categories = JSON.parse(placeholders['task-categories']);
-
+    const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
     const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
     const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
-    const $categoriesToggleIcon = getIconElement('template-free');
     const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
     const $categories = createTag('ul', { class: 'category-list' });
 
     $categoriesToggle.textContent = placeholders['jump-to-category'];
 
-    $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
+    $categoriesToggleWrapper.append($categoriesToggle);
     $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
 
-    Object.entries(categories).forEach((category) => {
+    Object.entries(categories).forEach((category, index) => {
       const $listItem = createTag('li');
+
+      let icon;
+      if (categoryIcons[index] && categoryIcons[index] !== '') {
+        icon = categoryIcons[index];
+      } else {
+        icon = 'template-static';
+      }
+
+      const iconElement = getIconElement(icon);
       const $a = createTag('a', { 'data-tasks': category[1] });
       [$a.textContent] = category;
 
@@ -825,7 +833,7 @@ function decorateCategoryList($block, $section, placeholders) {
         redirectSearch(null, $a.dataset.tasks);
       }, { passive: true });
 
-      $listItem.append($a);
+      $listItem.append(iconElement, $a);
       $categories.append($listItem);
     });
 
@@ -1036,16 +1044,22 @@ function updateOptionsStatus($block, $toolBar) {
   $wrappers.forEach(($wrapper) => {
     const $currentOption = $wrapper.querySelector('.current-option');
     const $options = $wrapper.querySelectorAll('.option-button');
-    let selected;
 
     $options.forEach(($option) => {
       const paramType = $wrapper.dataset.param;
       const paramValue = paramType === 'sort' ? $option.dataset.value : `(${$option.dataset.value})`;
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
-        || (!props[paramType] && paramValue === '(remove)')) {
-        selected = $option;
+        || ((!props.filters[paramType] || props.filters[paramType] === '()') && paramValue === '(remove)')) {
+        const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
+        let toReorder = false;
+        if (drawerCs.every((className) => !$wrapper.parentElement.classList.contains(className))) {
+          toReorder = true;
+        }
 
+        if (toReorder) {
+          $option.parentElement.prepend($option);
+        }
         if ($currentOption) {
           $currentOption.textContent = $option.textContent;
         }
@@ -1059,15 +1073,7 @@ function updateOptionsStatus($block, $toolBar) {
       }
     });
 
-    const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
-    let toReorder = false;
-    if (drawerCs.every((className) => !$wrapper.parentElement.classList.contains(className))) {
-      toReorder = true;
-    }
-    console.log(selected.textContent, props.filters);
-    if (toReorder) {
-      selected.parentElement.prepend(selected);
-    }
+
 
     updateFilterIcon($block);
   });
@@ -1126,8 +1132,12 @@ function initDrawer($block, $section, $toolBar) {
 
         $button.addEventListener('click', (e) => {
           e.stopPropagation();
-          $wrapper.classList.toggle('collapsed');
-          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? '24px' : maxHeight;
+          const button = $wrapper.querySelector('.button-wrapper');
+          if (button) {
+            const minHeight = `${button.offsetHeight - 8}px`;
+            $wrapper.classList.toggle('collapsed');
+            $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
+          }
         }, { passive: true });
       }
     });
@@ -1301,9 +1311,6 @@ function initFilterSort($block, $toolBar) {
           $wrapper.classList.remove('opened');
         }
       }, { passive: true });
-
-      // sync current filter & sorting method with toolbar current options
-      updateOptionsStatus($block, $toolBar);
     });
 
     if ($applyFilterButton) {
@@ -1315,6 +1322,8 @@ function initFilterSort($block, $toolBar) {
       });
     }
 
+    // sync current filter & sorting method with toolbar current options
+    updateOptionsStatus($block, $toolBar);
     updateFilterIcon($block);
   }
 }

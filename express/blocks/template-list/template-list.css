@@ -1103,7 +1103,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
   top: 0;
   background: var(--color-gray-100);
   margin: 28px 0px;
-  border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-wrap: wrap;
@@ -1195,7 +1194,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .icon {
   display: block;
-  padding-right: 4px;
+  padding-right: 6px;
   height: 18px;
   width: 18px;
 }
@@ -1203,6 +1202,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .views .icon {
   height: 22px;
   width: 22px;
+  padding-right: unset;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container,
@@ -1210,7 +1210,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   display: flex;
   align-items: center;
   gap: 24px;
-  position: relative;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container {
@@ -1231,7 +1230,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort {
   cursor: pointer;
   user-select: none;
-  position: relative;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper {
@@ -1263,12 +1261,13 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   position: absolute;
   box-sizing: border-box;
   z-index: 1;
-  width: 100vw;
+  width: 88%;
   display: none;
   flex-direction: column;
   align-items: stretch;
-  top: 48px;
-  right: -16px;
+  bottom: -160px;
+  right: 50%;
+  transform: translateX(50%);
   background: var(--color-white);
   padding: 12px;
   border-radius: 8px;
@@ -1277,8 +1276,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper .icon {
   padding-right: 4px;
-  height: 22px;
-  width: 22px;
+  height: 18px;
+  width: 18px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .options-wrapper {
@@ -1290,7 +1289,8 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button,
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li {
   font-size: 14px;
   font-family: var(--body-font-family);
   line-height: 24px;
@@ -1298,6 +1298,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   display: flex;
   align-items: center;
   padding: 4px 8px;
+  margin-bottom: 0;
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -1316,16 +1317,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   border-radius: 8px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .option-radio,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button .option-radio {
-  display: block;
-  height: 12px;
-  width: 12px;
-  color: var(--color-white);
-  font-size: 4px;
-  border: var(--color-black) 2px solid;
-  border-radius: 50%;
-  margin-right: 10px;
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .icon,
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button .icon,
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li .icon{
+  height: 18px;
+  width: 18px;
+  padding-right: 6px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover .option-radio,
@@ -1461,14 +1458,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   opacity: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort {
-  position: relative;
-}
-
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper {
-  position: absolute;
-}
-
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper {
   font-family: var(--body-font-family);
@@ -1479,19 +1468,19 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper {
-  margin-bottom: 22px;
+  margin-bottom: 8px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper span {
-  font-size: 18px;
+  font-size: 14px;
   line-height: 24px;
   font-weight: 700;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper .icon,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper .icon {
-  height: 22px;
-  width: 22px;
+  height: 18px;
+  width: 18px;
   display: block;
 }
 
@@ -1521,7 +1510,6 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .options-wrapper {
-  padding-left: 26px;
   display: flex;
   flex-direction: column;
 }
@@ -1586,7 +1574,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   cursor: pointer;
   display: flex;
   gap: 4px;
@@ -1602,7 +1590,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle {
   font-family: var(--body-font-family);
-  font-size: 18px;
+  font-size: 14px;
   line-height: 24px;
   font-weight: 700;
 }
@@ -1621,8 +1609,9 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list {
+  margin: 0;
   list-style: none;
-  padding-left: 26px;
+  padding-left: unset;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list li {
@@ -1722,6 +1711,23 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li {
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background-color .2s, color .2s;
+}
+
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li:hover {
+  background-color: var(--color-gray-200);
+  color: var(--color-info-accent);
+}
+
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li .icon {
+  height: 18px;
+  width: 18px;
+  display: block;
+  padding-right: 6px;
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > a {
@@ -1837,7 +1843,7 @@ main .template-list.horizontal .carousel-platform {
   scroll-padding: 12px;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 900px) {
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-left,
   main .template-list.horizontal .carousel-container.controls-hidden .carousel-fader-right {
     opacity: unset;
@@ -1896,6 +1902,7 @@ main .template-list.horizontal .carousel-platform {
 
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
     margin: 40px;
+    border-radius: 12px;
   }
 
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container {
