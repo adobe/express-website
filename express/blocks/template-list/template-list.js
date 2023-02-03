@@ -1557,7 +1557,7 @@ export async function decorateTemplateList($block) {
         const $templateListWrapper = $parent.querySelector('.template-list-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
 
-        const $toolBarWrapper = createTag('div', { class: 'toolbar-wrapper'})
+        const $toolBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
         const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
