@@ -46,6 +46,8 @@ async function fetchPageContent(path) {
 }
 
 function formatSearchQuery(data) {
+  console.log(window.templates.data)
+  // todo check if the search query points to an exisitng page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
@@ -72,6 +74,7 @@ function formatSearchQuery(data) {
     return false;
   }
 
+  console.log(arrayToObject(dataArray))
   return arrayToObject(dataArray);
 }
 
