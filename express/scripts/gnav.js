@@ -151,16 +151,19 @@ function loadFEDS() {
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
-  const currentURL = new URL(window.location);
-  const origin = currentURL.origin
-  const linkList = currentURL.pathname.split('/');
-  linkList.shift();
-  const breadcrumbList = [];
-  let buildPath = `${origin}/`;
-  linkList.forEach((pathName) => {
-    buildPath += `${pathName}/`;
-    breadcrumbList.push({ title: pathName, url: buildPath });
-  });
+  const breadCrumbList = [{ title: 'Homepage', url: 'https://www.adobe.com/express' }];
+  const category = window.location.pathname.split('/')[2];
+  const categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
+  const secondBreadcrumb = { title: categoryCapitalized, url: `https://www.adobe.com/express/${category}` };
+  if (['create', 'feature', 'template'].includes(category.toLowerCase())) {
+    const thirdBreadcrumbName = document.querySelector('meta[name="short-title"]').getAttribute('content') || '';
+    const thirdBreadcrumb = { title: thirdBreadcrumbName, url: `${secondBreadcrumb.url}/${thirdBreadcrumbName}` };
+    breadCrumbList.push(secondBreadcrumb, thirdBreadcrumb);
+  }
+
+  const test = document.querySelector('header')
+  const subnav = createTag('div', { id: 'feds-subnav' });
+  test.append(subnav);
 
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
@@ -171,9 +174,9 @@ function loadFEDS() {
       },
     },
     locale: (locale === 'us' ? 'en' : locale),
-    content: {
-      experience: getMetadata('gnav') || fedsExp,
-    },
+    // content: {
+    //   experience: getMetadata('gnav') || fedsExp,
+    // },
     profile: {
       customSignIn: () => {
         const sparkLang = getLanguage(locale);
@@ -197,8 +200,8 @@ function loadFEDS() {
       }
       : {},
     breadcrumbs: {
-      showLogo: true,
-      links: breadcrumbList,
+      showLogo: false,
+      links: breadCrumbList,
     },
   };
 
