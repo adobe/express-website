@@ -18,7 +18,6 @@
  */
 
 import {
-  createTag,
   decorateMain,
   loadBlocks,
 } from '../../scripts/scripts.js';
@@ -32,7 +31,7 @@ async function loadFragment(path) {
   if (path && path.startsWith('/')) {
     const resp = await fetch(`${path}.plain.html`);
     if (resp.ok) {
-      const main = createTag('main', { class: 'fragment' });
+      const main = document.createElement('main');
       main.innerHTML = await resp.text();
       decorateMain(main);
       await loadBlocks(main);

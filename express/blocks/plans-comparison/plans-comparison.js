@@ -11,29 +11,13 @@
  */
 
 import {
-  createTag, fixIcons, getIconElement, getLocale, getOffer,
+  createTag,
+  fixIcons,
+  getIconElement,
+  getLocale,
+  getOffer,
+  fetchPlainBlockFromFragment,
 } from '../../scripts/scripts.js';
-
-async function decorateAsFragment($block, content) {
-  const path = new URL(content).pathname.split('.')[0];
-  const resp = await fetch(`${path}.plain.html`);
-  if (resp.status === 404) {
-    $block.parentElement.parentElement.remove();
-  } else {
-    const html = await resp.text();
-    const $newBlock = createTag('div');
-    $newBlock.innerHTML = html;
-    $newBlock.className = 'plans-comparison-container';
-    $newBlock.id = 'plans-comparison-container';
-    const img = $newBlock.querySelector('img');
-    if (img) {
-      img.setAttribute('loading', 'lazy');
-    }
-    const $section = $block.closest('.section');
-    $section.parentNode.replaceChild($newBlock, $section);
-    document.dispatchEvent(new Event('planscomparisonloaded'));
-  }
-}
 
 async function fetchPlan(planUrl) {
   if (!window.pricingPlans) {
@@ -332,43 +316,43 @@ function resizeCards($cards, $featuresWrappers, payload) {
   });
 }
 
-export default function decorate($block) {
-  let payload;
-  const location = new URL(window.location);
-  const locale = getLocale(location);
-  const $linkList = document.querySelector('.link-list-container');
-  let fragmentUrl;
-  if (locale === 'us') {
-    fragmentUrl = `${location.origin}/express/fragments/plans-comparison`;
-  } else {
-    fragmentUrl = `${location.origin}/${locale}/express/fragments/plans-comparison`;
-  }
-  decorateAsFragment($block, fragmentUrl);
+export default async function decorate($block) {
+  const enclosingMain = $block.closest('main');
+  if (enclosingMain) {
+    let payload;
+    const location = new URL(window.location);
+    const locale = getLocale(location);
+    const $linkList = enclosingMain.querySelector('.link-list-container');
+    let fragmentUrl;
+    if (locale === 'us') {
+      fragmentUrl = '/express/fragments/plans-comparison';
+    } else {
+      fragmentUrl = `/${locale}/express/fragments/plans-comparison`;
+    }
 
-  document.addEventListener('planscomparisonloaded', async () => {
-    const $section = document.querySelector('.plans-comparison-container');
+    const $section = await fetchPlainBlockFromFragment($block, fragmentUrl, 'plans-comparison');
 
     if ($linkList) {
       $linkList.before($section);
     }
 
     if ($section) {
-      const $newBlock = $section.querySelector('.plans-comparison');
-      if ($newBlock) {
-        payload = await buildPayload($newBlock);
-        $newBlock.innerHTML = payload.mainHeading;
-        $newBlock.querySelector('div').classList.add('main-heading-wrapper');
-        decorateCards($newBlock, payload);
-        decoratePagination($newBlock, payload);
-        const $cards = $newBlock.querySelectorAll('.plans-comparison-card');
-        const $featuresWrappers = $newBlock.querySelectorAll('.features-wrapper');
+      const $blockFromFragment = $section.querySelector('.plans-comparison');
+      if ($blockFromFragment) {
+        payload = await buildPayload($blockFromFragment);
+        $blockFromFragment.innerHTML = payload.mainHeading;
+        $blockFromFragment.querySelector('div').classList.add('main-heading-wrapper');
+        decorateCards($blockFromFragment, payload);
+        decoratePagination($blockFromFragment, payload);
+        const $cards = $blockFromFragment.querySelectorAll('.plans-comparison-card');
+        const $featuresWrappers = $blockFromFragment.querySelectorAll('.features-wrapper');
 
         if ($cards) {
           setTimeout(() => {
-            toggleExpandableCard($newBlock, $cards[1], payload, true);
+            toggleExpandableCard($blockFromFragment, $cards[1], payload, true);
             resizeCards($cards, $featuresWrappers, payload);
             payload.desiredHeight = `${$featuresWrappers[1].offsetHeight}px`;
-            toggleExpandableCard($newBlock, $cards[0], payload, true);
+            toggleExpandableCard($blockFromFragment, $cards[0], payload, true);
 
             if (window.innerWidth >= 1200) {
               $featuresWrappers.forEach((wrapper) => {
@@ -376,7 +360,7 @@ export default function decorate($block) {
               });
             }
 
-            $newBlock.classList.add('restrained');
+            $blockFromFragment.classList.add('restrained');
           }, 100);
 
           setTimeout(() => {
@@ -390,15 +374,17 @@ export default function decorate($block) {
           resizeCards($cards, $featuresWrappers, payload);
         });
 
-        fixIcons($newBlock);
+        fixIcons($blockFromFragment);
 
-        const $blockLinks = $newBlock.querySelectorAll('a');
+        const $blockLinks = $blockFromFragment.querySelectorAll('a');
 
         if ($blockLinks) {
           const linksPopulated = new CustomEvent('linkspopulated', { detail: $blockLinks });
           document.dispatchEvent(linksPopulated);
         }
+
+        document.dispatchEvent(new Event('planscomparisonloaded'));
       }
     }
-  });
+  }
 }

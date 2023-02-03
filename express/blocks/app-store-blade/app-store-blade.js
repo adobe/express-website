@@ -211,13 +211,16 @@ export default async function decorate($block) {
     });
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
-    buildStandardPayload($block, payload);
-    const $parentSection = $block.parentNode.parentNode;
-    const $elementToFollow = document.querySelector('.link-list-container');
-    $parentSection.dataset.audience = 'desktop';
+    const enclosingMain = $block.closest('main');
+    if (enclosingMain) {
+      buildStandardPayload($block, payload);
+      const $parentSection = $block.parentNode.parentNode;
+      const $elementToFollow = enclosingMain.querySelector('.link-list-container');
+      $parentSection.dataset.audience = 'desktop';
 
-    if ($elementToFollow) {
-      $elementToFollow.after($parentSection);
+      if ($elementToFollow) {
+        $elementToFollow.after($parentSection);
+      }
     }
   }
 

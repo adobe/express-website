@@ -16,6 +16,7 @@ import {
   addFreePlanWidget,
   addSearchQueryToHref,
   createTag,
+  decorateMain,
   fetchPlaceholders,
   getIconElement,
   getLocale,
@@ -248,6 +249,7 @@ async function fetchBlueprint(pathname) {
   const body = await resp.text();
   const $main = createTag('main');
   $main.innerHTML = body;
+  await decorateMain($main);
 
   window.spark.$blueprint = $main;
   return ($main);
