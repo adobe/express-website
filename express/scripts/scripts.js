@@ -957,7 +957,6 @@ export function buildBlock(blockName, content) {
  * @param {Element} block The block element
  */
 export async function loadBlock(block, eager = false) {
-  // console.log(`block: ${block.className}, main: ${document.querySelector('main').cloneNode(true).className}`);
   if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
@@ -1012,11 +1011,6 @@ export async function loadBlock(block, eager = false) {
 export async function loadBlocks(main) {
   updateSectionsStatus(main);
   const blocks = [...main.querySelectorAll('div.block')];
-  blocks.forEach((b) => {
-    if (main.className) {
-      b.classList.add(`from-${main.className}`)
-    }
-  });
   for (let i = 0; i < blocks.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
     await loadBlock(blocks[i]);
