@@ -1650,17 +1650,14 @@ function buildAutoBlocks($main) {
 
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
-    if ($main.querySelector('.app-store-highlight') === null) {
-      const $highlight = buildBlock('app-store-highlight', '');
-      if ($lastDiv) {
-        $lastDiv.append($highlight);
-      }
+    const $highlight = buildBlock('app-store-highlight', '');
+    if ($lastDiv) {
+      $lastDiv.append($highlight);
     }
-    if ($main.querySelector('.app-store-blade') === null) {
-      const $blade = buildBlock('app-store-blade', '');
-      if ($lastDiv) {
-        $lastDiv.append($blade);
-      }
+
+    const $blade = buildBlock('app-store-blade', '');
+    if ($lastDiv) {
+      $lastDiv.append($blade);
     }
   }
 
@@ -1674,14 +1671,18 @@ function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const $multifunctionButton = buildBlock('floating-button', '');
     $multifunctionButton.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+    if ($lastDiv) {
+      $lastDiv.append($multifunctionButton);
+    }
   }
 
   if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
     const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
     quickActionCardBlock.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+    if ($lastDiv) {
+      $lastDiv.append(quickActionCardBlock);
+    }
   }
 }
 
