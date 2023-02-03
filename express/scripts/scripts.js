@@ -957,6 +957,7 @@ export function buildBlock(blockName, content) {
  * @param {Element} block The block element
  */
 export async function loadBlock(block, eager = false) {
+  // console.log(`block: ${block.className}, main: ${document.querySelector('main').cloneNode(true).className}`);
   if (!(block.getAttribute('data-block-status') === 'loading' || block.getAttribute('data-block-status') === 'loaded')) {
     block.setAttribute('data-block-status', 'loading');
     const blockName = block.getAttribute('data-block-name');
@@ -1011,6 +1012,11 @@ export async function loadBlock(block, eager = false) {
 export async function loadBlocks(main) {
   updateSectionsStatus(main);
   const blocks = [...main.querySelectorAll('div.block')];
+  blocks.forEach((b) => {
+    if (main.className) {
+      b.classList.add(`from-${main.className}`)
+    }
+  });
   for (let i = 0; i < blocks.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
     await loadBlock(blocks[i]);
@@ -1638,7 +1644,10 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
 }
 
 function buildAutoBlocks($main) {
-  if (!$main.classList.contains('fragment')) {
+  console.log('loadAutoBlocks running')
+  console.log(`className we get accessing directly from $main: ${$main.className}`);
+  console.log(`className we get when querySelect main from document: ${document.querySelector('main').className}`);
+  // if (!$main.classList.contains('fragment')) {
     const $lastDiv = $main.querySelector(':scope > div:last-of-type');
 
     // Load the branch.io banner autoblock...
@@ -1672,16 +1681,16 @@ function buildAutoBlocks($main) {
     if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
       const $multifunctionButton = buildBlock('floating-button', '');
       $multifunctionButton.classList.add('spreadsheet-powered');
-      $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+      $lastDiv.append($multifunctionButton);
     }
 
     if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
       const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
       const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
       quickActionCardBlock.classList.add('spreadsheet-powered');
-      $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+      $lastDiv.append(quickActionCardBlock);
     }
-  }
+  // }
 }
 
 function splitSections($main) {
