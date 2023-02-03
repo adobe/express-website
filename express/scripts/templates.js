@@ -76,7 +76,11 @@ function formatSearchQuery(data) {
 }
 
 async function fetchLInkListFromCKGApi(pageData) {
-  if (pageData.ckgID) {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  if (pageData.ckgID || params.ckgid) {
     const dataRaw = {
       experienceId: 'templates-browse-v1',
       locale: 'en_US',
@@ -93,7 +97,7 @@ async function fetchLInkListFromCKGApi(pageData) {
           filters: [
             {
               categories: [
-                pageData.ckgID,
+                pageData.ckgID ?? params.ckgid,
               ],
             },
           ],
@@ -113,6 +117,7 @@ async function fetchLInkListFromCKGApi(pageData) {
       return result;
     }
   }
+
   return false;
 }
 
@@ -148,9 +153,9 @@ function updateLinkList(container, linkPill, list, pageData) {
       } else if (d.ckgID) {
         let searchParams;
         if (d.ckgID.indexOf('DESIGN_TYPE') > 0) {
-          searchParams = `tasks=${d.displayValue}&phformat=${pageData.placeholderFormat}`;
+          searchParams = `tasks=${d.displayValue}&phformat=${pageData.placeholderFormat}&ckgid=${d.ckgID}`;
         } else {
-          searchParams = `tasks=${pageData.templateTasks}&phformat=${pageData.placeholderFormat}&topics=${d.displayValue}`;
+          searchParams = `tasks=${pageData.templateTasks}&phformat=${pageData.placeholderFormat}&topics=${d.displayValue}&ckgid=${d.ckgID}`;
         }
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', titleCase(d.displayValue));
