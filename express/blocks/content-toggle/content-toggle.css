@@ -1,4 +1,4 @@
-main .section.content-toggle-small-no-dash-container {
+main .section.content-toggle-small-container {
     padding-right: 0;
     padding-left: 0;
 }
@@ -16,7 +16,7 @@ main .content-toggle-wrapper {
     padding: 0!important;
 }
 
-main .content-toggle-small-no-dash-container .content-toggle-wrapper {
+main .content-toggle-small-container .content-toggle-wrapper {
     max-width: 420px;
 }
 
@@ -41,8 +41,11 @@ main .block.content-toggle.small.margin-left-zero {
     margin-left: 0;
 }
 
-/* CAROUSEL!!!! */
-  
+main .content-toggle .carousel-container {
+    margin: 0;
+    height: 100%;
+}
+
 main .content-toggle .carousel-container {
     margin: 0;
     height: 100%;
@@ -60,13 +63,11 @@ main .content-toggle .carousel-container .carousel-platform {
 
 main .content-toggle.small .carousel-container .carousel-platform {
     height: 24px;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     width: 100%;
     gap: 6px;
 }
-
-/* Carousel --> Arrows */
 
 main .content-toggle.small .carousel-fader-left {
   width: 64px;
@@ -140,7 +141,7 @@ main .content-toggle button {
     list-style-type: none;
     background-color: #EDEDED;
     border-radius: 25px;
-    padding: 13px 18px;
+    padding: 10px 18px;
     font-size: 13px;
     font-weight: 600;
     margin: 0 5px;
@@ -149,6 +150,14 @@ main .content-toggle button {
     user-select: none;
     border: none;
     font-family: var(--body-font-family);
+}
+
+main .content-toggle:not(.small) button:first-child {
+    margin: 0 3px 0 0;
+}
+
+main .content-toggle:not(.small) button:last-child {
+    margin: 0 0 0 3px;
 }
   
 main .content-toggle.small button {
@@ -185,16 +194,8 @@ main .content-toggle.dark .tag {
     width: 61px;
     border-radius: 4px;
 }
-  
-main .content-toggle:not(.no-dash) button.active::after {
-    position: absolute;
-    content: '';
-    display: block;
-    width: 40px;
-    height: 40px;
-    background-color: #F8F8F8;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    bottom: -80px;
-    z-index: -1;
-  }
+
+main .content-toggle button.active {
+    position: relative;
+    background-color: white;
+}
