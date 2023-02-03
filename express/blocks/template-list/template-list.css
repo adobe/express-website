@@ -1092,10 +1092,6 @@ main .template-list-fullwidth-apipowered-container .animated-template-text {
 }
 
 @media (min-width: 600px) {
-  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
-    z-index: 2;
-  }
-
   main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
     right: 0;
   }
@@ -1103,13 +1099,26 @@ main .template-list-fullwidth-apipowered-container .animated-template-text {
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .task-dropdown-list {
     left: 0;
   }
+
+  main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking {
+    padding-left: 40px;
+    padding-right: 40px;
+    margin: 0;
+    border-radius: 0;
+  }
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
+main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
+  padding: 0;
+  background: var(--color-gray-100);
   position: sticky;
   z-index: 1;
   top: 0;
-  background: var(--color-gray-100);
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
+  position: relative;
+  z-index: 1;
   margin: 28px 0px;
   padding: 16px;
   display: flex;
@@ -1120,15 +1129,14 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
   gap: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking {
+main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .api-templates-toolbar {
   box-sizing: border-box;
   border-radius: 0;
   padding: 16px;
-  margin: 0;
   width: 100%;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar.with-box-shadow {
+main .template-list-fullwidth-apipowered-container .toolbar-wrapper.with-box-shadow {
   box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
 }
 
@@ -1142,7 +1150,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   flex-basis: 100%;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking .wrapper-content-search {
+main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .wrapper-content-search {
   width: 100%;
   padding-left: 48px;
 }
@@ -1180,7 +1188,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-se
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking .search-bar-wrapper {
+main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .search-bar-wrapper {
   display: unset;
 }
 
@@ -1724,13 +1732,12 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li {
   margin-bottom: 4px;
-  display: flex;
-  align-items: center;
   padding: 4px 8px;
   border-radius: 8px;
   transition: background-color .2s, color .2s;
 }
 
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li.active,
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li:hover {
   background-color: var(--color-gray-200);
   color: var(--color-info-accent);
@@ -1750,9 +1757,11 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   line-height: 24px;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  align-items: center;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > .category-list-template-count {
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > a > .category-list-template-count {
   font-family: var(--body-font-family);
   margin-left: 2px;
   font-size: 14px;
@@ -1799,6 +1808,11 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
 }
 
 @media (min-width: 600px) {
+  main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
+    margin: 40px;
+    border-radius: 12px;
+  }
+
   main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only {
     display: unset;
   }
@@ -1914,7 +1928,6 @@ main .template-list.horizontal .carousel-platform {
   }
 
   main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
-    margin: 40px;
     border-radius: 12px;
   }
 
@@ -1976,7 +1989,7 @@ main .template-list.horizontal .carousel-platform {
     flex-grow: 0;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar.sticking .wrapper-content-search {
+  main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .wrapper-content-search {
     width: auto;
   }
 

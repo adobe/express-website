@@ -148,7 +148,7 @@ async function appendCategoryTemplatesCount($section) {
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
       countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
-      li.append(countSpan);
+      anchor.append(countSpan);
     }
   }
 }
@@ -671,13 +671,14 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
   const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  const $toolbarWrapper = $toolBar.parentElement;
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
-      $toolBar.classList.add('sticking');
+      $toolbarWrapper.classList.add('sticking');
       resetTaskDropdowns($section);
     } else {
-      $toolBar.classList.remove('sticking');
+      $toolbarWrapper.classList.remove('sticking');
     }
   }, { rootMargin: '0px', threshold: 1 });
 
@@ -828,6 +829,9 @@ function decorateCategoryList($block, $section, placeholders) {
 
     Object.entries(categories).forEach((category, index) => {
       const $listItem = createTag('li');
+      if (category[1] === trimFormattedFilterText(props.filters.tasks)) {
+        $listItem.classList.add('active');
+      }
 
       let icon;
       if (categoryIcons[index] && categoryIcons[index] !== '') {
@@ -844,7 +848,8 @@ function decorateCategoryList($block, $section, placeholders) {
         redirectSearch(null, $a.dataset.tasks);
       }, { passive: true });
 
-      $listItem.append(iconElement, $a);
+      $a.prepend(iconElement);
+      $listItem.append($a);
       $categories.append($listItem);
     });
 
@@ -1232,6 +1237,7 @@ async function redrawTemplates($block, $toolBar) {
 
 async function toggleAnimatedText($block, $toolBar) {
   const section = $block.closest('.section.template-list-fullwidth-apipowered-container');
+  const $toolbarWrapper = $toolBar.parentElement;
 
   if (section) {
     const placeholders = await fetchPlaceholders();
@@ -1244,7 +1250,7 @@ async function toggleAnimatedText($block, $toolBar) {
     }
 
     if (props.filters.animated === '(true)') {
-      $toolBar.insertAdjacentElement('afterend', animatedTemplateText);
+      $toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
     }
   }
 }
@@ -1443,11 +1449,12 @@ function initViewToggle($block, $toolBar) {
 }
 
 function initToolbarShadow($block, $toolbar) {
+  const $toolbarWrapper = $toolbar.parentElement;
   document.addEventListener('scroll', () => {
-    if ($toolbar.getBoundingClientRect().top <= 0) {
-      $toolbar.classList.add('with-box-shadow');
+    if ($toolbarWrapper.getBoundingClientRect().top <= 0) {
+      $toolbarWrapper.classList.add('with-box-shadow');
     } else {
-      $toolbar.classList.remove('with-box-shadow');
+      $toolbarWrapper.classList.remove('with-box-shadow');
     }
   });
 }
@@ -1547,8 +1554,10 @@ export async function decorateTemplateList($block) {
         }, props.autoCollapseDelay);
       } else {
         const $toolBar = $parent.querySelector('.default-content-wrapper');
+        const $templateListWrapper = $parent.querySelector('.template-list-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
 
+        const $toolBarWrapper = createTag('div', { class: 'toolbar-wrapper'})
         const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
@@ -1561,6 +1570,10 @@ export async function decorateTemplateList($block) {
         }
 
         $toolBar.classList.add('api-templates-toolbar');
+        $toolBar.classList.remove('default-content-wrapper');
+
+        $templateListWrapper.before($toolBarWrapper);
+        $toolBarWrapper.append($toolBar);
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
       }
