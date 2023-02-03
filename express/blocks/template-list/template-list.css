@@ -1737,9 +1737,12 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   transition: background-color .2s, color .2s;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li.active,
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li:hover {
   background-color: var(--color-gray-200);
+  color: var(--color-info-accent);
+}
+
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li.active {
   color: var(--color-info-accent);
 }
 
