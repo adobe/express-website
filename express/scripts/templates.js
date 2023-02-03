@@ -52,7 +52,7 @@ function formatSearchQuery(data) {
 
   const dataArray = Object.entries(data);
 
-  if (params.tasks && params.topics && params.phformat) {
+  if (params.tasks && params.phformat) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{queryTasks}}', params.tasks);
     });
@@ -62,11 +62,11 @@ function formatSearchQuery(data) {
     });
 
     dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
+      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
     });
 
     dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
+      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics ?? ''));
     });
   } else {
     return false;
@@ -76,41 +76,42 @@ function formatSearchQuery(data) {
 }
 
 async function fetchLInkListFromCKGApi(pageData) {
-  const dataRaw = {
-    experienceId: 'templates-browse-v1',
-    locale: 'en_US',
-    queries: [
-      {
-        id: 'ccx-search-1',
-        start: 0,
-        limit: 40,
-        scope: {
-          entities: [
-            'HzTemplate',
-          ],
-        },
-        filters: [
-          {
-            categories: [
-              `ckg:DESIGN_TYPE:1603`,
+  if (pageData.ckgID) {
+    const dataRaw = {
+      experienceId: 'templates-browse-v1',
+      locale: 'en_US',
+      queries: [
+        {
+          id: 'ccx-search-1',
+          start: 0,
+          limit: 40,
+          scope: {
+            entities: [
+              'HzTemplate',
             ],
           },
-        ],
-        facets: [
-          {
-            facet: 'categories',
-            limit: 10,
-          },
-        ],
-      },
-    ],
-  };
+          filters: [
+            {
+              categories: [
+                pageData.ckgID,
+              ],
+            },
+          ],
+          facets: [
+            {
+              facet: 'categories',
+              limit: 10,
+            },
+          ],
+        },
+      ],
+    };
 
-  const env = getHelixEnv();
-  const result = await getData(env.name, dataRaw).then((data) => data);
-
-  if (result.status.httpCode === 200) {
-    return result;
+    const env = getHelixEnv();
+    const result = await getData(env.name, dataRaw).then((data) => data);
+    if (result.status.httpCode === 200) {
+      return result;
+    }
   }
   return false;
 }
@@ -120,12 +121,12 @@ async function fetchLinkList(data) {
     window.linkLists = {};
     const response = await fetchLInkListFromCKGApi(data);
     if (response && response.queryResults[0].facets) {
-      window.linkLists.data = response.queryResults[0].facets[0].buckets.map((intent) => {
-        return {
-          parent: titleCase(data.templateTasks),
-          'child-siblings': `${titleCase(intent.displayValue)} ${titleCase(data.templateTasks)}`,
-        };
-      });
+      window.linkLists.data = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
+        parent: titleCase(data.templateTasks),
+        'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
+        ckgID: ckgItem.canonicalName,
+        displayValue: ckgItem.displayValue,
+      }));
     } else {
       const resp = await fetch('/express/templates/top-priority-categories.json');
       window.linkLists.data = resp.ok ? (await resp.json()).data : [];
@@ -133,20 +134,28 @@ async function fetchLinkList(data) {
   }
 }
 
-function updateLinkList(container, template, list) {
+function updateLinkList(container, linkPill, list, pageData) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.shortTitle.toLowerCase() === d.toLowerCase() && p.live === 'Y');
-
+      const templatePageData = templatePages.find((p) => p.live === 'Y' && (p.ckgID === d.ckgID || p.shortTitle.toLowerCase() === d.childSibling.toLowerCase()));
+      const clone = linkPill.cloneNode(true);
       if (templatePageData) {
-        const clone = template.cloneNode(true);
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-        container.append(clone);
+      } else if (d.ckgID) {
+        let searchParams;
+        if (d.ckgID.indexOf('DESIGN_TYPE') > 0) {
+          searchParams = `tasks=${d.displayValue}&phformat=${pageData.placeholderFormat}`;
+        } else {
+          searchParams = `tasks=${pageData.templateTasks}&phformat=${pageData.placeholderFormat}&topics=${d.displayValue}`;
+        }
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', titleCase(d.displayValue));
       }
+      container.append(clone);
     });
   }
 }
@@ -220,13 +229,17 @@ async function updateBlocks(data) {
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
       window.linkLists.data.forEach((row) => {
-        if (row.parent === data.shortTitle) {
-          linkListData.push(row['child-siblings']);
+        if (row.parent === data.shortTitle || row.ckgID === data.ckgID) {
+          linkListData.push({
+            childSibling: row['child-siblings'],
+            ckgID: row.ckgID,
+            displayValue: row.displayValue,
+          });
         }
       });
     }
 
-    updateLinkList(linkListContainer, linkListTemplate, linkListData);
+    updateLinkList(linkListContainer, linkListTemplate, linkListData, data);
   } else {
     linkListContainer.remove();
   }
@@ -254,9 +267,9 @@ async function updateBlocks(data) {
 
     if (window.templates.data && data.topTemplates) {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
-      const topTemplatesData = data.topTemplates.split(', ');
+      const topTemplatesData = data.topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
-      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData, data);
     } else {
       topTemplatesContainer.innerHTML = '';
     }
