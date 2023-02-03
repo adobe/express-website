@@ -15,11 +15,17 @@ import {
   titleCase,
   createTag,
   fetchPlaceholders,
+  getLocale,
 } from './scripts.js';
 
 import getData from './api-v3-controller.js';
 
-async function fetchPageContent(path) {
+export function findMatchExistingSEOPage(path) {
+  const pathMatch = (e) => e.path === path;
+  return (window.templates && window.templates.data.some(pathMatch));
+}
+
+export async function fetchPageContent(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
@@ -46,11 +52,18 @@ async function fetchPageContent(path) {
 }
 
 function formatSearchQuery(data) {
-  console.log(window.templates.data)
   // todo check if the search query points to an exisitng page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
+
+  const locale = getLocale(window.location);
+  const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
+  const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
+
+  if (findMatchExistingSEOPage(pathToMatch)) {
+    window.location = `${window.location.origin}${pathToMatch}`;
+  }
 
   const dataArray = Object.entries(data);
 
@@ -74,7 +87,6 @@ function formatSearchQuery(data) {
     return false;
   }
 
-  console.log(arrayToObject(dataArray))
   return arrayToObject(dataArray);
 }
 
