@@ -1766,10 +1766,10 @@ async function decorateTailButton($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     const placeholders = await fetchPlaceholders().then((result) => result);
 
-    if (placeholders['relevant-rows-view-all'] && props.viewAllLink) {
+    if (placeholders['relevant-rows-view-all'] && (props.viewAllLink || placeholders['relevant-rows-view-all-link'])) {
       props.tailButton = createTag('a', { class: 'button accent tail-cta' });
       props.tailButton.innerText = placeholders['relevant-rows-view-all'];
-      props.tailButton.href = props.viewAllLink;
+      props.tailButton.href = props.viewAllLink || placeholders['relevant-rows-view-all-link'];
     }
   }
 
