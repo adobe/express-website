@@ -78,7 +78,7 @@
 	);
 	
 	(function (win, doc) {
-		const { host, hostname, href, origin, pathname, port, protocol} = win.location;	
+		const { href, pathname } = win.location;	
 
 		let originalPath = pathname.split("/");
 		let userLocale = originalPath[1]; 
@@ -89,10 +89,9 @@
 			// making sure just the specific string between the forward slashes are replaced.
 			userLocale = "/"+ userLocale +"/";
 			let redirectURL = href.replace(userLocale, redirectMapping);
-			doc.cookie = " international = "+ localeCookie + ";" + "Path = /; domain = adobe.com";
+			doc.cookie = 'international = ${localeCookie}; Path = /; domain = .adobe.com';
 			win.location.replace(redirectURL);
 		} 
-		 
   }(window, document));
   
   </script>
