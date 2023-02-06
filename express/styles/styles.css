@@ -859,6 +859,11 @@ main .block.center .button-container.free-plan-container {
   justify-content: center;
 }
 
+main .block.center .free-plan-widget-placeholder,
+main .block.fullscreen-marquee .free-plan-widget-placeholder {
+  margin: auto;
+}
+
 main .block .button-container.free-plan-container.fixed {
   position: fixed;
   top: -8px;
@@ -931,6 +936,7 @@ main .block .free-plan-bullet {
   position: absolute;
   border-radius: 100px;
   height: 100%;
+  width: 100%;
   display: none;
   top: 0;
   left: 0;
@@ -1077,6 +1083,11 @@ main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-
   main .block .button-container.free-plan-container .free-plan-optout {
     display: flex;
   }
+
+  main .block .free-plan-bullet .free-plan-bullet-container,
+  main .block .free-plan-widget-placeholder {
+    max-width: 375px;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -1130,6 +1141,11 @@ main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-
   main .columns-fullsize-center-container>div,
   main .template-list-sixcols-container>div {
     max-width: 1122px;
+  }
+
+  main .block .free-plan-bullet .free-plan-bullet-container,
+  main .block .free-plan-widget-placeholder {
+    max-width: 400px;
   }
 }
 
