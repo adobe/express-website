@@ -83,11 +83,6 @@
 		let originalPath = pathname.split("/");
 		let userLocale = originalPath[1]; 
 		let redirectMapping = redirectMap.get(userLocale);
-		// for debugging 
-		console.log("USER LOCALE :" + userLocale);
-		console.log("ORIGIN:"  + origin );
-		console.log("URL: " + href); 
-		console.log("REDIRECT MAPPPING:" + redirectMapping );
 		
 		if (redirectMapping){
 			let localeCookie = userLocale;
@@ -96,8 +91,6 @@
 			let redirectURL = href.replace(userLocale, redirectMapping);
 			doc.cookie = " international = "+ localeCookie + ";" + "Path = /; domain = adobe.com";
 			win.location.replace(redirectURL);
-			// for debugging
-			console.log("REDIRECT URL: " + redirectURL);
 		} 
 		 
   }(window, document));
