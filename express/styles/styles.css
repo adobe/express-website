@@ -10,6 +10,7 @@
 :root {
   --color-white: #FFF;
   --color-gray-100: #F8F8F8;
+  --color-gray-150: #F3F3F3;
   --color-gray-200: #E8E8E8;
   --color-gray-300: #D4D4D4;
   --color-gray-400: #B6B6B6;
@@ -937,7 +938,7 @@ main .block .free-plan-bullet {
 }
 
 main .block .free-plan-bullet .free-plan-bullet-container {
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-150);
   max-width: 400px;
   width: 100vw;
   height: 100%;
@@ -958,7 +959,7 @@ main .block .button-container.free-plan-container.fixed .free-plan-bullet-contai
   height: calc(100% + 16px);
   border-radius: 0;
   overflow: hidden;
-  transition: transform 0.5s ease-in, max-width 0.5s ease-in, border-radius 0.5s ease-in;
+  transition: transform 0.2s ease-in, max-width 0.2s ease-in, border-radius 0.2s ease-in;
 }
 
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray {
@@ -966,7 +967,7 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 20px;
   transition: transform 0.2s linear;
   animation-name: freePlanHighlight;
   animation-timing-function: linear;
@@ -986,10 +987,15 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
 
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
-  font-family: var(--body-serif-font-family);
-  font-style: italic;
   font-size: 16px;
-  transition: font-size 0.5s;
+}
+
+main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag::before {
+  content: "\2022";
+  font-size: 24px;
+  line-height: 20px;
+  display: inline-block;
+  padding-right: 20px;
 }
 
 main .block .free-plan-optout {
@@ -1007,7 +1013,7 @@ main .block .free-plan-optout {
   justify-content: center;
   transition: left 0.1s ease-in, transform 0.1s ease-in;
   cursor: pointer;
-  background: var(--color-black);
+  background: var(--color-gray-200);
   z-index: 1;
 }
 
@@ -1019,7 +1025,7 @@ main .block .button-container.free-plan-container.fixed .free-plan-optout {
   left: -56px;
   border-radius: 50px;
   transform: translateY(-50%) rotate(-90deg);
-  transition: left 0.5s ease-in, transform 0.5s ease-in;
+  transition: left 0.2s ease-in, transform 0.2s ease-in;
   z-index: 3;
 }
 
@@ -1030,14 +1036,14 @@ main .block .button-container.free-plan-container::before {
   left: 0;
   width: 80px;
   position: absolute;
-  transition: max-height 0.5s ease-in, left 0.5s ease-in;
+  transition: max-height 0.2s ease-in, left 0.2s ease-in;
   z-index: 2;
 }
 
 main .block .button-container.free-plan-container.fixed::before {
   max-height: 100%;
   left: -68px;
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-150);
 }
 
 main .block .button-container.free-plan-container .free-plan-optout img {
@@ -1048,10 +1054,6 @@ main .block .button-container.free-plan-container .free-plan-optout img {
 
 main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag > div:first-child {
   display: none;
-}
-
-main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
-  font-size: 22px;
 }
 
 @media (min-width: 900px) {
@@ -1141,7 +1143,7 @@ main .template-list-sixcols-container>div {
   }
 
   100% {
-    transform: translateX(-25.3%);
+    transform: translateX(-25%);
   }
 }
 
@@ -1151,7 +1153,7 @@ main .template-list-sixcols-container>div {
   }
 
   100% {
-    transform: translateX(-25.3%);
+    transform: translateX(-25%);
   }
 }
 
@@ -1161,7 +1163,7 @@ main .template-list-sixcols-container>div {
   }
 
   100% {
-    transform: translateX(-25.3%);
+    transform: translateX(-25%);
   }
 }
 

@@ -55,7 +55,7 @@ export default async function decorate(block) {
       }
 
       block.closest('.section').classList.add(...fragmentSection.classList);
-      block.closest('.fragment-wrapper').replaceWith(...fragmentSection.children);
+      block.closest('.fragment-wrapper').replaceWith(...fragmentSection.childNodes);
     }
   }
 }
