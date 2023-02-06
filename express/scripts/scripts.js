@@ -1648,6 +1648,17 @@ function buildAutoBlocks($main) {
     }
   }
 
+  if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
+    if (!window.relevantRowsLoaded) {
+      const $relevantRowsSection = createTag('div');
+      const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
+      $relevantRowsSection.dataset.audience = 'mobile';
+      $relevantRowsSection.append($fragment);
+      $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
+      window.relevantRowsLoaded = true;
+    }
+  }
+
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     const $highlight = buildBlock('app-store-highlight', '');
@@ -1658,17 +1669,6 @@ function buildAutoBlocks($main) {
     const $blade = buildBlock('app-store-blade', '');
     if ($lastDiv) {
       $lastDiv.append($blade);
-    }
-  }
-
-  if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
-    if (!window.relevantRowsLoaded) {
-      const $relevantRowsSection = createTag('div');
-      const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
-      $relevantRowsSection.dataset.audience = 'mobile';
-      $relevantRowsSection.append($fragment);
-      $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
-      window.relevantRowsLoaded = true;
     }
   }
 

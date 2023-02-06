@@ -21,6 +21,18 @@ main .template-list-fullwidth-apipowered-container .default-content-wrapper p {
   text-align: left;
 }
 
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container h2 {
+  margin: 20px 12px 0 12px;
+  text-align: left;
+}
+
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container p {
+  font-weight: 800;
+  font-size: var(--body-font-size-m);
+  margin: 16px 12px 12px 12px;
+  text-align: left;
+}
+
 main .template-list.template-list-complete {
   min-height: unset;
 }
@@ -1968,6 +1980,7 @@ main .template-list-horizontal-fullwidth-mini-container .template-list .carousel
   display: none;
 }
 
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container > div,
 main .template-list-horizontal-fullwidth-mini-container > div {
   max-width: unset;
   padding: 0;

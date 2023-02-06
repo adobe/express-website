@@ -44,6 +44,8 @@ const props = {
   masonry: undefined,
   authoringError: false,
   headingTitle: null,
+  headingSlug: null,
+  viewAllLink: null,
 };
 
 function wordStartsWithVowels(word) {
@@ -1522,6 +1524,7 @@ export async function decorateTemplateList($block) {
       } else {
         const $toolBar = $parent.querySelector('.default-content-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
+        let $sectionSlug = null;
 
         const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
@@ -1529,6 +1532,11 @@ export async function decorateTemplateList($block) {
         if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
           if ($block.classList.contains('spreadsheet-powered') && props.headingTitle) {
             $sectionHeading.textContent = props.headingTitle || '';
+
+            if (props.headingSlug) {
+              $sectionSlug = createTag('p');
+              $sectionSlug.textContent = props.headingSlug;
+            }
           } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
@@ -1539,6 +1547,10 @@ export async function decorateTemplateList($block) {
         $toolBar.classList.add('api-templates-toolbar');
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
+
+        if ($sectionSlug) {
+          $contentWrapper.append($sectionSlug);
+        }
       }
 
       const $linkList = $parent.querySelector('.link-list-wrapper');
@@ -1754,10 +1766,10 @@ async function decorateTailButton($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     const placeholders = await fetchPlaceholders().then((result) => result);
 
-    if (placeholders['relevant-rows-view-all'] && placeholders['relevant-rows-view-all-link']) {
+    if (placeholders['relevant-rows-view-all'] && props.viewAllLink) {
       props.tailButton = createTag('a', { class: 'button accent tail-cta' });
       props.tailButton.innerText = placeholders['relevant-rows-view-all'];
-      props.tailButton.href = placeholders['relevant-rows-view-all-link'];
+      props.tailButton.href = props.viewAllLink;
     }
   }
 
@@ -1803,6 +1815,8 @@ export default async function decorate($block) {
       $block.closest('.section').dataset.audience = 'mobile';
 
       props.headingTitle = relevantRowsData.header || null;
+      props.headingSlug = relevantRowsData.shortTitle || null;
+      props.viewAllLink = relevantRowsData.viewAllLink || null;
 
       $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
       $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
