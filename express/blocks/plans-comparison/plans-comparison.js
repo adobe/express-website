@@ -14,7 +14,6 @@ import {
   createTag,
   fixIcons,
   getIconElement,
-  getLocale,
   getOffer,
   fetchPlainBlockFromFragment,
 } from '../../scripts/scripts.js';
