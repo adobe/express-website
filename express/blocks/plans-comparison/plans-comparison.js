@@ -14,7 +14,6 @@ import {
   createTag,
   fixIcons,
   getIconElement,
-  getLocale,
   getOffer,
   fetchPlainBlockFromFragment,
 } from '../../scripts/scripts.js';
@@ -320,23 +319,14 @@ export default async function decorate($block) {
   const enclosingMain = $block.closest('main');
   if (enclosingMain) {
     let payload;
-    const location = new URL(window.location);
-    const locale = getLocale(location);
     const $linkList = enclosingMain.querySelector('.link-list-container');
-    let fragmentUrl;
-    if (locale === 'us') {
-      fragmentUrl = '/express/fragments/plans-comparison';
-    } else {
-      fragmentUrl = `/${locale}/express/fragments/plans-comparison`;
-    }
-
-    const $section = await fetchPlainBlockFromFragment($block, fragmentUrl, 'plans-comparison');
-
-    if ($linkList) {
-      $linkList.before($section);
-    }
+    const $section = await fetchPlainBlockFromFragment($block, '/express/fragments/plans-comparison', 'plans-comparison');
 
     if ($section) {
+      if ($linkList) {
+        $linkList.before($section);
+      }
+
       const $blockFromFragment = $section.querySelector('.plans-comparison');
       if ($blockFromFragment) {
         payload = await buildPayload($blockFromFragment);

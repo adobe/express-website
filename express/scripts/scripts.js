@@ -2387,8 +2387,10 @@ export async function addFreePlanWidget(elem) {
             }
 
             const currentClone = parent.querySelector('.free-plan-widget-placeholder');
-            supposedCtaPositionX = currentClone.getBoundingClientRect().left;
-            elem.style.left = supposedCtaPositionX;
+            if (currentClone) {
+              supposedCtaPositionX = currentClone.getBoundingClientRect().left;
+              elem.style.left = supposedCtaPositionX;
+            }
           }, { passive: true });
         });
       }
