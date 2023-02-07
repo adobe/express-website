@@ -261,7 +261,11 @@ function decorateFeatures($block, $rows) {
     const $tooltip = $feature.querySelector('p');
 
     if ($tooltip) {
-      $tooltip.remove();
+      $tooltip.classList.add('pricing-hub-feature-tooltip');
+      const tooltipIcon = createTag('div', { class: 'pricing-hub-feature-tooltip-icon' });
+      tooltipIcon.innerHTML = 'i';
+      $columns[0].append(tooltipIcon);
+      tooltipIcon.append($tooltip);
     }
 
     $feature.classList.add('pricing-hub-feature');

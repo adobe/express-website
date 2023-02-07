@@ -1,303 +1,366 @@
 main .pricing-hub {
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 60px 0;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 60px 0;
 }
 
 main .pricing-hub .pricing-hub-cards {
-    display: flex;
-    flex-direction: column;
-    width: 336px;
-    margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 336px;
+  margin-bottom: 40px;
 }
 
 main .pricing-hub .pricing-hub-card {
-    display: flex;
-    flex-direction: column;
-    width: 336px;
-    max-width: 336px;
-    border: 2px solid var(--color-gray-200);
-    border-radius: 20px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  width: 336px;
+  max-width: 336px;
+  border: 2px solid var(--color-gray-200);
+  border-radius: 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: var(--color-white);
 }
 
 main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight {
-    background: var(--gradient-highlight-diagonal);
-    color: var(--color-gray-100);
+  background: var(--gradient-highlight-diagonal);
+  color: var(--color-gray-100);
 }
 
 main .pricing-hub .pricing-hub-card .pricing-hub-card-header {
-    background-color: var(--color-gray-800);
-    color: var(--color-white);
-    padding: 8px;
-    margin: -20px -20px 10px -20px;
-    border-radius: 20px 20px 0 0;
-    font-size: var(--body-font-size-s);
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+  padding: 8px;
+  margin: -20px -20px 10px -20px;
+  border-radius: 20px 20px 0 0;
+  font-size: var(--body-font-size-s);
 }
 
 main .pricing-hub .pricing-hub-card h2 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--heading-font-size-m);
-    margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--heading-font-size-m);
+  margin: 10px 0;
 }
 
 main .pricing-hub .pricing-hub-card h2 svg {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 main .pricing-hub .pricing-hub-card p {
-    font-size: var(--body-font-size-s);
-    margin: 10px 0;
+  font-size: var(--body-font-size-s);
+  margin: 10px 0;
 }
 
 main .pricing-hub .pricing-hub-card .button-container {
-    display: flex;
+  display: flex;
 }
 
 main .pricing-hub .pricing-hub-card .pricing-hub-card-pricing-text {
-    display: flex;
-    justify-content: center;
-    font-size: var(--body-font-size-s);
-    font-weight: var(--heading-font-weight);
+  display: flex;
+  justify-content: center;
+  font-size: var(--body-font-size-s);
+  font-weight: var(--heading-font-weight);
 }
 
 main .pricing-hub .pricing-hub-card .pricing-hub-card-pricing-text strong {
-    font-size: var(--heading-font-size-s);
-    font-weight: var(--heading-font-weight);
-    margin-top: -3px;
+  font-size: var(--heading-font-size-s);
+  font-weight: var(--heading-font-weight);
+  margin-top: -3px;
 }
 
 main .pricing-hub .pricing-hub-card .button {
-    width: 100%;
+  width: 100%;
 }
 
 main .pricing-hub .pricing-hub-features {
-    display: flex;
-    flex-direction: column;
-    width: 336px;
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 336px;
+  box-sizing: border-box;
 }
 
 main .pricing-hub .pricing-hub-feature {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    margin: 5px 0 30px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0 30px 0;
 }
 
 main .pricing-hub .pricing-hub-feature:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    bottom: -30px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: var(--color-gray-200);
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-gray-200);
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
-    display: flex;
-    margin: 10px 0 10px 0;
+  display: flex;
+  margin: 10px 0 10px 0;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
-    height: 22px;
-    width: 22px;
-    margin-right: 10px;
+  height: 22px;
+  width: 22px;
+  margin-right: 10px;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--body-font-size-s);
-    font-weight: var(--body-font-weight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--body-font-size-s);
+  font-weight: var(--body-font-weight);
+  text-align: left;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
-    display: flex;
-    width: 336px;
-    border: 2px var(--color-gray-200) solid;
-    margin-top: 8px;
-    border-radius: 12px;
+  display: flex;
+  width: 336px;
+  border: 2px var(--color-gray-200) solid;
+  margin-top: 8px;
+  border-radius: 12px;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    height: 100px;
-    background-color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100px;
+  background-color: var(--color-white);
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
-    background-color: var(--color-info-accent);
-    color: var(--color-white);
-    outline: 2px var(--color-info-accent) solid;
+  background-color: var(--color-info-accent);
+  color: var(--color-white);
+  outline: 2px var(--color-info-accent) solid;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight .icon {
-    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(201deg) brightness(106%) contrast(106%);
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(201deg) brightness(106%)
+    contrast(106%);
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column .icon {
-    width: 33px;
-    height: 33px;
-    margin-bottom: 6px;
+  width: 33px;
+  height: 33px;
+  margin-bottom: 6px;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column p {
-    margin: 0;
-    font-size: 11px;
+  margin: 0;
+  font-size: 11px;
+}
+
+main .pricing-hub .pricing-hub-feature-tooltip-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12px;
+  min-height: 12px;
+  max-height: 12px;
+  width: 12px;
+  min-width: 12px;
+  max-width: 12px;
+  margin-left: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--color-gray-700);
+  color: var(--color-gray-700);
+  font-weight: 700;
+  font-size: var(--body-font-size-s);
+  margin-right: 20px;
+}
+main .pricing-hub .pricing-hub-feature-tooltip-chevron {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+  font-size: var(--body-font-size-s);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+main .pricing-hub .pricing-hub-feature-tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+  font-size: var(--body-font-size-s);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+
+main .pricing-hub .pricing-hub-feature-tooltip-icon:hover .pricing-hub-feature-tooltip,
+main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-tooltip,
+main .pricing-hub .pricing-hub-feature-tooltip-icon:hover .pricing-hub-feature-tooltip-chevron,
+main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-tooltip-chevron {
+  opacity: 1;
+  visibility: visible;
 }
 
 @media (min-width: 900px) {
-    main .pricing-hub .pricing-hub-cards {
-        flex-direction: row;
-        width: 828px;
-        gap: 10px;
-    }
+  main .pricing-hub .pricing-hub-cards {
+    flex-direction: row;
+    width: 828px;
+    gap: 10px;
+  }
 
-    main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight {
-        margin-top: -34px;
-    }
+  main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight {
+    margin-top: -34px;
+  }
 
-    main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight h2 {
-        margin-top: 20px;
-    }
+  main .pricing-hub .pricing-hub-card.pricing-hub-card-highlight h2 {
+    margin-top: 20px;
+  }
 
-    main .pricing-hub .pricing-hub-features {
-        width: 828px;
-    }
+  main .pricing-hub .pricing-hub-features {
+    width: 828px;
+  }
 
-    main .pricing-hub .pricing-hub-feature {
-        flex-direction: row;
-        justify-content: space-between;
-        margin: 0;
-    }
+  main .pricing-hub .pricing-hub-feature {
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0;
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
-        font-size: var(--body-font-size-m);
-        color: var(--color-gray-800);
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
+    font-size: var(--body-font-size-m);
+    font-weight: var(--body-font-weight);
+    color: var(--color-gray-700);
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
-        width: 44px;
-        height: 44px;
-        margin-right: 16px;
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
+    width: 44px;
+    height: 44px;
+    margin-right: 16px;
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
-        width: 600px;
-        margin: 0;
-        gap: 20px;
-        border: none;
-        border-radius: 0;
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
+    width: 600px;
+    margin: 0;
+    gap: 20px;
+    border: none;
+    border-radius: 0;
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
-        outline: none;
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
+    outline: none;
+  }
 
-    main .pricing-hub .pricing-hub-feature:first-child .pricing-hub-feature-column {
-        border-radius: 24px 24px 0 0;
-        border-top: 2px var(--color-gray-200) solid;
-    }
+  main .pricing-hub .pricing-hub-feature:first-child .pricing-hub-feature-column {
+    border-radius: 24px 24px 0 0;
+    border-top: 2px var(--color-gray-200) solid;
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
-        width: 200px;
-        border-left: 2px var(--color-gray-200) solid;
-        border-right: 2px var(--color-gray-200) solid;
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
+    width: 200px;
+    border-left: 2px var(--color-gray-200) solid;
+    border-right: 2px var(--color-gray-200) solid;
+  }
 
-    main .pricing-hub .pricing-hub-feature:last-child .pricing-hub-feature-column {
-        border-radius: 0 0 24px 24px;
-        border-bottom: 2px var(--color-gray-200) solid;
-    }
+  main .pricing-hub .pricing-hub-feature:last-child .pricing-hub-feature-column {
+    border-radius: 0 0 24px 24px;
+    border-bottom: 2px var(--color-gray-200) solid;
+  }
 
-    main .pricing-hub .pricing-hub-feature:not(:last-child)::after {
-        display: none;
-    }
+  main .pricing-hub .pricing-hub-feature:not(:last-child)::after {
+    display: none;
+  }
 
-    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-title {
-        position: relative;
-        flex: 1;
-    }
+  main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-title {
+    position: relative;
+    flex: 1;
+  }
 
-    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-title::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 90%;
-        height: 1px;
-        background-color: var(--color-gray-200);
-    }
+  main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 90%;
+    height: 1px;
+    background-color: var(--color-gray-200);
+  }
 
-    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-column {
-        position: relative;
-    }
+  main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-column {
+    position: relative;
+  }
 
-    main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-column::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        width: 90%;
-        height: 1px;
-        background-color: var(--color-gray-200);
-        transform: translateX(-50%);
-    }
+  main .pricing-hub .pricing-hub-feature:not(:last-child) .pricing-hub-feature-column::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 90%;
+    height: 1px;
+    background-color: var(--color-gray-200);
+    transform: translateX(-50%);
+  }
 }
 
 @media (min-width: 1200px) {
-    main .pricing-hub .pricing-hub-cards {
-        width: 1200px;
-        gap: 20px;
-        min-height: 338px;
-        justify-content: center;
-    }
+  main .pricing-hub .pricing-hub-cards {
+    width: 1200px;
+    gap: 20px;
+    min-height: 338px;
+    justify-content: center;
+  }
 
-    main .pricing-hub .pricing-hub-card {
-        min-width: 390px;
-    }
+  main .pricing-hub .pricing-hub-card {
+    min-width: 390px;
+  }
 
-    main .pricing-hub .pricing-hub-card .button-container {
-        display: flex;
-        align-items: flex-end;
-        flex: 1;
-    }
+  main .pricing-hub .pricing-hub-card .button-container {
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+  }
 
-    main .pricing-hub .pricing-hub-features {
-        width: 1200px;
-    }
+  main .pricing-hub .pricing-hub-features {
+    width: 1200px;
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
-        font-size: var(--body-font-size-l);
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
+    font-size: var(--body-font-size-l);
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
-        margin-right: 20px;
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
+    margin-right: 20px;
+  }
 
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
+    width: 900px;
+  }
 
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
-        width: 900px;
-    }
-
-    main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
-        width: 290px;
-    }
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
+    width: 290px;
+  }
 }
