@@ -10,7 +10,7 @@ main .pricing-hub .pricing-hub-cards {
   display: flex;
   flex-direction: column;
   width: 336px;
-  margin-bottom: 40px;
+  margin-bottom: 0;
 }
 
 main .pricing-hub .pricing-hub-card {
@@ -79,16 +79,21 @@ main .pricing-hub .pricing-hub-card .button {
 }
 
 main .pricing-hub .pricing-hub-midsection {
+  margin-bottom: 32px;
 }
 
 main .pricing-hub .pricing-hub-midsection p {
   font-size: var(--body-font-size-m);
   max-width: 475px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 main .pricing-hub .pricing-hub-midsection strong {
   position: relative;
   color: var(--color-info-accent);
+  font-size: var(--body-font-size-s);
+  margin-left: 16px;
 }
 
 main .pricing-hub .pricing-hub-lottie-button-scroll {
@@ -108,6 +113,7 @@ main .pricing-hub .pricing-hub-features {
   display: flex;
   flex-direction: column;
   width: 336px;
+  padding-top: 60px;
   box-sizing: border-box;
 }
 
@@ -284,6 +290,7 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
 
   main .pricing-hub .pricing-hub-features {
     width: 828px;
+    padding-top: 160px;
   }
 
   main .pricing-hub .pricing-hub-feature {

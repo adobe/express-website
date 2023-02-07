@@ -261,7 +261,7 @@ function decorateMidSection($block) {
   $midSectionHeader.classList.add('pricing-hub-lottie-button-scroll');
   $midSectionHeader.addEventListener('click', () => {
     window.scrollTo({
-      top: $midSectionHeader.getBoundingClientRect().bottom + window.scrollY,
+      top: $midSectionHeader.getBoundingClientRect().bottom + window.scrollY + 150,
       behavior: 'smooth',
     });
   });
