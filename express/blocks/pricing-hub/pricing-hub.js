@@ -180,7 +180,13 @@ async function fetchPlan(planUrl) {
   return plan;
 }
 
-async function decorateCards($headersContainer, $cardsContainer, $buttonsContainer) {
+async function decorateCards($block) {
+  const $rows = Array.from($block.children);
+
+  const $headersContainer = $rows[0];
+  const $cardsContainer = $rows[1];
+  const $buttonsContainer = $rows[2];
+
   const $headers = Array.from($headersContainer.children);
   const $cards = Array.from($cardsContainer.children);
   const $buttonDivs = Array.from($buttonsContainer.children);
@@ -243,10 +249,11 @@ async function decorateCards($headersContainer, $cardsContainer, $buttonsContain
   $buttonsContainer.remove();
 }
 
-function decorateFeatures($block, $rows) {
+function decorateFeatures($block) {
+  const $rows = Array.from($block.children);
   const $features = createTag('div', { class: 'pricing-hub-features' });
 
-  for (let i = 3; i < $rows.length; i += 1) {
+  for (let i = 2; i < $rows.length; i += 1) {
     const $feature = $rows[i];
     const $columns = Array.from($feature.children);
     const $columnsContainer = createTag('div', { class: 'pricing-hub-feature-columns' });
@@ -283,8 +290,6 @@ function decorateFeatures($block, $rows) {
 }
 
 export default async function decorate($block) {
-  const $rows = Array.from($block.children);
-
-  await decorateCards($rows[0], $rows[1], $rows[2]);
-  decorateFeatures($block, $rows);
+  await decorateCards($block);
+  decorateFeatures($block);
 }
