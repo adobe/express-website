@@ -1707,16 +1707,16 @@ export async function fetchFloatingCta(path) {
   }
 
   if (window.floatingCta.length) {
-    const floatingCta = window.floatingCta.find((p) => {
+    const candidates = window.floatingCta.filter((p) => {
       const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
-      return path.match(urlToMatch);
-    });
+      return path === p.path || path.match(urlToMatch);
+    }).sort((a, b) => b.path.length - a.path.length);
 
     if (env && env.name === 'stage') {
-      return floatingCta || null;
+      return candidates[0] || null;
     }
 
-    return floatingCta && floatingCta.live !== 'N' ? floatingCta : null;
+    return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
   }
 
   return null;
