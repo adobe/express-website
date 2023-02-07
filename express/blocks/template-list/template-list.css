@@ -531,6 +531,10 @@ main .template-list .template.placeholder > div:first-of-type {
   align-items: center;
 }
 
+main .template-list.sm-view .template.placeholder > div:first-of-type {
+  height: 60%;
+}
+
 main .template-list .template.placeholder > div:first-of-type > img,
 main .template-list .template.placeholder > div:first-of-type > svg {
   width: 44px;
@@ -659,6 +663,10 @@ main .template-list.fullwidth.sm-view > .masonry-col {
   main .template-list.fullwidth.md-view .template.placeholder,
   main .template-list.fullwidth.sm-view .template.placeholder {
     max-height: unset;
+  }
+
+  main .template-list.sm-view .template.placeholder > div:first-of-type {
+    height: 95%;
   }
 }
 
@@ -1310,9 +1318,13 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   transform: rotate(180deg);
 }
 
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li {
+  margin-bottom: 0;
+}
+
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button,
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a {
   font-size: 14px;
   font-family: var(--body-font-family);
   line-height: 24px;
@@ -1320,8 +1332,16 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   display: flex;
   align-items: center;
   padding: 4px 8px;
-  margin-bottom: 0;
   transition: background-color 0.2s, color 0.2s;
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li.active > a {
+  font-weight: 600;
+  color: var(--color-info-accent);
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a > span {
+  margin-left: 4px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover,
