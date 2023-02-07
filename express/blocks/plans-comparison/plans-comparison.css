@@ -4,6 +4,10 @@ main .plans-comparison-container {
     max-width: calc(100% - 40px);
 }
 
+main .plans-comparison-container .plans-comparison-wrapper {
+    max-width: none;
+}
+
 main .plans-comparison-container .plans-comparison {
     margin: 0;
 }
