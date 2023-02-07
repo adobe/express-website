@@ -108,6 +108,7 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
   align-items: center;
   justify-content: flex-start;
   text-align: left;
+  min-width: 320px;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
@@ -141,6 +142,7 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
   flex: 1;
   height: 100px;
   background-color: var(--color-white);
+  flex-shrink: 2;
 }
 
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
@@ -185,34 +187,44 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon {
   font-size: var(--body-font-size-s);
   margin-right: 20px;
 }
+
 main .pricing-hub .pricing-hub-feature-tooltip-chevron {
+  z-index: 2;
   position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
   background-color: var(--color-gray-800);
-  color: var(--color-white);
-  font-size: var(--body-font-size-s);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  height: 6px;
+  width: 6px;
 }
 
 main .pricing-hub .pricing-hub-feature-tooltip {
+  z-index: 2;
   position: absolute;
-  top: 0;
-  left: 0;
+  margin: 0;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-gray-800);
   color: var(--color-white);
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.1;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  border-radius: 6px;
+  min-width: 170px;
+  padding: 6px;
+  font-weight: lighter;
+  text-align: center;
 }
 
 main .pricing-hub .pricing-hub-feature-tooltip-icon:hover .pricing-hub-feature-tooltip,
@@ -264,7 +276,7 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
   }
 
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
-    width: 600px;
+    width: 540px;
     margin: 0;
     gap: 20px;
     border: none;

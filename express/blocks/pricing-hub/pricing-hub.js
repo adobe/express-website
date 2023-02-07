@@ -270,8 +270,10 @@ function decorateFeatures($block) {
     if ($tooltip) {
       $tooltip.classList.add('pricing-hub-feature-tooltip');
       const tooltipIcon = createTag('div', { class: 'pricing-hub-feature-tooltip-icon' });
+      const tooltipChevron = createTag('div', { class: 'pricing-hub-feature-tooltip-chevron' });
       tooltipIcon.innerHTML = 'i';
       $columns[0].append(tooltipIcon);
+      tooltipIcon.append(tooltipChevron);
       tooltipIcon.append($tooltip);
     }
 
