@@ -1,0 +1,181 @@
+main .quick-action-card-container {
+  padding: 0;
+}
+
+main .quick-action-card-container + .section.steps-highlight-container  {
+  margin-top: 0;
+}
+
+main .section .quick-action-card-wrapper {
+  display: flex;
+  justify-content: center;
+  color: var(--color-white);
+  background-color: #010B1D;
+  max-width: unset;
+}
+
+main .block.quick-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  gap: 20px;
+  margin-top: 36px;
+  margin-bottom: 62px;
+  width: 100%;
+  text-align: left;
+}
+
+.quick-action-card > *:not(.carousel-container) {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+main .quick-action-card .feature-image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #444444;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+main .quick-action-card h3 {
+  text-align: left;
+  hyphens: none;
+}
+
+main .quick-action-card > span {
+  text-align: left;
+  font-size: 20px;
+}
+
+main .quick-action-card .app-badge img {
+  width: 147px;
+  height: 43px;
+  outline-offset: -4px;
+  outline: 5px solid black;
+  border-radius: 4px;
+  margin: 0;
+}
+
+main .quick-action-card .app-badge-wrapper {
+  background: linear-gradient(to right top, #5F7BF7, #DA6BF5);
+  border-radius: 5px;
+  height: 43px;
+  width: 147px;
+  padding: 3px;
+}
+
+main .quick-action-card .free-plan-logo-container {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  max-width: 674px;
+  width: 100%;
+}
+
+main .quick-action-card .free-plan-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+main .quick-action-card .free-plan-container div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+main .quick-action-card .check-wrapper {
+  justify-content: center;
+  background-color: #F263B0;
+  border-radius: 50%;
+  height: 16px;
+  width: 16px;
+}
+
+main .quick-action-card .free-plan-container div:nth-of-type(1) .check-wrapper {
+  background-color: #D861F3;
+}
+
+main .quick-action-card .free-plan-container img {
+  width: 8px;
+  height: 7px;
+}
+
+main .quick-action-card .adobe-logo-wrapper {
+  border: solid #333C4A 1px;
+  border-radius: 10px;
+}
+
+main .quick-action-card .free-plan-logo-container .icon-adobe-express-rebrand-logo {
+  height: 48px;
+  width: auto;
+}
+
+main .quick-action-card .carousel-container {
+  margin: 0;
+}
+
+main .quick-action-card .carousel-container .carousel-platform {
+  align-items: flex-start;
+  gap: 15px;
+  font-size: 16px;
+  padding-bottom: 12px;
+}
+
+main .quick-action-card .carousel-platform::-webkit-scrollbar {
+  display: none;
+}
+
+main .quick-action-card .carousel-platform a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  fill: var(--color-white);
+  color: var(--color-white)
+}
+
+main .quick-action-card .carousel-platform a:first-of-type {
+  padding-left: 32px;
+}
+
+main .quick-action-card .carousel-platform a:last-of-type {
+  padding-right: 32px;
+}
+
+main .quick-action-card .carousel-platform svg {
+  height: 20px;
+  width: 20px;
+}
+
+main .quick-action-card .carousel-platform span {
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+  text-align: center;
+  max-width: 66px;
+}
+
+main .quick-action-card .carousel-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 100%;
+  background: linear-gradient(to left, #010B1D00, #010B1DCC);
+}
+
+main .quick-action-card .carousel-platform::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 100%;
+  background: linear-gradient(to right, #010B1D00, #010B1DCC);
+}
