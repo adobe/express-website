@@ -7,9 +7,9 @@ main [data-toggle] {
     background-color: #F8F8F8;
 }
 
-main .content-toggle-wrapper {
+main .section .content-toggle-wrapper {
     margin: 0 auto;
-    padding: 0!important;
+    padding: 0 16px;
 }
 
 main .content-toggle-small-container .content-toggle-wrapper {
@@ -17,23 +17,16 @@ main .content-toggle-small-container .content-toggle-wrapper {
 }
 
 main .block.content-toggle {
-  display: inline-block;
-  background-color: #EDEDED;
-  border-radius: 25px;
-  padding: 6px;
-  margin-bottom: 40px;
-}
-
-main .block.content-toggle {
-    width: 100%;
+    max-width: max-content;
+    background-color: #EDEDED;
+    border-radius: 25px;
+    padding: 6px;
+    margin: 10px auto 40px;
+    height: 36px;
 }
 
 main .block.content-toggle.small {
-  margin-top: 10px;
-  margin-left: 15px;
-  height: 20px;
-  padding-left: 4px;
-  padding-right: 2px;
+    height: 24px;
 }
 
 main .block.content-toggle.small.margin-left-zero {
@@ -50,7 +43,7 @@ main .content-toggle .carousel-container {
     height: 100%;
 }
 
-main .content-toggle.small .carousel-container {
+main .content-toggle .carousel-container {
     display: flex;
     align-items: center;
 }
@@ -58,14 +51,10 @@ main .content-toggle.small .carousel-container {
 main .content-toggle .carousel-container .carousel-platform {
     padding-top: 0;
     padding-bottom: 0;
-    overflow-x: initial;
-    overflow-y: initial;
 }
 
-main .content-toggle.small .carousel-container .carousel-platform {
-    /* display: flex;
-    justify-content: center; */
-    height: 24px;
+main .content-toggle .carousel-container .carousel-platform {
+    height: 56px;
     padding-top: 4px;
     padding-bottom: 4px;
     width: 100%;
@@ -73,14 +62,14 @@ main .content-toggle.small .carousel-container .carousel-platform {
 }
 
 main .content-toggle.small .carousel-fader-left {
-  width: 64px;
+    width: 64px;
 }
 
 main .content-toggle.small .carousel-fader-right {
-  width: 64px;
-  right: 17px;
+    width: 64px;
+    right: 17px;
 }
-  
+
 main .content-toggle.small .carousel-fader-left::before {
     content: "";
     position: absolute;
@@ -102,7 +91,7 @@ main .content-toggle.small .carousel-fader-right::after {
     background: linear-gradient(90deg, #F8F8F800 0%, #F8F8F8 100%) 0% 0% no-repeat padding-box;
 }
 
-main .content-toggle.small  a.button.carousel-arrow {
+main .content-toggle.small a.button.carousel-arrow {
     display: flex;
     align-items: center;
     height: 40px;
@@ -111,12 +100,12 @@ main .content-toggle.small  a.button.carousel-arrow {
 
 main .content-toggle.small .content-toggle-button {
     margin: 0;
-  }
-  
+}
+
 main .content-toggle.small .content-toggle-button {
     margin: 0;
 }
-  
+
 
 main .content-toggle.small .carousel-container a.button.carousel-arrow::before {
     margin-top: 0;
@@ -165,15 +154,15 @@ main .content-toggle:not(.small) .content-toggle-button:first-child {
 main .content-toggle:not(.small) .content-toggle-button:last-child {
     margin: 0 0 0 3px;
 }
-  
+
 main .content-toggle.small .content-toggle-button {
     padding: 5px 16px;
 }
-  
+
 main .content-toggle .content-toggle-button:hover {
     background-color: var(--color-gray-300);
 }
-  
+
 main .content-toggle .content-toggle-button.active {
     position: relative;
     background-color: white;

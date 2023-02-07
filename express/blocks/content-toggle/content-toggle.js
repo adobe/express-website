@@ -13,18 +13,6 @@
 import { createTag } from '../../scripts/scripts.js';
 import { buildCarousel } from '../shared/carousel.js';
 
-function toggleMargin(block) {
-  const $rightArrow = block.querySelector('.carousel-arrow-right');
-  $rightArrow.addEventListener('click', () => {
-    block.classList.add('margin-left-zero');
-  });
-
-  const $leftArrow = block.querySelector('.carousel-arrow-left');
-  $leftArrow.addEventListener('click', () => {
-    block.classList.remove('margin-left-zero');
-  });
-}
-
 export default function decorate($block) {
   const $sections = document.querySelectorAll('[data-toggle]');
   const $toggleContainer = $block.querySelector('ul');
@@ -100,5 +88,4 @@ export default function decorate($block) {
   }
 
   buildCarousel('.content-toggle > *', $block);
-  toggleMargin($block);
 }
