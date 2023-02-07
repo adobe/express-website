@@ -3,10 +3,6 @@ main .section.content-toggle-small-container {
     padding-left: 0;
 }
 
-main .content-toggle {
-    /* position: relative; */
-}
-
 main [data-toggle] {
     background-color: #F8F8F8;
 }
@@ -28,8 +24,11 @@ main .block.content-toggle {
   margin-bottom: 40px;
 }
 
+main .block.content-toggle {
+    width: 100%;
+}
+
 main .block.content-toggle.small {
-  width: 100%;
   margin-top: 10px;
   margin-left: 15px;
   height: 20px;
@@ -93,12 +92,13 @@ main .content-toggle.small .carousel-fader-left::before {
 }
 
 main .content-toggle.small .carousel-fader-right::after {
+    z-index: 1;
     content: "";
     position: absolute;
-    top: -7px;
+    top: -15px;
     right: 0;
     width: 72px;
-    height: 33px;
+    height: 43px;
     background: linear-gradient(90deg, #F8F8F800 0%, #F8F8F8 100%) 0% 0% no-repeat padding-box;
 }
 
@@ -133,7 +133,7 @@ main .content-toggle.small .carousel-platform .content-toggle-button:not('.activ
 
 main .content-toggle.small .carousel-container a.button.carousel-arrow {
     margin-right: 17px;
-    z-index: 1;
+    z-index: 2;
 }
 
 main .content-toggle.small .carousel-platform::-webkit-scrollbar {
