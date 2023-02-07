@@ -10,9 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-// eslint-disable-next-line import/no-unresolved
-import {fetchRelevantRows, normalizeHeadings} from '../../scripts/scripts.js';
-// eslint-disable-next-line import/no-unresolved
+import {
+  fetchRelevantRows,
+  normalizeHeadings,
+} from '../../scripts/scripts.js';
+
 import { buildCarousel } from '../shared/carousel.js';
 
 async function loadSpreadsheetData($block, relevantRowsData) {
