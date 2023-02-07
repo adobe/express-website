@@ -198,20 +198,26 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 12px;
-  min-height: 12px;
-  max-height: 12px;
-  width: 12px;
-  min-width: 12px;
-  max-width: 12px;
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+  width: 16px;
+  min-width: 16px;
+  max-width: 16px;
   margin-left: 10px;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid var(--color-gray-700);
   color: var(--color-gray-700);
   font-weight: 700;
   font-size: var(--body-font-size-s);
   margin-right: 20px;
+}
+
+main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .pricing-hub-feature-tooltip-icon img.icon {
+  margin-left: 0;
+  margin-right: 0;
+  height: 16px;
+  width: 16px;
 }
 
 main .pricing-hub .pricing-hub-feature-tooltip-chevron {

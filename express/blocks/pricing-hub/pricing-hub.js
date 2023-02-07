@@ -18,6 +18,8 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   getOffer,
+  getIcon,
+  getIconElement,
 } from '../../scripts/scripts.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
@@ -292,12 +294,18 @@ function decorateFeatures($block) {
 
     if ($tooltip) {
       $tooltip.classList.add('pricing-hub-feature-tooltip');
-      const tooltipIcon = createTag('div', { class: 'pricing-hub-feature-tooltip-icon', tabindex: 0 });
+      const tooltipIcon = getIconElement('info');
+      const tooltipDiv = createTag('div', {
+        class: 'pricing-hub-feature-tooltip-icon',
+        'aria-label': $tooltip.textContent,
+        role: 'tooltip',
+        tabindex: '0',
+      });
+      tooltipDiv.append(tooltipIcon);
       const tooltipChevron = createTag('div', { class: 'pricing-hub-feature-tooltip-chevron' });
-      tooltipIcon.innerHTML = 'i';
-      $columns[0].append(tooltipIcon);
-      tooltipIcon.append(tooltipChevron);
-      tooltipIcon.append($tooltip);
+      $columns[0].append(tooltipDiv);
+      tooltipDiv.append(tooltipChevron);
+      tooltipDiv.append($tooltip);
     }
 
     $feature.classList.add('pricing-hub-feature');
