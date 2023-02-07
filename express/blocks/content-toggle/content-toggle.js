@@ -28,7 +28,6 @@ function toggleMargin(block) {
 export default function decorate($block) {
   const $sections = document.querySelectorAll('[data-toggle]');
   const $toggleContainer = $block.querySelector('ul');
-  let $aElement;
 
   $block.innerHTML = '';
 
@@ -38,38 +37,33 @@ export default function decorate($block) {
     const tagText = tagTextBrackets ? tagTextBrackets[1] : null;
     const link = $toggle.querySelector('a');
     const $tag = createTag('span', { class: 'tag' });
-    const $button = createTag('button', { class: 'content-toggle-button' });
     let $toggleElement;
 
     if (tagText) {
       sectionText = sectionText.replace(tagTextBrackets[0], '').trim();
       $tag.textContent = tagText;
     }
+
     if (link) {
-      $aElement = createTag('a', { href: link.getAttribute('href'), class: 'content-toggle-button' });
-      $aElement.textContent = sectionText;
-      $toggleElement = $aElement;
-      $block.append($aElement);
-      if (tagText) {
-        $aElement.append($tag);
-      }
+      $toggleElement = createTag('a', { href: link.getAttribute('href'), class: 'content-toggle-button' });
     } else {
-      $button.textContent = sectionText;
-      $toggleElement = $button;
-      $block.append($button);
-      if (tagText) {
-        $button.append($tag);
-      }
+      $toggleElement = createTag('button', { class: 'content-toggle-button' });
+    }
+
+    $toggleElement.textContent = sectionText;
+    $block.append($toggleElement);
+    if (tagText) {
+      $toggleElement.append($tag);
     }
 
     $toggleElement.addEventListener('click', () => {
-      const $activeButton = $block.querySelector('button.active');
+      const $activeButton = $block.querySelector('.active');
       const blockPosition = $block.getBoundingClientRect().top;
       const offsetPosition = blockPosition + window.scrollY - 80;
 
       if ($activeButton !== $toggle) {
         $activeButton.classList.remove('active');
-        $button.classList.add('active');
+        $toggleElement.classList.add('active');
 
         $sections.forEach(($section) => {
           if ($section === $section.dataset.toggle) {
@@ -87,7 +81,7 @@ export default function decorate($block) {
     });
 
     if (index === 0) {
-      $button.classList.add('active');
+      $toggleElement.classList.add('active');
     }
   });
 

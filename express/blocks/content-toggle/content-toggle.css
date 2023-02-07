@@ -58,8 +58,8 @@ main .content-toggle.small .carousel-container {
 main .content-toggle .carousel-container .carousel-platform {
     padding-top: 0;
     padding-bottom: 0;
-    overflow-x: initial;
-    overflow-y: initial;
+    /* overflow-x: initial;
+    overflow-y: initial; */
 }
 
 main .content-toggle.small .carousel-container .carousel-platform {
@@ -68,7 +68,7 @@ main .content-toggle.small .carousel-container .carousel-platform {
     height: 24px;
     padding-top: 4px;
     padding-bottom: 4px;
-    width: 100%;
+    /* width: 100%; */
     gap: 6px;
 }
 
@@ -136,7 +136,7 @@ main .content-toggle.small .carousel-container a.button.carousel-arrow {
     z-index: 2;
 }
 
-main .content-toggle.small .carousel-platform::-webkit-scrollbar {
+main .content-toggle .carousel-platform::-webkit-scrollbar {
     display: none;
 }
 
