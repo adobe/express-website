@@ -78,6 +78,40 @@ main .pricing-hub .pricing-hub-card .button {
     width: 100%;
 }
 
+main .pricing-hub .pricing-hub-midsection {
+
+}
+
+main .pricing-hub .pricing-hub-midsection p {
+    font-size: var(--body-font-size-m);
+    max-width: 475px;
+}
+
+main .pricing-hub .pricing-hub-midsection strong {
+    position: relative;
+    color: var(--color-info-accent);
+}
+
+main .pricing-hub .pricing-hub-lottie {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    margin: 0;
+    padding: 4px 0 0;
+    background: rgba(0,0,0,0);
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+main .pricing-hub .pricing-hub-lottie .lottie-purple-arrows {
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+}
+
 main .pricing-hub .pricing-hub-features {
     display: flex;
     flex-direction: column;

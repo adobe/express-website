@@ -13,8 +13,10 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  createTag, getHelixEnv, getOffer,
-// eslint-disable-next-line import/no-unresolved
+  createTag,
+  getHelixEnv,
+  getLottie,
+  getOffer,
 } from '../../scripts/scripts.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
@@ -249,6 +251,17 @@ async function decorateCards($block) {
   $buttonsContainer.remove();
 }
 
+function decorateMidSection($block) {
+  const $rows = Array.from($block.children);
+  const $midSection = $rows[1];
+  const $midSectionHeader = $midSection.querySelector('strong');
+  const $midSectionAnimation = createTag('span', { class: 'pricing-hub-lottie' });
+
+  $midSection.classList.add('pricing-hub-midsection');
+  $midSectionAnimation.innerHTML = getLottie('purple-arrows', '/express/blocks/pricing-hub/purple-arrows.json');
+  $midSectionHeader.append($midSectionAnimation);
+}
+
 function decorateFeatures($block) {
   const $rows = Array.from($block.children);
   const $features = createTag('div', { class: 'pricing-hub-features' });
@@ -291,5 +304,6 @@ function decorateFeatures($block) {
 
 export default async function decorate($block) {
   await decorateCards($block);
+  decorateMidSection($block);
   decorateFeatures($block);
 }
