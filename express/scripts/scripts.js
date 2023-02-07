@@ -1650,17 +1650,14 @@ function buildAutoBlocks($main) {
 
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
-    if ($main.querySelector('.app-store-highlight') === null) {
-      const $highlight = buildBlock('app-store-highlight', '');
-      if ($lastDiv) {
-        $lastDiv.append($highlight);
-      }
+    const $highlight = buildBlock('app-store-highlight', '');
+    if ($lastDiv) {
+      $lastDiv.append($highlight);
     }
-    if ($main.querySelector('.app-store-blade') === null) {
-      const $blade = buildBlock('app-store-blade', '');
-      if ($lastDiv) {
-        $lastDiv.append($blade);
-      }
+
+    const $blade = buildBlock('app-store-blade', '');
+    if ($lastDiv) {
+      $lastDiv.append($blade);
     }
   }
 
@@ -1674,14 +1671,18 @@ function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const $multifunctionButton = buildBlock('floating-button', '');
     $multifunctionButton.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
+    if ($lastDiv) {
+      $lastDiv.append($multifunctionButton);
+    }
   }
 
   if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
     const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
     quickActionCardBlock.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
+    if ($lastDiv) {
+      $lastDiv.append(quickActionCardBlock);
+    }
   }
 }
 
@@ -2291,9 +2292,7 @@ export async function addFreePlanWidget(elem) {
       const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
       const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
       const optoutButton = createTag('button', { class: 'free-plan-optout' });
-      optoutButton.append(getIconElement('close-white'));
-      let highlightWidth = 400;
-      const a = elem.querySelector('a');
+      optoutButton.append(getIconElement('close-black'));
 
       for (let i = 0; i < 40; i += 1) {
         const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
@@ -2310,14 +2309,6 @@ export async function addFreePlanWidget(elem) {
       freePlanBulletContainer.append(freePlanBulletTray);
       bullet.append(freePlanBulletContainer);
       elem.append(bullet, optoutButton);
-
-      const captureCtaWidth = setInterval(() => {
-        if (a.offsetWidth > 0) {
-          highlightWidth = a.offsetWidth + 200;
-          freePlanBulletContainer.style.maxWidth = `${highlightWidth}px`;
-          clearInterval(captureCtaWidth);
-        }
-      }, 200);
 
       // start watching for free-plan-highlight scroll
       const parent = elem.parentElement;
@@ -2339,8 +2330,13 @@ export async function addFreePlanWidget(elem) {
       if (parent && previousSibling) {
         ['scroll', 'resize'].forEach((event) => {
           window.addEventListener(event, () => {
-            if (supposedCtaPositionX === 0 || !elem.classList.contains('fixed')) {
+            if (!elem.classList.contains('fixed')) {
               supposedCtaPositionX = elem.getBoundingClientRect().left;
+            } else {
+              const currentClone = parent.querySelector('.free-plan-widget-placeholder');
+              if (currentClone) {
+                supposedCtaPositionX = currentClone.getBoundingClientRect().left;
+              }
             }
 
             const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace('px', ''), 10);
@@ -2358,20 +2354,19 @@ export async function addFreePlanWidget(elem) {
             const ctaPositionX = elem.getBoundingClientRect().left;
             const highlightContainer = elem.querySelector('.free-plan-bullet-container');
 
-            const placeHolder = createTag('div', {
-              style: `height: ${elh + elmt}px`,
-              class: 'free-plan-widget-placeholder',
-            });
-
             if (window.innerWidth > 900 && triggerPoint <= 0) {
               if (!elem.classList.contains('highlight-optout')) {
                 elem.classList.add('fixed');
                 elem.style.left = `${supposedCtaPositionX}px`;
                 highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
-                highlightContainer.style.maxWidth = '100vw';
 
                 if (parent.querySelectorAll('.free-plan-widget-placeholder').length <= 0) {
-                  previousSibling.insertAdjacentElement('afterend', placeHolder);
+                  const clone = createTag('div', {
+                    style: `height: ${elh + elmt}px`,
+                    class: 'free-plan-widget-placeholder',
+                  });
+
+                  previousSibling.insertAdjacentElement('afterend', clone);
                 }
               }
             } else {
@@ -2382,7 +2377,6 @@ export async function addFreePlanWidget(elem) {
               elem.classList.remove('fixed');
               elem.style.removeProperty('left');
               highlightContainer.style.removeProperty('transform');
-              highlightContainer.style.maxWidth = `${highlightWidth}px`;
             }
           }, { passive: true });
         });

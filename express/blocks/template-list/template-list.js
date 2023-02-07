@@ -139,6 +139,7 @@ function fetchTemplatesByTasks(tasks) {
 
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
+  const currentTask = props.filters.tasks;
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
@@ -151,6 +152,8 @@ async function appendCategoryTemplatesCount($section) {
       anchor.append(countSpan);
     }
   }
+
+  props.filters.tasks = currentTask;
 }
 
 async function processResponse() {
