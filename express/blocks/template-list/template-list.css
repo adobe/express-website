@@ -1742,8 +1742,9 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   color: var(--color-info-accent);
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li.active {
+main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li.active > a {
   color: var(--color-info-accent);
+  font-weight: 600;
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li .icon {
