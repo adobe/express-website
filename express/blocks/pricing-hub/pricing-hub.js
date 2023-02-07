@@ -16,6 +16,7 @@ import {
   createTag,
   getHelixEnv,
   getLottie,
+  lazyLoadLottiePlayer,
   getOffer,
 } from '../../scripts/scripts.js';
 
@@ -255,11 +256,20 @@ function decorateMidSection($block) {
   const $rows = Array.from($block.children);
   const $midSection = $rows[1];
   const $midSectionHeader = $midSection.querySelector('strong');
+  $midSectionHeader.classList.add('pricing-hub-lottie-button-scroll');
+  $midSectionHeader.addEventListener('click', () => {
+    window.scrollTo({
+      top: $midSectionHeader.getBoundingClientRect().bottom + window.scrollY,
+      behavior: 'smooth',
+    });
+  });
+
   const $midSectionAnimation = createTag('span', { class: 'pricing-hub-lottie' });
 
   $midSection.classList.add('pricing-hub-midsection');
   $midSectionAnimation.innerHTML = getLottie('purple-arrows', '/express/blocks/pricing-hub/purple-arrows.json');
   $midSectionHeader.append($midSectionAnimation);
+  lazyLoadLottiePlayer();
 }
 
 function decorateFeatures($block) {
