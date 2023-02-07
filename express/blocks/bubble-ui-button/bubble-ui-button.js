@@ -43,19 +43,11 @@ const bubbleUI = {
     }
 
     const vp = boxBottom.querySelector('.bubble-viewport');
-    vp.addEventListener('scroll', () => {
-      this.resizeBubbles(boxBottom);
-    });
-    window.addEventListener(
-      'orientationchange',
-      () => {
-        this.centerBubbles();
-      },
-      false,
-    );
-    window.addEventListener('resize', () => {
-      this.centerBubbles();
-    });
+    if (vp) {
+      vp.addEventListener('scroll', () => {
+        this.resizeBubbles(boxBottom);
+      });
+    }
   },
   centerBubbles(boxBottom) {
     const vp = boxBottom.querySelector('.bubble-viewport');
@@ -64,8 +56,7 @@ const bubbleUI = {
     const hb = boxBottom.querySelector('.center-piece > div');
     const hbc = this.getCenter(hb);
 
-    vp.scrollTo({ top: hbc.y - vpc.y, left: hbc.x - vpc.x });
-    this.resizeBubbles(boxBottom);
+    vp.scrollTo({ top: hbc.y + 10 - vpc.y, left: hbc.x + 10 - vpc.x });
 
     setTimeout(() => {
       const bubbleRowContainers = boxBottom.querySelectorAll('.bubble-row-container');
@@ -75,6 +66,9 @@ const bubbleUI = {
           el.style.opacity = '1';
         });
       }
+
+      this.resizeBubbles(boxBottom);
+      boxBottom.classList.remove('no-transition');
     }, 300);
   },
   getCenter(el) {
@@ -288,6 +282,7 @@ function initBubbleUI(boxBottom) {
 
 async function decorateBubbleUI($boxBottom, data) {
   $boxBottom.classList.add('bubble-ui');
+  $boxBottom.classList.add('no-transition');
 
   const bubbleViewportContainer = createTag('div', { class: 'bubble-viewport-container' });
   const bubbleViewport = createTag('div', { class: 'bubble-viewport' });

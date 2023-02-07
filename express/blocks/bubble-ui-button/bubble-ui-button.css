@@ -1,0 +1,106 @@
+main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom.bubble-ui {
+    margin: 0;
+    flex-grow: 1;
+    height: 350px;
+    position: relative;
+    /* border-radius: 50px; */
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    scroll-padding: 100px 0 0 100px;
+    display: flex;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport::-webkit-scrollbar {
+    display: none;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: content-box;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row {
+    display: flex;
+    flex-direction: row;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-container {
+    width: 110px;
+    height: 110px;
+    margin: 0 5px;
+    position: relative;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble {
+    border-radius: 50%;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui.no-transition .bubble {
+    transition: none;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.small-bubble,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bubble {
+    background-image: none !important;
+    align-items: center;
+    padding-top: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .small-bubble,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .tiny-bubble {
+    background: linear-gradient(320deg, #ff4dd2, #7c84f3, #ff4dd2, #7c84f3, #ff4dd2) !important;
+    background-size: 400% 400% !important;
+    -webkit-animation: buttonGradient 45s ease infinite;
+    -moz-animation: buttonGradient 45s ease infinite;
+    animation: buttonGradient 45s ease infinite;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece img {
+    display: none;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .small-bubble img,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .tiny-bubble img {
+    width: 55%;
+    display: block;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bubble > img {
+    opacity: 0;
+}
