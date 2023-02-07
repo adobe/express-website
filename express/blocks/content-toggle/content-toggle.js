@@ -14,12 +14,12 @@ import { createTag } from '../../scripts/scripts.js';
 import { buildCarousel } from '../shared/carousel.js';
 
 function toggleMargin(block) {
-  const $rightArrow = block.querySelector('.small .carousel-arrow-right');
+  const $rightArrow = block.querySelector('.carousel-arrow-right');
   $rightArrow.addEventListener('click', () => {
     block.classList.add('margin-left-zero');
   });
 
-  const $leftArrow = block.querySelector('.small .carousel-arrow-left');
+  const $leftArrow = block.querySelector('.carousel-arrow-left');
   $leftArrow.addEventListener('click', () => {
     block.classList.remove('margin-left-zero');
   });
@@ -28,34 +28,41 @@ function toggleMargin(block) {
 export default function decorate($block) {
   const $sections = document.querySelectorAll('[data-toggle]');
   const $toggleContainer = $block.querySelector('ul');
-  let aTag;
+  let $aElement;
 
   $block.innerHTML = '';
 
   Array.from($toggleContainer.children).forEach(($toggle, index) => {
-    const $button = createTag('button');
-    const section = $toggle.textContent.trim();
-    const tagText = $toggle.textContent.trim().match(/\[(.*?)\]/);
+    let sectionText = $toggle.textContent.trim();
+    const tagTextBrackets = sectionText.match(/\[(.*?)\]/);
+    const tagText = tagTextBrackets ? tagTextBrackets[1] : null;
     const link = $toggle.querySelector('a');
+    const $tag = createTag('span', { class: 'tag' });
+    const $button = createTag('button', { class: 'content-toggle-button' });
+    let $toggleElement;
 
-    $button.textContent = $toggle.textContent.trim();
-    if ($block.classList.contains('dark') && tagText) {
-      const [fullText, tagTextContent] = tagText;
-      $button.textContent = $toggle.textContent.trim().replace(fullText, '').trim();
-      const $tag = createTag('span', { class: 'tag' });
-      $tag.textContent = tagTextContent;
-      $block.append($tag);
+    if (tagText) {
+      sectionText = sectionText.replace(tagTextBrackets[0], '').trim();
+      $tag.textContent = tagText;
     }
-
-    if ($block.classList.contains('small') && link) {
-      aTag = createTag('a', { href: link.getAttribute('href') });
-      aTag.append($button);
-      $block.append(aTag);
+    if (link) {
+      $aElement = createTag('a', { href: link.getAttribute('href'), class: 'content-toggle-button' });
+      $aElement.textContent = sectionText;
+      $toggleElement = $aElement;
+      $block.append($aElement);
+      if (tagText) {
+        $aElement.append($tag);
+      }
     } else {
+      $button.textContent = sectionText;
+      $toggleElement = $button;
       $block.append($button);
+      if (tagText) {
+        $button.append($tag);
+      }
     }
 
-    $button.addEventListener('click', () => {
+    $toggleElement.addEventListener('click', () => {
       const $activeButton = $block.querySelector('button.active');
       const blockPosition = $block.getBoundingClientRect().top;
       const offsetPosition = blockPosition + window.scrollY - 80;
@@ -65,7 +72,7 @@ export default function decorate($block) {
         $button.classList.add('active');
 
         $sections.forEach(($section) => {
-          if (section === $section.dataset.toggle) {
+          if ($section === $section.dataset.toggle) {
             $section.style.display = 'block';
           } else {
             $section.style.display = 'none';

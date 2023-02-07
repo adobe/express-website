@@ -3,8 +3,8 @@ main .section.content-toggle-small-container {
     padding-left: 0;
 }
 
-main .content-toggle.dark {
-    position: relative;
+main .content-toggle {
+    /* position: relative; */
 }
 
 main [data-toggle] {
@@ -34,7 +34,7 @@ main .block.content-toggle.small {
   margin-left: 15px;
   height: 20px;
   padding-left: 4px;
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 main .block.content-toggle.small.margin-left-zero {
@@ -59,9 +59,13 @@ main .content-toggle.small .carousel-container {
 main .content-toggle .carousel-container .carousel-platform {
     padding-top: 0;
     padding-bottom: 0;
+    overflow-x: initial;
+    overflow-y: initial;
 }
 
 main .content-toggle.small .carousel-container .carousel-platform {
+    /* display: flex;
+    justify-content: center; */
     height: 24px;
     padding-top: 4px;
     padding-bottom: 4px;
@@ -105,11 +109,11 @@ main .content-toggle.small  a.button.carousel-arrow {
     width: 40px;
 }
 
-main .content-toggle.small button:first-child {
+main .content-toggle.small .content-toggle-button {
     margin: 0;
   }
   
-main .content-toggle.small button:last-child {
+main .content-toggle.small .content-toggle-button {
     margin: 0;
 }
   
@@ -123,7 +127,7 @@ main .content-toggle.small .carousel-container a.button.carousel-arrow.carousel-
     margin-left: 16px;
 }
 
-main .content-toggle.small .carousel-platform button:not('.active'):hover {
+main .content-toggle.small .carousel-platform .content-toggle-button:not('.active'):hover {
     background-color: #D4D4D4;
 }
 
@@ -136,7 +140,8 @@ main .content-toggle.small .carousel-platform::-webkit-scrollbar {
     display: none;
 }
 
-main .content-toggle button {
+main .content-toggle .content-toggle-button {
+    position: relative;
     display: block;
     list-style-type: none;
     background-color: #EDEDED;
@@ -150,36 +155,37 @@ main .content-toggle button {
     user-select: none;
     border: none;
     font-family: var(--body-font-family);
+    color: #000000;
 }
 
-main .content-toggle:not(.small) button:first-child {
+main .content-toggle:not(.small) .content-toggle-button:first-child {
     margin: 0 3px 0 0;
 }
 
-main .content-toggle:not(.small) button:last-child {
+main .content-toggle:not(.small) .content-toggle-button:last-child {
     margin: 0 0 0 3px;
 }
   
-main .content-toggle.small button {
+main .content-toggle.small .content-toggle-button {
     padding: 5px 16px;
 }
   
-main .content-toggle button:hover {
+main .content-toggle .content-toggle-button:hover {
     background-color: var(--color-gray-300);
 }
   
-main .content-toggle button.active {
+main .content-toggle .content-toggle-button.active {
     position: relative;
     background-color: white;
 }
 
-main .content-toggle.dark button.active {
+main .content-toggle.dark .content-toggle-button.active {
     position: relative;
     background-color: #242424;
     color: white;
 }
 
-main .content-toggle.dark .tag {
+main .content-toggle .tag {
     position: absolute;
     display: flex;
     align-items: center;
@@ -195,7 +201,7 @@ main .content-toggle.dark .tag {
     border-radius: 4px;
 }
 
-main .content-toggle button.active {
+main .content-toggle .content-toggle-button.active {
     position: relative;
     background-color: white;
 }
