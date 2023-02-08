@@ -938,14 +938,14 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $taskDropdownBridge = createTag('div', { class: 'task-dropdown-bridge' });
   const $taskDropdownList = createTag('ul', { class: 'task-dropdown-list' });
   const categories = JSON.parse(placeholders['task-categories']);
-
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
   let optionMatched = false;
 
-  Object.entries(categories).forEach((category) => {
-    const $itemRadio = createTag('span', { class: 'option-radio', tabindex: 0 });
+  Object.entries(categories).forEach((category, index) => {
+    const $itemIcon = getIconElement(categoryIcons[index]);
     const $listItem = createTag('li', { class: 'option', 'data-tasks': category[1] });
     [$listItem.textContent] = category;
-    $listItem.prepend($itemRadio);
+    $listItem.prepend($itemIcon);
     $taskDropdownList.append($listItem);
 
     if ($listItem.dataset.tasks === trimFormattedFilterText(props.filters.tasks)) {
@@ -1124,30 +1124,32 @@ function initDrawer($block, $section, $toolBar) {
     }, { passive: true });
   });
 
-  setTimeout(() => {
-    $drawer.classList.remove('hidden');
-    $functionWrappers.forEach(($wrapper) => {
-      const $button = $wrapper.querySelector('.button-wrapper');
-      let maxHeight;
-      if ($button) {
-        if (!maxHeight) {
-          maxHeight = window.getComputedStyle($wrapper).height;
+  $drawer.classList.remove('hidden');
+  $functionWrappers.forEach(($wrapper) => {
+    const $button = $wrapper.querySelector('.button-wrapper');
+    let maxHeight;
+    if ($button) {
+      const wrapperMaxHeightGrabbed = setInterval(() => {
+        if ($wrapper.offsetHeight > 0) {
+          maxHeight = `${$wrapper.offsetHeight}px`;
           $wrapper.style.maxHeight = maxHeight;
+          clearInterval(wrapperMaxHeightGrabbed);
         }
+      }, 200);
 
-        $button.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const button = $wrapper.querySelector('.button-wrapper');
-          if (button) {
-            const minHeight = `${button.offsetHeight - 8}px`;
-            $wrapper.classList.toggle('collapsed');
-            $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
-          }
-        }, { passive: true });
-      }
-    });
-    $drawer.classList.add('hidden');
-  }, 10);
+      $button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const button = $wrapper.querySelector('.button-wrapper');
+        if (button) {
+          const minHeight = `${button.offsetHeight - 8}px`;
+          $wrapper.classList.toggle('collapsed');
+          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
+        }
+      }, { passive: true });
+    }
+  });
+
+  $drawer.classList.add('hidden');
 }
 
 function updateQueryURL(functionWrapper, option) {
@@ -1264,9 +1266,10 @@ function initFilterSort($block, $toolBar) {
               b.parentElement.classList.remove('opened');
             }
           });
+
+          $wrapper.classList.toggle('opened');
         }
 
-        $wrapper.classList.toggle('opened');
         closeTaskDropdown($toolBar);
       }, { passive: true });
 
