@@ -1280,3 +1280,27 @@ main .section[data-section-status='initialized'] {
     font-size: var(--heading-font-size-m);
   }
 }
+
+/* long-form section: left-align text */
+main .section.long-form .default-content-wrapper {
+  box-sizing: border-box;
+  padding: 0 20px;
+  max-width: unset;
+}
+
+
+main .section.long-form .default-content-wrapper,
+main .section.long-form .default-content-wrapper h2,
+main .section.long-form .default-content-wrapper h3,
+main .section.long-form .default-content-wrapper h4,
+main .section.long-form .default-content-wrapper h5,
+main .section.long-form .default-content-wrapper h6 {
+  text-align: left;
+}
+
+@media (min-width: 600px) {
+  main .section.long-form .default-content-wrapper {
+    padding: 0 40px;
+    max-width: 1070px;
+  }
+}
