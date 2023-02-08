@@ -1,3 +1,6 @@
+.quick-action ccl-quick-action {
+    height: 518px;
+}
 .mock-ccl-quick-action {
     display: flex;
     margin: 0 auto 3.25rem auto;
@@ -95,6 +98,9 @@
     margin: 0 0 0 0;
 }
 
+.mock-ccl-quick-action #mock-file-input {
+    display: none;
+}
 .quick-action-tag {
     display: inline-block;
     position: relative;

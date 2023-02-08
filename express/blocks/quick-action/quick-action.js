@@ -46,11 +46,10 @@ async function fetchDependency(url, id) {
 }
 
 function showQuickAction(display) {
-  const quickActionEle = document.getElementsByTagName(ELEMENT_NAME);
   if (display) {
     document.getElementsByClassName(MOCK_ELEMENT_NAME)[0].style.display = 'none';
   }
-  quickActionEle[0].style.display = display ? 'block' : 'none';
+  window.qtHost.task.qtEle.hideWorkSpace = false;
 }
 
 function createMockQuickAction() {
@@ -68,7 +67,8 @@ function createMockQuickAction() {
         + 'Upload your photo'
     + '</button>'
   + '</div>'
-  + '</div> </div>';
+  + '</div> <input id="mock-file-input" type="file" accept="image/jpeg,image/png">'
+  + '</div>';
   return ele;
 }
 
@@ -80,8 +80,12 @@ function hideVideoAndShowMock() {
 
 function addListenersOnMockElements(ele) {
   ele.addEventListener('click', () => {
-    // trigger click on the main ccl action
-    document.querySelector('cclqt-remove-background').shadowRoot.querySelector('cclqt-image-upload').shadowRoot.querySelector('button').click();
+    document.querySelector('.mock-ccl-quick-action #mock-file-input').click();
+  });
+  document.querySelector(`.${MOCK_ELEMENT_NAME} #mock-file-input`).addEventListener('change', (event) => {
+    const input = event.target;
+    const file = input.files[0];
+    window.qtHost.task.uploadImageFile(file);
   });
   ele.addEventListener('dragover', (ev) => {
     ev.preventDefault();
@@ -90,7 +94,6 @@ function addListenersOnMockElements(ele) {
     ev.preventDefault();
     const file = ev.dataTransfer.files[0];
     window.qtHost.task.uploadImageFile(file);
-    // showQuickAction(true);
   });
   ele.addEventListener('mouseover', hideVideoAndShowMock);
   document.querySelector(`.${MOCK_ELEMENT_NAME} video`).addEventListener('ended', (event) => {
@@ -137,7 +140,7 @@ class CCXQuickActionElement extends HTMLElement {
           'should-use-cloud-storage': true,
           'preview-only': true,
           'should-download-in-editor': true,
-          'pass-errors-to-host': true,
+          'hide-work-space': true,
         },
       },
       hostType: 'standalone',
@@ -158,12 +161,12 @@ class CCXQuickActionElement extends HTMLElement {
   // eslint-disable-next-line class-methods-use-this
   async connectedCallback() {
     // FIXME: remove hardcoded fallback once PR is merged to main
-    const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-f377a22e.js'
+    const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-fa980e71.js'
       || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api/host-entries/host-shared', 'host-shared');
     loadScript(sharedScriptUrl);
 
     // FIXME: remove hardcoded fallback once PR is merged to main
-    const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-218c95a0.js'
+    const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-7c43cc31.js'
       || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', this.action);
     loadScript(actionScriptUrl);
   }
@@ -285,7 +288,6 @@ window.customElements.define(ELEMENT_NAME, CCXQuickActionElement);
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   block.innerHTML = `<${ELEMENT_NAME} action="${config.action || 'remove-background'}"></${ELEMENT_NAME}>`;
-  showQuickAction(false);
   const mockQuickActionEle = createMockQuickAction();
   block.append(mockQuickActionEle);
   addListenersOnMockElements(mockQuickActionEle);
