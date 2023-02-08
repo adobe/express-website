@@ -1001,7 +1001,8 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
   position: absolute;
   display: flex;
-  width: max-content;
+  width: 240px;
+  min-width: max-content;
   height: max-content;
   box-sizing: border-box;
   max-height: 0;
