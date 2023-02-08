@@ -1445,8 +1445,12 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .butto
   padding-right: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper.collapsed .icon.icon-drop-down-arrow {
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile-inner-wrapper .function-wrapper .icon.icon-drop-down-arrow {
   transform: rotate(180deg);
+}
+
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile-inner-wrapper .function-wrapper.collapsed .icon.icon-drop-down-arrow {
+  transform: rotate(0deg);
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile {
