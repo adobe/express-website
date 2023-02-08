@@ -31,7 +31,7 @@
 	(function (win, doc) {
 		const { href, pathname } = win.location;	
 		const [_ , userLocale] = pathname.split('/');
-		const redirectMapping = redirectMap.get(userLocale) || '/' ;  
+		const redirectMapping = redirectMap.get(userLocale) || '/';  
 		const redirectURL = href.replace(`/${userLocale}/`, redirectMapping);
 
 		doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
