@@ -935,7 +935,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $taskDropdown = createTag('div', { class: 'task-dropdown' });
   const $taskDropdownChev = getIconElement('drop-down-arrow');
   const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
-  const $taskDropdownBridge = createTag('div', { class: 'task-dropdown-bridge' });
   const $taskDropdownList = createTag('ul', { class: 'task-dropdown-list' });
   const categories = JSON.parse(placeholders['task-categories']);
   const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
@@ -967,8 +966,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
-  $taskDropdownBridge.append($taskDropdownList);
-  $taskDropdown.append($taskDropdownToggle, $taskDropdownBridge, $taskDropdownChev);
+  $taskDropdown.append($taskDropdownToggle, $taskDropdownList, $taskDropdownChev);
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
   $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);

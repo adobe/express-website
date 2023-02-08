@@ -998,10 +998,6 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   background-color: var(--color-gray-200);
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-bridge {
-  padding-top: 8px;
-}
-
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
   position: absolute;
   display: flex;
@@ -1013,7 +1009,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   flex-direction: column;
   align-items: stretch;
   background: var(--color-white);
-  margin-top: 0;
+  margin-top: 8px;
   padding: 0 12px;
   border-radius: 12px;
   box-shadow: 0 0 16px #00000015;
@@ -1025,22 +1021,16 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   width: 12px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
-  border: 2px var(--color-gray-100) solid;
-  border-radius: 0 12px 12px 0;
-}
-
 /* Handle */
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
-  border: 2px var(--color-gray-100) solid;
+  background: var(--color-gray-200);
+  border: 2px var(--color-white) solid;
   border-radius: 12px;
 }
 
 /* Handle on hover */
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-400);
+  background: var(--color-gray-300);
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list.active {
