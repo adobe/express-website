@@ -1776,6 +1776,7 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > a {
   font-family: var(--body-font-family);
+  color: var(--color-black);
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;

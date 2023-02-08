@@ -471,13 +471,7 @@ function redirectSearch($searchBar, targetTask) {
   const topicToSearch = $searchBar ? $searchBar.value : currentTopic;
   const taskToSearch = targetTask || currentTasks;
 
-  let searchUrlTemplate;
-
-  if (currentTasks === 'all' && !targetTask) {
-    searchUrlTemplate = `/express/templates/search?tasks=''&phformat=${format}&topics=${topicToSearch}`;
-  } else {
-    searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
-  }
+  const searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
   const targetPath = locale === 'us' ? `/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}` : `/${locale}/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
 
@@ -831,8 +825,13 @@ function decorateCategoryList($block, $section, placeholders) {
     $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
 
     Object.entries(categories).forEach((category, index) => {
+      const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+      const targetTasks = category[1];
+      const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
+      const currentTopic = trimFormattedFilterText(props.filters.topics);
+
       const $listItem = createTag('li');
-      if (category[1] === trimFormattedFilterText(props.filters.tasks)) {
+      if (category[1] === currentTasks) {
         $listItem.classList.add('active');
       }
 
@@ -844,12 +843,11 @@ function decorateCategoryList($block, $section, placeholders) {
       }
 
       const iconElement = getIconElement(icon);
-      const $a = createTag('a', { 'data-tasks': category[1] });
+      const $a = createTag('a', {
+        'data-tasks': targetTasks,
+        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic}`,
+      });
       [$a.textContent] = category;
-
-      $a.addEventListener('click', () => {
-        redirectSearch(null, $a.dataset.tasks);
-      }, { passive: true });
 
       $a.prepend(iconElement);
       $listItem.append($a);
@@ -857,14 +855,6 @@ function decorateCategoryList($block, $section, placeholders) {
     });
 
     const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
-
-    const $mobileCategoryButtons = $categoriesMobileWrapper.querySelectorAll(':scope > .category-list > li > a');
-
-    $mobileCategoryButtons.forEach(($button) => {
-      $button.addEventListener('click', () => {
-        redirectSearch(null, $button.dataset.tasks);
-      }, { passive: true });
-    });
 
     const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
     $mobileDrawerWrapper.append($lottieArrows);
@@ -950,11 +940,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const categories = JSON.parse(placeholders['task-categories']);
 
   let optionMatched = false;
-  const $radio = createTag('span', { class: 'option-radio', tabindex: 0 });
-  const $optionAll = createTag('li', { class: 'option', 'data-tasks': 'all' });
-  $optionAll.textContent = placeholders.all;
-  $optionAll.prepend($radio);
-  $taskDropdownList.append($optionAll);
 
   Object.entries(categories).forEach((category) => {
     const $itemRadio = createTag('span', { class: 'option-radio', tabindex: 0 });
@@ -971,8 +956,11 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   });
 
   if (!optionMatched) {
-    $optionAll.classList.add('active');
-    $taskDropdownToggle.textContent = $optionAll.textContent;
+    const $optionAll = $taskDropdownList.querySelector('.option[data-tasks="\'\'"]');
+    if ($optionAll) {
+      $optionAll.classList.add('active');
+      $taskDropdownToggle.textContent = $optionAll.textContent;
+    }
   }
 
   $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
@@ -1226,7 +1214,7 @@ async function redrawTemplates($block, $toolBar) {
   await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
     $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
     updateOptionsStatus($block, $toolBar);
-    if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
+    if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
       $viewButtons.forEach(($button) => {
         $button.classList.remove('active');
@@ -1340,7 +1328,7 @@ function initFilterSort($block, $toolBar) {
         e.preventDefault();
         await redrawTemplates($block, $toolBar);
         closeDrawer($toolBar);
-        toggleAnimatedText($block, $toolBar);
+        await toggleAnimatedText($block, $toolBar);
       });
     }
 
