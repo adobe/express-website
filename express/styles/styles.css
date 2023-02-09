@@ -1288,7 +1288,6 @@ main .section.long-form .default-content-wrapper {
   max-width: unset;
 }
 
-
 main .section.long-form .default-content-wrapper,
 main .section.long-form .default-content-wrapper h2,
 main .section.long-form .default-content-wrapper h3,
@@ -1296,6 +1295,14 @@ main .section.long-form .default-content-wrapper h4,
 main .section.long-form .default-content-wrapper h5,
 main .section.long-form .default-content-wrapper h6 {
   text-align: left;
+}
+
+main .section.long-form .default-content-wrapper h2,
+main .section.long-form .default-content-wrapper h3,
+main .section.long-form .default-content-wrapper h4,
+main .section.long-form .default-content-wrapper h5,
+main .section.long-form .default-content-wrapper h6 {
+  font-size: var(--heading-font-size-s);
 }
 
 @media (min-width: 600px) {
