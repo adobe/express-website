@@ -29,11 +29,11 @@ function decorateButton($block, $toggle) {
   $block.append($button);
 }
 
-function initButton($block, index) {
+function initButton($block, $sections, index) {
   const $enclosingMain = $block.closest('main');
+
   if ($enclosingMain) {
     const $buttons = $block.querySelectorAll('.content-toggle-button');
-    const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
     const $toggleBackground = $block.querySelector('.toggle-background');
 
     $buttons[index].addEventListener('click', () => {
@@ -93,7 +93,7 @@ export default function decorate($block) {
 
     Array.from($toggleContainer.children).forEach(($toggle, index) => {
       decorateButton($block, $toggle);
-      initButton($block, index);
+      initButton($block, $sections, index);
     });
 
     if ($sections) {

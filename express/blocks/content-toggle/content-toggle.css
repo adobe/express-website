@@ -1,8 +1,3 @@
-main .section.content-toggle-small-container {
-    padding-right: 0;
-    padding-left: 0;
-}
-
 main .section .content-toggle-wrapper {
     margin: 0 auto;
     padding: 0 16px;
@@ -14,8 +9,8 @@ main .block.content-toggle {
     position: relative;
     display: flex;
     justify-content: center;
-    background-color: #EDEDED;
     width: max-content;
+    background-color: #EDEDED;
     border-radius: 25px;
     padding: 6px;
     margin-top: 10px;
@@ -37,12 +32,7 @@ main .content-toggle .content-toggle-button {
     user-select: none;
     border: none;
     font-family: var(--body-font-family);
-    color: #000000;
-}
-
-main .content-toggle .content-toggle-button.active {
     color: black;
-    z-index: 0;
 }
 
 main .content-toggle.dark .content-toggle-button.active {
