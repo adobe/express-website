@@ -249,7 +249,7 @@ export default async function decorate($block) {
     const enclosingMain = $block.closest('main');
     if (enclosingMain) {
       const $parentSection = $block.parentNode.parentNode;
-      const $relevantRows = enclosingMain.querySelector('.template-list-horizontal-fullwidth-mini-container');
+      const $relevantRows = enclosingMain.querySelector('.template-list-horizontal-fullwidth-mini-container, .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container');
       let $elementToFollow;
       if ($relevantRows) {
         $elementToFollow = $relevantRows;

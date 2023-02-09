@@ -17,7 +17,7 @@ import {
   addSearchQueryToHref,
   createTag,
   decorateMain,
-  fetchPlaceholders,
+  fetchPlaceholders, fetchRelevantRows,
   getIconElement,
   getLocale,
   linkImage,
@@ -45,6 +45,9 @@ const props = {
   sort: '-remixCount',
   masonry: undefined,
   authoringError: false,
+  headingTitle: null,
+  headingSlug: null,
+  viewAllLink: null,
 };
 
 function wordStartsWithVowels(word) {
@@ -1518,12 +1521,20 @@ export async function decorateTemplateList($block) {
       } else {
         const $toolBar = $parent.querySelector('.default-content-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
+        let $sectionSlug = null;
 
         const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
         if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
-          if (props.authoringError) {
+          if ($block.classList.contains('spreadsheet-powered') && props.headingTitle) {
+            $sectionHeading.textContent = props.headingTitle || '';
+
+            if (props.headingSlug) {
+              $sectionSlug = createTag('p');
+              $sectionSlug.textContent = props.headingSlug;
+            }
+          } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
             $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
@@ -1533,6 +1544,10 @@ export async function decorateTemplateList($block) {
         $toolBar.classList.add('api-templates-toolbar');
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
+
+        if ($sectionSlug) {
+          $contentWrapper.append($sectionSlug);
+        }
       }
 
       const $linkList = $parent.querySelector('.link-list-wrapper');
@@ -1742,10 +1757,20 @@ async function decorateLoadMoreButton($block) {
   return $loadMoreDiv;
 }
 
-function decorateTailButton($block) {
+async function decorateTailButton($block) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
 
-  if ($carouselPlatform) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const placeholders = await fetchPlaceholders().then((result) => result);
+
+    if (placeholders['relevant-rows-view-all'] && (props.viewAllLink || placeholders['relevant-rows-view-all-link'])) {
+      props.tailButton = createTag('a', { class: 'button accent tail-cta' });
+      props.tailButton.innerText = placeholders['relevant-rows-view-all'];
+      props.tailButton.href = props.viewAllLink || placeholders['relevant-rows-view-all-link'];
+    }
+  }
+
+  if ($carouselPlatform && props.tailButton) {
     props.tailButton.classList.add('tail-cta');
     $carouselPlatform.append(props.tailButton);
   }
@@ -1778,6 +1803,37 @@ function addBackgroundAnimation($block, animationUrl) {
 }
 
 export default async function decorate($block) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    const placeholders = await fetchPlaceholders().then((result) => result);
+    const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+    props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
+
+    if (relevantRowsData) {
+      $block.closest('.section').dataset.audience = 'mobile';
+
+      props.headingTitle = relevantRowsData.header || null;
+      props.headingSlug = relevantRowsData.shortTitle || null;
+      props.viewAllLink = relevantRowsData.viewAllLink || null;
+
+      $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-locale', relevantRowsData.templateLocale || 'en');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-premium', relevantRowsData.templatePremium || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-animated', relevantRowsData.templateAnimated || '');
+      $block.innerHTML = $block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/');
+      $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
+
+      if (relevantRowsData.templateTasks === '') {
+        $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+      } else {
+        $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
+      }
+    } else {
+      $block.remove();
+    }
+  }
+
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block);
   }
@@ -1791,7 +1847,7 @@ export default async function decorate($block) {
     addAnimationToggle($block);
   }
 
-  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
+  if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday') && !$block.classList.contains('mini')) {
     const $loadMore = await decorateLoadMoreButton($block);
 
     if ($loadMore) {
@@ -1799,7 +1855,7 @@ export default async function decorate($block) {
     }
   }
 
-  if ($block.classList.contains('mini')) {
+  if ($block.classList.contains('mini') || $block.classList.contains('apipowered')) {
     decorateTailButton($block);
   }
 
