@@ -17,7 +17,9 @@ import {
   addSearchQueryToHref,
   createTag,
   decorateMain,
-  fetchPlaceholders, fetchRelevantRows,
+  createOptimizedPicture,
+  fetchPlaceholders,
+  fetchRelevantRows,
   getIconElement,
   getLocale,
   linkImage,
@@ -91,11 +93,7 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function fetchTemplates(tasks) {
-  if (tasks) {
-    props.filters.tasks = `(${tasks})`;
-  }
-
+function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
     const prunedFilter = Object.entries(props.filters)
       .filter(([, value]) => value !== '()');
@@ -116,6 +114,33 @@ function fetchTemplates(tasks) {
   return null;
 }
 
+function fetchTemplatesByTasks(tasks) {
+  const tempFilters = { ...props.filters };
+  if (tasks) {
+    tempFilters.tasks = `(${tasks})`;
+  }
+
+  if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
+    const prunedFilter = Object.entries(tempFilters)
+      .filter(([, value]) => value !== '()');
+    const filterString = prunedFilter.reduce((string, [key, value]) => {
+      if (key === prunedFilter[prunedFilter.length - 1][0]) {
+        return `${string}${key}:${value}`;
+      } else {
+        return `${string}${key}:${value} AND `;
+      }
+    }, '');
+
+    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+
+    return fetch(props.queryString)
+      .then((response) => response.json())
+      .then((response) => response);
+  }
+
+  return null;
+}
+
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
   const currentTask = props.filters.tasks;
@@ -124,11 +149,11 @@ async function appendCategoryTemplatesCount($section) {
     const anchor = li.querySelector('a');
     if (anchor) {
       // eslint-disable-next-line no-await-in-loop
-      const json = await fetchTemplates(anchor.dataset.tasks);
+      const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
       countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
-      li.append(countSpan);
+      anchor.append(countSpan);
     }
   }
 
@@ -192,53 +217,6 @@ async function processResponse() {
   } else {
     return null;
   }
-}
-
-/**
- * Returns a picture element with webp and fallbacks
- * @param {string} src The image URL
- * @param {boolean} eager load image eager
- * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
- */
-
-export function createOptimizedPicture(src,
-  alt = '',
-  eager = false,
-  breakpoints = [{
-    media: '(min-width: 400px)',
-    width: '2000',
-  }, { width: '750' }]) {
-  const url = new URL(src, window.location.href);
-  const picture = document.createElement('picture');
-  const { pathname } = url;
-  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
-
-  // webp
-  breakpoints.forEach((br) => {
-    const source = document.createElement('source');
-    if (br.media) source.setAttribute('media', br.media);
-    source.setAttribute('type', 'image/webp');
-    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
-    picture.appendChild(source);
-  });
-
-  // fallback
-  breakpoints.forEach((br, i) => {
-    if (i < breakpoints.length - 1) {
-      const source = document.createElement('source');
-      if (br.media) source.setAttribute('media', br.media);
-      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
-      picture.appendChild(source);
-    } else {
-      const img = document.createElement('img');
-      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
-      img.setAttribute('loading', eager ? 'eager' : 'lazy');
-      img.setAttribute('alt', alt);
-      picture.appendChild(img);
-    }
-  });
-
-  return picture;
 }
 
 async function fetchBlueprint(pathname) {
@@ -497,13 +475,7 @@ function redirectSearch($searchBar, targetTask) {
   const topicToSearch = $searchBar ? $searchBar.value : currentTopic;
   const taskToSearch = targetTask || currentTasks;
 
-  let searchUrlTemplate;
-
-  if (currentTasks === 'all' && !targetTask) {
-    searchUrlTemplate = `/express/templates/search?tasks=''&phformat=${format}&topics=${topicToSearch}`;
-  } else {
-    searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
-  }
+  const searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
   const targetPath = locale === 'us' ? `/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}` : `/${locale}/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
 
@@ -519,17 +491,17 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icons: ['template-premium', 'template-free'],
+      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icons: ['template-animation', 'template-static'],
+      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-sort']),
       elements: {},
-      icons: ['sort'],
+      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
     },
   };
 
@@ -543,16 +515,18 @@ function makeTemplateFunctions(placeholders) {
       button: {
         wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
         subElements: {
-          primaryIcon: getIconElement(entry[1].icons[0], null, null, 'primary-icon'),
-          secondaryIcon: entry[1].icons[1] ? getIconElement(entry[1].icons[1], null, null, 'secondary-icon') : null,
+          iconHolder: createTag('span', { class: 'icon-holder' }),
           textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+          chevIcon: getIconElement('drop-down-arrow'),
         },
       },
       options: {
         wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
-        subElements: Object.entries(entry[1].placeholders).map((option) => {
+        subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
+          const icon = getIconElement(entry[1].icons[subIndex]);
           const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
           [optionButton.textContent] = Object.values(option);
+          optionButton.prepend(icon);
           return optionButton;
         }),
       },
@@ -568,19 +542,15 @@ function makeTemplateFunctions(placeholders) {
 function updateFilterIcon(block) {
   const section = block.closest('.section.template-list-fullwidth-apipowered-container');
   const functionWrapper = section.querySelectorAll('.function-wrapper');
+  const optionsWrapper = section.querySelectorAll('.options-wrapper');
 
-  functionWrapper.forEach((wrap) => {
-    const primaryIcon = wrap.querySelector('.primary-icon');
-    const secondaryIcon = wrap.querySelector('.secondary-icon');
-    const currentOption = wrap.querySelector('.option-button.active');
-
-    if (primaryIcon && secondaryIcon && currentOption) {
-      if (currentOption.dataset.value === 'false') {
-        secondaryIcon.style.display = 'unset';
-        primaryIcon.style.display = 'none';
-      } else {
-        secondaryIcon.style.display = 'none';
-        primaryIcon.style.display = 'unset';
+  functionWrapper.forEach((wrap, index) => {
+    const iconHolder = wrap.querySelector('.icon-holder');
+    const activeOption = optionsWrapper[index].querySelector('.option-button.active');
+    if (iconHolder && activeOption) {
+      const activeIcon = activeOption.querySelector('.icon');
+      if (activeIcon) {
+        iconHolder.innerHTML = activeIcon.outerHTML;
       }
     }
   });
@@ -644,9 +614,12 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
     category.forEach((element) => {
       element.classList.add('in-drawer');
       const heading = element.querySelector('.current-option');
-
+      const iconHolder = element.querySelector('.icon-holder');
       if (heading) {
         heading.className = 'filter-mobile-option-heading';
+      }
+      if (iconHolder) {
+        iconHolder.remove();
       }
     });
   });
@@ -699,13 +672,14 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
   const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  const $toolbarWrapper = $toolBar.parentElement;
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
-      $toolBar.classList.add('sticking');
+      $toolbarWrapper.classList.add('sticking');
       resetTaskDropdowns($section);
     } else {
-      $toolBar.classList.remove('sticking');
+      $toolbarWrapper.classList.remove('sticking');
     }
   }, { rootMargin: '0px', threshold: 1 });
 
@@ -760,8 +734,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     }, { passive: true });
 
     $taskOptions.forEach((option) => {
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
+      const updateTaskOptions = () => {
         $taskOptions.forEach((o) => {
           if (o !== option) {
             o.classList.remove('active');
@@ -772,14 +745,18 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
         props.filters.tasks = `(${option.dataset.tasks})`;
         $taskDropdownToggle.textContent = option.textContent.trim();
         closeTaskDropdown($toolBar);
+      };
+
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateTaskOptions();
       }, { passive: true });
     });
 
     document.addEventListener('click', (e) => {
       if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
-        // $dropdown.classList.add('hidden');
-
         if ($wrapper.classList.contains('sticky-search-bar')) {
+          $wrapper.classList.remove('ready');
           $wrapper.classList.add('collapsed');
         }
       }
@@ -788,15 +765,27 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
   $stickySearchBar.addEventListener('click', (e) => {
     e.stopPropagation();
+
     $stickySearchBarWrapper.classList.remove('collapsed');
+    setTimeout(() => {
+      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
+        $stickySearchBarWrapper.classList.add('ready');
+      }
+    }, 500);
   }, { passive: true });
 
   $stickySearchBarWrapper.addEventListener('mouseenter', () => {
     $stickySearchBarWrapper.classList.remove('collapsed');
+    setTimeout(() => {
+      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
+        $stickySearchBarWrapper.classList.add('ready');
+      }
+    }, 500);
   }, { passive: true });
 
   $stickySearchBarWrapper.addEventListener('mouseleave', () => {
     if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
+      $stickySearchBarWrapper.classList.remove('ready');
       $stickySearchBarWrapper.classList.add('collapsed');
       resetTaskDropdowns($section);
     }
@@ -828,42 +817,48 @@ function decorateCategoryList($block, $section, placeholders) {
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
     const categories = JSON.parse(placeholders['task-categories']);
-
+    const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
     const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
     const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
-    const $categoriesToggleIcon = getIconElement('template-free');
     const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
     const $categories = createTag('ul', { class: 'category-list' });
-    const $categoriesResizeButton = createTag('a', { class: 'category-list-resize' });
 
     $categoriesToggle.textContent = placeholders['jump-to-category'];
-    $categoriesResizeButton.textContent = placeholders['show-less'];
 
-    $categoriesToggleWrapper.append($categoriesToggleIcon, $categoriesToggle);
+    $categoriesToggleWrapper.append($categoriesToggle);
     $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
 
-    Object.entries(categories).forEach((category) => {
+    Object.entries(categories).forEach((category, index) => {
+      const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+      const targetTasks = category[1];
+      const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
+      const currentTopic = trimFormattedFilterText(props.filters.topics);
+
       const $listItem = createTag('li');
-      const $a = createTag('a', { 'data-tasks': category[1] });
+      if (category[1] === currentTasks) {
+        $listItem.classList.add('active');
+      }
+
+      let icon;
+      if (categoryIcons[index] && categoryIcons[index] !== '') {
+        icon = categoryIcons[index];
+      } else {
+        icon = 'template-static';
+      }
+
+      const iconElement = getIconElement(icon);
+      const $a = createTag('a', {
+        'data-tasks': targetTasks,
+        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic}`,
+      });
       [$a.textContent] = category;
 
-      $a.addEventListener('click', () => {
-        redirectSearch(null, $a.dataset.tasks);
-      }, { passive: true });
-
+      $a.prepend(iconElement);
       $listItem.append($a);
       $categories.append($listItem);
     });
 
     const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
-
-    const $mobileCategoryButtons = $categoriesMobileWrapper.querySelectorAll(':scope > .category-list > li > a');
-
-    $mobileCategoryButtons.forEach(($button) => {
-      $button.addEventListener('click', () => {
-        redirectSearch(null, $button.dataset.tasks);
-      }, { passive: true });
-    });
 
     const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
     $mobileDrawerWrapper.append($lottieArrows);
@@ -872,38 +867,36 @@ function decorateCategoryList($block, $section, placeholders) {
     lazyLoadLottiePlayer();
 
     $categoriesDesktopWrapper.classList.add('desktop-only');
-    $categoriesDesktopWrapper.append($categoriesResizeButton);
 
     if ($blockWrapper) {
       $blockWrapper.prepend($categoriesDesktopWrapper);
       $blockWrapper.classList.add('with-categories-list');
     }
 
-    const $toggleButtons = $section.querySelectorAll('.category-list-toggle-wrapper');
-    $toggleButtons.forEach(($button) => {
-      $button.addEventListener('click', () => {
-        const $listWrapper = $button.parentElement;
-        $button.classList.toggle('collapsed');
-        if ($button.classList.contains('collapsed')) {
-          if ($listWrapper.classList.contains('desktop-only')) {
-            $listWrapper.classList.add('collapsed');
-            $listWrapper.style.maxHeight = '40px';
-          } else {
-            $listWrapper.classList.add('collapsed');
-            $listWrapper.style.maxHeight = '24px';
-          }
+    const $toggleButton = $categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
+    $toggleButton.append(getIconElement('drop-down-arrow'));
+    $toggleButton.addEventListener('click', () => {
+      const $listWrapper = $toggleButton.parentElement;
+      $toggleButton.classList.toggle('collapsed');
+      if ($toggleButton.classList.contains('collapsed')) {
+        if ($listWrapper.classList.contains('desktop-only')) {
+          $listWrapper.classList.add('collapsed');
+          $listWrapper.style.maxHeight = '40px';
         } else {
-          $listWrapper.classList.remove('collapsed');
-          $listWrapper.style.maxHeight = '1000px';
+          $listWrapper.classList.add('collapsed');
+          $listWrapper.style.maxHeight = '24px';
         }
+      } else {
+        $listWrapper.classList.remove('collapsed');
+        $listWrapper.style.maxHeight = '1000px';
+      }
 
-        setTimeout(() => {
-          if (!$listWrapper.classList.contains('desktop-only')) {
-            updateLottieStatus($section);
-          }
-        }, 510);
-      }, { passive: true });
-    });
+      setTimeout(() => {
+        if (!$listWrapper.classList.contains('desktop-only')) {
+          updateLottieStatus($section);
+        }
+      }, 510);
+    }, { passive: true });
 
     $lottieArrows.addEventListener('click', () => {
       $inWrapper.scrollBy({
@@ -915,20 +908,6 @@ function decorateCategoryList($block, $section, placeholders) {
     $inWrapper.addEventListener('scroll', () => {
       updateLottieStatus($section);
     }, { passive: true });
-
-    setTimeout(() => {
-      const categoriesHeight = $categories.offsetHeight;
-      $categoriesResizeButton.addEventListener('click', () => {
-        $categoriesResizeButton.classList.toggle('collapsed');
-        if ($categoriesResizeButton.classList.contains('collapsed')) {
-          $categories.style.maxHeight = '200px';
-          $categoriesResizeButton.textContent = placeholders['show-more'];
-        } else {
-          $categories.style.maxHeight = `${categoriesHeight}px`;
-          $categoriesResizeButton.textContent = placeholders['show-less'];
-        }
-      }, { passive: true });
-    }, 10);
   }
 }
 
@@ -958,19 +937,18 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   // Tasks Dropdown
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
   const $taskDropdown = createTag('div', { class: 'task-dropdown' });
+  const $taskDropdownChev = getIconElement('drop-down-arrow');
   const $taskDropdownToggle = createTag('button', { class: 'task-dropdown-toggle' });
-  const $taskDropdownBridge = createTag('div', { class: 'task-dropdown-bridge' });
   const $taskDropdownList = createTag('ul', { class: 'task-dropdown-list' });
   const categories = JSON.parse(placeholders['task-categories']);
-
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
   let optionMatched = false;
-  const $optionAll = createTag('li', { class: 'option', 'data-tasks': 'all' });
-  $optionAll.textContent = placeholders.all;
-  $taskDropdownList.append($optionAll);
 
-  Object.entries(categories).forEach((category) => {
+  Object.entries(categories).forEach((category, index) => {
+    const $itemIcon = getIconElement(categoryIcons[index]);
     const $listItem = createTag('li', { class: 'option', 'data-tasks': category[1] });
     [$listItem.textContent] = category;
+    $listItem.prepend($itemIcon);
     $taskDropdownList.append($listItem);
 
     if ($listItem.dataset.tasks === trimFormattedFilterText(props.filters.tasks)) {
@@ -981,16 +959,18 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   });
 
   if (!optionMatched) {
-    $optionAll.classList.add('active');
-    $taskDropdownToggle.textContent = $optionAll.textContent;
+    const $optionAll = $taskDropdownList.querySelector('.option[data-tasks="\'\'"]');
+    if ($optionAll) {
+      $optionAll.classList.add('active');
+      $taskDropdownToggle.textContent = $optionAll.textContent;
+    }
   }
 
   $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
-  $taskDropdownBridge.append($taskDropdownList);
-  $taskDropdown.append($taskDropdownToggle, $taskDropdownBridge);
+  $taskDropdown.append($taskDropdownToggle, $taskDropdownList, $taskDropdownChev);
   $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
   $searchDropdown.append($searchDropdownHeadingWrapper);
   $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
@@ -1079,10 +1059,20 @@ function updateOptionsStatus($block, $toolBar) {
       const paramValue = paramType === 'sort' ? $option.dataset.value : `(${$option.dataset.value})`;
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
-        || (!props[paramType] && paramValue === '(remove)')) {
+        || ((!props.filters[paramType] || props.filters[paramType] === '()') && paramValue === '(remove)')) {
+        const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
+        let toReorder = false;
+        if (drawerCs.every((className) => !$wrapper.parentElement.classList.contains(className))) {
+          toReorder = true;
+        }
+
+        if (toReorder) {
+          $option.parentElement.prepend($option);
+        }
         if ($currentOption) {
           $currentOption.textContent = $option.textContent;
         }
+
         $options.forEach((o) => {
           if ($option !== o) {
             o.classList.remove('active');
@@ -1136,26 +1126,32 @@ function initDrawer($block, $section, $toolBar) {
     }, { passive: true });
   });
 
-  setTimeout(() => {
-    $drawer.classList.remove('hidden');
-    $functionWrappers.forEach(($wrapper) => {
-      const $button = $wrapper.querySelector('.button-wrapper');
-      let maxHeight;
-      if ($button) {
-        if (!maxHeight) {
-          maxHeight = window.getComputedStyle($wrapper).height;
+  $drawer.classList.remove('hidden');
+  $functionWrappers.forEach(($wrapper) => {
+    const $button = $wrapper.querySelector('.button-wrapper');
+    let maxHeight;
+    if ($button) {
+      const wrapperMaxHeightGrabbed = setInterval(() => {
+        if ($wrapper.offsetHeight > 0) {
+          maxHeight = `${$wrapper.offsetHeight}px`;
           $wrapper.style.maxHeight = maxHeight;
+          clearInterval(wrapperMaxHeightGrabbed);
         }
+      }, 200);
 
-        $button.addEventListener('click', (e) => {
-          e.stopPropagation();
+      $button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const button = $wrapper.querySelector('.button-wrapper');
+        if (button) {
+          const minHeight = `${button.offsetHeight - 8}px`;
           $wrapper.classList.toggle('collapsed');
-          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? '24px' : maxHeight;
-        }, { passive: true });
-      }
-    });
-    $drawer.classList.add('hidden');
-  }, 10);
+          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
+        }
+      }, { passive: true });
+    }
+  });
+
+  $drawer.classList.add('hidden');
 }
 
 function updateQueryURL(functionWrapper, option) {
@@ -1222,8 +1218,7 @@ async function redrawTemplates($block, $toolBar) {
   await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
     $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
     updateOptionsStatus($block, $toolBar);
-
-    if ($block.querySelectorAll('.template:not(.placeholder)').length <= 0) {
+    if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
       $viewButtons.forEach(($button) => {
         $button.classList.remove('active');
@@ -1237,6 +1232,7 @@ async function redrawTemplates($block, $toolBar) {
 
 async function toggleAnimatedText($block, $toolBar) {
   const section = $block.closest('.section.template-list-fullwidth-apipowered-container');
+  const $toolbarWrapper = $toolBar.parentElement;
 
   if (section) {
     const placeholders = await fetchPlaceholders();
@@ -1249,7 +1245,7 @@ async function toggleAnimatedText($block, $toolBar) {
     }
 
     if (props.filters.animated === '(true)') {
-      $toolBar.insertAdjacentElement('afterend', animatedTemplateText);
+      $toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
     }
   }
 }
@@ -1266,21 +1262,29 @@ function initFilterSort($block, $toolBar) {
       const $options = $optionsList.querySelectorAll('.option-button');
 
       $button.addEventListener('click', () => {
-        $buttons.forEach((b) => {
-          if ($button !== b) {
-            b.parentElement.classList.remove('opened');
-          }
-        });
-        $wrapper.classList.toggle('opened');
+        if (!$button.classList.contains('in-drawer')) {
+          $buttons.forEach((b) => {
+            if ($button !== b) {
+              b.parentElement.classList.remove('opened');
+            }
+          });
+
+          $wrapper.classList.toggle('opened');
+        }
+
         closeTaskDropdown($toolBar);
       }, { passive: true });
 
       $options.forEach(($option) => {
-        // sync current filter & sorting method with toolbar current options
-        updateOptionsStatus($block, $toolBar);
+        const updateOptions = async () => {
+          $buttons.forEach((b) => {
+            b.parentElement.classList.remove('opened');
+          });
 
-        $option.addEventListener('click', async () => {
-          // e.stopPropagation();
+          if ($currentOption) {
+            $currentOption.textContent = $option.textContent;
+          }
+
           $options.forEach((o) => {
             if ($option !== o) {
               o.classList.remove('active');
@@ -1288,29 +1292,38 @@ function initFilterSort($block, $toolBar) {
           });
           $option.classList.add('active');
 
-          if ($currentOption) {
-            $currentOption.textContent = $option.textContent;
-          }
-
           updateQueryURL($wrapper, $option);
           updateFilterIcon($block);
 
           if (!$optionsList.classList.contains('in-drawer')) {
-            toggleAnimatedText($block, $toolBar);
+            await toggleAnimatedText($block, $toolBar);
           }
 
           if (!$button.classList.contains('in-drawer')) {
             await redrawTemplates($block, $toolBar);
           }
+        };
+
+        const radio = $option.querySelector('.option-radio');
+        if (radio) {
+          radio.addEventListener('keydown', async (e) => {
+            e.stopPropagation();
+            if (e.keyCode === 13) {
+              await updateOptions();
+            }
+          }, { passive: true });
+        }
+
+        $option.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          await updateOptions();
         }, { passive: true });
       });
 
       document.addEventListener('click', (e) => {
         const { target } = e;
-        if (target !== $wrapper && !$wrapper.contains(target)) {
+        if (target !== $wrapper && !$wrapper.contains(target) && !$button.classList.contains('in-drawer')) {
           $wrapper.classList.remove('opened');
-        } else {
-          $wrapper.classList.add('opened');
         }
       }, { passive: true });
     });
@@ -1320,10 +1333,12 @@ function initFilterSort($block, $toolBar) {
         e.preventDefault();
         await redrawTemplates($block, $toolBar);
         closeDrawer($toolBar);
-        toggleAnimatedText($block, $toolBar);
+        await toggleAnimatedText($block, $toolBar);
       });
     }
 
+    // sync current filter & sorting method with toolbar current options
+    updateOptionsStatus($block, $toolBar);
     updateFilterIcon($block);
   }
 }
@@ -1429,6 +1444,17 @@ function initViewToggle($block, $toolBar) {
   });
 }
 
+function initToolbarShadow($block, $toolbar) {
+  const $toolbarWrapper = $toolbar.parentElement;
+  document.addEventListener('scroll', () => {
+    if ($toolbarWrapper.getBoundingClientRect().top <= 0) {
+      $toolbarWrapper.classList.add('with-box-shadow');
+    } else {
+      $toolbarWrapper.classList.remove('with-box-shadow');
+    }
+  });
+}
+
 function decorateToolbar($block, $section, placeholders) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
 
@@ -1457,6 +1483,7 @@ function decorateToolbar($block, $section, placeholders) {
     initDrawer($block, $section, $toolBar);
     initFilterSort($block, $toolBar);
     initViewToggle($block, $toolBar);
+    initToolbarShadow($block, $toolBar);
   }
 }
 
@@ -1523,9 +1550,11 @@ export async function decorateTemplateList($block) {
         }, props.autoCollapseDelay);
       } else {
         const $toolBar = $parent.querySelector('.default-content-wrapper');
+        const $templateListWrapper = $parent.querySelector('.template-list-wrapper');
         const $sectionHeading = $parent.querySelector('div > h2');
         let $sectionSlug = null;
 
+        const $toolBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
         const $contentWrapper = createTag('div', { class: 'wrapper-content-search' });
         const $functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
@@ -1545,6 +1574,10 @@ export async function decorateTemplateList($block) {
         }
 
         $toolBar.classList.add('api-templates-toolbar');
+        $toolBar.classList.remove('default-content-wrapper');
+
+        $templateListWrapper.before($toolBarWrapper);
+        $toolBarWrapper.append($toolBar);
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
 
@@ -1743,7 +1776,7 @@ async function decorateLoadMoreButton($block) {
   $loadMoreDiv.append($loadMoreButton, $loadMoreText);
   $loadMoreText.textContent = placeholders['load-more'];
   $block.insertAdjacentElement('afterend', $loadMoreDiv);
-  $loadMoreButton.textContent = '+';
+  $loadMoreButton.append(getIconElement('plus-icon'));
 
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
