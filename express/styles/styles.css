@@ -873,10 +873,6 @@ main .block .button-container.free-plan-container.fixed {
 
 main .block .button-container.free-plan-container a.button {
   max-height: 24px;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  z-index: 4;
 }
 
 main .block .free-plan-widget {
@@ -1088,6 +1084,13 @@ main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-
   main .block .free-plan-widget-placeholder {
     max-width: 375px;
   }
+
+  main .block .button-container.free-plan-container a.button {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    z-index: 4;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -1275,5 +1278,36 @@ main .section[data-section-status='initialized'] {
 
   :lang(ja) main h2.heading-x-long {
     font-size: var(--heading-font-size-m);
+  }
+}
+
+/* long-form section: left-align text */
+main .section.long-form .default-content-wrapper {
+  box-sizing: border-box;
+  padding: 0 20px;
+  max-width: unset;
+}
+
+main .section.long-form .default-content-wrapper,
+main .section.long-form .default-content-wrapper h2,
+main .section.long-form .default-content-wrapper h3,
+main .section.long-form .default-content-wrapper h4,
+main .section.long-form .default-content-wrapper h5,
+main .section.long-form .default-content-wrapper h6 {
+  text-align: left;
+}
+
+main .section.long-form .default-content-wrapper h2,
+main .section.long-form .default-content-wrapper h3,
+main .section.long-form .default-content-wrapper h4,
+main .section.long-form .default-content-wrapper h5,
+main .section.long-form .default-content-wrapper h6 {
+  font-size: var(--heading-font-size-s);
+}
+
+@media (min-width: 600px) {
+  main .section.long-form .default-content-wrapper {
+    padding: 0 40px;
+    max-width: 1070px;
   }
 }
