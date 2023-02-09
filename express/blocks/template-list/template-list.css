@@ -1006,6 +1006,16 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   transition: background-color 0.2s, border 0.2s;
 }
 
+main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-toggle:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 2px solid var(--color-gray-200);
+  height: calc(100% - 8px);
+}
+
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-toggle:hover {
   background-color: var(--color-gray-200);
 }
