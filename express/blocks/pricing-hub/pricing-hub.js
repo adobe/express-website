@@ -251,12 +251,13 @@ function decorateFeatures($block) {
     const $columnsContainer = createTag('div', { class: 'pricing-hub-feature-columns' });
     const $title = $feature.querySelector('h3');
     const $icon = $feature.querySelector('svg, img');
-    const $tooltipText = $feature.querySelector('p');
-    
+
     if ($title && $icon) {
       $icon.parentElement.remove();
       $title.prepend($icon);
     }
+
+    const $tooltipText = $feature.querySelector('p');
 
     if ($tooltipText) {
       const tooltipText = $tooltipText.textContent.trim();
