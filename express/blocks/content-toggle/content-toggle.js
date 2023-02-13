@@ -9,34 +9,52 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  createTag,
-// eslint-disable-next-line import/no-unresolved
-} from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
 
-export default function decorate($block) {
-  const $sections = document.querySelectorAll('[data-toggle]');
-  const $toggleContainer = $block.querySelector('ul');
+function decorateButton($block, $toggle) {
+  const $button = createTag('button', { class: 'content-toggle-button' });
+  const tagText = $toggle.textContent.trim().match(/\[(.*?)\]/);
 
-  $block.innerHTML = '';
-
-  Array.from($toggleContainer.children).forEach(($toggle, index) => {
-    const $button = createTag('button');
-    const section = $toggle.textContent.trim();
-
+  if (tagText) {
+    const [fullText, tagTextContent] = tagText;
+    const $tag = createTag('span', { class: 'tag' });
+    $button.textContent = $toggle.textContent.trim().replace(fullText, '').trim();
+    $button.dataset.text = $button.textContent.toLowerCase();
+    $tag.textContent = tagTextContent;
+    $button.append($tag);
+  } else {
     $button.textContent = $toggle.textContent.trim();
+    $button.dataset.text = $button.textContent.toLowerCase();
+  }
+  $block.append($button);
+}
 
-    $button.addEventListener('click', () => {
+function initButton($block, $sections, index) {
+  const $enclosingMain = $block.closest('main');
+
+  if ($enclosingMain) {
+    const $buttons = $block.querySelectorAll('.content-toggle-button');
+    const $toggleBackground = $block.querySelector('.toggle-background');
+
+    $buttons[index].addEventListener('click', () => {
       const $activeButton = $block.querySelector('button.active');
       const blockPosition = $block.getBoundingClientRect().top;
       const offsetPosition = blockPosition + window.scrollY - 80;
+      const activeButtonWidth = $buttons[index].offsetWidth + 5;
+      let leftOffset = index * 10;
 
-      if ($activeButton !== $toggle) {
+      for (let i = 0; i < index; i += 1) {
+        leftOffset += $buttons[i].offsetWidth;
+      }
+      $toggleBackground.style.left = `${leftOffset}px`;
+      $toggleBackground.style.width = `${activeButtonWidth}px`;
+
+      if ($activeButton !== $buttons[index]) {
         $activeButton.classList.remove('active');
-        $button.classList.add('active');
+        $buttons[index].classList.add('active');
 
         $sections.forEach(($section) => {
-          if (section === $section.dataset.toggle) {
+          if ($buttons[index].dataset.text === $section.dataset.toggle.toLowerCase()) {
             $section.style.display = 'block';
           } else {
             $section.style.display = 'none';
@@ -49,19 +67,41 @@ export default function decorate($block) {
         });
       }
     });
-
     if (index === 0) {
-      $button.classList.add('active');
+      $buttons[index].classList.add('active');
+      const firstButtonWidthGrabbed = setInterval(() => {
+        if ($buttons[index].offsetWidth > 0) {
+          $toggleBackground.style.width = `${$buttons[index].offsetWidth + 5}px`;
+          $toggleBackground.style.left = 0;
+          clearInterval(firstButtonWidthGrabbed);
+        }
+      }, 200);
     }
+  }
+}
 
-    $block.append($button);
-  });
+export default function decorate($block) {
+  const $enclosingMain = $block.closest('main');
+  if ($enclosingMain) {
+    const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
+    const $toggleContainer = $block.querySelector('ul');
+    const $toggleBackground = createTag('div', { class: 'toggle-background' });
 
-  if ($sections) {
-    $sections.forEach(($section, index) => {
-      if (index > 0) {
-        $section.style.display = 'none';
-      }
+    $block.innerHTML = '';
+
+    $block.prepend($toggleBackground);
+
+    Array.from($toggleContainer.children).forEach(($toggle, index) => {
+      decorateButton($block, $toggle);
+      initButton($block, $sections, index);
     });
+
+    if ($sections) {
+      $sections.forEach(($section, index) => {
+        if (index > 0) {
+          $section.style.display = 'none';
+        }
+      });
+    }
   }
 }
