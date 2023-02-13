@@ -11,6 +11,19 @@ main .link-list {
   text-align: left;
 }
 
+main .link-list.centered {
+  box-sizing: border-box;
+  max-width: 92%;
+  width: max-content;
+}
+
+main .link-list.shaded {
+  margin-top: 8px;
+  margin-bottom: 24px;
+  background-color: #EDEDED;
+  border-radius: 100px;
+}
+
 main .link-list h2,
 main .link-list h3,
 main .link-list h4 {
@@ -74,6 +87,14 @@ main .link-list .carousel-container {
   margin-bottom: 0;
 }
 
+main .link-list.shaded .carousel-container .carousel-platform {
+  padding: 4px;
+}
+
+main .link-list.centered .carousel-container .carousel-platform {
+  box-sizing: border-box;
+}
+
 main .link-list h2,
 main .link-list h3,
 main .link-list h4 {
@@ -86,6 +107,10 @@ main .link-list .carousel-platform {
 
 main .link-list .carousel-platform p.button-container:first-child {
   margin-left: 32px;
+}
+
+main .link-list.centered .carousel-platform p.button-container:first-child {
+  margin-left: unset;
 }
 
 @media (min-width: 900px) {
@@ -169,6 +194,22 @@ main .link-list-wrapper .link-list.noarrows p.button-container .button.medium.se
   padding: 3px 14px;
 }
 
+main .link-list.shaded p.button-container {
+  margin: 0 2px;
+}
+
+main .link-list.shaded p.button-container .button {
+  margin: 0;
+  padding: 4px 16px;
+  background-color: transparent;
+  color: var(--color-black);
+  border: none;
+}
+
+main .link-list.shaded p.button-container .button:hover,
+main .link-list.shaded p.button-container .button.active {
+  background-color: var(--color-white);
+}
 
 /* fullwidth + leftalign variant */
 

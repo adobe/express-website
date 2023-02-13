@@ -54,7 +54,15 @@ export default async function decorate($block) {
   if (links.length) {
     links.forEach((p) => {
       const link = p.querySelector('a');
-      link.classList.add('medium', 'secondary');
+      if (!$block.classList.contains('shaded')) {
+        link.classList.add('secondary');
+      }
+
+      if ($block.classList.contains('shaded') && new URL(link.href).pathname === window.location.pathname) {
+        link.classList.add('active');
+      }
+
+      link.classList.add('medium');
       link.classList.remove('accent');
     });
     const div = links[0].closest('div');
