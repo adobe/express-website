@@ -102,7 +102,7 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function fetchTemplates() {
+async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
     const prunedFilter = Object.entries(props.filters)
       .filter(([, value]) => value !== '()');
@@ -116,9 +116,18 @@ function fetchTemplates() {
 
     props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
 
-    return fetch(props.queryString)
+    const result = await fetch(props.queryString)
       .then((response) => response.json())
       .then((response) => response);
+
+    // eslint-disable-next-line no-underscore-dangle
+    if (result._embedded.total > 0) {
+      return result;
+    } else {
+      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
+        .then((response) => response.json())
+        .then((response) => response);
+    }
   }
   return null;
 }
