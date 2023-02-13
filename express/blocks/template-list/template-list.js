@@ -15,19 +15,19 @@ import {
   addAnimationToggle,
   addFreePlanWidget,
   addSearchQueryToHref,
+  arrayToObject,
+  createOptimizedPicture,
   createTag,
   decorateMain,
-  createOptimizedPicture,
   fetchPlaceholders,
   fetchRelevantRows,
   getIconElement,
   getLocale,
-  linkImage,
-  toClassName,
-  arrayToObject,
-  titleCase,
   getLottie,
   lazyLoadLottiePlayer,
+  linkImage,
+  titleCase,
+  toClassName,
 } from '../../scripts/scripts.js';
 import { Masonry } from '../shared/masonry.js';
 
@@ -52,6 +52,15 @@ const props = {
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
+}
+
+function handlelize(str) {
+  return str.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/(\W+|\s+)/g, '-') // Replace space and other characters by hyphen
+    .replace(/--+/g, '-') // Replaces multiple hyphens by one hyphen
+    .replace(/(^-+|-+$)/g, '') // Remove extra hyphens from beginning or end of the string
+    .toLowerCase(); // To lowercase
 }
 
 function trimFormattedFilterText(attr, capitalize) {
@@ -460,7 +469,11 @@ function findMatchExistingSEOPage(path) {
   return (window.templates && window.templates.data.some(pathMatch));
 }
 
-function redirectSearch($searchBar, targetTask) {
+async function redirectSearch($searchBar) {
+  const placeholders = await fetchPlaceholders()
+    .then((result) => result);
+  const taskMap = JSON.parse(placeholders['task-name-mapping']);
+
   if ($searchBar) {
     const wrapper = $searchBar.closest('.search-bar-wrapper');
     const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
@@ -468,15 +481,29 @@ function redirectSearch($searchBar, targetTask) {
   }
 
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-  const currentTasks = trimFormattedFilterText(props.filters.tasks);
+  let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
+  let searchInput = $searchBar ? $searchBar.value : currentTopic;
+
+  const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
+    const searchValue = $searchBar.value.toLowerCase();
+    return searchValue.indexOf(word.toLowerCase()) >= 0;
+  })).sort((a, b) => b[0].length - a[0].length);
+
+  if (tasksFoundInInput.length > 0) {
+    tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
+      searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
+    });
+
+    searchInput = searchInput.trim();
+    [[currentTasks]] = tasksFoundInInput;
+  }
+
   const locale = getLocale(window.location);
-
-  const topicToSearch = $searchBar ? $searchBar.value : currentTopic;
-  const taskToSearch = targetTask || currentTasks;
-
-  const searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
-  const targetPath = locale === 'us' ? `/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}` : `/${locale}/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}`;
+  const topicUrl = searchInput ? `/${searchInput}` : '';
+  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
+  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput}`;
+  const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
 
   if (findMatchExistingSEOPage(targetPath)) {
@@ -709,9 +736,9 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       }
     }, { passive: true });
 
-    $searchForm.addEventListener('submit', (e) => {
+    $searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      redirectSearch($searchBar);
+      await redirectSearch($searchBar);
     });
 
     $clear.addEventListener('click', () => {
@@ -923,7 +950,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     type: 'text',
     placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
     enterKeyHint: placeholders.search ?? 'Search',
-    required: true,
   });
 
   // Suggestions Dropdown
