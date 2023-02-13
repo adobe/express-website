@@ -18,7 +18,6 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   getOffer,
-  getIcon,
   getIconElement,
 } from '../../scripts/scripts.js';
 
@@ -86,38 +85,6 @@ function buildUrl(optionUrl, country, language) {
 
   if (rUrl) planUrl.searchParams.set('rUrl', rUrl.toString());
   return planUrl.href;
-}
-
-function pushPricingAnalytics(adobeEventName, sparkEventName, plan) {
-  const url = new URL(window.location.href);
-  const sparkTouchpoint = url.searchParams.get('touchpointName');
-
-  /* eslint-disable no-underscore-dangle */
-  /* global digitalData _satellite */
-  digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
-  digitalData._set('spark.eventData.eventName', sparkEventName);
-  digitalData._set('spark.eventData.contextualData4', `billingFrequency:${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData6', `commitmentType:${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
-  digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
-  digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
-  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
-  digitalData._set('spark.eventData.contextualData14', 'quantity:1');
-  digitalData._set('spark.eventData.trigger', sparkTouchpoint);
-
-  _satellite.track('event', {
-    digitalData: digitalData._snapshot(),
-  });
-
-  digitalData._delete('primaryEvent.eventInfo.eventName');
-  digitalData._delete('spark.eventData.eventName');
-  digitalData._delete('spark.eventData.contextualData4');
-  digitalData._delete('spark.eventData.contextualData6');
-  digitalData._delete('spark.eventData.contextualData7');
-  digitalData._delete('spark.eventData.contextualData9');
-  digitalData._delete('spark.eventData.contextualData10');
-  digitalData._delete('spark.eventData.contextualData12');
-  digitalData._delete('spark.eventData.contextualData14');
 }
 
 async function fetchPlan(planUrl) {
@@ -284,28 +251,33 @@ function decorateFeatures($block) {
     const $columnsContainer = createTag('div', { class: 'pricing-hub-feature-columns' });
     const $title = $feature.querySelector('h3');
     const $icon = $feature.querySelector('svg, img');
-
+    const $tooltipText = $feature.querySelector('p');
+    
     if ($title && $icon) {
       $icon.parentElement.remove();
       $title.prepend($icon);
     }
 
-    const $tooltip = $feature.querySelector('p');
+    if ($tooltipText) {
+      const tooltipText = $tooltipText.textContent.trim();
 
-    if ($tooltip) {
-      $tooltip.classList.add('pricing-hub-feature-tooltip');
-      const tooltipIcon = getIconElement('info');
-      const tooltipDiv = createTag('div', {
-        class: 'pricing-hub-feature-tooltip-icon',
-        'aria-label': $tooltip.textContent,
-        role: 'tooltip',
-        tabindex: '0',
-      });
-      tooltipDiv.append(tooltipIcon);
-      const tooltipChevron = createTag('div', { class: 'pricing-hub-feature-tooltip-chevron' });
-      $columns[0].append(tooltipDiv);
-      tooltipDiv.append(tooltipChevron);
-      tooltipDiv.append($tooltip);
+      if (tooltipText) {
+        const tooltipIcon = getIconElement('info');
+        const tooltipChevron = createTag('div', { class: 'pricing-hub-feature-tooltip-chevron' });
+        const $tooltip = createTag('div', {
+          class: 'pricing-hub-feature-tooltip-icon',
+          'aria-label': $tooltipText.textContent,
+          role: 'tooltip',
+          tabindex: '0',
+        });
+
+        $tooltipText.classList.add('pricing-hub-feature-tooltip');
+        $tooltip.append(tooltipIcon);
+
+        $columns[0].append($tooltip);
+        $tooltip.append(tooltipChevron);
+        $tooltip.append($tooltipText);
+      }
     }
 
     $feature.classList.add('pricing-hub-feature');
