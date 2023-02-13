@@ -725,6 +725,10 @@ main .section {
   padding-top: 60px;
 }
 
+main .section.secondary {
+  background-color: var(--color-gray-100);
+}
+
 main .section>div {
   margin: auto;
   max-width: 375px;
