@@ -221,6 +221,44 @@ async function decorateCards($block) {
   $buttonsContainer.remove();
 }
 
+async function decorateScrollOverlay(block) {
+  const cards = Array.from(block.querySelectorAll('.pricing-hub-card'));
+  if (!cards || cards.length !== 3) return;
+  const scrollOverlay = createTag('div', { class: 'pricing-hub-scroll-overlay' });
+  cards.forEach((card) => {
+    const scrollCard = createTag('div', { class: 'pricing-hub-scroll-overlay-card' });
+    scrollOverlay.append(scrollCard);
+    const title = card.querySelector('h2').cloneNode(true);
+    const cta = card.querySelector('.button-container').cloneNode(true);
+    scrollCard.append(title, cta);
+  });
+  block.append(scrollOverlay);
+
+  const featuresSection = block.querySelector('.pricing-hub-features');
+  const scrollObserver = new IntersectionObserver((entries) => {
+    const entry = entries[0];
+    if (entry.isIntersecting) {
+      scrollOverlay.classList.add('pricing-hub-scroll-overlay-visible');
+    } else {
+      scrollOverlay.classList.remove('pricing-hub-scroll-overlay-visible');
+    }
+  }, { threshold: 0 });
+  if (document.readyState === 'complete') {
+    scrollObserver.observe(featuresSection);
+  } else {
+    window.addEventListener('load', () => {
+      scrollObserver.observe(featuresSection);
+    });
+  }
+  document.addEventListener('scroll', () => {
+    if (featuresSection.getBoundingClientRect().top < 30) {
+      scrollOverlay.classList.add('pricing-hub-scroll-overlay-scrolled');
+    } else {
+      scrollOverlay.classList.remove('pricing-hub-scroll-overlay-scrolled');
+    }
+  });
+}
+
 function decorateMidSection($block) {
   const $rows = Array.from($block.children);
   const $midSection = $rows[1];
@@ -303,4 +341,5 @@ export default async function decorate($block) {
   await decorateCards($block);
   decorateMidSection($block);
   decorateFeatures($block);
+  decorateScrollOverlay($block);
 }
