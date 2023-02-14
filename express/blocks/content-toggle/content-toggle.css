@@ -1,62 +1,76 @@
-main .content-toggle-wrapper {
+main .section .content-toggle-wrapper {
     margin: 0 auto;
-    padding: 0!important;
+    padding: 0 16px;
+    overflow: auto;
+    max-width: max-content;
 }
 
-main [data-toggle] {
-    background-color: #F8F8F8;
-}
-
-main .content-toggle {
-    display: inline-block;
+main .block.content-toggle {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: max-content;
     background-color: #EDEDED;
     border-radius: 25px;
     padding: 6px;
-    margin-bottom: 40px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+    height: 42px;
 }
 
-main .content-toggle button {
+main .content-toggle .content-toggle-button {
+    position: relative;
+    display: block;
     list-style-type: none;
-    display: inline-block;
-    background-color: #EDEDED;
-    border-radius: 25px;
+    background-color: transparent;
+    border-radius: 100px;
     padding: 10px 18px;
     font-size: 13px;
     font-weight: 600;
     margin: 0 5px;
-    transition: .2s background-color ease;
     cursor: pointer;
     user-select: none;
     border: none;
     font-family: var(--body-font-family);
+    color: black;
 }
 
-main .content-toggle button:hover {
-    background-color: var(--color-gray-300);
+main .content-toggle.dark .content-toggle-button.active {
+    color: white;
+    transition: 0.5s;
 }
 
-main .content-toggle button.active {
-    position: relative;
-    background-color: white;
-}
-
-main .content-toggle button.active::after {
+main .content-toggle .toggle-background  {
     position: absolute;
-    content: '';
-    display: block;
-    width: 40px;
+    top: 50%;
+    transform: translateY(-50%);
     height: 40px;
-    background-color: #F8F8F8;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    bottom: -80px;
-    z-index: -1;
+    margin: 0 8px;
+    border-radius: 100px;
+    background-color: white;
+    color: #000000;
+    transition: 0.5s;
 }
 
-main .content-toggle button:first-child {
-    margin: 0 3px 0 0;
+main .content-toggle.dark .toggle-background  {
+    background-color: #242424;
+    color: #FFFFFF;
+    transition: 0.5s;
 }
 
-main .content-toggle button:last-child {
-    margin: 0 0 0 3px;
+main .content-toggle .tag {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: -15px;
+    right: -15px;
+    z-index: 1;
+    font-size: 12px;
+    font-weight: 400;
+    background-color: #33AB84;
+    color: white;
+    height: 20px;
+    width: 61px;
+    border-radius: 4px;
 }

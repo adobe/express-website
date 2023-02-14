@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <g id="Group_318049" data-name="Group 318049" transform="translate(-8.5 -7.726)">
+    <g id="SXmock_Poster_18_N" transform="translate(17.5 16.726)">
+      <g id="SXmock_Poster_18_N-2" data-name="SXmock_Poster_18_N" transform="translate(-9 -9)">
+        <rect id="Canvas" width="18" height="18" fill="#ff13dc" opacity="0"/>
+        <g id="Group_704" data-name="Group 704">
+          <path id="Path_601494" data-name="Path 601494" d="M12.98,2.1A.9.9,0,0,0,13,2V1a1,1,0,1,0-2,0V2H7V1A1,1,0,1,0,5,1V2a.9.9,0,0,0,.02.1A5.007,5.007,0,0,0,1,7v6a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V7a5.007,5.007,0,0,0-4.02-4.9ZM15,13a3,3,0,0,1-3,3H6a3,3,0,0,1-3-3V7A3,3,0,0,1,6,4h6a3,3,0,0,1,3,3Z"/>
+          <path id="Path_601495" data-name="Path 601495" d="M13,10H5a1,1,0,0,0,0,2h8a1,1,0,0,0,0-2Z"/>
+          <path id="Path_601496" data-name="Path 601496" d="M11,13H7a1,1,0,0,0,0,2h4a1,1,0,0,0,0-2Z"/>
+          <path id="Path_601497" data-name="Path 601497" d="M4.655,9h8.689c.583,0,.874-.579.462-.917L11.462,6.157a.759.759,0,0,0-.925,0l-1.255,1.5-1.821-2.5a.759.759,0,0,0-.925,0L4.193,8.083C3.781,8.421,4.073,9,4.655,9Z"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

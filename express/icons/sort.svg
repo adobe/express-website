@@ -1,0 +1,9 @@
+<svg id="SXmock_SwitchVertical_18_N" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="SMOCK">
+    <rect id="Canvas" width="22" height="22" fill="rgba(255,19,220,0)"/>
+  </g>
+  <g id="ICONS" transform="translate(3 2)">
+    <path id="Path_127706" data-name="Path 127706" d="M2.707,4.707,4,3.414V15a1,1,0,0,0,2,0V3.414L7.293,4.707A1,1,0,1,0,8.707,3.293l-3-3a1,1,0,0,0-1.414,0l-3,3A1,1,0,1,0,2.707,4.707Z" transform="translate(-1 0)"/>
+    <path id="Path_127707" data-name="Path 127707" d="M15.293,13.293,14,14.586V3a1,1,0,1,0-2,0V14.586l-1.293-1.293a1,1,0,1,0-1.414,1.414l3,3a1,1,0,0,0,1.414,0l3-3a1,1,0,1,0-1.414-1.414Z" transform="translate(-1 0)"/>
+  </g>
+</svg>

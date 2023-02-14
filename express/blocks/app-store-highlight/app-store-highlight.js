@@ -11,7 +11,12 @@
  */
 
 import {
-  createOptimizedPicture, createTag, fetchPlaceholders, getIcon, getIconElement, getMetadata,
+  createOptimizedPicture,
+  createTag,
+  fetchPlaceholders,
+  getIcon,
+  getIconElement,
+  getMetadata,
   getMobileOperatingSystem,
 } from '../../scripts/scripts.js';
 
@@ -241,19 +246,22 @@ export default async function decorate($block) {
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     buildStandardPayload($block, payload);
-    const $parentSection = $block.parentNode.parentNode;
-    const $relevantRows = document.querySelector('.template-list-horizontal-fullwidth-mini-container');
-    let $elementToFollow;
-    if ($relevantRows) {
-      $elementToFollow = $relevantRows;
-    } else {
-      $elementToFollow = document.querySelector('.columns-fullsize-center-container');
-    }
+    const enclosingMain = $block.closest('main');
+    if (enclosingMain) {
+      const $parentSection = $block.parentNode.parentNode;
+      const $relevantRows = enclosingMain.querySelector('.template-list-horizontal-fullwidth-mini-container, .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container');
+      let $elementToFollow;
+      if ($relevantRows) {
+        $elementToFollow = $relevantRows;
+      } else {
+        $elementToFollow = enclosingMain.querySelector('.columns-fullsize-center-container');
+      }
 
-    $parentSection.dataset.audience = 'mobile';
+      $parentSection.dataset.audience = 'mobile';
 
-    if ($elementToFollow) {
-      $elementToFollow.after($parentSection);
+      if ($elementToFollow) {
+        $elementToFollow.after($parentSection);
+      }
     }
   }
 
