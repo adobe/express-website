@@ -1675,7 +1675,7 @@ function buildAutoBlocks($main) {
     $main.querySelector(':scope > div:last-of-type').append($multifunctionButton);
   }
 
-  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-quick-action-card').toLowerCase())) {
     const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
     const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
     quickActionCardBlock.classList.add('spreadsheet-powered');
