@@ -1284,7 +1284,7 @@ main .section[data-section-status='initialized'] {
 /* long-form section: left-align text */
 main .section.long-form .default-content-wrapper {
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 0 20px 40px;
   max-width: unset;
 }
 
@@ -1307,7 +1307,7 @@ main .section.long-form .default-content-wrapper h6 {
 
 @media (min-width: 600px) {
   main .section.long-form .default-content-wrapper {
-    padding: 0 40px;
+    padding: 0 40px 40px;
     max-width: 1070px;
   }
 }
