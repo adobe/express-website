@@ -57,8 +57,6 @@ function getCurrentRatingStars(rating = 5) {
 }
 
 function addCloseBtn(block) {
-  const $section = block.closest('.section');
-  const $background = $section.querySelector('.gradient-background');
   const $closeBtnDiv = createTag('div', { class: 'close-btn-div' });
   const $closeBtnImg = getIconElement('close-icon');
 
@@ -66,6 +64,8 @@ function addCloseBtn(block) {
   block.append($closeBtnDiv);
 
   $closeBtnDiv.addEventListener('click', () => {
+    const $section = block.closest('.section');
+    const $background = $section.querySelector('.gradient-background');
     $section.classList.add('block-removed');
     const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
     if ($floatingButton) {
@@ -86,12 +86,13 @@ function initScrollDirection(block) {
   let lastScrollTop = 0;
 
   document.addEventListener('scroll', () => {
-    if (!$section.classList.contains('block-removed')
-      && (!$floatingButton.classList.contains('toolbox-opened') || !$floatingButton)) {
+    if (!$section.classList.contains('block-removed')) {
       const { scrollTop } = document.documentElement;
       if (scrollTop < lastScrollTop) {
         block.classList.remove('appear');
-        if ($floatingButton) $floatingButton.classList.remove('push-up');
+        if ($floatingButton && !$floatingButton.classList.contains('toolbox-opened')) {
+          $floatingButton.classList.remove('push-up');
+        }
         background.classList.remove('show');
         setTimeout(() => {
           if (!block.classList.contains('appear')) {
@@ -100,7 +101,9 @@ function initScrollDirection(block) {
         }, 600);
       } else {
         block.classList.add('show');
-        if ($floatingButton) $floatingButton.classList.add('push-up');
+        if ($floatingButton && !$floatingButton.classList.contains('toolbox-opened')) {
+          $floatingButton.classList.add('push-up');
+        }
         background.classList.add('show');
         setTimeout(() => {
           if (block.classList.contains('show')) {
