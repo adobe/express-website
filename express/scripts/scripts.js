@@ -1687,20 +1687,13 @@ function buildAutoBlocks($main) {
     }
   }
 
-  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-quick-action-card').toLowerCase())) {
     const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
     const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
     quickActionCardBlock.classList.add('spreadsheet-powered');
     if ($lastDiv) {
       $lastDiv.append(quickActionCardBlock);
     }
-  }
-
-  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-quick-action-card').toLowerCase())) {
-    const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
-    const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
-    quickActionCardBlock.classList.add('spreadsheet-powered');
-    $main.querySelector(':scope > div:last-of-type').append(quickActionCardBlock);
   }
 }
 
