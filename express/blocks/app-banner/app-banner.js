@@ -57,8 +57,6 @@ function getCurrentRatingStars(rating = 5) {
 }
 
 function addCloseBtn(block) {
-  const $section = block.closest('.section');
-  const $background = $section.querySelector('.gradient-background');
   const $closeBtnDiv = createTag('div', { class: 'close-btn-div' });
   const $closeBtnImg = getIconElement('close-icon');
 
@@ -66,6 +64,8 @@ function addCloseBtn(block) {
   block.append($closeBtnDiv);
 
   $closeBtnDiv.addEventListener('click', () => {
+    const $section = block.closest('.section');
+    const $background = $section.querySelector('.gradient-background');
     $section.classList.add('block-removed');
     const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
     if ($floatingButton) {
