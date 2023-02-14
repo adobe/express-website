@@ -519,6 +519,8 @@ loadScript(martechURL, () => {
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
     let sparkButtonId;
+    let sparkEventDestination;
+
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
     const $contentToggleContainer = $a.closest('.content-toggle');
@@ -673,6 +675,35 @@ loadScript(martechURL, () => {
       }
     }
 
+    // Button ID script.
+    if (!sparkButtonId) {
+      let index;
+
+      const $buttonBlock = $a.closest('[data-block-name]');
+
+      if ($buttonBlock && $buttonBlock.dataset.blockName) {
+        const $blockSiblings = d.querySelectorAll(`[data-block-name="${$buttonBlock.dataset.blockName}"]`);
+        const blockIndex = Array.prototype.indexOf.call($blockSiblings, $buttonBlock) + 1;
+        const $siblings = $buttonBlock.querySelectorAll(`${$a.tagName}`);
+
+        sparkButtonId = `${$buttonBlock.dataset.blockName} ${blockIndex} | `;
+        index = `| ${Array.prototype.indexOf.call($siblings, $a) + 1}`;
+      } else {
+        sparkButtonId = 'main | ';
+        index = '';
+      }
+
+      sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
+    }
+
+    if ($a.href.includes('/express/')) {
+      sparkEventDestination = 'internalLink';
+    } else if ($a.href.includes('adobesparkpost.app.link')) {
+      sparkEventDestination = 'product';
+    } else {
+      sparkEventDestination = 'externalLink';
+    }
+
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
@@ -699,6 +730,7 @@ loadScript(martechURL, () => {
                   eventName: sparkEventName,
                   trigger: sparkTouchpoint,
                   buttonId: sparkButtonId || '',
+                  contextualData1: sparkEventDestination || '',
                   sendTimestamp: new Date().getTime(),
                 },
               },
