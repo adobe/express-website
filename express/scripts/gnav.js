@@ -146,25 +146,53 @@ function loadFEDS() {
 
   const isHomepage = window.location.pathname.endsWith('/express/');
   const isMegaNav = window.location.pathname.startsWith('/express')
-    || window.location.pathname.startsWith('/education');
+  || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
-  const breadCrumbList = [{ title: 'Homepage', url: 'https://www.adobe.com/express' }];
-  const category = window.location.pathname.split('/')[2];
-  const categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
-  const secondBreadcrumb = { title: categoryCapitalized, url: `https://www.adobe.com/express/${category}` };
-  if (['create', 'feature', 'template'].includes(category.toLowerCase())) {
-    const thirdBreadcrumbName = document.querySelector('meta[name="short-title"]').getAttribute('content') || '';
-    const thirdBreadcrumb = { title: thirdBreadcrumbName, url: `${secondBreadcrumb.url}/${thirdBreadcrumbName}` };
-    breadCrumbList.push(secondBreadcrumb, thirdBreadcrumb);
+  function buildBreadCrumbs() {
+    if (isHomepage) {
+      return;
+    }
+    const breadCrumbList = [];
+    const validCategories = ['create', 'feature', 'templates'];
+    let pathList = window.location.pathname.split('/');
+    pathList = pathList.filter((element) => element !== '');
+    const category = pathList[1].toLowerCase();
+    const categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
+    const firstBreadcrumb = { title: 'Homepage', url: 'https://www.adobe.com/express' };
+    // If the get metadata returns a value, use that instead of the second breadcrumb
+    const secondBreadcrumb = { title: categoryCapitalized, url: `https://www.adobe.com/express/${category}` };
+    let pagesShortName;
+    if (document.querySelector('meta[name="short-title"]')) {
+      pagesShortName = document.querySelector('meta[name="short-title"]').getAttribute('content') || '';
+    }
+    const thirdBreadcrumb = { title: pagesShortName, url: `${secondBreadcrumb.url}/${pagesShortName}` };
+
+    switch (pathList.length) {
+      case 2:
+        breadCrumbList.push(firstBreadcrumb);
+        if (validCategories.includes(category)) {
+          breadCrumbList.push(secondBreadcrumb);
+        }
+        break;
+      case 3:
+        if (pagesShortName) {
+          if (validCategories.includes(category)) {
+            breadCrumbList.push(firstBreadcrumb, secondBreadcrumb, thirdBreadcrumb);
+          } else {
+            breadCrumbList.push(firstBreadcrumb);
+          }
+        }
+        break;
+      default:
+        return;
+    }
+    return breadCrumbList;
   }
 
-  const test = document.querySelector('header')
-  const subnav = createTag('div', { id: 'feds-subnav' });
-  test.append(subnav);
-
+  const breadCrumbList = buildBreadCrumbs();
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
