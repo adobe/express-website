@@ -112,6 +112,7 @@ main .pricing-hub .pricing-hub-features {
   width: 336px;
   padding-top: 60px;
   box-sizing: border-box;
+  margin-bottom: 120px;
 }
 
 main .pricing-hub .pricing-hub-feature {
@@ -462,12 +463,27 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     background-color: var(--color-gray-200);
     transform: translateX(-50%);
   }
+
+  main .pricing-hub .pricing-hub-scroll-overlay-card h2 {
+    font-size: var(--body-font-size-xl);
+  }
+}
+
+
+@media (min-width: 920px) {
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
+    min-width: 280px;
+    width: 280px;
+  }
+
+  main .pricing-hub .pricing-hub-feature {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    margin: 0;
+  }
 }
 
 @media (min-width: 1200px) {
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
-    gap: 16px;
-  }
   main .pricing-hub .pricing-hub-cards {
     width: 1200px;
     gap: 20px;
@@ -489,20 +505,32 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     font-size: var(--body-font-size-l);
   }
 
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon {
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon, 
+  main .pricing-hub .pricing-hub-scroll-overlay svg {
     margin-right: 20px;
   }
-}
 
-@media (min-width: 920px) {
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
-    min-width: 280px;
-    width: 280px;
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
+    gap: 16px;
+  }
+
+  main .pricing-hub .pricing-hub-scroll-overlay {
+    gap: 16px;
+    width: 700px;
+    max-width: 700px;
+    transform: translateX(-50%) translateX(158px);
   }
 
   main .pricing-hub .pricing-hub-feature {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    margin: 0;
+    grid-template-columns: 320px 1fr;
+  }
+
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
+    min-width: 320px;
+    width: 320px;
+  }
+
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
+    width: 700px;
   }
 }
