@@ -511,7 +511,7 @@ async function redirectSearch($searchBar) {
   const locale = getLocale(window.location);
   const topicUrl = searchInput ? `/${searchInput}` : '';
   const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput}`;
+  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
   const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
 
@@ -885,7 +885,7 @@ function decorateCategoryList($block, $section, placeholders) {
       const iconElement = getIconElement(icon);
       const $a = createTag('a', {
         'data-tasks': targetTasks,
-        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic}`,
+        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
       });
       [$a.textContent] = category;
 
