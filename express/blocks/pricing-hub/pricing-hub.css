@@ -348,7 +348,7 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     max-width: 600px;
     grid-template-columns: 1fr 1fr 1fr;
     left: 50%;
-    transform: translateX(-50%) translateX(165px);
+    transform: translateX(-50%) translateX(145px);
   }
 
   main .pricing-hub .pricing-hub-scroll-overlay .button-container {
@@ -469,7 +469,6 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
   }
 }
 
-
 @media (min-width: 920px) {
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
     min-width: 280px;
@@ -480,6 +479,10 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     display: grid;
     grid-template-columns: 280px 1fr;
     margin: 0;
+  }
+
+  main .pricing-hub .pricing-hub-scroll-overlay {
+    transform: translateX(-50%) translateX(165px);
   }
 }
 
