@@ -1733,6 +1733,17 @@ async function buildAutoBlocks($main) {
     }
   }
 
+  if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
+    if (!window.relevantRowsLoaded) {
+      const $relevantRowsSection = createTag('div');
+      const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
+      $relevantRowsSection.dataset.audience = 'mobile';
+      $relevantRowsSection.append($fragment);
+      $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
+      window.relevantRowsLoaded = true;
+    }
+  }
+
   // Load the app store autoblocks...
   if (['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase())) {
     const $highlight = buildBlock('app-store-highlight', '');
@@ -2036,6 +2047,33 @@ function decoratePictures(main) {
     const picture = img.closest('picture');
     if (picture) picture.parentElement.replaceChild(newPicture, picture);
   });
+}
+
+export async function fetchRelevantRows(path) {
+  if (!window.relevantRows) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/relevant-rows.json`);
+      window.relevantRows = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch('/express/relevant-rows.json');
+      window.relevantRows = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.relevantRows.length) {
+    const relevantRow = window.relevantRows.find((p) => path === p.path);
+    const env = getHelixEnv();
+
+    if (env && env.name === 'stage') {
+      return relevantRow || null;
+    }
+
+    return relevantRow && relevantRow.live !== 'N' ? relevantRow : null;
+  }
+
+  return null;
 }
 
 export async function decorateMain($main) {
