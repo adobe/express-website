@@ -39,6 +39,14 @@ const bubbleUI = {
             window.location = target.getAttribute('data-href');
           }
         });
+
+        bubble.addEventListener('touchstart', () => {
+          bubble.classList.add('scale-down');
+        });
+
+        bubble.addEventListener('touchend', () => {
+          bubble.classList.remove('scale-down');
+        });
       });
     }
 
@@ -46,6 +54,12 @@ const bubbleUI = {
     if (vp) {
       vp.addEventListener('scroll', () => {
         this.resizeBubbles(boxBottom);
+      });
+
+      vp.addEventListener('touchmove', () => {
+        allBubbles.forEach((bubble) => {
+          bubble.classList.remove('scale-down');
+        });
       });
     }
   },
@@ -56,7 +70,7 @@ const bubbleUI = {
     const hb = boxBottom.querySelector('.center-piece > div');
     const hbc = this.getCenter(hb);
 
-    vp.scrollTo({ top: hbc.y + 10 - vpc.y, left: hbc.x + 10 - vpc.x });
+    vp.scrollTo({ top: hbc.y - vpc.y, left: hbc.x - vpc.x });
 
     setTimeout(() => {
       const bubbleRowContainers = boxBottom.querySelectorAll('.bubble-row-container');
@@ -69,7 +83,7 @@ const bubbleUI = {
 
       this.resizeBubbles(boxBottom);
       boxBottom.classList.remove('no-transition');
-    }, 300);
+    }, 500);
   },
   getCenter(el) {
     const box = el.getBoundingClientRect();
@@ -96,6 +110,10 @@ const bubbleUI = {
       const props = {
         left: 0,
         top: 0,
+        topOffset: 24,
+        bottomOffset: -40,
+        rightOffset: 24,
+        leftOffset: 24,
         diameter: maxDiameter,
         height: maxDiameter,
         // viewport edge overlap
@@ -106,21 +124,21 @@ const bubbleUI = {
       // calculate width
       if (bb.left < vpb.left) {
         // over left border
-        props.diameter = bb.right - vpb.left;
+        props.diameter = bb.right - vpb.left + props.leftOffset;
         props.horizontal = 'left';
       } else if (vpb.right < bb.right) {
         // over right border
-        props.diameter = vpb.right - bb.left;
+        props.diameter = vpb.right - bb.left + props.rightOffset;
         props.horizontal = 'right';
       }
       // calculate height
       if (bb.top < vpb.top) {
         // over top border
-        props.height = bb.bottom - vpb.top;
+        props.height = bb.bottom - vpb.top + props.topOffset;
         props.vertical = 'top';
       } else if (vpb.bottom < bb.bottom) {
         // over bottom border
-        props.height = vpb.bottom - bb.top;
+        props.height = vpb.bottom - bb.top + props.bottomOffset;
         props.vertical = 'bottom';
       }
 
@@ -313,25 +331,29 @@ async function decorateBubbleUI($boxBottom, data) {
 
   builtBubbles.forEach((bubbleContainer, i) => {
     const bubble = createTag('div', { class: 'bubble', 'data-href': bubblesArray[i].link });
+    const bubbleBGImage = createTag('div', { class: 'bubble-background' });
     let img;
     if (bubblesArray[i].icon) {
       img = getIconElement(bubblesArray[i].icon);
-      img.classList.remove('icon');
     }
 
     bubble.style.backgroundColor = bubblesArray[i].hexValue;
-    bubble.style.backgroundImage = `url('${bubblesArray[i].image}')`;
+    bubbleBGImage.style.backgroundImage = `url('${bubblesArray[i].image}')`;
 
     if (['yes', 'true', 'on', 'Y'].includes(bubblesArray[i].centerPiece)) {
+      const initBG = createTag('div', { class: 'initial-bg' });
+      initBG.append(getIconElement('aex-logo'));
       bubbleContainer.classList.add('center-piece');
       bubble.style.backgroundColor = 'transparent';
+      bubble.append(initBG);
     }
+
+    bubble.append(bubbleBGImage);
+    bubbleContainer.append(bubble);
 
     if (img) {
       bubble.append(img);
     }
-
-    bubbleContainer.append(bubble);
   });
 
   $boxBottom.append(bubbleViewportContainer);
@@ -367,7 +389,8 @@ function initNotchDragAction($wrapper, data) {
   }, { passive: true });
 }
 
-async function buildBubblesToolBox($wrapper, data) {
+async function buildBubblesToolBox($block, $wrapper, data) {
+  $wrapper.classList.add('bubble-ui-button');
   buildToolBoxStructure($wrapper, data);
 
   const $lottie = $wrapper.querySelector('.floating-button-lottie');
@@ -393,7 +416,7 @@ export async function createMultiFunctionButton($block, data, audience) {
   const $buttonWrapper = await createFloatingButton($block, audience, data)
     .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
-  await buildBubblesToolBox($buttonWrapper, data);
+  await buildBubblesToolBox($block, $buttonWrapper, data);
 }
 
 export default async function decorateBlock($block) {

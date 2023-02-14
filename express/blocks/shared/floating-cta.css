@@ -185,7 +185,8 @@ main .floating-button-wrapper.multifunction .toolbox:after {
     bottom: 0;
     height: 64px;
     width: 100%;
-    background: white;
+    background-color: white;
+    transition: 0.5s;
 }
 
 main .floating-button-wrapper.multifunction.initial-load .toolbox {
