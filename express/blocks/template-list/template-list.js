@@ -986,7 +986,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     $listItem.prepend($itemIcon);
     $taskDropdownList.append($listItem);
 
-    if ($listItem.dataset.tasks === trimFormattedFilterText(props.filters.tasks)) {
+    if (handlelize($listItem.dataset.tasks) === trimFormattedFilterText(props.filters.tasks)) {
       optionMatched = true;
       $listItem.classList.add('active');
       $taskDropdownToggle.textContent = $listItem.textContent;
