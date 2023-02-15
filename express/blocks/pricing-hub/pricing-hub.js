@@ -299,14 +299,16 @@ async function decorateScrollOverlay(block) {
         scrollObserver.observe(featuresSection);
       });
     }
-    document.addEventListener('scroll', () => {
+    const checkIfScrolled = () => {
       const rect = featuresSection.getBoundingClientRect();
-      if (rect.height > 0 && rect.top < 30) {
+      if (rect.height > 0 && rect.top < 80) {
         scrollOverlay.classList.add('pricing-hub-scroll-overlay-scrolled');
       } else {
         scrollOverlay.classList.remove('pricing-hub-scroll-overlay-scrolled');
       }
-    });
+    };
+    document.addEventListener('scroll', checkIfScrolled);
+    document.addEventListener('resize', checkIfScrolled);
   }
 }
 
@@ -317,7 +319,7 @@ function decorateMidSection($block) {
   $midSectionHeader.classList.add('pricing-hub-lottie-button-scroll');
   $midSectionHeader.addEventListener('click', () => {
     window.scrollTo({
-      top: $midSectionHeader.getBoundingClientRect().bottom + window.scrollY + 150,
+      top: $midSectionHeader.getBoundingClientRect().bottom + window.scrollY + 90,
       behavior: 'smooth',
     });
   });
