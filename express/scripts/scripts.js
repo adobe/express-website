@@ -1713,7 +1713,13 @@ async function buildAutoBlocks($main) {
   }
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
-    if (!window.relevantRowsLoaded) {
+    const authoredRRFound = [
+      '.template-list.horizontal.fullwidth.mini',
+      '.link-list.noarrows',
+      '.collapsible-card',
+    ].every((block) => $main.querySelector(block));
+
+    if (!authoredRRFound && !window.relevantRowsLoaded) {
       const relevantRowsData = await fetchRelevantRows(window.location.pathname);
 
       if (relevantRowsData) {
