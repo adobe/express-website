@@ -205,6 +205,54 @@ async function decorateCards($block) {
       // eslint-disable-next-line no-await-in-loop
       const plan = await fetchPlan($button.href);
 
+      if ($card.textContent.includes('{{ App Picker }}')) {
+        const $appList = $card.querySelector('ul');
+
+        if ($appList) {
+          const $dropdown = createTag('select', { class: 'pricing-hub-app-picker' });
+
+          $appList.querySelectorAll('li').forEach(($listItem) => {
+            const $option = createTag('option');
+            const $link = $listItem.querySelector('a');
+            const $icon = $listItem.querySelector('img, svg');
+
+            $option.textContent = $link ? $link.textContent : $listItem.textContent;
+            $option.value = $link ? $link.href : $button.href;
+
+            $dropdown.append($option);
+          });
+
+          $dropdown.addEventListener('change', async (e) => {
+            e.preventDefault();
+
+            if ($dropdown.value !== $button.href) {
+              const newPlan = await fetchPlan($dropdown.value);
+
+              if (newPlan) {
+                $button.href = buildUrl(plan.url, plan.country, plan.language);
+              }
+            }
+
+            const $firstFeature = $block.querySelector('.pricing-hub-feature-title');
+
+            if ($firstFeature) {
+              const $featureHeader = $firstFeature.querySelector('h3');
+
+              $featureHeader.textContent = $dropdown[$dropdown.selectedIndex].textContent;
+            }
+          });
+
+          $appList.remove();
+
+          Array.from($card.children).forEach(($row) => {
+            if ($row.textContent.includes('{{ App Picker }}')) {
+              $row.textContent = '';
+              $row.append($dropdown);
+            }
+          });
+        }
+      }
+
       if (plan) {
         Array.from($card.children).forEach(($row) => {
           if ($row.textContent.includes('{{ Pricing }}')) {

@@ -77,6 +77,10 @@ main .pricing-hub .pricing-hub-card .button {
   width: 100%;
 }
 
+main .pricing-hub .pricing-hub-card .pricing-hub-app-picker {
+  padding: 6px 12px;
+}
+
 main .pricing-hub .pricing-hub-midsection {
   margin-bottom: 32px;
 }
@@ -508,7 +512,7 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     font-size: var(--body-font-size-l);
   }
 
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon, 
+  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title .icon,
   main .pricing-hub .pricing-hub-scroll-overlay svg {
     margin-right: 20px;
   }
