@@ -330,6 +330,7 @@ function decorateMidSection($block) {
 function decorateFeatures($block) {
   const $rows = Array.from($block.children);
   const $features = createTag('div', { class: 'pricing-hub-features' });
+  $features.append(createTag('div', { class: 'pricing-hub-gradient' }));
 
   for (let i = 2; i < $rows.length; i += 1) {
     const $feature = $rows[i];

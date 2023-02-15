@@ -192,7 +192,7 @@ main .pricing-hub .pricing-hub-scroll-overlay.pricing-hub-scroll-overlay-visible
 }
 
 main .pricing-hub .pricing-hub-scroll-overlay-card {
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 20px 20px;
   background-color: var(--color-white);
   padding: 1rem 0;
   width: 100%;
@@ -335,7 +335,33 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
   transform: translate(-50%, 0);
 }
 
+main .pricing-hub .pricing-hub-gradient {
+  position: absolute;
+  top: 260px;
+  left: 461px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(248,248,248,1) -11%, rgba(187,87,243,1) 0%, rgba(110,121,246,1) 45%, rgba(54,145,248,1) 100%);
+  z-index: 3;
+  width: 200px;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+  display: none;
+}
+
 @media (min-width: 900px) {
+  main .pricing-hub .pricing-hub-scroll-overlay-card {
+    border-radius: 20px;
+    margin-top: 12px;
+  }  
+
+  main .pricing-hub .pricing-hub-feature:nth-child(2) .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
+    background-color: #BB57F3;
+  }
+
+  main .pricing-hub .pricing-hub-gradient {
+    display: block;
+  }
+
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title {
     min-width: 260px;
     width: 260px;
@@ -352,11 +378,21 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     max-width: 600px;
     grid-template-columns: 1fr 1fr 1fr;
     left: 50%;
+    top: 0;
     transform: translateX(-50%) translateX(145px);
+    filter: unset;
+    background: linear-gradient(180deg, rgba(248,248,248,1) 30%, rgba(248,248,248,0) 70%);
   }
 
   main .pricing-hub .pricing-hub-scroll-overlay .button-container {
-    display: inline-block;
+    display: block;
+    padding: 0 4px;
+    margin: 0;
+  }
+
+  main .pricing-hub .pricing-hub-scroll-overlay .button-container a {
+    display: block;
+    margin-bottom: 0;
   }
 
   main .pricing-hub .pricing-hub-cards {
@@ -376,6 +412,7 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
   main .pricing-hub .pricing-hub-features {
     padding-top: 160px;
     width: 100%;
+    position: relative;
   }
 
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
@@ -406,32 +443,12 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
     border-radius: 0;
   }
 
-  main .pricing-hub .pricing-hub-feature:first-child .pricing-hub-feature-column {
-    border-radius: 24px 24px 0 0;
-    border-top: 2px var(--color-gray-200) solid;
-  }
-
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
-    border-left: 2px var(--color-gray-200) solid;
-    border-right: 2px var(--color-gray-200) solid;
+  main .pricing-hub .pricing-hub-feature:nth-child(2) .pricing-hub-feature-column {
+    border-radius: 20px 20px 0 0;
   }
 
   main .pricing-hub .pricing-hub-feature:last-child .pricing-hub-feature-column {
-    border-radius: 0 0 24px 24px;
-    border-bottom: 2px var(--color-gray-200) solid;
-  }
-
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
-    border-left: 0;
-    border-right: 0;
-  }
-
-  main .pricing-hub .pricing-hub-feature:first-child .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
-    border-top: 2px solid var(--color-info-accent);
-  }
-
-  main .pricing-hub .pricing-hub-feature:last-child .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
-    border-bottom: 2px solid var(--color-info-accent);
+    border-radius: 0 0 20px 20px;
   }
 
   main .pricing-hub .pricing-hub-feature:not(:last-child)::after {
@@ -471,6 +488,10 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
   main .pricing-hub .pricing-hub-scroll-overlay-card h2 {
     font-size: var(--body-font-size-xl);
   }
+
+  main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
+    transform: scale(1.1);
+  }
 }
 
 @media (min-width: 920px) {
@@ -488,9 +509,18 @@ main .pricing-hub .pricing-hub-feature-tooltip-icon:focus .pricing-hub-feature-t
   main .pricing-hub .pricing-hub-scroll-overlay {
     transform: translateX(-50%) translateX(165px);
   }
+
+  main .pricing-hub .pricing-hub-gradient {
+    left: 481px;
+  }
 }
 
 @media (min-width: 1200px) {
+  main .pricing-hub .pricing-hub-gradient {
+    left: 558px;
+    width: 223px;
+  }
+
   main .pricing-hub .pricing-hub-cards {
     width: 1200px;
     gap: 20px;
