@@ -164,7 +164,7 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
   grid-template-columns: 1fr 1fr 1fr;
   width: 336px;
   margin-top: 16px;
-  border: 2px var(--color-gray-200) solid;
+  border: none;
   box-sizing: border-box;
   border-radius: 12px;
 }
@@ -192,14 +192,23 @@ main .pricing-hub .pricing-hub-scroll-overlay.pricing-hub-scroll-overlay-visible
 }
 
 main .pricing-hub .pricing-hub-scroll-overlay-card {
-  border-radius: 0 0 20px 20px;
+  border-radius: 0;
   background-color: var(--color-white);
   padding: 1rem 0;
   width: 100%;
 }
 
+main .pricing-hub .pricing-hub-scroll-overlay-card:first-child {
+  border-radius: 0 0 0 12px;
+}
+
+main .pricing-hub .pricing-hub-scroll-overlay-card:last-child {
+  border-radius: 0 0 12px 0;
+}
+
 main .pricing-hub .pricing-hub-scroll-overlay-card h2 {
   font-size: 14px;
+  font-weight: 600;
 }
 
 main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg {
@@ -230,7 +239,6 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column {
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
   background-color: var(--color-info-accent);
   color: var(--color-white);
-  box-shadow: 0 -2px 0 var(--color-info-accent), 0 2px 0 var(--color-info-accent);
   z-index: 2;
 }
 
@@ -348,7 +356,18 @@ main .pricing-hub .pricing-hub-gradient {
   display: none;
 }
 
+main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
+  transform: scale(1.1);
+}
+
 @media (min-width: 900px) {
+
+  main .pricing-hub .pricing-hub-scroll-overlay-card,
+  main .pricing-hub .pricing-hub-scroll-overlay-card:first-child,
+  main .pricing-hub .pricing-hub-scroll-overlay-card:last-child {
+    border-radius: 20px;
+  }
+
   main .pricing-hub .pricing-hub-scroll-overlay-card {
     border-radius: 20px;
     margin-top: 12px;
@@ -434,10 +453,6 @@ main .pricing-hub .pricing-hub-gradient {
     width: 600px;
   }
 
-  main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
-    box-shadow: none;
-  }
-
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column:first-child,
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-column:last-child {
     border-radius: 0;
@@ -487,10 +502,11 @@ main .pricing-hub .pricing-hub-gradient {
 
   main .pricing-hub .pricing-hub-scroll-overlay-card h2 {
     font-size: var(--body-font-size-xl);
+    font-weight: var(--heading-font-weight);
   }
 
   main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 }
 

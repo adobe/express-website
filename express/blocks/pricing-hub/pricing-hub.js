@@ -273,12 +273,20 @@ async function decorateScrollOverlay(block) {
   const cards = Array.from(block.querySelectorAll('.pricing-hub-card'));
   if (!cards || cards.length !== 3) return;
   const scrollOverlay = createTag('div', { class: 'pricing-hub-scroll-overlay' });
-  cards.forEach((card) => {
+  cards.forEach((card, index) => {
     const scrollCard = createTag('div', { class: 'pricing-hub-scroll-overlay-card' });
     scrollOverlay.append(scrollCard);
     const title = card.querySelector('h2').cloneNode(true);
     const cta = card.querySelector('.button-container').cloneNode(true);
     scrollCard.append(title, cta);
+    const scrollToCard = () => {
+      window.scrollTo({
+        top: document.querySelector(`.pricing-hub-cards > :nth-child(${index + 1})`).getBoundingClientRect().top + window.scrollY - 20,
+        behavior: 'smooth',
+      });
+    };
+    scrollCard.addEventListener('click', scrollToCard);
+    scrollCard.addEventListener('touchstart', scrollToCard);
   });
   block.append(scrollOverlay);
 
