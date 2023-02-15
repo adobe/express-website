@@ -1815,17 +1815,19 @@ async function buildAutoBlocks($main) {
 
       desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
       mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
-    } else {
+    } else if (defaultButton) {
       desktopButton = buildBlock(defaultButton.desktop, 'desktop');
       mobileButton = buildBlock(defaultButton.mobile, 'mobile');
     }
 
-    [desktopButton, mobileButton].forEach((button) => {
-      button.classList.add('spreadsheet-powered');
-      if ($lastDiv) {
-        $lastDiv.append(button);
-      }
-    });
+    if (floatingCTAData || defaultButton) {
+      [desktopButton, mobileButton].forEach((button) => {
+        button.classList.add('spreadsheet-powered');
+        if ($lastDiv) {
+          $lastDiv.append(button);
+        }
+      });
+    }
   }
 
   if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-quick-action-card').toLowerCase())) {
