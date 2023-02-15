@@ -729,6 +729,13 @@ export function getHelixEnv() {
   return env;
 }
 
+function convertGlobToRe(glob) {
+  let reString = glob.replace(/\*\*/g, '_');
+  reString = reString.replace(/\*/g, '[0-9a-z-]*');
+  reString = reString.replace(/_/g, '.*');
+  return (new RegExp(reString));
+}
+
 function getCurrencyDisplay(currency) {
   if (currency === 'JPY') {
     return 'name';
