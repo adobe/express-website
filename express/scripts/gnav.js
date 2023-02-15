@@ -19,6 +19,7 @@ import {
   sampleRUM,
   getCookie,
   getMetadata,
+  fetchPlaceholders,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
@@ -151,48 +152,80 @@ function loadFEDS() {
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
-  function buildBreadCrumbs() {
-    if (isHomepage) {
-      return;
-    }
-    const breadCrumbList = [];
+  const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+  function buildBreadCrumb(parentURL, path, name) {
+    return { title: capitalize(name), url: `${parentURL}/${path}` };
+  }
+
+  const breadCrumbList = [];
+  async function buildBreadCrumbArray() {
+    const placeholders = await fetchPlaceholders();
     const validCategories = ['create', 'feature', 'templates'];
     let pathList = window.location.pathname.split('/');
     pathList = pathList.filter((element) => element !== '');
-    const category = pathList[1].toLowerCase();
-    const categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
-    const firstBreadcrumb = { title: 'Homepage', url: 'https://www.adobe.com/express' };
-    // If the get metadata returns a value, use that instead of the second breadcrumb
-    const secondBreadcrumb = { title: categoryCapitalized, url: `https://www.adobe.com/express/${category}` };
+    const firstBreadCrumb = buildBreadCrumb('adobe.com', 'express', 'Homepage');
+    let category = pathList[1].toLowerCase();
+    const categoryURL = category;
+
+    if (isHomepage || !validCategories.includes(pathList[1])) {
+      return;
+    }
+    if (placeholders[category]) {
+      category = capitalize(placeholders[category]);
+      validCategories.push(category);
+    }
+
+    const secondBreadCrumb = buildBreadCrumb(firstBreadCrumb.url, categoryURL, category);
     let pagesShortName;
-    if (document.querySelector('meta[name="short-title"]')) {
+    if (document.querySelector('meta[name="short-title"]') && pathList.length === 3) {
       pagesShortName = document.querySelector('meta[name="short-title"]').getAttribute('content') || '';
     }
-    const thirdBreadcrumb = { title: pagesShortName, url: `${secondBreadcrumb.url}/${pagesShortName}` };
-
-    switch (pathList.length) {
-      case 2:
-        breadCrumbList.push(firstBreadcrumb);
-        if (validCategories.includes(category)) {
-          breadCrumbList.push(secondBreadcrumb);
-        }
-        break;
-      case 3:
-        if (pagesShortName) {
-          if (validCategories.includes(category)) {
-            breadCrumbList.push(firstBreadcrumb, secondBreadcrumb, thirdBreadcrumb);
-          } else {
-            breadCrumbList.push(firstBreadcrumb);
-          }
-        }
-        break;
-      default:
-        return;
+    if (pathList.length === 3 && !pagesShortName) {
+      return;
     }
-    return breadCrumbList;
+
+    let thirdBreadCrumb;
+    if (pathList.length === 3) {
+      thirdBreadCrumb = buildBreadCrumb(secondBreadCrumb.url, pagesShortName, pagesShortName);
+    } else if (pathList.length > 3) {
+      thirdBreadCrumb = buildBreadCrumb(secondBreadCrumb.url, pathList[2], pathList[2]);
+    }
+
+    breadCrumbList.push(firstBreadCrumb);
+    if (validCategories.includes(category)) {
+      breadCrumbList.push(secondBreadCrumb);
+    }
+    if (pathList.length === 3) {
+      breadCrumbList.push(thirdBreadCrumb);
+    }
+
+    let runningURL = secondBreadCrumb.url;
+    for (let i = breadCrumbList.length; i < pathList.length; i += 1) {
+      breadCrumbList.push(buildBreadCrumb(runningURL, pathList[i], pathList[i]));
+      runningURL = `${runningURL}/${pathList[i]}`;
+    }
+
+    // switch (pathList.length) {
+    //   case 2:
+    //     breadCrumbList.push(firstBreadcrumb);
+    //     if (validCategories.includes(category)) {
+    //       breadCrumbList.push(secondBreadcrumb);
+    //     }
+    //     break;
+    //   case 3:
+    //     if (pagesShortName) {
+    //       if (validCategories.includes(category)) {
+    //         breadCrumbList.push(firstBreadcrumb, secondBreadcrumb, thirdBreadcrumb);
+    //       } else {
+    //         breadCrumbList.push(firstBreadcrumb);
+    //       }
+    //     }
+    //   break;
+    // default:
+    // }
   }
 
-  const breadCrumbList = buildBreadCrumbs();
+  buildBreadCrumbArray();
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
