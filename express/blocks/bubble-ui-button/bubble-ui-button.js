@@ -21,7 +21,8 @@ import {
   showScrollArrow,
   hideScrollArrow,
   collectFloatingButtonData,
-  buildToolBoxStructure, initToolBox,
+  buildToolBoxStructure,
+  initToolBox,
 } from '../shared/floating-cta.js';
 
 const bubbleUI = {
@@ -70,7 +71,7 @@ const bubbleUI = {
     const hb = boxBottom.querySelector('.center-piece > div');
     const hbc = this.getCenter(hb);
 
-    vp.scrollTo({ top: hbc.y - vpc.y, left: hbc.x - vpc.x });
+    vp.scrollTo({ top: hbc.y - vpc.y + 32, left: hbc.x - vpc.x });
 
     setTimeout(() => {
       const bubbleRowContainers = boxBottom.querySelectorAll('.bubble-row-container');
@@ -83,7 +84,18 @@ const bubbleUI = {
 
       this.resizeBubbles(boxBottom);
       boxBottom.classList.remove('no-transition');
+      boxBottom.parentElement.classList.remove('initial-load');
+      boxBottom.parentElement.classList.add('zoom-in');
     }, 500);
+
+    setTimeout(() => {
+      boxBottom.parentElement.classList.remove('zoom-in');
+    }, 600);
+
+    setTimeout(() => {
+      const bubbleLoadBackground = boxBottom.parentElement.querySelector('.bubble-load-background');
+      if (bubbleLoadBackground) bubbleLoadBackground.remove();
+    }, 2600);
   },
   getCenter(el) {
     const box = el.getBoundingClientRect();
@@ -299,13 +311,17 @@ function initBubbleUI(boxBottom) {
 }
 
 async function decorateBubbleUI($boxBottom, data) {
+  $boxBottom.parentElement.classList.add('initial-load');
   $boxBottom.classList.add('bubble-ui');
   $boxBottom.classList.add('no-transition');
 
   const bubbleViewportContainer = createTag('div', { class: 'bubble-viewport-container' });
   const bubbleViewport = createTag('div', { class: 'bubble-viewport' });
   const bubbleRowContainer = createTag('div', { class: 'bubble-row-container' });
+  const bubbleLoadBackground = createTag('div', { class: 'bubble-load-background' });
 
+  bubbleLoadBackground.append(getIconElement('aex-logo'));
+  $boxBottom.parentElement.append(bubbleLoadBackground);
   $boxBottom.append(bubbleViewportContainer);
   bubbleViewportContainer.append(bubbleViewport);
   bubbleViewport.append(bubbleRowContainer);

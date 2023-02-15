@@ -290,6 +290,7 @@ export function decorateBadge() {
 
 export function buildToolBoxStructure($wrapper, data) {
   const $toolBox = createTag('div', { class: 'toolbox' });
+  const $toolBoxWrapper = createTag('div', { class: 'toolbox-inner-wrapper' });
   const $notch = createTag('a', { class: 'notch' });
   const $notchPill = createTag('div', { class: 'notch-pill' });
   const $appStoreBadge = decorateBadge();
@@ -302,7 +303,8 @@ export function buildToolBoxStructure($wrapper, data) {
   const $floatingButton = $wrapper.querySelector('.floating-button');
 
   $toggleButton.innerHTML = getLottie('plus-animation', '/express/icons/plus-animation.json');
-  $toolBox.append($boxTop, $boxBottom);
+  $toolBoxWrapper.append($boxTop, $boxBottom);
+  $toolBox.append($toolBoxWrapper);
   $toggleButton.append($toggleIcon);
   $floatingButton.append($toggleButton);
   $notch.append($notchPill);
