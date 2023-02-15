@@ -283,28 +283,31 @@ async function decorateScrollOverlay(block) {
   block.append(scrollOverlay);
 
   const featuresSection = block.querySelector('.pricing-hub-features');
-  const scrollObserver = new IntersectionObserver((entries) => {
-    const entry = entries[0];
-    if (entry.isIntersecting) {
-      scrollOverlay.classList.add('pricing-hub-scroll-overlay-visible');
-    } else {
-      scrollOverlay.classList.remove('pricing-hub-scroll-overlay-visible');
-    }
-  }, { threshold: 0 });
-  if (document.readyState === 'complete') {
-    scrollObserver.observe(featuresSection);
-  } else {
-    window.addEventListener('load', () => {
+  if (featuresSection) {
+    const scrollObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && entry.intersectionRatio > 0) {
+        scrollOverlay.classList.add('pricing-hub-scroll-overlay-visible');
+      } else {
+        scrollOverlay.classList.remove('pricing-hub-scroll-overlay-visible');
+      }
+    }, { threshold: 0 });
+    if (document.readyState === 'complete') {
       scrollObserver.observe(featuresSection);
+    } else {
+      window.addEventListener('load', () => {
+        scrollObserver.observe(featuresSection);
+      });
+    }
+    document.addEventListener('scroll', () => {
+      const rect = featuresSection.getBoundingClientRect();
+      if (rect.height > 0 && rect.top < 30) {
+        scrollOverlay.classList.add('pricing-hub-scroll-overlay-scrolled');
+      } else {
+        scrollOverlay.classList.remove('pricing-hub-scroll-overlay-scrolled');
+      }
     });
   }
-  document.addEventListener('scroll', () => {
-    if (featuresSection.getBoundingClientRect().top < 30) {
-      scrollOverlay.classList.add('pricing-hub-scroll-overlay-scrolled');
-    } else {
-      scrollOverlay.classList.remove('pricing-hub-scroll-overlay-scrolled');
-    }
-  });
 }
 
 function decorateMidSection($block) {
