@@ -11,8 +11,9 @@ main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-i
 }
 
 main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in {
+    pointer-events: none;
     opacity: 0;
-    transform: scale(3);
+    transform: scale(5);
     transition: none;
 }
 
@@ -45,11 +46,15 @@ main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-i
     border-radius: 100px;
     height: 100%;
     width: 100%;
-    max-width: 110px;
+    max-width: 80px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    transition: all 0.8s, opacity 1.5s ease-in;
+    transition: all 0.8s, transform 2s, opacity 2s ease-in;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in .bubble-load-background .icon-aex-logo {
+    transform: translate(-50%, -50%) scale(0.5);
 }
 
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox {

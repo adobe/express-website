@@ -90,12 +90,12 @@ const bubbleUI = {
 
     setTimeout(() => {
       boxBottom.parentElement.classList.remove('zoom-in');
-    }, 600);
+    }, 1500);
 
     setTimeout(() => {
       const bubbleLoadBackground = boxBottom.parentElement.querySelector('.bubble-load-background');
       if (bubbleLoadBackground) bubbleLoadBackground.remove();
-    }, 2600);
+    }, 3500);
   },
   getCenter(el) {
     const box = el.getBoundingClientRect();
