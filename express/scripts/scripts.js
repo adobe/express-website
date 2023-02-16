@@ -1714,9 +1714,9 @@ export async function fetchFloatingCta(path) {
   let sheet;
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/express/create/floating-cta-dev.json?limit=10000';
+    sheet = '/express/floating-cta-dev.json?limit=10000';
   } else {
-    sheet = '/express/create/floating-cta.json?limit=10000';
+    sheet = '/express/floating-cta.json?limit=10000';
   }
 
   if (!window.floatingCta) {
