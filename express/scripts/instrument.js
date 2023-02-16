@@ -696,14 +696,6 @@ loadScript(martechURL, () => {
       sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
     }
 
-    if ($a.href.includes('/express/')) {
-      sparkEventDestination = 'internalLink';
-    } else if ($a.href.includes('adobesparkpost.app.link')) {
-      sparkEventDestination = 'product';
-    } else {
-      sparkEventDestination = 'externalLink';
-    }
-
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
