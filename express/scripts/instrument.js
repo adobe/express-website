@@ -519,7 +519,6 @@ loadScript(martechURL, () => {
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
     let sparkButtonId;
-    let sparkEventDestination;
 
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
@@ -696,14 +695,6 @@ loadScript(martechURL, () => {
       sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
     }
 
-    if ($a.href.includes('/express/')) {
-      sparkEventDestination = 'internalLink';
-    } else if ($a.href.includes('adobesparkpost.app.link')) {
-      sparkEventDestination = 'product';
-    } else {
-      sparkEventDestination = 'externalLink';
-    }
-
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
@@ -730,7 +721,6 @@ loadScript(martechURL, () => {
                   eventName: sparkEventName,
                   trigger: sparkTouchpoint,
                   buttonId: sparkButtonId || '',
-                  contextualData1: sparkEventDestination || '',
                   sendTimestamp: new Date().getTime(),
                 },
               },
