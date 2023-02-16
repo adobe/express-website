@@ -5,7 +5,7 @@
   <script type="text/javascript">
 	window.isErrorPage = true;
 	window.errorCode = '404';
-	
+
 	const redirectMap = new Map(
 		[
 			['ar', '/es/'],
@@ -48,7 +48,9 @@
 	
 	(function (win, doc) {
 		const eduRedirectPath = 'education/express/';
-		const eduPageRequest = '/express/edu/';
+		const eduPageRequest = '/edu';
+		const adobeDomain = 'www.adobe.com';
+		const protocol = 'https://';
 		const { href, pathname, search } = win.location;
 		let userLocale, redirectURL, redirectMapping;
 
@@ -56,7 +58,7 @@
 			[_, userLocale] = search.split('=');
 			const valueInMap = redirectMap.get(userLocale); 
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;  
-			redirectURL = href.replace(`${eduPageRequest}${search}`, redirectMapping);
+			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
 		}
 		else {
 			[_ , userLocale] = pathname.split('/');
