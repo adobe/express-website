@@ -125,7 +125,7 @@ export default function decorate($block) {
 
     document.addEventListener('floatingbuttonloaded', () => {
       initCTAListener($block, hrefHolder);
-    })
+    });
 
     document.dispatchEvent(new Event('splitactionloaded'));
   }
