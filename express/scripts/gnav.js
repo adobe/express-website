@@ -153,8 +153,9 @@ function loadFEDS() {
     : 'cc-express/cc-express-gnav';
 
   const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
-  function buildBreadCrumb(parentURL, path, name) {
-    return { title: capitalize(name), url: `${parentURL}/${path}` };
+
+  function buildBreadCrumb(path, name, parentPath = '') {
+    return { title: capitalize(name), url: `${parentPath}/${path}` };
   }
 
   const breadCrumbList = [];
@@ -163,11 +164,17 @@ function loadFEDS() {
     const validCategories = ['create', 'feature', 'templates'];
     let pathList = window.location.pathname.split('/');
     pathList = pathList.filter((element) => element !== '');
-    const firstBreadCrumb = buildBreadCrumb('adobe.com', 'express', 'Homepage');
+    pathList = pathList.filter((element) => element !== locale);
+    const localePath = locale !== 'us' ? `${locale}/` : '';
+    const firstBreadCrumb = buildBreadCrumb(`${localePath}express/`, 'Homepage');
     let category = pathList[1].toLowerCase();
     const categoryURL = category;
 
-    if (isHomepage || !validCategories.includes(pathList[1])) {
+    if (isHomepage) {
+      return;
+    }
+    if (!validCategories.includes(pathList[1])) {
+      breadCrumbList.push(firstBreadCrumb);
       return;
     }
     if (placeholders[category]) {
@@ -175,7 +182,7 @@ function loadFEDS() {
       validCategories.push(category);
     }
 
-    const secondBreadCrumb = buildBreadCrumb(firstBreadCrumb.url, categoryURL, category);
+    const secondBreadCrumb = buildBreadCrumb(categoryURL, category, `/${locale}/express`);
     let pagesShortName;
     if (document.querySelector('meta[name="short-title"]') && pathList.length === 3) {
       pagesShortName = document.querySelector('meta[name="short-title"]').getAttribute('content') || '';
@@ -186,43 +193,24 @@ function loadFEDS() {
 
     let thirdBreadCrumb;
     if (pathList.length === 3) {
-      thirdBreadCrumb = buildBreadCrumb(secondBreadCrumb.url, pagesShortName, pagesShortName);
+      thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);
     } else if (pathList.length > 3) {
-      thirdBreadCrumb = buildBreadCrumb(secondBreadCrumb.url, pathList[2], pathList[2]);
+      thirdBreadCrumb = buildBreadCrumb(pathList[2], pathList[2], secondBreadCrumb.url);
     }
 
     breadCrumbList.push(firstBreadCrumb);
     if (validCategories.includes(category)) {
       breadCrumbList.push(secondBreadCrumb);
     }
-    if (pathList.length === 3) {
+    if (pathList.length >= 3) {
       breadCrumbList.push(thirdBreadCrumb);
     }
 
     let runningURL = secondBreadCrumb.url;
     for (let i = breadCrumbList.length; i < pathList.length; i += 1) {
-      breadCrumbList.push(buildBreadCrumb(runningURL, pathList[i], pathList[i]));
+      breadCrumbList.push(buildBreadCrumb(pathList[i], pathList[i], runningURL));
       runningURL = `${runningURL}/${pathList[i]}`;
     }
-
-    // switch (pathList.length) {
-    //   case 2:
-    //     breadCrumbList.push(firstBreadcrumb);
-    //     if (validCategories.includes(category)) {
-    //       breadCrumbList.push(secondBreadcrumb);
-    //     }
-    //     break;
-    //   case 3:
-    //     if (pagesShortName) {
-    //       if (validCategories.includes(category)) {
-    //         breadCrumbList.push(firstBreadcrumb, secondBreadcrumb, thirdBreadcrumb);
-    //       } else {
-    //         breadCrumbList.push(firstBreadcrumb);
-    //       }
-    //     }
-    //   break;
-    // default:
-    // }
   }
 
   buildBreadCrumbArray();
