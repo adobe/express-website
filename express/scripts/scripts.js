@@ -1703,8 +1703,6 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
     if (img) {
       img.setAttribute('loading', 'lazy');
     }
-    const $section = $block.closest('.section');
-    $section.parentNode.replaceChild(section, $section);
     return section;
   }
   return null;

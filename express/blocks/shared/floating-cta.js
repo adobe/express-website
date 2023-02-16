@@ -192,6 +192,7 @@ export async function createFloatingButton($block, audience, data) {
     $floatButtonWrapper.classList.add('floating-button--above-the-fold');
   }
 
+  document.dispatchEvent(new Event('floatingbuttonloaded'));
   return $floatButtonWrapper;
 }
 
