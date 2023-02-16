@@ -730,7 +730,6 @@ loadScript(martechURL, () => {
                   eventName: sparkEventName,
                   trigger: sparkTouchpoint,
                   buttonId: sparkButtonId || '',
-                  contextualData1: sparkEventDestination || '',
                   sendTimestamp: new Date().getTime(),
                 },
               },
