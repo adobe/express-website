@@ -519,7 +519,6 @@ loadScript(martechURL, () => {
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
     let sparkButtonId;
-    let sparkEventDestination;
 
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
