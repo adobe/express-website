@@ -165,16 +165,15 @@ function loadFEDS() {
     let pathList = window.location.pathname.split('/');
     pathList = pathList.filter((element) => element !== '');
     pathList = pathList.filter((element) => element !== locale);
-    const localePath = locale !== 'us' ? `${locale}/` : '';
+    const localePath = locale === 'us' ? '' : `${locale}/`;
     const firstBreadCrumb = buildBreadCrumb(`${localePath}express/`, 'Homepage');
     let category = pathList[1].toLowerCase();
     const categoryURL = category;
+    const pagesShortName = pathList.length > 2
+      ? document.querySelector('meta[name="short-title"]').getAttribute('content')
+      : true;
 
-    if (isHomepage) {
-      return;
-    }
-    if (!validCategories.includes(pathList[1])) {
-      breadCrumbList.push(firstBreadCrumb);
+    if (isHomepage || !pagesShortName) {
       return;
     }
     if (placeholders[category]) {
@@ -182,34 +181,17 @@ function loadFEDS() {
       validCategories.push(category);
     }
 
-    const secondBreadCrumb = buildBreadCrumb(categoryURL, category, `/${locale}/express`);
-    let pagesShortName;
-    if (document.querySelector('meta[name="short-title"]') && pathList.length === 3) {
-      pagesShortName = document.querySelector('meta[name="short-title"]').getAttribute('content') || '';
-    }
-    if (pathList.length === 3 && !pagesShortName) {
+    const secondBreadCrumb = buildBreadCrumb(categoryURL, category, `${localePath}/express`);
+
+    if (!validCategories.includes(category)) {
+      breadCrumbList.push(firstBreadCrumb, secondBreadCrumb);
       return;
     }
 
-    let thirdBreadCrumb;
-    if (pathList.length === 3) {
-      thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);
-    } else if (pathList.length > 3) {
-      thirdBreadCrumb = buildBreadCrumb(pathList[2], pathList[2], secondBreadCrumb.url);
-    }
-
-    breadCrumbList.push(firstBreadCrumb);
-    if (validCategories.includes(category)) {
-      breadCrumbList.push(secondBreadCrumb);
-    }
+    breadCrumbList.push(firstBreadCrumb, secondBreadCrumb);
     if (pathList.length >= 3) {
+      const thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);
       breadCrumbList.push(thirdBreadCrumb);
-    }
-
-    let runningURL = secondBreadCrumb.url;
-    for (let i = breadCrumbList.length; i < pathList.length; i += 1) {
-      breadCrumbList.push(buildBreadCrumb(pathList[i], pathList[i], runningURL));
-      runningURL = `${runningURL}/${pathList[i]}`;
     }
   }
 
@@ -224,6 +206,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     // content: {
+    //   experience: 'adobe-express/ax-gnav-homepage',
     //   experience: getMetadata('gnav') || fedsExp,
     // },
     profile: {
