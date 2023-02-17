@@ -71,7 +71,7 @@ const bubbleUI = {
     const hb = boxBottom.querySelector('.center-piece > div');
     const hbc = this.getCenter(hb);
 
-    vp.scrollTo({ top: hbc.y - vpc.y + 32, left: hbc.x - vpc.x });
+    vp.scrollTo({ top: hbc.y - vpc.y + 34, left: hbc.x - vpc.x });
 
     setTimeout(() => {
       const bubbleRowContainers = boxBottom.querySelectorAll('.bubble-row-container');

@@ -1,5 +1,6 @@
 main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox {
     padding-bottom: 21px;
+    max-height: 64px;
 }
 
 main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper {
@@ -50,12 +51,12 @@ main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-i
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    transition: all 0.8s, transform 2s, opacity 2s ease-in;
+    transition: opacity 2s ease-in;
 }
 
-main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in .bubble-load-background .icon-aex-logo {
-    transform: translate(-50%, -50%) scale(0.5);
-}
+/*main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in .bubble-load-background .icon-aex-logo {*/
+/*    transform: translate(-50%, -50%) scale(0.25);*/
+/*}*/
 
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox {
     padding-bottom: 0;
