@@ -11,7 +11,7 @@
  */
 
 import {
-  readBlockConfig, transformLinkToAnimation, lazyLoadLottiePlayer, getLottie, createTag,
+  readBlockConfig, transformLinkToAnimation, lazyLoadLottiePlayer, getLottie,
 } from '../../scripts/scripts.js';
 import { CCXQuickActionElement, ELEMENT_NAME } from '../quick-action/shared.js';
 
@@ -19,7 +19,7 @@ const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 const BLOCK_NAME = '.quick-action1';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const LOTTIE_ICONS = {
-  'arrow-up': '/express/blocks/quick-action1/arrow-up.json',
+  'arrow-up': '/express/blocks/quick-action/arrow-up.json',
 };
 
 function createMockQuickAction() {
