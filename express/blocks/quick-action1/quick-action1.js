@@ -10,11 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { readBlockConfig, transformLinkToAnimation } from '../../scripts/scripts.js';
+import {
+  readBlockConfig, transformLinkToAnimation, lazyLoadLottiePlayer, getLottie, createTag,
+} from '../../scripts/scripts.js';
 import { CCXQuickActionElement, ELEMENT_NAME } from '../quick-action/shared.js';
 
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 const BLOCK_NAME = '.quick-action1';
+const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
+const LOTTIE_ICONS = {
+  'arrow-up': '/express/blocks/quick-action1/arrow-up.json',
+};
 
 function createMockQuickAction() {
   const ele = document.createElement('div');
@@ -24,15 +30,41 @@ function createMockQuickAction() {
   + '<div class="dropzone__content">'
   + '<div class="dropzone__illustration">'
       + '<h4><!---->Drag &amp; drop an image <br> or <span class="browse-to-upload">browse to upload. <span><!----></h4>'
-    + '<button class="upload-your-photo">'
-        + 'Upload your photo'
-    + '</button>'
+    + '<a class="button xlarge upload-your-photo" href="javascript:void(0);"> Upload your photo </a>'
   + '</div>'
   + '<div class="quick-action-tag-container"><div class="quick-action-tag"><img class="icon icon-checkmark" src="/express/icons/checkmark.svg" alt="checkmark"></div>Free use forever</div>'
   + '<div class="quick-action-tag-container"><div class="quick-action-tag"><img class="icon icon-checkmark" src="/express/icons/checkmark.svg" alt="checkmark"></div>No credit card required</div>'
   + '</div> <input id="mock-file-input" type="file" accept="image/jpeg,image/png">'
   + '</div>';
   return ele;
+}
+
+function addLottieIcons(array, lottieIcon) {
+  const lottie = getLottie(lottieIcon, LOTTIE_ICONS[lottieIcon]);
+  array.forEach((el) => {
+    el.innerHTML = `${lottie}${el.innerHTML}`;
+  });
+  lazyLoadLottiePlayer();
+}
+
+function createOverlays() {
+  const overlayContainer = document.createElement('div');
+  overlayContainer.className = 'quick-action-complete-overlay-container';
+  const overlay = document.createElement('div');
+  overlay.className = 'quick-action-complete-overlay';
+  const downloadCopy = document.querySelector(`${ELEMENT_NAME} [data-action='Download']`).cloneNode(true);
+  const freeTagCopy = document.querySelectorAll(`${ELEMENT_NAME} .quick-action-tag-container`)[0].cloneNode(true);
+  const noCreditCardTagCopy = document.querySelectorAll(`${ELEMENT_NAME} .quick-action-tag-container`)[1].cloneNode(true);
+  [downloadCopy, freeTagCopy, noCreditCardTagCopy].forEach((btn) => {
+    btn.classList.add('overlay-item');
+    overlay.appendChild(btn);
+  });
+  overlayContainer.appendChild(overlay);
+  const closeButton = document.createElement('button');
+  closeButton.className = QUICK_TASK_CLOSE_BUTTON;
+  document.querySelector(`${ELEMENT_NAME}`).appendChild(overlayContainer);
+  document.querySelector(`${ELEMENT_NAME}`).appendChild(closeButton);
+  addLottieIcons(document.querySelectorAll(`${ELEMENT_NAME} [data-action='Download']`), 'arrow-up');
 }
 
 function addListenersOnMockElements(ele) {
@@ -71,6 +103,12 @@ function addListenersOnMockElements(ele) {
   document.querySelector(ELEMENT_NAME).addEventListener('ccl-quick-action-complete', () => {
     document.querySelector(`${BLOCK_NAME} .before-action`).style.display = 'none';
     document.querySelector(`${BLOCK_NAME} .after-action`).style.display = 'block';
+    createOverlays();
+  });
+  document.querySelector(`${ELEMENT_NAME}`).addEventListener('click', (event) => {
+    if (event.target.matches(` .${QUICK_TASK_CLOSE_BUTTON}`)) {
+      window.location.reload();
+    }
   });
 }
 
@@ -97,7 +135,7 @@ export default async function decorate(block) {
     }
   }
   const range = document.createRange();
-  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}"></${ELEMENT_NAME}>`);
+  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download your image"></${ELEMENT_NAME}>`);
   block.append(cclQuickAction);
   const mockQuickActionEle = createMockQuickAction();
   if (quickActionMedia) {
@@ -105,5 +143,6 @@ export default async function decorate(block) {
   } else {
     block.append(mockQuickActionEle);
   }
+  addLottieIcons(document.querySelectorAll('a.button.upload-your-photo'), 'arrow-up');
   addListenersOnMockElements(mockQuickActionEle);
 }

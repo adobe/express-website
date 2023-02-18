@@ -9,10 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { loadScript } from '../../scripts/scripts.js';
+import { loadScript, addFreePlanWidget } from '../../scripts/scripts.js';
 
 export const ELEMENT_NAME = 'ccl-quick-action';
-export const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 
 function createButton(label) {
   const btn = document.createElement('a');
@@ -45,10 +44,9 @@ async function fetchDependency(url, id) {
 }
 
 function showQuickAction(display) {
-  if (display) {
-    document.getElementsByClassName(MOCK_ELEMENT_NAME)[0].style.display = 'none';
-  }
   window.qtHost.task.qtEle.hideWorkSpace = !display;
+  const showQuickActionEvent = new Event('ccl-show-quick-action');
+  document.querySelector(ELEMENT_NAME).dispatchEvent(showQuickActionEvent);
 }
 
 export class CCXQuickActionElement extends HTMLElement {
@@ -59,6 +57,8 @@ export class CCXQuickActionElement extends HTMLElement {
   constructor() {
     super();
     this.action = this.attributes.getNamedItem('action').value;
+    this.downloadLabel = this.attributes.getNamedItem('downloadLabel') ? this.attributes.getNamedItem('downloadLabel').value : '';
+    this.editLabel = this.attributes.getNamedItem('editLabel') ? this.attributes.getNamedItem('editLabel').value : '';
     this.isLoading = true;
 
     this.taskContext = {
@@ -79,9 +79,11 @@ export class CCXQuickActionElement extends HTMLElement {
         // TODO: show upload image button
           return;
         }
-        [this.btnEdit, this.btnDl].forEach((btn) => {
-          btn.style.display = state.exportEnabled ? 'inline-block' : 'none';
-        });
+        if (!state.editorLoading && state.exportEnabled) {
+          const quickActionCompletionEvent = new Event('ccl-quick-action-complete');
+          document.querySelector(ELEMENT_NAME).dispatchEvent(quickActionCompletionEvent);
+        }
+        this.buttonContainer.style.display = state.exportEnabled ? 'flex' : 'none';
       },
       sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
       navigationData: {
@@ -205,28 +207,30 @@ export class CCXQuickActionElement extends HTMLElement {
 
   async render() {
     console.debug('render:');
-
-    if (!this.btnDl) {
-      this.btnDl = createButton('Download');
-      this.btnDl.classList.add('reverse');
+    this.buttonContainer = document.createElement('div');
+    this.buttonContainer.className = 'button-container';
+    this.buttonContainer.style.display = 'none';
+    if (this.downloadLabel && !this.btnDl) {
+      this.btnDl = createButton(this.downloadLabel || 'Download');
+      this.btnDl.classList.add('large');
       this.btnDl.dataset.action = 'Download';
-      this.btnDl.style.display = 'none';
-      this.append(this.btnDl);
+      this.buttonContainer.append(this.btnDl);
     }
-    if (!this.btnEdit) {
-      this.btnEdit = createButton('Customize in Adobe Express for free');
+    if (this.editLabel && !this.btnEdit) {
+      this.btnEdit = createButton(this.editLabel);
+      this.btnEdit.classList.add('large');
       this.btnEdit.dataset.action = 'Editor';
-      this.btnEdit.style.display = 'none';
-      this.append(this.btnEdit);
+      this.buttonContainer.append(this.btnEdit);
     }
     if (!this.freeUseTag) {
       this.freeUseTag = createTag('Free use forever');
-      this.append(this.freeUseTag);
+      this.buttonContainer.append(this.freeUseTag);
     }
     if (!this.noCreditCardTag) {
       this.noCreditCardTag = createTag('No credit card required');
-      this.append(this.noCreditCardTag);
+      this.buttonContainer.append(this.noCreditCardTag);
     }
+    this.append(this.buttonContainer);
     if (this.task) {
       await this.task.render();
     }
