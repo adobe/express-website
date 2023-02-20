@@ -33,16 +33,8 @@ function toggleCollapsibleCard($block) {
 }
 
 function initToggleState($block) {
-  $block.classList.add('expanded');
-  $block.classList.add('initial-expansion');
   const $divs = $block.querySelectorAll(':scope > div');
-  $divs[$divs.length - 1].style.maxHeight = '600px';
-
-  setTimeout(() => {
-    if ($block.classList.contains('initial-expansion')) {
-      toggleCollapsibleCard($block);
-    }
-  }, 10000);
+  $divs[$divs.length - 1].style.maxHeight = '0px';
 }
 
 function decorateToggleButton($block) {
