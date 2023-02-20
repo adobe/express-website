@@ -1,0 +1,29 @@
+main .section.paginated-carousel-container {
+
+}
+
+main .section.paginated-carousel-container .paginated-carousel-wrapper {
+
+}
+
+main .section.paginated-carousel-container .paginated-carousel {
+    display: flex;
+    overflow: auto;
+    scroll-snap-type: x mandatory;
+}
+
+main .section.paginated-carousel-container .paginated-carousel .paginated-carousel-item {
+    min-width: 220px;
+    scroll-snap-align: start;
+    padding: 0 6px;
+}
+
+main .section.paginated-carousel-container .paginated-carousel .paginated-carousel-item .image-container img {
+    border-radius: 16px;
+    display: block;
+}
+
+
+main .section.paginated-carousel-container .paginated-carousel .paginated-carousel-item p {
+    border-radius: 16px;
+}
