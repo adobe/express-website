@@ -281,7 +281,7 @@ async function decorateScrollOverlay(block) {
     scrollCard.append(title, cta);
     const scrollToCard = () => {
       window.scrollTo({
-        top: document.querySelector(`.pricing-hub-cards > :nth-child(${index + 1})`).getBoundingClientRect().top + window.scrollY - 20,
+        top: document.querySelector(`.pricing-hub-cards > :nth-child(${index + 1})`).getBoundingClientRect().top + window.scrollY - 30,
         behavior: 'smooth',
       });
     };

@@ -227,6 +227,7 @@ main .pricing-hub .pricing-hub-scroll-overlay-card {
   background-color: var(--color-white);
   padding: 1rem 0;
   width: 100%;
+  cursor: pointer;
 }
 
 main .pricing-hub .pricing-hub-scroll-overlay-card:first-child {
