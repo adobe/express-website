@@ -24,6 +24,7 @@ main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper h1 {
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 0;
 }
 
 main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper .column {
@@ -43,6 +44,7 @@ main .pricing-hub {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 0 60px 0;
 }
 
 main .pricing-hub .pricing-hub-cards {
@@ -390,6 +392,11 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
 }
 
 @media (min-width: 900px) {
+  main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper h1 {
+    max-width: 500px;
+    font-size: var(--heading-font-size-l);
+  }
+  
   main .section.pricing-hub-toc {
     padding-bottom: 32px;
   }
@@ -403,7 +410,7 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
   main .pricing-hub .pricing-hub-scroll-overlay-card {
     border-radius: 20px;
     margin-top: 12px;
-  }  
+  }
 
   main .pricing-hub .pricing-hub-feature:nth-child(2) .pricing-hub-feature-column.pricing-hub-feature-column-highlight {
     background-color: #BB57F3;
@@ -566,6 +573,7 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 32px;
+    font-size: var(--heading-font-size-xl);
   }
   
   main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper p {

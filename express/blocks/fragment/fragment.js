@@ -33,7 +33,7 @@ async function loadFragment(path) {
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
-      decorateMain(main);
+      await decorateMain(main);
       await loadBlocks(main);
       return main;
     }

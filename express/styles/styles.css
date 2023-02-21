@@ -729,6 +729,22 @@ main .section.secondary {
   background-color: var(--color-gray-100);
 }
 
+main .section.pricing-hub.toc { padding-bottom: 0; }
+main .section.pricing-hub-toc .link-list { margin: 0 auto; }
+main .section.pricing-hub-toc .link-list-wrapper { padding-top: 10px; }
+main .section.pricing-hub-toc .columns > div { padding: 0; }
+main .section.pricing-hub-toc .columns .column { margin: 0 auto; padding: 0 0 10px 0!important; }
+main .section.pricing-hub-toc .columns h1 { font-size: var(--heading-font-size-l); margin: 20px auto; }
+
+@media (min-width: 900px) {
+  main .section.pricing-hub.toc { padding-bottom: 0; }
+  main .section.pricing-hub-toc .link-list { margin: 0 auto; }
+  main .section.pricing-hub-toc .link-list-wrapper { padding-top: 10px; }
+  main .section.pricing-hub-toc .columns > div { padding: 0; }
+  main .section.pricing-hub-toc .columns .column { margin: 0 auto; padding: 20px 40px 10px 40px!important; }
+  main .section.pricing-hub-toc .columns h1 { font-size: var(--heading-font-size-xl); max-width: 600px; }
+}
+
 main .section>div {
   margin: auto;
   max-width: 375px;
@@ -1288,7 +1304,7 @@ main .section[data-section-status='initialized'] {
 /* long-form section: left-align text */
 main .section.long-form .default-content-wrapper {
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 0 20px 60px;
   max-width: unset;
 }
 
@@ -1311,7 +1327,7 @@ main .section.long-form .default-content-wrapper h6 {
 
 @media (min-width: 600px) {
   main .section.long-form .default-content-wrapper {
-    padding: 0 40px;
+    padding: 0 40px 60px;
     max-width: 1070px;
   }
 }
