@@ -1151,7 +1151,7 @@ main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
   background: var(--color-gray-100);
   position: sticky;
   z-index: 1;
-  top: 0;
+  top: -0.5px;
 }
 
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
