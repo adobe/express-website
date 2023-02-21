@@ -213,12 +213,17 @@ ccl-quick-action:hover .quick-action-complete-overlay-container {
 .more-quick-actions-container {
     flex: 1 1 300px;
 }
+ccl-quick-action .more-quick-actions-container p {
+    text-align: left;
+    width: 200px;
+    margin-bottom: 0;
+}
 .more-quick-actions-container ul{
     padding:0;
 }
 .more-quick-actions-container li {
     width: 200px;
-    padding: 8px 12px;
+    padding: 8px 0;
     margin: 0;
     display: flex;
     align-items: center;
