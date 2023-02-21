@@ -1150,7 +1150,6 @@ main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
   padding: 0;
   background: var(--color-gray-100);
   position: sticky;
-  position: -webkit-sticky;
   z-index: 1;
   top: 0;
 }
