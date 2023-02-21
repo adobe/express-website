@@ -11,7 +11,6 @@
  */
 
 /* eslint-disable import/named, import/extensions */
-
 import {
   createTag,
   getHelixEnv,
@@ -20,6 +19,11 @@ import {
   getOffer,
   getIconElement,
 } from '../../scripts/scripts.js';
+
+/* eslint-disable import/named, import/extensions */
+import {
+  buildDropdown,
+} from '../shared/dropdown.js';
 
 function replaceUrlParam(url, paramName, paramValue) {
   const params = url.searchParams;
@@ -209,37 +213,30 @@ async function decorateCards($block) {
         const $appList = $card.querySelector('ul');
 
         if ($appList) {
-          const $dropdown = createTag('select', { class: 'pricing-hub-app-picker' });
+          const dropdownOptions = [];
 
           $appList.querySelectorAll('li').forEach(($listItem) => {
-            const $option = createTag('option');
             const $link = $listItem.querySelector('a');
-            const $icon = $listItem.querySelector('img, svg');
 
-            $option.textContent = $link ? $link.textContent : $listItem.textContent;
-            $option.value = $link ? $link.href : $button.href;
+            const option = {
+              icon: $listItem.querySelector('img, svg'),
+              text: $link ? $link.textContent : $listItem.textContent,
+              value: $link ? $link.href : $button.href,
+            };
 
-            $dropdown.append($option);
+            dropdownOptions.push(option);
           });
 
-          $dropdown.addEventListener('change', async (e) => {
-            e.preventDefault();
+          const $dropdown = buildDropdown(dropdownOptions, [], async (option) => {
+            const newPlan = await fetchPlan(option.value);
 
-            if ($dropdown.value !== $button.href) {
-              const newPlan = await fetchPlan($dropdown.value);
-
-              if (newPlan) {
-                $button.href = buildUrl(plan.url, plan.country, plan.language);
+            Array.from($card.children).forEach(($row) => {
+              if ($row.textContent.includes('{{ Pricing }}')) {
+                $row.classList.add('pricing-hub-card-pricing-text');
+                $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', newPlan.formatted);
+                $button.href = buildUrl(newPlan.url, newPlan.country, newPlan.language);
               }
-            }
-
-            const $firstFeature = $block.querySelector('.pricing-hub-feature-title');
-
-            if ($firstFeature) {
-              const $featureHeader = $firstFeature.querySelector('h3');
-
-              $featureHeader.textContent = $dropdown[$dropdown.selectedIndex].textContent;
-            }
+            });
           });
 
           $appList.remove();
