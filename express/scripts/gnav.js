@@ -153,7 +153,6 @@ function loadFEDS() {
     : 'cc-express/cc-express-gnav';
 
   const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
-
   function buildBreadCrumb(path, name, parentPath = '') {
     return { title: capitalize(name), url: `${parentPath}/${path}` };
   }
@@ -162,11 +161,10 @@ function loadFEDS() {
   async function buildBreadCrumbArray() {
     const placeholders = await fetchPlaceholders();
     const validCategories = ['create', 'feature', 'templates'];
-    let pathList = window.location.pathname.split('/');
-    pathList = pathList.filter((element) => element !== '');
-    pathList = pathList.filter((element) => element !== locale);
+    const pathList = window.location.pathname.split('/')
+      .filter((element) => element !== '')
+      .filter((element) => element !== locale);
     const localePath = locale === 'us' ? '' : `${locale}/`;
-    const firstBreadCrumb = buildBreadCrumb(`${localePath}express/`, 'Homepage');
     let category = pathList[1].toLowerCase();
     const categoryURL = category;
     const pagesShortName = pathList.length > 2
@@ -182,13 +180,12 @@ function loadFEDS() {
     }
 
     const secondBreadCrumb = buildBreadCrumb(categoryURL, category, `${localePath}/express`);
+    breadCrumbList.push(secondBreadCrumb);
 
     if (!validCategories.includes(category)) {
-      breadCrumbList.push(firstBreadCrumb, secondBreadCrumb);
       return;
     }
 
-    breadCrumbList.push(firstBreadCrumb, secondBreadCrumb);
     if (pathList.length >= 3) {
       const thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);
       breadCrumbList.push(thirdBreadCrumb);
@@ -205,10 +202,11 @@ function loadFEDS() {
       },
     },
     locale: (locale === 'us' ? 'en' : locale),
-    // content: {
-    //   experience: 'adobe-express/ax-gnav-homepage',
-    //   experience: getMetadata('gnav') || fedsExp,
-    // },
+    content: {
+      // experience: 'adobe-express/ax-gnav-homepage',
+      // experience: "adobe-express/ax-gnav"
+      // experience: getMetadata('gnav') || fedsExp,
+    },
     profile: {
       customSignIn: () => {
         const sparkLang = getLanguage(locale);
@@ -232,7 +230,7 @@ function loadFEDS() {
       }
       : {},
     breadcrumbs: {
-      showLogo: false,
+      showLogo: true,
       links: breadCrumbList,
     },
   };
