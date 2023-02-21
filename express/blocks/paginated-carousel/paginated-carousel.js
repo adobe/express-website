@@ -59,6 +59,13 @@ function decoratePagination(block, payload) {
   block.insertAdjacentElement('afterend', paginationContainer);
 }
 
+function stopScrolling(block) { // To prevent safari shakiness
+  block.style.overflowX = 'hidden';
+  setTimeout(() => {
+    block.style.removeProperty('overflow-x');
+  }, 20);
+}
+
 function initCarousel(block, payload) {
   const originalCards = block.querySelectorAll('.paginated-carousel-item.original');
   const paginationDots = block.parentElement.querySelectorAll('.pagination-dot');
@@ -77,18 +84,22 @@ function initCarousel(block, payload) {
         paginationDots[payload.currentIndex].classList.add('active');
 
         if (card.classList.contains('prev') && payload.currentIndex === (originalCards.length - 1).toString()) {
+          stopScrolling(block);
           block.scrollBy({ left: originalCards.length * card.offsetWidth });
         }
 
         if (card.classList.contains('next') && payload.currentIndex === (originalCards.length - 1).toString()) {
+          stopScrolling(block);
           block.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
         }
       } else {
         if (card.classList.contains('next') && payload.currentIndex !== (originalCards.length - 1).toString()) {
+          stopScrolling(block);
           block.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
         }
 
         if (card.classList.contains('prev') && payload.currentIndex !== (originalCards.length - 1).toString()) {
+          stopScrolling(block);
           block.scrollBy({ left: originalCards.length * card.offsetWidth });
         }
       }
@@ -119,7 +130,7 @@ function initCarousel(block, payload) {
     }
   });
 
-  block.addEventListener('scroll', () => {
+  block.addEventListener('scroll', (e) => {
     if (!payload.backwardInfinite) {
       const prevCards = block.querySelectorAll('.paginated-carousel-item.prev');
       prevCards.forEach((pCard) => {
@@ -127,7 +138,7 @@ function initCarousel(block, payload) {
       });
       payload.backwardInfinite = true;
     }
-  }, { passive: true });
+  });
 }
 
 export default function decorate(block) {
