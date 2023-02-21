@@ -19,6 +19,8 @@ function decorateParagraphs(carouselItem) {
   if (paragraphs.length > 0) {
     paragraphs.forEach((p) => {
       if (p.querySelectorAll(':scope > picture').length > 0) {
+        const img = p.querySelector('img');
+        img.removeAttribute('loading');
         p.classList.add('image-container');
       }
 
@@ -74,15 +76,21 @@ function initCarousel(block, payload) {
         });
         paginationDots[payload.currentIndex].classList.add('active');
 
-        if (card.classList.contains('prev')) {
+        if (card.classList.contains('prev') && payload.currentIndex === (originalCards.length - 1).toString()) {
           block.scrollBy({ left: originalCards.length * card.offsetWidth });
         }
 
         if (card.classList.contains('next') && payload.currentIndex === (originalCards.length - 1).toString()) {
           block.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
         }
-      } else if (card.classList.contains('next') && payload.currentIndex !== (originalCards.length - 1).toString()) {
-        block.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
+      } else {
+        if (card.classList.contains('next') && payload.currentIndex !== (originalCards.length - 1).toString()) {
+          block.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
+        }
+
+        if (card.classList.contains('prev') && payload.currentIndex !== (originalCards.length - 1).toString()) {
+          block.scrollBy({ left: originalCards.length * card.offsetWidth });
+        }
       }
     });
   };
