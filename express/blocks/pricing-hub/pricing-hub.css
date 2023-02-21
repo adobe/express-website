@@ -1,9 +1,48 @@
+main .section.pricing-hub-toc {
+  padding: 8px 0;
+}
+
+main .section.pricing-hub-toc .link-list-wrapper .link-list {
+  margin-top: 0;
+  margin-bottom: 32px;
+}
+
+main .section.pricing-hub-toc .link-list .carousel-fader-left {
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+main .section.pricing-hub-toc .link-list .carousel-fader-right {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper .columns > div {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper h1 {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper .column {
+  padding: 0 16px;
+}
+
+main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper .columns .column p {
+  padding: 0 16px;
+}
+
+main .section.pricing-hub-container {
+  padding-top: 0;
+}
+
 main .pricing-hub {
   width: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 60px 0;
 }
 
 main .pricing-hub .pricing-hub-cards {
@@ -116,7 +155,7 @@ main .pricing-hub .pricing-hub-features {
   width: 336px;
   padding-top: 60px;
   box-sizing: border-box;
-  margin-bottom: 120px;
+  margin-bottom: 60px;
 }
 
 main .pricing-hub .pricing-hub-feature {
@@ -351,6 +390,9 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
 }
 
 @media (min-width: 900px) {
+  main .section.pricing-hub-toc {
+    padding-bottom: 32px;
+  }
 
   main .pricing-hub .pricing-hub-scroll-overlay-card,
   main .pricing-hub .pricing-hub-scroll-overlay-card:first-child,
@@ -422,6 +464,7 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
     padding-top: 160px;
     width: 100%;
     position: relative;
+    margin-bottom: 120px;
   }
 
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
@@ -518,6 +561,17 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
 }
 
 @media (min-width: 1200px) {
+  main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper h1 {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 32px;
+  }
+  
+  main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper p {
+    margin-bottom: 20px;
+  }
+  
   main .pricing-hub .pricing-hub-gradient {
     left: 558px;
     width: 223px;
