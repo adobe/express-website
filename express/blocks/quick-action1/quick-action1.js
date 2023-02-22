@@ -48,6 +48,9 @@ function addLottieIcons(array, lottieIcon) {
 }
 
 function createOverlays() {
+  if (document.querySelector('.quick-action-complete-overlay-container') !== null) {
+    return;
+  }
   const overlayContainer = document.createElement('div');
   overlayContainer.className = 'quick-action-complete-overlay-container';
   const overlay = document.createElement('div');

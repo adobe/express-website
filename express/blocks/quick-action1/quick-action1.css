@@ -146,16 +146,32 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     font-size: 45px;
 }
 .quick-action1 h1 em {
-    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2,#FF993B );
     background-size: 400% 400%;
-    /* -webkit-animation: buttonGradient 45s ease infinite; */
-    -moz-animation: buttonGradient 45s ease infinite;
-    /* animation: buttonGradient 45s ease infinite; */
+    -webkit-animation: quickActionGradient 45s ease infinite;
+    -moz-animation: quickActionGradient 45s ease infinite;
+    animation: quickActionGradient 45s ease infinite;
     -webkit-background-clip: text;
     background-clip: text;
     font-style: normal;
     -webkit-text-fill-color: transparent;
 }
+@-webkit-keyframes quickActionGradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes quickActionGradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes quickActionGradient {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
 .quick-action1 .before-action h1 + p, .quick-action1 .after-action h1 + p {
     margin: 16px 0 24px;
     font-size: 16px;
