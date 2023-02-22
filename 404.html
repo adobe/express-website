@@ -5,6 +5,7 @@
   <script type="text/javascript">
 	window.isErrorPage = true;
 	window.errorCode = '404';
+	console.log('404 LOGIC');
 
 	const redirectMap = new Map(
 		[
@@ -22,7 +23,7 @@
 			['ca_fr', '/fr/'],
 			['cis_en', '/'],
 			['cis_ru', '/'],
-			['cr_es', 'es'],
+			['cr', '/es/'],
 			['cy_en', '/'],
 			['cz', '/'],
 			['ch_de', '/de/'],
@@ -74,7 +75,6 @@
 			['nl-NL', '/nl/'],
 			['nz', '/'],
 			['pe', '/es/'],
-			['pr', 'es'],
 			['ph_en', '/'],
 			['ph_fil', '/'],
 			['pl', '/'],
@@ -122,7 +122,7 @@
 			valueInMap = redirectMap.get(userLocale); 
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
-			win.location.replace(redirectMap);	
+			win.location.replace(redirectURL);	
 		}
 		else {
 			[_, userLocale] = pathname.split('/');
