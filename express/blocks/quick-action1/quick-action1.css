@@ -1,7 +1,7 @@
 .quick-action1 ccl-quick-action {
     display: block;
     margin: 0 auto;
-    width: 600px;
+    width: 712px;
     height: 475px;
     position: relative;
 }
@@ -183,12 +183,12 @@ ccl-quick-action:hover .quick-action-complete-overlay-container {
 .quick-action-complete-overlay-container {
     display: block;
     position: absolute;
-    top: 96px;
+    top: 86px;
     bottom: 0;
     left: -46px;
     right: 0;
     height: 400px;
-    width: 489px;
+    width: 600px;
     opacity: 0;
     margin: 0 auto;
     transition: .5s ease;
@@ -210,8 +210,8 @@ ccl-quick-action:hover .quick-action-complete-overlay-container {
     position: absolute;
     width: 42px;
     height: 42px;
-    top: 79px;
-    right: 62px;
+    top: 64px;
+    right: 60px;
     z-index: 1000;
     box-shadow: 0 0 6px 6px rgb(0 0 0 / 4%);
     border-radius: 100%;
