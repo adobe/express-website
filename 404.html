@@ -108,7 +108,7 @@
 	
 	(function (win, doc) {
 		const eduRedirectPath = 'education/express/';
-		const eduPageRequest = '/edu/';
+		const eduPageRequest = '/edu/?locale';
 		const adobeDomain = 'www.adobe.com';
 		const protocol = 'https://';
 		const { href, pathname, search } = win.location;
@@ -116,7 +116,7 @@
 		let userLocale, redirectURL, redirectMapping, valueInMap;
 		const noop = ()=>{};
 
-	 	 if (pathname.includes(eduPageRequest) && search ) { 
+	 	 if (href.includes(eduPageRequest) && search ) { 
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale); 
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
