@@ -2,6 +2,10 @@ main .free-plan-tagline-container {
     padding: 0;
 }
 
+main [class='section section-wrapper free-plan-tagline-container'] {
+    background-color: var(--color-gray-100);
+}
+
 main .block.free-plan-tagline .free-plan-widget {
     background-color: unset;
     display: flex;
