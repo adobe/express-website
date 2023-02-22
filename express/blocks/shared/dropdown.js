@@ -78,7 +78,7 @@ function buildOptions($button, $options, options, callback) {
   $options.append(getIconElement('drop-down-arrow'));
 
   document.body.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('dropdown-button') && !e.target.classList.contains('dropdown-button-text') && !e.target.classList.contains('dropdown-button-icon')) {
+    if (!e.target.classList.contains('dropdown-button')) {
       if ($options.classList.contains('active')) {
         $options.classList.remove('active');
       }

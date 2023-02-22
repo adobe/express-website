@@ -17,7 +17,7 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   getOffer,
-  getIconElement,
+  getIconElement, fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
 /* eslint-disable import/named, import/extensions */
@@ -156,6 +156,64 @@ async function fetchPlan(planUrl) {
   return plan;
 }
 
+async function buildPlansDropdown($block, $card, $button, $appList) {
+  const dropdownOptions = [];
+
+  $appList.querySelectorAll('li').forEach(($listItem) => {
+    const $link = $listItem.querySelector('a');
+
+    const option = {
+      icon: $listItem.querySelector('img, svg'),
+      text: $link ? $link.textContent : $listItem.textContent,
+      value: $link ? $link.href : $button.href,
+    };
+
+    dropdownOptions.push(option);
+  });
+
+  const $dropdown = buildDropdown(dropdownOptions, [], async (option) => {
+    // const newPlan = await fetchPlan(option.value);
+
+    /**
+    Array.from($card.children).forEach(($row) => {
+      if ($row.textContent.includes('{{ Pricing }}')) {
+        $row.classList.add('pricing-hub-card-pricing-text');
+        $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', newPlan.formatted);
+        $button.href = buildUrl(newPlan.url, newPlan.country, newPlan.language);
+      }
+    }); */
+
+    const $firstFeature = $block.querySelector('.pricing-hub-feature.bundle-plan-feature');
+
+    if ($firstFeature) {
+      const $firstFeatureHeading = $firstFeature.querySelector('h3');
+      const $firstFeatureTooltip = $firstFeature.querySelector('.pricing-hub-feature-tooltip');
+
+      if ($firstFeatureHeading) {
+        $firstFeatureHeading.innerHTML = option.text;
+        $firstFeatureHeading.prepend(option.icon.cloneNode(true));
+      }
+
+      if ($firstFeatureTooltip) {
+        fetchPlaceholders().then((placeholders) => {
+          if (placeholders['bundle-plan-description']) {
+            $firstFeatureTooltip.textContent = placeholders['bundle-plan-description'].replaceAll('{{ App Name }}', option.text.replace('Adobe', ''));
+          }
+        });
+      }
+    }
+  });
+
+  $appList.remove();
+
+  Array.from($card.children).forEach(($row) => {
+    if ($row.textContent.includes('{{ App Picker }}')) {
+      $row.textContent = '';
+      $row.append($dropdown);
+    }
+  });
+}
+
 async function decorateCards($block) {
   const $rows = Array.from($block.children);
 
@@ -213,40 +271,8 @@ async function decorateCards($block) {
         const $appList = $card.querySelector('ul');
 
         if ($appList) {
-          const dropdownOptions = [];
-
-          $appList.querySelectorAll('li').forEach(($listItem) => {
-            const $link = $listItem.querySelector('a');
-
-            const option = {
-              icon: $listItem.querySelector('img, svg'),
-              text: $link ? $link.textContent : $listItem.textContent,
-              value: $link ? $link.href : $button.href,
-            };
-
-            dropdownOptions.push(option);
-          });
-
-          const $dropdown = buildDropdown(dropdownOptions, [], async (option) => {
-            const newPlan = await fetchPlan(option.value);
-
-            Array.from($card.children).forEach(($row) => {
-              if ($row.textContent.includes('{{ Pricing }}')) {
-                $row.classList.add('pricing-hub-card-pricing-text');
-                $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', newPlan.formatted);
-                $button.href = buildUrl(newPlan.url, newPlan.country, newPlan.language);
-              }
-            });
-          });
-
-          $appList.remove();
-
-          Array.from($card.children).forEach(($row) => {
-            if ($row.textContent.includes('{{ App Picker }}')) {
-              $row.textContent = '';
-              $row.append($dropdown);
-            }
-          });
+          // eslint-disable-next-line no-await-in-loop
+          await buildPlansDropdown($block, $card, $button, $appList);
         }
       }
 
@@ -348,6 +374,10 @@ function decorateFeatures($block) {
     const $columnsContainer = createTag('div', { class: 'pricing-hub-feature-columns' });
     const $title = $feature.querySelector('h3');
     const $icon = $feature.querySelector('svg, img');
+
+    if (i === 2) {
+      $feature.classList.add('bundle-plan-feature');
+    }
 
     if ($title && $icon) {
       $icon.parentElement.remove();
