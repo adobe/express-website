@@ -49,14 +49,19 @@ function addLottieIcons(array, lottieIcon) {
 }
 
 function createOverlays() {
+  if (document.querySelector('.quick-action-complete-overlay-container') !== null) {
+    return;
+  }
   const overlayContainer = document.createElement('div');
   overlayContainer.className = 'quick-action-complete-overlay-container';
   const overlay = document.createElement('div');
   overlay.className = 'quick-action-complete-overlay';
   const downloadCopy = document.querySelector(`${ELEMENT_NAME} [data-action='Download']`).cloneNode(true);
+  downloadCopy.classList.add('dark');
+  const editCopy = document.querySelector(`${ELEMENT_NAME} [data-action='Editor']`).cloneNode(true);
   const freeTagCopy = document.querySelectorAll(`${ELEMENT_NAME} .quick-action-tag-container`)[0].cloneNode(true);
   const noCreditCardTagCopy = document.querySelectorAll(`${ELEMENT_NAME} .quick-action-tag-container`)[1].cloneNode(true);
-  [downloadCopy, freeTagCopy, noCreditCardTagCopy].forEach((btn) => {
+  [downloadCopy, editCopy, freeTagCopy, noCreditCardTagCopy].forEach((btn) => {
     btn.classList.add('overlay-item');
     overlay.appendChild(btn);
   });
@@ -65,7 +70,6 @@ function createOverlays() {
   closeButton.className = QUICK_TASK_CLOSE_BUTTON;
   document.querySelector(`${ELEMENT_NAME}`).appendChild(overlayContainer);
   document.querySelector(`${ELEMENT_NAME}`).appendChild(closeButton);
-  addLottieIcons(document.querySelectorAll(`${ELEMENT_NAME} [data-action='Download']`), 'arrow-up');
 }
 
 function renderMoreActions() {
@@ -149,7 +153,7 @@ export default async function decorate(block) {
     }
   }
   const range = document.createRange();
-  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download your image"></${ELEMENT_NAME}>`);
+  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
   block.append(cclQuickAction);
   const mockQuickActionEle = createMockQuickAction();
   if (quickActionMedia) {
