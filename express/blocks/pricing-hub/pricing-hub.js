@@ -172,16 +172,14 @@ async function buildPlansDropdown($block, $card, $button, $appList) {
   });
 
   const $dropdown = buildDropdown(dropdownOptions, [], async (option) => {
-    // const newPlan = await fetchPlan(option.value);
+    const newPlan = await fetchPlan(option.value);
 
-    /**
     Array.from($card.children).forEach(($row) => {
-      if ($row.textContent.includes('{{ Pricing }}')) {
-        $row.classList.add('pricing-hub-card-pricing-text');
-        $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', newPlan.formatted);
+      if ($row.classList.contains('pricing-hub-card-pricing-text')) {
+        $row.innerHTML = newPlan.formatted;
         $button.href = buildUrl(newPlan.url, newPlan.country, newPlan.language);
       }
-    }); */
+    });
 
     const $firstFeature = $block.querySelector('.pricing-hub-feature.bundle-plan-feature');
 
