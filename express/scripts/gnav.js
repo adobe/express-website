@@ -152,26 +152,25 @@ function loadFEDS() {
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
-  const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
-  function buildBreadCrumb(path, name, parentPath = '') {
-    return { title: capitalize(name), url: `${parentPath}/${path}` };
-  }
-
   const breadCrumbList = [];
   async function buildBreadCrumbArray() {
+    const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+    const buildBreadCrumb = (path, name, parentPath = '') => (
+      { title: capitalize(name), url: `${parentPath}/${path}` }
+    );
+
     const placeholders = await fetchPlaceholders();
     const validCategories = ['create', 'feature', 'templates'];
-    const pathList = window.location.pathname.split('/')
+    const pathSegments = window.location.pathname.split('/')
       .filter((element) => element !== '')
       .filter((element) => element !== locale);
     const localePath = locale === 'us' ? '' : `${locale}/`;
-    let category = pathList[1].toLowerCase();
-    const categoryURL = category;
-    const pagesShortName = pathList.length > 2
-      ? document.querySelector('meta[name="short-title"]').getAttribute('content')
-      : true;
+    let category = pathSegments[1].toLowerCase();
+    const secondPathSegment = category;
+    const pagesShortNameElement = document.querySelector('meta[name="short-title"]');
+    const pagesShortName = pagesShortNameElement ? pagesShortNameElement.getAttribute('content') : null;
 
-    if (isHomepage || !pagesShortName) {
+    if (isHomepage || (!pagesShortName && pathSegments.length > 2)) {
       return;
     }
     if (placeholders[category]) {
@@ -179,14 +178,14 @@ function loadFEDS() {
       validCategories.push(category);
     }
 
-    const secondBreadCrumb = buildBreadCrumb(categoryURL, category, `${localePath}/express`);
+    const secondBreadCrumb = buildBreadCrumb(secondPathSegment, category, `${localePath}/express`);
     breadCrumbList.push(secondBreadCrumb);
 
     if (!validCategories.includes(category)) {
       return;
     }
 
-    if (pathList.length >= 3) {
+    if (pathSegments.length >= 3) {
       const thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);
       breadCrumbList.push(thirdBreadCrumb);
     }
