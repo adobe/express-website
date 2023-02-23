@@ -16,7 +16,7 @@ import {
 import { CCXQuickActionElement, ELEMENT_NAME } from '../../../../blocks/quick-action/shared.js';
 
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
-const BLOCK_NAME = '.quick-action1';
+const BLOCK_NAME = '.quick-action';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const LOTTIE_ICONS = {
   'arrow-up': '/express/blocks/quick-action/arrow-up.json',

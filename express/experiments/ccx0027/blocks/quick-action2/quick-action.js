@@ -17,7 +17,7 @@ import { CCXQuickActionElement, ELEMENT_NAME } from '../../../../blocks/quick-ac
 
 const REMOVE_BACKGROUND_ELEMENT = 'cclqt-remove-background';
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
-const BLOCK_NAME = '.quick-action2';
+const BLOCK_NAME = '.quick-action';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const LOTTIE_ICONS = {
   'arrow-up': '/express/blocks/quick-action/arrow-up.json',
