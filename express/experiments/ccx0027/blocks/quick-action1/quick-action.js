@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,12 +12,11 @@
 
 import {
   readBlockConfig, transformLinkToAnimation, lazyLoadLottiePlayer, getLottie,
-} from '../../scripts/scripts.js';
-import { CCXQuickActionElement, ELEMENT_NAME } from '../quick-action/shared.js';
+} from '../../../../scripts/scripts.js';
+import { CCXQuickActionElement, ELEMENT_NAME } from '../../../../blocks/quick-action/shared.js';
 
-const REMOVE_BACKGROUND_ELEMENT = 'cclqt-remove-background';
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
-const BLOCK_NAME = '.quick-action2';
+const BLOCK_NAME = '.quick-action1';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const LOTTIE_ICONS = {
   'arrow-up': '/express/blocks/quick-action/arrow-up.json',
@@ -57,11 +56,9 @@ function createOverlays() {
   const overlay = document.createElement('div');
   overlay.className = 'quick-action-complete-overlay';
   const downloadCopy = document.querySelector(`${ELEMENT_NAME} [data-action='Download']`).cloneNode(true);
-  downloadCopy.classList.add('dark');
-  const editCopy = document.querySelector(`${ELEMENT_NAME} [data-action='Editor']`).cloneNode(true);
   const freeTagCopy = document.querySelectorAll(`${ELEMENT_NAME} .quick-action-tag-container`)[0].cloneNode(true);
   const noCreditCardTagCopy = document.querySelectorAll(`${ELEMENT_NAME} .quick-action-tag-container`)[1].cloneNode(true);
-  [downloadCopy, editCopy, freeTagCopy, noCreditCardTagCopy].forEach((btn) => {
+  [downloadCopy, freeTagCopy, noCreditCardTagCopy].forEach((btn) => {
     btn.classList.add('overlay-item');
     overlay.appendChild(btn);
   });
@@ -70,18 +67,7 @@ function createOverlays() {
   closeButton.className = QUICK_TASK_CLOSE_BUTTON;
   document.querySelector(`${ELEMENT_NAME}`).appendChild(overlayContainer);
   document.querySelector(`${ELEMENT_NAME}`).appendChild(closeButton);
-}
-
-function renderMoreActions() {
-  const afterAction = document.querySelector(`${BLOCK_NAME} .after-action`);
-  const afterActionSubCopy = afterAction.firstElementChild;
-  const moreActions = afterActionSubCopy ? afterActionSubCopy.nextElementSibling : '';
-  if (moreActions) {
-    const quickAction = document.querySelector(`${ELEMENT_NAME}`);
-    const removeBackgroundEle = document.querySelector(REMOVE_BACKGROUND_ELEMENT);
-    quickAction.insertBefore(moreActions, removeBackgroundEle.nextElementSibling);
-    moreActions.classList.add('more-quick-actions-container');
-  }
+  addLottieIcons(document.querySelectorAll(`${ELEMENT_NAME} [data-action='Download']`), 'arrow-up');
 }
 
 function addListenersOnMockElements(ele) {
@@ -121,7 +107,6 @@ function addListenersOnMockElements(ele) {
     document.querySelector(`${BLOCK_NAME} .before-action`).style.display = 'none';
     document.querySelector(`${BLOCK_NAME} .after-action`).style.display = 'block';
     createOverlays();
-    renderMoreActions();
   });
   document.querySelector(`${ELEMENT_NAME}`).addEventListener('click', (event) => {
     if (event.target.matches(` .${QUICK_TASK_CLOSE_BUTTON}`)) {
@@ -153,7 +138,7 @@ export default async function decorate(block) {
     }
   }
   const range = document.createRange();
-  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
+  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download your image"></${ELEMENT_NAME}>`);
   block.append(cclQuickAction);
   const mockQuickActionEle = createMockQuickAction();
   if (quickActionMedia) {
