@@ -410,9 +410,20 @@ function decorateFeatures($block) {
     $features.append($feature);
 
     $columns[0].classList.add('pricing-hub-feature-title');
-    $columns[1].classList.add('pricing-hub-feature-column');
-    $columns[2].classList.add('pricing-hub-feature-column', 'pricing-hub-feature-column-highlight');
-    $columns[3].classList.add('pricing-hub-feature-column');
+
+    [$columns[1], $columns[2], $columns[3]].forEach(($column, index) => {
+      const $columnChildren = Array.from($column.children);
+      $column.classList.add('pricing-hub-feature-column');
+
+      if (index === 1) {
+        $columns[2].classList.add('pricing-hub-feature-column-highlight');
+      }
+
+      if ($columnChildren.length === 3) {
+        $columnChildren[1].classList.add('pricing-hub-feature-text-desktop');
+        $columnChildren[2].classList.add('pricing-hub-feature-text-mobile');
+      }
+    });
 
     $columnsContainer.append($columns[1]);
     $columnsContainer.append($columns[2]);

@@ -190,6 +190,14 @@ main .pricing-hub .pricing-hub-feature .pricing-hub-feature-title h3 {
   text-align: left;
 }
 
+main .pricing-hub .pricing-hub-feature-text-mobile {
+  display: block;
+}
+
+main .pricing-hub .pricing-hub-feature-text-desktop {
+  display: none;
+}
+
 main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -397,7 +405,7 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
     max-width: 500px;
     font-size: var(--heading-font-size-l);
   }
-  
+
   main .section.pricing-hub-toc {
     padding-bottom: 32px;
   }
@@ -559,6 +567,14 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
     margin: 0;
   }
 
+  main .pricing-hub .pricing-hub-feature-text-mobile {
+    display: none;
+  }
+
+  main .pricing-hub .pricing-hub-feature-text-desktop {
+    display: block;
+  }
+
   main .pricing-hub .pricing-hub-scroll-overlay {
     transform: translateX(-50%) translateX(165px);
   }
@@ -576,11 +592,11 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
     margin-bottom: 32px;
     font-size: var(--heading-font-size-xl);
   }
-  
+
   main .section.pricing-hub-toc .link-list-wrapper + .columns-wrapper p {
     margin-bottom: 20px;
   }
-  
+
   main .pricing-hub .pricing-hub-gradient {
     left: 558px;
     width: 223px;
