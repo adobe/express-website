@@ -142,7 +142,12 @@ window.customElements.define(ELEMENT_NAME, CCXQuickActionElement);
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  // show first row and hide second row
+  // create the utilityy and mock first
+  const range = document.createRange();
+  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
+  block.append(cclQuickAction);
+  const mockQuickActionEle = createMockQuickAction();
+  // decorate and then play the video
   let quickActionMedia = '';
   const beforeAction = block.firstElementChild;
   if (beforeAction && beforeAction.tagName === 'DIV') {
@@ -160,10 +165,6 @@ export default async function decorate(block) {
       $video.loop = false;
     }
   }
-  const range = document.createRange();
-  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
-  block.append(cclQuickAction);
-  const mockQuickActionEle = createMockQuickAction();
   if (quickActionMedia) {
     quickActionMedia.parentNode.append(mockQuickActionEle);
   } else {
