@@ -1,8 +1,12 @@
 /* ccl-quick-action styles */
+main .section > .quick-action-wrapper {
+    max-width: 1200px;
+}
 
 .quick-action ccl-quick-action {
     display: flex;
-    width: 1012px;
+    /* width: 1012px; */
+    /* use only 10px height to start with so that error toast messages are shown with out scrolling to bottom. When the utility is shown, this will be set to 475px */
     height: 10px;
     position: relative;
     flex-wrap: wrap;
@@ -14,6 +18,10 @@ ccl-quick-action .button-container {
 
 ccl-quick-action cclqt-remove-background {
     flex: 0 0 712px;
+}
+
+ccl-quick-action.quick-action-completed cclqt-remove-background {
+    margin-right: 0;
 }
 
 ccl-quick-action .quick-action-complete-overlay a.overlay-item {
@@ -58,6 +66,12 @@ ccl-quick-action a[data-action='Download'] lottie-player {
 
 .mock-ccl-quick-action a.button.upload-your-photo {
     display: flex;
+    border-radius: 35px;
+    align-items: center;
+}
+
+.mock-ccl-quick-action a.button.upload-your-photo:focus {
+    box-shadow: none;
 }
 
 .mock-ccl-quick-action .restrictions {
@@ -156,12 +170,14 @@ ccl-quick-action a[data-action='Download'] lottie-player {
 .quick-action .before-action .hero-animation-overlay {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .quick-action .before-action h1,
 .quick-action .after-action h1 {
     margin-top: 40px;
     font-size: 45px;
+    line-height: 50px;
 }
 
 .quick-action h1 em {
@@ -226,7 +242,7 @@ ccl-quick-action a[data-action='Download'] lottie-player {
 /* more quick actions styles */
 
 .more-quick-actions-container {
-    flex: 1 1 300px;
+    flex: 0 0 300px;
 }
 
 ccl-quick-action .more-quick-actions-container p {
@@ -274,11 +290,10 @@ ccl-quick-action .more-quick-actions-container p {
     position: absolute;
     top: 37px;
     bottom: 0;
-    left: -350px;
+    left: -159px;
     right: 0;
     height: 400px;
     width: 600px;
-    opacity: 0.75;
     margin: 0 auto;
     transition: .5s ease;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.90));
@@ -290,7 +305,7 @@ ccl-quick-action .more-quick-actions-container p {
     width: 70%;
     color: white;
     position: absolute;
-    top: 50%;
+    top: 80%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -304,7 +319,7 @@ ccl-quick-action .more-quick-actions-container p {
     position: absolute;
     width: 42px;
     height: 42px;
-    top: 10px;
+    top: 16px;
     right: 358px;
     z-index: 1000;
     box-shadow: 0 0 6px 6px rgb(0 0 0 / 4%);

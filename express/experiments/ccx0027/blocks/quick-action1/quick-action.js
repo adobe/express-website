@@ -19,6 +19,7 @@ const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 const BLOCK_NAME = '.quick-action';
 const QUICKACTION_HEIGHT_IN_PX = '475px';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
+const QUICK_ACTION_COMPLETED = 'quick-action-completed';
 const LOTTIE_ICONS = {
   'arrow-up': '/express/blocks/quick-action/arrow-up.json',
 };
@@ -112,6 +113,7 @@ function addListenersOnMockElements(ele) {
   document.querySelector(ELEMENT_NAME).addEventListener('ccl-quick-action-complete', () => {
     document.querySelector(`${BLOCK_NAME} .before-action`).style.display = 'none';
     document.querySelector(`${BLOCK_NAME} .after-action`).style.display = 'block';
+    document.querySelector(`${ELEMENT_NAME}`).classList.add(QUICK_ACTION_COMPLETED);
     createOverlays();
   });
   document.querySelector(`${ELEMENT_NAME}`).addEventListener('click', (event) => {

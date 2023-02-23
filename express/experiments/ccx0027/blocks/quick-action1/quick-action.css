@@ -1,9 +1,13 @@
 /* ccl-quick-action styles */
+main .section > .quick-action-wrapper {
+    max-width: 1200px;
+}
 
 .quick-action ccl-quick-action {
     display: block;
     margin: 0 auto;
     width: 712px;
+    /* use only 10px height to start with so that error toast messages are shown with out scrolling to bottom. When the utility is shown, this will be set to 475px */
     height: 10px;
     position: relative;
 }
@@ -13,11 +17,13 @@ ccl-quick-action .button-container {
     width: 535px;
 }
 
-ccl-quick-action .button-container a[data-action='Download'], ccl-quick-action .quick-action-complete-overlay a[data-action='Download']{
+.quick-action ccl-quick-action .button-container a[data-action='Download'], ccl-quick-action .quick-action-complete-overlay a[data-action='Download']{
     display: flex;
     flex: 0 0 158px;
     width: 158px;
     margin: auto;
+    border-radius: 35px;
+    align-items: center;
 }
 
 .quick-action ccl-quick-action lottie-player {
@@ -57,6 +63,12 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 
 .mock-ccl-quick-action a.button.upload-your-photo {
     display: flex;
+    border-radius: 35px;
+    align-items: center;
+}
+
+.mock-ccl-quick-action a.button.upload-your-photo:focus {
+    box-shadow: none;
 }
 
 .mock-ccl-quick-action .restrictions {
@@ -155,12 +167,14 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 .quick-action .before-action .hero-animation-overlay {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .quick-action .before-action h1,
 .quick-action .after-action h1 {
     margin-top: 40px;
     font-size: 45px;
+    line-height: 50px;
 }
 
 .quick-action h1 em {
@@ -224,7 +238,7 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 }
 
 ccl-quick-action:hover .quick-action-complete-overlay-container {
-    opacity: 0.9;
+    opacity: 1;
 }
 
 /* quick action overlay styles */
@@ -248,7 +262,7 @@ ccl-quick-action:hover .quick-action-complete-overlay-container {
     width: 100%;
     color: white;
     position: absolute;
-    top: 50%;
+    top: 80%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
