@@ -147,8 +147,9 @@ export default async function decorate(block) {
   const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
   block.append(cclQuickAction);
   const mockQuickActionEle = createMockQuickAction();
-  // decorate and then play the video
+  // decorate
   let quickActionMedia = '';
+  let video = '';
   const beforeAction = block.firstElementChild;
   if (beforeAction && beforeAction.tagName === 'DIV') {
     beforeAction.className = 'before-action';
@@ -157,12 +158,10 @@ export default async function decorate(block) {
       afterAction.className = 'after-action';
       afterAction.style.display = 'none';
     }
-    const video = block.querySelector('a[href*=".mp4"]');
+    video = block.querySelector('a[href*=".mp4"]');
     if (video) {
       quickActionMedia = video.parentNode;
       quickActionMedia.className = 'quick-action-media';
-      const $video = transformLinkToAnimation(video);
-      $video.loop = false;
     }
   }
   if (quickActionMedia) {
@@ -171,5 +170,10 @@ export default async function decorate(block) {
     block.append(mockQuickActionEle);
   }
   addLottieIcons(document.querySelectorAll('a.button.upload-your-photo'), 'arrow-up');
+  // play the video almost at the end of decoration
+  if (video) {
+    const $video = transformLinkToAnimation(video);
+    $video.loop = false;
+  }
   addListenersOnMockElements(mockQuickActionEle);
 }
