@@ -121,14 +121,15 @@
 			valueInMap = redirectMap.get(userLocale); 
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
+			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			win.location.replace(redirectURL);	
 		}
 		else {
 			[_, userLocale] = pathname.split('/');
-			valueInMap = redirectMap.get(userLocale);  
+			valueInMap = redirectMap.get(userLocale); 
+			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`; 
 			valueInMap ? win.location.replace( href.replace(`/${userLocale}/`, valueInMap)) : noop;
 		}
-		doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 	}(window, document));
 
 	
