@@ -17,6 +17,7 @@ import { CCXQuickActionElement, ELEMENT_NAME } from '../../../../blocks/quick-ac
 
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 const BLOCK_NAME = '.quick-action';
+const QUICKACTION_HEIGHT_IN_PX = '475px';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const LOTTIE_ICONS = {
   'arrow-up': '/express/blocks/quick-action/arrow-up.json',
@@ -81,7 +82,11 @@ function addListenersOnMockElements(ele) {
   });
   ele.addEventListener('dragover', (ev) => {
     ev.preventDefault();
-    document.querySelector(`.${MOCK_ELEMENT_NAME}`).style.backgroundColor = '#f8f8f8';
+    document.querySelector(`.${MOCK_ELEMENT_NAME}`).classList.add('dragged');
+  });
+  ele.addEventListener('dragleave', (ev) => {
+    ev.preventDefault();
+    document.querySelector(`.${MOCK_ELEMENT_NAME}`).classList.remove('dragged');
   });
   ele.addEventListener('drop', (ev) => {
     ev.preventDefault();
@@ -102,6 +107,7 @@ function addListenersOnMockElements(ele) {
   });
   document.querySelector(ELEMENT_NAME).addEventListener('ccl-show-quick-action', () => {
     document.getElementsByClassName(MOCK_ELEMENT_NAME)[0].parentNode.style.display = 'none';
+    document.querySelector(ELEMENT_NAME).style.height = QUICKACTION_HEIGHT_IN_PX;
   });
   document.querySelector(ELEMENT_NAME).addEventListener('ccl-quick-action-complete', () => {
     document.querySelector(`${BLOCK_NAME} .before-action`).style.display = 'none';

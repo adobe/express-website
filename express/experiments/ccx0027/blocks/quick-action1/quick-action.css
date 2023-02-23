@@ -2,7 +2,7 @@
     display: block;
     margin: 0 auto;
     width: 712px;
-    height: 475px;
+    height: 10px;
     position: relative;
 }
 ccl-quick-action .button-container {
@@ -38,7 +38,9 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 .mock-ccl-quick-action:hover{
     background-color:#f8f8f8;
 }
-
+.mock-ccl-quick-action.dragged .dropzone__bg {
+    background-color: #242424;
+}
 .mock-ccl-quick-action .browse-to-upload {
     color: #5c5ce0;
 }

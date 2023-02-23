@@ -45,8 +45,10 @@ async function fetchDependency(url, id) {
 
 function showQuickAction(display) {
   window.qtHost.task.qtEle.hideWorkSpace = !display;
-  const showQuickActionEvent = new Event('ccl-show-quick-action');
-  document.querySelector(ELEMENT_NAME).dispatchEvent(showQuickActionEvent);
+  if (display) {
+    const showQuickActionEvent = new Event('ccl-show-quick-action');
+    document.querySelector(ELEMENT_NAME).dispatchEvent(showQuickActionEvent);
+  }
 }
 
 export class CCXQuickActionElement extends HTMLElement {
