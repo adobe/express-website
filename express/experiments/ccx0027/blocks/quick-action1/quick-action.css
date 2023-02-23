@@ -77,8 +77,6 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 }
 
 .mock-ccl-quick-action .dropzone {
-    max-width: 95%;
-    max-height: 92%;
     width: 100%;
     height: 100%;
     position: relative;
@@ -86,14 +84,15 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 }
 
 .mock-ccl-quick-action .dropzone__bg {
-    width: 100%;
-    height: 100%;
+    width: 552px;
+    height: 272px;
     transition: 0.3s ease-in-out;
     background-color: #b6b6b6;
     -webkit-mask: center center / 100% no-repeat;
     display: block;
     position: absolute;
-    inset: 0px;
+    top: 24px;
+    left: 24px;
     z-index: 1;
 }
 
@@ -110,7 +109,7 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     align-items: center;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 40px 0 20px;
+    padding: 56px 0 0;
 }
 
 .mock-ccl-quick-action .dropzone__illustration h4 {
@@ -148,7 +147,6 @@ ccl-quick-action a[data-action='Download'] lottie-player{
 .quick-action-tag-container {
     display: inline-block;
     margin: 10px;
-    vertical-align: top;
     overflow: hidden;
     white-space: nowrap;
     vertical-align: top;
