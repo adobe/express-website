@@ -116,7 +116,7 @@
 		let userLocale, redirectURL, redirectMapping, valueInMap;
 		const noop = ()=>{};
 
-	 	 if (search.includes(eduPageRequest) && search ) { 
+	 	 if (pathname.includes(eduPageRequest) && search ) { 
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale); 
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
