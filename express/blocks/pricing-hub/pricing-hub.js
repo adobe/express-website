@@ -179,6 +179,15 @@ async function buildPlansDropdown($block, $card, $button, $appList) {
         $row.innerHTML = newPlan.formatted;
         $button.href = buildUrl(newPlan.url, newPlan.country, newPlan.language);
       }
+
+      if ($row.classList.contains('pricing-hub-card-pricing-secondary')) {
+        if (newPlan.vatInfo) {
+          $row.style.display = 'block';
+          $row.textContent = newPlan.vatInfo;
+        } else {
+          $row.style.display = 'none';
+        }
+      }
     });
 
     const $firstFeature = $block.querySelector('.pricing-hub-feature.bundle-plan-feature');
@@ -279,6 +288,17 @@ async function decorateCards($block) {
           if ($row.textContent.includes('{{ Pricing }}')) {
             $row.classList.add('pricing-hub-card-pricing-text');
             $row.innerHTML = $row.innerHTML.replace('{{ Pricing }}', plan.formatted);
+
+            const $pricingSecondaryText = createTag('p', { class: 'pricing-hub-card-pricing-secondary' });
+            $row.parentElement.insertBefore($pricingSecondaryText, $row.nextSibling);
+
+            if (plan.vatInfo) {
+              $pricingSecondaryText.style.display = 'block';
+              $pricingSecondaryText.textContent = plan.vatInfo;
+            } else {
+              $pricingSecondaryText.style.display = 'none';
+            }
+
             $button.href = buildUrl(plan.url, plan.country, plan.language);
           }
         });
@@ -439,5 +459,5 @@ export default async function decorate($block) {
   await decorateCards($block);
   decorateMidSection($block);
   decorateFeatures($block);
-  decorateScrollOverlay($block);
+  await decorateScrollOverlay($block);
 }

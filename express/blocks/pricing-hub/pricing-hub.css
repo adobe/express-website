@@ -97,6 +97,10 @@ main .pricing-hub .pricing-hub-card p {
   margin: 10px 0;
 }
 
+main .pricing-hub .pricing-hub-card .pricing-hub-card-pricing-secondary {
+  margin-top: -10px;
+}
+
 main .pricing-hub .pricing-hub-card .button-container {
   display: flex;
 }
