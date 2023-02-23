@@ -1,4 +1,4 @@
-.quick-action2 ccl-quick-action {
+.quick-action ccl-quick-action {
     display: flex;
     width: 1012px;
     height: 475px;
@@ -17,7 +17,7 @@ ccl-quick-action .quick-action-complete-overlay a.overlay-item {
     margin-bottom: 12px;
     margin-left: 6px;
 }
-.quick-action2 lottie-player {
+.quick-action lottie-player {
     width: 25px;
     height: 25px;
 }
@@ -128,25 +128,25 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     vertical-align: top;
 }
 
-.quick-action2 .before-action .quick-action-media {
+.quick-action .before-action .quick-action-media {
     width: 445px;
     height: 445px;
     margin: 0 10px 0 0;
 }
-.quick-action2 .before-action .quick-action-media img {
+.quick-action .before-action .quick-action-media img {
     width: 100%;
 }
 
-.quick-action2 .before-action .hero-animation-overlay {
+.quick-action .before-action .hero-animation-overlay {
     display: flex;
     align-items: center;
 }
-.quick-action2 .before-action h1, .quick-action2 .after-action h1 {
+.quick-action .before-action h1, .quick-action .after-action h1 {
     margin-top: 40px;
     font-size: 45px;
 }
 
-.quick-action2 h1 em {
+.quick-action h1 em {
     background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2,#FF993B );
     background-size: 400% 400%;
     -webkit-animation: quickActionGradient 45s ease infinite;
@@ -172,7 +172,7 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     50%{background-position:100% 50%}
     100%{background-position:0% 50%}
 }
-.quick-action2 .before-action h1 + p, .quick-action2 .after-action h1 + p {
+.quick-action .before-action h1 + p, .quick-action .after-action h1 + p {
     margin: 16px 0 24px;
     font-size: 16px;
 }
