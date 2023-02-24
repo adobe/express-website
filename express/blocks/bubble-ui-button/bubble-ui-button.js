@@ -85,12 +85,12 @@ const bubbleUI = {
       this.resizeBubbles(boxBottom);
       boxBottom.classList.remove('no-transition');
       boxBottom.parentElement.classList.remove('initial-load');
-      boxBottom.parentElement.classList.add('zoom-in');
+      // boxBottom.parentElement.classList.add('zoom-in');
     }, 500);
 
-    setTimeout(() => {
-      boxBottom.parentElement.classList.remove('zoom-in');
-    }, 1500);
+    // setTimeout(() => {
+    //   boxBottom.parentElement.classList.remove('zoom-in');
+    // }, 1500);
 
     setTimeout(() => {
       const bubbleLoadBackground = boxBottom.parentElement.querySelector('.bubble-load-background');
@@ -123,7 +123,7 @@ const bubbleUI = {
         left: 0,
         top: 0,
         topOffset: 24,
-        bottomOffset: -40,
+        bottomOffset: 24,
         rightOffset: 24,
         leftOffset: 24,
         diameter: maxDiameter,
@@ -216,6 +216,7 @@ const bubbleUI = {
 function toggleBubblesToolBox($wrapper, $lottie, data, userInitiated = true) {
   const $toolbox = $wrapper.querySelector('.toolbox');
   const $button = $wrapper.querySelector('.floating-button');
+  const body = document.querySelector('body');
 
   if (userInitiated) {
     $wrapper.classList.remove('initial-load');
@@ -244,6 +245,7 @@ function toggleBubblesToolBox($wrapper, $lottie, data, userInitiated = true) {
         }
       }, 2000);
     }
+    if (body) body.style.removeProperty('overflow');
   } else {
     $toolbox.classList.remove('hidden');
     $wrapper.classList.add('clamped');
@@ -257,6 +259,7 @@ function toggleBubblesToolBox($wrapper, $lottie, data, userInitiated = true) {
     setTimeout(() => {
       bubbleUI.resizeBubbles($wrapper.querySelector('.bubble-ui'));
     }, 500);
+    if (body) body.style.overflow = 'hidden';
   }
 }
 
@@ -321,7 +324,7 @@ async function decorateBubbleUI($boxBottom, data) {
   const bubbleLoadBackground = createTag('div', { class: 'bubble-load-background' });
 
   bubbleLoadBackground.append(getIconElement('aex-logo'));
-  $boxBottom.parentElement.append(bubbleLoadBackground);
+  // $boxBottom.parentElement.append(bubbleLoadBackground);
   $boxBottom.append(bubbleViewportContainer);
   bubbleViewportContainer.append(bubbleViewport);
   bubbleViewport.append(bubbleRowContainer);

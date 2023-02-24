@@ -199,7 +199,7 @@ main .floating-button-wrapper.multifunction .toolbox.hidden {
 
 main .floating-button-wrapper.multifunction .floating-button .toggle-button {
     position: absolute;
-    left: 28px;
+    left: 29px;
     height: 18px;
     padding: 4px;
     width: 18px;
@@ -264,7 +264,7 @@ main .floating-button-wrapper.multifunction .toolbox .notch-pill {
 
 main .floating-button-wrapper.multifunction .toolbox .badge {
     position: absolute;
-    max-width: 100px;
+    max-width: 120px;
     top: -8px;
     right: 32px;
     transition: all 0.5s;

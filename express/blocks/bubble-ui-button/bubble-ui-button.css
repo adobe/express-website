@@ -61,7 +61,7 @@ main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-i
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox {
     padding-bottom: 0;
     transform: translateY(72px);
-    max-height: 500px;
+    max-height: 520px;
 }
 
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox:after {
@@ -76,7 +76,7 @@ main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-t
 main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom.bubble-ui {
     margin: 0;
     flex-grow: 1;
-    height: 400px;
+    height: 420px;
     position: relative;
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
@@ -124,6 +124,7 @@ main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .too
 
 main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport {
     position: absolute;
+    user-select: none;
     top: 0;
     left: 0;
     height: 100%;
@@ -131,7 +132,7 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport
     overflow: auto;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-    scroll-padding: 100px 0 0 100px;
+    scroll-padding: 100px 0 80px 100px;
     display: flex;
 }
 
@@ -140,6 +141,8 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport
 }
 
 main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row-container {
+    height: 620px;
+    user-select: none;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -150,11 +153,13 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row-cont
 
 main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row {
     display: flex;
+    user-select: none;
     flex-direction: row;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-container {
     width: 110px;
+    user-select: none;
     height: 110px;
     margin: 0 5px;
     position: relative;
@@ -163,6 +168,7 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-containe
 main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble {
     border-radius: 50%;
     display: -webkit-flex;
+    user-select: none;
     display: flex;
     justify-content: center;
     align-items: flex-start;
