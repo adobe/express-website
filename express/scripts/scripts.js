@@ -397,17 +397,10 @@ export function transformLinkToAnimation($a) {
   $innerDiv.classList.add('hero-animation-overlay');
   $a.replaceWith($video);
   // autoplay animation
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (!e.isIntersecting) {
-        e.target.pause();
-        return;
-      }
-      e.target.muted = true;
-      e.target.play().catch((error) => console.error('unable to autoplay videos', error));
-    });
+  $video.addEventListener('canplay', () => {
+    $video.muted = true;
+    $video.play();
   });
-  observer.observe($video);
   return $video;
 }
 
@@ -2176,8 +2169,7 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      // const target = checkTesting();
-      const target = false;
+      const target = checkTesting();
       if (useAlloy) {
         document.querySelector('body').classList.add('personalization-container');
         // target = true;
