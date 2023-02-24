@@ -404,7 +404,9 @@ export function transformLinkToAnimation($a) {
         return;
       }
       e.target.muted = true;
-      e.target.play().catch((error) => console.error('unable to auto play videos', error));
+      setTimeout(() => {
+        e.target.play().catch((error) => console.error('unable to auto play videos', error));
+      });
     });
   });
   observer.observe($video);
