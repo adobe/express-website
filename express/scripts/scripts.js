@@ -15,6 +15,7 @@ window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
 window.RUM_HIGH_SAMPLE_RATE = 50;
 
+const SHOW_BODY_EVENT = 'show-body';
 /**
  * log RUM if part of the sample.
  * @param {string} checkpoint identifies the checkpoint in funnel
@@ -397,20 +398,10 @@ export function transformLinkToAnimation($a) {
   $innerDiv.classList.add('hero-animation-overlay');
   $a.replaceWith($video);
   // autoplay animation
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      console.log('intersection observer', e);
-      if (!e.isIntersecting) {
-        e.target.pause();
-        return;
-      }
-      e.target.muted = true;
-      setTimeout(() => {
-        e.target.play().catch((error) => console.error('unable to auto play videos', error));
-      }, 2000);
-    });
+  document.addEventListener(SHOW_BODY_EVENT, () => {
+    $video.muted = true;
+    $video.play();
   });
-  observer.observe($video);
   return $video;
 }
 
@@ -2188,6 +2179,7 @@ async function loadEager() {
         hideBody();
         setTimeout(() => {
           unhideBody();
+          document.dispatchEvent(new CustomEvent(SHOW_BODY_EVENT));
         }, 3000);
       }
     }
@@ -2201,6 +2193,8 @@ async function loadEager() {
       } else {
         resolve();
       }
+    }).then(() => {
+      document.dispatchEvent(new CustomEvent(SHOW_BODY_EVENT));
     });
   }
 }
