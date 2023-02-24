@@ -340,24 +340,9 @@ async function decorateScrollOverlay(block) {
 
   const featuresSection = block.querySelector('.pricing-hub-features');
   if (featuresSection) {
-    const scrollObserver = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      if (entry.isIntersecting && entry.intersectionRatio > 0) {
-        scrollOverlay.classList.add('pricing-hub-scroll-overlay-visible');
-      } else {
-        scrollOverlay.classList.remove('pricing-hub-scroll-overlay-visible');
-      }
-    }, { threshold: 0 });
-    if (document.readyState === 'complete') {
-      scrollObserver.observe(featuresSection);
-    } else {
-      window.addEventListener('load', () => {
-        scrollObserver.observe(featuresSection);
-      });
-    }
     const checkIfScrolled = () => {
       const rect = featuresSection.getBoundingClientRect();
-      if (rect.height > 0 && rect.top < 80) {
+      if (rect.height > 0 && rect.top < 80 && rect.bottom > 0) {
         scrollOverlay.classList.add('pricing-hub-scroll-overlay-scrolled');
       } else {
         scrollOverlay.classList.remove('pricing-hub-scroll-overlay-scrolled');

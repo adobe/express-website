@@ -228,7 +228,7 @@ main .pricing-hub .pricing-hub-scroll-overlay {
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-main .pricing-hub .pricing-hub-scroll-overlay.pricing-hub-scroll-overlay-visible.pricing-hub-scroll-overlay-scrolled {
+main .pricing-hub .pricing-hub-scroll-overlay.pricing-hub-scroll-overlay-scrolled {
   pointer-events: auto;
   visibility: visible;
   opacity: 1;
