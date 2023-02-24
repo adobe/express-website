@@ -142,14 +142,8 @@ window.customElements.define(ELEMENT_NAME, CCXQuickActionElement);
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  // create the utilityy and mock first
-  const range = document.createRange();
-  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
-  block.append(cclQuickAction);
-  const mockQuickActionEle = createMockQuickAction();
-  // decorate
+  // show first row and hide second row
   let quickActionMedia = '';
-  let video = '';
   const beforeAction = block.firstElementChild;
   if (beforeAction && beforeAction.tagName === 'DIV') {
     beforeAction.className = 'before-action';
@@ -158,22 +152,23 @@ export default async function decorate(block) {
       afterAction.className = 'after-action';
       afterAction.style.display = 'none';
     }
-    video = block.querySelector('a[href*=".mp4"]');
+    const video = block.querySelector('a[href*=".mp4"]');
     if (video) {
       quickActionMedia = video.parentNode;
       quickActionMedia.className = 'quick-action-media';
+      const $video = transformLinkToAnimation(video);
+      $video.loop = false;
     }
   }
+  const range = document.createRange();
+  const cclQuickAction = range.createContextualFragment(`<${ELEMENT_NAME} action="${config.action || 'remove-background'}" downloadLabel = "Download" editLabel = "Edit in Adobe Express for free"></${ELEMENT_NAME}>`);
+  block.append(cclQuickAction);
+  const mockQuickActionEle = createMockQuickAction();
   if (quickActionMedia) {
     quickActionMedia.parentNode.append(mockQuickActionEle);
   } else {
     block.append(mockQuickActionEle);
   }
   addLottieIcons(document.querySelectorAll('a.button.upload-your-photo'), 'arrow-up');
-  // play the video almost at the end of decoration
-  if (video) {
-    const $video = transformLinkToAnimation(video);
-    $video.loop = false;
-  }
   addListenersOnMockElements(mockQuickActionEle);
 }
