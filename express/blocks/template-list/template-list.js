@@ -102,19 +102,22 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
+function formatSearchQuery(filters) {
+  const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
+  const filterString = prunedFilter.reduce((string, [key, value]) => {
+    if (key === prunedFilter[prunedFilter.length - 1][0]) {
+      return `${string}${key}:${value}`;
+    } else {
+      return `${string}${key}:${value} AND `;
+    }
+  }, '');
+
+  props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+}
+
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    const prunedFilter = Object.entries(props.filters)
-      .filter(([, value]) => value !== '()');
-    const filterString = prunedFilter.reduce((string, [key, value]) => {
-      if (key === prunedFilter[prunedFilter.length - 1][0]) {
-        return `${string}${key}:${value}`;
-      } else {
-        return `${string}${key}:${value} AND `;
-      }
-    }, '');
-
-    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+    formatSearchQuery(props.filters);
 
     const result = await fetch(props.queryString)
       .then((response) => response.json())
@@ -124,6 +127,7 @@ async function fetchTemplates() {
     if (result._embedded.total > 0) {
       return result;
     } else {
+      // save fetch if search query returned 0 templates. "Bad result is better than no result"
       return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
         .then((response) => response.json())
         .then((response) => response);
@@ -139,17 +143,7 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const prunedFilter = Object.entries(tempFilters)
-      .filter(([, value]) => value !== '()');
-    const filterString = prunedFilter.reduce((string, [key, value]) => {
-      if (key === prunedFilter[prunedFilter.length - 1][0]) {
-        return `${string}${key}:${value}`;
-      } else {
-        return `${string}${key}:${value} AND `;
-      }
-    }, '');
-
-    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+    formatSearchQuery(tempFilters);
 
     return fetch(props.queryString)
       .then((response) => response.json())
