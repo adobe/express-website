@@ -173,11 +173,12 @@ async function buildPlansDropdown($block, $card, $button, $appList) {
 
   const $dropdown = buildDropdown(dropdownOptions, [], async (option) => {
     const newPlan = await fetchPlan(option.value);
+    const planLink = buildUrl(newPlan.url, newPlan.country, newPlan.language);
 
     Array.from($card.children).forEach(($row) => {
       if ($row.classList.contains('pricing-hub-card-pricing-text')) {
         $row.innerHTML = newPlan.formatted;
-        $button.href = buildUrl(newPlan.url, newPlan.country, newPlan.language);
+        $button.href = planLink;
       }
 
       if ($row.classList.contains('pricing-hub-card-pricing-secondary')) {
@@ -191,6 +192,7 @@ async function buildPlansDropdown($block, $card, $button, $appList) {
     });
 
     const $firstFeature = $block.querySelector('.pricing-hub-feature.bundle-plan-feature');
+    const $overlayCards = $block.querySelectorAll('.pricing-hub-scroll-overlay-card');
 
     if ($firstFeature) {
       const $firstFeatureHeading = $firstFeature.querySelector('h3');
@@ -208,6 +210,11 @@ async function buildPlansDropdown($block, $card, $button, $appList) {
           }
         });
       }
+    }
+
+    if ($overlayCards.length > 0) {
+      const $bundleOverlayButton = $overlayCards[$overlayCards.length - 1].querySelector('.button-container > a');
+      if ($bundleOverlayButton) $bundleOverlayButton.href = planLink;
     }
   });
 
