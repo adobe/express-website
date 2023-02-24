@@ -1,0 +1,329 @@
+/* ccl-quick-action styles */
+main .section > .quick-action-wrapper {
+    max-width: 1200px;
+}
+
+.quick-action ccl-quick-action {
+    display: flex;
+    /* width: 1012px; */
+    /* use only 10px height to start with so that error toast messages are shown with out scrolling to bottom. When the utility is shown, this will be set to 475px */
+    height: 10px;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+ccl-quick-action .button-container {
+    display: none !important;
+}
+
+ccl-quick-action cclqt-remove-background {
+    flex: 0 0 712px;
+}
+
+ccl-quick-action.quick-action-completed cclqt-remove-background {
+    margin-right: 0;
+}
+
+ccl-quick-action .quick-action-complete-overlay a.overlay-item {
+    margin-bottom: 12px;
+    margin-left: 6px;
+}
+
+.quick-action ccl-quick-action lottie-player {
+    width: 25px;
+    height: 25px;
+}
+
+ccl-quick-action a[data-action='Download'] lottie-player {
+    transform: rotate(180deg);
+}
+
+/* mock-ccl-quick-action styles */
+
+.mock-ccl-quick-action {
+    display: flex;
+    flex: 0 0 600px;
+    width: 600px;
+    height: 320px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 10%);
+}
+
+.mock-ccl-quick-action:hover {
+    background-color: #f8f8f8;
+}
+
+.mock-ccl-quick-action.dragged .dropzone__bg {
+    background-color: #242424;
+}
+
+.mock-ccl-quick-action .browse-to-upload {
+    color: #5c5ce0;
+}
+
+.mock-ccl-quick-action a.button.upload-your-photo {
+    display: flex;
+    border-radius: 35px;
+    align-items: center;
+}
+
+.mock-ccl-quick-action a.button.upload-your-photo:focus {
+    box-shadow: none;
+}
+
+.mock-ccl-quick-action .restrictions {
+    font-size: 0.825rem;
+    margin: 24px 0 32px 0;
+}
+
+.mock-ccl-quick-action .dropzone {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.mock-ccl-quick-action .dropzone__bg {
+    width: 552px;
+    height: 272px;
+    transition: 0.3s ease-in-out;
+    background-color: #b6b6b6;
+    -webkit-mask: center center / 100% no-repeat;
+    display: block;
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 1;
+}
+
+.mock-ccl-quick-action .dropzone__content {
+    justify-content: space-between;
+    position: relative;
+    align-items: center;
+    z-index: 2;
+}
+
+.mock-ccl-quick-action .dropzone__illustration {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 56px 0 0;
+}
+
+.mock-ccl-quick-action .dropzone__illustration h4 {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 36px;
+    color: #242424;
+    transition: 0.3s ease-in-out;
+    margin: 0 0 14px;
+}
+
+.mock-ccl-quick-action #mock-file-input {
+    display: none;
+}
+
+.quick-action-tag {
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+    background: #f06dad;
+    border-radius: 50%;
+}
+
+.quick-action-tag img {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    max-height: 8px;
+}
+
+.quick-action-tag-container {
+    display: inline-block;
+    margin: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+.quick-action .before-action .quick-action-media {
+    width: 445px;
+    height: 445px;
+    margin: 0 10px 0 0;
+}
+
+.quick-action .before-action .quick-action-media img {
+    width: 100%;
+}
+
+.quick-action .before-action .hero-animation-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quick-action .before-action h1,
+.quick-action .after-action h1 {
+    margin-top: 40px;
+    font-size: 45px;
+    line-height: 50px;
+}
+
+.quick-action h1 em {
+    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+    background-size: 400% 400%;
+    -webkit-animation: quickActionGradient 45s ease infinite;
+    -moz-animation: quickActionGradient 45s ease infinite;
+    animation: quickActionGradient 45s ease infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-style: normal;
+    -webkit-text-fill-color: transparent;
+}
+
+@-webkit-keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+.quick-action .before-action h1+p,
+.quick-action .after-action h1+p {
+    margin: 16px 0 24px;
+    font-size: 16px;
+}
+
+/* more quick actions styles */
+
+.more-quick-actions-container {
+    flex: 0 0 300px;
+}
+
+ccl-quick-action .more-quick-actions-container p {
+    text-align: left;
+    width: 200px;
+    margin-bottom: 0;
+    font-size: var(--body-font-size-xl);
+}
+
+.more-quick-actions-container ul {
+    padding: 0;
+}
+
+.more-quick-actions-container li {
+    width: 200px;
+    padding: 8px 0;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+}
+
+.more-quick-actions-container li:hover {
+    background-color: var(--color-gray-200);
+}
+
+.more-quick-actions-container li a {
+    color: var(--body-color);
+    font-weight: var(--body-font-weight);
+    font-size: var(--body-font-size-l);
+}
+
+.more-quick-actions-container li svg,
+.more-quick-actions-container li img {
+    padding: 0 12px 0 0;
+    min-width: 18px;
+    min-height: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+/* quick action overlay styles */
+
+.quick-action-complete-overlay-container {
+    display: block;
+    position: absolute;
+    top: 37px;
+    bottom: 0;
+    left: -159px;
+    right: 0;
+    height: 400px;
+    width: 600px;
+    margin: 0 auto;
+    transition: .5s ease;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.90));
+}
+
+.quick-action-complete-overlay-container .quick-action-complete-overlay {
+    display: flex;
+    flex-wrap: wrap;
+    width: 70%;
+    color: white;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.quick-task-close-button {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    top: 16px;
+    right: 358px;
+    z-index: 1000;
+    box-shadow: 0 0 6px 6px rgb(0 0 0 / 4%);
+    border-radius: 100%;
+    border: solid 1px #fff;
+    cursor: pointer;
+    background: no-repeat 50%/37% url(/express/icons/close-button-x.svg) #fff;
+}
+
