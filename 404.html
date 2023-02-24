@@ -119,10 +119,9 @@
 		const { hostname, href, pathname, port, search } = win.location;
 		if ((hostname === 'localhost')  && (port === '3000' ))  return;
 
-
 		let userLocale, redirectURL, redirectMapping, valueInMap;
 		const noop = ()=>{};
-		
+
 		if (pathname.includes(expressPrefix) && search) {
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale);
