@@ -256,10 +256,11 @@ ccl-quick-action .more-quick-actions-container p {
 
 .more-quick-actions-container li {
     width: 200px;
-    padding: 8px 0;
+    padding: 8px 0 8px 12px;
     margin: 0 0 8px;
     display: flex;
     align-items: center;
+    border-radius: 8px;
 }
 
 .more-quick-actions-container li:hover {

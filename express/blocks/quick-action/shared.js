@@ -85,7 +85,7 @@ export class CCXQuickActionElement extends HTMLElement {
           const quickActionCompletionEvent = new Event('ccl-quick-action-complete');
           document.querySelector(ELEMENT_NAME).dispatchEvent(quickActionCompletionEvent);
         }
-        this.buttonContainer.style.display = state.exportEnabled ? 'flex' : 'none';
+        this.buttonContainer.style.display = state.exportEnabled ? 'block' : 'none';
       },
       sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
       navigationData: {

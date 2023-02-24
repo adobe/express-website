@@ -14,14 +14,21 @@ main .section > .quick-action-wrapper {
 
 ccl-quick-action .button-container {
     align-items: baseline;
-    width: 535px;
 }
 
-.quick-action ccl-quick-action .button-container a[data-action='Download'], ccl-quick-action .quick-action-complete-overlay a[data-action='Download']{
+ccl-quick-action .quick-action-complete-overlay a[data-action='Download']{
     display: flex;
     flex: 0 0 158px;
     width: 158px;
     margin: auto;
+    border-radius: 35px;
+    align-items: center;
+}
+
+.quick-action ccl-quick-action .button-container a[data-action='Download'] {
+    display: inline-flex;
+    margin: 0 auto;
+    margin-right: 15px;
     border-radius: 35px;
     align-items: center;
 }
