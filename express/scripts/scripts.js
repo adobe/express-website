@@ -399,6 +399,7 @@ export function transformLinkToAnimation($a) {
   // autoplay animation
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
+      console.log('intersection observer', e);
       if (!e.isIntersecting) {
         e.target.pause();
         return;
