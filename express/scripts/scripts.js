@@ -2169,7 +2169,8 @@ async function loadEager() {
     document.querySelector('body').classList.add('appear');
 
     if (!window.hlx.lighthouse) {
-      const target = checkTesting();
+      // const target = checkTesting();
+      const target = false;
       if (useAlloy) {
         document.querySelector('body').classList.add('personalization-container');
         // target = true;
