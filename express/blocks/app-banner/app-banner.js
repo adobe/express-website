@@ -18,23 +18,12 @@ import {
   getIconElement,
 } from '../../scripts/scripts.js';
 
-async function buildPayload($block) {
+async function buildPayload() {
   const payload = {
     userAgent: getMobileOperatingSystem(),
     ratingScore: 0,
     ratingCount: '',
   };
-
-  const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
-  const $section = $block.closest('.section');
-
-  if ($floatingButton) {
-    payload.floatingButton = $floatingButton;
-  }
-
-  if ($section) {
-    payload.section = $section;
-  }
 
   await fetchPlaceholders().then((placeholders) => {
     if (payload.userAgent === 'iOS') {
@@ -48,6 +37,9 @@ async function buildPayload($block) {
 
   return payload;
 }
+
+// Returns true if a week has passed or the banner has not been closed yet
+const weekPassed = () => new Date().getTime() > localStorage.getItem('app-banner-optout-exp-date');
 
 function getCurrentRatingStars(rating = 5) {
   const star = getIcon('star', 'Full star');
@@ -67,8 +59,7 @@ function getCurrentRatingStars(rating = 5) {
   return stars;
 }
 
-function addCloseBtn(block, payload) {
-  const $background = payload.section.querySelector('.gradient-background');
+function addCloseBtn(block) {
   const $closeBtnDiv = createTag('div', { class: 'close-btn-div' });
   const $closeBtnImg = getIconElement('close-icon');
 
@@ -76,9 +67,16 @@ function addCloseBtn(block, payload) {
   block.append($closeBtnDiv);
 
   $closeBtnDiv.addEventListener('click', () => {
-    payload.section.classList.add('block-removed');
-    payload.floatingButton.classList.remove('push-up');
+    const $section = block.closest('.section');
+    const $background = $section.querySelector('.gradient-background');
+    $section.classList.add('block-removed');
+    const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
+    if ($floatingButton) {
+      $floatingButton.classList.remove('push-up');
+    }
     block.remove();
+    const sevenDaysFromNow = new Date().getTime() + (7 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('app-banner-optout-exp-date', sevenDaysFromNow);
 
     setTimeout(() => {
       $background.remove();
@@ -86,16 +84,20 @@ function addCloseBtn(block, payload) {
   });
 }
 
-function initScrollDirection(block, payload) {
-  const background = payload.section.querySelector('.gradient-background');
+function initScrollDirection(block) {
+  const $section = block.closest('.section');
+  const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
+  const background = $section.querySelector('.gradient-background');
   let lastScrollTop = 0;
 
   document.addEventListener('scroll', () => {
-    if (!payload.section.classList.contains('block-removed') && !payload.floatingButton.classList.contains('toolbox-opened')) {
+    if (!$section.classList.contains('block-removed')) {
       const { scrollTop } = document.documentElement;
       if (scrollTop < lastScrollTop) {
         block.classList.remove('appear');
-        payload.floatingButton.classList.remove('push-up');
+        if ($floatingButton && !$floatingButton.classList.contains('toolbox-opened')) {
+          $floatingButton.classList.remove('push-up');
+        }
         background.classList.remove('show');
         setTimeout(() => {
           if (!block.classList.contains('appear')) {
@@ -104,7 +106,9 @@ function initScrollDirection(block, payload) {
         }, 600);
       } else {
         block.classList.add('show');
-        payload.floatingButton.classList.add('push-up');
+        if ($floatingButton && !$floatingButton.classList.contains('toolbox-opened')) {
+          $floatingButton.classList.add('push-up');
+        }
         background.classList.add('show');
         setTimeout(() => {
           if (block.classList.contains('show')) {
@@ -142,43 +146,61 @@ function decorateBanner($block, payload) {
   $details.append($cta, $ratings, $secondImage);
   $colTwo.append($title, $details);
   $block.append($logo, $colTwo);
-  payload.section.prepend($background);
+  $block.parentElement.prepend($background);
   $ratings.prepend(getCurrentRatingStars(ratingNumber));
 }
 
-function watchFloatingButtonState(block, payload) {
-  const config = { attributes: true, childList: false, subtree: false };
+function watchFloatingButtonState(block) {
+  const $floatingButton = document.querySelector('.floating-button-wrapper[data-audience="mobile"]');
+  if ($floatingButton) {
+    const config = { attributes: true, childList: false, subtree: false };
 
-  const callback = (mutationList) => {
-    for (const mutation of mutationList) {
-      if (mutation.type === 'attributes'
-        && mutation.target.classList.contains('toolbox-opened')
-        && payload.floatingButton.classList.contains('push-up')) {
-        const background = payload.section.querySelector('.gradient-background');
-        block.classList.remove('appear');
-        payload.floatingButton.classList.remove('push-up');
-        background.classList.remove('show');
-        setTimeout(() => {
-          if (!block.classList.contains('appear')) {
-            block.classList.remove('show');
-          }
-        }, 600);
+    const callback = (mutationList) => {
+      for (const mutation of mutationList) {
+        if (mutation.type === 'attributes'
+          && mutation.target.classList.contains('toolbox-opened')
+          && $floatingButton.classList.contains('push-up')) {
+          const background = block.parentElement.querySelector('.gradient-background');
+          block.classList.remove('appear');
+          $floatingButton.classList.remove('push-up');
+          background.classList.remove('show');
+          setTimeout(() => {
+            if (!block.classList.contains('appear')) {
+              block.classList.remove('show');
+            }
+          }, 600);
+        }
       }
-    }
-  };
+    };
 
-  const observer = new MutationObserver(callback);
+    const observer = new MutationObserver(callback);
 
-  // Start observing the target node for configured mutations
-  observer.observe(payload.floatingButton, config);
+    // Start observing the target node for configured mutations
+    observer.observe($floatingButton, config);
+  }
 }
 
 export default async function decorate($block) {
-  setTimeout(async () => {
-    const payload = await buildPayload($block);
+  if (weekPassed()) {
+    localStorage.removeItem('app-banner-optout-exp-date');
+    const payload = await buildPayload();
     decorateBanner($block, payload);
-    addCloseBtn($block, payload);
-    initScrollDirection($block, payload);
-    watchFloatingButtonState($block, payload);
-  }, 1000);
+    addCloseBtn($block);
+
+    if (window.multifunctionButton && window.multifunctionButton.length) {
+      const db = window.multifunctionButton[0];
+      const mfb = window.multifunctionButton.find((p) => window.location.pathname === p.path);
+      const delay = mfb.delay ? mfb.delay * 1000 : db.delay * 1000;
+
+      setTimeout(() => {
+        initScrollDirection($block);
+        watchFloatingButtonState($block);
+      }, delay);
+    } else {
+      setTimeout(() => {
+        initScrollDirection($block);
+        watchFloatingButtonState($block);
+      }, 1000);
+    }
+  }
 }

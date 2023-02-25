@@ -692,6 +692,43 @@ export function getLanguage(locale) {
   return language;
 }
 
+export function getHelixEnv() {
+  let envName = sessionStorage.getItem('helix-env');
+  if (!envName) {
+    envName = 'stage';
+    if (window.spark.hostname === 'www.adobe.com') envName = 'prod';
+  }
+  const envs = {
+    stage: {
+      commerce: 'commerce-stg.adobe.com',
+      adminconsole: 'stage.adminconsole.adobe.com',
+      spark: 'express-stage.adobeprojectm.com',
+    },
+    prod: {
+      commerce: 'commerce.adobe.com',
+      spark: 'express.adobe.com',
+      adminconsole: 'adminconsole.adobe.com',
+    },
+  };
+  const env = envs[envName];
+
+  const overrideItem = sessionStorage.getItem('helix-env-overrides');
+  if (overrideItem) {
+    const overrides = JSON.parse(overrideItem);
+    const keys = Object.keys(overrides);
+    env.overrides = keys;
+
+    for (const a of keys) {
+      env[a] = overrides[a];
+    }
+  }
+
+  if (env) {
+    env.name = envName;
+  }
+  return env;
+}
+
 function getCurrencyDisplay(currency) {
   if (currency === 'JPY') {
     return 'name';
@@ -700,6 +737,33 @@ function getCurrencyDisplay(currency) {
     return 'code';
   }
   return 'symbol';
+}
+
+export async function fetchRelevantRows(path) {
+  if (!window.relevantRows) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}/express/relevant-rows.json`);
+      window.relevantRows = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch('/express/relevant-rows.json');
+      window.relevantRows = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.relevantRows.length) {
+    const relevantRow = window.relevantRows.find((p) => path === p.path);
+    const env = getHelixEnv();
+
+    if (env && env.name === 'stage') {
+      return relevantRow || null;
+    }
+
+    return relevantRow && relevantRow.live !== 'N' ? relevantRow : null;
+  }
+
+  return null;
 }
 
 export function formatPrice(price, currency) {
@@ -1637,7 +1701,7 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
   return null;
 }
 
-function buildAutoBlocks($main) {
+async function buildAutoBlocks($main) {
   const $lastDiv = $main.querySelector(':scope > div:last-of-type');
 
   // Load the branch.io banner autoblock...
@@ -1649,13 +1713,23 @@ function buildAutoBlocks($main) {
   }
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
-    if (!window.relevantRowsLoaded) {
-      const $relevantRowsSection = createTag('div');
-      const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
-      $relevantRowsSection.dataset.audience = 'mobile';
-      $relevantRowsSection.append($fragment);
-      $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
-      window.relevantRowsLoaded = true;
+    const authoredRRFound = [
+      '.template-list.horizontal.fullwidth.mini',
+      '.link-list.noarrows',
+      '.collapsible-card',
+    ].every((block) => $main.querySelector(block));
+
+    if (!authoredRRFound && !window.relevantRowsLoaded) {
+      const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+
+      if (relevantRowsData) {
+        const $relevantRowsSection = createTag('div');
+        const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
+        $relevantRowsSection.dataset.audience = 'mobile';
+        $relevantRowsSection.append($fragment);
+        $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
+        window.relevantRowsLoaded = true;
+      }
     }
   }
 
@@ -1687,7 +1761,7 @@ function buildAutoBlocks($main) {
     }
   }
 
-  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+  if (getMetadata('show-quick-action-card') && !['no', 'false', 'off'].includes(getMetadata('show-quick-action-card').toLowerCase())) {
     const fragmentName = getMetadata('show-quick-action-card').toLowerCase();
     const quickActionCardBlock = buildBlock('quick-action-card', fragmentName);
     quickActionCardBlock.classList.add('spreadsheet-powered');
@@ -1834,43 +1908,6 @@ function makeRelativeLinks($main) {
   });
 }
 
-export function getHelixEnv() {
-  let envName = sessionStorage.getItem('helix-env');
-  if (!envName) {
-    envName = 'stage';
-    if (window.spark.hostname === 'www.adobe.com') envName = 'prod';
-  }
-  const envs = {
-    stage: {
-      commerce: 'commerce-stg.adobe.com',
-      adminconsole: 'stage.adminconsole.adobe.com',
-      spark: 'express-stage.adobeprojectm.com',
-    },
-    prod: {
-      commerce: 'commerce.adobe.com',
-      spark: 'express.adobe.com',
-      adminconsole: 'adminconsole.adobe.com',
-    },
-  };
-  const env = envs[envName];
-
-  const overrideItem = sessionStorage.getItem('helix-env-overrides');
-  if (overrideItem) {
-    const overrides = JSON.parse(overrideItem);
-    const keys = Object.keys(overrides);
-    env.overrides = keys;
-
-    for (const a of keys) {
-      env[a] = overrides[a];
-    }
-  }
-
-  if (env) {
-    env.name = envName;
-  }
-  return env;
-}
-
 function displayOldLinkWarning() {
   if (window.location.hostname.includes('localhost') || window.location.hostname.includes('.hlx.page')) {
     document.querySelectorAll('main a[href^="https://spark.adobe.com/"]').forEach(($a) => {
@@ -2008,35 +2045,8 @@ export async function fetchMultifunctionButton(path) {
   return null;
 }
 
-export async function fetchRelevantRows(path) {
-  if (!window.relevantRows) {
-    try {
-      const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/relevant-rows.json`);
-      window.relevantRows = resp.ok ? (await resp.json()).data : [];
-    } catch {
-      const resp = await fetch('/express/relevant-rows.json');
-      window.relevantRows = resp.ok ? (await resp.json()).data : [];
-    }
-  }
-
-  if (window.relevantRows.length) {
-    const relevantRow = window.relevantRows.find((p) => path === p.path);
-    const env = getHelixEnv();
-
-    if (env && env.name === 'stage') {
-      return relevantRow || null;
-    }
-
-    return relevantRow && relevantRow.live !== 'N' ? relevantRow : null;
-  }
-
-  return null;
-}
-
 export async function decorateMain($main) {
-  buildAutoBlocks($main);
+  await buildAutoBlocks($main);
   splitSections($main);
   decorateSections($main);
   decorateButtons($main);

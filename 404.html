@@ -5,6 +5,68 @@
   <script type="text/javascript">
 	window.isErrorPage = true;
 	window.errorCode = '404';
+	
+	const redirectMap = new Map(
+		[
+			['ar', '/es/'],
+			['at', '/de/'],
+			['be_fr', '/fr/'],
+			['be_nl', '/nl/'],
+			['ca_fr', '/fr/'],
+			['ch_de', '/de/'],
+			['ch_fr', '/fr/'],
+			['ch_it', '/it/'],
+			['cl', '/es/'],
+			['co', '/es/'],
+			['cr', '/es/'],
+			['da-DK', '/dk/'],
+			['de-DE','/de/'],
+			['ec', '/es/'],
+			['es-ES', '/es/'],
+			['fi-FI', '/fi/'],
+			['fr-FR', '/fr/'],
+			['gt', '/es/'],
+			['hk_zh', '/tw/'],
+			['it-IT', '/it/'],
+			['ja-JP', '/jp/'],
+			['ko-KR', '/kr/'],
+			['la', '/es/'],
+			['lu_de', '/de/'],
+			['lu_fr', '/fr/'],
+			['mx', '/es/'],
+			['nb-NO', '/no/'],
+			['nl-NL', '/nl/'],
+			['pe', '/es/'],
+			['pr', '/es/'],
+			['pt', '/br/'],	
+			['pt-BR', '/br/'],
+			['sv-SE', '/se/'],
+			['zh-Hans-CN', '/cn/' ],
+			['zh-Hant-TW', '/tw/'],
+		]	
+	);
+	
+	(function (win, doc) {
+		const eduRedirectPath = 'education/express';
+		const eduPageRequest = '/express/edu/';
+		const { href, pathname, search } = win.location;
+		let userLocale, redirectURL, redirectMapping;
+
+		if  (pathname.includes(eduPageRequest) && search) {
+			[_, userLocale] = search.split('=');
+			const valueInMap = redirectMap.get(userLocale); 
+			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;  
+			redirectURL = href.replace(`${eduPageRequest}${search}`, redirectMapping);
+		}
+		else {
+			[_ , userLocale] = pathname.split('/');
+			redirectMapping = redirectMap.get(userLocale) || '/'; 
+			redirectURL = href.replace(`/${userLocale}/`, redirectMapping);
+		}	
+		doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
+		win.location.replace(redirectURL);
+  }(window, document));
+
   </script>
   <style>
 	
