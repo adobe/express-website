@@ -2340,84 +2340,11 @@ export async function buildFreePlanHighlight(elem) {
   freePlanBulletContainer.append(freePlanBulletTray);
   bullet.append(freePlanBulletContainer);
   elem.append(bullet, optoutButton);
-
-  // start watching for free-plan-highlight scroll
-  const parent = elem.parentElement;
-  const previousSibling = elem.previousElementSibling;
-
-  optoutButton.addEventListener('click', () => {
-    const highlightContainer = elem.querySelector('.free-plan-bullet-container');
-    elem.classList.add('highlight-optout');
-    sessionStorage.setItem('highlight-optout', true);
-    elem.classList.remove('fixed');
-    highlightContainer.style.removeProperty('transform');
-    elem.style.removeProperty('left');
-    parent.querySelectorAll('.free-plan-tag-placeholder').forEach((el) => {
-      el.remove();
-    });
-  }, { passive: true });
-  let supposedCtaPositionX = elem.getBoundingClientRect().left;
-
-  if (parent && previousSibling) {
-    ['scroll', 'resize'].forEach((event) => {
-      window.addEventListener(event, () => {
-        if (!elem.classList.contains('fixed')) {
-          supposedCtaPositionX = elem.getBoundingClientRect().left;
-        } else {
-          const currentClone = parent.querySelector('.free-plan-tag-placeholder');
-          if (currentClone) {
-            supposedCtaPositionX = currentClone.getBoundingClientRect().left;
-          }
-        }
-
-        const psmb = parseInt(getComputedStyle(previousSibling).marginBottom.replace('px', ''), 10);
-        const elmt = parseInt(getComputedStyle(elem).marginTop.replace('px', ''), 10);
-        const elh = parseInt(getComputedStyle(elem).height.replace('px', ''), 10);
-
-        let roomNeeded;
-        if (getComputedStyle(parent).display === 'flex') {
-          roomNeeded = psmb + elmt - 8;
-        } else {
-          roomNeeded = psmb >= elmt ? psmb - 8 : elmt - 8;
-        }
-
-        const triggerPoint = previousSibling.getBoundingClientRect().bottom + roomNeeded;
-        const ctaPositionX = elem.getBoundingClientRect().left;
-        const highlightContainer = elem.querySelector('.free-plan-bullet-container');
-
-        if (window.innerWidth > 900 && triggerPoint <= 0) {
-          if (!elem.classList.contains('highlight-optout')) {
-            elem.classList.add('fixed');
-            elem.style.left = `${supposedCtaPositionX}px`;
-            highlightContainer.style.transform = `translate(-${ctaPositionX}px, -8px)`;
-
-            if (parent.querySelectorAll('.free-plan-tag-placeholder').length <= 0) {
-              const clone = createTag('div', {
-                style: `height: ${elh + elmt}px`,
-                class: 'free-plan-tag-placeholder',
-              });
-
-              previousSibling.insertAdjacentElement('afterend', clone);
-            }
-          }
-        } else {
-          parent.querySelectorAll('.free-plan-tag-placeholder')
-            .forEach((el) => {
-              el.remove();
-            });
-          elem.classList.remove('fixed');
-          elem.style.removeProperty('left');
-          highlightContainer.style.removeProperty('transform');
-        }
-      }, { passive: true });
-    });
-  }
 }
 
 export async function addFreePlanWidget(elem) {
-  const placeholders = await fetchPlaceholders();
   if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
-
+    const placeholders = await fetchPlaceholders();
     const widget = await buildStaticFreePlanWidget();
 
     document.addEventListener('planscomparisonloaded', () => {
