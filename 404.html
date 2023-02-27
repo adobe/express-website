@@ -128,7 +128,7 @@
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			win.location.replace(redirectURL);	
 		}
-	 	 else if (pathname.includes(eduPageRequest) && search ) { 
+	 	else if (pathname.includes(eduPageRequest) && search ) { 
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale); 
 			redirectMapping =  valueInMap ? `${valueInMap}${educationSufix}` : `/${educationSufix}`;	
