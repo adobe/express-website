@@ -202,7 +202,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      // experience: 'adobe-express/ax-gnav-homepage',
+      experience: 'adobe-express/ax-gnav-homepage',
       // experience: "adobe-express/ax-gnav"
       // experience: getMetadata('gnav') || fedsExp,
     },
