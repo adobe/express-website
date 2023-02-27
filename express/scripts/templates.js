@@ -146,7 +146,6 @@ async function fetchLinkList(data) {
         parent: titleCase(data.templateTasks),
         'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
         ckgID: ckgItem.canonicalName,
-        displayValue: ckgItem.displayValue,
       }));
     } else {
       const resp = await fetch('/express/templates/top-priority-categories.json');
@@ -155,7 +154,7 @@ async function fetchLinkList(data) {
   }
 }
 
-function updateLinkList(container, linkPill, list, pageData) {
+function updateLinkList(container, linkPill, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
 
@@ -166,17 +165,20 @@ function updateLinkList(container, linkPill, list, pageData) {
       if (templatePageData) {
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-      } else if (d.ckgID) {
-        let searchParams;
-        if (d.ckgID.indexOf('DESIGN_TYPE') > 0) {
-          searchParams = `tasks=${d.displayValue}&phformat=${pageData.placeholderFormat}&ckgid=${d.ckgID}`;
-        } else {
-          searchParams = `tasks=${pageData.templateTasks}&phformat=${pageData.placeholderFormat}&topics=${d.displayValue}&ckgid=${d.ckgID}`;
-        }
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', titleCase(d.displayValue));
+        container.append(clone);
       }
-      container.append(clone);
+      // currently unused code for generating search link for linklist when no match is found in the metadata sheet
+      // else if (d.ckgID) {
+      //   let searchParams;
+      //   if (d.ckgID.indexOf('DESIGN_TYPE') > 0) {
+      //     searchParams = `tasks=${d.displayValue}&phformat=${pageData.placeholderFormat}&ckgid=${d.ckgID}`;
+      //   } else {
+      //     searchParams = `tasks=${pageData.templateTasks}&phformat=${pageData.placeholderFormat}&topics=${d.displayValue}&ckgid=${d.ckgID}`;
+      //   }
+      //   clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
+      //   clone.innerHTML = clone.innerHTML.replaceAll('Default', titleCase(d.displayValue));
+      // }
+      // container.append(clone);
     });
   }
 }
@@ -254,13 +256,12 @@ async function updateBlocks(data) {
           linkListData.push({
             childSibling: row['child-siblings'],
             ckgID: row.ckgID,
-            displayValue: row.displayValue,
           });
         }
       });
     }
 
-    updateLinkList(linkListContainer, linkListTemplate, linkListData, data);
+    updateLinkList(linkListContainer, linkListTemplate, linkListData);
   } else {
     linkListContainer.remove();
   }
@@ -290,7 +291,7 @@ async function updateBlocks(data) {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = data.topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
-      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData, data);
+      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
     } else {
       topTemplatesContainer.innerHTML = '';
     }
