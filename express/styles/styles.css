@@ -955,15 +955,6 @@ main .block .button-container.free-plan-container.highlight-optout .free-plan-bu
   transition: none;
 }
 
-main .block .button-container.free-plan-container.fixed .free-plan-bullet-container {
-  max-width: 100vw;
-  width: 100vw;
-  height: calc(100% + 16px);
-  border-radius: 0;
-  overflow: hidden;
-  transition: transform 0.2s ease-in, max-width 0.2s ease-in, border-radius 0.2s ease-in;
-}
-
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray {
   width: max-content;
   height: 100%;
@@ -992,14 +983,6 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
   font-size: 16px;
 }
 
-main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag::before {
-  content: "\2022";
-  font-size: 24px;
-  line-height: 20px;
-  display: inline-block;
-  padding-right: 20px;
-}
-
 main .block .free-plan-optout {
   appearance: none;
   display: none;
@@ -1023,14 +1006,6 @@ main .block .button-container.free-plan-container .free-plan-optout .icon {
   margin: 0;
 }
 
-main .block .button-container.free-plan-container.fixed .free-plan-optout {
-  left: -56px;
-  border-radius: 50px;
-  transform: translateY(-50%) rotate(-90deg);
-  transition: left 0.2s ease-in, transform 0.2s ease-in;
-  z-index: 3;
-}
-
 main .block .button-container.free-plan-container::before {
   content: '';
   height: 100%;
@@ -1042,20 +1017,10 @@ main .block .button-container.free-plan-container::before {
   z-index: 2;
 }
 
-main .block .button-container.free-plan-container.fixed::before {
-  max-height: 100%;
-  left: -68px;
-  background-color: var(--color-gray-150);
-}
-
 main .block .button-container.free-plan-container .free-plan-optout img {
   height: 16px;
   width: 16px;
   padding: 12px;
-}
-
-main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-plan-bullet-tray .free-plan-tag > div:first-child {
-  display: none;
 }
 
 @media (min-width: 900px) {
@@ -1103,10 +1068,6 @@ main .block .button-container.free-plan-container.fixed .free-plan-bullet .free-
   main .block.center .button-container.free-plan-container {
     justify-content: unset;
     margin: 40px auto 0 auto;
-  }
-
-  main .block.center .button-container.free-plan-container.fixed {
-    margin-top: 16px;
   }
 
   main .block .free-plan-widget {
