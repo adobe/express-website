@@ -156,6 +156,38 @@ async function fetchPlan(planUrl) {
   return plan;
 }
 
+function pushBundleAnalytics(plan, bundleType) {
+  const adobeEventName = 'adobe.com:express:pricing:bundleType:selected';
+  const sparkEventName = 'pricing:bundleTypeSelected';
+  const url = new URL(window.location.href);
+  const sparkTouchPoint = url.searchParams.get('touchpointName');
+
+  /* eslint-disable no-underscore-dangle */
+  /* global digitalData _satellite */
+  digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+  digitalData._set('spark.eventData.eventName', sparkEventName);
+  digitalData._set('spark.eventData.contextualData6', `bundleType:${bundleType}`);
+  digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
+  digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
+  digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
+  digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
+  digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+  digitalData._set('spark.eventData.trigger', sparkTouchPoint);
+
+  _satellite.track('event', {
+    digitalData: digitalData._snapshot(),
+  });
+
+  digitalData._delete('primaryEvent.eventInfo.eventName');
+  digitalData._delete('spark.eventData.eventName');
+  digitalData._delete('spark.eventData.contextualData6');
+  digitalData._delete('spark.eventData.contextualData7');
+  digitalData._delete('spark.eventData.contextualData9');
+  digitalData._delete('spark.eventData.contextualData10');
+  digitalData._delete('spark.eventData.contextualData12');
+  digitalData._delete('spark.eventData.contextualData14');
+}
+
 async function buildPlansDropdown($block, $card, $button, $appList) {
   const dropdownOptions = [];
 
@@ -216,6 +248,8 @@ async function buildPlansDropdown($block, $card, $button, $appList) {
       const $bundleOverlayButton = $overlayCards[$overlayCards.length - 1].querySelector('.button-container > a');
       if ($bundleOverlayButton) $bundleOverlayButton.href = planLink;
     }
+
+    pushBundleAnalytics(newPlan, option.text);
   });
 
   $appList.remove();
