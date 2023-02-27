@@ -164,7 +164,7 @@ main .floating-button-wrapper.multifunction .toolbox {
     pointer-events: auto;
     background-color: var(--color-white);
     box-sizing: border-box;
-    padding: 30px 0;
+    padding: 24px 0;
     transform: translateY(72px);
     width: 100%;
     max-height: 0;
@@ -278,6 +278,7 @@ main .floating-button-wrapper.multifunction .toolbox .tool {
 }
 
 main .floating-button-wrapper.multifunction .toolbox .toolbox-top {
+    padding-bottom: 12px;
     margin: 0 32px 12px 32px;
     border-bottom: 1px solid var(--color-gray-300);
 }
