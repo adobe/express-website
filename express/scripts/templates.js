@@ -140,6 +140,7 @@ async function fetchLinkList(data) {
   if (!(window.linkLists && window.linkLists.data)) {
     window.linkLists = {};
     const response = await fetchLInkListFromCKGApi(data);
+    // catch data from CKG API, if empty, use top priority categories sheet
     if (response && response.queryResults[0].facets) {
       window.linkLists.data = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
         parent: titleCase(data.templateTasks),
