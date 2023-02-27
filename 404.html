@@ -115,7 +115,7 @@
 		const protocol = 'https://';
 	
 		const { hostname, href, pathname, port, search } = win.location;
-		if ((hostname === 'localhost')  && (port === '3000' ))  return;
+		if (hostname === 'localhost')  return;
 
 		let userLocale, redirectURL, redirectMapping, valueInMap;
 		const noop = ()=>{};
@@ -131,7 +131,7 @@
 	 	 else if (pathname.includes(eduPageRequest) && search ) { 
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale); 
-			redirectMapping =  valueInMap ? `${valueInMap}${educationSufix}` : `/${eduRedirectPath}`;	
+			redirectMapping =  valueInMap ? `${valueInMap}${educationSufix}` : `/${educationSufix}`;	
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			win.location.replace(redirectURL);	
