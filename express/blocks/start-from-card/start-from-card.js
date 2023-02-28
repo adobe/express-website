@@ -11,7 +11,7 @@
  */
 
 import {
-
+  buildStaticFreePlanWidget,
 } from '../../scripts/scripts.js';
 
 import buildPaginatedCarousel from '../shared/paginated-carousel.js';
@@ -21,6 +21,7 @@ export default async function decorate($block) {
     carouselArray: [],
     other: [],
   };
+
   for (const $row of $block.children) {
     const $divs = $row.querySelectorAll('div');
     switch ($divs[0].textContent.trim()) {
@@ -28,9 +29,11 @@ export default async function decorate($block) {
         payload.other.push($divs);
         break;
       case 'Feature Carousel':
-        buildPaginatedCarousel(':scope > p', $divs[1], true);
-        $divs[0].remove();
+        buildPaginatedCarousel(':scope > div > p', $row, true);
         break;
     }
   }
+
+  const freePlanTags = await buildStaticFreePlanWidget();
+  $block.insertAdjacentElement('afterend', freePlanTags);
 }

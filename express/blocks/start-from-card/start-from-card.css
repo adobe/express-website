@@ -32,3 +32,40 @@ main .start-from-card .paginated-carousel-container .paginated-carousel-tray .pa
     left: 0;
     margin: 0;
 }
+
+main .start-from-card-wrapper .free-plan-widget {
+    background-color: var(--color-gray-100);
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+    margin: auto;
+}
+
+main .start-from-card-wrapper .free-plan-widget > div {
+    display: flex;
+    align-items: center;
+}
+
+main .start-from-card-wrapper .free-plan-widget > div > div:first-child {
+    position: relative;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+    background: #33AB84;
+    border-radius: 50%;
+}
+
+main .start-from-card-wrapper .free-plan-widget > div > div:last-child {
+    font-weight: 700;
+}
+
+main .start-from-card-wrapper .free-plan-widget .icon.icon-checkmark {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    fill: var(--color-white);
+    width: 8px;
+    max-height: 8px;
+}
