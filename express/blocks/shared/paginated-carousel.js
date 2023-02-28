@@ -132,10 +132,13 @@ function addClickableLayer(element) {
   }
 }
 
-function resetPagination(wrapper) {
+function resetPagination(wrapper, payload) {
   const paginationDots = wrapper.querySelectorAll('.pagination-dot');
-  paginationDots.forEach((dot) => dot.classList.remove('active'));
-  paginationDots[0].classList.add('active');
+  if (paginationDots.length > 0) {
+    payload.currentIndex = '0';
+    paginationDots.forEach((dot) => dot.classList.remove('active'));
+    paginationDots[0].classList.add('active');
+  }
 }
 
 export default function buildPaginatedCarousel(selector = ':scope > *', container, infinityScrollEnabled = false) {
@@ -188,7 +191,7 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
     decoratePagination(wrapper, payload);
     initCarousel(container, payload);
     setTimeout(() => {
-      if (payload.currentIndex !== 0) resetPagination(wrapper);
+      if (payload.currentIndex !== 0) resetPagination(wrapper, payload);
     }, 20);
   }
 }
