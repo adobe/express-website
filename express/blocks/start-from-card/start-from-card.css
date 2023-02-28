@@ -1,3 +1,22 @@
+main .start-from-card-container .start-from-card-wrapper {
+    background-color: var(--color-gray-100);
+    padding: 36px 24px 12px;
+}
+
+main .start-from-card-container .start-from-card {
+    background-color: var(--color-white);
+    border-radius: 24px;
+    padding: 24px 0;
+}
+
+main .section.start-from-card-container .start-from-card > div {
+    margin-bottom: 24px;
+}
+
+main .section.start-from-card-container .start-from-card .paginated-carousel-container {
+    margin: 0;
+}
+
 main .start-from-card .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item picture {
     display: block;
     margin: 8px 0;
@@ -39,6 +58,7 @@ main .start-from-card-wrapper .free-plan-widget {
     justify-content: center;
     flex-direction: row;
     gap: 20px;
+    padding: 16px 0;
     margin: auto;
 }
 
