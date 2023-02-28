@@ -1,0 +1,34 @@
+main .start-from-card .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item picture {
+    display: block;
+    margin: 8px 0;
+}
+
+main .start-from-card .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item picture img {
+    border-radius: 16px;
+    height: 120px;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+main .start-from-card .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item a {
+    display: block;
+    padding: 0;
+    border: none;
+    color: var(--color-black);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: left;
+    margin: 8px 0 0 0;
+}
+
+main .start-from-card .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item a.clickable-layer {
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
