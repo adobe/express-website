@@ -199,15 +199,15 @@ export async function createFloatingButton($block, audience, data) {
 
 export async function collectFloatingButtonData() {
   const defaultButton = await fetchFloatingCta('default');
-  const multifunctionButton = await fetchFloatingCta(window.location.pathname);
+  const pageButton = await fetchFloatingCta(window.location.pathname);
   const dataArray = [];
 
-  if (multifunctionButton) {
+  if (pageButton) {
     const objectKeys = Object.keys(defaultButton);
     // eslint-disable-next-line consistent-return
     objectKeys.forEach((key) => {
       if (['path', 'live'].includes(key)) return false;
-      dataArray.push([key, multifunctionButton[key] || defaultButton[key]]);
+      dataArray.push([key, pageButton[key] || defaultButton[key]]);
     });
   } else {
     const objectKeys = Object.keys(defaultButton);

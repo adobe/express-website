@@ -155,6 +155,8 @@ export default async function decorateBlock(block) {
     const container = await fetchPlainBlockFromFragment(block, `/express/fragments/floating-panel/${data.panelFragment}`, 'floating-panel');
 
     if (container) {
+      const $section = block.closest('.section');
+      $section.parentNode.replaceChild(container, $section);
       standardizeSection(container, audience);
 
       lazyLoadLottiePlayer();
