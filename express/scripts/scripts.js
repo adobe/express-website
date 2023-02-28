@@ -2375,10 +2375,8 @@ export async function addFreePlanWidget(elem) {
 
     // add the free plan bullet if there's a CTA to attach to
     if (elem.classList.contains('button-container')) {
-      buildFreePlanHighlight(elem);
+      await buildFreePlanHighlight(elem);
     }
-
-    // end of free plan bullet code block
 
     elem.classList.add('free-plan-container');
   }

@@ -38,6 +38,9 @@ async function buildPayload() {
   return payload;
 }
 
+// Returns true if a week has passed or the banner has not been closed yet
+const weekPassed = () => new Date().getTime() > localStorage.getItem('app-banner-optout-exp-date');
+
 function getCurrentRatingStars(rating = 5) {
   const star = getIcon('star', 'Full star');
   const starHalf = getIcon('star-half', 'Half star');
@@ -72,6 +75,8 @@ function addCloseBtn(block) {
       $floatingButton.classList.remove('push-up');
     }
     block.remove();
+    const sevenDaysFromNow = new Date().getTime() + (7 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('app-banner-optout-exp-date', sevenDaysFromNow);
 
     setTimeout(() => {
       $background.remove();
@@ -176,23 +181,26 @@ function watchFloatingButtonState(block) {
 }
 
 export default async function decorate($block) {
-  const payload = await buildPayload();
-  decorateBanner($block, payload);
-  addCloseBtn($block);
+  if (weekPassed()) {
+    localStorage.removeItem('app-banner-optout-exp-date');
+    const payload = await buildPayload();
+    decorateBanner($block, payload);
+    addCloseBtn($block);
 
-  if (window.multifunctionButton.length) {
-    const db = window.multifunctionButton[0];
-    const mfb = window.multifunctionButton.find((p) => window.location.pathname === p.path);
-    const delay = mfb.delay ? mfb.delay * 1000 : db.delay * 1000;
+    if (window.multifunctionButton && window.multifunctionButton.length) {
+      const db = window.multifunctionButton[0];
+      const mfb = window.multifunctionButton.find((p) => window.location.pathname === p.path);
+      const delay = mfb.delay ? mfb.delay * 1000 : db.delay * 1000;
 
-    setTimeout(() => {
-      initScrollDirection($block);
-      watchFloatingButtonState($block);
-    }, delay);
-  } else {
-    setTimeout(() => {
-      initScrollDirection($block);
-      watchFloatingButtonState($block);
-    }, 1000);
+      setTimeout(() => {
+        initScrollDirection($block);
+        watchFloatingButtonState($block);
+      }, delay);
+    } else {
+      setTimeout(() => {
+        initScrollDirection($block);
+        watchFloatingButtonState($block);
+      }, 1000);
+    }
   }
 }
