@@ -109,7 +109,7 @@
 	(function (win, doc) {
 		const eduRedirectPath = 'education/express/';
 		const eduPageRequest = '/edu';
-		const educationSufix= 'euducation/'
+		const educationSuffix= 'euducation/'
 		const expressPrefix = '/express/edu'
 		const adobeDomain = 'www.adobe.com';
 		const protocol = 'https://';
@@ -131,7 +131,7 @@
 	 	else if (pathname.includes(eduPageRequest) && search ) { 
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale); 
-			redirectMapping =  valueInMap ? `${valueInMap}${educationSufix}` : `/${educationSufix}`;	
+			redirectMapping =  valueInMap ? `${valueInMap}${educationSuffix}` : `/${educationSuffix}`;	
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			win.location.replace(redirectURL);	
