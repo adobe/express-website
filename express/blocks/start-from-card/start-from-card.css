@@ -1,6 +1,9 @@
-main .start-from-card-container .start-from-card-wrapper {
+main .start-from-card-container {
     background-color: var(--color-gray-100);
-    padding: 36px 24px 12px;
+}
+
+main .start-from-card-container .start-from-card-wrapper {
+    padding: 36px 12px 12px;
 }
 
 main .start-from-card-container .start-from-card {
