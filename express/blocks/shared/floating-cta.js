@@ -322,7 +322,6 @@ export function buildToolBoxStructure($wrapper, data) {
 }
 
 export function initToolBox($wrapper, data, toggleFunction) {
-  const body = document.querySelector('body');
   const $floatingButton = $wrapper.querySelector('.floating-button');
   const $cta = $floatingButton.querySelector('a');
   const $toggleButton = $wrapper.querySelector('.toggle-button');
@@ -353,6 +352,4 @@ export function initToolBox($wrapper, data, toggleFunction) {
       });
     }
   });
-
-  if (body) body.style.overflow = 'hidden';
 }
