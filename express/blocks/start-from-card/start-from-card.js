@@ -28,8 +28,7 @@ export default async function decorate($block) {
         payload.other.push($divs);
         break;
       case 'Feature Carousel':
-        buildPaginatedCarousel(':scope > p', $divs[1], true);
-        $divs[0].remove();
+        buildPaginatedCarousel(':scope > div > p', $row, true);
         break;
     }
   }
