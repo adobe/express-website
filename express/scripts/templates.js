@@ -167,18 +167,6 @@ function updateLinkList(container, linkPill, list) {
         clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
         container.append(clone);
       }
-      // currently unused code for generating search link for linklist when no match is found in the metadata sheet
-      // else if (d.ckgID) {
-      //   let searchParams;
-      //   if (d.ckgID.indexOf('DESIGN_TYPE') > 0) {
-      //     searchParams = `tasks=${d.displayValue}&phformat=${pageData.placeholderFormat}&ckgid=${d.ckgID}`;
-      //   } else {
-      //     searchParams = `tasks=${pageData.templateTasks}&phformat=${pageData.placeholderFormat}&topics=${d.displayValue}&ckgid=${d.ckgID}`;
-      //   }
-      //   clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
-      //   clone.innerHTML = clone.innerHTML.replaceAll('Default', titleCase(d.displayValue));
-      // }
-      // container.append(clone);
     });
   }
 }
