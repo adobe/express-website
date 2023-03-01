@@ -22,7 +22,7 @@ const QUICKACTION_HEIGHT_IN_PX = '475px';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const QUICK_ACTION_COMPLETED = 'quick-action-completed';
 const LOTTIE_ICONS = {
-  'arrow-up': '/express/blocks/quick-action/arrow-up.json',
+  'arrow-up': '/express/icons/arrow-up-lottie.json',
 };
 
 function createMockQuickAction() {

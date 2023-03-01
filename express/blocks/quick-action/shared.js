@@ -64,21 +64,14 @@ export class CCXQuickActionElement extends HTMLElement {
     this.isLoading = true;
 
     this.taskContext = {
-      close() { console.log('[CCLQT CB]', 'close'); },
-      done(options) { console.log('[CCLQT CB]', 'done', options); },
       navigate: (dest, data, file) => {
-        console.log('[CCLQT CB]', 'navigate', dest, data, file);
         if (dest.id === 'post-editor') {
           this.handleNavigateToPostEditor(data, data.autoDownloadInEditor);
-        } else {
-          this.handleDownloadImage(file);
         }
       },
       sendEditorStateToHost: (state) => {
         showQuickAction(true);
-        console.log('[CCLQT CB]', 'editor-state', state);
         if (state.isSampleImageUploaded) {
-        // TODO: show upload image button
           return;
         }
         if (!state.editorLoading && state.exportEnabled) {
@@ -101,7 +94,6 @@ export class CCXQuickActionElement extends HTMLElement {
     };
     window.qtHost = {
       qtLoaded: async (QuickTask) => {
-        console.debug('loaded:');
         this.task = new QuickTask(this, this.taskContext);
         window.qtHost.task = this.task;
         this.isLoading = false;
@@ -125,17 +117,15 @@ export class CCXQuickActionElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    console.debug('disconnected:');
     if (this.buttonClickListener) {
       this.removeEventListener('click', this.buttonClickListener);
     }
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback() {
     if (!this.isConnected || this.isLoading) {
       return;
     }
-    console.debug('attr:', name, oldValue, newValue, this);
     this.render();
   }
 
@@ -149,29 +139,6 @@ export class CCXQuickActionElement extends HTMLElement {
       this.handleAction(ev.target.dataset.action);
     };
     this.addEventListener('click', this.buttonClickListener);
-
-    const taskId = this.task.qtEle.qtId;
-    this.task.qtEle.addEventListener(`${taskId}__navigate-to-task`, (ev) => {
-      console.log('[CCLQT EVT]', 'navigate-to-task', ev.detail);
-    });
-    this.task.qtEle.addEventListener(`${taskId}__navigate-to-host`, (ev) => {
-      console.log('[CCLQT EVT]', 'navigate-to-host', ev.detail);
-    });
-    this.task.qtEle.addEventListener(`${taskId}__navigate-to-done-modal`, (ev) => {
-      console.log('[CCLQT EVT]', 'navigate-to-done-modal', ev.detail);
-    });
-    this.task.qtEle.addEventListener(`${taskId}__downloadable-image`, (ev) => {
-      console.log('[CCLQT EVT]', 'downloadable-image', ev.detail);
-    });
-    this.task.qtEle.addEventListener(`${taskId}__close-full-screen-modal`, (ev) => {
-      console.log('[CCLQT EVT]', 'close-full-screen-modal', ev.detail);
-    });
-    this.task.qtEle.addEventListener(`${taskId}__send-error-to-host`, (ev) => {
-      console.log('[CCLQT EVT]', 'send-error-to-host', ev.detail);
-    });
-    this.task.qtEle.addEventListener(`${taskId}__authenticate-from-host`, (ev) => {
-      console.log('[CCLQT EVT]', 'authenticate-from-host', ev.detail);
-    });
   }
 
   handleAction(action) {
@@ -199,16 +166,7 @@ export class CCXQuickActionElement extends HTMLElement {
     window.location.replace(url);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  handleDownloadImage(fileData) {
-    const a = document.createElement('a');
-    a.download = fileData.fileName;
-    a.href = fileData.base64URL;
-    a.click();
-  }
-
   async render() {
-    console.debug('render:');
     this.buttonContainer = document.createElement('div');
     this.buttonContainer.className = 'button-container';
     this.buttonContainer.style.display = 'none';
