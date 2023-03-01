@@ -147,10 +147,25 @@ async function fetchLinkList(data) {
         'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
         ckgID: ckgItem.canonicalName,
       }));
+      window.linkLists.source = 'ckg-api';
     } else {
       const resp = await fetch('/express/templates/top-priority-categories.json');
       window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+      window.linkLists.source = 'top-priority-sheet';
     }
+  }
+}
+
+function matchCKGResultOrSheetResult(ckgData, pageData) {
+  const ckgMatch = pageData.ckgID === ckgData.ckgID;
+  const shortTitleMatch = pageData.shortTitle.toLowerCase() === ckgData.childSibling.toLowerCase();
+  const currentLocale = getLocale(window.location);
+  const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
+  const sameLocale = currentLocale === pageLocale;
+  if (window.linkLists.source === 'ckg-api') {
+    return sameLocale && (ckgMatch || shortTitleMatch);
+  } else {
+    return sameLocale && shortTitleMatch;
   }
 }
 
@@ -160,7 +175,8 @@ function updateLinkList(container, linkPill, list) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y' && (p.ckgID === d.ckgID || p.shortTitle.toLowerCase() === d.childSibling.toLowerCase()));
+      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResultOrSheetResult(d, p));
+
       const clone = linkPill.cloneNode(true);
       if (templatePageData) {
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
@@ -240,10 +256,11 @@ async function updateBlocks(data) {
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
       window.linkLists.data.forEach((row) => {
-        if (row.parent === data.shortTitle || row.ckgID === data.ckgID) {
+        if (window.linkLists.source === 'ckg-api' || row.parent === data.shortTitle) {
           linkListData.push({
             childSibling: row['child-siblings'],
             ckgID: row.ckgID,
+            shortTitle: data.shortTitle,
           });
         }
       });
