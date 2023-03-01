@@ -91,3 +91,8 @@ main .start-from-card-wrapper .free-plan-widget .icon.icon-checkmark {
     width: 8px;
     max-height: 8px;
 }
+
+main .start-from-card .app-store-aTag {
+    margin-top: 28px;
+    margin-bottom: 28px;
+}
