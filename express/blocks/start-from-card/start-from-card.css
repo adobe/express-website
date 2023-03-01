@@ -1,22 +1,20 @@
-main .start-from-card-container {
+main .section .start-from-card-wrapper {
     background-color: var(--color-gray-100);
-}
-
-main .start-from-card-container .start-from-card-wrapper {
     padding: 36px 12px 12px;
+    margin-top: 20px;
 }
 
-main .start-from-card-container .start-from-card {
+main .section .start-from-card {
     background-color: var(--color-white);
     border-radius: 24px;
     padding: 24px 0;
 }
 
-main .section.start-from-card-container .start-from-card > div {
+main .section .start-from-card > div {
     margin-bottom: 24px;
 }
 
-main .section.start-from-card-container .start-from-card .paginated-carousel-container {
+main .section .start-from-card .paginated-carousel-container {
     margin: 0;
 }
 
