@@ -200,7 +200,7 @@ main .link-list.shaded p.button-container {
 
 main .link-list.shaded p.button-container .button {
   margin: 0;
-  padding: 4px 16px;
+  padding: 2px 16px;
   background-color: transparent;
   color: var(--color-black);
   border: none;

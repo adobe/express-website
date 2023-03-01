@@ -991,6 +991,77 @@ loadScript(martechURL, () => {
       });
     });
 
+    document.addEventListener('pricingdropdown', (e) => {
+      const plan = e.detail;
+
+      const adobeEventName = 'adobe.com:express:pricing:bundleType:selected';
+      const sparkEventName = 'pricing:bundleTypeSelected';
+
+      if (useAlloy) {
+        _satellite.track('event', {
+          xdm: {},
+          data: {
+            eventType: 'web.webinteraction.linkClicks',
+            web: {
+              webInteraction: {
+                name: adobeEventName,
+                linkClicks: {
+                  value: 1,
+                },
+                type: 'other',
+              },
+            },
+            _adobe_corpnew: {
+              digitalData: {
+                primaryEvent: {
+                  eventInfo: {
+                    eventName: adobeEventName,
+                  },
+                },
+                spark: {
+                  eventData: {
+                    eventName: sparkEventName,
+                    contextualData6: `bundleType:${plan.bundleType}`,
+                    contextualData7: `currencyCode:${plan.currency}`,
+                    contextualData9: `offerId:${plan.offerId}`,
+                    contextualData10: `price:${plan.price}`,
+                    contextualData12: `productName:${plan.name} - ${plan.frequency}`,
+                    contextualData14: 'quantity:1',
+                    trigger: sparkTouchpoint,
+                    sendTimestamp: new Date().getTime(),
+                  },
+                },
+              },
+            },
+          },
+        });
+      } else {
+        /* eslint-disable no-underscore-dangle */
+        digitalData._set('primaryEvent.eventInfo.eventName', adobeEventName);
+        digitalData._set('spark.eventData.eventName', sparkEventName);
+        digitalData._set('spark.eventData.contextualData6', `bundleType:${plan.bundleType}`);
+        digitalData._set('spark.eventData.contextualData7', `currencyCode:${plan.currency}`);
+        digitalData._set('spark.eventData.contextualData9', `offerId:${plan.offerId}`);
+        digitalData._set('spark.eventData.contextualData10', `price:${plan.price}`);
+        digitalData._set('spark.eventData.contextualData12', `productName:${plan.name} - ${plan.frequency}`);
+        digitalData._set('spark.eventData.contextualData14', 'quantity:1');
+        digitalData._set('spark.eventData.trigger', sparkTouchpoint);
+
+        _satellite.track('event', {
+          digitalData: digitalData._snapshot(),
+        });
+
+        digitalData._delete('primaryEvent.eventInfo.eventName');
+        digitalData._delete('spark.eventData.eventName');
+        digitalData._delete('spark.eventData.contextualData6');
+        digitalData._delete('spark.eventData.contextualData7');
+        digitalData._delete('spark.eventData.contextualData9');
+        digitalData._delete('spark.eventData.contextualData10');
+        digitalData._delete('spark.eventData.contextualData12');
+        digitalData._delete('spark.eventData.contextualData14');
+      }
+    });
+
     // tracking videos loaded asynchronously.
     document.addEventListener('videoloaded', (e) => {
       trackVideoAnalytics(e.detail.video, e.detail.parameters);

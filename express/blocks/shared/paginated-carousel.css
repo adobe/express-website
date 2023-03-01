@@ -1,0 +1,65 @@
+main .paginated-carousel-container .paginated-carousel-wrapper {
+    max-width: none;
+}
+
+main .paginated-carousel-container .paginated-carousel-wrapper .pagination-container {
+    display: flex;
+    width: max-content;
+    border-radius: 24px;
+    background-color: var(--color-gray-100);
+    margin: 12px auto 0;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 18px;
+}
+
+main .paginated-carousel-container .paginated-carousel-wrapper .pagination-container .pagination-dot {
+    height: 5px;
+    width: 5px;
+    border-radius: 8px;
+    background-color: var(--color-gray-200);
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+main .paginated-carousel-container .paginated-carousel-wrapper .pagination-container .pagination-dot:hover {
+    background-color: var(--color-gray-300);
+}
+
+main .paginated-carousel-container .paginated-carousel-wrapper .pagination-container .pagination-dot.active {
+    background-color: var(--color-gray-400);
+}
+
+main .paginated-carousel-container .paginated-carousel-tray {
+    display: flex;
+    overflow: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;  /* Firefox */
+}
+
+main .paginated-carousel-container .paginated-carousel-tray::-webkit-scrollbar {
+    display: none;
+}
+
+main .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item {
+    min-width: 60%;
+    position: relative;
+    scroll-snap-align: start;
+    padding: 0 8px;
+}
+
+main .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item.hidden {
+    display: none;
+}
+
+@media (min-width: 900px) {
+    main .paginated-carousel-container .paginated-carousel-wrapper .pagination-container {
+        gap: 14px;
+    }
+
+    main .paginated-carousel-container .paginated-carousel-wrapper .pagination-container .pagination-dot {
+        height: 8px;
+        width: 8px;
+        border-radius: 8px;
+    }
+}
