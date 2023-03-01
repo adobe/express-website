@@ -2616,11 +2616,6 @@ export function getMobileOperatingSystem() {
   return 'unknown';
 }
 
-export default function buildAppBadge() {
-  const icon = getMobileOperatingSystem() === 'iOS' ? getIconElement('apple-store') : getIconElement('google-store');
-  return icon;
-}
-
 export function titleCase(str) {
   const splitStr = str.toLowerCase().split(' ');
   for (let i = 0; i < splitStr.length; i += 1) {

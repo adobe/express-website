@@ -10,11 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { buildAppBadge } from '../../scripts/scripts.js';
+import { buildAppStoreBadge } from '../shared/app-store-badge.js';
 
 export default function decorate(block) {
-  console.log('Testin')
   const { textContent: href } = block.firstElementChild.firstElementChild;
-  const badge = buildAppBadge();
-  console.log(badge);
+  block.innerHTML = '';
+  block.append(buildAppStoreBadge(href, { class: 'gradient-border' }));
 }
