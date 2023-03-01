@@ -15,6 +15,7 @@ import {
 } from '../../scripts/scripts.js';
 
 import buildPaginatedCarousel from '../shared/paginated-carousel.js';
+import { buildAppStoreBadge } from '../shared/app-store-badge.js';
 
 export default async function decorate($block) {
   const payload = {
@@ -30,6 +31,9 @@ export default async function decorate($block) {
         break;
       case 'Feature Carousel':
         buildPaginatedCarousel(':scope > div > p', $row, true);
+        break;
+      case 'App Store Badge':
+        $row.replaceWith(buildAppStoreBadge($divs[1].firstElementChild.href, { class: 'gradient-border' }));
         break;
     }
   }
