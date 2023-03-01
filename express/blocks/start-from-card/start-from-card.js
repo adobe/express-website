@@ -12,6 +12,8 @@
 
 import {
   buildStaticFreePlanWidget,
+  createTag,
+  fetchRelevantRows,
 } from '../../scripts/scripts.js';
 
 import buildPaginatedCarousel from '../shared/paginated-carousel.js';
@@ -22,12 +24,20 @@ export default async function decorate($block) {
     carouselArray: [],
     other: [],
   };
+  const relevantRowsData = await fetchRelevantRows(window.location.pathname);
 
   for (const $row of $block.children) {
     const $divs = $row.querySelectorAll('div');
     switch ($divs[0].textContent.trim()) {
       default:
         payload.other.push($divs);
+        break;
+      case 'Heading':
+        if (relevantRowsData) {
+          const heading = createTag('h3');
+          heading.innerText = relevantRowsData.header;
+          $row.replaceWith(heading);
+        }
         break;
       case 'Feature Carousel':
         buildPaginatedCarousel(':scope > div > p', $row, true);
