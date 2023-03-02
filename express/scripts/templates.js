@@ -18,7 +18,9 @@ import {
   getLocale,
 } from './scripts.js';
 
-import getData from './api-v3-controller.js';
+import {
+  fetchLInkListFromCKGApi,
+} from './api-v3-controller.js';
 
 export function findMatchExistingSEOPage(path) {
   const pathMatch = (e) => e.path === path;
@@ -90,52 +92,6 @@ function formatSearchQuery(data) {
   return arrayToObject(dataArray);
 }
 
-async function fetchLInkListFromCKGApi(pageData) {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (pageData.ckgID || params.ckgid) {
-    const dataRaw = {
-      experienceId: 'templates-browse-v1',
-      locale: 'en_US',
-      queries: [
-        {
-          id: 'ccx-search-1',
-          start: 0,
-          limit: 40,
-          scope: {
-            entities: [
-              'HzTemplate',
-            ],
-          },
-          filters: [
-            {
-              categories: [
-                pageData.ckgID ?? params.ckgid,
-              ],
-            },
-          ],
-          facets: [
-            {
-              facet: 'categories',
-              limit: 10,
-            },
-          ],
-        },
-      ],
-    };
-
-    const env = getHelixEnv();
-    const result = await getData(env.name, dataRaw).then((data) => data);
-    if (result.status.httpCode === 200) {
-      return result;
-    }
-  }
-
-  return false;
-}
-
 async function fetchLinkList(data) {
   if (!(window.linkLists && window.linkLists.data)) {
     window.linkLists = {};
@@ -163,7 +119,7 @@ function matchCKGResultOrSheetResult(ckgData, pageData) {
   const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
   const sameLocale = currentLocale === pageLocale;
   if (window.linkLists.source === 'ckg-api') {
-    return sameLocale && (ckgMatch || shortTitleMatch);
+    return sameLocale && ckgMatch;
   } else {
     return sameLocale && shortTitleMatch;
   }
@@ -256,7 +212,8 @@ async function updateBlocks(data) {
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
       window.linkLists.data.forEach((row) => {
-        if (window.linkLists.source === 'ckg-api' || row.parent === data.shortTitle) {
+        if (window.linkLists.source === 'ckg-api'
+          || (window.linkLists.source === 'top-priority-sheet' && row.parent === data.shortTitle)) {
           linkListData.push({
             childSibling: row['child-siblings'],
             ckgID: row.ckgID,

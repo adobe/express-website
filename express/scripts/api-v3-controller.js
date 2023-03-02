@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { getHelixEnv } from './scripts.js';
+
 const endpoints = {
   dev: {
     cdn: '',
@@ -47,4 +49,50 @@ export default async function getData(env = '', data = {}) {
   } else {
     return response;
   }
+}
+
+export async function fetchLInkListFromCKGApi(pageData) {
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  if (pageData.ckgID || params.ckgid) {
+    const dataRaw = {
+      experienceId: 'templates-browse-v1',
+      locale: 'en_US',
+      queries: [
+        {
+          id: 'ccx-search-1',
+          start: 0,
+          limit: 40,
+          scope: {
+            entities: [
+              'HzTemplate',
+            ],
+          },
+          filters: [
+            {
+              categories: [
+                pageData.ckgID ?? params.ckgid,
+              ],
+            },
+          ],
+          facets: [
+            {
+              facet: 'categories',
+              limit: 10,
+            },
+          ],
+        },
+      ],
+    };
+
+    const env = getHelixEnv();
+    const result = await getData(env.name, dataRaw).then((data) => data);
+    if (result.status.httpCode === 200) {
+      return result;
+    }
+  }
+
+  return false;
 }
