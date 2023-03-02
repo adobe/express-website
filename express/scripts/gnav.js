@@ -20,12 +20,13 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 // for stage it should be:    environment: 'stg1',
+// for prod  it should be:    environment: 'prod'.
 function loadIMS() {
   window.adobeid = {
     client_id: 'MarvelWeb3',
     scope: 'AdobeID,openid',
     locale: getLocale(window.location),
-    environment: 'prod',
+    environment: 'stg1',
   };
   loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
 }
