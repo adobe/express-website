@@ -59,11 +59,12 @@ function initButton($block, $sections, index) {
           } else {
             $section.style.display = 'none';
           }
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth',
-          });
+          if (!document.querySelector('.pricing-hub')) {
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth',
+            });
+          }
         });
       }
     });

@@ -314,6 +314,7 @@ async function decorateCards($block) {
           }
         });
       }
+      $button.removeAttribute('target');
     }
   }
 
@@ -331,7 +332,8 @@ async function decorateScrollOverlay(block) {
     const title = card.querySelector('h2').cloneNode(true);
     const cta = card.querySelector('.button-container').cloneNode(true);
     scrollCard.append(title, cta);
-    const scrollToCard = () => {
+    const scrollToCard = (e) => {
+      if (e.target.tagName === 'A') return;
       window.scrollTo({
         top: document.querySelector(`.pricing-hub-cards > :nth-child(${index + 1})`).getBoundingClientRect().top + window.scrollY - 30,
         behavior: 'smooth',
