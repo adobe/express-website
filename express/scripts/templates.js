@@ -52,7 +52,7 @@ export async function fetchPageContent(path) {
 }
 
 function formatSearchQuery(data) {
-  // todo check if the search query points to an exisitng page. If so, redirect.
+  // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
