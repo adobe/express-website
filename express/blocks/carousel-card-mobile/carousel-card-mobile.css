@@ -32,7 +32,7 @@ main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tra
 
 main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item a {
     display: block;
-    padding: 0;
+    padding: 0 12px;
     border: none;
     color: var(--color-gray-800);
     font-size: 16px;
@@ -50,6 +50,7 @@ main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tra
     top: 0;
     left: 0;
     margin: 0;
+    padding: 0;
 }
 
 main .carousel-card-mobile-wrapper .free-plan-widget {
