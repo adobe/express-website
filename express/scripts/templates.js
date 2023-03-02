@@ -115,11 +115,13 @@ async function fetchLinkList(data) {
 function matchCKGResultOrSheetResult(ckgData, pageData) {
   const ckgMatch = pageData.ckgID === ckgData.ckgID;
   const shortTitleMatch = pageData.shortTitle.toLowerCase() === ckgData.childSibling.toLowerCase();
+  const taskMatch = ckgData.tasks === pageData.templateTasks;
   const currentLocale = getLocale(window.location);
   const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
   const sameLocale = currentLocale === pageLocale;
+
   if (window.linkLists.source === 'ckg-api') {
-    return sameLocale && ckgMatch;
+    return sameLocale && ckgMatch && taskMatch;
   } else {
     return sameLocale && shortTitleMatch;
   }
@@ -132,6 +134,25 @@ function updateLinkList(container, linkPill, list) {
   if (list && templatePages) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResultOrSheetResult(d, p));
+
+      const clone = linkPill.cloneNode(true);
+      if (templatePageData) {
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
+        container.append(clone);
+      }
+    });
+  }
+}
+
+function updateSEOLinkList(container, linkPill, list) {
+  const templatePages = window.templates.data ?? [];
+  container.innerHTML = '';
+
+  if (list && templatePages) {
+    list.forEach((d) => {
+      const templatePageData = templatePages.find((p) => p.live === 'Y'
+        && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
 
       const clone = linkPill.cloneNode(true);
       if (templatePageData) {
@@ -218,6 +239,7 @@ async function updateBlocks(data) {
             childSibling: row['child-siblings'],
             ckgID: row.ckgID,
             shortTitle: data.shortTitle,
+            tasks: data.templateTasks,
           });
         }
       });
@@ -253,7 +275,7 @@ async function updateBlocks(data) {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = data.topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
-      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
     } else {
       topTemplatesContainer.innerHTML = '';
     }
