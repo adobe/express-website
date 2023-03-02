@@ -659,13 +659,13 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
 
 /* handle the retracted header */
 
-main .pricing-hub .pricing-hub-scroll-overlay-card {
+header.feds-header-wrapper ~ main .pricing-hub .pricing-hub-scroll-overlay-card {
   transition: margin .3s ease;
   margin-top: 64px; 
 }
 
 @media (min-width: 900px) {
-  main .pricing-hub .pricing-hub-scroll-overlay-card {
+  header.feds-header-wrapper ~ main .pricing-hub .pricing-hub-scroll-overlay-card {
     margin-top: 76px; 
   }
 }
