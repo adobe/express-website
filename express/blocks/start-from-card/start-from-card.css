@@ -90,11 +90,11 @@ main .start-from-card-wrapper .free-plan-widget .icon.icon-checkmark {
     max-height: 8px;
 }
 
-main .start-from-card .app-store-aTag {
+main .start-from-card-wrapper .start-from-card .app-store-aTag {
     margin-top: 28px;
     margin-bottom: 28px;
 }
 
-main .start-from-card h3 {
+main .start-from-card-wrapper .start-from-card h3 {
     margin: 8px 32px 8px 32px;
 }

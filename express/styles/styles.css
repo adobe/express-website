@@ -1315,6 +1315,8 @@ main .section.long-form .default-content-wrapper h6 {
 main .block a.app-store-aTag {
   display: flex;
   justify-content: center;
+  width: max-content;
+  margin: auto;
 }
 
 main .block .app-store-aTag .app-store-badge {
