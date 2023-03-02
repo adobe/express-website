@@ -1368,6 +1368,15 @@ async function decorateTesting() {
           setLastExperimentVariant(config.id, config.selectedVariant);
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          // populate ttMETA with hlx experimentation details
+          window.ttMETA = window.ttMETA || [];
+          const experimentDetails = {
+            CampaignId: window.hlx.experiment.id,
+            CampaignName: window.hlx.experiment.experimentName,
+            OfferId: window.hlx.experiment.selectedVariant,
+            OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
+          };
+          window.ttMETA.push(experimentDetails);
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
