@@ -1,5 +1,5 @@
 /* ccl-quick-action styles */
-main .section > .quick-action-wrapper {
+main .section>.quick-action-wrapper {
     max-width: 1200px;
 }
 
@@ -92,6 +92,7 @@ ccl-quick-action a[data-action='Download'] lottie-player {
     transition: 0.3s ease-in-out;
     background-color: #b6b6b6;
     -webkit-mask: center center / 100% no-repeat;
+    mask: center center / 100% no-repeat;
     display: block;
     position: absolute;
     top: 24px;
@@ -190,47 +191,6 @@ ccl-quick-action a[data-action='Download'] lottie-player {
     -webkit-text-fill-color: transparent;
 }
 
-@-webkit-keyframes quickActionGradient {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
-
-@-moz-keyframes quickActionGradient {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
-
-@keyframes quickActionGradient {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
 .quick-action .before-action h1+p,
 .quick-action .after-action h1+p {
     margin: 16px 0 24px;
@@ -328,3 +288,44 @@ ccl-quick-action .more-quick-actions-container p {
     background: no-repeat 50%/37% url(/express/icons/close-button-x.svg) #fff;
 }
 
+@-webkit-keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}

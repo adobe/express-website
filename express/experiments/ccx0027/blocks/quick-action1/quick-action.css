@@ -1,5 +1,5 @@
 /* ccl-quick-action styles */
-main .section > .quick-action-wrapper {
+main .section>.quick-action-wrapper {
     max-width: 1200px;
 }
 
@@ -16,7 +16,7 @@ ccl-quick-action .button-container {
     align-items: baseline;
 }
 
-ccl-quick-action .quick-action-complete-overlay a[data-action='Download']{
+ccl-quick-action .quick-action-complete-overlay a[data-action='Download'] {
     display: flex;
     flex: 0 0 158px;
     width: 158px;
@@ -38,7 +38,7 @@ ccl-quick-action .quick-action-complete-overlay a[data-action='Download']{
     height: 25px;
 }
 
-ccl-quick-action a[data-action='Download'] lottie-player{
+ccl-quick-action a[data-action='Download'] lottie-player {
     transform: rotate(180deg);
 }
 
@@ -56,8 +56,8 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 10%);
 }
 
-.mock-ccl-quick-action:hover{
-    background-color:#f8f8f8;
+.mock-ccl-quick-action:hover {
+    background-color: #f8f8f8;
 }
 
 .mock-ccl-quick-action.dragged .dropzone__bg {
@@ -96,6 +96,7 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     transition: 0.3s ease-in-out;
     background-color: #b6b6b6;
     -webkit-mask: center center / 100% no-repeat;
+    mask: center center / 100% no-repeat;
     display: block;
     position: absolute;
     top: 24px;
@@ -165,6 +166,7 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     height: 445px;
     margin: 0 10px 0 0;
 }
+
 .quick-action .before-action .quick-action-media img {
     width: 100%;
 }
@@ -192,48 +194,6 @@ ccl-quick-action a[data-action='Download'] lottie-player{
     background-clip: text;
     font-style: normal;
     -webkit-text-fill-color: transparent;
-}
-
-@-webkit-keyframes quickActionGradient {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
-
-@-moz-keyframes quickActionGradient {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
-}
-
-@keyframes quickActionGradient {
-    0% {
-        background-position: 0% 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-
-    100% {
-        background-position: 0% 50%
-    }
 }
 
 .quick-action .before-action h1+p,
@@ -287,4 +247,46 @@ ccl-quick-action:hover .quick-action-complete-overlay-container {
     border: solid 1px #fff;
     cursor: pointer;
     background: no-repeat 50%/37% url(/express/icons/close-button-x.svg) #fff;
+}
+
+@-webkit-keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@-moz-keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
+}
+
+@keyframes quickActionGradient {
+    0% {
+        background-position: 0% 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0% 50%
+    }
 }

@@ -64,7 +64,7 @@ export class CCXQuickActionElement extends HTMLElement {
     this.isLoading = true;
 
     this.taskContext = {
-      navigate: (dest, data, file) => {
+      navigate: (dest, data) => {
         if (dest.id === 'post-editor') {
           this.handleNavigateToPostEditor(data, data.autoDownloadInEditor);
         }
@@ -80,6 +80,7 @@ export class CCXQuickActionElement extends HTMLElement {
         }
         this.buttonContainer.style.display = state.exportEnabled ? 'block' : 'none';
       },
+      // eslint-disable-next-line no-console
       sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
       navigationData: {
         config: {
