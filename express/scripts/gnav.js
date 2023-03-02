@@ -19,7 +19,7 @@ import {
   sampleRUM,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
-// for stage it should be:    environment: 'stg1', for prod: environment: 'prod',
+
 function loadIMS() {
   window.adobeid = {
     client_id: 'MarvelWeb3',
