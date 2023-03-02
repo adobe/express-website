@@ -108,9 +108,9 @@
 	
 	(function (win, doc) {
 		const eduRedirectPath = 'education/express/';
-		const eduPageRequest = '/edu';
-		const educationSuffix= 'euducation/'
-		const expressPrefix = '/express/edu'
+		const eduWithoutPrefix = '/edu';
+		const educationSuffix= 'education/'
+		const eduWithExpressPrefix = '/express/edu'
 		const adobeDomain = 'www.adobe.com';
 		const protocol = 'https://';
 	
@@ -120,7 +120,7 @@
 		let userLocale, redirectURL, redirectMapping, valueInMap;
 		const noop = ()=>{};
 
-		if (pathname.includes(expressPrefix) && search) {
+		if (pathname.includes(eduWithExpressPrefix) && search) {
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale);
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;
@@ -128,10 +128,16 @@
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			win.location.replace(redirectURL);	
 		}
-	 	else if (pathname.includes(eduPageRequest) && search ) { 
+	 	else if (pathname.includes(eduWithoutPrefix) && search ) {
+	
 			[_, userLocale] =   search.split('=');
 			valueInMap = redirectMap.get(userLocale); 
-			redirectMapping =  valueInMap ? `${valueInMap}${educationSuffix}` : `/${educationSuffix}`;	
+			if (hostname !== adobeDomain){
+				redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
+			}
+			else {
+				redirectMapping =  valueInMap ? `${valueInMap}${educationSuffix}` : `/${educationSuffix}`;	
+			}
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			win.location.replace(redirectURL);	
