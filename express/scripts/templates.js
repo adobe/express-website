@@ -52,7 +52,7 @@ export async function fetchPageContent(path) {
 }
 
 function formatSearchQuery(data) {
-  // todo check if the search query points to an exisitng page. If so, redirect.
+  // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
@@ -319,13 +319,13 @@ if (page) {
   await fetchLinkList(page);
   if (window.location.pathname === '/express/templates/search') {
     const data = formatSearchQuery(page);
-    if (!data) {
-      window.location.replace('/express/templates/');
-    } else {
-      const purgedData = purgeAllTaskText(data);
-      updateMetadata(purgedData);
-      await updateBlocks(purgedData);
-    }
+    // if (!data) {
+    //   window.location.replace('/express/templates/');
+    // } else {
+    const purgedData = purgeAllTaskText(data);
+    updateMetadata(purgedData);
+    await updateBlocks(purgedData);
+    // }
   } else {
     await updateBlocks(page);
   }
