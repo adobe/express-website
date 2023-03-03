@@ -303,10 +303,10 @@ if (page) {
     } else {
       const purgedData = purgeAllTaskText(data);
       updateMetadata(purgedData);
-      await updateBlocks(purgedData);
+      updateBlocks(purgedData);
     }
   } else {
-    await updateBlocks(page);
+    updateBlocks(page);
   }
 } else {
   const env = getHelixEnv();
