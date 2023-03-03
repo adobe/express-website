@@ -1506,9 +1506,9 @@ function getDecisionPolicy(config) {
           allocationPercentage: props.percentageSplit
             ? parseFloat(props.percentageSplit) * 100
             : 100 - Object.values(config.variants).reduce((result, variant) => {
-            const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
-            return returnResult;
-          }, 100),
+              const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
+              return returnResult;
+            }, 100),
         })),
       },
     }],
