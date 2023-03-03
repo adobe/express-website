@@ -311,7 +311,7 @@ if (page) {
 } else {
   const env = getHelixEnv();
 
-  if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
-    window.location.replace('/404');
-  }
+  // if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
+  //   window.location.replace('/404');
+  // }
 }
