@@ -30,7 +30,6 @@ import {
   lazyLoadLottiePlayer,
 } from '../../scripts/scripts.js';
 
-import { findMatchExistingSEOPage } from '../../scripts/templates.js';
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
@@ -475,8 +474,8 @@ function redirectSearch($searchBar, targetTask) {
   const searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
   const targetPath = locale === 'us' ? `/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}` : `/${locale}/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
-
-  if (findMatchExistingSEOPage(targetPath)) {
+  const pathMatch = (e) => e.path === targetPath;
+  if (window.templates && window.templates.data.some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
   } else {
     window.location = searchUrl;
