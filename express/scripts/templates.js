@@ -64,7 +64,7 @@ function formatSearchQuery(data) {
   const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
 
   if (findMatchExistingSEOPage(pathToMatch)) {
-    window.location.assign(`${window.location.origin}${pathToMatch}`);
+    window.location.replace(`${window.location.origin}${pathToMatch}`);
   }
 
   const dataArray = Object.entries(data);
