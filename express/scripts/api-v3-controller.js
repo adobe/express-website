@@ -25,15 +25,15 @@ const endpoints = {
     key: 'express-ckg-stage',
   },
   prod: {
-    cdn: '',
-    url: 'https://uss-templates-dev.adobe.io/uss/v3/query',
+    cdn: 'https://www.adobe.com/ax-uss-api/',
+    url: 'https://uss-templates.adobe.io/uss/v3/query',
     token: '2e0199f4-c4e2-4025-8229-df4ca5397605',
+    key: 'template-list-linklist-facet',
   },
 };
 
 export default async function getData(env = '', data = {}) {
   const endpoint = endpoints[env];
-  // Default options are marked with *
   const response = await fetch(endpoint.url, {
     method: 'POST',
     headers: {
