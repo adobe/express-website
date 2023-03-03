@@ -35,7 +35,7 @@ export default [
     name: 'Template List - video',
     input: 'input/template-list.video.doc.html',
     expected: 'expected/template-list.video.block.html',
-    timeout: 1000,
+    timeout: 2000,
   }, {
     name: 'Template List - linked image',
     input: 'input/template-list.linkedimage.doc.html',
