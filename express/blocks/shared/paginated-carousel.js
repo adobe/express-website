@@ -39,13 +39,6 @@ function buildPagination(wrapper, payload) {
   wrapper.append(paginationContainer);
 }
 
-function stopScrolling(tray) { // To prevent safari shakiness
-  tray.style.overflowX = 'hidden';
-  setTimeout(() => {
-    tray.style.removeProperty('overflow-x');
-  }, 20);
-}
-
 function initCarousel(container, payload) {
   const tray = container.querySelector('.paginated-carousel-tray');
   const originalCards = tray.querySelectorAll('.paginated-carousel-item.original');
