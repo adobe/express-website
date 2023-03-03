@@ -11,8 +11,6 @@
  */
 /* eslint-disable no-console */
 
-// conservative test script
-
 window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
 window.RUM_HIGH_SAMPLE_RATE = 50;
@@ -1506,9 +1504,9 @@ function getDecisionPolicy(config) {
           allocationPercentage: props.percentageSplit
             ? parseFloat(props.percentageSplit) * 100
             : 100 - Object.values(config.variants).reduce((result, variant) => {
-            const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
-            return returnResult;
-          }, 100),
+              const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
+              return returnResult;
+            }, 100),
         })),
       },
     }],
@@ -1800,7 +1798,7 @@ function splitSections($main) {
 function setTheme() {
   let theme = getMeta('theme');
   if (!theme && (window.location.pathname.startsWith('/express')
-    || window.location.pathname.startsWith('/education'))) {
+  || window.location.pathname.startsWith('/education'))) {
     // mega nav, suppress brand header
     theme = 'no-brand-header';
   }
@@ -2566,30 +2564,20 @@ export function getMobileOperatingSystem() {
 export function titleCase(str) {
   const splitStr = str.toLowerCase().split(' ');
   for (let i = 0; i < splitStr.length; i += 1) {
-    // You do not need to check if i is larger than splitStr length, as your for does that for you
-    // Assign it back to the array
     splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
-  // Directly return the joined string
   return splitStr.join(' ');
 }
 
 export function arrayToObject(arr) {
   return arr.reduce(
     (acc, curr) => {
-      // Extract the key and the value
       const key = curr[0];
-      const value = curr[1];
+      [, acc[key]] = curr;
 
-      // Assign key and value
-      // to the accumulator
-      acc[key] = value;
-
-      // Return the accumulator
       return acc;
     },
 
-    // Initialize with an empty object
     {},
   );
 }
