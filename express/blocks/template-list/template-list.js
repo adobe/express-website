@@ -29,8 +29,6 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
 } from '../../scripts/scripts.js';
-
-import { findMatchExistingSEOPage } from '../../scripts/templates.js';
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
@@ -455,6 +453,11 @@ async function readRowsFromBlock($block) {
     props.heading = 'Authoring error: first row must specify the template “type”';
     props.authoringError = true;
   }
+}
+
+function findMatchExistingSEOPage(path) {
+  const pathMatch = (e) => e.path === path;
+  return (window.templates && window.templates.data.some(pathMatch));
 }
 
 function redirectSearch($searchBar, targetTask) {

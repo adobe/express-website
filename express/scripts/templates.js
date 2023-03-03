@@ -13,101 +13,10 @@ import {
   getHelixEnv,
   arrayToObject,
   titleCase,
-  createTag,
-  fetchPlaceholders,
-  getLocale,
+  createTag, fetchPlaceholders,
 } from './scripts.js';
 
-const endpoints = {
-  dev: {
-    cdn: '',
-    url: 'https://uss-templates-dev.adobe.io/uss/v3/query',
-    token: 'cd1823ed-0104-492f-ba91-25f4195d5f6c',
-  },
-  stage: {
-    cdn: 'https://www.stage.adobe.com/ax-uss-api/',
-    url: 'https://uss-templates-stage.adobe.io/uss/v3/query',
-    token: 'db7a3d14-5aaa-4a3d-99c3-52a0f0dbb459',
-    key: 'express-ckg-stage',
-  },
-  prod: {
-    cdn: '',
-    url: 'https://uss-templates-dev.adobe.io/uss/v3/query',
-    token: '2e0199f4-c4e2-4025-8229-df4ca5397605',
-  },
-};
-
-export default async function getData(env = '', data = {}) {
-  const endpoint = endpoints[env];
-  const response = await fetch(endpoint.url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/vnd.adobe.search-request+json',
-      'x-api-key': endpoint.key,
-      'x-app-token': endpoint.token,
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (response.ok) {
-    return response.json();
-  } else {
-    return response;
-  }
-}
-
-export async function fetchLInkListFromCKGApi(pageData) {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (pageData.ckgID || params.ckgid) {
-    const dataRaw = {
-      experienceId: 'templates-browse-v1',
-      locale: 'en_US',
-      queries: [
-        {
-          id: 'ccx-search-1',
-          start: 0,
-          limit: 40,
-          scope: {
-            entities: [
-              'HzTemplate',
-            ],
-          },
-          filters: [
-            {
-              categories: [
-                pageData.ckgID ?? params.ckgid,
-              ],
-            },
-          ],
-          facets: [
-            {
-              facet: 'categories',
-              limit: 10,
-            },
-          ],
-        },
-      ],
-    };
-
-    const env = getHelixEnv();
-    const result = await getData(env.name, dataRaw).then((data) => data);
-    if (result.status.httpCode === 200) {
-      return result;
-    }
-  }
-
-  return false;
-}
-
-export function findMatchExistingSEOPage(path) {
-  const pathMatch = (e) => e.path === path;
-  return (window.templates && window.templates.data.some(pathMatch));
-}
-
-export async function fetchPageContent(path) {
+async function fetchPageContent(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
@@ -134,22 +43,13 @@ export async function fetchPageContent(path) {
 }
 
 function formatSearchQuery(data) {
-  // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 
-  const locale = getLocale(window.location);
-  const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
-  const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
-
-  if (findMatchExistingSEOPage(pathToMatch)) {
-    window.location.replace(`${window.location.origin}${pathToMatch}`);
-  }
-
   const dataArray = Object.entries(data);
 
-  if (params.tasks && params.phformat) {
+  if (params.tasks && params.topics && params.phformat) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{queryTasks}}', params.tasks);
     });
@@ -159,11 +59,11 @@ function formatSearchQuery(data) {
     });
 
     dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
+      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
     });
 
     dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics ?? ''));
+      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
     });
   } else {
     return false;
@@ -172,70 +72,24 @@ function formatSearchQuery(data) {
   return arrayToObject(dataArray);
 }
 
-async function fetchLinkList(data) {
+async function fetchLinkList() {
   if (!(window.linkLists && window.linkLists.data)) {
     window.linkLists = {};
-    const response = await fetchLInkListFromCKGApi(data);
-    // catch data from CKG API, if empty, use top priority categories sheet
-    if (response && response.queryResults[0].facets) {
-      window.linkLists.data = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
-        parent: titleCase(data.templateTasks),
-        'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
-        ckgID: ckgItem.canonicalName,
-      }));
-      window.linkLists.source = 'ckg-api';
-    } else {
-      const resp = await fetch('/express/templates/top-priority-categories.json');
-      window.linkLists.data = resp.ok ? (await resp.json()).data : [];
-      window.linkLists.source = 'top-priority-sheet';
-    }
+    const resp = await fetch('/express/templates/top-priority-categories.json');
+    window.linkLists.data = resp.ok ? (await resp.json()).data : [];
   }
 }
 
-function matchCKGResultOrSheetResult(ckgData, pageData) {
-  const ckgMatch = pageData.ckgID === ckgData.ckgID;
-  const shortTitleMatch = pageData.shortTitle.toLowerCase() === ckgData.childSibling.toLowerCase();
-  const taskMatch = ckgData.tasks === pageData.templateTasks;
-  const currentLocale = getLocale(window.location);
-  const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
-  const sameLocale = currentLocale === pageLocale;
-
-  if (window.linkLists.source === 'ckg-api') {
-    return sameLocale && ckgMatch && taskMatch;
-  } else {
-    return sameLocale && shortTitleMatch;
-  }
-}
-
-function updateLinkList(container, linkPill, list) {
+function updateLinkList(container, template, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResultOrSheetResult(d, p));
+      const templatePageData = templatePages.find((p) => p.shortTitle === d && p.live === 'Y');
 
-      const clone = linkPill.cloneNode(true);
       if (templatePageData) {
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-        container.append(clone);
-      }
-    });
-  }
-}
-
-function updateSEOLinkList(container, linkPill, list) {
-  const templatePages = window.templates.data ?? [];
-  container.innerHTML = '';
-
-  if (list && templatePages) {
-    list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y'
-        && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
-
-      const clone = linkPill.cloneNode(true);
-      if (templatePageData) {
+        const clone = template.cloneNode(true);
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
         container.append(clone);
@@ -308,19 +162,14 @@ async function updateBlocks(data) {
   const linkListContainer = linkList.querySelector('p').parentElement;
 
   if (linkList && window.templates.data) {
-    const linkListTemplate = linkList.querySelector('p').cloneNode(true);
+    const linkListTemplate = linkList.querySelector('p')
+      .cloneNode(true);
     const linkListData = [];
 
     if (window.linkLists && window.linkLists.data && data.shortTitle) {
       window.linkLists.data.forEach((row) => {
-        if (window.linkLists.source === 'ckg-api'
-          || (window.linkLists.source === 'top-priority-sheet' && row.parent === data.shortTitle)) {
-          linkListData.push({
-            childSibling: row['child-siblings'],
-            ckgID: row.ckgID,
-            shortTitle: data.shortTitle,
-            tasks: data.templateTasks,
-          });
+        if (row.parent === data.shortTitle) {
+          linkListData.push(row['child-siblings']);
         }
       });
     }
@@ -352,10 +201,11 @@ async function updateBlocks(data) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
 
     if (window.templates.data && data.topTemplates) {
-      const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
-      const topTemplatesData = data.topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
+      const topTemplatesTemplate = seoNav.querySelector('p')
+        .cloneNode(true);
+      const topTemplatesData = data.topTemplates.split(', ');
 
-      updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
     } else {
       topTemplatesContainer.innerHTML = '';
     }
@@ -373,20 +223,21 @@ async function updateBlocks(data) {
 }
 
 const page = await fetchPageContent(window.location.pathname);
+await fetchLinkList();
 
 if (page) {
-  await fetchLinkList(page);
   if (window.location.pathname === '/express/templates/search') {
     const data = formatSearchQuery(page);
+
     if (!data) {
       window.location.replace('/express/templates/');
     } else {
       const purgedData = purgeAllTaskText(data);
       updateMetadata(purgedData);
-      await updateBlocks(purgedData);
+      updateBlocks(purgedData);
     }
   } else {
-    await updateBlocks(page);
+    updateBlocks(page);
   }
 } else {
   const env = getHelixEnv();
