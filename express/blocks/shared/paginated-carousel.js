@@ -15,7 +15,7 @@ import {
   loadCSS,
 } from '../../scripts/scripts.js';
 
-function decoratePagination(wrapper, payload) {
+function buildPagination(wrapper, payload) {
   const paginationContainer = createTag('div', { class: 'pagination-container' });
   const tray = wrapper.querySelector('.paginated-carousel-tray');
   const originalCItems = tray.querySelectorAll('.paginated-carousel-item.original');
@@ -66,23 +66,19 @@ function initCarousel(container, payload) {
 
         if (payload.infinite) {
           if (card.classList.contains('prev') && payload.currentIndex === (originalCards.length - 1).toString()) {
-            stopScrolling(tray);
             tray.scrollBy({ left: originalCards.length * card.offsetWidth });
           }
 
           if (card.classList.contains('next') && payload.currentIndex === (originalCards.length - 1).toString()) {
-            stopScrolling(tray);
             tray.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
           }
         }
       } else if (payload.infinite) {
         if (card.classList.contains('next') && payload.currentIndex !== (originalCards.length - 1).toString()) {
-          stopScrolling(tray);
           tray.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
         }
 
         if (card.classList.contains('prev') && payload.currentIndex !== (originalCards.length - 1).toString()) {
-          stopScrolling(tray);
           tray.scrollBy({ left: originalCards.length * card.offsetWidth });
         }
       }
@@ -104,11 +100,6 @@ function initCarousel(container, payload) {
       tray.prepend(card);
     });
 
-    const scrollObserver = new IntersectionObserver(onScroll, options);
-
-    const allCards = tray.querySelectorAll('.paginated-carousel-item');
-    allCards.forEach((card) => scrollObserver.observe(card));
-
     tray.addEventListener('scroll', () => {
       if (!payload.backwardInfinite) {
         const prevCards = tray.querySelectorAll('.paginated-carousel-item.prev');
@@ -119,6 +110,11 @@ function initCarousel(container, payload) {
       }
     }, { passive: true });
   }
+
+  const scrollObserver = new IntersectionObserver(onScroll, options);
+
+  const allCards = tray.querySelectorAll('.paginated-carousel-item');
+  allCards.forEach((card) => scrollObserver.observe(card));
 }
 
 function addClickableLayer(element) {
@@ -188,7 +184,7 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
       }
     }
 
-    decoratePagination(wrapper, payload);
+    buildPagination(wrapper, payload);
     initCarousel(container, payload);
     setTimeout(() => {
       if (payload.currentIndex !== 0) resetPagination(wrapper, payload);
