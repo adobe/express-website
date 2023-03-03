@@ -15,7 +15,7 @@ import {
   loadCSS,
 } from '../../scripts/scripts.js';
 
-function buildPagination(wrapper, payload) {
+function buildPagination(wrapper) {
   const paginationContainer = createTag('div', { class: 'pagination-container' });
   const tray = wrapper.querySelector('.paginated-carousel-tray');
   const originalCItems = tray.querySelectorAll('.paginated-carousel-item.original');
@@ -27,7 +27,7 @@ function buildPagination(wrapper, payload) {
       paginationContainer.append(dot);
 
       dot.addEventListener('click', () => {
-        const offset = payload.backwardInfinite ? originalCItems.length * cItem.offsetWidth : 0;
+        const offset = originalCItems.length * cItem.offsetWidth;
         tray.scrollTo({
           left: offset + (cItem.offsetWidth * dot.dataset.carouselIndex),
           behavior: 'smooth',
@@ -39,15 +39,19 @@ function buildPagination(wrapper, payload) {
   wrapper.append(paginationContainer);
 }
 
+function stopScrolling(tray) { // To prevent safari shakiness
+  tray.style.overflowX = 'hidden';
+  setTimeout(() => {
+    tray.style.removeProperty('overflow-x');
+  }, 20);
+}
+
 function initCarousel(container, payload) {
   const tray = container.querySelector('.paginated-carousel-tray');
-  const originalCards = tray.querySelectorAll('.paginated-carousel-item.original');
   const paginationDots = tray.parentElement.querySelectorAll('.pagination-dot');
 
   const onScroll = (entries) => {
     entries.forEach((entry) => {
-      const card = entry.target;
-
       if (entry.isIntersecting) {
         payload.currentIndex = entry.target.dataset.carouselIndex;
         paginationDots.forEach((dot) => {
@@ -56,24 +60,6 @@ function initCarousel(container, payload) {
           }
         });
         paginationDots[payload.currentIndex].classList.add('active');
-
-        if (payload.infinite) {
-          if (card.classList.contains('prev') && payload.currentIndex === (originalCards.length - 1).toString()) {
-            tray.scrollBy({ left: originalCards.length * card.offsetWidth });
-          }
-
-          if (card.classList.contains('next') && payload.currentIndex === (originalCards.length - 1).toString()) {
-            tray.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
-          }
-        }
-      } else if (payload.infinite) {
-        if (card.classList.contains('next') && payload.currentIndex !== (originalCards.length - 1).toString()) {
-          tray.scrollBy({ left: -(originalCards.length * card.offsetWidth) });
-        }
-
-        if (card.classList.contains('prev') && payload.currentIndex !== (originalCards.length - 1).toString()) {
-          tray.scrollBy({ left: originalCards.length * card.offsetWidth });
-        }
       }
     });
   };
@@ -81,7 +67,7 @@ function initCarousel(container, payload) {
   const options = {
     root: tray,
     rootMargin: '0px',
-    threshold: 1.00,
+    threshold: 0.99,
   };
 
   if (payload.infinite) {
@@ -93,14 +79,32 @@ function initCarousel(container, payload) {
       tray.prepend(card);
     });
 
+    let previousScroll = tray.scrollLeft;
     tray.addEventListener('scroll', () => {
-      if (!payload.backwardInfinite) {
-        const prevCards = tray.querySelectorAll('.paginated-carousel-item.prev');
-        prevCards.forEach((pCard) => {
-          pCard.classList.remove('hidden');
-        });
-        payload.backwardInfinite = true;
+      if (tray.scrollLeft > previousScroll) {
+        console.log(tray.scrollLeft, previousScroll)
+        console.log('scrolling right');
       }
+
+      if (tray.scrollLeft < previousScroll) {
+        console.log(tray.scrollLeft, previousScroll)
+        console.log('scrolling left');
+      }
+      const originalCardsLeftEdge = Math.round(tray.scrollWidth / 3);
+      const nextCardsLeftEdge = Math.round((tray.scrollWidth / 3) * 2);
+      if (tray.scrollLeft < originalCardsLeftEdge && tray.scrollLeft < previousScroll) {
+        // stopScrolling(tray);
+        tray.scrollLeft = nextCardsLeftEdge;
+      }
+
+      if (tray.scrollLeft > nextCardsLeftEdge && tray.scrollLeft > previousScroll) {
+        // stopScrolling(tray);
+        tray.scrollLeft = originalCardsLeftEdge;
+      }
+
+      // if (Math.abs(tray.scrollLeft - previousScroll) > 10) {
+        previousScroll = tray.scrollLeft;
+      // }
     }, { passive: true });
   }
 
@@ -168,7 +172,7 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
           payload[key] = Array.from(cItems).map((item, index) => {
             const carouselItem = createTag('div');
             carouselItem.innerHTML = item.innerHTML;
-            carouselItem.className = key === 'cItemsPrev' ? 'paginated-carousel-item prev hidden' : 'paginated-carousel-item next';
+            carouselItem.className = key === 'cItemsPrev' ? 'paginated-carousel-item prev' : 'paginated-carousel-item next';
             carouselItem.dataset.carouselIndex = index.toString();
             addClickableLayer(carouselItem);
             return carouselItem;
@@ -177,7 +181,7 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
       }
     }
 
-    buildPagination(wrapper, payload);
+    buildPagination(wrapper);
     initCarousel(container, payload);
     setTimeout(() => {
       if (payload.currentIndex !== 0) resetPagination(wrapper, payload);

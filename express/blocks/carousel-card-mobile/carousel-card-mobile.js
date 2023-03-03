@@ -50,7 +50,7 @@ export default async function decorate($block) {
       $heading.textContent = headingText;
       $row.replaceWith($heading);
     } else if (parameter === 'Feature Carousel') {
-      buildPaginatedCarousel(':scope > div > p', $row, false);
+      buildPaginatedCarousel(':scope > div > p', $row, true);
     } else if (parameter === 'App Store Badge') {
       $row.replaceWith(buildAppStoreBadge($value.firstElementChild.href, { class: 'gradient-border' }));
     } else {
