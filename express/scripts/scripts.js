@@ -24,15 +24,13 @@ window.RUM_HIGH_SAMPLE_RATE = 50;
 export function sampleRUM(checkpoint, data = {}) {
   sampleRUM.defer = sampleRUM.defer || [];
   const defer = (fnname) => {
-    sampleRUM[fnname] = sampleRUM[fnname]
-      || ((...args) => sampleRUM.defer.push({ fnname, args }));
+    sampleRUM[fnname] = sampleRUM[fnname] || ((...args) => sampleRUM.defer.push({ fnname, args }));
   };
-  sampleRUM.drain = sampleRUM.drain
-    || ((dfnname, fn) => {
+  sampleRUM.drain =
+    sampleRUM.drain ||
+    ((dfnname, fn) => {
       sampleRUM[dfnname] = fn;
-      sampleRUM.defer
-        .filter(({ fnname }) => dfnname === fnname)
-        .forEach(({ fnname, args }) => sampleRUM[fnname](...args));
+      sampleRUM.defer.filter(({ fnname }) => dfnname === fnname).forEach(({ fnname, args }) => sampleRUM[fnname](...args));
     });
   sampleRUM.on = (chkpnt, fn) => {
     sampleRUM.cases[chkpnt] = fn;
@@ -44,12 +42,12 @@ export function sampleRUM(checkpoint, data = {}) {
     window.hlx = window.hlx || {};
     if (!window.hlx.rum) {
       const usp = new URLSearchParams(window.location.search);
-      const weight = (usp.get('rum') === 'on') ? 1 : window.RUM_LOW_SAMPLE_RATE;
+      const weight = usp.get('rum') === 'on' ? 1 : window.RUM_LOW_SAMPLE_RATE;
       // eslint-disable-next-line no-bitwise
-      const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
+      const hashCode = (s) => s.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
       const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
       const random = Math.random();
-      const isSelected = (random * weight < 1);
+      const isSelected = random * weight < 1;
       // eslint-disable-next-line object-curly-newline
       window.hlx.rum = { weight, id, random, isSelected, sampleRUM };
     }
@@ -60,7 +58,14 @@ export function sampleRUM(checkpoint, data = {}) {
           return;
         }
         // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
-        const body = JSON.stringify({ weight: window.hlx.rum.weight, id, referer: window.location.href, generation: window.RUM_GENERATION, checkpoint, ...data });
+        const body = JSON.stringify({
+          weight: window.hlx.rum.weight,
+          id,
+          referer: window.location.href,
+          generation: window.RUM_GENERATION,
+          checkpoint,
+          ...data,
+        });
         const url = `https://rum.hlx.page/.rum/${window.hlx.rum.weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
@@ -80,7 +85,7 @@ export function sampleRUM(checkpoint, data = {}) {
         experiment: () => {
           // track experiments with higher sampling rate
           window.hlx.rum.weight = Math.min(window.hlx.rum.weight, window.RUM_HIGH_SAMPLE_RATE);
-          window.hlx.rum.isSelected = (window.hlx.rum.random * window.hlx.rum.weight < 1);
+          window.hlx.rum.isSelected = window.hlx.rum.random * window.hlx.rum.weight < 1;
 
           sampleRUM.drain('stash', sampleRUM);
           sendPing(data);
@@ -110,38 +115,42 @@ document.addEventListener('click', () => sampleRUM('click'));
 function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
   window.dataLayer = window.dataLayer || [];
 
-  const viewAssetObserver = new IntersectionObserver((entries) => {
-    entries
-      .filter((entry) => entry.isIntersecting)
-      .forEach((entry) => {
-        const el = entry.target;
+  const viewAssetObserver = new IntersectionObserver(
+    (entries) => {
+      entries
+        .filter((entry) => entry.isIntersecting)
+        .forEach((entry) => {
+          const el = entry.target;
 
-        // observe only once
-        viewAssetObserver.unobserve(el);
+          // observe only once
+          viewAssetObserver.unobserve(el);
 
-        // Get asset details
-        let assetPath = el.href // the reference for an a/svg tag
-          || el.currentSrc // the active source in a picture/video/audio element
-          || el.src; // the source for an image/video/iframe
-        assetPath = new URL(assetPath).pathname;
-        const match = assetPath.match(/media_([a-f0-9]+)\.\w+/);
-        const assetFilename = match ? match[0] : assetPath;
-        const details = {
-          event: 'viewasset',
-          assetId: assetFilename,
-          assetPath,
-        };
+          // Get asset details
+          let assetPath =
+            el.href || // the reference for an a/svg tag
+            el.currentSrc || // the active source in a picture/video/audio element
+            el.src; // the source for an image/video/iframe
+          assetPath = new URL(assetPath).pathname;
+          const match = assetPath.match(/media_([a-f0-9]+)\.\w+/);
+          const assetFilename = match ? match[0] : assetPath;
+          const details = {
+            event: 'viewasset',
+            assetId: assetFilename,
+            assetPath,
+          };
 
-        // Add experiment details
-        const { id, selectedVariant } = (window.hlx.experiment || {});
-        if (selectedVariant) {
-          details.experiment = id;
-          details.variant = selectedVariant;
-        }
+          // Add experiment details
+          const { id, selectedVariant } = window.hlx.experiment || {};
+          if (selectedVariant) {
+            details.experiment = id;
+            details.variant = selectedVariant;
+          }
 
-        window.dataLayer.push(details);
-      });
-  }, { threshold: 0.25 });
+          window.dataLayer.push(details);
+        });
+    },
+    { threshold: 0.25 },
+  );
 
   // Observe all assets in the DOM
   document.querySelectorAll(assetsSelector).forEach((el) => {
@@ -188,7 +197,10 @@ export function addPublishDependencies(url) {
 
 export function toClassName(name) {
   return name && typeof name === 'string'
-    ? name.trim().toLowerCase().replace(/[^0-9a-z]/gi, '-')
+    ? name
+        .trim()
+        .toLowerCase()
+        .replace(/[^0-9a-z]/gi, '-')
     : '';
 }
 
@@ -208,8 +220,7 @@ export function getMeta(name) {
   const $metas = [...document.querySelectorAll('meta')].filter(($m) => {
     const nameAttr = $m.getAttribute('name');
     const propertyAttr = $m.getAttribute('property');
-    return ((nameAttr && nameLower === nameAttr.toLowerCase())
-      || (propertyAttr && nameLower === propertyAttr.toLowerCase()));
+    return (nameAttr && nameLower === nameAttr.toLowerCase()) || (propertyAttr && nameLower === propertyAttr.toLowerCase());
   });
   if ($metas[0]) value = $metas[0].getAttribute('content');
   return value;
@@ -217,7 +228,9 @@ export function getMeta(name) {
 
 // Get lottie animation HTML - remember to lazyLoadLottiePlayer() to see it.
 export function getLottie(name, src, loop = true, autoplay = true, control = false, hover = false) {
-  return (`<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${(loop) ? 'loop ' : ''}${(autoplay) ? 'autoplay ' : ''}${(control) ? 'controls ' : ''}${(hover) ? 'hover ' : ''}></lottie-player>`);
+  return `<lottie-player class="lottie lottie-${name}" src="${src}" background="transparent" speed="1" ${loop ? 'loop ' : ''}${
+    autoplay ? 'autoplay ' : ''
+  }${control ? 'controls ' : ''}${hover ? 'hover ' : ''}></lottie-player>`;
 }
 
 // Lazy-load lottie player if you scroll to the block.
@@ -273,7 +286,7 @@ export function getIcon(icons, alt, size = 44) {
   // eslint-disable-next-line no-param-reassign
   icons = Array.isArray(icons) ? icons : [icons];
   const [defaultIcon, mobileIcon] = icons;
-  const icon = (mobileIcon && window.innerWidth < 600) ? mobileIcon : defaultIcon;
+  const icon = mobileIcon && window.innerWidth < 600 ? mobileIcon : defaultIcon;
   const symbols = [
     'adobefonts',
     'adobe-stock',
@@ -346,11 +359,7 @@ export function getIcon(icons, alt, size = 44) {
     'star-empty',
   ];
 
-  const size22Icons = [
-    'chevron',
-    'pricingfree',
-    'pricingpremium',
-  ];
+  const size22Icons = ['chevron', 'pricingfree', 'pricingpremium'];
 
   if (symbols.includes(icon)) {
     const iconName = icon;
@@ -361,7 +370,7 @@ export function getIcon(icons, alt, size = 44) {
       <use href="/express/icons/ccx-sheet_${sheetSize}.svg#${iconName}${sheetSize}"></use>
     </svg>`;
   } else {
-    return (`<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt || icon}">`);
+    return `<img class="icon icon-${icon}" src="/express/icons/${icon}.svg" alt="${alt || icon}">`;
   }
 }
 
@@ -370,7 +379,7 @@ export function getIconElement(icons, size, alt, additionalClassName) {
   $div.innerHTML = getIcon(icons, alt, size);
 
   if (additionalClassName) $div.firstElementChild.classList.add(additionalClassName);
-  return ($div.firstElementChild);
+  return $div.firstElementChild;
 }
 
 export function transformLinkToAnimation($a) {
@@ -562,7 +571,7 @@ function getCountry() {
     country = getLocale(window.location);
   }
   if (country === 'uk') country = 'gb';
-  return (country.split('_')[0]);
+  return country.split('_')[0];
 }
 
 export function getCurrency(locale) {
@@ -775,7 +784,8 @@ export function formatPrice(price, currency) {
     style: 'currency',
     currency,
     currencyDisplay,
-  }).format(price)
+  })
+    .format(price)
     .replace('SAR', 'SR'); // custom currency symbol for SAR
 }
 
@@ -791,8 +801,8 @@ export async function getOffer(offerId, countryOverride) {
   const resp = await fetch('/express/system/offers-new.json');
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
-  let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
-  if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
+  let offer = json.data.find((e) => e.o === offerId && e.c === upperCountry);
+  if (!offer) offer = json.data.find((e) => e.o === offerId && e.c === 'US');
 
   if (offer) {
     // console.log(offer);
@@ -874,15 +884,17 @@ export function loadCSS(href, callback) {
 function resolveFragments() {
   Array.from(document.querySelectorAll('main > div div'))
     .filter(($cell) => $cell.childElementCount === 0)
-    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/mg.test($cell.textContent.trim()))
+    .filter(($cell) => /^\[[A-Za-z0-9 -_—]+\]$/gm.test($cell.textContent.trim()))
     .forEach(($cell) => {
-      const marker = $cell.textContent.trim()
+      const marker = $cell.textContent
+        .trim()
         .substring(1, $cell.textContent.trim().length - 1)
         .toLocaleLowerCase()
         .trim();
       // find the fragment with the marker
-      const $marker = Array.from(document.querySelectorAll('main > div h3'))
-        .find(($title) => $title.textContent.trim().toLocaleLowerCase() === marker);
+      const $marker = Array.from(document.querySelectorAll('main > div h3')).find(
+        ($title) => $title.textContent.trim().toLocaleLowerCase() === marker,
+      );
       if (!$marker) {
         console.log(`no fragment with marker "${marker}" found`);
         return;
@@ -949,9 +961,7 @@ export function decorateBlock(block) {
  * @param {Element} main The container element
  */
 export function decorateBlocks(main) {
-  main
-    .querySelectorAll('div.section > div > div')
-    .forEach((block) => decorateBlock(block));
+  main.querySelectorAll('div.section > div > div').forEach((block) => decorateBlock(block));
 }
 
 function decorateMarqueeColumns($main) {
@@ -1013,7 +1023,7 @@ export function buildBlock(blockName, content) {
     });
     blockEl.appendChild(rowEl);
   });
-  return (blockEl);
+  return blockEl;
 }
 
 /**
@@ -1254,12 +1264,14 @@ export function decorateButtons(block = document) {
     if ($block) {
       blockName = $block.className;
     }
-    if (!noButtonBlocks.includes(blockName)
-      && originalHref !== linkText
-      && !(linkText.startsWith('https') && linkText.includes('/media_'))
-      && !linkText.includes('hlx.blob.core.windows.net')
-      && !linkText.endsWith(' >')
-      && !linkText.endsWith(' ›')) {
+    if (
+      !noButtonBlocks.includes(blockName) &&
+      originalHref !== linkText &&
+      !(linkText.startsWith('https') && linkText.includes('/media_')) &&
+      !linkText.includes('hlx.blob.core.windows.net') &&
+      !linkText.endsWith(' >') &&
+      !linkText.endsWith(' ›')
+    ) {
       const $up = $a.parentElement;
       const $twoup = $a.parentElement.parentElement;
       if (!$a.querySelector('img')) {
@@ -1267,13 +1279,11 @@ export function decorateButtons(block = document) {
           $a.className = 'button accent'; // default
           $up.classList.add('button-container');
         }
-        if ($up.childNodes.length === 1 && $up.tagName === 'STRONG'
-          && $twoup.children.length === 1 && $twoup.tagName === 'P') {
+        if ($up.childNodes.length === 1 && $up.tagName === 'STRONG' && $twoup.children.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent';
           $twoup.classList.add('button-container');
         }
-        if ($up.childNodes.length === 1 && $up.tagName === 'EM'
-          && $twoup.children.length === 1 && $twoup.tagName === 'P') {
+        if ($up.childNodes.length === 1 && $up.tagName === 'EM' && $twoup.children.length === 1 && $twoup.tagName === 'P') {
           $a.className = 'button accent light';
           $twoup.classList.add('button-container');
         }
@@ -1311,7 +1321,7 @@ export function decorateButtons(block = document) {
 // }
 
 export function checkTesting() {
-  return (getMeta('testing').toLowerCase() === 'on');
+  return getMeta('testing').toLowerCase() === 'on';
 }
 
 /**
@@ -1400,7 +1410,7 @@ export async function getExperimentConfig(experimentId) {
       };
     });
 
-    return (config);
+    return config;
   } else {
     const path = `/express/experiments/${experimentId}/manifest.json`;
     try {
@@ -1492,24 +1502,27 @@ function getDecisionPolicy(config) {
   const decisionPolicy = {
     id: 'content-experimentation-policy',
     rootDecisionNodeId: 'n1',
-    decisionNodes: [{
-      id: 'n1',
-      type: 'EXPERIMENTATION',
-      experiment: {
-        id: config.id,
-        identityNamespace: 'ECID',
-        randomizationUnit: 'DEVICE',
-        treatments: Object.entries(config.variants).map(([key, props]) => ({
-          id: key,
-          allocationPercentage: props.percentageSplit
-            ? parseFloat(props.percentageSplit) * 100
-            : 100 - Object.values(config.variants).reduce((result, variant) => {
-              const returnResult = result - (parseFloat(variant.percentageSplit || 0) * 100);
-              return returnResult;
-            }, 100),
-        })),
+    decisionNodes: [
+      {
+        id: 'n1',
+        type: 'EXPERIMENTATION',
+        experiment: {
+          id: config.id,
+          identityNamespace: 'ECID',
+          randomizationUnit: 'DEVICE',
+          treatments: Object.entries(config.variants).map(([key, props]) => ({
+            id: key,
+            allocationPercentage: props.percentageSplit
+              ? parseFloat(props.percentageSplit) * 100
+              : 100 -
+                Object.values(config.variants).reduce((result, variant) => {
+                  const returnResult = result - parseFloat(variant.percentageSplit || 0) * 100;
+                  return returnResult;
+                }, 100),
+          })),
+        },
       },
-    }],
+    ],
   };
   return decisionPolicy;
 }
@@ -1522,7 +1535,7 @@ async function decorateTesting() {
     // let reason = '';
     const usp = new URLSearchParams(window.location.search);
     const martech = usp.get('martech');
-    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+    if ((checkTesting() && martech !== 'off' && martech !== 'delay') || martech === 'rush') {
       // eslint-disable-next-line no-console
       console.log('rushing martech');
       loadScript('/express/scripts/instrument.js', null, 'module');
@@ -1585,14 +1598,12 @@ export async function fixIcons(block = document) {
     if (alt) {
       const lowerAlt = alt.toLowerCase();
       if (lowerAlt.includes('icon:')) {
-        const [icon, mobileIcon] = lowerAlt
-          .split(';')
-          .map((i) => {
-            if (i) {
-              return toClassName(i.split(':')[1].trim());
-            }
-            return null;
-          });
+        const [icon, mobileIcon] = lowerAlt.split(';').map((i) => {
+          if (i) {
+            return toClassName(i.split(':')[1].trim());
+          }
+          return null;
+        });
         let altText = null;
         if (placeholders[icon]) {
           altText = placeholders[icon];
@@ -1612,8 +1623,7 @@ export async function fixIcons(block = document) {
             return;
           }
         }
-        $picture.parentElement
-          .replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
+        $picture.parentElement.replaceChild(getIconElement([icon, mobileIcon], size, altText), $picture);
       }
     }
   });
@@ -1630,7 +1640,7 @@ export function unwrapBlock($block) {
 
   let $appendTo;
   $elems.forEach(($e) => {
-    if ($e === $block || ($e.className === 'section-metadata')) {
+    if ($e === $block || $e.className === 'section-metadata') {
       $appendTo = $blockSection;
     }
 
@@ -1713,11 +1723,9 @@ async function buildAutoBlocks($main) {
   }
 
   if (['yes', 'true', 'on'].includes(getMetadata('show-relevant-rows').toLowerCase())) {
-    const authoredRRFound = [
-      '.template-list.horizontal.fullwidth.mini',
-      '.link-list.noarrows',
-      '.collapsible-card',
-    ].every((block) => $main.querySelector(block));
+    const authoredRRFound = ['.template-list.horizontal.fullwidth.mini', '.link-list.noarrows', '.collapsible-card'].every((block) =>
+      $main.querySelector(block),
+    );
 
     if (!authoredRRFound && !window.relevantRowsLoaded) {
       const relevantRowsData = await fetchRelevantRows(window.location.pathname);
@@ -1776,7 +1784,17 @@ function splitSections($main) {
   const multipleColumns = $main.querySelectorAll('.columns.fullsize-center').length > 1;
   $main.querySelectorAll(':scope > div > div').forEach(($block) => {
     const hasAppStoreBlocks = ['yes', 'true', 'on'].includes(getMetadata('show-standard-app-store-blocks').toLowerCase());
-    const blocksToSplit = ['template-list', 'layouts', 'banner', 'faq', 'promotion', 'fragment', 'app-store-highlight', 'app-store-blade', 'plans-comparison'];
+    const blocksToSplit = [
+      'template-list',
+      'layouts',
+      'banner',
+      'faq',
+      'promotion',
+      'fragment',
+      'app-store-highlight',
+      'app-store-blade',
+      'plans-comparison',
+    ];
     // work around for splitting columns and sixcols template list
     // add metadata condition to minimize impact on other use cases
     if (hasAppStoreBlocks && !multipleColumns) {
@@ -1797,8 +1815,7 @@ function splitSections($main) {
 
 function setTheme() {
   let theme = getMeta('theme');
-  if (!theme && (window.location.pathname.startsWith('/express')
-  || window.location.pathname.startsWith('/education'))) {
+  if (!theme && (window.location.pathname.startsWith('/express') || window.location.pathname.startsWith('/education'))) {
     // mega nav, suppress brand header
     theme = 'no-brand-header';
   }
@@ -1889,16 +1906,11 @@ function makeRelativeLinks($main) {
   $main.querySelectorAll('a').forEach(($a) => {
     if (!$a.href) return;
     try {
-      const {
-        protocol, hostname, pathname, search, hash,
-      } = new URL($a.href);
-      if (hostname.endsWith('.page')
-        || hostname.endsWith('.live')
-        || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
+      const { protocol, hostname, pathname, search, hash } = new URL($a.href);
+      if (hostname.endsWith('.page') || hostname.endsWith('.live') || ['www.adobe.com', 'www.stage.adobe.com'].includes(hostname)) {
         // make link relative
         $a.href = `${pathname}${search}${hash}`;
-      } else if (hostname !== 'adobesparkpost.app.link'
-        && !['tel:', 'mailto:', 'sms:'].includes(protocol)) {
+      } else if (hostname !== 'adobesparkpost.app.link' && !['tel:', 'mailto:', 'sms:'].includes(protocol)) {
         // open external links in a new tab
         $a.target = '_blank';
       }
@@ -1972,7 +1984,12 @@ function displayEnv() {
  * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
  */
 
-export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+export function createOptimizedPicture(
+  src,
+  alt = '',
+  eager = false,
+  breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }],
+) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
@@ -2063,18 +2080,11 @@ const usp = new URLSearchParams(window.location.search);
 window.spark = {};
 window.spark.hostname = usp.get('hostname') || window.location.hostname;
 
-const useAlloy = !(
-  usp.has('martech')
-  && usp.get('martech') === 'legacy'
-);
+const useAlloy = !(usp.has('martech') && usp.get('martech') === 'legacy');
 
 function unhideBody() {
   try {
-    const id = (
-      useAlloy
-        ? 'alloy-prehiding'
-        : 'at-body-style'
-    );
+    const id = useAlloy ? 'alloy-prehiding' : 'at-body-style';
     document.head.removeChild(document.getElementById(id));
   } catch (e) {
     // nothing
@@ -2082,26 +2092,14 @@ function unhideBody() {
 }
 
 function hideBody() {
-  const id = (
-    useAlloy
-      ? 'alloy-prehiding'
-      : 'at-body-style'
-  );
+  const id = useAlloy ? 'alloy-prehiding' : 'at-body-style';
   let style = document.getElementById(id);
   if (style) {
     return;
   }
   style = document.createElement('style');
-  style.id = (
-    useAlloy
-      ? 'alloy-prehiding'
-      : 'at-body-style'
-  );
-  style.innerHTML = (
-    useAlloy
-      ? '.personalization-container{opacity:0.01 !important}'
-      : 'body{visibility: hidden !important}'
-  );
+  style.id = useAlloy ? 'alloy-prehiding' : 'at-body-style';
+  style.innerHTML = useAlloy ? '.personalization-container{opacity:0.01 !important}' : 'body{visibility: hidden !important}';
 
   try {
     document.head.appendChild(style);
@@ -2111,14 +2109,18 @@ function hideBody() {
 }
 
 export function addAnimationToggle(target) {
-  target.addEventListener('click', () => {
-    const videos = target.querySelectorAll('video');
-    const paused = videos[0] ? videos[0].paused : false;
-    videos.forEach((video) => {
-      if (paused) video.play();
-      else video.pause();
-    });
-  }, true);
+  target.addEventListener(
+    'click',
+    () => {
+      const videos = target.querySelectorAll('video');
+      const paused = videos[0] ? videos[0].paused : false;
+      videos.forEach((video) => {
+        if (paused) video.play();
+        else video.pause();
+      });
+    },
+    true,
+  );
 }
 
 /**
@@ -2183,21 +2185,20 @@ export function addHeaderSizing($block, classPrefix = 'heading', selector = 'h1,
   const headings = $block.querySelectorAll(selector);
   // Each threshold of JP should be smaller than other languages
   // because JP characters are larger and JP sentences are longer
-  const sizes = getLocale(window.location) === 'jp'
-    ? [
-      { name: 'long', threshold: 8 },
-      { name: 'very-long', threshold: 11 },
-      { name: 'x-long', threshold: 15 },
-    ]
-    : [
-      { name: 'long', threshold: 30 },
-      { name: 'very-long', threshold: 40 },
-      { name: 'x-long', threshold: 50 },
-    ];
+  const sizes =
+    getLocale(window.location) === 'jp'
+      ? [
+          { name: 'long', threshold: 8 },
+          { name: 'very-long', threshold: 11 },
+          { name: 'x-long', threshold: 15 },
+        ]
+      : [
+          { name: 'long', threshold: 30 },
+          { name: 'very-long', threshold: 40 },
+          { name: 'x-long', threshold: 50 },
+        ];
   headings.forEach((h) => {
-    const length = getLocale(window.location) === 'jp'
-      ? getJapaneseTextCharacterCount(h.textContent.trim())
-      : h.textContent.trim().length;
+    const length = getLocale(window.location) === 'jp' ? getJapaneseTextCharacterCount(h.textContent.trim()) : h.textContent.trim().length;
     sizes.forEach((size) => {
       if (length >= size.threshold) h.classList.add(`${classPrefix}-${size.name}`);
     });
@@ -2254,7 +2255,7 @@ async function loadEager() {
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
-    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    const hasLCPBlock = block && lcpBlocks.includes(block.getAttribute('data-block-name'));
     if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
@@ -2271,6 +2272,8 @@ async function loadEager() {
           unhideBody();
         }, 3000);
       }
+    } else {
+      loadMartech();
     }
 
     const lcpCandidate = document.querySelector('main img');
@@ -2417,7 +2420,7 @@ async function decoratePage() {
   await loadEager();
   loadLazy();
   loadGnav();
-  if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === ('localhost')) {
+  if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === 'localhost') {
     import('../../tools/preview/preview.js');
   }
 }
