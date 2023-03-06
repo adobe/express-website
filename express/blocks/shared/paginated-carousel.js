@@ -39,7 +39,7 @@ function initCarousel(container, states) {
   const onScroll = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        states.currentIndex = entry.target.dataset.carouselIndex;
+        states.currentIndex = parseInt(entry.target.dataset.carouselIndex, 10);
         paginationDots.forEach((dot) => {
           if (dot !== paginationDots[states.currentIndex]) {
             dot.classList.remove('active');
@@ -65,10 +65,10 @@ function initCarousel(container, states) {
     tray.classList.remove('scroll-snap');
 
     tray.addEventListener('touchstart', (e) => {
-      tray.classList.remove('scroll-snap');
       if (e.cancelable) {
         e.preventDefault();
       }
+      tray.classList.remove('scroll-snap');
       oldTouchPos = Math.round(e.touches[0].clientX);
       touchStart = Math.round(e.touches[0].clientX);
     });
@@ -84,6 +84,7 @@ function initCarousel(container, states) {
     }, { passive: true });
 
     tray.addEventListener('touchend', (e) => {
+      e.preventDefault();
       states.readyToScroll = false;
       const touchEnd = Math.round(e.changedTouches[0].clientX);
       const scrollDistance = Math.abs(touchStart - touchEnd);
@@ -135,6 +136,19 @@ function initCarousel(container, states) {
         }
         if (!states.reordering) states.reordering = true;
       }
+
+      // click when it's a click instead of scroll
+      if (touchEnd === touchStart) {
+        let clickedCard;
+        const index = states.currentIndex;
+        if (e.changedTouches[0].clientX > allCards[states.currentIndex].offsetWidth) {
+          clickedCard = index + 1 <= allCards.length - 1 ? allCards[index + 1] : allCards[0];
+        } else {
+          clickedCard = allCards[states.currentIndex];
+        }
+        const a = clickedCard.querySelector('a.clickable-layer');
+        window.location.assign(a.href);
+      }
     });
   }
 }
@@ -153,7 +167,7 @@ function addClickableLayer(element) {
 function resetPagination(wrapper, states) {
   const paginationDots = wrapper.querySelectorAll('.pagination-dot');
   if (paginationDots.length > 0) {
-    states.currentIndex = '0';
+    states.currentIndex = 0;
     paginationDots.forEach((dot) => dot.classList.remove('active'));
     paginationDots[0].classList.add('active');
   }
