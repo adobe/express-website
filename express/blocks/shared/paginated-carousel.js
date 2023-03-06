@@ -25,41 +25,27 @@ function buildPagination(wrapper) {
       const dot = createTag('span', { class: 'pagination-dot' });
       dot.dataset.carouselIndex = cItem.dataset.carouselIndex;
       paginationContainer.append(dot);
-
-      dot.addEventListener('click', () => {
-        const offset = originalCItems.length * cItem.offsetWidth;
-        tray.scrollTo({
-          left: offset + (cItem.offsetWidth * dot.dataset.carouselIndex),
-          behavior: 'smooth',
-        });
-      });
     });
   }
 
   wrapper.append(paginationContainer);
 }
 
-function stopScrolling(tray) { // To prevent safari shakiness
-  tray.style.overflowX = 'hidden';
-  setTimeout(() => {
-    tray.style.removeProperty('overflow-x');
-  }, 20);
-}
-
-function initCarousel(container, payload) {
+function initCarousel(container, states) {
   const tray = container.querySelector('.paginated-carousel-tray');
   const paginationDots = tray.parentElement.querySelectorAll('.pagination-dot');
+  const allCards = tray.querySelectorAll('.paginated-carousel-item');
 
   const onScroll = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        payload.currentIndex = entry.target.dataset.carouselIndex;
+        states.currentIndex = entry.target.dataset.carouselIndex;
         paginationDots.forEach((dot) => {
-          if (dot !== paginationDots[payload.currentIndex]) {
+          if (dot !== paginationDots[states.currentIndex]) {
             dot.classList.remove('active');
           }
         });
-        paginationDots[payload.currentIndex].classList.add('active');
+        paginationDots[states.currentIndex].classList.add('active');
       }
     });
   };
@@ -70,48 +56,87 @@ function initCarousel(container, payload) {
     threshold: 0.99,
   };
 
-  if (payload.infinite) {
-    payload.cItemsNext.forEach((card) => {
-      tray.append(card);
-    });
-
-    payload.cItemsPrev.reverse().forEach((card) => {
-      tray.prepend(card);
-    });
-
-    let previousScroll = tray.scrollLeft;
-    tray.addEventListener('scroll', () => {
-      if (tray.scrollLeft > previousScroll) {
-        console.log(tray.scrollLeft, previousScroll)
-        console.log('scrolling right');
-      }
-
-      if (tray.scrollLeft < previousScroll) {
-        console.log(tray.scrollLeft, previousScroll)
-        console.log('scrolling left');
-      }
-      const originalCardsLeftEdge = Math.round(tray.scrollWidth / 3);
-      const nextCardsLeftEdge = Math.round((tray.scrollWidth / 3) * 2);
-      if (tray.scrollLeft < originalCardsLeftEdge && tray.scrollLeft < previousScroll) {
-        // stopScrolling(tray);
-        tray.scrollLeft = nextCardsLeftEdge;
-      }
-
-      if (tray.scrollLeft > nextCardsLeftEdge && tray.scrollLeft > previousScroll) {
-        // stopScrolling(tray);
-        tray.scrollLeft = originalCardsLeftEdge;
-      }
-
-      // if (Math.abs(tray.scrollLeft - previousScroll) > 10) {
-        previousScroll = tray.scrollLeft;
-      // }
-    }, { passive: true });
-  }
-
   const scrollObserver = new IntersectionObserver(onScroll, options);
-
-  const allCards = tray.querySelectorAll('.paginated-carousel-item');
   allCards.forEach((card) => scrollObserver.observe(card));
+
+  if (states.infinite) {
+    let touchStart = 0;
+    let oldTouchPos = 0;
+    tray.classList.remove('scroll-snap');
+
+    tray.addEventListener('touchstart', (e) => {
+      tray.classList.remove('scroll-snap');
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      oldTouchPos = Math.round(e.touches[0].clientX);
+      touchStart = Math.round(e.touches[0].clientX);
+    });
+
+    tray.addEventListener('touchmove', (e) => {
+      if (states.readyToScroll) {
+        const newTouchPos = Math.round(e.touches[0].clientX);
+        tray.scrollBy({
+          left: oldTouchPos - newTouchPos,
+        });
+        oldTouchPos = newTouchPos;
+      }
+    }, { passive: true });
+
+    tray.addEventListener('touchend', (e) => {
+      states.readyToScroll = false;
+      const touchEnd = Math.round(e.changedTouches[0].clientX);
+      const scrollDistance = Math.abs(touchStart - touchEnd);
+      const cardScrolledAway = allCards[states.currentIndex];
+
+      if (touchEnd > touchStart && states.reordering) {
+        tray.scrollBy({
+          left: -(cardScrolledAway.offsetWidth - scrollDistance),
+          behavior: 'smooth',
+        });
+
+        let lastScrollPos = 0;
+        const scrollEndWatcher = setInterval(() => {
+          if (lastScrollPos === tray.scrollLeft) {
+            // offset the shift caused by reordering cards
+            tray.scrollBy({
+              left: cardScrolledAway.offsetWidth,
+            });
+            tray.prepend(tray.querySelectorAll('.paginated-carousel-item')[allCards.length - 1]);
+            // snap to align once just in case;
+            tray.classList.add('scroll-snap');
+            clearInterval(scrollEndWatcher);
+          }
+          lastScrollPos = tray.scrollLeft;
+          states.readyToScroll = true;
+        }, 25);
+      } else if (touchEnd < touchStart) {
+        tray.scrollBy({
+          left: cardScrolledAway.offsetWidth - scrollDistance,
+          behavior: 'smooth',
+        });
+
+        let lastScrollPos = 0;
+        if (states.reordering) {
+          const scrollEndWatcher = setInterval(() => {
+            if (lastScrollPos === tray.scrollLeft) {
+              // offset the shift caused by reordering cards
+              tray.scrollBy({
+                left: -cardScrolledAway.offsetWidth,
+              });
+              tray.append(tray.querySelectorAll('.paginated-carousel-item')[0]);
+              // snap to align once just in case;
+              tray.classList.add('scroll-snap');
+              clearInterval(scrollEndWatcher);
+            }
+            lastScrollPos = tray.scrollLeft;
+            states.readyToScroll = true;
+          }, 25);
+        }
+        if (!states.reordering) states.reordering = true;
+      }
+    });
+  }
 }
 
 function addClickableLayer(element) {
@@ -125,10 +150,10 @@ function addClickableLayer(element) {
   }
 }
 
-function resetPagination(wrapper, payload) {
+function resetPagination(wrapper, states) {
   const paginationDots = wrapper.querySelectorAll('.pagination-dot');
   if (paginationDots.length > 0) {
-    payload.currentIndex = '0';
+    states.currentIndex = '0';
     paginationDots.forEach((dot) => dot.classList.remove('active'));
     paginationDots[0].classList.add('active');
   }
@@ -137,10 +162,9 @@ function resetPagination(wrapper, payload) {
 export default function buildPaginatedCarousel(selector = ':scope > *', container, infinityScrollEnabled = false) {
   loadCSS('/express/blocks/shared/paginated-carousel.css');
 
-  const payload = {
-    cItemsPrev: [],
-    cItemsNext: [],
-    backwardInfinite: false,
+  const states = {
+    readyToScroll: true,
+    reordering: false,
     currentIndex: 0,
     infinite: infinityScrollEnabled,
   };
@@ -149,7 +173,7 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
 
   if (cItems.length > 0) {
     const wrapper = createTag('div', { class: 'paginated-carousel-wrapper' });
-    const tray = createTag('div', { class: 'paginated-carousel-tray' });
+    const tray = createTag('div', { class: 'paginated-carousel-tray scroll-snap' });
 
     container.className = 'paginated-carousel-container';
     container.innerHTML = '';
@@ -167,9 +191,9 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
     });
 
     if (infinityScrollEnabled) {
-      for (const [key] of Object.entries(payload)) {
+      for (const [key] of Object.entries(states)) {
         if (['cItemsPrev', 'cItemsNext'].includes(key)) {
-          payload[key] = Array.from(cItems).map((item, index) => {
+          states[key] = Array.from(cItems).map((item, index) => {
             const carouselItem = createTag('div');
             carouselItem.innerHTML = item.innerHTML;
             carouselItem.className = key === 'cItemsPrev' ? 'paginated-carousel-item prev' : 'paginated-carousel-item next';
@@ -182,9 +206,9 @@ export default function buildPaginatedCarousel(selector = ':scope > *', containe
     }
 
     buildPagination(wrapper);
-    initCarousel(container, payload);
+    initCarousel(container, states);
     setTimeout(() => {
-      if (payload.currentIndex !== 0) resetPagination(wrapper, payload);
+      if (states.currentIndex !== 0) resetPagination(wrapper, states);
     }, 20);
   }
 }
