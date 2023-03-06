@@ -154,6 +154,9 @@ function loadFEDS() {
 
   const breadCrumbList = [];
   async function buildBreadCrumbArray() {
+    if (isHomepage) {
+      return
+    }
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
     const buildBreadCrumb = (path, name, parentPath = '') => (
       { title: capitalize(name), url: `${parentPath}/${path}` }
@@ -170,7 +173,9 @@ function loadFEDS() {
     const pagesShortNameElement = document.querySelector('meta[name="short-title"]');
     const pagesShortName = pagesShortNameElement ? pagesShortNameElement.getAttribute('content') : null;
 
-    if (isHomepage || (!pagesShortName && pathSegments.length > 2)) {
+    if (getMetadata('hide-breadcrumbs') === 'true'
+    || (!pagesShortName && pathSegments.length > 2)
+    || locale !== 'us') { // Remove this line once locale translations are complete
       return;
     }
     if (placeholders[category]) {
@@ -202,9 +207,7 @@ function loadFEDS() {
     },
     locale: (locale === 'us' ? 'en' : locale),
     content: {
-      experience: 'adobe-express/ax-gnav-homepage',
-      // experience: "adobe-express/ax-gnav"
-      // experience: getMetadata('gnav') || fedsExp,
+      experience: getMetadata('gnav') || fedsExp,
     },
     profile: {
       customSignIn: () => {
