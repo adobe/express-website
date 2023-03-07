@@ -93,20 +93,23 @@ function formatSearchQuery(data) {
 }
 
 async function fetchLinkList(data) {
-  if (!(window.linkLists && window.linkLists.data)) {
+  if (!window.linkLists) {
     window.linkLists = {};
-    const response = await fetchLInkListFromCKGApi(data);
-    // catch data from CKG API, if empty, use top priority categories sheet
-    if (response && response.queryResults[0].facets) {
-      window.linkLists.data = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
-        parent: titleCase(data.templateTasks),
-        'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
-        ckgID: ckgItem.canonicalName,
-      }));
-      window.linkLists.source = 'ckg-api';
-    } else {
+    if (!window.linkLists.apiData) {
+      const response = await fetchLInkListFromCKGApi(data);
+      // catch data from CKG API, if empty, use top priority categories sheet
+      if (response && response.queryResults[0].facets) {
+        window.linkLists.apiData = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
+          parent: titleCase(data.templateTasks),
+          'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
+          ckgID: ckgItem.canonicalName,
+        }));
+      }
+    }
+
+    if (!window.linkLists.sheetData) {
       const resp = await fetch('/express/templates/top-priority-categories.json');
-      window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+      window.linkLists.sheetData = resp.ok ? (await resp.json()).data : [];
       window.linkLists.source = 'top-priority-sheet';
     }
   }
@@ -127,24 +130,6 @@ function matchCKGResultOrSheetResult(ckgData, pageData) {
   }
 }
 
-function updateLinkList(container, linkPill, list) {
-  const templatePages = window.templates.data ?? [];
-  container.innerHTML = '';
-
-  if (list && templatePages) {
-    list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResultOrSheetResult(d, p));
-
-      const clone = linkPill.cloneNode(true);
-      if (templatePageData) {
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-        container.append(clone);
-      }
-    });
-  }
-}
-
 function updateSEOLinkList(container, linkPill, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
@@ -161,6 +146,49 @@ function updateSEOLinkList(container, linkPill, list) {
         container.append(clone);
       }
     });
+  }
+}
+
+function updateLinkList(container, linkPill, list, pageData) {
+  const templatePages = window.templates.data ?? [];
+  container.innerHTML = '';
+
+  if (list && templatePages) {
+    list.forEach((d) => {
+      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResultOrSheetResult(d, p));
+
+      const clone = linkPill.cloneNode(true);
+      if (templatePageData) {
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
+        container.append(clone);
+      }
+    });
+
+    if (container.children.length === 0) {
+      const linkListData = [];
+
+      window.linkLists.sheetData.forEach((row) => {
+        if (row.parent === pageData.shortTitle) {
+          linkListData.push({
+            childSibling: row['child-siblings'],
+            shortTitle: pageData.shortTitle,
+            tasks: pageData.templateTasks,
+          });
+        }
+      });
+
+      linkListData.forEach((d) => {
+        const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
+
+        const clone = linkPill.cloneNode(true);
+        if (templatePageData) {
+          clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
+          clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
+          container.append(clone);
+        }
+      });
+    }
   }
 }
 
@@ -231,21 +259,18 @@ async function updateBlocks(data) {
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
 
-    if (window.linkLists && window.linkLists.data && data.shortTitle) {
-      window.linkLists.data.forEach((row) => {
-        if (window.linkLists.source === 'ckg-api'
-          || (window.linkLists.source === 'top-priority-sheet' && row.parent === data.shortTitle)) {
-          linkListData.push({
-            childSibling: row['child-siblings'],
-            ckgID: row.ckgID,
-            shortTitle: data.shortTitle,
-            tasks: data.templateTasks,
-          });
-        }
+    if (window.linkLists && window.linkLists.apiData && data.shortTitle) {
+      window.linkLists.apiData.forEach((row) => {
+        linkListData.push({
+          childSibling: row['child-siblings'],
+          ckgID: row.ckgID,
+          shortTitle: data.shortTitle,
+          tasks: data.templateTasks,
+        });
       });
     }
 
-    updateLinkList(linkListContainer, linkListTemplate, linkListData);
+    await updateLinkList(linkListContainer, linkListTemplate, linkListData, data);
   } else {
     linkListContainer.remove();
   }
