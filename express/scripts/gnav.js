@@ -154,7 +154,7 @@ function loadFEDS() {
 
   const breadCrumbList = [];
   async function buildBreadCrumbArray() {
-    if (isHomepage) {
+    if (isHomepage || getMetadata('hide-breadcrumbs') === 'true') {
       return;
     }
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
@@ -173,8 +173,7 @@ function loadFEDS() {
     const pagesShortNameElement = document.querySelector('meta[name="short-title"]');
     const pagesShortName = pagesShortNameElement ? pagesShortNameElement.getAttribute('content') : null;
 
-    if (getMetadata('hide-breadcrumbs') === 'true'
-    || (!pagesShortName && pathSegments.length > 2)
+    if ((!pagesShortName && pathSegments.length > 2)
     || !placeholders[`breadcrumbs-${category}`]
     || locale !== 'us') { // Remove this line once locale translations are complete
       return;
