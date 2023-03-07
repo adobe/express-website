@@ -335,7 +335,7 @@ async function decorateScrollOverlay(block) {
     const scrollToCard = (e) => {
       if (e.target.tagName === 'A') return;
       window.scrollTo({
-        top: document.querySelector(`.pricing-hub-cards > :nth-child(${index + 1})`).getBoundingClientRect().top + window.scrollY - 30,
+        top: document.querySelector(`.pricing-hub-cards > :nth-child(${index + 1})`).getBoundingClientRect().top + window.scrollY - 85,
         behavior: 'smooth',
       });
     };
