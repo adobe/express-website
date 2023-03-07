@@ -249,13 +249,13 @@ ccl-quick-action .more-quick-actions-container p {
     position: absolute;
     top: 37px;
     bottom: 0;
-    left: -159px;
+    left: -160px;
     right: 0;
     height: 400px;
     width: 600px;
     margin: 0 auto;
     transition: .5s ease;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.90));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.70));
 }
 
 .quick-action-complete-overlay-container .quick-action-complete-overlay {
