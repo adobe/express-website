@@ -11,24 +11,6 @@
  */
 import { createTag } from '../../scripts/scripts.js';
 
-function decorateButton($block, $toggle) {
-  const $button = createTag('button', { class: 'intent-toggle-button' });
-  const tagText = $toggle.textContent.trim().match(/\[(.*?)\]/);
-
-  if (tagText) {
-    const [fullText, tagTextContent] = tagText;
-    const $tag = createTag('span', { class: 'tag' });
-    $button.textContent = $toggle.textContent.trim().replace(fullText, '').trim();
-    $button.dataset.text = $button.textContent.toLowerCase();
-    $tag.textContent = tagTextContent;
-    $button.append($tag);
-  } else {
-    $button.textContent = $toggle.textContent.trim();
-    $button.dataset.text = $button.textContent.toLowerCase();
-  }
-  $block.append($button);
-}
-
 function initButton($block, $sections, index) {
   const $enclosingMain = $block.closest('main');
 
@@ -81,10 +63,68 @@ function initButton($block, $sections, index) {
   }
 }
 
+function decorateButtons($block, container) {
+  const $enclosingMain = $block.closest('main');
+  if ($enclosingMain) {
+    const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
+    const $toggleBackground = createTag('div', { class: 'toggle-background' });
+
+    if (container && container.children.length > 0) {
+      container.classList.add('intent-toggle-buttons-container');
+      const content = Array.from(container.children);
+      container.innerHTML = '';
+      container.prepend($toggleBackground);
+      $block.append(container);
+
+      content.forEach(($toggle, index) => {
+        const $button = createTag('button', { class: 'intent-toggle-button' });
+        const tagText = $toggle.textContent.trim().match(/\[(.*?)\]/);
+
+        if (tagText) {
+          const [fullText, tagTextContent] = tagText;
+          const $tag = createTag('span', { class: 'tag' });
+          $button.textContent = $toggle.textContent.trim().replace(fullText, '').trim();
+          $button.dataset.text = $button.textContent.toLowerCase();
+          $tag.textContent = tagTextContent;
+          $button.append($tag);
+        } else {
+          $button.textContent = $toggle.textContent.trim();
+          $button.dataset.text = $button.textContent.toLowerCase();
+        }
+
+        container.append($button);
+        initButton(container, $sections, index);
+      });
+    }
+  }
+}
+
 export default function decorate($block) {
   const $enclosingMain = $block.closest('main');
   if ($enclosingMain) {
     const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
+    const blockRows = Array.from($block.children);
+    $block.innerHTML = '';
+
+    blockRows.forEach((row) => {
+      const columns = Array.from(row.children);
+      if (columns.length > 1) {
+        const parameter = columns[0].textContent.trim().toLowerCase();
+        const contentContainer = columns[1];
+
+        if (parameter === 'accessibility') {
+          // todo: build reduce motion toggle button
+        }
+
+        if (parameter === 'toggle') {
+          decorateButtons($block, contentContainer);
+        }
+
+        if (parameter === 'quick actions') {
+          // todo: build two quick action buttons
+        }
+      }
+    });
 
     if ($sections) {
       $sections.forEach(($section, index) => {
@@ -93,19 +133,5 @@ export default function decorate($block) {
         }
       });
     }
-
-    const $toggleContainer = $block.querySelector('ul');
-    const $toggleBackground = createTag('div', { class: 'toggle-background' });
-
-    $block.innerHTML = '';
-
-    $block.prepend($toggleBackground);
-
-    Array.from($toggleContainer.children).forEach(($toggle, index) => {
-      decorateButton($block, $toggle);
-      initButton($block, $sections, index);
-    });
-
-
   }
 }
