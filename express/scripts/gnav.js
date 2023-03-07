@@ -155,7 +155,7 @@ function loadFEDS() {
   const breadCrumbList = [];
   async function buildBreadCrumbArray() {
     if (isHomepage) {
-      return
+      return;
     }
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
     const buildBreadCrumb = (path, name, parentPath = '') => (
@@ -168,20 +168,19 @@ function loadFEDS() {
       .filter((element) => element !== '')
       .filter((element) => element !== locale);
     const localePath = locale === 'us' ? '' : `${locale}/`;
-    let category = pathSegments[1].toLowerCase();
-    const secondPathSegment = category;
+    let category = pathSegments[1];
+    const secondPathSegment = category.toLowerCase();
     const pagesShortNameElement = document.querySelector('meta[name="short-title"]');
     const pagesShortName = pagesShortNameElement ? pagesShortNameElement.getAttribute('content') : null;
 
     if (getMetadata('hide-breadcrumbs') === 'true'
     || (!pagesShortName && pathSegments.length > 2)
+    || !placeholders[`breadcrumbs-${category}`]
     || locale !== 'us') { // Remove this line once locale translations are complete
       return;
     }
-    if (placeholders[category]) {
-      category = capitalize(placeholders[category]);
-      validCategories.push(category);
-    }
+    category = capitalize(placeholders[`breadcrumbs-${category}`]);
+    validCategories.push(category);
 
     const secondBreadCrumb = buildBreadCrumb(secondPathSegment, category, `${localePath}/express`);
     breadCrumbList.push(secondBreadCrumb);
