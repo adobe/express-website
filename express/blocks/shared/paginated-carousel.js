@@ -65,12 +65,15 @@ function initCarousel(container, states) {
     tray.classList.remove('scroll-snap');
 
     tray.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
       if (e.cancelable) {
         e.preventDefault();
       }
-      tray.classList.remove('scroll-snap');
-      oldTouchPos = Math.round(e.touches[0].clientX);
-      touchStart = Math.round(e.touches[0].clientX);
+      if (states.readyToScroll) {
+        tray.classList.remove('scroll-snap');
+        oldTouchPos = Math.round(e.touches[0].clientX);
+        touchStart = Math.round(e.touches[0].clientX);
+      }
     });
 
     tray.addEventListener('touchmove', (e) => {
@@ -135,10 +138,8 @@ function initCarousel(container, states) {
           }, 25);
         }
         if (!states.reordering) states.reordering = true;
-      }
-
-      // click when it's a click instead of scroll
-      if (touchEnd === touchStart) {
+      } else {
+        // click when it's a click instead of scroll
         let clickedCard;
         const index = states.currentIndex;
         if (e.changedTouches[0].clientX > allCards[states.currentIndex].offsetWidth) {
