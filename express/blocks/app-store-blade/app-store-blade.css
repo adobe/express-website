@@ -91,7 +91,7 @@ main .app-store-blade-container .main-container .copy-wrapper .or-to-link.copied
     font-size: 18px;
 }
 
-main .app-store-blade-container .main-container .copy-wrapper .or-to-link a {
+main .app-store-blade-container .main-container .copy-wrapper .or-to-link .bitly-span {
     margin-left: 4px;
     font-weight: 700;
     color: var(--color-white);

@@ -113,7 +113,7 @@ function buildTamplateTitle($block) {
 
 function handleClipboard($block) {
   const $orToLink = $block.querySelector('.or-to-link');
-  const $innerAnchor = $orToLink.querySelector('a');
+  const $innerAnchor = $orToLink.querySelector('.bitly-span');
   if (!$orToLink.classList.contains('copied')) {
     navigator.clipboard.writeText($innerAnchor.textContent.trim());
   }
@@ -164,6 +164,10 @@ function decorateBlade($block, payload) {
     }
 
     if (paragraph.querySelector('a')) {
+      const bitlyLink = paragraph.querySelector('a');
+      const bitlySpan = createTag('span', { class: 'bitly-span' });
+      bitlySpan.innerHTML = bitlyLink.innerHTML;
+      paragraph.replaceChild(bitlySpan, bitlyLink);
       paragraph.classList.add('or-to-link');
       paragraph.append(getIconElement('copy'));
       const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
