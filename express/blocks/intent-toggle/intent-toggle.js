@@ -85,6 +85,15 @@ export default function decorate($block) {
   const $enclosingMain = $block.closest('main');
   if ($enclosingMain) {
     const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
+
+    if ($sections) {
+      $sections.forEach(($section, index) => {
+        if (index > 0) {
+          $section.style.display = 'none';
+        }
+      });
+    }
+
     const $toggleContainer = $block.querySelector('ul');
     const $toggleBackground = createTag('div', { class: 'toggle-background' });
 
@@ -97,12 +106,6 @@ export default function decorate($block) {
       initButton($block, $sections, index);
     });
 
-    if ($sections) {
-      $sections.forEach(($section, index) => {
-        if (index > 0) {
-          $section.style.display = 'none';
-        }
-      });
-    }
+
   }
 }
