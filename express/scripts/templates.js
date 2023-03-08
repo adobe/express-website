@@ -141,7 +141,7 @@ function updateSEOLinkList(container, linkPill, list) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y'
         && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
-      replaceLinkPill(linkPill, templatePageData, container)
+      replaceLinkPill(linkPill, templatePageData, container);
     });
   }
 }
@@ -153,7 +153,7 @@ function updateLinkList(container, linkPill, list, pageData) {
   if (list && templatePages) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
-      replaceLinkPill(linkPill, templatePageData, container)
+      replaceLinkPill(linkPill, templatePageData, container);
     });
 
     if (container.children.length === 0) {
@@ -171,7 +171,7 @@ function updateLinkList(container, linkPill, list, pageData) {
 
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
-        replaceLinkPill(linkPill, templatePageData, container)
+        replaceLinkPill(linkPill, templatePageData, container);
       });
     }
   }
