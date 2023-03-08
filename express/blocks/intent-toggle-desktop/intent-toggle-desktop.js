@@ -11,6 +11,16 @@
  */
 import { createTag } from '../../scripts/scripts.js';
 
+function toggleSections($sections, buttons, index) {
+  $sections.forEach(($section) => {
+    if (buttons[index].dataset.text === $section.dataset.toggle.toLowerCase()) {
+      $section.style.display = 'block';
+    } else {
+      $section.style.display = 'none';
+    }
+  });
+}
+
 function initButton($block, $sections, index) {
   const $enclosingMain = $block.closest('main');
 
@@ -32,14 +42,7 @@ function initButton($block, $sections, index) {
       if ($activeButton !== $buttons[index]) {
         $activeButton.classList.remove('active');
         $buttons[index].classList.add('active');
-
-        $sections.forEach(($section) => {
-          if ($buttons[index].dataset.text === $section.dataset.toggle.toLowerCase()) {
-            $section.style.display = 'block';
-          } else {
-            $section.style.display = 'none';
-          }
-        });
+        toggleSections($sections, $buttons, index);
       }
     });
 
@@ -56,13 +59,7 @@ function initButton($block, $sections, index) {
       }, 200);
 
       // initializing the page with first tab sections
-      $sections.forEach(($section) => {
-        if ($buttons[index].dataset.text === $section.dataset.toggle.toLowerCase()) {
-          $section.style.display = 'block';
-        } else {
-          $section.style.display = 'none';
-        }
-      });
+      toggleSections($sections, $buttons, index);
     }
   }
 }
