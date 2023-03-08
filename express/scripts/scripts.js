@@ -2594,3 +2594,15 @@ export function arrayToObject(arr) {
     {},
   );
 }
+
+export function gradateColorfulText(textElement) {
+  const $textToColor = textElement.querySelectorAll('em');
+
+  if ($textToColor.length > 0) {
+    $textToColor.forEach((span) => {
+      const $coloredText = createTag('span', { class: 'gradient-text' });
+      $coloredText.textContent = span.textContent;
+      textElement.replaceChild($coloredText, span);
+    });
+  }
+}

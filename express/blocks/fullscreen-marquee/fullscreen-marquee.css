@@ -52,17 +52,6 @@ main .fullscreen-marquee-container .fullscreen-marquee .button-container > a.but
   border-radius: 120px;
 }
 
-main .fullscreen-marquee-container .fullscreen-marquee h1 > span.colorful {
-  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
-  background-size: 400% 400%;
-  -webkit-animation: buttonGradient 45s ease infinite;
-  -moz-animation: buttonGradient 45s ease infinite;
-  animation: buttonGradient 45s ease infinite;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 main .section.fullscreen-marquee-container div.fullscreen-marquee > div > div.picture-frame {
   position: relative;
   box-sizing: border-box;
