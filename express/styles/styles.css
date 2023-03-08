@@ -1241,6 +1241,18 @@ main .section[data-section-status='initialized'] {
   display: none;
 }
 
+/* gradient text made by gradateColorfulText() function */
+main .section span.gradient-text {
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+  background-size: 400% 400%;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Japanese font sizing styles */
 :lang(ja) main h1.heading-long {
   font-size: var(--heading-font-size-xl);

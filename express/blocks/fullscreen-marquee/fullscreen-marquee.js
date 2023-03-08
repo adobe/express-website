@@ -15,6 +15,7 @@ import {
   transformLinkToAnimation,
   createOptimizedPicture,
   addFreePlanWidget,
+  gradateColorfulText,
 } from '../../scripts/scripts.js';
 
 import {
@@ -162,15 +163,7 @@ export default function decorate($block) {
         const $section = $block.closest('.fullscreen-marquee-container');
 
         if ($h1) {
-          const $textToColor = $h1.querySelectorAll('em');
-
-          if ($textToColor.length > 0) {
-            $textToColor.forEach((span) => {
-              const $coloredText = createTag('span', { class: 'colorful' });
-              $coloredText.textContent = span.textContent;
-              $h1.replaceChild($coloredText, span);
-            });
-          }
+          gradateColorfulText($h1);
         }
 
         $a.classList.add('primaryCTA');
