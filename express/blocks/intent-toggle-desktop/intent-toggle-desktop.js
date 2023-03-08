@@ -54,6 +54,15 @@ function initButton($block, $sections, index) {
         $buttons[index].classList.add('active');
         $toggleBackground.classList.remove('loading');
       }, 200);
+
+      // initializing the page with first tab sections
+      $sections.forEach(($section) => {
+        if ($buttons[index].dataset.text === $section.dataset.toggle.toLowerCase()) {
+          $section.style.display = 'block';
+        } else {
+          $section.style.display = 'none';
+        }
+      });
     }
   }
 }
@@ -159,7 +168,6 @@ function decorateQuickActions($block, container) {
 export default function decorate($block) {
   const $enclosingMain = $block.closest('main');
   if ($enclosingMain) {
-    const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
     const blockRows = Array.from($block.children);
     $block.innerHTML = '';
 
@@ -182,13 +190,5 @@ export default function decorate($block) {
         }
       }
     });
-
-    if ($sections) {
-      $sections.forEach(($section, index) => {
-        if (index > 0) {
-          $section.style.display = 'none';
-        }
-      });
-    }
   }
 }
