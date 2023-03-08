@@ -75,6 +75,14 @@ function buildReduceMotionSwitch($block, container) {
   const reduceMotionKnob = createTag('div', { class: 'reduce-motion-knob' });
   const reduceMotionText = createTag('span', { class: 'reduce-motion-text' });
 
+  const dispatchMotionToggleEvent = () => {
+    const reduceMotionToggled = new CustomEvent('reducemotiontoggled', {
+      detail: { state: sessionStorage.getItem('reduceMotion') },
+    });
+
+    document.dispatchEvent(reduceMotionToggled);
+  };
+
   reduceMotionText.textContent = container.textContent.trim();
   container.innerHTML = '';
 
@@ -100,11 +108,20 @@ function buildReduceMotionSwitch($block, container) {
       sessionStorage.setItem('reduceMotion', 'on');
     }
 
-    const reduceMotionToggled = new CustomEvent('reducemotiontoggled', {
-      detail: { state: sessionStorage.getItem('reduceMotion') },
-    });
+    dispatchMotionToggleEvent();
+  });
 
-    document.dispatchEvent(reduceMotionToggled);
+  const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  mediaQuery.addEventListener('change', () => {
+    if (mediaQuery.matches) {
+      sessionStorage.setItem('reduceMotion', 'on');
+      reduceMotionSlider.classList.add('on');
+    } else {
+      sessionStorage.setItem('reduceMotion', 'off');
+      reduceMotionSlider.classList.remove('on');
+    }
+
+    dispatchMotionToggleEvent();
   });
 
   container.classList.add('reduce-motion-switch-container');
