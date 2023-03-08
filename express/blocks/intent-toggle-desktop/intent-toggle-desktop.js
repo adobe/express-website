@@ -15,13 +15,11 @@ function initButton($block, $sections, index) {
   const $enclosingMain = $block.closest('main');
 
   if ($enclosingMain) {
-    const $buttons = $block.querySelectorAll('.intent-toggle-button');
-    const $toggleBackground = $block.querySelector('.toggle-background');
+    const $buttons = $block.querySelectorAll('.intent-toggle-desktop-button');
+    const $toggleBackground = $block.querySelector('.intent-toggle-background');
 
     $buttons[index].addEventListener('click', () => {
       const $activeButton = $block.querySelector('button.active');
-      const blockPosition = $block.getBoundingClientRect().top;
-      const offsetPosition = blockPosition + window.scrollY - 80;
       const activeButtonWidth = $buttons[index].offsetWidth + 5;
       let leftOffset = index * 10;
 
@@ -41,23 +39,20 @@ function initButton($block, $sections, index) {
           } else {
             $section.style.display = 'none';
           }
-          if (!document.querySelector('.pricing-hub')) {
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth',
-            });
-          }
         });
       }
     });
+
     if (index === 0) {
-      $buttons[index].classList.add('active');
+      $toggleBackground.classList.add('loading');
       const firstButtonWidthGrabbed = setInterval(() => {
         if ($buttons[index].offsetWidth > 0) {
           $toggleBackground.style.width = `${$buttons[index].offsetWidth + 5}px`;
           $toggleBackground.style.left = 0;
           clearInterval(firstButtonWidthGrabbed);
         }
+        $buttons[index].classList.add('active');
+        $toggleBackground.classList.remove('loading');
       }, 200);
     }
   }
@@ -113,17 +108,17 @@ function decorateToggleButtons($block, container) {
   const $enclosingMain = $block.closest('main');
   if ($enclosingMain) {
     const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
-    const $toggleBackground = createTag('div', { class: 'toggle-background' });
+    const $toggleBackground = createTag('div', { class: 'intent-toggle-background' });
 
     if (container && container.children.length > 0) {
-      container.classList.add('intent-toggle-buttons-container');
+      container.classList.add('intent-toggle-desktop-buttons-container');
       const content = Array.from(container.children);
       container.innerHTML = '';
       container.prepend($toggleBackground);
       $block.append(container);
 
       content.forEach(($toggle, index) => {
-        const $button = createTag('button', { class: 'intent-toggle-button' });
+        const $button = createTag('button', { class: 'intent-toggle-desktop-button' });
         const tagText = $toggle.textContent.trim().match(/\[(.*?)]/);
 
         if (tagText) {
@@ -145,7 +140,7 @@ function decorateToggleButtons($block, container) {
   }
 }
 
-function buildQuickActions($block, container) {
+function decorateQuickActions($block, container) {
   const paragraphs = container.querySelectorAll('p');
   paragraphs.forEach((p) => {
     const img = p.querySelector('img');
@@ -183,7 +178,7 @@ export default function decorate($block) {
         }
 
         if (parameter === 'quick actions') {
-          buildQuickActions($block, contentContainer);
+          decorateQuickActions($block, contentContainer);
         }
       }
     });
