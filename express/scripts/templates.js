@@ -110,7 +110,6 @@ async function fetchLinkList(data) {
     if (!window.linkLists.sheetData) {
       const resp = await fetch('/express/templates/top-priority-categories.json');
       window.linkLists.sheetData = resp.ok ? (await resp.json()).data : [];
-      window.linkLists.source = 'top-priority-sheet';
     }
   }
 }
