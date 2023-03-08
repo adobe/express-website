@@ -125,6 +125,15 @@ function matchCKGResult(ckgData, pageData) {
   return sameLocale && ckgMatch && taskMatch;
 }
 
+function replaceLinkPill(linkPill, data, container) {
+  const clone = linkPill.cloneNode(true);
+  if (data) {
+    clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.path);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.shortTitle);
+    container.append(clone);
+  }
+}
+
 function updateSEOLinkList(container, linkPill, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
@@ -133,13 +142,7 @@ function updateSEOLinkList(container, linkPill, list) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y'
         && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
-
-      const clone = linkPill.cloneNode(true);
-      if (templatePageData) {
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-        container.append(clone);
-      }
+      replaceLinkPill(linkPill, templatePageData, container)
     });
   }
 }
@@ -151,13 +154,7 @@ function updateLinkList(container, linkPill, list, pageData) {
   if (list && templatePages) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
-
-      const clone = linkPill.cloneNode(true);
-      if (templatePageData) {
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-        container.append(clone);
-      }
+      replaceLinkPill(linkPill, templatePageData, container)
     });
 
     if (container.children.length === 0) {
@@ -175,13 +172,7 @@ function updateLinkList(container, linkPill, list, pageData) {
 
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
-
-        const clone = linkPill.cloneNode(true);
-        if (templatePageData) {
-          clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-          clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-          container.append(clone);
-        }
+        replaceLinkPill(linkPill, templatePageData, container)
       });
     }
   }
