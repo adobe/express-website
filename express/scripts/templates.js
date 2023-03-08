@@ -95,11 +95,11 @@ function formatSearchQuery(data) {
 async function fetchLinkList(data) {
   if (!window.linkLists) {
     window.linkLists = {};
-    if (!window.linkLists.apiData) {
+    if (!window.linkLists.ckgData) {
       const response = await fetchLInkListFromCKGApi(data);
       // catch data from CKG API, if empty, use top priority categories sheet
       if (response && response.queryResults[0].facets) {
-        window.linkLists.apiData = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
+        window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
           parent: titleCase(data.templateTasks),
           'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
           ckgID: ckgItem.canonicalName,
@@ -115,19 +115,14 @@ async function fetchLinkList(data) {
   }
 }
 
-function matchCKGResultOrSheetResult(ckgData, pageData) {
+function matchCKGResult(ckgData, pageData) {
   const ckgMatch = pageData.ckgID === ckgData.ckgID;
-  const shortTitleMatch = pageData.shortTitle.toLowerCase() === ckgData.childSibling.toLowerCase();
   const taskMatch = ckgData.tasks === pageData.templateTasks;
   const currentLocale = getLocale(window.location);
   const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
   const sameLocale = currentLocale === pageLocale;
 
-  if (window.linkLists.source === 'ckg-api') {
-    return sameLocale && ckgMatch && taskMatch;
-  } else {
-    return sameLocale && shortTitleMatch;
-  }
+  return sameLocale && ckgMatch && taskMatch;
 }
 
 function updateSEOLinkList(container, linkPill, list) {
@@ -155,7 +150,7 @@ function updateLinkList(container, linkPill, list, pageData) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResultOrSheetResult(d, p));
+      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
 
       const clone = linkPill.cloneNode(true);
       if (templatePageData) {
@@ -259,8 +254,8 @@ async function updateBlocks(data) {
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
 
-    if (window.linkLists && window.linkLists.apiData && data.shortTitle) {
-      window.linkLists.apiData.forEach((row) => {
+    if (window.linkLists && window.linkLists.ckgData && data.shortTitle) {
+      window.linkLists.ckgData.forEach((row) => {
         linkListData.push({
           childSibling: row['child-siblings'],
           ckgID: row.ckgID,
