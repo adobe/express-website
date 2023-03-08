@@ -321,8 +321,10 @@ export default async function decorate($block) {
     let payload;
     const $linkList = enclosingMain.querySelector('.link-list-container');
     const $section = await fetchPlainBlockFromFragment($block, '/express/fragments/plans-comparison', 'plans-comparison');
-    $section.style.display = 'none';
+
     if ($section) {
+      // hide section to avoid showing broken block
+      $section.style.display = 'none';
       if ($linkList) {
         $linkList.before($section);
       }
