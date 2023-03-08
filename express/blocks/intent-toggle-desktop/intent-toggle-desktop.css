@@ -1,9 +1,9 @@
-main .section.intent-toggle-dark-container {
+main .section.intent-toggle-desktop-dark-container {
     overflow: visible;
     position: relative;
 }
 
-main .section.intent-toggle-dark-container::before {
+main .section.intent-toggle-desktop-dark-container::before {
     content: '';
     position: absolute;
     height: 711px;
@@ -14,18 +14,18 @@ main .section.intent-toggle-dark-container::before {
     background: transparent linear-gradient(180deg, #F9F9F9 0%, #FFFFFF00 100%) 0% 0% no-repeat padding-box;
 }
 
-main .section.intent-toggle-dark-container > .intent-toggle-wrapper {
+main .section.intent-toggle-desktop-dark-container > .intent-toggle-desktop-wrapper {
     margin: 0 auto;
     padding: 0 16px;
     max-width: 1306px;
 }
 
-main .intent-toggle-wrapper {
+main .intent-toggle-desktop-wrapper {
     position: relative;
     overflow: visible;
 }
 
-main .block.intent-toggle {
+main .block.intent-toggle-desktop {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -34,21 +34,21 @@ main .block.intent-toggle {
     background: var(--color-white);
 }
 
-main .block.intent-toggle .reduce-motion-switch-container {
+main .block.intent-toggle-desktop .reduce-motion-switch-container {
     display: flex;
     align-items: center;
     gap: 10px;
     flex-basis: 30%;
 }
 
-main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-switch {
+main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-switch {
     position: relative;
     display: inline-block;
     width: 28px;
     height: 16px;
 }
 
-main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-slider {
+main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-slider {
     position: absolute;
     cursor: pointer;
     border-radius: 34px;
@@ -61,11 +61,11 @@ main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-slider 
     transition: .2s;
 }
 
-main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-slider.on {
+main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-slider.on {
     background-color: var(--color-info-accent);
 }
 
-main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-knob {
+main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-knob {
     position: absolute;
     border-radius: 50%;
     content: "";
@@ -78,15 +78,15 @@ main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-knob {
     transition: .2s;
 }
 
-main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-slider.on .reduce-motion-knob {
+main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-slider.on .reduce-motion-knob {
     left: calc(100% - 14px);
 }
 
-main .block.intent-toggle .reduce-motion-switch-container .reduce-motion-text {
+main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-text {
     font-size: var(--body-font-size-s);
 }
 
-main .block.intent-toggle .intent-toggle-buttons-container {
+main .block.intent-toggle-desktop .intent-toggle-desktop-buttons-container {
     position: relative;
     display: flex;
     justify-content: center;
@@ -96,7 +96,7 @@ main .block.intent-toggle .intent-toggle-buttons-container {
     height: 28px;
 }
 
-main .intent-toggle .intent-toggle-buttons-container .intent-toggle-button {
+main .intent-toggle-desktop .intent-toggle-desktop-buttons-container .intent-toggle-desktop-button {
     position: relative;
     display: block;
     list-style-type: none;
@@ -113,12 +113,12 @@ main .intent-toggle .intent-toggle-buttons-container .intent-toggle-button {
     color: black;
 }
 
-main .intent-toggle.dark .intent-toggle-button.active {
+main .intent-toggle-desktop.dark .intent-toggle-desktop-button.active {
     color: white;
     transition: 0.5s;
 }
 
-main .intent-toggle .intent-toggle-buttons-container .toggle-background  {
+main .intent-toggle-desktop .intent-toggle-desktop-buttons-container .intent-toggle-background  {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -130,19 +130,23 @@ main .intent-toggle .intent-toggle-buttons-container .toggle-background  {
     transition: 0.5s;
 }
 
-main .intent-toggle.dark .intent-toggle-buttons-container .toggle-background {
-    background-color: #242424;
-    color: #FFFFFF;
+main .intent-toggle-desktop.dark .intent-toggle-desktop-buttons-container .intent-toggle-background {
+    background-color: var(--color-gray-800);
+    color: var(--color-white);
     transition: 0.5s;
 }
 
-main .intent-toggle .quick-action-buttons {
+main .intent-toggle-desktop .intent-toggle-desktop-buttons-container .intent-toggle-background.loading {
+    display: none;
+}
+
+main .intent-toggle-desktop .quick-action-buttons {
     display: flex;
     justify-content: flex-end;
     flex-basis: 30%;
 }
 
-main .intent-toggle .quick-action-buttons > a {
+main .intent-toggle-desktop .quick-action-buttons > a {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -156,11 +160,11 @@ main .intent-toggle .quick-action-buttons > a {
     margin-left: 10px;
 }
 
-main .intent-toggle .quick-action-buttons > a > img {
+main .intent-toggle-desktop .quick-action-buttons > a > img {
     display: block;
 }
 
-main .intent-toggle .intent-toggle-buttons-container .tag {
+main .intent-toggle-desktop .intent-toggle-desktop-buttons-container .tag {
     position: absolute;
     display: flex;
     align-items: center;
