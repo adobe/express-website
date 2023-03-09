@@ -71,8 +71,7 @@ main .floating-button a.button:any-link {
     display: block;
     margin: 0;
     z-index: 2;
-    min-width: 200px;
-    margin-right: 50px;
+    min-width: 250px;
     pointer-events: auto;
 }
 
@@ -80,7 +79,7 @@ main .floating-button a.button:any-link,
 main .floating-button a.button:any-link:hover,
 main .floating-button a.button:any-link:active,
 main .floating-button a.button:any-link:focus {
-    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
+    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding .3s;
 }
 
 main .floating-button .floating-button-lottie {
@@ -97,6 +96,9 @@ main .floating-button .floating-button-lottie {
     border-radius: 60px;
     cursor: pointer;
     pointer-events: auto;
+    transition: opacity 0.2s;
+    opacity: 1;
+    z-index: 2;
 }
 
 main .floating-button .floating-button-lottie .lottie-purple-arrows {
@@ -117,6 +119,8 @@ main .floating-button--scrolled .floating-button a.button:any-link {
 main .floating-button--scrolled .floating-button-lottie {
     pointer-events: none;
     user-select: none;
+    opacity: 0;
+    z-index: 0;
 }
 
 main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
@@ -222,6 +226,7 @@ main .floating-button-wrapper.multifunction .floating-button .toggle-button .lot
 
 main .floating-button-wrapper.multifunction.floating-button--above-the-fold:not(.floating-button--scrolled) .button {
     padding-left: 48px;
+    padding-right: 48px;
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
