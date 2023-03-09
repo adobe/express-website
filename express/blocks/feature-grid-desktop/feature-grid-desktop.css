@@ -20,7 +20,7 @@
   }
 }
 
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1440px) {
   .feature-grid-desktop.block {
     --block-height: 1107px;
     --grid-container-template-columns: repeat(5, 240px);
@@ -49,8 +49,6 @@ main .feature-grid-desktop {
   grid-template-columns: var(--grid-container-template-columns);
   grid-template-rows: var(--grid-container-template-rows);
   grid-gap: var(--grid-item-gap);
-  /* FIXME: how much width */
-  /* width: 1260px; */
   height: var(--grid-container-height);
 }
 @media (prefers-reduced-motion: no-preference) {
