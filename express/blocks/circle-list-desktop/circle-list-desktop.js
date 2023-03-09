@@ -50,6 +50,7 @@ const extractContent = async (block) => {
     const dropDownOptions = [];
     let imageLinks;
     const defaultLink = row.firstElementChild.querySelector('a')?.getAttribute('href') ?? '';
+    let imageLinks;
     const label = row.firstElementChild.textContent.trim();
     const colArray = Array.from(row.children);
 
