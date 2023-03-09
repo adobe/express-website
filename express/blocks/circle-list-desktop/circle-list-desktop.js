@@ -12,38 +12,33 @@
 
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 
-// async function fetchCircleImages(link) {
-//   fetch(`${link}`)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       return data
-//     });
-// }
-
 async function fetchCircleImages(link) {
   const resp = await fetch(`${link}`);
   const json = await resp.json();
   return json.data;
 }
 
-const grabImageSet = () => {
+const grabImageSet = (category, imageData) => {
+  const targetRow = imageData.filter((row) => category === row.Category);
+  return Object.values(targetRow[0]).slice(1);
+};
 
-}
-
-const decorateCircle = async (block) => {
+const extractContent = async (block) => {
   const circleList = [];
   const imagesLink = block.firstElementChild.textContent.trim();
-  const images = await fetchCircleImages(imagesLink);
-  console.log(images);
-  Array.from(block.children).forEach((row) => {
+  const imageData = await fetchCircleImages(imagesLink);
+
+  const circleRows = Array.from(block.children).slice(1);
+  circleRows.forEach((row) => {
+    const circleObject = {};
     const defaultLink = row.firstElementChild.querySelector('a')?.getAttribute('href') ?? '';
+    let imageLinks;
     const label = row.firstElementChild.textContent.trim();
     const dropDownOptions = [];
     const colArray = Array.from(row.children);
-    if (colArray.length > 3) {
-      images.forEach((row) => {})
-      const imageLinks = [];
 
+    if (colArray.length > 2) {
+      imageLinks = grabImageSet(label, imageData);
       for (let i = 1; i < colArray.length; i += 1) {
         dropDownOptions.push({
           icon: colArray[i].querySelector('svg'),
@@ -51,18 +46,29 @@ const decorateCircle = async (block) => {
           link: colArray[i].querySelector('a')?.getAttribute('href') ?? '',
         });
       }
+      circleObject.imageLinks = imageLinks;
+      circleObject.dropDownOptions = dropDownOptions;
+    } else if (colArray.length === 2) {
+      const subText = colArray[1].textContent.trim();
+      circleObject.subText = subText;
     }
+
+    circleObject.label = label;
+    circleObject.defaultLink = defaultLink;
+    circleList.push(circleObject);
   });
+  block.innerHTML = '';
+  return circleList;
 };
 
-export default function decorate($block) {
-  const circleList = [];
-  circleList.push({
-    imageLink: '',
-    label: '',
-    defaultLink: '',
-    dropDownOptions: [{icon: '', text: '', link: ''}],
-  });
+const buildCircleList = (circles) => {
+  console.log(circles);
+  circles.forEach((circle) => {
+    console.log(circle);
+  })
+}
 
-  decorateCircle($block);
+export default function decorate($block) {
+  const circleList = extractContent($block);
+  buildCircleList(circleList);
 }
