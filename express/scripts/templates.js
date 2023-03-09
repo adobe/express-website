@@ -99,11 +99,15 @@ async function fetchLinkList(data) {
       const response = await fetchLInkListFromCKGApi(data);
       // catch data from CKG API, if empty, use top priority categories sheet
       if (response && response.queryResults[0].facets) {
-        window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => ({
-          parent: titleCase(data.templateTasks),
-          'child-siblings': `${titleCase(ckgItem.displayValue)} ${titleCase(data.templateTasks)}`,
-          ckgID: ckgItem.canonicalName,
-        }));
+        window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
+          const formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
+          return {
+            parent: formattedTasks,
+            'child-siblings': `${titleCase(ckgItem.displayValue)} ${formattedTasks}`,
+            ckgID: ckgItem.canonicalName,
+            displayValue: ckgItem.displayValue,
+          };
+        });
       }
     }
 
@@ -153,7 +157,30 @@ function updateLinkList(container, linkPill, list, pageData) {
   if (list && templatePages) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
-      replaceLinkPill(linkPill, templatePageData, container);
+
+      if (templatePageData) {
+        replaceLinkPill(linkPill, templatePageData, container);
+      } else if (d.ckgID && getLocale(window.location) === 'us') {
+        const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')} ` : '';
+        const topicsQuery = d.displayValue.indexOf(topics.trim()) >= 0 ? `${d.displayValue}` : `${topics ?? topics}${d.displayValue}`;
+        const currentTasks = pageData.templateTasks.replace(/[$@%"]/g, '');
+        const displayTopics = topics && d.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
+        let displayText;
+
+        const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
+        const clone = linkPill.cloneNode(true);
+
+        if (d.childSibling.indexOf(titleCase(d.displayValue)) >= 0) {
+          displayText = `${displayTopics}${titleCase(d.childSibling)}`;
+        } else {
+          displayText = `${displayTopics}${titleCase(d.displayValue)} ${titleCase(d.childSibling)}`;
+        }
+
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
+
+        container.append(clone);
+      }
     });
 
     if (container.children.length === 0) {
@@ -251,6 +278,7 @@ async function updateBlocks(data) {
           ckgID: row.ckgID,
           shortTitle: data.shortTitle,
           tasks: data.templateTasks,
+          displayValue: row.displayValue,
         });
       });
     }
