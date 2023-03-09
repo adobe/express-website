@@ -1311,7 +1311,6 @@ main .section.long-form .default-content-wrapper h6 {
   }
 }
 
-
 main .block a.app-store-aTag {
   display: flex;
   justify-content: center;
@@ -1319,13 +1318,28 @@ main .block a.app-store-aTag {
   margin: auto;
 }
 
+main .block .app-store-aTag .app-store-badge-wrapper {
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+main .block .app-store-aTag .app-store-badge-wrapper::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  border: 4px solid var(--color-black);
+  border-radius: 4px;
+}
+
 main .block .app-store-aTag .app-store-badge {
   width: 100%;
   height: 100%;
-  outline-offset: -4px;
-  outline: 5px solid black;
-  border-radius: 4px;
-  z-index: 1;
+  display: block;
 }
 
 main .block .app-store-aTag  .app-store-wrapper::before {
@@ -1343,6 +1357,5 @@ main .block .app-store-aTag  .app-store-wrapper::before {
 main .block .app-store-aTag .app-store-wrapper {
   position: relative;
   display: flex;
-  width: 147px;
   height: 43px;
 }
