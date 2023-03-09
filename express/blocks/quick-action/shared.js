@@ -107,13 +107,11 @@ export class CCXQuickActionElement extends HTMLElement {
   // eslint-disable-next-line class-methods-use-this
   async connectedCallback() {
     // FIXME: remove hardcoded fallback once PR is merged to main
-    const sharedScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/host-shared/entry-9007a3ba.js'
-    || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api/host-entries/host-shared', 'host-shared');
+    const sharedScriptUrl = await fetchDependency('https://express-stage.adobe.com/express-apps/quick-actions-api/host-entries/host-shared', 'host-shared');
     loadScript(sharedScriptUrl);
 
     // FIXME: remove hardcoded fallback once PR is merged to main
-    const actionScriptUrl = 'https://custom.adobeprojectm.com/express-apps/ccl-quick-tasks/pr-905/remove-background/entry-7fbe32d1.js'
-    || await fetchDependency('https://express.adobe.com/express-apps/quick-actions-api', this.action);
+    const actionScriptUrl = await fetchDependency('https://express-stage.adobe.com/express-apps/quick-actions-api', this.action);
     loadScript(actionScriptUrl);
   }
 
@@ -148,7 +146,7 @@ export class CCXQuickActionElement extends HTMLElement {
 
   // eslint-disable-next-line class-methods-use-this
   handleNavigateToPostEditor(data, autoDownload = false) {
-    const host = 'https://project-marvel-theo-web-8513.fracture.adobeprojectm.com';
+    const host = ' https://express-stage.adobe.com';
     const action = 'remove-background';
     const { repositoryId, transientToken } = data;
     const path = '/sp/design/post/new';
