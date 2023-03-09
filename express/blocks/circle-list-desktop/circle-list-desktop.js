@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-// 2) Animation for doorhandle transition
-
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 
 async function fetchCircleImages(link) {
@@ -107,20 +105,6 @@ const buildCircleList = (block, circles) => {
       lottie.innerHTML = circle.lottie;
       lottieWrapper.append(lottie);
       circleWrapper.append(lottieWrapper);
-
-      // const player = lottie.querySelector('lottie-player');
-      
-      // player.onload = () => {
-      //   console.log(player);
-      //   console.log(player.animationState);
-      //   const lottiePlaying = setInterval(() => {
-      //     if (player.animationState.playing) {
-      //       console.log('AND SHE PLAYIN');
-      //       player.pause();
-      //       clearInterval(lottiePlaying);
-      //     }
-      //   }, 500);
-      // };
     }
 
     const label = createTag('span', { class: 'circle-label' });
