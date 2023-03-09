@@ -1310,3 +1310,39 @@ main .section.long-form .default-content-wrapper h6 {
     max-width: 1070px;
   }
 }
+
+
+main .block a.app-store-aTag {
+  display: flex;
+  justify-content: center;
+  width: max-content;
+  margin: auto;
+}
+
+main .block .app-store-aTag .app-store-badge {
+  width: 100%;
+  height: 100%;
+  outline-offset: -4px;
+  outline: 5px solid black;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+main .block .app-store-aTag  .app-store-wrapper::before {
+  position: absolute;
+  content: '';
+  top: -3px;
+  left: -3px;
+  border-radius: 4px;
+  background: linear-gradient(to right top, #5F7BF7, #DA6BF5);
+  padding: 3px;
+  width: 100%;
+  height: 100%;
+}
+
+main .block .app-store-aTag .app-store-wrapper {
+  position: relative;
+  display: flex;
+  width: 147px;
+  height: 43px;
+}
