@@ -70,7 +70,9 @@ ccl-quick-action a[data-action='Download'] lottie-player {
     align-items: center;
 }
 
-.mock-ccl-quick-action a.button.upload-your-photo:focus {
+.mock-ccl-quick-action a.button.upload-your-photo:focus,
+.quick-action-complete-overlay-container a.button[data-action="Download"]:focus,
+.quick-action-complete-overlay-container a.button[data-action="Editor"]:focus {
     box-shadow: none;
 }
 

@@ -93,6 +93,7 @@ function addListenersOnMockElements(ele) {
     ev.preventDefault();
     const file = ev.dataTransfer.files[0];
     window.qtHost.task.uploadImageFile(file);
+    document.querySelector(`.${MOCK_ELEMENT_NAME}`).classList.remove('dragged');
   });
   document.querySelector('.before-action video').addEventListener('ended', (event) => {
     const video = event.target;

@@ -74,9 +74,9 @@ ccl-quick-action a[data-action='Download'] lottie-player {
     align-items: center;
 }
 
-.mock-ccl-quick-action a.button.upload-your-photo:focus {
-    box-shadow: none;
-}
+.mock-ccl-quick-action a.button.upload-your-photo:focus,
+ccl-quick-action a.button[data-action="Download"]:focus {
+    box-shadow: none;}
 
 .mock-ccl-quick-action .restrictions {
     font-size: 0.825rem;
