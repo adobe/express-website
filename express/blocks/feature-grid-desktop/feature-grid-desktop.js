@@ -27,33 +27,33 @@ const ITEM_CLASS = [
 ];
 
 function renderGridNode({ picture, title, ctas }, index) {
-  const $grid = createTag('div', { class: `grid-item ${ITEM_CLASS[index]}` });
+  const grid = createTag('div', { class: `grid-item ${ITEM_CLASS[index]}` });
 
   // adding text
   if (title) {
-    const $titleWrapper = createTag('div', { class: 'title-wrapper' });
-    $titleWrapper.append(title.textContent.trim());
-    $grid.append($titleWrapper);
+    const titleWrapper = createTag('div', { class: 'title-wrapper' });
+    titleWrapper.append(title.textContent.trim());
+    grid.append(titleWrapper);
   }
 
   // adding img background
   const img = picture.querySelector('img');
 
   // FIXME: get a image to upload to doc
-  $grid.style.backgroundImage = index === 0
+  grid.style.backgroundImage = index === 0
     ? 'url(/express/blocks/feature-grid-desktop/logo.svg)'
     : `url(${img.src})`;
 
-  $grid.style.backgroundRepeat = 'no-repeat';
-  $grid.style.backgroundPositionX = 'center';
+  grid.style.backgroundRepeat = 'no-repeat';
+  grid.style.backgroundPositionX = 'center';
 
   // adding feature-overlay
-  const $overlay = createTag('div', { class: 'feature-overlay' });
+  const overlay = createTag('div', { class: 'feature-overlay' });
   ctas.forEach((cta) => {
-    $overlay.append(cta);
+    overlay.append(cta);
   });
-  $grid.append($overlay);
-  return $grid;
+  grid.append(overlay);
+  return grid;
 }
 
 const observerCallback = (entries, observer) => {
@@ -65,9 +65,9 @@ const observerCallback = (entries, observer) => {
   });
 };
 
-export default function decorate($block) {
-  const $inputRows = $block.querySelectorAll(':scope > div > div');
-  const children = Array.from($inputRows);
+export default function decorate(block) {
+  const inputRows = block.querySelectorAll(':scope > div > div');
+  const children = Array.from(inputRows);
   const footnote = children.pop().textContent;
   const gridProps = children.map((child) => {
     const picture = child.querySelector('picture');
@@ -82,7 +82,7 @@ export default function decorate($block) {
     );
   }
 
-  const $gridContainer = createTag('div', {
+  const gridContainer = createTag('div', {
     class: 'grid-container',
   });
 
@@ -94,20 +94,20 @@ export default function decorate($block) {
     threshold: 0.5,
   });
 
-  containerObserver.observe($gridContainer);
+  containerObserver.observe(gridContainer);
 
   gridProps.forEach((props, index) => {
-    const $rendered = renderGridNode(props, index);
-    itemsObserver.observe($rendered);
-    $gridContainer.append($rendered);
+    const rendered = renderGridNode(props, index);
+    itemsObserver.observe(rendered);
+    gridContainer.append(rendered);
   });
 
-  const $footnoteContainer = createTag('div', {
+  const footnoteContainer = createTag('div', {
     class: 'footnote-container',
   });
-  $footnoteContainer.append(footnote);
+  footnoteContainer.append(footnote);
 
-  $block.innerHTML = '';
-  $block.append($gridContainer);
-  $block.append($footnoteContainer);
+  block.innerHTML = '';
+  block.append(gridContainer);
+  block.append(footnoteContainer);
 }
