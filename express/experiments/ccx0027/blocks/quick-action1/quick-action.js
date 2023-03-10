@@ -17,7 +17,7 @@ import { CCXQuickActionElement, ELEMENT_NAME } from '../../../../blocks/quick-ac
 
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
 const BLOCK_NAME = '.quick-action';
-const QUICKACTION_HEIGHT_IN_PX = '475px';
+const QUICKACTION_HEIGHT_IN_PX = '525px';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
 const QUICK_ACTION_COMPLETED = 'quick-action-completed';
 const LOTTIE_ICONS = {
