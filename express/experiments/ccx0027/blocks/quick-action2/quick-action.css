@@ -22,6 +22,7 @@ ccl-quick-action cclqt-remove-background {
 
 ccl-quick-action.quick-action-completed cclqt-remove-background {
     margin-right: 0;
+    pointer-events: none;
 }
 
 ccl-quick-action .quick-action-complete-overlay a.overlay-item {
@@ -41,6 +42,7 @@ ccl-quick-action a[data-action='Download'] lottie-player {
 /* mock-ccl-quick-action styles */
 
 .mock-ccl-quick-action {
+    position: relative;
     display: flex;
     flex: 0 0 600px;
     width: 600px;
@@ -249,15 +251,16 @@ ccl-quick-action .more-quick-actions-container p {
 .quick-action-complete-overlay-container {
     display: block;
     position: absolute;
-    top: 37px;
+    top: 27px;
     bottom: 0;
     left: -160px;
     right: 0;
-    height: 400px;
+    height: 420px;
     width: 600px;
     margin: 0 auto;
     transition: .5s ease;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.70));
+    border-radius: 0.75rem;
 }
 
 .quick-action-complete-overlay-container .quick-action-complete-overlay {
@@ -280,7 +283,7 @@ ccl-quick-action .more-quick-actions-container p {
     position: absolute;
     width: 42px;
     height: 42px;
-    top: 16px;
+    top: 6px;
     right: 358px;
     z-index: 1000;
     box-shadow: 0 0 6px 6px rgb(0 0 0 / 4%);
