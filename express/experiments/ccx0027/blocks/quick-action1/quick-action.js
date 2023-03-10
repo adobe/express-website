@@ -67,6 +67,7 @@ function createOverlays() {
   overlayContainer.appendChild(overlay);
   const closeButton = document.createElement('button');
   closeButton.className = QUICK_TASK_CLOSE_BUTTON;
+  closeButton.title = 'Restart';
   document.querySelector(`${ELEMENT_NAME}`).appendChild(overlayContainer);
   document.querySelector(`${ELEMENT_NAME}`).appendChild(closeButton);
   addLottieIcons(document.querySelectorAll(`${ELEMENT_NAME} [data-action='Download']`), 'arrow-up');
