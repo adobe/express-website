@@ -66,13 +66,34 @@ main .floating-button-wrapper.floating-button--hidden .floating-button {
     margin-bottom: 24px;
 }
 
+main .floating-button .floating-button-inner-wrapper {
+    position: relative;
+}
+
+main .floating-button .floating-button-inner-wrapper .floating-button-background {
+    position: absolute;
+    height: 100%;
+    display: block;
+    z-index: 2;
+    width: 100%;
+    pointer-events: auto;
+    border-radius: 27px;
+    border-color: transparent;
+    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+    background-size: 400% 400%;
+    -webkit-animation: buttonGradient 45s ease infinite;
+    -moz-animation: buttonGradient 45s ease infinite;
+    animation: buttonGradient 45s ease infinite;
+    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
+}
+
 main .floating-button a.button:any-link {
     position: relative;
     display: block;
-    margin: 0;
     z-index: 2;
     min-width: 200px;
-    margin-right: 50px;
+    margin: 0;
+    padding: 13px 64px;
     pointer-events: auto;
 }
 
@@ -80,6 +101,7 @@ main .floating-button a.button:any-link,
 main .floating-button a.button:any-link:hover,
 main .floating-button a.button:any-link:active,
 main .floating-button a.button:any-link:focus {
+    background: transparent;
     transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
 }
 
@@ -88,15 +110,16 @@ main .floating-button .floating-button-lottie {
     position: absolute;
     right: 10px;
     top: 10px;
-    padding: 0;
     margin: 0;
-    padding-top: 4px;
+    padding: 4px 0 0;
     background: rgba(0,0,0,0);
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     border: none;
     border-radius: 60px;
     cursor: pointer;
     pointer-events: auto;
+    transition: opacity 0.3s;
+    opacity: 1;
 }
 
 main .floating-button .floating-button-lottie .lottie-purple-arrows {
@@ -109,14 +132,21 @@ main .floating-button--scrolled .floating-button {
     background-color: rgba(0,0,0,0);
 }
 
-main .floating-button--scrolled .floating-button a.button:any-link {
+main .floating-button--scrolled .floating-button .floating-button-background {
     margin-right: 0;
     min-width: 250px;
+    width: 100%;
+}
+
+main .floating-button-wrapper.floating-button--above-the-fold:not(.floating-button--scrolled) .floating-button-background {
+    width: calc(100% - 50px);
 }
 
 main .floating-button--scrolled .floating-button-lottie {
     pointer-events: none;
     user-select: none;
+    opacity: 0;
+    z-index: 0;
 }
 
 main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
@@ -218,10 +248,6 @@ main .floating-button-wrapper.multifunction .floating-button .toggle-button .lot
     width: 120px;
     pointer-events: none;
     transition: opacity 0.2s;
-}
-
-main .floating-button-wrapper.multifunction.floating-button--above-the-fold:not(.floating-button--scrolled) .button {
-    padding-left: 48px;
 }
 
 main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
@@ -349,7 +375,7 @@ main .floating-button-wrapper.multifunction.floating-button--hidden .toolbox-bac
 
     /* set desktop below/above the fold styles */
     main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
-        display: inline-block;
+        display: block;
     }
 
     main .floating-button-wrapper.floating-button--intersecting:not(.floating-button--clicked),
