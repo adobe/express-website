@@ -211,6 +211,7 @@ ccl-quick-action .more-quick-actions-container p {
     text-align: left;
     width: 200px;
     margin-bottom: 0;
+    margin-top: 20px;
     font-size: var(--body-font-size-xl);
 }
 
