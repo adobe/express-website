@@ -167,9 +167,7 @@ function updateLinkList(container, linkPill, list, pageData) {
         const displayTopics = topics && d.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
         const displayText = `${displayTopics}${titleCase(d.displayValue)} ${titleCase(d.childSibling)}`
           .split(' ')
-          .filter((item, i, allItems) => {
-            return i === allItems.indexOf(item);
-          })
+          .filter((item, i, allItems) => i === allItems.indexOf(item))
           .join(' ');
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
