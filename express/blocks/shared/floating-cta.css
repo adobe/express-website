@@ -102,7 +102,12 @@ main .floating-button a.button:any-link:hover,
 main .floating-button a.button:any-link:active,
 main .floating-button a.button:any-link:focus {
     background: transparent;
-    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
+    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding .3s;
+}
+
+
+main .floating-button-wrapper.floating-button--above-the-fold:not(.floating-button--scrolled) a.button:any-link {
+    padding: 13px 89px 13px 39px;
 }
 
 main .floating-button .floating-button-lottie {
