@@ -162,19 +162,18 @@ function updateLinkList(container, linkPill, list, pageData) {
         replaceLinkPill(linkPill, templatePageData, container);
       } else if (d.ckgID && getLocale(window.location) === 'us') {
         const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')} ` : '';
-        const topicsQuery = d.displayValue.indexOf(topics.trim()) >= 0 ? `${d.displayValue}` : `${topics ?? topics}${d.displayValue}`;
+        const topicsQuery = `${topics ?? topics}${d.displayValue}`;
         const currentTasks = pageData.templateTasks.replace(/[$@%"]/g, '');
         const displayTopics = topics && d.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
-        let displayText;
+        const displayText = `${displayTopics}${titleCase(d.displayValue)} ${titleCase(d.childSibling)}`
+          .split(' ')
+          .filter((item, i, allItems) => {
+            return i === allItems.indexOf(item);
+          })
+          .join(' ');
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
-
-        if (d.childSibling.indexOf(titleCase(d.displayValue)) >= 0) {
-          displayText = `${displayTopics}${titleCase(d.childSibling)}`;
-        } else {
-          displayText = `${displayTopics}${titleCase(d.displayValue)} ${titleCase(d.childSibling)}`;
-        }
 
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
