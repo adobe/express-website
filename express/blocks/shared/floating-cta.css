@@ -90,9 +90,9 @@ main .floating-button .floating-button-inner-wrapper .floating-button-background
 main .floating-button a.button:any-link {
     position: relative;
     display: block;
-    z-index: 2;
     min-width: 200px;
     margin: 0;
+    z-index: 2;
     padding: 13px 64px;
     pointer-events: auto;
 }
@@ -124,7 +124,12 @@ main .floating-button .floating-button-lottie {
     cursor: pointer;
     pointer-events: auto;
     transition: opacity 0.3s;
+    z-index: 2;
     opacity: 1;
+}
+
+main .floating-button-wrapper[data-audience='desktop'] .floating-button .floating-button-lottie {
+    z-index: 0;
 }
 
 main .floating-button .floating-button-lottie .lottie-purple-arrows {
