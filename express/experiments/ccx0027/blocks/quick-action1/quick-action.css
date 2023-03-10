@@ -18,6 +18,7 @@ ccl-quick-action .button-container {
 
 ccl-quick-action.quick-action-completed cclqt-remove-background {
     pointer-events: none;
+    height: 475px;
 }
 
 ccl-quick-action .quick-action-complete-overlay a[data-action='Download'] {

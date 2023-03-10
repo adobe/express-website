@@ -77,8 +77,10 @@ export class CCXQuickActionElement extends HTMLElement {
         if (!state.editorLoading && state.exportEnabled) {
           const quickActionCompletionEvent = new Event('ccl-quick-action-complete');
           document.querySelector(ELEMENT_NAME).dispatchEvent(quickActionCompletionEvent);
+          this.buttonContainer.style.display = 'block';
+        } else {
+          this.buttonContainer.style.display = 'none';
         }
-        this.buttonContainer.style.display = state.exportEnabled ? 'block' : 'none';
       },
       // eslint-disable-next-line no-console
       sendErrorToHost(err) { console.error('[CCLQT CB]', 'error', err); },
