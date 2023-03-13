@@ -5,14 +5,26 @@
   <script type="text/javascript">
 	window.isErrorPage = true;
 	window.errorCode = '404';
-	
+
 	const redirectMap = new Map(
 		[
+			['ae_ar', '/'],
+			['ae_en', '/'],
+			['africa', '/'],
 			['ar', '/es/'],
 			['at', '/de/'],
+			['au', '/'],
+			['be_en', '/'],
 			['be_fr', '/fr/'],
 			['be_nl', '/nl/'],
+			['bg', '/'],
+			['ca', '/'],
 			['ca_fr', '/fr/'],
+			['cis_en', '/'],
+			['cis_ru', '/'],
+			['cr', '/es/'],
+			['cy_en', '/'],
+			['cz', '/'],
 			['ch_de', '/de/'],
 			['ch_fr', '/fr/'],
 			['ch_it', '/it/'],
@@ -22,51 +34,123 @@
 			['da-DK', '/dk/'],
 			['de-DE','/de/'],
 			['ec', '/es/'],
+			['ee', '/'],
+			['eg_ar', '/'],
+			['eg_en', '/'],
 			['es-ES', '/es/'],
 			['fi-FI', '/fi/'],
 			['fr-FR', '/fr/'],
+			['gr_en', '/'],
+			['gr_el', '/'],
 			['gt', '/es/'],
+			['hk_en', '/'],
 			['hk_zh', '/tw/'],
+			['hu', '/'],
+			['id_en', '/'],
+			['id_id', '/'],
+			['ie', '/'],
+			['il_en', '/'],
+			['il_he', '/'],
+			['in', '/'],
+			['in_hi', '/'],
 			['it-IT', '/it/'],
 			['ja-JP', '/jp/'],
 			['ko-KR', '/kr/'],
+			['kw_ar', '/'],
+			['kw_en', '/'],
 			['la', '/es/'],
+			['lt', '/'],
+			['lu_en', '/'],
 			['lu_de', '/de/'],
 			['lu_fr', '/fr/'],
+			['lv', '/'],
+			['mena_ar', '/'],
+			['mena_en', '/'],
+			['mt', '/'],
 			['mx', '/es/'],
+			['my_en', '/'],
+			['my_ms', '/'],
 			['nb-NO', '/no/'],
+			['ng', '/'],
 			['nl-NL', '/nl/'],
+			['nz', '/'],
 			['pe', '/es/'],
+			['ph_en', '/'],
+			['ph_fil', '/'],
+			['pl', '/'],
 			['pr', '/es/'],
 			['pt', '/br/'],	
 			['pt-BR', '/br/'],
+			['qa_ar', '/'],
+			['qa_en', '/'],
+			['ro', '/'],
+			['ru', '/'],
+			['sa_ar', '/'],
+			['sa_en', '/'],
+			['sea', '/'],
+			['sg', '/'],
+			['si', '/'],
+			['sk', '/'],
 			['sv-SE', '/se/'],
+			['th_en', '/'],
+			['th_th', '/'],
+			['tr', '/'],
+			['ua', '/'],
+			['uk', '/'],
+			['vn_en', '/'],
+			['vn_vi', '/'],
+			['za', '/'],
 			['zh-Hans-CN', '/cn/' ],
 			['zh-Hant-TW', '/tw/'],
 		]	
 	);
+
 	
 	(function (win, doc) {
-		const eduRedirectPath = 'education/express';
-		const eduPageRequest = '/express/edu/';
-		const { href, pathname, search } = win.location;
-		let userLocale, redirectURL, redirectMapping;
+		const eduRedirectPath = 'education/express/';
+		const eduWithoutPrefix = '/edu';
+		const educationSuffix= 'education/'
+		const eduWithExpressPrefix = '/express/edu'
+		const adobeDomain = 'www.adobe.com';
+		const protocol = 'https://';
+	
+		const { hostname, href, pathname, port, search } = win.location;
+		if (hostname === 'localhost')  return;
 
-		if  (pathname.includes(eduPageRequest) && search) {
-			[_, userLocale] = search.split('=');
-			const valueInMap = redirectMap.get(userLocale); 
-			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;  
-			redirectURL = href.replace(`${eduPageRequest}${search}`, redirectMapping);
+		let userLocale, redirectURL, redirectMapping, valueInMap;
+		const noop = ()=>{};
+
+		if (pathname.includes(eduWithExpressPrefix) && search) {
+			[_, userLocale] =   search.split('=');
+			valueInMap = redirectMap.get(userLocale);
+			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;
+			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
+			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
+			win.location.replace(redirectURL);	
+		}
+	 	else if (pathname.includes(eduWithoutPrefix) && search ) {
+	
+			[_, userLocale] =   search.split('=');
+			valueInMap = redirectMap.get(userLocale); 
+			if (hostname !== adobeDomain){
+				redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
+			}
+			else {
+				redirectMapping =  valueInMap ? `${valueInMap}${educationSuffix}` : `/${educationSuffix}`;	
+			}
+			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
+			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
+			win.location.replace(redirectURL);	
 		}
 		else {
-			[_ , userLocale] = pathname.split('/');
-			redirectMapping = redirectMap.get(userLocale) || '/'; 
-			redirectURL = href.replace(`/${userLocale}/`, redirectMapping);
-		}	
-		doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
-		win.location.replace(redirectURL);
-  }(window, document));
+			[_, userLocale] = pathname.split('/');
+			valueInMap = redirectMap.get(userLocale); 
+			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`; 
+			valueInMap ? win.location.replace( href.replace(`/${userLocale}/`, valueInMap)) : noop;
+		}
+	}(window, document));
 
+	
   </script>
   <style>
 	

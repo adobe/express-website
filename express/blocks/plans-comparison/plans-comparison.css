@@ -264,6 +264,10 @@ main .plans-comparison-container .plans-comparison .plans-comparison-cards .plan
     border: none;
 }
 
+main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.card-free.expanded .icon-pricingfree {
+    fill: var(--color-white);
+}
+
 main .plans-comparison-container .plans-comparison .plans-comparison-cards .plans-comparison-card.expanded .features-wrapper {
     display: block;
     opacity: 1;
