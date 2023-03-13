@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getIconElement } from '../../scripts/scripts.js';
+import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 
 async function fetchCircleImages(link) {
   const resp = await fetch(`${link}`);
@@ -19,22 +19,38 @@ async function fetchCircleImages(link) {
 }
 
 const grabImageSet = (category, imageData) => {
-  const targetRow = imageData.filter((row) => category === row.Category);
-  return Object.values(targetRow[0]).slice(1);
+  const targetRow = imageData.find((row) => category.toLowerCase() === row.Category.toLowerCase());
+  return Object.values(targetRow).slice(1);
+};
+
+const buildDropdownList = (circle) => {
+  const list = createTag('ul', { class: 'dropdown' });
+  circle.dropDownOptions.forEach((option) => {
+    const li = createTag('li');
+    const aTag = createTag('a');
+    const label = createTag('span');
+
+    label.textContent = option.text;
+    aTag.href = option.link;
+    aTag.append(option.icon, label);
+    li.append(aTag);
+    list.append(li);
+  });
+  return list;
 };
 
 const extractContent = async (block) => {
   const circleList = [];
   const imagesLink = block.firstElementChild.textContent.trim();
   const imageData = await fetchCircleImages(imagesLink);
-
   const circleRows = Array.from(block.children).slice(1);
+
   circleRows.forEach((row) => {
     const circleObject = {};
-    const defaultLink = row.firstElementChild.querySelector('a')?.getAttribute('href') ?? '';
-    let imageLinks;
-    const label = row.firstElementChild.textContent.trim();
     const dropDownOptions = [];
+    let imageLinks;
+    const defaultLink = row.firstElementChild.querySelector('a')?.getAttribute('href') ?? '';
+    const label = row.firstElementChild.textContent.trim();
     const colArray = Array.from(row.children);
 
     if (colArray.length > 2) {
@@ -49,10 +65,10 @@ const extractContent = async (block) => {
       circleObject.imageLinks = imageLinks;
       circleObject.dropDownOptions = dropDownOptions;
     } else if (colArray.length === 2) {
-      const subText = colArray[1].textContent.trim();
-      circleObject.subText = subText;
+      circleObject.lottie = getLottie('blank-canvas', 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js');
+      circleObject.subText = colArray[1].textContent.trim();
+      circleObject.type = 'lottie';
     }
-
     circleObject.label = label;
     circleObject.defaultLink = defaultLink;
     circleList.push(circleObject);
@@ -61,14 +77,65 @@ const extractContent = async (block) => {
   return circleList;
 };
 
-const buildCircleList = (circles) => {
-  console.log(circles);
+const buildCircleList = (block, circles) => {
+  const circleContainer = createTag('div', { class: 'circles-container' });
   circles.forEach((circle) => {
-    console.log(circle);
-  })
-}
+    const circleWrapper = createTag('div', { class: 'circle-wrapper' });
+    const defaultLink = createTag('a');
+    defaultLink.href = circle.defaultLink;
+    if (circle.type !== 'lottie') {
+      const image = createTag('img', { class: 'circle-image' });
+      image.src = circle.imageLinks[0]
+      circleWrapper.append(image);
+      circleWrapper.append(buildDropdownList(circle));
+    } else {
+      lazyLoadLottiePlayer();
+      const lottie = createTag('div', { class: 'lottie-animation' });
+      lottie.innerHTML = circle.lottie;
+      circleWrapper.append(lottie);
+    }
+    const label = createTag('span', { class: 'circle-label' });
+    label.textContent = circle.label;
 
-export default function decorate($block) {
-  const circleList = extractContent($block);
-  buildCircleList(circleList);
+    circleWrapper.append(label);
+    defaultLink.append(circleWrapper);
+    circleContainer.append(defaultLink);
+  });
+  block.append(circleContainer);
+};
+
+const initHoverState = (e) => {
+  console.log('Mouse is stillll over');
+  e.target.parentElement.classList.add('door-handle');
+};
+const initUnHoverState = (e) => {
+  e.target.firstElementChild.classList.remove('door-handle');
+};
+
+const initImageShuffle = (direction) => {
+  // console.log(event);
+};
+
+export default async function decorate($block) {
+  const circleList = await extractContent($block);
+  buildCircleList($block, circleList);
+
+  const circleWrappers = $block.querySelectorAll('.circles-container > a');
+  const images = $block.querySelectorAll('.circle-wrapper img');
+  const lastMousePoint = { x: null, y: null };
+  images.forEach((image) => {
+    image.addEventListener('mouseover', initHoverState);
+    image.addEventListener('mousemove', (e) => {
+      const leftOrRight = () => {
+        if (e.clientX > lastMousePoint.x) return 'right';
+        else if (e.clientX < lastMousePoint.x) return 'left';
+      };
+      initImageShuffle(leftOrRight());
+      lastMousePoint.x = e.clientX;
+      lastMousePoint.y = e.clientY;
+    });
+  });
+  circleWrappers.forEach((wrapper) => {
+    wrapper.addEventListener('mouseleave', initUnHoverState);
+  });
 }

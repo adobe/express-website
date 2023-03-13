@@ -1,0 +1,48 @@
+main .circle-list-desktop .circles-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 26px 58px 38px 58px;
+}
+
+main .circle-list-desktop .circle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+main .circle-list-desktop .circle-wrapper {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+main .circle-list-desktop .circle-image {
+  height: 135px;
+  width: 135px;
+  border-radius: 50%;
+}
+
+main .circle-list-desktop a {
+  color: #B1B1B1;
+  font-weight: 400  ;
+}
+
+main .circle-list-desktop .dropdown a {
+  display: none;
+  gap: 6px;
+  color: #000000;
+}
+
+main .circle-list-desktop .circle-wrapper.door-handle {
+  background-color: #E4E5EA;
+  border-radius: 105px 105px 24px 24px;
+}
+
+main .circle-list-desktop .door-handle .dropdown a {
+  display: flex;
+}
+
+main .circle-list-desktop .dropdown li {
+  list-style-type: none;
+  font-size: 14px;
+}
