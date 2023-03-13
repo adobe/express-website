@@ -235,7 +235,7 @@ main .hero-animation.wide video.hero-animation-background {
     object-fit: cover;
     max-height: unset;
     min-height: 250px;
-    object-position: center 100%;
+    object-position: center;
   }
 }
 

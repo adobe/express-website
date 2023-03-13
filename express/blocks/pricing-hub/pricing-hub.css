@@ -452,7 +452,7 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
     top: 0;
     transform: translateX(-50%) translateX(145px);
     filter: unset;
-    background: linear-gradient(180deg, rgba(248,248,248,1) 30%, rgba(248,248,248,0) 70%);
+    background: linear-gradient(180deg, rgba(248,248,248,1) 45%, rgba(248,248,248,0) 70%);
   }
 
   main .pricing-hub .pricing-hub-scroll-overlay .button-container {
@@ -654,5 +654,28 @@ main .pricing-hub .pricing-hub-scroll-overlay-card h2 svg.icon-premium {
 
   main .pricing-hub .pricing-hub-feature .pricing-hub-feature-columns {
     width: 700px;
+  }
+}
+
+/* handle the retracted header */
+
+header.feds-header-wrapper ~ main .pricing-hub .pricing-hub-scroll-overlay-card {
+  transition: margin .3s ease;
+  margin-top: 64px; 
+}
+
+@media (min-width: 900px) {
+  header.feds-header-wrapper ~ main .pricing-hub .pricing-hub-scroll-overlay-card {
+    margin-top: 76px; 
+  }
+}
+
+header.feds-header-wrapper--retracted ~ main .pricing-hub .pricing-hub-scroll-overlay-card {
+  margin-top: 0;
+}
+
+@media (min-width: 900px) {
+  header.feds-header-wrapper--retracted ~ main .pricing-hub .pricing-hub-scroll-overlay-card {
+    margin-top: 12px;
   }
 }
