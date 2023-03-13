@@ -124,6 +124,7 @@ function buildReduceMotionSwitch($block, container) {
     dispatchMotionToggleEvent();
   });
 
+  dispatchMotionToggleEvent();
   container.classList.add('reduce-motion-switch-container');
 }
 
