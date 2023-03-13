@@ -323,6 +323,8 @@ export default async function decorate($block) {
     const $section = await fetchPlainBlockFromFragment($block, '/express/fragments/plans-comparison', 'plans-comparison');
 
     if ($section) {
+      // hide section to avoid showing broken block
+      $section.style.display = 'none';
       if ($linkList) {
         $linkList.before($section);
       }
@@ -339,6 +341,7 @@ export default async function decorate($block) {
 
         if ($cards) {
           setTimeout(() => {
+            $section.style.removeProperty('display');
             toggleExpandableCard($blockFromFragment, $cards[1], payload, true);
             resizeCards($cards, $featuresWrappers, payload);
             payload.desiredHeight = `${$featuresWrappers[1].offsetHeight}px`;
