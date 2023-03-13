@@ -1956,7 +1956,7 @@ function displayEnv() {
     const env = sessionStorage.getItem('helix-env');
     if (env) {
       const $helixEnv = createTag('div', { class: 'helix-env' });
-      $helixEnv.innerHTML = env + (getHelixEnv() ? '' : ' [not found]');
+      $helixEnv.textContent = env + (getHelixEnv() ? '' : ' [not found]');
       document.body.appendChild($helixEnv);
     }
   } catch (e) {
