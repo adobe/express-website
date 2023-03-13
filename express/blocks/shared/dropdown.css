@@ -1,0 +1,82 @@
+main .dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+main .dropdown .dropdown-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-gray-200);
+  padding: 8px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 180px;
+}
+
+main .dropdown .dropdown-button .dropdown-button-text,
+main .dropdown .dropdown-option .dropdown-option-text {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  pointer-events: none;
+}
+
+main .dropdown .dropdown-button .dropdown-button-text .icon,
+main .dropdown .dropdown-options .dropdown-option-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  pointer-events: none;
+}
+
+main .dropdown .dropdown-button .icon.icon-drop-down-arrow {
+  width: 10px;
+  margin-right: 4px;
+  pointer-events: none;
+}
+
+main .dropdown .dropdown-options {
+  position: absolute;
+  top: 0;
+  display: none;
+  width: 196px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px #00000016;
+}
+
+main .dropdown .dropdown-options.active {
+  display: block;
+}
+
+main .dropdown .dropdown-options .dropdown-option {
+  padding: 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}
+
+main .dropdown .dropdown-options .dropdown-option:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+main .dropdown .dropdown-options .dropdown-option:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+main .dropdown .dropdown-options .dropdown-option:hover {
+  background-color: var(--color-gray-200);
+}
+
+main .dropdown .dropdown-options .icon.icon-drop-down-arrow {
+  width: 10px;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  transform: rotate(180deg);
+  pointer-events: none;
+}
