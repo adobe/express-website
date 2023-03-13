@@ -98,6 +98,8 @@ export async function createFloatingButton($block, audience, data) {
     'data-block-name': 'floating-button',
     'data-block-status': 'loaded',
   });
+  const $floatButtonInnerWrapper = createTag('div', { class: 'floating-button-inner-wrapper' });
+  const $floatButtonBackground = createTag('div', { class: 'floating-button-background' });
   const $lottieScrollButton = createTag('button', { class: 'floating-button-lottie' });
 
   if (audience) {
@@ -114,8 +116,8 @@ export async function createFloatingButton($block, audience, data) {
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
 
-  $floatButton.append($floatButtonLink);
-  $floatButton.append($lottieScrollButton);
+  $floatButtonInnerWrapper.append($floatButtonBackground, $floatButtonLink);
+  $floatButton.append($floatButtonInnerWrapper, $lottieScrollButton);
   $floatButtonWrapper.append($floatButton);
   main.append($floatButtonWrapper);
   if ($floatButtonWrapperOld) {
