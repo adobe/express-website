@@ -19,7 +19,7 @@ import {
 // eslint-disable-next-line import/prefer-default-export
 export function buildAppStoreBadge(href, attrs) {
   const appBadgeWrapper = createTag('div', { class: 'app-store-badge-wrapper' });
-  const appBadge = getMobileOperatingSystem() === 'iOS' ? getIconElement('apple-store') : getIconElement('google-store');
+  const appBadge = getMobileOperatingSystem() === 'iOS' ? getIconElement('apple-store-borderless') : getIconElement('google-store-borderless');
   const aTag = createTag('a', { href: 'app-store-aTag', class: 'app-store-aTag' });
   const wrapper = createTag('div', { class: 'app-store-wrapper' });
 
