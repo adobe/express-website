@@ -150,25 +150,44 @@ function updateSEOLinkList(container, linkPill, list) {
   }
 }
 
+function formatLinkPillText(pageData, LinkPillData) {
+  const digestedDisplayValue = titleCase(LinkPillData.displayValue.replace(/-/g, ' '));
+  const digestedChildSibling = titleCase(LinkPillData.childSibling.replace(/-/g, ' '));
+  const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '').replace(/-/g, ' ')}` : '';
+
+  const displayTopics = topics && LinkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
+  let displayText;
+
+  if (pageData.templateTasks) {
+    displayText = `${displayTopics} ${digestedDisplayValue} ${digestedChildSibling}`
+      .split(' ')
+      .filter((item, i, allItems) => i === allItems.indexOf(item))
+      .join(' ').trim();
+  } else {
+    displayText = `${digestedDisplayValue} ${digestedChildSibling} ${displayTopics}`
+      .split(' ')
+      .filter((item, i, allItems) => i === allItems.indexOf(item))
+      .join(' ').trim();
+  }
+
+  return displayText;
+}
+
 function updateLinkList(container, linkPill, list, pageData) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
 
   if (list && templatePages) {
     list.forEach((d) => {
+      const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')}` : '';
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
+      const topicsQuery = `${topics ?? topics} ${d.displayValue}`;
+      const displayText = formatLinkPillText(pageData, d);
 
       if (templatePageData) {
         replaceLinkPill(linkPill, templatePageData, container);
       } else if (d.ckgID && getLocale(window.location) === 'us') {
-        const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')} ` : '';
-        const topicsQuery = `${topics ?? topics}${d.displayValue}`;
-        const currentTasks = pageData.templateTasks.replace(/[$@%"]/g, '');
-        const displayTopics = topics && d.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
-        const displayText = `${displayTopics}${titleCase(d.displayValue)} ${titleCase(d.childSibling)}`
-          .split(' ')
-          .filter((item, i, allItems) => i === allItems.indexOf(item))
-          .join(' ');
+        const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
@@ -274,7 +293,7 @@ async function updateBlocks(data) {
           childSibling: row['child-siblings'],
           ckgID: row.ckgID,
           shortTitle: data.shortTitle,
-          tasks: data.templateTasks,
+          tasks: row.parent,
           displayValue: row.displayValue,
         });
       });
