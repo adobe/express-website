@@ -38,12 +38,7 @@ function renderGridNode({ picture, title, ctas }, index) {
 
   // adding img background
   const img = picture.querySelector('img');
-
-  // FIXME: get a image to upload to doc
-  grid.style.backgroundImage = index === 0
-    ? 'url(/express/blocks/feature-grid-desktop/logo.svg)'
-    : `url(${img.src})`;
-
+  grid.style.backgroundImage = `url(${img.src})`;
   grid.style.backgroundRepeat = 'no-repeat';
   grid.style.backgroundPositionX = 'center';
 
