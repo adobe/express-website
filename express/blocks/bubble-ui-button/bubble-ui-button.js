@@ -438,7 +438,7 @@ export async function createMultiFunctionButton($block, data, audience) {
   await buildBubblesToolBox($block, $buttonWrapper, data);
 }
 
-export default async function decorateBlock($block) {
+export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     const audience = $block.querySelector(':scope > div').textContent.trim();
     if (audience === 'mobile') {

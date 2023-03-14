@@ -107,7 +107,7 @@ main .floating-button a.button:any-link:focus {
 
 
 main .floating-button-wrapper.floating-button--above-the-fold:not(.floating-button--scrolled) a.button:any-link {
-    padding: 13px 89px 13px 39px;
+    padding: 13px 80px 13px 48px;
 }
 
 main .floating-button .floating-button-lottie {

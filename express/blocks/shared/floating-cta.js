@@ -108,10 +108,9 @@ export async function createFloatingButton($block, audience, data) {
   }
 
   $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
-  fetchPlaceholders()
-    .then((placeholders) => {
-      $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
-    });
+  fetchPlaceholders().then((placeholders) => {
+    $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
+  });
 
   const linksPopulated = new CustomEvent('linkspopulated', { detail: [$floatButtonLink, $lottieScrollButton] });
   document.dispatchEvent(linksPopulated);
