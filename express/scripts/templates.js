@@ -120,7 +120,7 @@ async function fetchLinkList(data) {
 
 function matchCKGResult(ckgData, pageData) {
   const ckgMatch = pageData.ckgID === ckgData.ckgID;
-  const taskMatch = ckgData.tasks === pageData.templateTasks;
+  const taskMatch = ckgData.tasks.toLowerCase() === pageData.templateTasks.toLowerCase();
   const currentLocale = getLocale(window.location);
   const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
   const sameLocale = currentLocale === pageLocale;
@@ -128,13 +128,13 @@ function matchCKGResult(ckgData, pageData) {
   return sameLocale && ckgMatch && taskMatch;
 }
 
-function replaceLinkPill(linkPill, data, container) {
+function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.path);
     clone.innerHTML = clone.innerHTML.replaceAll('Default', data.shortTitle);
-    container.append(clone);
   }
+  return clone;
 }
 
 function updateSEOLinkList(container, linkPill, list) {
@@ -145,7 +145,8 @@ function updateSEOLinkList(container, linkPill, list) {
     list.forEach((d) => {
       const templatePageData = templatePages.find((p) => p.live === 'Y'
         && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
-      replaceLinkPill(linkPill, templatePageData, container);
+      const clone = replaceLinkPill(linkPill, templatePageData);
+      container.append(clone);
     });
   }
 }
@@ -175,6 +176,8 @@ function formatLinkPillText(pageData, LinkPillData) {
 
 function updateLinkList(container, linkPill, list, pageData) {
   const templatePages = window.templates.data ?? [];
+  const pageLinks = [];
+  const searchLinks = [];
   container.innerHTML = '';
 
   if (list && templatePages) {
@@ -185,7 +188,8 @@ function updateLinkList(container, linkPill, list, pageData) {
       const displayText = formatLinkPillText(pageData, d);
 
       if (templatePageData) {
-        replaceLinkPill(linkPill, templatePageData, container);
+        const clone = replaceLinkPill(linkPill, templatePageData);
+        pageLinks.push(clone);
       } else if (d.ckgID && getLocale(window.location) === 'us') {
         const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
 
@@ -194,9 +198,12 @@ function updateLinkList(container, linkPill, list, pageData) {
 
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
-
-        container.append(clone);
+        searchLinks.push(clone);
       }
+
+      pageLinks.concat(searchLinks).forEach((clone) => {
+        container.append(clone);
+      });
     });
 
     if (container.children.length === 0) {
