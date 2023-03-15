@@ -291,10 +291,7 @@ async function decorateBubbleUI($boxBottom, data) {
   const bubbleViewportContainer = createTag('div', { class: 'bubble-viewport-container' });
   const bubbleViewport = createTag('div', { class: 'bubble-viewport' });
   const bubbleRowContainer = createTag('div', { class: 'bubble-row-container' });
-  const bubbleLoadBackground = createTag('div', { class: 'bubble-load-background' });
 
-  bubbleLoadBackground.append(getIconElement('aex-logo'));
-  // $boxBottom.parentElement.append(bubbleLoadBackground);
   $boxBottom.append(bubbleViewportContainer);
   bubbleViewportContainer.append(bubbleViewport);
   bubbleViewport.append(bubbleRowContainer);
@@ -330,11 +327,8 @@ async function decorateBubbleUI($boxBottom, data) {
     bubbleBGImage.style.backgroundImage = `url('${bubblesArray[i].image}')`;
 
     if (['yes', 'true', 'on', 'Y'].includes(bubblesArray[i].centerPiece)) {
-      const initBG = createTag('div', { class: 'initial-bg' });
-      initBG.append(getIconElement('aex-logo'));
       bubbleContainer.classList.add('center-piece');
       bubble.style.backgroundColor = 'transparent';
-      bubble.append(initBG);
     }
 
     bubble.append(bubbleBGImage);
