@@ -86,12 +86,7 @@ const bubbleUI = {
       this.resizeBubbles(boxBottom);
       boxBottom.classList.remove('no-transition');
       boxBottom.parentElement.classList.remove('initial-load');
-      // boxBottom.parentElement.classList.add('zoom-in');
     }, 500);
-
-    // setTimeout(() => {
-    //   boxBottom.parentElement.classList.remove('zoom-in');
-    // }, 1500);
 
     setTimeout(() => {
       const bubbleLoadBackground = boxBottom.parentElement.querySelector('.bubble-load-background');
