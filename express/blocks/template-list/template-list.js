@@ -29,6 +29,7 @@ import {
   titleCase,
   toClassName,
 } from '../../scripts/scripts.js';
+
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
@@ -472,11 +473,10 @@ function findMatchExistingSEOPage(path) {
   return (window.templates && window.templates.data.some(pathMatch));
 }
 
-async function redirectSearch($searchBar) {
+async function redirectSearch($searchBar, targetTask) {
   const placeholders = await fetchPlaceholders()
     .then((result) => result);
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
-
   if ($searchBar) {
     const wrapper = $searchBar.closest('.search-bar-wrapper');
     const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
@@ -508,8 +508,8 @@ async function redirectSearch($searchBar) {
   const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
   const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
-
-  if (findMatchExistingSEOPage(targetPath)) {
+  const pathMatch = (e) => e.path === targetPath;
+  if (window.templates && window.templates.data.some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
   } else {
     window.location = searchUrl;
