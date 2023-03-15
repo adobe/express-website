@@ -1534,6 +1534,10 @@ async function decorateTesting() {
     if (experiment) {
       console.log('experiment', experiment);
       const config = await getExperimentConfig(experiment);
+      if (!config) {
+        console.error('config is null');
+        return;
+      }
       console.log(config);
       if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
@@ -1551,6 +1555,15 @@ async function decorateTesting() {
           }
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          // populate ttMETA with hlx experimentation details
+          window.ttMETA = window.ttMETA || [];
+          const experimentDetails = {
+            CampaignId: window.hlx.experiment.id,
+            CampaignName: window.hlx.experiment.experimentName,
+            OfferId: window.hlx.experiment.selectedVariant,
+            OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
+          };
+          window.ttMETA.push(experimentDetails);
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
