@@ -107,7 +107,7 @@ export async function createFloatingButton($block, audience, data) {
     $floatButtonWrapper.dataset.sectionStatus = 'loaded';
   }
 
-  $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+  $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
   fetchPlaceholders().then((placeholders) => {
     $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
   });

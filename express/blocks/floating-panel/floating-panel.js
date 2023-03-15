@@ -68,7 +68,7 @@ async function decorateLottieButton(block) {
   const buttonContainers = block.querySelectorAll('p.button-container');
   const $lottieScrollButton = createTag('button', { class: 'floating-panel-lottie' });
 
-  $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-panel/purple-arrows.json');
+  $lottieScrollButton.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
   fetchPlaceholders().then((placeholders) => {
     $lottieScrollButton.setAttribute('aria-label', placeholders['see-more']);
   });

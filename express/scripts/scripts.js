@@ -2399,7 +2399,7 @@ export async function addFreePlanWidget(elem) {
       const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
 
       $learnMoreButton.textContent = placeholders['learn-more'];
-      lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+      lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
       $learnMoreButton.append(lottieWrapper);
       lazyLoadLottiePlayer();
       widget.append($learnMoreButton);
