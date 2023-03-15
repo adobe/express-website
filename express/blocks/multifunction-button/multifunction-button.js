@@ -19,7 +19,9 @@ import {
   hideScrollArrow,
   collectFloatingButtonData,
   buildToolBoxStructure,
-  initToolBox, openToolBox, closeToolBox,
+  initToolBox,
+  openToolBox,
+  closeToolBox,
 } from '../shared/floating-cta.js';
 
 function toggleMultifunctionToolBox($wrapper, $lottie, data, userInitiated = true) {
