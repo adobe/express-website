@@ -160,7 +160,9 @@ export class CCXQuickActionElement extends HTMLElement {
     params.append('actionLocation', 'seo');
     params.append('autoDownload', autoDownload);
     params.append('repositoryId', repositoryId);
-    params.append('transientToken', transientToken);
+    if (transientToken) {
+      params.append('transientToken', transientToken);
+    }
     const encodeUrl = encodeURIComponent(`${host}${path}?${params.toString()}`);
     const url = `${host}${loginUrl}${encodeUrl}`;
     // FIXME: verify if this is the right URL
