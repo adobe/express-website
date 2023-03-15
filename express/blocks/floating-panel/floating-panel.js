@@ -83,29 +83,31 @@ async function decorateLottieButton(block) {
   };
 }
 
-function isInViewport(rect) {
-  return (
-    rect.top >= 0
-    && rect.left >= 0
-    && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-    && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
-}
-
 function togglePanel(section, otherCTAs) {
   let CTAsOffBounds = 0;
 
   for (let i = 0; i < otherCTAs.length; i += 1) {
-    const rect = otherCTAs[i].getBoundingClientRect();
-    if (!isInViewport(rect)) {
-      CTAsOffBounds += 1;
-    }
-  }
+    const options = {
+      root: document,
+      rootMargin: '0px',
+      threshold: 1.0,
+    };
 
-  if (CTAsOffBounds === otherCTAs.length) {
-    section.style.bottom = '0';
-  } else {
-    section.style.bottom = `-${section.offsetHeight}px`;
+    // eslint-disable-next-line no-loop-func
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          CTAsOffBounds += 1;
+          observer.disconnect();
+          if (CTAsOffBounds === otherCTAs.length) {
+            section.style.bottom = '0';
+          } else {
+            section.style.bottom = `-${section.offsetHeight}px`;
+          }
+        }
+      });
+    }, options);
+    observer.observe(otherCTAs[i]);
   }
 }
 function initCTAWatcher(section) {
