@@ -1535,7 +1535,7 @@ async function decorateTesting() {
       console.log('experiment', experiment);
       const config = await getExperimentConfig(experiment);
       if (!config) {
-        console.error("config is null");
+        console.error('config is null');
         return;
       }
       console.log(config);
