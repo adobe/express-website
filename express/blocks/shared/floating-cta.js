@@ -32,6 +32,48 @@ export const showScrollArrow = ($floatButtonWrapper, $lottieScrollButton) => {
   $lottieScrollButton.removeAttribute('tabIndex');
 };
 
+export function openToolBox($wrapper, $lottie, data, userInitiated) {
+  const $toolbox = $wrapper.querySelector('.toolbox');
+  const $button = $wrapper.querySelector('.floating-button');
+
+  const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
+  if (data.scrollState === 'withLottie' && $scrollAnchor) {
+    showScrollArrow($wrapper, $lottie);
+  }
+  $wrapper.classList.remove('toolbox-opened');
+  if (userInitiated) {
+    setTimeout(() => {
+      if (!$wrapper.classList.contains('toolbox-opened')) {
+        $toolbox.classList.add('hidden');
+        $wrapper.classList.remove('clamped');
+        $button.classList.remove('toolbox-opened');
+      }
+    }, 500);
+  } else {
+    setTimeout(() => {
+      if ($wrapper.classList.contains('initial-load')) {
+        $toolbox.classList.add('hidden');
+        $wrapper.classList.remove('clamped');
+        $button.classList.remove('toolbox-opened');
+      }
+    }, 2000);
+  }
+}
+
+export function closeToolBox($wrapper, $lottie) {
+  const $toolbox = $wrapper.querySelector('.toolbox');
+  const $button = $wrapper.querySelector('.floating-button');
+
+  $toolbox.classList.remove('hidden');
+  $wrapper.classList.add('clamped');
+  $button.classList.add('toolbox-opened');
+  hideScrollArrow($wrapper, $lottie);
+
+  setTimeout(() => {
+    $wrapper.classList.add('toolbox-opened');
+  }, 10);
+}
+
 export function initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrollAnchor, data) {
   let clicked = false;
   $lottieScrollButton.addEventListener('click', () => {
@@ -180,7 +222,7 @@ export async function createFloatingButton($block, audience, data) {
       }
     }, {
       root: null,
-      rootMargin: '-40px 0px -40px 0px',
+      rootMargin: '-40px 0px',
       threshold: 0,
     });
     if (document.readyState === 'complete') {

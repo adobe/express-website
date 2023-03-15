@@ -16,53 +16,21 @@ import {
 
 import {
   createFloatingButton,
-  showScrollArrow,
   hideScrollArrow,
   collectFloatingButtonData,
   buildToolBoxStructure,
-  initToolBox,
+  initToolBox, openToolBox, closeToolBox,
 } from '../shared/floating-cta.js';
 
 function toggleMultifunctionToolBox($wrapper, $lottie, data, userInitiated = true) {
-  const $toolbox = $wrapper.querySelector('.toolbox');
-  const $button = $wrapper.querySelector('.floating-button');
-
   if (userInitiated) {
     $wrapper.classList.remove('initial-load');
   }
 
   if ($wrapper.classList.contains('toolbox-opened')) {
-    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
-    if (data.scrollState === 'withLottie' && $scrollAnchor) {
-      showScrollArrow($wrapper, $lottie);
-    }
-    $wrapper.classList.remove('toolbox-opened');
-    if (userInitiated) {
-      setTimeout(() => {
-        if (!$wrapper.classList.contains('toolbox-opened')) {
-          $toolbox.classList.add('hidden');
-          $wrapper.classList.remove('clamped');
-          $button.classList.remove('toolbox-opened');
-        }
-      }, 500);
-    } else {
-      setTimeout(() => {
-        if ($wrapper.classList.contains('initial-load')) {
-          $toolbox.classList.add('hidden');
-          $wrapper.classList.remove('clamped');
-          $button.classList.remove('toolbox-opened');
-        }
-      }, 2000);
-    }
+    openToolBox($wrapper, $lottie, data, userInitiated);
   } else {
-    $toolbox.classList.remove('hidden');
-    $wrapper.classList.add('clamped');
-    $button.classList.add('toolbox-opened');
-    hideScrollArrow($wrapper, $lottie);
-
-    setTimeout(() => {
-      $wrapper.classList.add('toolbox-opened');
-    }, 10);
+    closeToolBox($wrapper, $lottie);
   }
 }
 

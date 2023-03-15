@@ -54,10 +54,6 @@ main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-i
     transition: opacity 2s ease-in;
 }
 
-/*main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in .bubble-load-background .icon-aex-logo {*/
-/*    transform: translate(-50%, -50%) scale(0.25);*/
-/*}*/
-
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox {
     padding-bottom: 0;
     transform: translateY(72px);
@@ -94,27 +90,6 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport
     overflow: hidden;
 }
 
-/*main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox.initial-load {*/
-/*    transform: scale(8);*/
-/*}*/
-
-/*main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox.initial-load .bubble-container.center-piece .initial-bg {*/
-/*    position: absolute;*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    box-sizing: border-box;*/
-/*    background-size: cover;*/
-/*    background-repeat: no-repeat;*/
-/*    height: 100%;*/
-/*    width: 100%;*/
-/*    top: 50%;*/
-/*    left: 50%;*/
-/*    transform: translate(-50%, -50%);*/
-/*    z-index: 2;*/
-/*    background-color: black;*/
-/*}*/
-
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox.initial-load .bubble-container.center-piece .icon-aex-logo {
     display: unset;
     height: 64px;
@@ -130,7 +105,7 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport
     height: 100%;
     width: 100%;
     overflow: auto;
-    -ms-overflow-style: none;  /* IE and Edge */
+    -ms-overflow-style: none;  /* Edge */
     scrollbar-width: none;  /* Firefox */
     scroll-padding: 100px 0 80px 100px;
     display: flex;
@@ -228,8 +203,6 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .s
 main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .tiny-bubble {
     background: linear-gradient(320deg, #ff4dd2, #7c84f3, #ff4dd2, #7c84f3, #ff4dd2) !important;
     background-size: 400% 400% !important;
-    -webkit-animation: buttonGradient 45s ease infinite;
-    -moz-animation: buttonGradient 45s ease infinite;
     animation: buttonGradient 45s ease infinite;
 }
 
@@ -249,6 +222,10 @@ main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bub
 
 main .floating-button-wrapper.multifunction.bubble-ui-button .block.floating-button {
     width: 90vw;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .block.floating-button a:any-link {
+    min-width: unset;
 }
 
 main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .block.floating-button {

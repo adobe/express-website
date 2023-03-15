@@ -50,7 +50,7 @@ function initLottieArrow($lottieScrollButton, buttonWrapper, $scrollAnchor, sect
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 10) {
-      section.style.bottom = '0px';
+      section.style.bottom = '0';
     } else {
       section.style.bottom = `-${section.offsetHeight + 8}px`;
     }
@@ -103,7 +103,7 @@ function togglePanel(section, otherCTAs) {
   }
 
   if (CTAsOffBounds === otherCTAs.length) {
-    section.style.bottom = '0px';
+    section.style.bottom = '0';
   } else {
     section.style.bottom = `-${section.offsetHeight}px`;
   }

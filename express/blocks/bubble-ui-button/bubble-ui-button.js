@@ -18,8 +18,9 @@ import {
 
 import {
   createFloatingButton,
-  showScrollArrow,
   hideScrollArrow,
+  openToolBox,
+  closeToolBox,
   collectFloatingButtonData,
   buildToolBoxStructure,
   initToolBox,
@@ -214,8 +215,6 @@ const bubbleUI = {
 };
 
 function toggleBubblesToolBox($wrapper, $lottie, data, userInitiated = true) {
-  const $toolbox = $wrapper.querySelector('.toolbox');
-  const $button = $wrapper.querySelector('.floating-button');
   const body = document.querySelector('body');
 
   if (userInitiated) {
@@ -223,39 +222,10 @@ function toggleBubblesToolBox($wrapper, $lottie, data, userInitiated = true) {
   }
 
   if ($wrapper.classList.contains('toolbox-opened')) {
-    const $scrollAnchor = document.querySelector('.section:not(:nth-child(1)):not(:nth-child(2)) .template-list, .section:not(:nth-child(1)):not(:nth-child(2)) .layouts, .section:not(:nth-child(1)):not(:nth-child(2)) .steps-highlight-container') ?? document.querySelector('.section:nth-child(3)');
-    if (data.scrollState === 'withLottie' && $scrollAnchor) {
-      showScrollArrow($wrapper, $lottie);
-    }
-    $wrapper.classList.remove('toolbox-opened');
-    if (userInitiated) {
-      setTimeout(() => {
-        if (!$wrapper.classList.contains('toolbox-opened')) {
-          $toolbox.classList.add('hidden');
-          $wrapper.classList.remove('clamped');
-          $button.classList.remove('toolbox-opened');
-        }
-      }, 500);
-    } else {
-      setTimeout(() => {
-        if ($wrapper.classList.contains('initial-load')) {
-          $toolbox.classList.add('hidden');
-          $wrapper.classList.remove('clamped');
-          $button.classList.remove('toolbox-opened');
-        }
-      }, 2000);
-    }
+    openToolBox($wrapper, $lottie, data, userInitiated);
     if (body) body.style.removeProperty('overflow');
   } else {
-    $toolbox.classList.remove('hidden');
-    $wrapper.classList.add('clamped');
-    $button.classList.add('toolbox-opened');
-    hideScrollArrow($wrapper, $lottie);
-
-    setTimeout(() => {
-      $wrapper.classList.add('toolbox-opened');
-    }, 10);
-
+    closeToolBox($wrapper, $lottie);
     setTimeout(() => {
       bubbleUI.resizeBubbles($wrapper.querySelector('.bubble-ui'));
     }, 500);
