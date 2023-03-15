@@ -13,10 +13,21 @@ import {
   getHelixEnv,
   arrayToObject,
   titleCase,
-  createTag, fetchPlaceholders,
+  createTag,
+  fetchPlaceholders,
+  getLocale,
 } from './scripts.js';
 
-async function fetchPageContent(path) {
+import {
+  fetchLInkListFromCKGApi,
+} from './api-v3-controller.js';
+
+export function findMatchExistingSEOPage(path) {
+  const pathMatch = (e) => e.path === path;
+  return (window.templates && window.templates.data.some(pathMatch));
+}
+
+export async function fetchPageContent(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
@@ -43,13 +54,22 @@ async function fetchPageContent(path) {
 }
 
 function formatSearchQuery(data) {
+  // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 
+  const locale = getLocale(window.location);
+  const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
+  const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
+
+  if (findMatchExistingSEOPage(pathToMatch)) {
+    window.location.replace(`${window.location.origin}${pathToMatch}`);
+  }
+
   const dataArray = Object.entries(data);
 
-  if (params.tasks && params.topics && params.phformat) {
+  if (params.tasks && params.phformat) {
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{queryTasks}}', params.tasks);
     });
@@ -59,11 +79,11 @@ function formatSearchQuery(data) {
     });
 
     dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
+      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
     });
 
     dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
+      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics ?? ''));
     });
   } else {
     return false;
@@ -72,29 +92,138 @@ function formatSearchQuery(data) {
   return arrayToObject(dataArray);
 }
 
-async function fetchLinkList() {
-  if (!(window.linkLists && window.linkLists.data)) {
+async function fetchLinkList(data) {
+  if (!window.linkLists) {
     window.linkLists = {};
-    const resp = await fetch('/express/templates/top-priority-categories.json');
-    window.linkLists.data = resp.ok ? (await resp.json()).data : [];
+    if (!window.linkLists.ckgData) {
+      const response = await fetchLInkListFromCKGApi(data);
+      // catch data from CKG API, if empty, use top priority categories sheet
+      if (response && response.queryResults[0].facets) {
+        window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
+          const formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
+          return {
+            parent: formattedTasks,
+            'child-siblings': `${titleCase(ckgItem.displayValue)} ${formattedTasks}`,
+            ckgID: ckgItem.canonicalName,
+            displayValue: ckgItem.displayValue,
+          };
+        });
+      }
+    }
+
+    if (!window.linkLists.sheetData) {
+      const resp = await fetch('/express/templates/top-priority-categories.json');
+      window.linkLists.sheetData = resp.ok ? (await resp.json()).data : [];
+    }
   }
 }
 
-function updateLinkList(container, template, list) {
+function matchCKGResult(ckgData, pageData) {
+  const ckgMatch = pageData.ckgID === ckgData.ckgID;
+  const taskMatch = ckgData.tasks.toLowerCase() === pageData.templateTasks.toLowerCase();
+  const currentLocale = getLocale(window.location);
+  const pageLocale = pageData.path.split('/')[1] === 'express' ? 'us' : pageData.path.split('/')[1];
+  const sameLocale = currentLocale === pageLocale;
+
+  return sameLocale && ckgMatch && taskMatch;
+}
+
+function replaceLinkPill(linkPill, data) {
+  const clone = linkPill.cloneNode(true);
+  if (data) {
+    clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.path);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.shortTitle);
+  }
+  return clone;
+}
+
+function updateSEOLinkList(container, linkPill, list) {
   const templatePages = window.templates.data ?? [];
   container.innerHTML = '';
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.shortTitle === d && p.live === 'Y');
+      const templatePageData = templatePages.find((p) => p.live === 'Y'
+        && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
+      const clone = replaceLinkPill(linkPill, templatePageData);
+      container.append(clone);
+    });
+  }
+}
+
+function formatLinkPillText(pageData, LinkPillData) {
+  const digestedDisplayValue = titleCase(LinkPillData.displayValue.replace(/-/g, ' '));
+  const digestedChildSibling = titleCase(LinkPillData.childSibling.replace(/-/g, ' '));
+  const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '').replace(/-/g, ' ')}` : '';
+
+  const displayTopics = topics && LinkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
+  let displayText;
+
+  if (pageData.templateTasks) {
+    displayText = `${displayTopics} ${digestedDisplayValue} ${digestedChildSibling}`
+      .split(' ')
+      .filter((item, i, allItems) => i === allItems.indexOf(item))
+      .join(' ').trim();
+  } else {
+    displayText = `${digestedDisplayValue} ${digestedChildSibling} ${displayTopics}`
+      .split(' ')
+      .filter((item, i, allItems) => i === allItems.indexOf(item))
+      .join(' ').trim();
+  }
+
+  return displayText;
+}
+
+function updateLinkList(container, linkPill, list, pageData) {
+  const templatePages = window.templates.data ?? [];
+  const pageLinks = [];
+  const searchLinks = [];
+  container.innerHTML = '';
+
+  if (list && templatePages) {
+    list.forEach((d) => {
+      const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')}` : '';
+      const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
+      const topicsQuery = `${topics ?? topics} ${d.displayValue}`;
+      const displayText = formatLinkPillText(pageData, d);
 
       if (templatePageData) {
-        const clone = template.cloneNode(true);
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', templatePageData.path);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', templatePageData.shortTitle);
-        container.append(clone);
+        const clone = replaceLinkPill(linkPill, templatePageData);
+        pageLinks.push(clone);
+      } else if (d.ckgID && getLocale(window.location) === 'us') {
+        const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
+
+        const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
+        const clone = linkPill.cloneNode(true);
+
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
+        clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
+        searchLinks.push(clone);
       }
+
+      pageLinks.concat(searchLinks).forEach((clone) => {
+        container.append(clone);
+      });
     });
+
+    if (container.children.length === 0) {
+      const linkListData = [];
+
+      window.linkLists.sheetData.forEach((row) => {
+        if (row.parent === pageData.shortTitle) {
+          linkListData.push({
+            childSibling: row['child-siblings'],
+            shortTitle: pageData.shortTitle,
+            tasks: pageData.templateTasks,
+          });
+        }
+      });
+
+      linkListData.forEach((d) => {
+        const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
+        replaceLinkPill(linkPill, templatePageData, container);
+      });
+    }
   }
 }
 
@@ -162,19 +291,22 @@ async function updateBlocks(data) {
   const linkListContainer = linkList.querySelector('p').parentElement;
 
   if (linkList && window.templates.data) {
-    const linkListTemplate = linkList.querySelector('p')
-      .cloneNode(true);
+    const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
 
-    if (window.linkLists && window.linkLists.data && data.shortTitle) {
-      window.linkLists.data.forEach((row) => {
-        if (row.parent === data.shortTitle) {
-          linkListData.push(row['child-siblings']);
-        }
+    if (window.linkLists && window.linkLists.ckgData && data.shortTitle) {
+      window.linkLists.ckgData.forEach((row) => {
+        linkListData.push({
+          childSibling: row['child-siblings'],
+          ckgID: row.ckgID,
+          shortTitle: data.shortTitle,
+          tasks: row.parent,
+          displayValue: row.displayValue,
+        });
       });
     }
 
-    updateLinkList(linkListContainer, linkListTemplate, linkListData);
+    await updateLinkList(linkListContainer, linkListTemplate, linkListData, data);
   } else {
     linkListContainer.remove();
   }
@@ -201,11 +333,10 @@ async function updateBlocks(data) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
 
     if (window.templates.data && data.topTemplates) {
-      const topTemplatesTemplate = seoNav.querySelector('p')
-        .cloneNode(true);
-      const topTemplatesData = data.topTemplates.split(', ');
+      const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
+      const topTemplatesData = data.topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
-      updateLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
     } else {
       topTemplatesContainer.innerHTML = '';
     }
@@ -223,12 +354,11 @@ async function updateBlocks(data) {
 }
 
 const page = await fetchPageContent(window.location.pathname);
-await fetchLinkList();
 
 if (page) {
+  await fetchLinkList(page);
   if (window.location.pathname === '/express/templates/search') {
     const data = formatSearchQuery(page);
-
     if (!data) {
       window.location.replace('/express/templates/');
     } else {
