@@ -45,6 +45,13 @@ function renderGridNode({ picture, title, ctas }, index) {
   // adding feature-overlay
   const overlay = createTag('div', { class: 'feature-overlay' });
   ctas.forEach((cta) => {
+    // itallic or light class is used to indicate secondary CTA
+    if (cta.classList.contains('light')) {
+      cta.classList.remove('light');
+      cta.classList.add('secondary');
+    } else {
+      cta.classList.add('primaryCTA');
+    }
     overlay.append(cta);
   });
   grid.append(overlay);
@@ -95,6 +102,26 @@ export default function decorate(block) {
     const rendered = renderGridNode(props, index);
     itemsObserver.observe(rendered);
     gridContainer.append(rendered);
+  });
+
+  // for 900px layout, ctas are small
+  const bigLayoutMediaQuery = window.matchMedia('(min-width: 1200px)');
+  const overlayedCTAs = gridContainer.querySelectorAll('.feature-overlay a.button');
+  const reactToMediaQuery = (big) => {
+    if (big) {
+      overlayedCTAs.forEach((cta) => {
+        cta.classList.remove('small');
+      });
+    } else {
+      overlayedCTAs.forEach((cta) => {
+        cta.classList.add('small');
+      });
+    }
+  };
+  reactToMediaQuery();
+
+  bigLayoutMediaQuery.addEventListener('change', (e) => {
+    reactToMediaQuery(e.matches);
   });
 
   const footnoteContainer = createTag('div', {
