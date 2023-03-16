@@ -468,14 +468,8 @@ async function readRowsFromBlock($block) {
   }
 }
 
-function findMatchExistingSEOPage(path) {
-  const pathMatch = (e) => e.path === path;
-  return (window.templates && window.templates.data.some(pathMatch));
-}
-
-async function redirectSearch($searchBar, targetTask) {
-  const placeholders = await fetchPlaceholders()
-    .then((result) => result);
+async function redirectSearch($searchBar) {
+  const placeholders = await fetchPlaceholders().then((result) => result);
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if ($searchBar) {
     const wrapper = $searchBar.closest('.search-bar-wrapper');
