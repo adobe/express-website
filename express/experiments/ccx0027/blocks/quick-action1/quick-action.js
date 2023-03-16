@@ -16,6 +16,7 @@ import {
 import { CCXQuickActionElement, ELEMENT_NAME } from '../../../../blocks/quick-action/shared.js';
 
 const MOCK_ELEMENT_NAME = `mock-${ELEMENT_NAME}`;
+const MOCK_ELEMENT_CONTAINER = `${MOCK_ELEMENT_NAME}-container`;
 const BLOCK_NAME = '.quick-action';
 const QUICKACTION_HEIGHT_IN_PX = '525px';
 const QUICK_TASK_CLOSE_BUTTON = 'quick-task-close-button';
@@ -25,6 +26,8 @@ const LOTTIE_ICONS = {
 };
 
 function createMockQuickAction() {
+  const container = document.createElement('div');
+  container.className = MOCK_ELEMENT_CONTAINER;
   const ele = document.createElement('div');
   ele.className = MOCK_ELEMENT_NAME;
   ele.innerHTML = '<div class="dropzone"><div class="dropzone__bg" '
@@ -38,6 +41,17 @@ function createMockQuickAction() {
   + '<div class="quick-action-tag-container"><div class="quick-action-tag"><img class="icon icon-checkmark" src="/express/icons/checkmark.svg" alt="checkmark"></div>No credit card required</div>'
   + '</div> <input id="mock-file-input" type="file" accept="image/jpeg,image/png">'
   + '</div>';
+  container.append(ele);
+  container.append(createLegalCopy());
+  return container;
+}
+
+function createLegalCopy() {
+  const ele = document.createElement("div");
+  ele.className = "quick-action-legal-copy";
+  ele.innerHTML =
+    'By uploading your image or video, you are agreeing to the Adobe <a href="https://adobe.com/go/terms_en">Terms of Use</a>' +
+    ' and <a href="https://adobe.com/go/privacy_policy_en">Privacy Policy</a>.';
   return ele;
 }
 
@@ -109,7 +123,7 @@ function addListenersOnMockElements(ele) {
     video.parentNode.appendChild(picture);
   });
   document.querySelector(ELEMENT_NAME).addEventListener('ccl-show-quick-action', () => {
-    document.getElementsByClassName(MOCK_ELEMENT_NAME)[0].parentNode.style.display = 'none';
+    document.getElementsByClassName(MOCK_ELEMENT_CONTAINER)[0].parentNode.style.display = 'none';
     document.querySelector(ELEMENT_NAME).style.height = QUICKACTION_HEIGHT_IN_PX;
   });
   document.querySelector(ELEMENT_NAME).addEventListener('ccl-quick-action-complete', () => {

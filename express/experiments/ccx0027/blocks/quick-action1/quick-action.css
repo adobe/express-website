@@ -52,7 +52,6 @@ ccl-quick-action a[data-action='Download'] lottie-player {
 .mock-ccl-quick-action {
     position: relative;
     display: flex;
-    flex: 0 0 600px;
     width: 600px;
     height: 320px;
     justify-content: center;
@@ -138,6 +137,16 @@ ccl-quick-action a.button[data-action="Download"]:focus {
 
 .mock-ccl-quick-action #mock-file-input {
     display: none;
+}
+
+.mock-ccl-quick-action-container .quick-action-legal-copy {
+    margin: 16px 0 0 50px;
+    font-size: 12px;
+    color: #444444;
+}
+
+.mock-ccl-quick-action-container .quick-action-legal-copy a {
+    color: #4646C6;
 }
 
 .quick-action-tag {
