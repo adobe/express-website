@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+// 2) Animation for doorhandle transition
+
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 
 async function fetchCircleImages(link) {
