@@ -1541,6 +1541,10 @@ async function decorateTesting() {
     if (experiment) {
       console.log('experiment', experiment);
       const config = await getExperimentConfig(experiment);
+      if (!config) {
+        console.error('config is null');
+        return;
+      }
       console.log(config);
       if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
@@ -1558,6 +1562,15 @@ async function decorateTesting() {
           }
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
+          // populate ttMETA with hlx experimentation details
+          window.ttMETA = window.ttMETA || [];
+          const experimentDetails = {
+            CampaignId: window.hlx.experiment.id,
+            CampaignName: window.hlx.experiment.experimentName,
+            OfferId: window.hlx.experiment.selectedVariant,
+            OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
+          };
+          window.ttMETA.push(experimentDetails);
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
@@ -2608,30 +2621,20 @@ export function getMobileOperatingSystem() {
 export function titleCase(str) {
   const splitStr = str.toLowerCase().split(' ');
   for (let i = 0; i < splitStr.length; i += 1) {
-    // You do not need to check if i is larger than splitStr length, as your for does that for you
-    // Assign it back to the array
     splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
-  // Directly return the joined string
   return splitStr.join(' ');
 }
 
 export function arrayToObject(arr) {
   return arr.reduce(
     (acc, curr) => {
-      // Extract the key and the value
       const key = curr[0];
-      const value = curr[1];
+      [, acc[key]] = curr;
 
-      // Assign key and value
-      // to the accumulator
-      acc[key] = value;
-
-      // Return the accumulator
       return acc;
     },
 
-    // Initialize with an empty object
     {},
   );
 }
