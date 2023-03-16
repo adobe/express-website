@@ -1,25 +1,55 @@
+main .block.circle-list-desktop {
+  height: 200px;
+  max-width: 1307px;
+  margin: auto;
+}
+
 main .circle-list-desktop .circles-container {
   display: flex;
   justify-content: space-between;
-  margin: 26px 58px 38px 58px;
 }
 
 main .circle-list-desktop .circle-wrapper {
   display: flex;
+  gap: 8px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-main .circle-list-desktop .circle-wrapper {
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
-main .circle-list-desktop .circle-image {
-  height: 135px;
-  width: 135px;
+main .circle-list-desktop .img-wrapper,
+main .circle-list-desktop .lottie-wrapper {
+  display: block;
+  position: relative;
+  height: 160px;
+  width: 160px;
+}
+
+main .circle-list-desktop .hero-img, 
+main .circle-list-desktop .lottie-blank-canvas,
+main .circle-list-desktop .alt-img {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
   border-radius: 50%;
+  transform: scale3d(0.85, 0.85, 0.85);
+  -webkit-transform: scale3d(0.85, 0.85, 0.85);
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+main .circle-list-desktop .alt-img {
+  opacity: 0;
+}
+
+main .circle-list-desktop .lottie-blank-canvas {
+
+  background-color: #CC6AF7;
 }
 
 main .circle-list-desktop a {
@@ -27,22 +57,61 @@ main .circle-list-desktop a {
   font-weight: 400  ;
 }
 
-main .circle-list-desktop .dropdown a {
+main .circle-list-desktop .dropdown {
   display: none;
+  padding: 0;
+}
+
+main .circle-list-desktop .dropdown a {
+  display: flex;
+  align-items: center;
+  width: 190px;
   gap: 6px;
   color: #000000;
 }
 
 main .circle-list-desktop .circle-wrapper.door-handle {
+  position: relative;
   background-color: #E4E5EA;
   border-radius: 105px 105px 24px 24px;
+  z-index: 2;;
+}
+
+main .circle-list-desktop .door-handle .dropdown {
+  display: initial;
 }
 
 main .circle-list-desktop .door-handle .dropdown a {
+  padding-left: 8px;
+  padding-right: 8px;
   display: flex;
 }
 
 main .circle-list-desktop .dropdown li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  height: 32px;
+  width: 190px;
+  margin-left: 10px;
+  margin-right: 10px;
   list-style-type: none;
   font-size: 14px;
+}
+
+main .circle-list-desktop .door-handle .circle-label {
+  display: none;
+}
+
+main .circle-list-desktop .dropdown li:hover {
+  background-color: var(--color-white);;
+}
+
+main .circle-list-desktop .dropdown li:hover span {
+  color: #5C5CE0;
+}
+
+main .circle-list-desktop .circle-label {
+  max-width: 124px;
 }
