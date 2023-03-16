@@ -251,8 +251,8 @@ function loadFEDS() {
 if (!window.hlx || !window.hlx.lighthouse) {
   loadIMS();
   loadFEDS();
+  loadGoogleYOLO();
 }
-loadGoogleYOLO();
 /* Core Web Vitals RUM collection */
 
 sampleRUM('cwv');

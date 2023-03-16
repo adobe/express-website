@@ -10,9 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+function getRedirectUri() {
+  const primaryCta = document.querySelector('a.button.xlarge.same-as-floating-button-CTA, a.primaryCTA');
+  if (primaryCta) {
+    return primaryCta.href;
+  }
+}
+
 function onGoogleToken(data) {
   const token = data.credential;
-  const redirectURL = 'https://<add-redirect-url>';
+  const redirectURL = getRedirectUri() || window.location.href;
   window.adobeIMS.socialHeadlessSignIn({
     provider_id: 'google',
     idp_token: token,
@@ -42,6 +49,7 @@ function setupOneTap() {
 
     // Change the Google ID
     const GOOGLE_ID = '163892384754-vpnp2b90iphomo9e5ucshim3dcm7i91u.apps.googleusercontent.com';
+    const TEST_GOOGLE_ID = '460813204764-uia1ajlt8cjb0juqdkual1b0iap9smi3.apps.googleusercontent.com';
 
     const body = document.querySelector('body');
     const wrapper = document.createElement('div');
@@ -58,20 +66,20 @@ function setupOneTap() {
       path: 'https://accounts.google.com/gsi/client',
     }).then(() => {
       // Google script has been loaded
+      // eslint-disable-next-line no-undef
       google.accounts.id.initialize({
-        client_id: GOOGLE_ID,
+        client_id: TEST_GOOGLE_ID,
         callback: onGoogleToken,
         prompt_parent_id: 'GoogleOneTap',
         cancel_on_tap_outside: false,
       });
 
+      // eslint-disable-next-line no-undef
       google.accounts.id.prompt((dropdown) => {
         if (dropdown.isDisplayed()) {
           // The dropdown has been rendered to the user
-          console.log('REMOVE ME: dropdown displayed to user');
         } else {
           // The dropdown is not rendered - user does not have an active google session
-          console.log('REMOVE ME: dropdown not available to user');
         }
       });
     });
@@ -166,6 +174,7 @@ const atOffer = {
     const yoloInit = function () {
       // Change the Google ID
       const GOOGLE_ID = '419611593676-9r4iflfe9652cjp3booqmmk8jht5as81.apps.googleusercontent.com';
+      const TEST_GOOGLE_ID = '460813204764-uia1ajlt8cjb0juqdkual1b0iap9smi3.apps.googleusercontent.com';
 
       const body = document.querySelector('body');
       const wrapper = document.createElement('div');
@@ -185,7 +194,7 @@ const atOffer = {
         .then(() => {
           // Google script has been loaded
           google.accounts.id.initialize({
-            client_id: GOOGLE_ID,
+            client_id: TEST_GOOGLE_ID,
             callback: onGoogleToken,
             prompt_parent_id: 'GoogleOneTap',
             cancel_on_tap_outside: false,
@@ -227,12 +236,11 @@ const atOffer = {
 export default function loadGoogleYolo() {
   setTimeout(() => {
     if (typeof window.feds === 'object' && window.feds?.events?.experience === true) {
-      // FEDS is already loaded
-      console.log('FEDS is already loaded');
       setupOneTap();
     } else {
-      // wait for FEDS to load
-      setupOneTap();
+      window.addEventListener('window.feds.events.experience.loaded', () => {
+        setupOneTap();
+      });
     }
   }, 3000);
 }
