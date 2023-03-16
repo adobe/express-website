@@ -263,7 +263,7 @@ function updateMetadata(data) {
 function purgeAllTaskText(data) {
   const purgedData = data;
 
-  if (purgedData.templateTasks === "''") {
+  if (purgedData.templateTasks === "''" || purgedData.templateTopics === "''") {
     Object.entries(purgedData).forEach((entry) => {
       purgedData[entry[0]] = entry[1].replace("''", '');
     });
