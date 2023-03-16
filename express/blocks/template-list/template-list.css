@@ -801,7 +801,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
   margin: 0;
   font-family: var(--body-font-family);
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   padding: 10px 40px 10px 160px;
   border: var(--color-gray-200) 2px solid;
   border-radius: 100px;

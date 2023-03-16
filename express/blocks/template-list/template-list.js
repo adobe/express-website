@@ -15,19 +15,19 @@ import {
   addAnimationToggle,
   addFreePlanWidget,
   addSearchQueryToHref,
+  arrayToObject,
+  createOptimizedPicture,
   createTag,
   decorateMain,
-  createOptimizedPicture,
   fetchPlaceholders,
   fetchRelevantRows,
   getIconElement,
   getLocale,
-  linkImage,
-  toClassName,
-  arrayToObject,
-  titleCase,
   getLottie,
   lazyLoadLottiePlayer,
+  linkImage,
+  titleCase,
+  toClassName,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -53,6 +53,15 @@ const props = {
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
+}
+
+function handlelize(str) {
+  return str.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/(\W+|\s+)/g, '-') // Replace space and other characters by hyphen
+    .replace(/--+/g, '-') // Replaces multiple hyphens by one hyphen
+    .replace(/(^-+|-+$)/g, '') // Remove extra hyphens from beginning or end of the string
+    .toLowerCase(); // To lowercase
 }
 
 function trimFormattedFilterText(attr, capitalize) {
@@ -94,23 +103,36 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function fetchTemplates() {
+function formatSearchQuery(filters) {
+  const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
+  const filterString = prunedFilter.reduce((string, [key, value]) => {
+    if (key === prunedFilter[prunedFilter.length - 1][0]) {
+      return `${string}${key}:${value}`;
+    } else {
+      return `${string}${key}:${value} AND `;
+    }
+  }, '');
+
+  props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+}
+
+async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    const prunedFilter = Object.entries(props.filters)
-      .filter(([, value]) => value !== '()');
-    const filterString = prunedFilter.reduce((string, [key, value]) => {
-      if (key === prunedFilter[prunedFilter.length - 1][0]) {
-        return `${string}${key}:${value}`;
-      } else {
-        return `${string}${key}:${value} AND `;
-      }
-    }, '');
+    formatSearchQuery(props.filters);
 
-    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
-
-    return fetch(props.queryString)
+    const result = await fetch(props.queryString)
       .then((response) => response.json())
       .then((response) => response);
+
+    // eslint-disable-next-line no-underscore-dangle
+    if (result._embedded.total > 0) {
+      return result;
+    } else {
+      // save fetch if search query returned 0 templates. "Bad result is better than no result"
+      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
+        .then((response) => response.json())
+        .then((response) => response);
+    }
   }
   return null;
 }
@@ -122,17 +144,7 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const prunedFilter = Object.entries(tempFilters)
-      .filter(([, value]) => value !== '()');
-    const filterString = prunedFilter.reduce((string, [key, value]) => {
-      if (key === prunedFilter[prunedFilter.length - 1][0]) {
-        return `${string}${key}:${value}`;
-      } else {
-        return `${string}${key}:${value} AND `;
-      }
-    }, '');
-
-    props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+    formatSearchQuery(tempFilters);
 
     return fetch(props.queryString)
       .then((response) => response.json())
@@ -456,7 +468,9 @@ async function readRowsFromBlock($block) {
   }
 }
 
-function redirectSearch($searchBar, targetTask) {
+async function redirectSearch($searchBar) {
+  const placeholders = await fetchPlaceholders().then((result) => result);
+  const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if ($searchBar) {
     const wrapper = $searchBar.closest('.search-bar-wrapper');
     const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
@@ -464,15 +478,29 @@ function redirectSearch($searchBar, targetTask) {
   }
 
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-  const currentTasks = trimFormattedFilterText(props.filters.tasks);
+  let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
+  let searchInput = $searchBar ? $searchBar.value : currentTopic;
+
+  const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
+    const searchValue = $searchBar.value.toLowerCase();
+    return searchValue.indexOf(word.toLowerCase()) >= 0;
+  })).sort((a, b) => b[0].length - a[0].length);
+
+  if (tasksFoundInInput.length > 0) {
+    tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
+      searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
+    });
+
+    searchInput = searchInput.trim();
+    [[currentTasks]] = tasksFoundInInput;
+  }
+
   const locale = getLocale(window.location);
-
-  const topicToSearch = $searchBar ? $searchBar.value : currentTopic;
-  const taskToSearch = targetTask || currentTasks;
-
-  const searchUrlTemplate = `/express/templates/search?tasks=${taskToSearch}&phformat=${format}&topics=${topicToSearch}`;
-  const targetPath = locale === 'us' ? `/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}` : `/${locale}/express/templates/${taskToSearch.toLowerCase()}/${topicToSearch.toLowerCase()}`;
+  const topicUrl = searchInput ? `/${searchInput}` : '';
+  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
+  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
+  const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
   if (window.templates && window.templates.data.some(pathMatch)) {
@@ -682,7 +710,6 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   searchBarWatcher.observe($searchBarWrapper);
 
   $searchBarWrappers.forEach(($wrapper) => {
-    // const $dropdown = $wrapper.querySelector('.search-dropdown');
     const $searchForm = $wrapper.querySelector('.search-form');
     const $searchBar = $wrapper.querySelector('input.search-bar');
     const $clear = $wrapper.querySelector('.icon-search-clear');
@@ -693,7 +720,6 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     $searchBar.addEventListener('click', (e) => {
       e.stopPropagation();
-      // $dropdown.classList.remove('hidden');
       closeTaskDropdown($toolBar);
     }, { passive: true });
 
@@ -705,9 +731,9 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       }
     }, { passive: true });
 
-    $searchForm.addEventListener('submit', (e) => {
+    $searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      redirectSearch($searchBar);
+      await redirectSearch($searchBar);
     });
 
     $clear.addEventListener('click', () => {
@@ -845,7 +871,7 @@ function decorateCategoryList($block, $section, placeholders) {
       const iconElement = getIconElement(icon);
       const $a = createTag('a', {
         'data-tasks': targetTasks,
-        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic}`,
+        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
       });
       [$a.textContent] = category;
 
@@ -919,7 +945,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     type: 'text',
     placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
     enterKeyHint: placeholders.search ?? 'Search',
-    required: true,
   });
 
   // Suggestions Dropdown
@@ -947,7 +972,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     $listItem.prepend($itemIcon);
     $taskDropdownList.append($listItem);
 
-    if ($listItem.dataset.tasks === trimFormattedFilterText(props.filters.tasks)) {
+    if (handlelize($listItem.dataset.tasks) === trimFormattedFilterText(props.filters.tasks)) {
       optionMatched = true;
       $listItem.classList.add('active');
       $taskDropdownToggle.textContent = $listItem.textContent;
