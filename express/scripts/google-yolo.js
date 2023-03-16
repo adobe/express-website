@@ -50,7 +50,7 @@ function setupOneTap() {
 
     // Change the Google ID
     const GOOGLE_ID = '163892384754-vpnp2b90iphomo9e5ucshim3dcm7i91u.apps.googleusercontent.com';
-    const TEST_GOOGLE_ID = '460813204764-uia1ajlt8cjb0juqdkual1b0iap9smi3.apps.googleusercontent.com';
+    // const TEST_GOOGLE_ID = '460813204764-uia1ajlt8cjb0juqdkual1b0iap9smi3.apps.googleusercontent.com';
 
     const body = document.querySelector('body');
     const wrapper = document.createElement('div');
@@ -69,7 +69,7 @@ function setupOneTap() {
       // Google script has been loaded
       // eslint-disable-next-line no-undef
       google.accounts.id.initialize({
-        client_id: TEST_GOOGLE_ID,
+        client_id: GOOGLE_ID,
         callback: onGoogleToken,
         prompt_parent_id: 'GoogleOneTap',
         cancel_on_tap_outside: false,
