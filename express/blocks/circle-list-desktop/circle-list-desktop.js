@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+// 2) Animation for doorhandle transition
+
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 
 async function fetchCircleImages(link) {
@@ -65,7 +67,7 @@ const extractContent = async (block) => {
       circleObject.imageLinks = imageLinks;
       circleObject.dropDownOptions = dropDownOptions;
     } else if (colArray.length === 2) {
-      circleObject.lottie = getLottie('blank-canvas', 'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js');
+      circleObject.lottie = getLottie('blank-canvas', '/express/blocks/circle-list-desktop/blank-canvas.json');
       circleObject.subText = colArray[1].textContent.trim();
       circleObject.type = 'lottie';
     }
@@ -82,21 +84,33 @@ const buildCircleList = (block, circles) => {
   circles.forEach((circle) => {
     const circleWrapper = createTag('div', { class: 'circle-wrapper' });
     const defaultLink = createTag('a');
+
     defaultLink.href = circle.defaultLink;
     if (circle.type !== 'lottie') {
-      const image = createTag('img', { class: 'circle-image' });
-      image.src = circle.imageLinks[0]
-      circleWrapper.append(image);
+      const imageWrapper = createTag('div', { class: 'img-wrapper' });
+      const heroImage = createTag('img', { class: 'hero-img' });
+      [heroImage.src] = circle.imageLinks;
+      imageWrapper.append(heroImage);
+
+      for (let i = 1; i < circle.imageLinks.length; i += 1) {
+        const altImg = createTag('img', { class: 'alt-img' });
+        altImg.src = circle.imageLinks[i];
+        imageWrapper.append(altImg);
+      }
+
+      circleWrapper.append(imageWrapper);
       circleWrapper.append(buildDropdownList(circle));
     } else {
+      const lottieWrapper = createTag('div', { class: 'lottie-wrapper' });
       lazyLoadLottiePlayer();
       const lottie = createTag('div', { class: 'lottie-animation' });
       lottie.innerHTML = circle.lottie;
-      circleWrapper.append(lottie);
+      lottieWrapper.append(lottie);
+      circleWrapper.append(lottieWrapper);
     }
+
     const label = createTag('span', { class: 'circle-label' });
     label.textContent = circle.label;
-
     circleWrapper.append(label);
     defaultLink.append(circleWrapper);
     circleContainer.append(defaultLink);
@@ -105,34 +119,50 @@ const buildCircleList = (block, circles) => {
 };
 
 const initHoverState = (e) => {
-  console.log('Mouse is stillll over');
+  console.log(e.target);
   e.target.parentElement.classList.add('door-handle');
-};
-const initUnHoverState = (e) => {
-  e.target.firstElementChild.classList.remove('door-handle');
+  const hoveredImgs = Array.from(e.target.querySelectorAll('img'));
+  hoveredImgs.forEach((img) => {
+    img.setAttribute('style', 'transform: scale3d(1,1,1); -webkit-transform: scale3d(1,1,1); transform-style: preserve-3d; -webkit-transform-style: preserve-3d;');
+  });
 };
 
-const initImageShuffle = (direction) => {
-  // console.log(event);
+const initUnHoverState = (e) => {
+  e.target.firstElementChild.classList.remove('door-handle');
+  const hoveredImgs = Array.from(e.target.parentElement.querySelectorAll('img'));
+  hoveredImgs.forEach((img) => {
+    img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); -webkit-transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; -webkit-transform-style: preserve-3d;');
+  });
 };
 
 export default async function decorate($block) {
   const circleList = await extractContent($block);
   buildCircleList($block, circleList);
-
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
-  const images = $block.querySelectorAll('.circle-wrapper img');
-  const lastMousePoint = { x: null, y: null };
-  images.forEach((image) => {
-    image.addEventListener('mouseover', initHoverState);
-    image.addEventListener('mousemove', (e) => {
-      const leftOrRight = () => {
-        if (e.clientX > lastMousePoint.x) return 'right';
-        else if (e.clientX < lastMousePoint.x) return 'left';
-      };
-      initImageShuffle(leftOrRight());
-      lastMousePoint.x = e.clientX;
-      lastMousePoint.y = e.clientY;
+  const imageWrappers = $block.querySelectorAll('.img-wrapper');
+
+  imageWrappers.forEach((wrapper) => {
+    const imageCount = wrapper.querySelectorAll('img').length;
+    let activeImageIndex = 0;
+
+    wrapper.addEventListener('mouseover', initHoverState);
+    wrapper.addEventListener('mousemove', (e) => {
+      setTimeout(() => {
+        console.dir(wrapper);
+        console.log(wrapper.offsetLeft);
+      }, 1000);
+      const wrapperWidth = wrapper.offsetWidth;
+      const switchPxThreshold = wrapperWidth / imageCount;
+      const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
+      const photoList = Array.from(wrapper.children);
+
+      console.log(`HIDE: #${activeImageIndex} --> ${photoList[activeImageIndex]}`);
+      photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); -webkit-transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; -webkit-transform-style: preserve-3d opacity: 0');
+      activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
+        : Math.floor(mouseX / switchPxThreshold);
+      console.log(`SHOW  #${activeImageIndex} --> ${photoList[activeImageIndex]}`);
+      photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); -webkit-transform: scale3d(1, 1, 1); transform-style: preserve-3d; -webkit-transform-style: preserve-3d; opacity: 1');
+      photoList[activeImageIndex].classList.add('active');
     });
   });
   circleWrappers.forEach((wrapper) => {
