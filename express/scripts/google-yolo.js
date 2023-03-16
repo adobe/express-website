@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 function onGoogleToken(data) {
   const token = data.credential;
   const redirectURL = 'https://<add-redirect-url>';
@@ -77,16 +78,6 @@ function setupOneTap() {
   });
 }
 
-if (typeof window.feds === 'object' && window.feds?.events?.experience === true) {
-  // FEDS is already loaded
-  setupOneTap();
-} else {
-  // wait for FEDS to load
-  window.addEventListener('window.feds.events.experience.loaded', () => {
-    setupOneTap();
-  });
-}
-
 // Start of Vivian's version
 const atOffer = {
   main() {
@@ -133,6 +124,7 @@ const atOffer = {
   },
   setupOneTap() {
     const app = this;
+    console.log(app);
     const onGoogleToken = function (data) {
       const token = data.credential;
       window.adobeIMS
@@ -231,3 +223,16 @@ const atOffer = {
       });
   },
 };
+
+export default function loadGoogleYolo() {
+  setTimeout(() => {
+    if (typeof window.feds === 'object' && window.feds?.events?.experience === true) {
+      // FEDS is already loaded
+      console.log('FEDS is already loaded');
+      setupOneTap();
+    } else {
+      // wait for FEDS to load
+      setupOneTap();
+    }
+  }, 3000);
+}
