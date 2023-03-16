@@ -73,7 +73,7 @@ export async function fetchLInkListFromCKGApi(pageData) {
           filters: [
             {
               categories: [
-                pageData.ckgID ?? params.ckgid,
+                pageData.ckgID || params.ckgid,
               ],
             },
           ],
