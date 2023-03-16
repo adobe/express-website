@@ -710,7 +710,6 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
   searchBarWatcher.observe($searchBarWrapper);
 
   $searchBarWrappers.forEach(($wrapper) => {
-    // const $dropdown = $wrapper.querySelector('.search-dropdown');
     const $searchForm = $wrapper.querySelector('.search-form');
     const $searchBar = $wrapper.querySelector('input.search-bar');
     const $clear = $wrapper.querySelector('.icon-search-clear');
@@ -721,7 +720,6 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     $searchBar.addEventListener('click', (e) => {
       e.stopPropagation();
-      // $dropdown.classList.remove('hidden');
       closeTaskDropdown($toolBar);
     }, { passive: true });
 
