@@ -10,13 +10,32 @@
  * governing permissions and limitations under the License.
  */
 
-class Context {
+// provides access to every block for accessibility/ux-related preferences like:
+// themes, prefers-reduced-motion, prefers-color-scheme, prefers-contrast, etc
+class PreferenceStore {
   constructor() {
     this.stores = {};
+    this.node = document;
+  }
+
+  attach(node) {
+    if (node !== document) return;
+    this.node = node;
   }
 
   set(name, value) {
     this.stores[name] = value;
+    this.node.dispatchEvent(new CustomEvent(name, { detail: value }));
+  }
+
+  subscribe(name, callback) {
+    this.node.addEventListener(name, (e) => {
+      callback(e.detail);
+    });
+  }
+
+  unsubscribe(name, callback) {
+    this.node.removeEventListener(name, callback);
   }
 
   get(name) {
@@ -24,4 +43,8 @@ class Context {
   }
 }
 
-export default new Context();
+export default new PreferenceStore();
+
+export const eventNames = {
+  reduceMotion: 'reduceMotion',
+};
