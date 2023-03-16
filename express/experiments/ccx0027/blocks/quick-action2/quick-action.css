@@ -136,7 +136,7 @@ ccl-quick-action a[data-action='Download'] lottie-player {
 .mock-ccl-quick-action-container .quick-action-legal-copy {
     margin: 16px 0 0 50px;
     font-size: 12px;
-    color: #444444;
+    color: #444;
 }
 
 .mock-ccl-quick-action-container .quick-action-legal-copy a {

@@ -25,6 +25,14 @@ const LOTTIE_ICONS = {
   'arrow-up': '/express/icons/arrow-up-lottie.json',
 };
 
+function createLegalCopy() {
+  const ele = document.createElement('div');
+  ele.className = 'quick-action-legal-copy';
+  ele.innerHTML = 'By uploading your image or video, you are agreeing to the Adobe <a href="https://adobe.com/go/terms_en">Terms of Use</a>'
+    + ' and <a href="https://adobe.com/go/privacy_policy_en">Privacy Policy</a>.';
+  return ele;
+}
+
 function createMockQuickAction() {
   const container = document.createElement('div');
   container.className = MOCK_ELEMENT_CONTAINER;
@@ -44,15 +52,6 @@ function createMockQuickAction() {
   container.append(ele);
   container.append(createLegalCopy());
   return container;
-}
-
-function createLegalCopy() {
-  const ele = document.createElement("div");
-  ele.className = "quick-action-legal-copy";
-  ele.innerHTML =
-    'By uploading your image or video, you are agreeing to the Adobe <a href="https://adobe.com/go/terms_en">Terms of Use</a>' +
-    ' and <a href="https://adobe.com/go/privacy_policy_en">Privacy Policy</a>.';
-  return ele;
 }
 
 function addLottieIcons(array, lottieIcon) {
