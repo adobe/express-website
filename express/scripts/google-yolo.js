@@ -15,6 +15,7 @@ function getRedirectUri() {
   if (primaryCta) {
     return primaryCta.href;
   }
+  return false;
 }
 
 function onGoogleToken(data) {
@@ -78,7 +79,9 @@ function setupOneTap() {
       google.accounts.id.prompt((dropdown) => {
         if (dropdown.isDisplayed()) {
           // The dropdown has been rendered to the user
+          console.log('The dropdown has been rendered to the user');
         } else {
+          console.log('The dropdown is not rendered', dropdown.l);
           // The dropdown is not rendered - user does not have an active google session
         }
       });
