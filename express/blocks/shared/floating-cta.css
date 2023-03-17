@@ -190,6 +190,10 @@ main .floating-button-wrapper.multifunction {
     background: unset
 }
 
+main .floating-button-wrapper.multifunction.clamped {
+    width: auto;
+}
+
 main .floating-button-wrapper.multifunction::before {
     content: '';
     position: fixed;
