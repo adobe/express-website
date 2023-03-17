@@ -1,0 +1,107 @@
+main .section .carousel-card-mobile-wrapper {
+    background-color: var(--color-gray-100);
+    padding: 36px 12px 12px;
+    margin-top: 20px;
+}
+
+main .section .carousel-card-mobile {
+    background-color: var(--color-white);
+    border-radius: 24px;
+    padding: 24px 0;
+}
+
+main .section .carousel-card-mobile > div {
+    margin-bottom: 24px;
+}
+
+main .section .carousel-card-mobile .paginated-carousel-container {
+    margin: 0;
+}
+
+main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item picture {
+    display: block;
+    margin: 8px 0;
+}
+
+main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item picture img {
+    border-radius: 16px;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item a {
+    display: block;
+    padding: 0 12px;
+    border: none;
+    color: var(--color-gray-800);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 20px;
+    text-align: left;
+    margin: 8px 0 0 0;
+}
+
+main .carousel-card-mobile .paginated-carousel-container .paginated-carousel-tray .paginated-carousel-item a.clickable-layer {
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+}
+
+main .carousel-card-mobile-wrapper .free-plan-widget {
+    background-color: var(--color-gray-100);
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+    padding: 16px 0;
+    margin: auto;
+}
+
+main .carousel-card-mobile-wrapper .free-plan-widget > div {
+    display: flex;
+    align-items: center;
+}
+
+main .carousel-card-mobile-wrapper .free-plan-widget > div > div:first-child {
+    position: relative;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
+    background: #33AB84;
+    border-radius: 50%;
+}
+
+main .carousel-card-mobile-wrapper .free-plan-widget > div > div:last-child {
+    font-weight: 700;
+}
+
+main .carousel-card-mobile-wrapper .free-plan-widget .icon.icon-checkmark {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    fill: var(--color-white);
+    width: 8px;
+    max-height: 8px;
+}
+
+main .carousel-card-mobile-wrapper .carousel-card-mobile .app-store-aTag {
+    margin-top: 28px;
+    margin-bottom: 28px;
+}
+
+main .carousel-card-mobile-wrapper .carousel-card-mobile h3 {
+    margin: 8px 32px 8px 32px;
+}
+
+@media (min-width: 900px) {
+    main .section .carousel-card-mobile-wrapper {
+        display: none;
+    }
+}

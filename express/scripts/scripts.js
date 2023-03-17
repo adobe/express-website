@@ -1737,7 +1737,7 @@ async function buildAutoBlocks($main) {
 
       if (relevantRowsData) {
         const $relevantRowsSection = createTag('div');
-        const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default');
+        const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default-v2');
         $relevantRowsSection.dataset.audience = 'mobile';
         $relevantRowsSection.append($fragment);
         $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
