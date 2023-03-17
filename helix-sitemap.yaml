@@ -129,21 +129,21 @@ sitemaps:
         destination: /express/sitemap-seo-templates.xml
         hreflang: en
         alternate: /{path}
-      germany:
-        source: /metadata.json?sheet=sitemap-de
+      brasil:
+        source: /metadata.json?sheet=sitemap-br
         destination: /express/sitemap-seo-templates.xml
-        hreflang: de
-        alternate: /de/{path}
+        hreflang: pt
+        alternate: /br/{path}
       france:
         source: /metadata.json?sheet=sitemap-fr
         destination: /express/sitemap-seo-templates.xml
         hreflang: fr
         alternate: /fr/{path}
-      spain:
-        source: /metadata.json?sheet=sitemap-es
+      germany:
+        source: /metadata.json?sheet=sitemap-de
         destination: /express/sitemap-seo-templates.xml
-        hreflang: es
-        alternate: /es/{path}
+        hreflang: de
+        alternate: /de/{path}
       italy:
         source: /metadata.json?sheet=sitemap-it
         destination: /express/sitemap-seo-templates.xml
@@ -159,43 +159,13 @@ sitemaps:
         destination: /express/sitemap-seo-templates.xml
         hreflang: ko
         alternate: /kr/{path}
-      netherlands:
-        source: /metadata.json?sheet=sitemap-nl
+      spain:
+        source: /metadata.json?sheet=sitemap-es
         destination: /express/sitemap-seo-templates.xml
-        hreflang: nl
-        alternate: /nl/{path}
-      brasil:
-        source: /metadata.json?sheet=sitemap-br
-        destination: /express/sitemap-seo-templates.xml
-        hreflang: pt
-        alternate: /br/{path}
+        hreflang: es
+        alternate: /es/{path}
       taiwan:
         source: /metadata.json?sheet=sitemap-tw
         destination: /express/sitemap-seo-templates.xml
         hreflang: zh-Hant
         alternate: /tw/{path}
-      china:
-        source: /metadata.json?sheet=sitemap-cn
-        destination: /express/sitemap-seo-templates.xml
-        hreflang: zh-Hans
-        alternate: /cn/{path}
-      denmark:
-        source: /metadata.json?sheet=sitemap-dk
-        destination: /express/sitemap-seo-templates.xml
-        hreflang: da
-        alternate: /dk/{path}
-      finland:
-        source: /metadata.json?sheet=sitemap-fi
-        destination: /express/sitemap-seo-templates.xml
-        hreflang: fi
-        alternate: /fi/{path}
-      norway:
-        source: /metadata.json?sheet=sitemap-no
-        destination: /express/sitemap-seo-templates.xml
-        hreflang: nb
-        alternate: /no/{path}
-      sweden:
-        source: /metadata.json?sheet=sitemap-se
-        destination: /express/sitemap-seo-templates.xml
-        hreflang: sv
-        alternate: /se/{path}
