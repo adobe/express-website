@@ -305,10 +305,13 @@ main .floating-button-wrapper.multifunction .toolbox .badge {
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool {
-    max-width: 72%;
     display: flex;
     align-items: center;
     margin-bottom: 12px;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
+    padding-right: 100px;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .toolbox-top {
