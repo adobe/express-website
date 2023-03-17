@@ -123,5 +123,79 @@ sitemaps:
 
   seo-templates:
     origin: https://www.adobe.com
-    source: /metadata.json
-    destination: /express/sitemap-seo-templates.xml
+    languages:
+      default:
+        source: /metadata.json
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: en
+        alternate: /{path}
+      germany:
+        source: /metadata.json?sheet=sitemap-de
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: de
+        alternate: /de/{path}
+      france:
+        source: /metadata.json?sheet=sitemap-fr
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: fr
+        alternate: /fr/{path}
+      spain:
+        source: /metadata.json?sheet=sitemap-es
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: es
+        alternate: /es/{path}
+      italy:
+        source: /metadata.json?sheet=sitemap-it
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: it
+        alternate: /it/{path}
+      japan:
+        source: /metadata.json?sheet=sitemap-jp
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: ja
+        alternate: /jp/{path}
+      korea:
+        source: /metadata.json?sheet=sitemap-kr
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: ko
+        alternate: /kr/{path}
+      netherlands:
+        source: /metadata.json?sheet=sitemap-nl
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: nl
+        alternate: /nl/{path}
+      brasil:
+        source: /metadata.json?sheet=sitemap-br
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: pt
+        alternate: /br/{path}
+      taiwan:
+        source: /metadata.json?sheet=sitemap-tw
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: zh-Hant
+        alternate: /tw/{path}
+      china:
+        source: /metadata.json?sheet=sitemap-cn
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: zh-Hans
+        alternate: /cn/{path}
+      denmark:
+        source: /metadata.json?sheet=sitemap-dk
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: da
+        alternate: /dk/{path}
+      finland:
+        source: /metadata.json?sheet=sitemap-fi
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: fi
+        alternate: /fi/{path}
+      norway:
+        source: /metadata.json?sheet=sitemap-no
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: nb
+        alternate: /no/{path}
+      sweden:
+        source: /metadata.json?sheet=sitemap-se
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: sv
+        alternate: /se/{path}
