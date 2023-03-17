@@ -120,3 +120,8 @@ sitemaps:
         destination: /express/sitemap-blog.xml
         hreflang: it
         alternate: /it/{path}
+
+  seo-templates:
+    origin: https://www.adobe.com
+    source: /metadata.json
+    destination: /express/sitemap-seo-templates.xml
