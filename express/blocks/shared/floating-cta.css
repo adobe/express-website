@@ -311,7 +311,7 @@ main .floating-button-wrapper.multifunction .toolbox .tool {
 }
 
 main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
-    padding-right: 100px;
+    padding-right: 120px;
 }
 
 main .floating-button-wrapper.multifunction .toolbox .toolbox-top {
