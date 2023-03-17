@@ -4,8 +4,6 @@ main .block.circle-list-desktop {
   margin: auto;
 }
 
-
-
 main .circle-list-desktop .circles-container {
   display: flex;
   justify-content: space-between;
