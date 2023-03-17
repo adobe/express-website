@@ -174,8 +174,8 @@ function loadFEDS() {
     const pagesShortName = pagesShortNameElement ? pagesShortNameElement.getAttribute('content') : null;
 
     if ((!pagesShortName && pathSegments.length > 2)
-    || !placeholders[`breadcrumbs-${category}`]
-    || locale !== 'us') { // Remove this line once locale translations are complete
+      || !placeholders[`breadcrumbs-${category}`]
+      || locale !== 'us') { // Remove this line once locale translations are complete
       return;
     }
     category = capitalize(placeholders[`breadcrumbs-${category}`]);
