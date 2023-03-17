@@ -120,3 +120,52 @@ sitemaps:
         destination: /express/sitemap-blog.xml
         hreflang: it
         alternate: /it/{path}
+
+  seo-templates:
+    origin: https://www.adobe.com
+    languages:
+      default:
+        source: /metadata.json?sheet=sitemap-en
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: en
+        alternate: /{path}
+      brasil:
+        source: /metadata.json?sheet=sitemap-br
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: pt
+        alternate: /br/{path}
+      france:
+        source: /metadata.json?sheet=sitemap-fr
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: fr
+        alternate: /fr/{path}
+      germany:
+        source: /metadata.json?sheet=sitemap-de
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: de
+        alternate: /de/{path}
+      italy:
+        source: /metadata.json?sheet=sitemap-it
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: it
+        alternate: /it/{path}
+      japan:
+        source: /metadata.json?sheet=sitemap-jp
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: ja
+        alternate: /jp/{path}
+      korea:
+        source: /metadata.json?sheet=sitemap-kr
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: ko
+        alternate: /kr/{path}
+      spain:
+        source: /metadata.json?sheet=sitemap-es
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: es
+        alternate: /es/{path}
+      taiwan:
+        source: /metadata.json?sheet=sitemap-tw
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: zh-Hant
+        alternate: /tw/{path}
