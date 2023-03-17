@@ -147,7 +147,7 @@ function loadFEDS() {
 
   const isHomepage = window.location.pathname.endsWith('/express/');
   const isMegaNav = window.location.pathname.startsWith('/express')
-  || window.location.pathname.startsWith('/education');
+    || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
