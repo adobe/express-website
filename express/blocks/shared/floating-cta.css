@@ -5,7 +5,6 @@ main .floating-button-wrapper {
     top: auto;
     right: auto;
     z-index: 2;
-    width: 100%;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -185,7 +184,6 @@ main .floating-button-wrapper.multifunction {
     align-items: center;
     transform: translateX(-50%);
     left: 50%;
-    width: max-content;
     height: auto;
     background: unset
 }
