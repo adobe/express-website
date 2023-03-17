@@ -141,6 +141,7 @@ function initImageShuffling(wrapper) {
   const imageWrapper = wrapper.querySelector('.img-wrapper');
   const imageCount = imageWrapper.querySelectorAll('img').length;
   let activeImageIndex = 0;
+  let backgroundImageIndex = 0;
 
   imageWrapper.addEventListener('mousemove', (e) => {
     const wrapperWidth = imageWrapper.offsetWidth;
@@ -148,12 +149,25 @@ function initImageShuffling(wrapper) {
     const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
     const photoList = Array.from(imageWrapper.children);
 
-    photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); -webkit-transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; -webkit-transform-style: preserve-3d opacity: 0');
+    // NEed to prep next image when scrolling right, should make it opacity 1
+    // Always the image with one lower index that is showing behind it
+    backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
+    // console.log(backgroundImageIndex);
+    photoList[activeImageIndex].setAttribute('style', 'transform: scale(0.85); opacity: 0; z-index: 0'); // Hides the old 'current image'
+    console.log(photoList[activeImageIndex]);
+    console.log(`HIDE: # ${activeImageIndex} ${photoList[activeImageIndex]}`);
+    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85); opacity: 0'); // Hides the old 'background image'
+    // Grab the new one and show it with a lower z-index then the main photo
+    // photoList[activeImageIndex].setAttribute('style', 'transform: scale(1); opacity: 1');
     activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
-      : Math.floor(mouseX / switchPxThreshold);
-
-    photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); -webkit-transform: scale3d(1, 1, 1); transform-style: preserve-3d; -webkit-transform-style: preserve-3d; opacity: 1');
-    photoList[activeImageIndex].classList.add('active');
+    : Math.floor(mouseX / switchPxThreshold);
+    backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
+    const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
+    const minResizeScale = 0.85;
+    const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
+    console.log(`SHOW: # ${activeImageIndex} ${photoList[activeImageIndex]}`);
+    photoList[activeImageIndex].setAttribute('style', `transform: scale(${resizeScale}); opacity: 1; z-index: 5`); // Shows the new 'current image'
+    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(1); opacity: 1; z-index: 3'); // Shows the new 'background image'
   });
 }
 

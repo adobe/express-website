@@ -4,8 +4,6 @@ main .block.circle-list-desktop {
   margin: auto;
 }
 
-
-
 main .circle-list-desktop .circles-container {
   display: flex;
   justify-content: space-between;
@@ -45,8 +43,8 @@ main .circle-list-desktop .alt-img {
   width: 100%;
   border-radius: 50%;
   transition: transform 0.2s;
-  transform: scale3d(0.85, 0.85, 0.85);
-  -webkit-transform: scale3d(0.85, 0.85, 0.85);
+  transform: scale(0.85);
+  -webkit-transform: scale(0.85);
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
 }
