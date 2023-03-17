@@ -187,7 +187,7 @@ export default async function decorate($block) {
     decorateBanner($block, payload);
     addCloseBtn($block);
 
-    if (window.floatingCta && window.floatingCta.length) {
+    if (Array.isArray(window.floatingCta) && window.floatingCta.length) {
       const db = window.floatingCta[0];
       const mfb = window.floatingCta.find((p) => window.location.pathname === p.path);
       const delay = mfb.delay ? mfb.delay * 1000 : db.delay * 1000;
