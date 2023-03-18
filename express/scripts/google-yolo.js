@@ -26,17 +26,13 @@ function onGoogleToken(data) {
     idp_token: token,
     client_id: window.adobeid.client_id,
     scope: window.adobeid.scope,
-  }).then(() => {
-    // User already has an account, we refresh the page to finsish the login process
-    // window.location.reload();
-    // Use this code to redirect the user to a different page
-    window.location.href = redirectURL;
-  }).catch(() => {
-    // User does not have an account; proceed with Progressive Account Creation
-    // adobeIMS.signInWithSocialProvider('google');
-    // Use this code to redirect the user to a different page after account creation
-    window.adobeIMS.signInWithSocialProvider('google', { redirect_uri: redirectURL });
-  });
+  })
+    .then(() => {
+      window.location.href = redirectURL;
+    })
+    .catch(() => {
+      window.adobeIMS.signInWithSocialProvider('google', { redirect_uri: redirectURL });
+    });
 }
 
 function setupOneTap() {
@@ -47,9 +43,7 @@ function setupOneTap() {
       return;
     }
 
-    // Change the Google ID
-    const GOOGLE_ID = '163892384754-vpnp2b90iphomo9e5ucshim3dcm7i91u.apps.googleusercontent.com';
-
+    const GOOGLE_ID = '419611593676-9r4iflfe9652cjp3booqmmk8jht5as81.apps.googleusercontent.com';
     const body = document.querySelector('body');
     const wrapper = document.createElement('div');
     // Position the dropdown below navigation
@@ -65,22 +59,14 @@ function setupOneTap() {
       path: 'https://accounts.google.com/gsi/client',
     }).then(() => {
       // Google script has been loaded
-      // eslint-disable-next-line no-undef
-      google.accounts.id.initialize({
+      window.google.accounts.id.initialize({
         client_id: GOOGLE_ID,
         callback: onGoogleToken,
         prompt_parent_id: 'GoogleOneTap',
         cancel_on_tap_outside: false,
       });
 
-      // eslint-disable-next-line no-undef
-      google.accounts.id.prompt((dropdown) => {
-        if (dropdown.isDisplayed()) {
-          // The dropdown has been rendered to the user
-        } else {
-          // The dropdown is not rendered - user does not have an active google session
-        }
-      });
+      window.google.accounts.id.prompt();
     });
   });
 }
