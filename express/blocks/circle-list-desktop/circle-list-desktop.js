@@ -121,6 +121,7 @@ const buildCircleList = (block, circles) => {
 
 function initResetImage(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
+    console.log('The mouse left!:');
     const hoveredImgs = Array.from(e.target.parentElement.querySelectorAll('img'));
     hoveredImgs.forEach((img) => {
       img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s');
@@ -159,6 +160,7 @@ export default async function decorate($block) {
   const circleList = await extractContent($block);
   buildCircleList($block, circleList);
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
+  let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   window.addEventListener('reduce-motion-toggle', (e) => {
     prefersReducedMotion = e.detail.reduceMotionEnabled;

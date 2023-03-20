@@ -36,6 +36,11 @@ main .circle-list-desktop .circle-wrapper .dropdown:hover {
   display: initial;
 }
 
+main .circle-list-desktop .lottie-wrapper .circle-label {
+  color: #00000029;
+  size: 60px;
+}
+
 main .circle-list-desktop .circle-wrapper .img-wrapper:hover ~ .dropdown,
 main .circle-list-desktop .circle-wrapper .dropdown:hover {
   display: initial;
@@ -84,6 +89,7 @@ main .circle-list-desktop a {
 }
 
 main .circle-list-desktop .dropdown {
+  display: none;
   position: absolute;
   background-color: #E4E5EA;
   z-index: -1;
