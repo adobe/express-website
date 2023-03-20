@@ -22,7 +22,7 @@ import {
  * @returns {String}
  */
 
-function createStandardImage(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+function createStandardImage(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }]) {
   const url = new URL(src, window.location.origin);
   const picture = document.createElement('picture');
   const { pathname } = url;

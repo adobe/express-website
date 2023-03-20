@@ -164,7 +164,7 @@ main .hero-animation.white-text a:any-link {
 
 /* Wide option */
 
-@media (min-width: 400px) {
+@media (min-width: 600px) {
   main .hero-animation.wide {
     position: relative;
     max-width: 1200px;
