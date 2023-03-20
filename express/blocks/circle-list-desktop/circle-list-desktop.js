@@ -118,21 +118,12 @@ const buildCircleList = (block, circles) => {
   block.append(circleContainer);
 };
 
-function initDoorHandle(wrapper) {
-  const imageWrapper = wrapper.querySelector('.img-wrapper');
-
-  // todo: investigate a way to handle all of below in CSS and potentially remove the initDoorHandle Function
-  imageWrapper.addEventListener('mouseover', (e) => {
-    const hoveredImgs = Array.from(e.target.querySelectorAll('img'));
-    hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform: scale3d(1,1,1); -webkit-transform: scale3d(1,1,1); transform-style: preserve-3d; -webkit-transform-style: preserve-3d;');
-    });
-  });
-
+function initResetImage(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
+    console.log('The mouse left!:');
     const hoveredImgs = Array.from(e.target.parentElement.querySelectorAll('img'));
     hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); -webkit-transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; -webkit-transform-style: preserve-3d;');
+      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s');
     });
   });
 }
@@ -149,25 +140,17 @@ function initImageShuffling(wrapper) {
     const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
     const photoList = Array.from(imageWrapper.children);
 
-    // NEed to prep next image when scrolling right, should make it opacity 1
-    // Always the image with one lower index that is showing behind it
     backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-    // console.log(backgroundImageIndex);
-    photoList[activeImageIndex].setAttribute('style', 'transform: scale(0.85); opacity: 0; z-index: 0'); // Hides the old 'current image'
-    console.log(photoList[activeImageIndex]);
-    console.log(`HIDE: # ${activeImageIndex} ${photoList[activeImageIndex]}`);
-    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85); opacity: 0'); // Hides the old 'background image'
-    // Grab the new one and show it with a lower z-index then the main photo
-    // photoList[activeImageIndex].setAttribute('style', 'transform: scale(1); opacity: 1');
+    photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0; transition-property: transform');
+    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85, 0.85, 0.85); opacity: 0');
     activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
-    : Math.floor(mouseX / switchPxThreshold);
+      : Math.floor(mouseX / switchPxThreshold);
     backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
     const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
     const minResizeScale = 0.85;
     const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
-    console.log(`SHOW: # ${activeImageIndex} ${photoList[activeImageIndex]}`);
-    photoList[activeImageIndex].setAttribute('style', `transform: scale(${resizeScale}); opacity: 1; z-index: 5`); // Shows the new 'current image'
-    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(1); opacity: 1; z-index: 3'); // Shows the new 'background image'
+    photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 5; transition-property: none`);
+    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 3');
   });
 }
 
@@ -175,12 +158,19 @@ export default async function decorate($block) {
   const circleList = await extractContent($block);
   buildCircleList($block, circleList);
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
+  let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  circleWrappers.forEach((wrapper) => {
-    const imageWrapper = wrapper.querySelector('.img-wrapper');
-    if (imageWrapper) {
-      initDoorHandle(wrapper);
-      initImageShuffling(wrapper);
-    }
+  window.addEventListener('reduce-motion-toggle', (e) => {
+    prefersReducedMotion = e.detail.reduceMotionEnabled;
   });
+
+  if (!prefersReducedMotion) {
+    circleWrappers.forEach((wrapper) => {
+      const imageWrapper = wrapper.querySelector('.img-wrapper');
+      if (imageWrapper) {
+        initResetImage(wrapper);
+        initImageShuffling(wrapper);
+      }
+    });
+  }
 }
