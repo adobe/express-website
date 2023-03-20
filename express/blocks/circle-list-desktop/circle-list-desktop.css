@@ -27,6 +27,11 @@ main .circle-list-desktop .lottie-wrapper {
   width: 160px;
 }
 
+main .circle-list-desktop .lottie-wrapper .circle-label {
+  color: #00000029;
+  size: 60px;
+}
+
 main .circle-list-desktop .circle-wrapper .img-wrapper:hover ~ .dropdown,
 main .circle-list-desktop .circle-wrapper .dropdown:hover {
   display: initial;
@@ -42,11 +47,15 @@ main .circle-list-desktop .alt-img {
   height: 100%;
   width: 100%;
   border-radius: 50%;
-  transition: transform 0.2s;
-  transform: scale(0.85);
-  -webkit-transform: scale(0.85);
+  transform: scale3d(0.85, 0.85, 0.85);
   transform-style: preserve-3d;
-  -webkit-transform-style: preserve-3d;
+  transition: transform 0.4s;
+}
+
+main .block.circle-list-desktop .img-wrapper:hover img {
+  transform: scale3d(1, 1, 1);
+  transform-style: preserve-3d;
+  pointer-events: none;
 }
 
 main .circle-list-desktop .alt-img {
@@ -63,6 +72,7 @@ main .circle-list-desktop a {
 }
 
 main .circle-list-desktop .dropdown {
+  display: none;
   position: absolute;
   background-color: #E4E5EA;
   z-index: -1;
@@ -71,7 +81,11 @@ main .circle-list-desktop .dropdown {
   top: -25px;
   padding: 200px 0 24px 0;
   transform: translate(-50%, 0);
-  display: none;
+  filter: drop-shadow(0px 3px 6px #00000029);
+}
+
+main .block.circle-list-desktop svg {
+  width: 18px;
 }
 
 main .circle-list-desktop .dropdown a {
@@ -91,7 +105,7 @@ main .circle-list-desktop .door-handle .dropdown {
   display: initial;
 }
 
-main .circle-list-desktop .door-handle .dropdown a {
+main .circle-list-desktop .dropdown a {
   padding-left: 8px;
   padding-right: 8px;
   display: flex;
@@ -108,6 +122,7 @@ main .circle-list-desktop .dropdown li {
   margin-right: 10px;
   list-style-type: none;
   font-size: 14px;
+  transition: 0.4s;
 }
 
 main .circle-list-desktop .circle-label {
@@ -120,6 +135,7 @@ main .circle-list-desktop .dropdown li:hover {
 
 main .circle-list-desktop .dropdown li:hover span {
   color: #5C5CE0;
+  transition: 0.4s;
 }
 
 main .circle-list-desktop .circle-label {
