@@ -1,0 +1,454 @@
+.feature-grid-desktop.block {
+  --block-height: 1159px;
+  --grid-container-template-columns: repeat(4, 200px);
+  --grid-container-template-rows: repeat(5, 185px);
+  --grid-item-gap: 12px;
+  --grid-item-border-radius: 20px;
+  --grid-item-padding: 16px 0;
+  --font-size: var(--body-font-size-xs);
+  --in-out-quart-bezier: cubic-bezier(0.76, 0, 0.24, 1);
+  --animation-duration: 1.75s;
+  --animation-direction: normal;
+  --animation-iteration-count: 1;
+  --animation-fill-mode: both;
+}
+
+/* This block is desktop only */
+@media screen and (max-width: 899px) {
+  .feature-grid-desktop.block {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .feature-grid-desktop.block {
+    --block-height: 998px;
+    --grid-container-template-columns: repeat(5, 213px);
+    --grid-container-template-rows: repeat(4, 197px);
+    --grid-item-gap: 14px;
+    --font-size: var(--body-font-size-s);
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .feature-grid-desktop.block {
+    --block-height: 1107px;
+    --grid-container-template-columns: repeat(5, 240px);
+    --grid-container-template-rows: repeat(4, 220px);
+    --grid-item-gap: 16px;
+    --font-size: var(--body-font-size-m);
+  }
+}
+
+main .feature-grid-desktop {
+  height: var(--block-height);
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  font-size: var(--font-size);
+}
+
+.footnote-container {
+  margin-top: 22px;
+  font-size: 10px;
+  line-height: 1.2;
+  width: 500px;
+}
+@media screen and (min-width: 1200px) {
+  .footnote-container {
+    width: 100%;
+  }
+}
+
+.grid-container {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: var(--grid-container-template-columns);
+  grid-template-rows: var(--grid-container-template-rows);
+  grid-gap: var(--grid-item-gap);
+  height: var(--grid-container-height);
+}
+.grid-container.enter-animation {
+  opacity: 0;
+}
+.grid-container.enter-animation.entered {
+  animation: 
+    grid-container-scale var(--animation-duration) var(--in-out-quart-bezier) 0.25s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
+    grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+
+.grid-item {
+  background-color: #E1E2E4;
+  border-radius: var(--grid-item-border-radius);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--grid-item-padding);
+  position: relative;
+}
+.grid-item.enter-animation {
+  opacity: 0;
+}
+
+.grid-item.features { 
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-position-y: center;
+  background-size: 50%;
+}
+.grid-item.features.enter-animation.entered {
+  animation: grid-item-slide-in-top-left var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.features.enter-animation.entered {
+    animation: grid-item-slide-in-top-left var(--animation-duration) var(--in-out-quart-bezier) 0.6s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  } 
+}
+
+.grid-item.resize {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  background-position-y: 20px;
+  background-size: 75%;
+}
+.grid-item.resize.enter-animation.entered {
+  animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.225s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.resize.enter-animation.entered {
+    animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.6s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.quick-actions {
+  grid-column: 3 / 5;
+  grid-row: 1 / 2;
+  background-position-y: -25px;
+  background-size: 70%;
+}
+.grid-item.quick-actions.enter-animation.entered {
+  animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.3s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+} 
+
+.grid-item.effects {
+  grid-column: 4 / 5;
+  grid-row: 5 / 6;
+  background-position-y: top;
+  background-size: 90%;
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.effects {
+    grid-column: 5 / 6;
+    grid-row: 1 / 2;
+  }
+}
+.grid-item.effects.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.effects.enter-animation.entered {
+    animation: grid-item-slide-in-top-right var(--animation-duration) var(--in-out-quart-bezier) 0.425s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.branding {
+  grid-column: 1 / 2;
+  grid-row: 5 / 6;
+  background-position-y: 12px;
+  background-size: 80%;
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.branding {
+    grid-row: 2 / 3;
+  }
+}
+.grid-item.branding.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-left-big var(--animation-duration) var(--in-out-quart-bezier) 0.15s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.branding.enter-animation.entered {
+    animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.templates {
+  grid-column: 2 / 5;
+  grid-row: 2 / 4;
+  background-position-y: 20px;
+  background-size: 65%;
+}
+.grid-item.templates.enter-animation.entered {
+  animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
+    grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.templates.enter-animation.entered {
+    animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.fonts {
+  grid-column: 1 / 2;
+  grid-row: 2 / 4;
+  background-position-y: 15px;
+  background-size: 80%;
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.fonts {
+    grid-column: 5 / 6;
+  }
+}
+.grid-item.fonts.enter-animation.entered {
+  animation: grid-item-slide-in-left-big var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.fonts.enter-animation.entered {
+    animation: grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.475s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.stock {
+  grid-column: 2 / 3;
+  grid-row: 5 / 6;
+  background-position-y: 12px;
+  background-size: 90%;
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.stock {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+  }
+}
+.grid-item.stock.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-big var(--animation-duration) var(--in-out-quart-bezier) 0.325s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.stock.enter-animation.entered {
+    animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.275s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.graphic-groups {
+  grid-column: 1 / 3;
+  grid-row: 4 / 5;
+  background-position-y: -8px;
+  background-size: 74%;
+}
+.grid-item.graphic-groups.enter-animation.entered {
+  animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.275s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.graphic-groups.enter-animation.entered {
+    animation: grid-item-slide-in-bottom-left var(--animation-duration) var(--in-out-quart-bezier) 0.15s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.customization {
+  grid-column: 3 / 5;
+  grid-row: 4 / 5;
+  background-position-y: 14px;
+  background-size: 53%;
+}
+.grid-item.customization.enter-animation.entered {
+  animation: grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.325s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.customization.enter-animation.entered {
+    animation: grid-item-slide-in-bottom var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.grid-item.animations {
+  grid-column: 3 / 4;
+  grid-row: 5 / 6;
+  background-position-y: 8px;
+  background-size: 94%;
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.animations {
+    grid-column: 5 / 6;
+    grid-row: 4 / 5;
+  }
+}
+.grid-item.animations.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-big var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+}
+@media screen and (min-width: 1200px) {
+  .grid-item.animations.enter-animation.entered {
+    animation: grid-item-slide-in-bottom-right var(--animation-duration) var(--in-out-quart-bezier) 0.2s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+  }
+}
+
+.feature-overlay {
+  background-color: rgba(0,0,0,.78);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  border-radius: var(--grid-item-border-radius);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+}
+
+.feature-overlay a {
+  margin: 0 4px 20px 4px!important;
+}
+
+.grid-container > div.grid-item:hover > .feature-overlay {
+  opacity: 1;
+}
+
+
+@keyframes grid-container-scale {
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes grid-container-opacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes grid-item-slide-in-top {
+  0% {
+    top: -25%;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes grid-item-slide-in-top-right {
+  0% {
+    top: -25%;
+    left: 25%;
+  }
+  100% {
+    opacity: 1;
+    top: 0;
+    left: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-right {
+  0% {
+    left: 15%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-right-big {
+  0% {
+    left: 25%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-bottom-right {
+  0% {
+    top: 15%;
+    left: 15%;
+  }
+  100% {
+    opacity: 1;
+    top: 0;
+    left: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-bottom {
+  0% {
+    top: 10%;
+  }
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-bottom-big {
+  0% {
+    top: 15%;
+  }
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-bottom-left {
+  0% {
+    left: -5%;
+    top: 5%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+    top: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-bottom-left-big {
+  0% {
+    left: -15%;
+    top: 15%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+    top: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-left {
+  0% {
+    left: -15%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-left-big {
+  0% {
+    left: -25%;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes grid-item-slide-in-top-left {
+  0% {
+    top: -25%;
+    left: -25%;
+  }
+  100% {
+    opacity: 1;
+    top: 0;
+    left: 0;
+  }
+}
