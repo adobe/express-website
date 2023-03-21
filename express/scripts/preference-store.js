@@ -11,12 +11,17 @@
  */
 
 // provides access to every block for accessibility/ux-related preferences like:
-// themes, prefers-reduced-motion, prefers-color-scheme, prefers-contrast, etc
+// themes, prefers-reduced-motion, prefers-color-scheme, prefers-contrast, etc.
 class PreferenceStore {
   constructor() {
-    this.stores = {};
+    this.stores = {}; // { [name]: { value, subscribers: [HTMLElement] } }
   }
 
+  /**
+   * Sample usage:
+   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+   * preferenceStore.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
+   */
   set(name, value) {
     if (!this.stores[name]) this.stores[name] = { subscribers: [] };
     const store = this.stores[name];
@@ -29,6 +34,14 @@ class PreferenceStore {
     });
   }
 
+  /**
+   * Sample usage:
+   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+   * preferenceStore.subscribe(eventNames.reduceMotion, node, (value) => {
+   * node.append(`${value}`);
+   * });
+   *
+   * */
   subscribe(name, block, callback) {
     if (!this.stores[name]) this.stores[name] = { subscribers: [] };
     const store = this.stores[name];
@@ -40,6 +53,15 @@ class PreferenceStore {
     });
   }
 
+  /**
+   * Sample usage:
+   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+   * preferenceStore.unsubscribe(eventNames.reduceMotion, node, (value) => {
+   *  node.append(`${value}`);
+   * });
+   *
+   * Note that the callback should be the same one as when you subscribe
+   */
   unsubscribe(name, block, callback) {
     const { subscribers } = this.stores[name] || {};
     if (!subscribers || !subscribers.includes(block)) return;
@@ -48,6 +70,11 @@ class PreferenceStore {
     block.removeEventListener(name, callback);
   }
 
+  /**
+   * Sample usage:
+   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+   * preferenceStore.get(eventNames.reduceMotion);
+   */
   get(name) {
     return this.stores[name].value;
   }
