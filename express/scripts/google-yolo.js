@@ -20,19 +20,21 @@ function getRedirectUri() {
 
 function onGoogleToken(data) {
   const token = data.credential;
-  const redirectURL = getRedirectUri() || window.location.href;
+  const redirectURL = getRedirectUri();
   window.adobeIMS.socialHeadlessSignIn({
     provider_id: 'google',
     idp_token: token,
     client_id: window.adobeid.client_id,
     scope: window.adobeid.scope,
-  })
-    .then(() => {
-      window.location.href = redirectURL;
-    })
-    .catch(() => {
-      window.adobeIMS.signInWithSocialProvider('google', { redirect_uri: redirectURL });
-    });
+  }).then(() => {
+    if (redirectURL) {
+      window.location.assign(redirectURL);
+    } else {
+      window.location.reload();
+    }
+  }).catch(() => {
+    window.adobeIMS.signInWithSocialProvider('google', { redirect_uri: redirectURL || window.location.href });
+  });
 }
 
 function setupOneTap() {
