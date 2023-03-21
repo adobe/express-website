@@ -106,12 +106,7 @@ function loadFEDS() {
         console.log(`setting international based on language switch to: ${cookieValue}`);
         document.cookie = cookieValue;
         event.preventDefault();
-        const checkResp = await fetch(prefix + gPath);
-        if (checkResp.ok) {
-          window.location.href = prefix + gPath;
-        } else {
-          window.location.href = `${prefix}/express/`;
-        }
+        window.location.href = `${prefix}${gPath}`;
       });
     });
     // focus link of current region
