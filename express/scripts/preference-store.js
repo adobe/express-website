@@ -15,31 +15,41 @@
 class PreferenceStore {
   constructor() {
     this.stores = {};
-    this.node = document;
-  }
-
-  attach(node) {
-    if (node !== document) return;
-    this.node = node;
   }
 
   set(name, value) {
-    this.stores[name] = value;
-    this.node.dispatchEvent(new CustomEvent(name, { detail: value }));
+    if (!this.stores[name]) this.stores[name] = { subscribers: [] };
+    const store = this.stores[name];
+
+    if (value === this.get(name)) return;
+
+    store.value = value;
+    store.subscribers.forEach((sub) => {
+      sub.dispatchEvent(new CustomEvent(name, { detail: value }));
+    });
   }
 
-  subscribe(name, callback) {
-    this.node.addEventListener(name, (e) => {
+  subscribe(name, block, callback) {
+    if (!this.stores[name]) this.stores[name] = { subscribers: [] };
+    const store = this.stores[name];
+    if (store.subscribers.includes(block)) return;
+
+    store.subscribers.push(block);
+    block.addEventListener(name, (e) => {
       callback(e.detail);
     });
   }
 
-  unsubscribe(name, callback) {
-    this.node.removeEventListener(name, callback);
+  unsubscribe(name, block, callback) {
+    const { subscribers } = this.stores[name] || {};
+    if (!subscribers || !subscribers.includes(block)) return;
+
+    subscribers.splice(subscribers.indexOf(block), 1);
+    block.removeEventListener(name, callback);
   }
 
   get(name) {
-    return this.stores[name];
+    return this.stores[name].value;
   }
 }
 

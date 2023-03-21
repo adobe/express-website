@@ -11,9 +11,6 @@
  */
 import { createTag } from '../../scripts/scripts.js';
 import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-import preferenceStore2 from '../../scripts/preference-store-2.js';
-import preferenceStore3 from '../../scripts/preference-store-3.js';
-import preferenceStore4 from '../../scripts/preference-store-4.js';
 
 function toggleSections($sections, buttons, index) {
   $sections.forEach(($section) => {
@@ -26,7 +23,6 @@ function toggleSections($sections, buttons, index) {
 }
 
 function initButton($block, $sections, index) {
-  preferenceStore.attach($block);
   const $enclosingMain = $block.closest('main');
 
   if ($enclosingMain) {
@@ -82,9 +78,6 @@ function buildReduceMotionSwitch($block, container) {
 
   const dispatchMotionToggleEvent = () => {
     preferenceStore.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
-    preferenceStore2.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
-    preferenceStore3.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
-    preferenceStore4.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
   };
 
   reduceMotionText.textContent = container.textContent.trim();
