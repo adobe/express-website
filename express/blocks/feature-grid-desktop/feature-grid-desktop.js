@@ -11,6 +11,7 @@
  */
 
 import { createTag } from '../../scripts/scripts.js';
+import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
 
 const ITEM_CLASS = [
   'features',
@@ -25,6 +26,9 @@ const ITEM_CLASS = [
   'customization',
   'animations',
 ];
+
+const ANIMATION_CLS = 'enter-animation';
+const ENTERED_CLS = 'entered';
 
 function renderGridNode({ picture, title, ctas }, index) {
   const grid = createTag('div', { class: `grid-item ${ITEM_CLASS[index]}` });
@@ -62,7 +66,7 @@ const observerCallback = (entries, observer) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       observer.unobserve(entry.target);
-      entry.target.classList.add('enter-animation');
+      entry.target.classList.add(ENTERED_CLS);
     }
   });
 };
@@ -98,10 +102,11 @@ export default function decorate(block) {
 
   containerObserver.observe(gridContainer);
 
-  gridProps.forEach((props, index) => {
-    const rendered = renderGridNode(props, index);
-    itemsObserver.observe(rendered);
-    gridContainer.append(rendered);
+  const gridItems = gridProps.map((props, index) => renderGridNode(props, index));
+
+  gridItems.forEach((gridItem) => {
+    itemsObserver.observe(gridItem);
+    gridContainer.append(gridItem);
   });
 
   // for 900px layout, ctas are small
@@ -123,6 +128,25 @@ export default function decorate(block) {
   bigLayoutMediaQuery.addEventListener('change', (e) => {
     reactToMediaQuery(e.matches);
   });
+
+  // react to reduceMotion preference change event
+  const reactToPreference = (reduceMotion) => {
+    if (reduceMotion) {
+      gridContainer.classList.remove(ANIMATION_CLS);
+      gridItems.forEach((gridItem) => {
+        gridItem.classList.remove(ANIMATION_CLS);
+      });
+    } else {
+      gridContainer.classList.add(ANIMATION_CLS);
+      gridItems.forEach((gridItem) => {
+        gridItem.classList.add(ANIMATION_CLS);
+      });
+    }
+  };
+
+  reactToPreference(preferenceStore.get(eventNames.reduceMotion));
+
+  preferenceStore.subscribe(eventNames.reduceMotion, block, reactToPreference);
 
   const footnoteContainer = createTag('div', {
     class: 'footnote-container',

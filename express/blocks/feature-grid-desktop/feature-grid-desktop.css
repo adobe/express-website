@@ -68,15 +68,13 @@ main .feature-grid-desktop {
   grid-gap: var(--grid-item-gap);
   height: var(--grid-container-height);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-container {
-    opacity: 0;
-  }
-  .grid-container.enter-animation {
-    animation: 
-      grid-container-scale var(--animation-duration) var(--in-out-quart-bezier) 0.25s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
-      grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-container.enter-animation {
+  opacity: 0;
+}
+.grid-container.enter-animation.entered {
+  animation: 
+    grid-container-scale var(--animation-duration) var(--in-out-quart-bezier) 0.25s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
+    grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
 
 .grid-item {
@@ -89,10 +87,8 @@ main .feature-grid-desktop {
   padding: var(--grid-item-padding);
   position: relative;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item {
-    opacity: 0;
-  }
+.grid-item.enter-animation {
+  opacity: 0;
 }
 
 .grid-item.features { 
@@ -101,13 +97,11 @@ main .feature-grid-desktop {
   background-position-y: center;
   background-size: 50%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.features.enter-animation {
-    animation: grid-item-slide-in-top-left var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.features.enter-animation.entered {
+  animation: grid-item-slide-in-top-left var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.features.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.features.enter-animation.entered {
     animation: grid-item-slide-in-top-left var(--animation-duration) var(--in-out-quart-bezier) 0.6s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   } 
 }
@@ -118,13 +112,11 @@ main .feature-grid-desktop {
   background-position-y: 20px;
   background-size: 75%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.resize.enter-animation {
-    animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.225s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.resize.enter-animation.entered {
+  animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.225s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.resize.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.resize.enter-animation.entered {
     animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.6s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -135,11 +127,9 @@ main .feature-grid-desktop {
   background-position-y: -25px;
   background-size: 70%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.quick-actions.enter-animation {
-    animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.3s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  } 
-}
+.grid-item.quick-actions.enter-animation.entered {
+  animation: grid-item-slide-in-top var(--animation-duration) var(--in-out-quart-bezier) 0.3s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+} 
 
 .grid-item.effects {
   grid-column: 4 / 5;
@@ -153,13 +143,11 @@ main .feature-grid-desktop {
     grid-row: 1 / 2;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.effects.enter-animation {
-    animation: grid-item-slide-in-bottom-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.effects.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.effects.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.effects.enter-animation.entered {
     animation: grid-item-slide-in-top-right var(--animation-duration) var(--in-out-quart-bezier) 0.425s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -175,13 +163,11 @@ main .feature-grid-desktop {
     grid-row: 2 / 3;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.branding.enter-animation {
-    animation: grid-item-slide-in-bottom-left-big var(--animation-duration) var(--in-out-quart-bezier) 0.15s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.branding.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-left-big var(--animation-duration) var(--in-out-quart-bezier) 0.15s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.branding.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.branding.enter-animation.entered {
     animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -192,14 +178,12 @@ main .feature-grid-desktop {
   background-position-y: 20px;
   background-size: 65%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.templates.enter-animation {
-    animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
-      grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.templates.enter-animation.entered {
+  animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
+    grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.templates.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.templates.enter-animation.entered {
     animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -215,13 +199,11 @@ main .feature-grid-desktop {
     grid-column: 5 / 6;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.fonts.enter-animation {
-    animation: grid-item-slide-in-left-big var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.fonts.enter-animation.entered {
+  animation: grid-item-slide-in-left-big var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.fonts.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.fonts.enter-animation.entered {
     animation: grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.475s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -238,13 +220,11 @@ main .feature-grid-desktop {
     grid-row: 3 / 4;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.stock.enter-animation {
-    animation: grid-item-slide-in-bottom-big var(--animation-duration) var(--in-out-quart-bezier) 0.325s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.stock.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-big var(--animation-duration) var(--in-out-quart-bezier) 0.325s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.stock.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.stock.enter-animation.entered {
     animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.275s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -255,13 +235,11 @@ main .feature-grid-desktop {
   background-position-y: -8px;
   background-size: 74%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.graphic-groups.enter-animation {
-    animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.275s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.graphic-groups.enter-animation.entered {
+  animation: grid-item-slide-in-left var(--animation-duration) var(--in-out-quart-bezier) 0.275s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.graphic-groups.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.graphic-groups.enter-animation.entered {
     animation: grid-item-slide-in-bottom-left var(--animation-duration) var(--in-out-quart-bezier) 0.15s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -272,13 +250,11 @@ main .feature-grid-desktop {
   background-position-y: 14px;
   background-size: 53%;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.customization.enter-animation {
-    animation: grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.325s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.customization.enter-animation.entered {
+  animation: grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.325s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.customization.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.customization.enter-animation.entered {
     animation: grid-item-slide-in-bottom var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
@@ -295,13 +271,11 @@ main .feature-grid-desktop {
     grid-row: 4 / 5;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .grid-item.animations.enter-animation {
-    animation: grid-item-slide-in-bottom-big var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-  }
+.grid-item.animations.enter-animation.entered {
+  animation: grid-item-slide-in-bottom-big var(--animation-duration) var(--in-out-quart-bezier) 0.375s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
-@media screen and (min-width: 1200px) and (prefers-reduced-motion: no-preference) {
-  .grid-item.animations.enter-animation {
+@media screen and (min-width: 1200px) {
+  .grid-item.animations.enter-animation.entered {
     animation: grid-item-slide-in-bottom-right var(--animation-duration) var(--in-out-quart-bezier) 0.2s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
