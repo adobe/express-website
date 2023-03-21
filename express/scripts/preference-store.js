@@ -10,8 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-// provides access to every block for accessibility/ux-related preferences like:
-// themes, prefers-reduced-motion, prefers-color-scheme, prefers-contrast, etc.
+/**
+ * This is a store that provides access to every block for accessibility/ux-related preferences like
+ * themes, prefers-reduced-motion, prefers-color-scheme, prefers-contrast, etc.
+ * Example of dispatching:
+ * /express/blocks/intent-toggle-desktop/intent-toggle-desktop.js#L80
+ *
+ * Example of subscribing:
+ * /express/blocks/feature-grid-desktop/feature-grid-desktop.js#L149
+ *
+ * Example of getting current value:
+ * /express/blocks/feature-grid-desktop/feature-grid-desktop.js#L147
+ */
+
 class PreferenceStore {
   constructor() {
     this.stores = {}; // { [name]: { value, subscribers: [HTMLElement] } }
@@ -38,7 +49,7 @@ class PreferenceStore {
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
    * preferenceStore.subscribe(eventNames.reduceMotion, node, (value) => {
-   * node.append(`${value}`);
+   *   node.append(`${value}`);
    * });
    *
    * */
@@ -57,7 +68,7 @@ class PreferenceStore {
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
    * preferenceStore.unsubscribe(eventNames.reduceMotion, node, (value) => {
-   *  node.append(`${value}`);
+   *   node.append(`${value}`);
    * });
    *
    * Note that the callback should be the same one as when you subscribe
@@ -76,7 +87,7 @@ class PreferenceStore {
    * preferenceStore.get(eventNames.reduceMotion);
    */
   get(name) {
-    return this.stores[name].value;
+    return this.stores[name]?.value;
   }
 }
 
