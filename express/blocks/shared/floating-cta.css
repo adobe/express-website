@@ -129,7 +129,7 @@ main .floating-button .floating-button-lottie {
     opacity: 1;
 }
 
-main .floating-button-wrapper[data-audience='desktop'] .floating-button .floating-button-lottie {
+main .floating-button-wrapper[data-audience='desktop'].floating-button--below-the-fold .floating-button .floating-button-lottie {
     z-index: 0;
 }
 

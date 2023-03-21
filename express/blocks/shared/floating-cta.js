@@ -106,8 +106,10 @@ export function initLottieArrow($lottieScrollButton, $floatButtonWrapper, $scrol
 }
 
 function makeCTAFromSheet($block, data) {
+  const audience = $block.querySelector(':scope > div').textContent.trim();
+  const audienceSpecificUrl = audience && ['desktop', 'mobile'].includes(audience) ? data.mainCta[`${audience}Href`] : null;
   const $buttonContainer = createTag('div', { class: 'button-container' });
-  const ctaFromSheet = createTag('a', { href: data.mainCta.href, title: data.mainCta.text });
+  const ctaFromSheet = createTag('a', { href: audienceSpecificUrl || data.mainCta.href, title: data.mainCta.text });
   ctaFromSheet.textContent = data.mainCta.text;
   $buttonContainer.append(ctaFromSheet);
   $block.append($buttonContainer);
@@ -128,7 +130,7 @@ export async function createFloatingButton($block, audience, data) {
   // Hide CTAs with same url & text as the Floating CTA && is NOT a Floating CTA (in mobile/tablet)
   const sameUrlCTAs = Array.from(main.querySelectorAll('a.button:any-link'))
     .filter((a) => (a.textContent.trim() === $a.textContent.trim() || a.href === $a.href)
-      && !a.parentElement.classList.contains('floating-button'));
+      && !a.parentElement.parentElement.classList.contains('floating-button'));
   sameUrlCTAs.forEach((cta) => {
     cta.classList.add('same-as-floating-button-CTA');
   });
@@ -275,6 +277,14 @@ export async function collectFloatingButtonData() {
 
     if (key === 'delay') {
       data.delay = value;
+    }
+
+    if (key === 'desktop cta link') {
+      data.mainCta.desktopHref = value;
+    }
+
+    if (key === 'mobile cta link') {
+      data.mainCta.mobileHref = value;
     }
 
     if (key === 'main cta link') {
