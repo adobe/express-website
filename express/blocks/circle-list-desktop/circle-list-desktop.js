@@ -107,6 +107,20 @@ const buildCircleList = (block, circles) => {
       lottie.innerHTML = circle.lottie;
       lottieWrapper.append(lottie);
       circleWrapper.append(lottieWrapper);
+
+      // const player = lottie.querySelector('lottie-player');
+      
+      // player.onload = () => {
+      //   console.log(player);
+      //   console.log(player.animationState);
+      //   const lottiePlaying = setInterval(() => {
+      //     if (player.animationState.playing) {
+      //       console.log('AND SHE PLAYIN');
+      //       player.pause();
+      //       clearInterval(lottiePlaying);
+      //     }
+      //   }, 500);
+      // };
     }
 
     const label = createTag('span', { class: 'circle-label' });
@@ -120,7 +134,6 @@ const buildCircleList = (block, circles) => {
 
 function initResetImage(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
-    console.log('The mouse left!:');
     const hoveredImgs = Array.from(e.target.parentElement.querySelectorAll('img'));
     hoveredImgs.forEach((img) => {
       img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s');
@@ -155,16 +168,25 @@ function initImageShuffling(wrapper) {
 }
 
 export default async function decorate($block) {
+  let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const circleList = await extractContent($block);
   buildCircleList($block, circleList);
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
-  let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   window.addEventListener('reduce-motion-toggle', (e) => {
     prefersReducedMotion = e.detail.reduceMotionEnabled;
   });
 
-  if (!prefersReducedMotion) {
+  if (prefersReducedMotion) {
+    const player = $block.querySelector('lottie-player');
+    const lottiePlaying = setInterval(() => {
+      if (player.hasUpdated) {
+        player.setSpeed(0);
+        player.seek(200);
+        clearInterval(lottiePlaying);
+      }
+    }, 100);
+  } else {
     circleWrappers.forEach((wrapper) => {
       const imageWrapper = wrapper.querySelector('.img-wrapper');
       if (imageWrapper) {
