@@ -68,7 +68,7 @@ function loadIMS() {
   loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
 }
 
-function loadFEDS() {
+async function loadFEDS() {
   const locale = getLocale(window.location);
 
   async function showRegionPicker() {
@@ -152,10 +152,9 @@ function loadFEDS() {
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
-  const breadCrumbList = [];
   async function buildBreadCrumbArray() {
     if (isHomepage || getMetadata('hide-breadcrumbs') === 'true') {
-      return;
+      return undefined;
     }
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
     const buildBreadCrumb = (path, name, parentPath = '') => (
@@ -176,25 +175,25 @@ function loadFEDS() {
     if ((!pagesShortName && pathSegments.length > 2)
       || !placeholders[`breadcrumbs-${category}`]
       || locale !== 'us') { // Remove this line once locale translations are complete
-      return;
+      return undefined;
     }
     category = capitalize(placeholders[`breadcrumbs-${category}`]);
     validCategories.push(category);
 
     const secondBreadCrumb = buildBreadCrumb(secondPathSegment, category, `${localePath}/express`);
-    breadCrumbList.push(secondBreadCrumb);
+    const breadCrumbList = [secondBreadCrumb];
 
     if (!validCategories.includes(category)) {
-      return;
+      return undefined;
     }
 
     if (pathSegments.length >= 3) {
       const thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);
       breadCrumbList.push(thirdBreadCrumb);
     }
+    return breadCrumbList;
   }
 
-  buildBreadCrumbArray();
   window.fedsConfig = {
     ...(window.fedsConfig || {}),
 
@@ -231,7 +230,7 @@ function loadFEDS() {
       : {},
     breadcrumbs: {
       showLogo: true,
-      links: breadCrumbList,
+      links: await buildBreadCrumbArray(),
     },
   };
 
