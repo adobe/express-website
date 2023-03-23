@@ -1,6 +1,9 @@
+main .circle-list-desktop-container > .circle-list-desktop-wrapper {
+  max-width: 1307px;
+}
+
 main .block.circle-list-desktop {
   height: 200px;
-  max-width: 1307px;
   margin: auto;
 }
 

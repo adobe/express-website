@@ -10,9 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-// 2) Animation for doorhandle transition
-
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
+import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
 
 async function fetchCircleImages(link) {
   const resp = await fetch(`${link}`);
@@ -52,7 +51,6 @@ const extractContent = async (block) => {
     const dropDownOptions = [];
     let imageLinks;
     const defaultLink = row.firstElementChild.querySelector('a')?.getAttribute('href') ?? '';
-    let imageLinks;
     const label = row.firstElementChild.textContent.trim();
     const colArray = Array.from(row.children);
 
@@ -108,20 +106,6 @@ const buildCircleList = (block, circles) => {
       lottie.innerHTML = circle.lottie;
       lottieWrapper.append(lottie);
       circleWrapper.append(lottieWrapper);
-
-      // const player = lottie.querySelector('lottie-player');
-      
-      // player.onload = () => {
-      //   console.log(player);
-      //   console.log(player.animationState);
-      //   const lottiePlaying = setInterval(() => {
-      //     if (player.animationState.playing) {
-      //       console.log('AND SHE PLAYIN');
-      //       player.pause();
-      //       clearInterval(lottiePlaying);
-      //     }
-      //   }, 500);
-      // };
     }
 
     const label = createTag('span', { class: 'circle-label' });
@@ -133,67 +117,87 @@ const buildCircleList = (block, circles) => {
   block.append(circleContainer);
 };
 
-function initResetImage(wrapper) {
+function initResetDoorHandle(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
-    const hoveredImgs = Array.from(e.target.parentElement.querySelectorAll('img'));
+    const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));
     hoveredImgs.forEach((img) => {
       img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s');
     });
   });
 }
 
-function initImageShuffling(wrapper) {
+function initResetHeroImage(imgWrapper) {
+  const heroImage = imgWrapper.querySelector('.hero-img');
+  const altImages = Array.from(imgWrapper.querySelectorAll('.alt-img'));
+  imgWrapper.addEventListener('mouseleave', () => {
+    heroImage.setAttribute('style', 'transform: scale3d(1, 1, 1); transform-style: preserve-3d; transition-property: transform 0.4s; opacity: 1');
+    altImages.forEach((altImg) => {
+      altImg.setAttribute('style', 'opacity: 0');
+    });
+  });
+}
+
+function initImageShuffling(wrapper, block) {
   const imageWrapper = wrapper.querySelector('.img-wrapper');
   const imageCount = imageWrapper.querySelectorAll('img').length;
   let activeImageIndex = 0;
   let backgroundImageIndex = 0;
+  const player = block.querySelector('lottie-player');
+  const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
 
-  imageWrapper.addEventListener('mousemove', (e) => {
-    const wrapperWidth = imageWrapper.offsetWidth;
-    const switchPxThreshold = wrapperWidth / imageCount;
-    const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
-    const photoList = Array.from(imageWrapper.children);
+  const shuffle = (e) => {
+    if (!block.classList.contains('no-animation')) {
+      const wrapperWidth = imageWrapper.offsetWidth;
+      const switchPxThreshold = wrapperWidth / imageCount;
+      const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
+      const photoList = Array.from(imageWrapper.children);
 
-    backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-    photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0; transition-property: transform');
-    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85, 0.85, 0.85); opacity: 0');
-    activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
-      : Math.floor(mouseX / switchPxThreshold);
-    backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-    const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
-    const minResizeScale = 0.85;
-    const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
-    photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 5; transition-property: none`);
-    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 3');
-  });
+      backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
+      photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0; transition-property: transform');
+      photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85, 0.85, 0.85); opacity: 0');
+      activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
+        : Math.floor(mouseX / switchPxThreshold);
+      backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
+      const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
+      const minResizeScale = 0.85;
+      const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
+      photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 5; transition-property: none`);
+      photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 3');
+    }
+  };
+
+  const toggleAnimationState = (reduceMotion) => {
+    const lottiePlaying = setInterval(() => {
+      if (player.hasUpdated) {
+        if (reduceMotion === 'on') {
+          block.classList.add('no-animation');
+          player.setSpeed(0);
+          player.seek(200);
+        } else {
+          block.classList.remove('no-animation');
+          player.setSpeed(1);
+        }
+        clearInterval(lottiePlaying);
+      }
+    }, 100);
+  };
+
+  toggleAnimationState(reducedMotion);
+  preferenceStore.subscribe(eventNames.reduceMotion, block, (value) => toggleAnimationState(value));
+  imageWrapper.addEventListener('mousemove', shuffle);
 }
 
 export default async function decorate($block) {
-  let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const circleList = await extractContent($block);
   buildCircleList($block, circleList);
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
 
-  window.addEventListener('reduce-motion-toggle', (e) => {
-    prefersReducedMotion = e.detail.reduceMotionEnabled;
+  circleWrappers.forEach((wrapper) => {
+    const imageWrapper = wrapper.querySelector('.img-wrapper');
+    if (imageWrapper) {
+      initResetDoorHandle(wrapper);
+      initImageShuffling(wrapper, $block);
+      initResetHeroImage(imageWrapper);
+    }
   });
-
-  if (prefersReducedMotion) {
-    const player = $block.querySelector('lottie-player');
-    const lottiePlaying = setInterval(() => {
-      if (player.hasUpdated) {
-        player.setSpeed(0);
-        player.seek(200);
-        clearInterval(lottiePlaying);
-      }
-    }, 100);
-  } else {
-    circleWrappers.forEach((wrapper) => {
-      const imageWrapper = wrapper.querySelector('.img-wrapper');
-      if (imageWrapper) {
-        initResetImage(wrapper);
-        initImageShuffling(wrapper);
-      }
-    });
-  }
 }
