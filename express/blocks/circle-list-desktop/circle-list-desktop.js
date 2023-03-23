@@ -121,7 +121,7 @@ function initResetDoorHandle(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
     const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));
     hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s');
+      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 1');
     });
   });
 }

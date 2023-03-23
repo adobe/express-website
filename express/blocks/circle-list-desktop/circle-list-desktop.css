@@ -26,8 +26,8 @@ main .circle-list-desktop .img-wrapper,
 main .circle-list-desktop .lottie-wrapper {
   display: block;
   position: relative;
-  height: 160px;
-  width: 160px;
+  height: 178px;
+  width: 178px;
 }
 main .circle-list-desktop .lottie-wrapper .circle-label {
   color: #00000029;
@@ -83,7 +83,7 @@ main .circle-list-desktop .alt-img {
 
 main .circle-list-desktop .lottie-blank-canvas,
 main .circle-list-desktop .lottie-animation img {
-  background-color: #CC6AF7;
+  background: var(--gradient-highlight-diagonal);
 }
 
 main .circle-list-desktop a {
@@ -108,7 +108,7 @@ main .circle-list-desktop .dropdown {
   border-radius: 105px 105px 24px 24px;
   left: 50%;
   top: -25px;
-  padding: 200px 0 24px 0;
+  padding: 200px 0 20px 0;
   transform: translate(-50%, 0);
   filter: drop-shadow(0px 3px 6px #00000029);
 }
@@ -152,6 +152,10 @@ main .circle-list-desktop .dropdown li {
   list-style-type: none;
   font-size: 14px;
   transition: 0.4s;
+}
+
+main .circle-list-desktop .dropdown li:first-of-type {
+  margin-top: 26px;
 }
 
 main .circle-list-desktop .circle-label {
