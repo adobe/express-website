@@ -33,7 +33,9 @@ function onGoogleToken(data) {
       window.location.reload();
     }
   }).catch(() => {
-    window.adobeIMS.signInWithSocialProvider('google', { redirect_uri: redirectURL || window.location.href });
+    const layoverUrl = new URL(window.location.href);
+    layoverUrl.searchParams.set('layover', 'true');
+    window.adobeIMS.signInWithSocialProvider('google', { redirect_uri: layoverUrl.href });
   });
 }
 
@@ -74,6 +76,13 @@ function setupOneTap() {
 }
 
 export default function loadGoogleYolo() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const relayLogin = urlParams.get('layover');
+  const ctaUrl = getRedirectUri();
+  if (relayLogin && ctaUrl) {
+    window.location.assign(ctaUrl);
+  }
+
   setTimeout(() => {
     if (typeof window.feds === 'object' && window.feds?.events?.experience === true) {
       setupOneTap();
