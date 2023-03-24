@@ -104,7 +104,6 @@ main .circle-list-desktop .dropdown {
   display: none;
   position: absolute;
   background-color: #E4E5EA;
-  z-index: -1;
   border-radius: 105px 105px 24px 24px;
   left: 50%;
   top: -25px;
@@ -127,7 +126,7 @@ main .circle-list-desktop .dropdown a {
 
 main .circle-list-desktop .circle-wrapper {
   position: relative;
-  z-index: 2;;
+  z-index: 1;
 }
 
 main .circle-list-desktop .door-handle .dropdown {
@@ -146,7 +145,7 @@ main .circle-list-desktop .dropdown li {
   justify-content: center;
   border-radius: 5px;
   height: 32px;
-  width: 190px;
+  width: 222px;
   margin-left: 10px;
   margin-right: 10px;
   list-style-type: none;

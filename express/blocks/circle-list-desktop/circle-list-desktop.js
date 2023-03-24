@@ -117,15 +117,20 @@ const buildCircleList = (block, circles) => {
   block.append(circleContainer);
 };
 
+// Resets all the images to their default state
 function initResetDoorHandle(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
     const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));
+    const circleWrapper = wrapper.querySelector('.circle-wrapper');
+
+    circleWrapper.setAttribute('style', 'z-index: 1');
     hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 1');
+      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 0');
     });
   });
 }
 
+// Snaps back to hero image, even if mouse leaves image on partial transition
 function initResetHeroImage(imgWrapper) {
   const heroImage = imgWrapper.querySelector('.hero-img');
   const altImages = Array.from(imgWrapper.querySelectorAll('.alt-img'));
@@ -144,8 +149,10 @@ function initImageShuffling(wrapper, block) {
   let backgroundImageIndex = 0;
   const player = block.querySelector('lottie-player');
   const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
+  const circleWrapper = wrapper.querySelector('.circle-wrapper');
 
   const shuffle = (e) => {
+    circleWrapper.setAttribute('style', 'z-index: 3');
     if (!block.classList.contains('no-animation')) {
       const wrapperWidth = imageWrapper.offsetWidth;
       const switchPxThreshold = wrapperWidth / imageCount;
@@ -161,8 +168,10 @@ function initImageShuffling(wrapper, block) {
       const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
       const minResizeScale = 0.85;
       const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
-      photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 5; transition-property: none`);
-      photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 3');
+      photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 2; transition-property: none`);
+      photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
+    } else {
+      wrapper.querySelector('.hero-img').setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
     }
   };
 
