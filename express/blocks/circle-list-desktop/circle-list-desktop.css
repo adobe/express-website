@@ -60,8 +60,6 @@ main .circle-list-desktop .lottie-animation img {
   height: 100%;
   width: 100%;
   border-radius: 50%;
-  transition: transform 0.2s;
-  transform: scale3d(0.85, 0.85, 0.85);
   transform-style: preserve-3d;
 }
 
@@ -70,11 +68,14 @@ main .circle-list-desktop .lottie-animation img {
   padding: 16px;
 }
 
-main .block.circle-list-desktop .img-wrapper:hover img {
+main .block.circle-list-desktop .img-wrapper {
+  transform: scale3d(0.85, 0.85, 0.85);
   transition: transform 0.4s;
+}
+
+main .block.circle-list-desktop .img-wrapper:hover {
   transform: scale3d(1, 1, 1);
   transform-style: preserve-3d;
-  pointer-events: none;
 }
 
 main .circle-list-desktop .alt-img {
@@ -162,7 +163,7 @@ main .circle-list-desktop .circle-label {
 }
 
 main .circle-list-desktop .dropdown li:hover {
-  background-color: var(--color-white);;
+  background-color: var(--color-white);
 }
 
 main .circle-list-desktop .dropdown li:hover span {
