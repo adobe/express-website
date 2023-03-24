@@ -117,29 +117,25 @@ const buildCircleList = (block, circles) => {
   block.append(circleContainer);
 };
 
-// Mouse exits entire door handle - resets all the images to their default state
+// Resets all the images to their default state
 function initResetDoorHandle(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
-    console.log('The mouse has left the DOOR HANDLE!');
     const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));
     const circleWrapper = wrapper.querySelector('.circle-wrapper');
-    const imgWrapper = circleWrapper.querySelector('.img-wrapper');
 
     circleWrapper.setAttribute('style', 'z-index: 1');
     hoveredImgs.forEach((img) => {
       img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 0');
-      imgWrapper.classList.remove('first-transition-complete');
     });
   });
 }
 
 // Snaps back to hero image, even if mouse leaves image on partial transition
 function initResetHeroImage(imgWrapper) {
-  console.log('Resetting to hero image now');
   const heroImage = imgWrapper.querySelector('.hero-img');
   const altImages = Array.from(imgWrapper.querySelectorAll('.alt-img'));
   imgWrapper.addEventListener('mouseleave', () => {
-    heroImage.setAttribute('style', 'transform: scale3d(1, 1, 1); transform-style: preserve-3d; opacity: 1');
+    heroImage.setAttribute('style', 'transform: scale3d(1, 1, 1); transform-style: preserve-3d; transition-property: transform 0.4s; opacity: 1');
     altImages.forEach((altImg) => {
       altImg.setAttribute('style', 'opacity: 0');
     });
@@ -147,10 +143,10 @@ function initResetHeroImage(imgWrapper) {
 }
 
 function initImageShuffling(wrapper, block) {
-  let activeImageIndex = 0;
-  let backgroundImageIndex = 0;
   const imageWrapper = wrapper.querySelector('.img-wrapper');
   const imageCount = imageWrapper.querySelectorAll('img').length;
+  let activeImageIndex = 0;
+  let backgroundImageIndex = 0;
   const player = block.querySelector('lottie-player');
   const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
@@ -164,7 +160,7 @@ function initImageShuffling(wrapper, block) {
       const photoList = Array.from(imageWrapper.children);
 
       backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-      photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0');
+      photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0; transition-property: transform');
       photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85, 0.85, 0.85); opacity: 0');
       activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
         : Math.floor(mouseX / switchPxThreshold);
@@ -172,18 +168,7 @@ function initImageShuffling(wrapper, block) {
       const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
       const minResizeScale = 0.85;
       const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
-
-      if (!imageWrapper.classList.contains('first-transition-complete')) {
-        const transitionEndHandler = () => {
-          imageWrapper.classList.add('first-transition-complete');
-          photoList.forEach((photo) => {
-            photo.setAttribute('style', 'transition-property: none');
-          });
-          photoList[activeImageIndex].removeEventListener('transitionend', transitionEndHandler);
-        };
-        photoList[activeImageIndex].addEventListener('transitionend', transitionEndHandler);
-      }
-      photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 2`);
+      photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 2; transition-property: none`);
       photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
     } else {
       wrapper.querySelector('.hero-img').setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
