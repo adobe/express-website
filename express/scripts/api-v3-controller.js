@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getHelixEnv } from './scripts.js';
+import { getHelixEnv, getLocale } from './scripts.js';
 
 const endpoints = {
   dev: {
@@ -32,6 +32,24 @@ const endpoints = {
   },
 };
 
+export async function getPillWordsMapping() {
+  const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+  const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
+  if (!window.linkListPills) {
+    try {
+      const resp = await fetch(`${urlPrefix}/express/linklist-qa-03-20-2023.json`);
+      const filterredArray = await resp.json();
+      window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+    } catch {
+      const resp = await fetch('/express/linklist-qa-03-20-2023.json');
+      const filterredArray = await resp.json();
+      window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+    }
+  }
+  return window.linkListPills;
+}
+
 export default async function getData(env = '', data = {}) {
   const endpoint = endpoints[env];
   const response = await fetch(endpoint.url, {
@@ -51,7 +69,7 @@ export default async function getData(env = '', data = {}) {
   }
 }
 
-export async function fetchLInkListFromCKGApi(pageData) {
+export async function fetchLinkListFromCKGApi(pageData) {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });

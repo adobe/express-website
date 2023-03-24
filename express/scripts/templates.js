@@ -19,7 +19,8 @@ import {
 } from './scripts.js';
 
 import {
-  fetchLInkListFromCKGApi,
+  fetchLinkListFromCKGApi,
+  getPillWordsMapping,
 } from './api-v3-controller.js';
 
 export function findMatchExistingSEOPage(path) {
@@ -96,7 +97,7 @@ async function fetchLinkList(data) {
   if (!window.linkLists) {
     window.linkLists = {};
     if (!window.linkLists.ckgData) {
-      const response = await fetchLInkListFromCKGApi(data);
+      const response = await fetchLinkListFromCKGApi(data);
       // catch data from CKG API, if empty, use top priority categories sheet
       if (response && response.queryResults[0].facets) {
         window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
@@ -151,15 +152,17 @@ function updateSEOLinkList(container, linkPill, list) {
   }
 }
 
-function formatLinkPillText(pageData, LinkPillData) {
-  const digestedDisplayValue = titleCase(LinkPillData.displayValue.replace(/-/g, ' '));
-  const digestedChildSibling = titleCase(LinkPillData.childSibling.replace(/-/g, ' '));
+function formatLinkPillText(pageData, linkPillData, pillsMapping) {
+  const digestedDisplayValue = titleCase(linkPillData.displayValue.replace(/-/g, ' '));
+  const digestedChildSibling = titleCase(linkPillData.childSibling.replace(/-/g, ' '));
   const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '').replace(/-/g, ' ')}` : '';
+  const locale = getLocale(window.location);
+  const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
 
-  const displayTopics = topics && LinkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
+  const displayTopics = topics && linkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
   let displayText;
 
-  if (pageData.templateTasks) {
+  if (pageData.templateTasks && pageData.templateTasks !== '{{queryTasks}}') {
     displayText = `${displayTopics} ${digestedDisplayValue} ${digestedChildSibling}`
       .split(' ')
       .filter((item, i, allItems) => i === allItems.indexOf(item))
@@ -171,11 +174,22 @@ function formatLinkPillText(pageData, LinkPillData) {
       .join(' ').trim();
   }
 
+  const alternateText = pillsMapping.find((row) => {
+    const pageMatch = pageData.path === row['Express SEO URL'] && pageData.ckgID === row.CKGID;
+    const pillMatch = linkPillData.ckgID === row['CKG Pill ID'] && displayText === row['Pill Display Name'];
+    return pageMatch && pillMatch;
+  });
+
+  if (alternateText) {
+    displayText = alternateText[`${localeColumnString}`];
+  }
+
   return displayText;
 }
 
-function updateLinkList(container, linkPill, list, pageData) {
+async function updateLinkList(container, linkPill, list, pageData) {
   const templatePages = window.templates.data ?? [];
+  const pillsMapping = await getPillWordsMapping();
   const pageLinks = [];
   const searchLinks = [];
   container.innerHTML = '';
@@ -184,8 +198,10 @@ function updateLinkList(container, linkPill, list, pageData) {
     list.forEach((d) => {
       const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')}` : '';
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
-      const topicsQuery = `${topics ?? topics} ${d.displayValue}`;
-      const displayText = formatLinkPillText(pageData, d);
+      const topicsQuery = `${topics ?? topics} ${d.displayValue}`.split(' ')
+        .filter((item, i, allItems) => i === allItems.indexOf(item))
+        .join(' ').trim();
+      const displayText = formatLinkPillText(pageData, d, pillsMapping);
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
@@ -364,10 +380,10 @@ if (page) {
     } else {
       const purgedData = purgeAllTaskText(data);
       updateMetadata(purgedData);
-      updateBlocks(purgedData);
+      await updateBlocks(purgedData);
     }
   } else {
-    updateBlocks(page);
+    await updateBlocks(page);
   }
 } else {
   const env = getHelixEnv();
