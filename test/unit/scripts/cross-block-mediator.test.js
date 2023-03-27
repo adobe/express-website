@@ -115,6 +115,28 @@ describe('CrossBlockMediator', () => {
       expect(newV).to.equal('value1');
     });
 
+    it('should have all callbacks executed despite errors', async () => {
+      const storeName = getNextStoreName();
+      let newV = null;
+      const err1 = new Error('err1');
+      const err2 = new Error('err2');
+      mediator.subscribe(storeName, () => {
+        throw err1;
+      });
+      mediator.subscribe(storeName, ({ newValue }) => {
+        newV = newValue;
+      });
+      mediator.subscribe(storeName, () => {
+        throw err2;
+      });
+
+      const { success, errors } = await mediator.set(storeName, 'value1');
+      expect(mediator.get(storeName)).to.equal('value1');
+      expect(success).to.be.false;
+      expect(errors).to.deep.equal([err1, err2]);
+      expect(newV).to.equal('value1');
+    });
+
     it('should return a function to unsubscribe the callback', () => {
       const storeName = getNextStoreName();
       const unsubscribe = mediator.subscribe(storeName, () => {});
