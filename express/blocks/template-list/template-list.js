@@ -21,7 +21,7 @@ import {
   decorateMain,
   fetchPlaceholders,
   fetchPlainBlockFromFragment,
-  fetchRelevantRows,
+  fetchRelevantRows, fixIcons,
   getIconElement,
   getLocale,
   getLottie,
@@ -1909,6 +1909,7 @@ async function replaceRRTemplateList($block) {
         }
         $block.classList.remove('apipowered');
         $block.innerHTML = $newBlock.innerHTML;
+        await fixIcons($block);
       }
     } else {
       $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
@@ -1934,34 +1935,6 @@ async function replaceRRTemplateList($block) {
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     await replaceRRTemplateList($block);
-    // const placeholders = await fetchPlaceholders().then((result) => result);
-    // const relevantRowsData = await fetchRelevantRows(window.location.pathname);
-    // props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
-    //
-    // if (relevantRowsData) {
-    //   $block.closest('.section').dataset.audience = 'mobile';
-    //   props.headingTitle = relevantRowsData.header || null;
-    //   props.headingSlug = relevantRowsData.shortTitle || null;
-    //   props.viewAllLink = relevantRowsData.viewAllLink || null;
-    //
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-locale', relevantRowsData.templateLocale || 'en');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-premium', relevantRowsData.templatePremium || '');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-animated', relevantRowsData.templateAnimated || '');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/');
-    //   $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
-    //
-    //   if (relevantRowsData.templateTasks === '') {
-    //     $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-    //   } else {
-    //     $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
-    //   }
-    //   // }
-    // } else {
-    //   $block.remove();
-    // }
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
