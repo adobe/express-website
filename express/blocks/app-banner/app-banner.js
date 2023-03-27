@@ -187,9 +187,9 @@ export default async function decorate($block) {
     decorateBanner($block, payload);
     addCloseBtn($block);
 
-    if (window.multifunctionButton && window.multifunctionButton.length) {
-      const db = window.multifunctionButton[0];
-      const mfb = window.multifunctionButton.find((p) => window.location.pathname === p.path);
+    if (Array.isArray(window.floatingCta) && window.floatingCta.length) {
+      const db = window.floatingCta[0];
+      const mfb = window.floatingCta.find((p) => window.location.pathname === p.path);
       const delay = mfb.delay ? mfb.delay * 1000 : db.delay * 1000;
 
       setTimeout(() => {

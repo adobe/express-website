@@ -17,10 +17,6 @@ import {
   addFreePlanWidget,
 } from '../../scripts/scripts.js';
 
-import {
-  createFloatingButton,
-} from '../floating-button/floating-button.js';
-
 function styleBackgroundWithScroll($section) {
   const $background = createTag('div', { class: 'marquee-background' });
 
@@ -174,7 +170,6 @@ export default function decorate($block) {
         }
 
         $a.classList.add('primaryCTA');
-        createFloatingButton($a, $block.closest('.section').dataset.audience);
         styleBackgroundWithScroll($section);
         addFreePlanWidget($block.querySelector('.button-container'));
       }

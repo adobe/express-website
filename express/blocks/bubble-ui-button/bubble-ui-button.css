@@ -1,0 +1,233 @@
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox {
+    padding-bottom: 21px;
+    max-height: 64px;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper {
+    transition: opacity 0.2s, transform 2s;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.initial-load {
+    opacity: 0;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in {
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(5);
+    transition: none;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper .bubble-load-background {
+    position: absolute;
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    background-color: var(--color-black);
+    max-height: 110px;
+    max-width: 110px;
+    transition: all 0.8s, opacity 1.5s ease-in;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper.zoom-in .bubble-load-background {
+    opacity: 1;
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    transition: none;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-inner-wrapper .bubble-load-background .icon-aex-logo {
+    display: block;
+    position: absolute;
+    border-radius: 100px;
+    height: 100%;
+    width: 100%;
+    max-width: 80px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 2s ease-in;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox {
+    padding-bottom: 0;
+    transform: translateY(72px);
+    max-height: 520px;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox:after {
+    height: 72px;
+    background-color: transparent;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .toolbox .toolbox-top {
+    margin-bottom: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom.bubble-ui {
+    margin: 0;
+    flex-grow: 1;
+    height: 420px;
+    position: relative;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .toolbox.initial-load .bubble-container.center-piece .icon-aex-logo {
+    display: unset;
+    height: 64px;
+    width: 64px;
+}
+
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport {
+    position: absolute;
+    user-select: none;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    -ms-overflow-style: none;  /* Edge */
+    scrollbar-width: none;  /* Firefox */
+    scroll-padding: 100px 0 80px 100px;
+    display: flex;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-viewport::-webkit-scrollbar {
+    display: none;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row-container {
+    height: 620px;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: content-box;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-row {
+    display: flex;
+    user-select: none;
+    flex-direction: row;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble-container {
+    width: 110px;
+    user-select: none;
+    height: 110px;
+    margin: 0 5px;
+    position: relative;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble {
+    border-radius: 50%;
+    display: -webkit-flex;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.scale-down {
+    transform: scale(0.9);
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui.no-transition .bubble {
+    transition: none;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble .bubble-background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    transition: opacity 0.3s;
+    z-index: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble > img {
+    position: absolute;
+    top: 8px;
+    height: 32px;
+    width: 32px;
+    z-index: 1;
+    transition: top 0.3s, transform 0.3s;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.small-bubble,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bubble {
+    background-image: none !important;
+    align-items: center;
+    padding-top: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.small-bubble .bubble-background,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bubble .bubble-background {
+    opacity: 0;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.small-bubble > img,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bubble > img {
+    top: 50%;
+    transform: translateY(-50%);
+    height: 56%;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .small-bubble,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .tiny-bubble {
+    background: linear-gradient(320deg, #ff4dd2, #7c84f3, #ff4dd2, #7c84f3, #ff4dd2) !important;
+    background-size: 400% 400% !important;
+    animation: buttonGradient 45s ease infinite;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece img {
+    display: none;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .small-bubble img,
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .center-piece .tiny-bubble img {
+    width: 55%;
+    display: block;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .bubble-ui .bubble.tiny-bubble > img {
+    opacity: 0;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .block.floating-button {
+    width: 90vw;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button .block.floating-button a:any-link {
+    min-width: unset;
+}
+
+main .floating-button-wrapper.multifunction.bubble-ui-button.toolbox-opened .block.floating-button {
+    background-color: transparent;
+}

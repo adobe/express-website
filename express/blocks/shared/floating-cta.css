@@ -1,0 +1,440 @@
+main .floating-button-wrapper {
+    position: fixed;
+    left: 0;
+    bottom: -1px;
+    top: auto;
+    right: auto;
+    z-index: 2;
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: flex-end;
+    -webkit-align-items: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+    mix-blend-mode: normal;
+    box-sizing: border-box;
+    padding: 0 6px;
+    pointer-events: none;
+    background: -webkit-linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);
+    transition: bottom 0.6s ease-out, opacity 0.6s ease-out, height 0.6s ease-out, background 0.6s, padding-bottom 0.6s;
+    height: 150px;
+}
+main .floating-button-wrapper.push-up {
+    padding-bottom: 96px;
+}
+main .floating-button-wrapper.push-up .floating-button {
+    margin-bottom: 8px;
+}
+
+body.branch-banner-is-active .floating-button-wrapper {
+    height: calc(150px + 76px);
+}
+
+main .floating-button-wrapper.floating-button--hidden {
+    height: 150px;
+    bottom: -151px;
+    opacity: 0.9;
+}
+
+main .floating-button {
+    display: block;
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 100px;
+    background-color: var(--color-gray-200);
+    transition: background-color .3s, padding .3s, margin-bottom 0.6s ease-out;
+    z-index: 2;
+    max-width: 100%;
+    pointer-events: auto;
+    margin-bottom: 24px;
+}
+
+body.branch-banner-is-active .floating-button-wrapper .floating-button {
+    margin-bottom: calc(24px + 76px);
+}
+
+main .floating-button-wrapper.floating-button--hidden .floating-button {
+    margin-bottom: 24px;
+}
+
+main .floating-button .floating-button-inner-wrapper {
+    position: relative;
+}
+
+main .floating-button .floating-button-inner-wrapper .floating-button-background {
+    position: absolute;
+    height: 100%;
+    display: block;
+    z-index: 2;
+    width: 100%;
+    pointer-events: auto;
+    border-radius: 27px;
+    border-color: transparent;
+    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+    background-size: 400% 400%;
+    -webkit-animation: buttonGradient 45s ease infinite;
+    -moz-animation: buttonGradient 45s ease infinite;
+    animation: buttonGradient 45s ease infinite;
+    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding-left .3s;
+}
+
+main .floating-button a.button:any-link {
+    position: relative;
+    display: block;
+    min-width: 200px;
+    white-space: nowrap;
+    margin: 0;
+    z-index: 2;
+    padding: 13px 64px;
+    pointer-events: auto;
+}
+
+main .floating-button a.button:any-link,
+main .floating-button a.button:any-link:hover,
+main .floating-button a.button:any-link:active,
+main .floating-button a.button:any-link:focus {
+    background: transparent;
+    transition: width .3s, margin .3s, min-width .3s, background-color .3s, color .3s, border .3s, background-position 2s ease-out, padding .3s;
+}
+
+
+main .floating-button-wrapper.floating-button--above-the-fold:not(.floating-button--scrolled) a.button:any-link {
+    padding: 13px 80px 13px 48px;
+}
+
+main .floating-button .floating-button-lottie {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    margin: 0;
+    padding: 4px 0 0;
+    background: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: opacity 0.3s;
+    z-index: 2;
+    opacity: 1;
+}
+
+main .floating-button-wrapper[data-audience='desktop'].floating-button--below-the-fold .floating-button .floating-button-lottie {
+    z-index: 0;
+}
+
+main .floating-button .floating-button-lottie .lottie-purple-arrows {
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+}
+
+main .floating-button--scrolled .floating-button {
+    background-color: rgba(0,0,0,0);
+}
+
+main .floating-button--scrolled .floating-button .floating-button-background {
+    margin-right: 0;
+    min-width: 250px;
+    width: 100%;
+}
+
+main .floating-button-wrapper.floating-button--above-the-fold:not(.floating-button--scrolled) .floating-button-background {
+    width: calc(100% - 50px);
+}
+
+main .floating-button--scrolled .floating-button-lottie {
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    z-index: 0;
+}
+
+main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
+    display: none;
+}
+
+main [data-audience].floating-button-wrapper {
+    display: none;
+}
+
+body[data-device="mobile"] main .floating-button-wrapper[data-audience="mobile"][data-section-status="loaded"],
+body[data-device="desktop"] main .floating-button-wrapper[data-audience="desktop"][data-section-status="loaded"] {
+    display: flex;
+}
+
+body[data-device="mobile"] main .floating-button-wrapper[data-audience="mobile"][data-section-status="loaded"] .same-as-floating-button-CTA {
+    display: block;
+}
+
+main .floating-button-wrapper:first-of-type + .section {
+    padding-top: 0;
+}
+
+main .floating-button-wrapper.multifunction {
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: translateX(-50%);
+    left: 50%;
+    width: max-content;
+    height: auto;
+    background: unset
+}
+
+main .floating-button-wrapper.multifunction.clamped {
+    width: auto;
+}
+
+main .floating-button-wrapper.multifunction::before {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    height: 150px;
+    width: 100vw;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.95) 70%, rgba(255,255,255,1) 78%);;
+}
+
+main .floating-button-wrapper.multifunction .toolbox {
+    display: flex;
+    pointer-events: auto;
+    background-color: var(--color-white);
+    box-sizing: border-box;
+    padding: 24px 0;
+    transform: translateY(72px);
+    width: 100%;
+    max-height: 0;
+    border-radius: 32px;
+    overflow: hidden;
+    flex-direction: column;
+    text-align: left;
+    bottom: 0;
+    z-index: 1;
+    transition: max-height 0.5s, transform 0.5s ease-in, padding 0.5s;
+}
+
+main .floating-button-wrapper.multifunction .toolbox:after {
+    content: '';
+    position: absolute;
+    border-radius: 32px;
+    left: 0;
+    bottom: 0;
+    height: 64px;
+    width: 100%;
+    background-color: white;
+    transition: 0.5s;
+}
+
+main .floating-button-wrapper.multifunction.initial-load .toolbox {
+    transition: max-height 2s ease, padding 0.5s ease-in;
+}
+
+main .floating-button-wrapper.multifunction .toolbox.hidden {
+    display: none;
+}
+
+main .floating-button-wrapper.multifunction .floating-button .toggle-button {
+    position: absolute;
+    left: 29px;
+    height: 18px;
+    padding: 4px;
+    width: 18px;
+    bottom: 50%;
+    transform: translateY(50%);
+    transition: transform 0.2s;
+    z-index: 2;
+}
+
+main .floating-button-wrapper.multifunction .floating-button .toggle-button .lottie-plus-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 80px;
+    width: 120px;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button {
+    transform: translateY(50%) rotate(45deg);
+}
+
+main .floating-button-wrapper.multifunction.toolbox-opened .floating-button .toggle-button .lottie-plus-animation {
+    opacity: 0;
+}
+
+main .floating-button-wrapper.multifunction.toolbox-opened .toolbox {
+    max-height: 500px;
+    padding-bottom: 64px;
+    transform: translateY(64px);
+    z-index: 1;
+}
+
+main .floating-button-wrapper.multifunction .floating-button {
+    transition: all .2s;
+}
+
+main .floating-button-wrapper.multifunction .floating-button.toolbox-opened {
+    background-color: var(--color-white);
+}
+
+main .floating-button-wrapper.multifunction .toolbox .notch {
+    position: absolute;
+    padding: 6px;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+main .floating-button-wrapper.multifunction .toolbox .notch-pill {
+    border-radius: 20px;
+    height: 4px;
+    width: 36px;
+    background: var(--color-gray-300);
+}
+
+main .floating-button-wrapper.multifunction .toolbox .badge {
+    position: absolute;
+    max-width: 120px;
+    top: -8px;
+    right: 32px;
+    transition: all 0.5s;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .tool {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .tool:first-of-type {
+    padding-right: 120px;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .toolbox-top {
+    margin: 0 32px 12px 32px;
+    border-bottom: 1px solid var(--color-gray-300);
+}
+
+main .floating-button-wrapper.multifunction .toolbox .toolbox-bottom {
+    margin: 0 32px;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .tool img,
+main .floating-button-wrapper.multifunction .toolbox .tool svg {
+    color: var(--color-black);
+    fill: var(--color-black);
+    height: 22px;
+    width: 22px;
+    margin-right: 12px;
+    object-fit: contain;
+}
+
+main .floating-button-wrapper.multifunction .toolbox .tool a {
+    font-size: 16px;
+    line-height: 21px;
+    color: var(--color-black);
+}
+
+main .floating-button-wrapper.multifunction .toolbox-background {
+    position: fixed;
+    pointer-events: none;
+    bottom: 0;
+    left: unset;
+    transform: unset;
+    height: 200vh;
+    width: 100vw;
+    background-color: var(--color-black);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+main .floating-button-wrapper.multifunction.toolbox-opened .toolbox-background {
+    pointer-events: auto;
+    opacity: 0.75;
+}
+
+main .floating-button-wrapper.multifunction.initial-load .toolbox-background {
+    transition: all 2s;
+}
+
+main .floating-button-wrapper.multifunction.floating-button--hidden .toolbox,
+main .floating-button-wrapper.multifunction.floating-button--hidden .toolbox-background {
+    opacity: 0;
+}
+
+@media screen and (min-width: 900px) {
+    /* reset above-banner styles */
+    body.branch-banner-is-active #branch-banner-iframe {
+        display: none;
+    }
+    body.branch-banner-is-active .floating-button-wrapper .floating-button {
+        margin-bottom: 24px;
+    }
+    body.branch-banner-is-active .floating-button-wrapper {
+        height: 150px;
+    }
+
+    main.branch-banner-is-active .floating-button-wrapper {
+        height: 150px;
+    }
+
+    /* set desktop below/above the fold styles */
+    main > div:not(.banner-container) a.button.same-as-floating-button-CTA {
+        display: inline-block;
+    }
+
+    main .floating-button-wrapper.floating-button--intersecting:not(.floating-button--clicked),
+    main .floating-button-wrapper {
+        bottom: -151px;
+        opacity: 0.9;
+    }
+
+    main .floating-button-wrapper {
+        transition: none;
+    }
+
+    main .floating-button-wrapper.floating-button--above-the-fold,
+    main .floating-button-wrapper.floating-button--below-the-fold {
+        bottom: -1px;
+        opacity: 1;
+        transition: bottom 0.6s ease-out, opacity 0.6s ease-out;
+    }
+
+    main .floating-button--below-the-fold .floating-button {
+        background-color: rgba(0,0,0,0);
+    }
+
+    main .floating-button--below-the-fold .floating-button a.button:any-link {
+        margin-right: 0;
+        min-width: 250px;
+    }
+
+    main .floating-button--below-the-fold .floating-button-lottie {
+        pointer-events: none;
+        user-select: none;
+    }
+
+    main .floating-button-wrapper.floating-button--hidden {
+        bottom: -151px;
+        opacity: 0.9;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    main .floating-button a.button:any-link,
+    main .floating-button--scrolled .floating-button a.button:any-link {
+        min-width: unset
+    }
+}

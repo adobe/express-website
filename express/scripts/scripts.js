@@ -729,6 +729,13 @@ export function getHelixEnv() {
   return env;
 }
 
+function convertGlobToRe(glob) {
+  let reString = glob.replace(/\*\*/g, '_');
+  reString = reString.replace(/\*/g, '[0-9a-z-]*');
+  reString = reString.replace(/_/g, '.*');
+  return (new RegExp(reString));
+}
+
 function getCurrencyDisplay(currency) {
   if (currency === 'JPY') {
     return 'name';
@@ -1701,16 +1708,55 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
     section.innerHTML = html;
     section.className = `section section-wrapper ${blockName}-container`;
     const block = section.querySelector(`.${blockName}`);
+    block.dataset.blockName = blockName;
+    block.dataset.blockStatus = 'loaded';
     block.parentElement.className = `${blockName}-wrapper`;
     block.classList.add('block');
     const img = section.querySelector('img');
     if (img) {
       img.setAttribute('loading', 'lazy');
     }
-    const $section = $block.closest('.section');
-    $section.parentNode.replaceChild(section, $section);
     return section;
   }
+  return null;
+}
+
+export async function fetchFloatingCta(path) {
+  const env = getHelixEnv();
+  const dev = new URLSearchParams(window.location.search).get('dev');
+  let sheet;
+
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/express/floating-cta-dev.json?limit=10000';
+  } else {
+    sheet = '/express/floating-cta.json?limit=10000';
+  }
+
+  if (!window.floatingCta) {
+    try {
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const resp = await fetch(`${urlPrefix}${sheet}`);
+      window.floatingCta = resp.ok ? (await resp.json()).data : [];
+    } catch {
+      const resp = await fetch(sheet);
+      window.floatingCta = resp.ok ? (await resp.json()).data : [];
+    }
+  }
+
+  if (window.floatingCta.length) {
+    const candidates = window.floatingCta.filter((p) => {
+      const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
+      return path === p.path || path.match(urlToMatch);
+    }).sort((a, b) => b.path.length - a.path.length);
+
+    if (env && env.name === 'stage') {
+      return candidates[0] || null;
+    }
+
+    return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
+  }
+
   return null;
 }
 
@@ -1766,11 +1812,36 @@ async function buildAutoBlocks($main) {
     }
   }
 
-  if (['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
-    const $multifunctionButton = buildBlock('floating-button', '');
-    $multifunctionButton.classList.add('spreadsheet-powered');
-    if ($lastDiv) {
-      $lastDiv.append($multifunctionButton);
+  if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
+    if (!window.floatingCtasLoaded) {
+      const floatingCTAData = await fetchFloatingCta(window.location.pathname);
+      const defaultButton = await fetchFloatingCta('default');
+      let desktopButton;
+      let mobileButton;
+
+      if (floatingCTAData) {
+        const buttonTypes = {
+          desktop: floatingCTAData.desktop || defaultButton.desktop,
+          mobile: floatingCTAData.mobile || defaultButton.mobile,
+        };
+
+        desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
+        mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
+      } else if (defaultButton) {
+        desktopButton = buildBlock(defaultButton.desktop, 'desktop');
+        mobileButton = buildBlock(defaultButton.mobile, 'mobile');
+      }
+
+      if (floatingCTAData || defaultButton) {
+        [desktopButton, mobileButton].forEach((button) => {
+          button.classList.add('spreadsheet-powered');
+          if ($lastDiv) {
+            $lastDiv.append(button);
+          }
+        });
+      }
+
+      window.floatingCtasLoaded = true;
     }
   }
 
@@ -2029,33 +2100,6 @@ function decoratePictures(main) {
     const picture = img.closest('picture');
     if (picture) picture.parentElement.replaceChild(newPicture, picture);
   });
-}
-
-export async function fetchMultifunctionButton(path) {
-  if (!window.multifunctionButton) {
-    try {
-      const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/create/multifunction-button.json`);
-      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
-    } catch {
-      const resp = await fetch('/express/create/multifunction-button.json');
-      window.multifunctionButton = resp.ok ? (await resp.json()).data : [];
-    }
-  }
-
-  if (window.multifunctionButton.length) {
-    const multifunctionButton = window.multifunctionButton.find((p) => path === p.path);
-    const env = getHelixEnv();
-
-    if (env && env.name === 'stage') {
-      return multifunctionButton || null;
-    }
-
-    return multifunctionButton && multifunctionButton.live !== 'N' ? multifunctionButton : null;
-  }
-
-  return null;
 }
 
 export async function decorateMain($main) {
@@ -2368,7 +2412,7 @@ export async function addFreePlanWidget(elem) {
       const lottieWrapper = createTag('span', { class: 'lottie-wrapper' });
 
       $learnMoreButton.textContent = placeholders['learn-more'];
-      lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+      lottieWrapper.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
       $learnMoreButton.append(lottieWrapper);
       lazyLoadLottiePlayer();
       widget.append($learnMoreButton);
