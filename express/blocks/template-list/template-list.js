@@ -20,6 +20,7 @@ import {
   createTag,
   decorateMain,
   fetchPlaceholders,
+  fetchPlainBlockFromFragment,
   fetchRelevantRows,
   getIconElement,
   getLocale,
@@ -1764,6 +1765,23 @@ export async function decorateTemplateList($block) {
   // make copy of children to avoid modifying list while looping
 
   populateTemplates($block, templates);
+
+  if ($block.classList.contains('spreadsheet-powered')
+    && !$block.classList.contains('apipowered')
+    && $block.classList.contains('mini')) {
+    const $buttons = $block.querySelectorAll('a:any-link');
+    $buttons.forEach((button) => {
+      const isPlaceholder = button.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
+      const $2ndDiv = button.querySelector(':scope > div:last-of-type');
+
+      if (isPlaceholder) {
+        button.classList.add('placeholder');
+      }
+
+      $2ndDiv.classList.add('button-container');
+    });
+  }
+
   if (!$block.classList.contains('horizontal')) {
     if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
@@ -1859,19 +1877,40 @@ function addBackgroundAnimation($block, animationUrl) {
   }
 }
 
-export default async function decorate($block) {
-  if ($block.classList.contains('spreadsheet-powered')) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
-    const relevantRowsData = await fetchRelevantRows(window.location.pathname);
-    props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
+async function replaceRRTemplateList($block) {
+  const placeholders = await fetchPlaceholders().then((result) => result);
+  const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+  props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
 
-    if (relevantRowsData) {
-      $block.closest('.section').dataset.audience = 'mobile';
+  if (relevantRowsData) {
+    $block.closest('.section').dataset.audience = 'mobile';
+    props.headingTitle = relevantRowsData.header || null;
+    props.headingSlug = relevantRowsData.shortTitle || null;
+    props.viewAllLink = relevantRowsData.viewAllLink || null;
 
-      props.headingTitle = relevantRowsData.header || null;
-      props.headingSlug = relevantRowsData.shortTitle || null;
-      props.viewAllLink = relevantRowsData.viewAllLink || null;
+    if (relevantRowsData.manualTemplates === 'Y') {
+      const $sectionFromFragment = await fetchPlainBlockFromFragment(`/express/fragments/relevant-rows/${relevantRowsData.templateFragment}`, 'template-list');
+      const $newBlock = $sectionFromFragment.querySelector('.template-list');
 
+      if ($newBlock) {
+        const $section = $block.closest('.section');
+        const $sectionHeading = $section.querySelector('div.default-content-wrapper > h2');
+        let $sectionSlug = null;
+
+        if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
+          if ($block.classList.contains('spreadsheet-powered') && props.headingTitle) {
+            $sectionHeading.textContent = props.headingTitle || '';
+
+            if (props.headingSlug) {
+              $sectionSlug = createTag('p');
+              $sectionSlug.textContent = props.headingSlug;
+            }
+          }
+        }
+        $block.classList.remove('apipowered');
+        $block.innerHTML = $newBlock.innerHTML;
+      }
+    } else {
       $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
       $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
       $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
@@ -1886,9 +1925,43 @@ export default async function decorate($block) {
       } else {
         $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
       }
-    } else {
-      $block.remove();
     }
+  } else {
+    $block.remove();
+  }
+}
+
+export default async function decorate($block) {
+  if ($block.classList.contains('spreadsheet-powered')) {
+    await replaceRRTemplateList($block);
+    // const placeholders = await fetchPlaceholders().then((result) => result);
+    // const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+    // props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
+    //
+    // if (relevantRowsData) {
+    //   $block.closest('.section').dataset.audience = 'mobile';
+    //   props.headingTitle = relevantRowsData.header || null;
+    //   props.headingSlug = relevantRowsData.shortTitle || null;
+    //   props.viewAllLink = relevantRowsData.viewAllLink || null;
+    //
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-locale', relevantRowsData.templateLocale || 'en');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-premium', relevantRowsData.templatePremium || '');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-animated', relevantRowsData.templateAnimated || '');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/');
+    //   $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
+    //
+    //   if (relevantRowsData.templateTasks === '') {
+    //     $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+    //   } else {
+    //     $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
+    //   }
+    //   // }
+    // } else {
+    //   $block.remove();
+    // }
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
@@ -1913,7 +1986,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('mini') || $block.classList.contains('apipowered')) {
-    decorateTailButton($block);
+    await decorateTailButton($block);
   }
 
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
