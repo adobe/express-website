@@ -101,7 +101,15 @@ async function fetchLinkList(data) {
       // catch data from CKG API, if empty, use top priority categories sheet
       if (response && response.queryResults[0].facets) {
         window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
-          const formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
+          let formattedTasks;
+          if (window.location.pathname === '/express/templates/search') {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+              get: (searchParams, prop) => searchParams.get(prop),
+            });
+            formattedTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
+          } else {
+            formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
+          }
           return {
             parent: formattedTasks,
             'child-siblings': `${titleCase(ckgItem.displayValue)} ${formattedTasks}`,
@@ -162,7 +170,7 @@ function formatLinkPillText(pageData, linkPillData, pillsMapping) {
   const displayTopics = topics && linkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
   let displayText;
 
-  if (pageData.templateTasks && pageData.templateTasks !== '{{queryTasks}}') {
+  if (pageData.templateTasks) {
     displayText = `${displayTopics} ${digestedDisplayValue} ${digestedChildSibling}`
       .split(' ')
       .filter((item, i, allItems) => i === allItems.indexOf(item))
