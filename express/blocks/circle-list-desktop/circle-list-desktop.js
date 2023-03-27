@@ -65,12 +65,13 @@ const extractContent = async (block) => {
       }
       circleObject.imageLinks = imageLinks;
       circleObject.dropDownOptions = dropDownOptions;
+      circleObject.label = label;
     } else if (colArray.length === 2) {
       circleObject.lottie = getLottie('blank-canvas', '/express/blocks/circle-list-desktop/blank-canvas.json');
-      circleObject.subText = colArray[1].textContent.trim();
+      circleObject.subText = label;
       circleObject.type = 'lottie';
+      circleObject.label = colArray[1].textContent.trim();
     }
-    circleObject.label = label;
     circleObject.defaultLink = defaultLink;
     circleList.push(circleObject);
   });
@@ -103,9 +104,12 @@ const buildCircleList = (block, circles) => {
       const lottieWrapper = createTag('div', { class: 'lottie-wrapper' });
       lazyLoadLottiePlayer();
       const lottie = createTag('div', { class: 'lottie-animation' });
+      const subText = createTag('span', { class: 'sub-text' });
+      subText.textContent = circle.subText;
       lottie.innerHTML = circle.lottie;
       lottieWrapper.append(lottie);
       circleWrapper.append(lottieWrapper);
+      circleWrapper.append(subText);
     }
 
     const label = createTag('span', { class: 'circle-label' });
@@ -125,7 +129,7 @@ function initResetDoorHandle(wrapper) {
 
     circleWrapper.setAttribute('style', 'z-index: 1');
     hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 0');
+      img.setAttribute('style', 'transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 0');
     });
   });
 }
