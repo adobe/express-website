@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-class CrossBlockMediator {
+class BlockMediator {
   #stores; // { [name]: { callbacks: [cb], value: any } }
 
   constructor() {
@@ -21,41 +21,22 @@ class CrossBlockMediator {
     this.#stores[name] = { callbacks: [], value: undefined };
   }
 
-  /**
-   * @param {string} name
-   * @returns {boolean} true if store exists
-   */
   hasStore(name) {
     return name in this.#stores;
   }
 
-  /**
-   * @returns {string[]} list of store names
-   */
   listStores() {
     return Object.keys(this.#stores);
   }
 
-  /**
-   * @param {string} name
-   * @returns {any} value. undefined if store does not exist
-   */
   get(name) {
     return this.#stores[name]?.value;
   }
 
   /**
-   * Update value and then call all callbacks asynchronously passing { oldValue, newValue }
-   * You can await this method to check if all callbacks succeeded.
-   *
    * @param {string} name
    * @param {any} value
    * @returns {Promise<{ succeed: boolean, errors: Error[] }>}
-   * @example
-   * const { success, errors } = await mediator.set('storeName', 'newValue');
-   * if (!success) {
-   *  console.error('some callbacks failed', errors);
-   * }
    */
   set(name, value) {
     if (!this.hasStore(name)) {
@@ -80,23 +61,20 @@ class CrossBlockMediator {
   }
 
   /**
-   * Subscribe to store changes. Callback will be called asynchronously with { oldValue, newValue }
-   *
    * @param {string} name
    * @param {function({ oldValue: any, newValue: any }): void} cb
-   * @returns {function(): void} unsubscribe function
+   * @returns {function(): void} unsubscribe func
    * @example
    * const unsubscribe = mediator.subscribe('storeName', ({ oldValue, newValue }) => {
-   *  console.log(`storeName changed from ${oldValue} to ${newValue}`);
+   *  console.log(`storeName value from ${oldValue} to ${newValue}`);
    * });
-   * // later
-   * unsubscribe(); // only needed if you are subscribing more than once
-   * @note oldValue and newValue can be the same. Handle the duplicate event on you own
-   * @note When oldValue is undefined, it means the store was created
-   * @note You can subscribe more than once, but you need to unsubscribe to avoid memory leaks
-   * @note You can subscribe to a store that does not exist yet, and get notified when it is created
-   * @note Callbacks should be simple and should not call set() or subscribe() to avoid loops
-   * @note Wrap your callback in a try/catch to handle errors. Otherwise setter will catch them
+   * @notes
+   * 1. It doesn't filter duplicate events
+   * 2. undefined oldValue means the store was just created
+   * 3. Can subscribe more than once, but unsubscribe wisely to avoid memory leaks
+   * 4. Can subscribe to an nonexistent store and get notified of creation
+   * 5. Simple cbs plz. Don't call set or subscribe leading to loops
+   * 6. Handle errors in cb, or setter will catch them
    */
   subscribe(name, cb) {
     if (!this.hasStore(name)) {
@@ -112,4 +90,4 @@ class CrossBlockMediator {
   }
 }
 
-export default new CrossBlockMediator();
+export default new BlockMediator();
