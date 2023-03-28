@@ -38,11 +38,11 @@ export async function getPillWordsMapping() {
   const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
   if (!window.linkListPills) {
     try {
-      const resp = await fetch(`${urlPrefix}/express/linklist-qa-03-20-2023.json`);
+      const resp = await fetch(`${urlPrefix}/express/linklist-qa-mapping.json`);
       const filterredArray = await resp.json();
       window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
     } catch {
-      const resp = await fetch('/express/linklist-qa-03-20-2023.json');
+      const resp = await fetch('/express/linklist-qa-mapping.json');
       const filterredArray = await resp.json();
       window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
     }
