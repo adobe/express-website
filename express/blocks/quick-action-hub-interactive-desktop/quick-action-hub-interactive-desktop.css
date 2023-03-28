@@ -132,13 +132,15 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   opacity: 1;
 }
 
-.quick-action-hub-interactive-desktop-hover-overlay:hover .button-container:first-of-type {
-  margin-top: 70px;
-}
-
 .quick-action-hub-interactive-desktop-hover-overlay:hover .button-container a {
   margin: 0;
 }
+
+.quick-action-hub-interactive-desktop-hover-overlay:hover .lottie-mouse-arrow {
+  width: 64px;
+  height: 64px;
+}
+
 
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .card {
   margin-top: 16px;
@@ -188,13 +190,13 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
     gap: 40px;
   }
 
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover {
+  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover {
     background-color: #2C2C2C;
     color: var(--color-white);
   }
 
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover img,
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover svg {
+  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover img,
+  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover svg {
     filter: brightness(0) invert(1);
   }
 

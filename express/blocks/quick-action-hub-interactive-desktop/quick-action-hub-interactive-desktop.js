@@ -12,7 +12,7 @@
 
 import {
   buildStaticFreePlanWidget,
-  createTag,
+  createTag, getLottie, lazyLoadLottiePlayer,
   transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
@@ -44,12 +44,17 @@ function buildHoverContent(title, videoDiv, links) {
     video.href = videoLink.href;
     transformLinkToAnimation(video);
   }
+  const test = createTag('div', { class: 'mouse-arrow' });
+  test.innerHTML = getLottie('mouse-arrow', '/express/blocks/quick-action-hub-interactive-desktop/arrow-up.json');
+  overlay.append(test);
   overlay.append(links);
   hoverElem.append(hoverContent);
   buildStaticFreePlanWidget().then((widget) => {
     hoverContent.append(widget);
   });
   hoverElem.append(overlay);
+
+  lazyLoadLottiePlayer(hoverElem);
   return hoverElem;
 }
 function buildColContent(nodes, column) {
@@ -72,9 +77,11 @@ function buildColContent(nodes, column) {
         if (e.toElement !== link && !hoverContent.contains(e.toElement)) {
           hoverContent.removeEventListener('mouseleave', handleMouseLeave);
           hoverContent.remove();
+          link.classList.remove('hover');
         }
       };
       link.addEventListener('mouseover', () => {
+        link.classList.add('hover');
         if (link.parentNode.querySelector(':scope .quick-action-hub-interactive-desktop-hover')) return;
         const hoverContent = buildHoverContent(nodes[1], nodes[2], nodes[3]);
         column.insertBefore(hoverContent, column.children[0].nextSibling);
