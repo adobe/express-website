@@ -122,7 +122,7 @@ const buildCircleList = (block, circles) => {
   block.append(circleContainer);
 };
 
-// Adds a class to make door handle hidden
+// Adds a class to handle transitions for door handle appearing
 function initDoorHandle(wrapper) {
   const dropDown = wrapper.querySelector('.dropdown');
   const imgWrapper = wrapper.querySelector('.img-wrapper');
@@ -134,7 +134,7 @@ function initDoorHandle(wrapper) {
   });
 }
 
-// Resets all the images to their default state
+// Resets all the images to their default state and handles classes for transitions
 function initResetDoorHandle(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
     const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));

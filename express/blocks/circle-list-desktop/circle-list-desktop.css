@@ -80,34 +80,26 @@ main .circle-list-desktop a {
 main .circle-list-desktop .dropdown {
   position: absolute;
   display: initial;
+  left: 50%;
+  top: -25px;
   opacity: 1;
-  transform: scale(1);
-  transition: all 0.2s;
-  background-color: #E4E5EA;
+  transform: translate(-50%, 0) scale(1);
+  transition: opacity 0.2s, transform 0.2s;
   z-index: -1;
   border-radius: 105px 105px 24px 24px;
-  left: 50%;
-  top: -25px;
-  padding: 200px 0 24px 0;
-  transform: translate(-50%, 0);
-  position: absolute;
   background-color: #E4E5EA;
-  border-radius: 105px 105px 24px 24px;
-  left: 50%;
-  top: -25px;
   padding: 200px 0 20px 0;
-  transform: translate(-50%, 0);
   filter: drop-shadow(0px 3px 6px #00000029);
 }
 
 main .circle-list-desktop .hidden.dropdown {
   display: none;
   z-index: 1;
-  transform: scale(0.25);
 }
 
 main .circle-list-desktop .transparent.dropdown {
   opacity: 0;
+  transform: translate(-50%, 0) scale(0.95);
 }
 
 /* main .circle-list-desktop .door-handle .dropdown {
