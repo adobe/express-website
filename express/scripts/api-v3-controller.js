@@ -43,8 +43,12 @@ export async function getPillWordsMapping() {
       window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
     } catch {
       const resp = await fetch('/express/linklist-qa-mapping.json');
-      const filterredArray = await resp.json();
-      window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+      if (resp.ok) {
+        const filterredArray = await resp.json();
+        window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+      } else {
+        return false;
+      }
     }
   }
   return window.linkListPills;

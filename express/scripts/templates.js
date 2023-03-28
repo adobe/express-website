@@ -182,14 +182,16 @@ function formatLinkPillText(pageData, linkPillData, pillsMapping) {
       .join(' ').trim();
   }
 
-  const alternateText = pillsMapping.find((row) => {
-    const pageMatch = pageData.path === row['Express SEO URL'] && pageData.ckgID === row.CKGID;
-    const pillMatch = linkPillData.ckgID === row['CKG Pill ID'] && displayText === row['Pill Display Name'];
-    return pageMatch && pillMatch;
-  });
+  if (pillsMapping) {
+    const alternateText = pillsMapping.find((row) => {
+      const pageMatch = pageData.path === row['Express SEO URL'] && pageData.ckgID === row.CKGID;
+      const pillMatch = linkPillData.ckgID === row['CKG Pill ID'] && displayText === row['Pill Display Name'];
+      return pageMatch && pillMatch;
+    });
 
-  if (alternateText) {
-    displayText = alternateText[`${localeColumnString}`];
+    if (alternateText) {
+      displayText = alternateText[`${localeColumnString}`];
+    }
   }
 
   return displayText;
