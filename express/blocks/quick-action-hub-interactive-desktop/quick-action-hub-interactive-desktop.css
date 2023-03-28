@@ -1,7 +1,3 @@
-main .section div.quick-action-hub-interactive-desktop-wrapper {
-  padding: 88px 16px;
-}
-
 main .section .quick-action-hub-interactive-desktop {
   display: none;
 }
@@ -33,13 +29,15 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
 
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 40px;
 }
 
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-column {
   display: flex;
   flex-direction: column;
   margin-bottom: 28px;
+  align-items: flex-start;
 }
 
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .column-title {
@@ -72,7 +70,10 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   user-select: none;
   text-align: left;
   height: 35px;
-  width: 208px;
+  width: 204px;
+  padding: 8px 24px;
+  border-radius: 8px;
+  background-color: #FBFBFB;
 }
 
 .quick-action-hub-interactive-desktop-hover {
@@ -142,7 +143,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .card {
   margin-top: 16px;
   border-radius: 16px;
-  width: 264px;
+  width: 252px;
   overflow: hidden;
   border: 1px solid #D9D9D9;
   cursor: pointer;
@@ -187,25 +188,6 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
     gap: 40px;
   }
 
-  main .section div.quick-action-hub-interactive-desktop-wrapper {
-    padding: 0;
-  }
-
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container {
-    flex-direction: row;
-    gap: 40px;
-  }
-
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-column {
-    align-items: flex-start;
-  }
-
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action {
-    padding: 8px 22px;
-    border-radius: 8px;
-    background-color: #FBFBFB;
-  }
-
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover {
     background-color: #2C2C2C;
     color: var(--color-white);
@@ -237,10 +219,6 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-container {
     border-radius: 16px 0 0 16px;
   }
-
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action {
-    width: 220px;
-  }
 }
 
 
@@ -249,8 +227,13 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
     gap: 50px;
   }
 
+  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action {
+    width: 220px;
+  }
+
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .card {
     margin-top: 36px;
+    width: 264px;
   }
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .card .text-content {
