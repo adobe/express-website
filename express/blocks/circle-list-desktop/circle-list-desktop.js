@@ -26,6 +26,7 @@ const grabImageSet = (category, imageData) => {
 
 const buildDropdownList = (circle) => {
   const list = createTag('ul', { class: 'dropdown' });
+  list.classList.add('hidden', 'tranparent');
   circle.dropDownOptions.forEach((option) => {
     const li = createTag('li');
     const aTag = createTag('a');
@@ -121,13 +122,29 @@ const buildCircleList = (block, circles) => {
   block.append(circleContainer);
 };
 
+// Adds a class to make door handle hidden
+function initDoorHandle(wrapper) {
+  const dropDown = wrapper.querySelector('.dropdown');
+  const imgWrapper = wrapper.querySelector('.img-wrapper');
+  imgWrapper.addEventListener('mouseenter', () => {
+    dropDown.classList.remove('hidden');
+    setTimeout(() => {
+      dropDown.classList.remove('transparent');
+    }, 10);
+  });
+}
+
 // Resets all the images to their default state
 function initResetDoorHandle(wrapper) {
   wrapper.addEventListener('mouseleave', (e) => {
     const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));
+    const dropDown = wrapper.querySelector('.dropdown');
     const circleWrapper = wrapper.querySelector('.circle-wrapper');
-
     circleWrapper.setAttribute('style', 'z-index: 1');
+    dropDown.classList.add('transparent');
+    setTimeout(() => {
+      dropDown.classList.add('hidden');
+    }, 201);
     hoveredImgs.forEach((img) => {
       img.setAttribute('style', 'transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 0');
     });
@@ -208,6 +225,7 @@ export default async function decorate($block) {
   circleWrappers.forEach((wrapper) => {
     const imageWrapper = wrapper.querySelector('.img-wrapper');
     if (imageWrapper) {
+      initDoorHandle(wrapper);
       initResetDoorHandle(wrapper);
       initImageShuffling(wrapper, $block);
       initResetHeroImage(imageWrapper);
