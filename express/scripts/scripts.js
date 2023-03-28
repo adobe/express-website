@@ -1688,7 +1688,7 @@ export function normalizeHeadings(block, allowedHeadings) {
   });
 }
 
-export async function fetchPlainBlockFromFragment($block, url, blockName) {
+export async function fetchPlainBlockFromFragment(url, blockName) {
   const location = new URL(window.location);
   const locale = getLocale(location);
   let fragmentUrl;
@@ -1701,7 +1701,7 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
   const path = new URL(fragmentUrl).pathname.split('.')[0];
   const resp = await fetch(`${path}.plain.html`);
   if (resp.status === 404) {
-    $block.parentElement.parentElement.remove();
+    return null;
   } else {
     const html = await resp.text();
     const section = createTag('div');
@@ -1718,7 +1718,6 @@ export async function fetchPlainBlockFromFragment($block, url, blockName) {
     }
     return section;
   }
-  return null;
 }
 
 export async function fetchFloatingCta(path) {
