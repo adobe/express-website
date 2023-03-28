@@ -886,7 +886,7 @@ function decorateCategoryList($block, $section, placeholders) {
     const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
     $mobileDrawerWrapper.append($lottieArrows);
     $inWrapper.append($categoriesMobileWrapper);
-    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
     lazyLoadLottiePlayer();
 
     $categoriesDesktopWrapper.classList.add('desktop-only');
