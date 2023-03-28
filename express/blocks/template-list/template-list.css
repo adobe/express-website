@@ -21,7 +21,8 @@ main .template-list-fullwidth-apipowered-container .default-content-wrapper p {
   text-align: left;
 }
 
-main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container h2 {
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container h2,
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container .default-content-wrapper h2{
   margin: 20px 12px 0 12px;
   text-align: left;
 }
