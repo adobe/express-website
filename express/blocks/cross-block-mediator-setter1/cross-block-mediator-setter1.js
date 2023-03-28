@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { createTag } from '../../scripts/scripts.js';
-import crossBlockMediator from '../../scripts/cross-block-mediator.js';
+import crossBlockMediator from '../../scripts/block-mediator.js';
 
 export default function decorate(block) {
   const content = createTag('div');
@@ -19,6 +19,6 @@ export default function decorate(block) {
   setTimeout(() => {
     crossBlockMediator.set('demo', 42);
   }, ms);
-  content.append(`I am cross-block-mediator-setter1. I set the value of demo to 42 after ${ms} ms.`);
+  content.append(`I am block-mediator-setter1. I set the value of demo to 42 after ${ms} ms.`);
   block.append(content);
 }

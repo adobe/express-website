@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 import { createTag } from '../../scripts/scripts.js';
-import crossBlockMediator from '../../scripts/cross-block-mediator.js';
+import crossBlockMediator from '../../scripts/block-mediator.js';
 
 export default function decorate(block) {
   const content = createTag('div');
   block.innerHTML = '';
   const value = crossBlockMediator.get('demo');
-  content.append(`I am cross-block-mediator-subscriber2. I only listen for the onLoad() of setter. demo value now is ${value}.`);
+  content.append(`I am block-mediator-subscriber2. I only listen for the onLoad() of setter. demo value now is ${value}.`);
   content.append(createTag('br'));
   const unsubscribe = crossBlockMediator.subscribe('demo', ({ oldValue, newValue }) => {
     if (oldValue === undefined) {

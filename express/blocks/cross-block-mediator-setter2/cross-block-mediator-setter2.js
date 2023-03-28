@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 import { createTag } from '../../scripts/scripts.js';
-import crossBlockMediator from '../../scripts/cross-block-mediator.js';
+import crossBlockMediator from '../../scripts/block-mediator.js';
 
 export default function decorate(block) {
   const content = createTag('div');
   block.innerHTML = '';
-  content.append('I am cross-block-mediator-setter2. Click below to increment the value of demo.');
+  content.append('I am block-mediator-setter2. Click below to increment the value of demo.');
   const div = createTag('div', { style: 'cursor: pointer; background-color: pink;' });
   div.append('Click me!');
   content.append(createTag('br'));
