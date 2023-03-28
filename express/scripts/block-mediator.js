@@ -10,45 +10,34 @@
  * governing permissions and limitations under the License.
  */
 
-class BlockMediator {
-  #stores; // { [name]: { callbacks: [cb], value: any } }
+const BlockMediator = (() => {
+  const stores = {}; // { [name]: { callbacks: [cb], value: any } }
 
-  constructor() {
-    this.#stores = {};
-  }
+  const initStore = (name) => {
+    stores[name] = { callbacks: [], value: undefined };
+  };
 
-  #initStore(name) {
-    this.#stores[name] = { callbacks: [], value: undefined };
-  }
+  const hasStore = (name) => name in stores;
 
-  hasStore(name) {
-    return name in this.#stores;
-  }
+  const listStores = () => Object.keys(stores);
 
-  listStores() {
-    return Object.keys(this.#stores);
-  }
-
-  get(name) {
-    return this.#stores[name]?.value;
-  }
+  const get = (name) => stores[name]?.value;
 
   /**
    * @param {string} name
    * @param {any} value
    * @returns {Promise<{ succeed: boolean, errors: Error[] }>}
    */
-  set(name, value) {
-    if (!this.hasStore(name)) {
-      this.#initStore(name);
+  const set = (name, value) => {
+    if (!hasStore(name)) {
+      initStore(name);
     }
-    const oldValue = this.get(name);
-    this.#stores[name].value = value;
-
+    const oldValue = get(name);
+    stores[name].value = value;
     return Promise.resolve().then(() => {
       let success = true;
       const errors = [];
-      for (const cb of this.#stores[name].callbacks) {
+      for (const cb of stores[name].callbacks) {
         try {
           cb({ oldValue, newValue: value });
         } catch (e) {
@@ -58,7 +47,7 @@ class BlockMediator {
       }
       return { success, errors };
     });
-  }
+  };
 
   /**
    * @param {string} name
@@ -76,18 +65,26 @@ class BlockMediator {
    * 5. Simple cbs plz. Don't call set or subscribe leading to loops
    * 6. Handle errors in cb, or setter will catch them
    */
-  subscribe(name, cb) {
-    if (!this.hasStore(name)) {
-      this.#initStore(name);
+  const subscribe = (name, cb) => {
+    if (!hasStore(name)) {
+      initStore(name);
     }
-    const store = this.#stores[name];
+    const store = stores[name];
     if (store.callbacks.includes(cb)) return () => {};
     store.callbacks.push(cb);
     const unsubscribe = () => {
       store.callbacks = store.callbacks.filter((f) => f !== cb);
     };
     return unsubscribe;
-  }
-}
+  };
 
-export default new BlockMediator();
+  return {
+    hasStore,
+    listStores,
+    get,
+    set,
+    subscribe,
+  };
+})();
+
+export default BlockMediator;
