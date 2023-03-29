@@ -77,7 +77,7 @@ function buildReduceMotionSwitch($block, container) {
   const reduceMotionText = createTag('span', { class: 'reduce-motion-text' });
 
   const dispatchMotionToggleEvent = () => {
-    preferenceStore.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
+    preferenceStore.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion') === 'on');
   };
 
   reduceMotionText.textContent = container.textContent.trim();
