@@ -167,6 +167,7 @@ function formatLinkPillText(pageData, linkPillData, pillsMapping) {
   const digestedChildSibling = titleCase(linkPillData.childSibling.replace(/-/g, ' '));
   const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '').replace(/-/g, ' ')}` : '';
   const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
 
   const displayTopics = topics && linkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
@@ -185,11 +186,7 @@ function formatLinkPillText(pageData, linkPillData, pillsMapping) {
   }
 
   if (pillsMapping) {
-    const alternateText = pillsMapping.find((row) => {
-      const pageMatch = pageData.path === row['Express SEO URL'] && pageData.ckgID === row.CKGID;
-      const pillMatch = linkPillData.ckgID === row['CKG Pill ID'] && displayText === row['Pill Display Name'];
-      return pageMatch && pillMatch;
-    });
+    const alternateText = pillsMapping.find((row) => pageData.path === `${urlPrefix}${row['Express SEO URL']}` && linkPillData.ckgID === row['CKG Pill ID']);
 
     if (alternateText) {
       displayText = alternateText[`${localeColumnString}`];
@@ -218,7 +215,7 @@ async function updateLinkList(container, linkPill, list, pageData) {
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID && getLocale(window.location) === 'us') {
+      } else if (d.ckgID && (getLocale(window.location) === 'us' || getHelixEnv().name !== 'prod')) {
         const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;

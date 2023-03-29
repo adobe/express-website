@@ -36,11 +36,11 @@ export async function getPillWordsMapping() {
   const locale = getLocale(window.location);
   const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
   try {
-    const resp = await fetch('/linklist-qa-mapping.json');
+    const resp = await fetch('/linklist-qa-mapping.json?limit=100000');
     const filteredArray = await resp.json();
     return filteredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
   } catch {
-    const resp = await fetch('/express/linklist-qa-mapping.json');
+    const resp = await fetch('/express/linklist-qa-mapping.json?limit=100000');
     if (resp.ok) {
       const filteredArray = await resp.json();
       return filteredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
@@ -91,7 +91,7 @@ export async function fetchLinkListFromCKGApi(pageData) {
           filters: [
             {
               categories: [
-                pageData.ckgID || params.ckgid,
+                pageData.ckgID,
               ],
             },
           ],
