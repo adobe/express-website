@@ -136,7 +136,8 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   margin: 0;
 }
 
-.quick-action-hub-interactive-desktop-hover-overlay:hover .lottie-mouse-arrow {
+.quick-action-hub-interactive-desktop-hover-overlay:hover .lottie-mouse-arrow,
+.quick-action-hub-interactive-desktop-hover-overlay:hover .mouse-arrow {
   width: 64px;
   height: 64px;
 }

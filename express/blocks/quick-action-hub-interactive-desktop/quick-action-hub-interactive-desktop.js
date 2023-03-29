@@ -44,17 +44,15 @@ function buildHoverContent(title, videoDiv, links) {
     video.href = videoLink.href;
     transformLinkToAnimation(video);
   }
-  const test = createTag('div', { class: 'mouse-arrow' });
-  test.innerHTML = getLottie('mouse-arrow', '/express/blocks/quick-action-hub-interactive-desktop/arrow-up.json');
-  overlay.append(test);
+  const mouseArrow = createTag('div', { class: 'mouse-arrow' });
+  mouseArrow.innerHTML = getLottie('mouse-arrow', '/express/blocks/quick-action-hub-interactive-desktop/arrow-up.json');
+  overlay.append(mouseArrow);
   overlay.append(links);
   hoverElem.append(hoverContent);
   buildStaticFreePlanWidget().then((widget) => {
     hoverContent.append(widget);
   });
   hoverElem.append(overlay);
-
-  lazyLoadLottiePlayer(hoverElem);
   return hoverElem;
 }
 function buildColContent(nodes, column) {
@@ -163,4 +161,5 @@ export default function decorate(block) {
   block.append(container);
   container.append(header);
   container.append(columns);
+  lazyLoadLottiePlayer(block);
 }
