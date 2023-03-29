@@ -34,24 +34,20 @@ const endpoints = {
 
 export async function getPillWordsMapping() {
   const locale = getLocale(window.location);
-  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
-  if (!window.linkListPills) {
-    try {
-      const resp = await fetch(`${urlPrefix}/express/linklist-qa-mapping.json`);
-      const filterredArray = await resp.json();
-      window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
-    } catch {
-      const resp = await fetch('/express/linklist-qa-mapping.json');
-      if (resp.ok) {
-        const filterredArray = await resp.json();
-        window.linkListPills = filterredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
-      } else {
-        return false;
-      }
+  try {
+    const resp = await fetch('/linklist-qa-mapping.json');
+    const filteredArray = await resp.json();
+    return filteredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+  } catch {
+    const resp = await fetch('/express/linklist-qa-mapping.json');
+    if (resp.ok) {
+      const filteredArray = await resp.json();
+      return filteredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+    } else {
+      return false;
     }
   }
-  return window.linkListPills;
 }
 
 export default async function getData(env = '', data = {}) {

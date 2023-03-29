@@ -16,6 +16,7 @@ import {
   createTag,
   fetchPlaceholders,
   getLocale,
+  getMetadata,
 } from './scripts.js';
 
 import {
@@ -102,7 +103,7 @@ async function fetchLinkList(data) {
       if (response && response.queryResults[0].facets) {
         window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
           let formattedTasks;
-          if (window.location.pathname === '/express/templates/search') {
+          if (getMetadata('template-search-page') === 'Y') {
             const params = new Proxy(new URLSearchParams(window.location.search), {
               get: (searchParams, prop) => searchParams.get(prop),
             });
@@ -110,6 +111,7 @@ async function fetchLinkList(data) {
           } else {
             formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
           }
+
           return {
             parent: formattedTasks,
             'child-siblings': `${titleCase(ckgItem.displayValue)} ${formattedTasks}`,
@@ -383,7 +385,7 @@ const page = await fetchPageContent(window.location.pathname);
 
 if (page) {
   await fetchLinkList(page);
-  if (window.location.pathname === '/express/templates/search') {
+  if (getMetadata('template-search-page') === 'Y') {
     const data = formatSearchQuery(page);
     if (!data) {
       window.location.replace('/express/templates/');
