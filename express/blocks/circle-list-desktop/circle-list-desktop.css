@@ -28,6 +28,7 @@ main .circle-list-desktop .lottie-wrapper {
   height: 178px;
   width: 178px;
 }
+
 main .circle-list-desktop .lottie-wrapper .circle-label {
   color: #00000029;
   size: 60px;
@@ -58,7 +59,7 @@ main .block.circle-list-desktop .lottie-wrapper {
   transition: transform 0.4s;
 }
 
-main .block.circle-list-desktop .img-wrapper:hover {
+main .block.circle-list-desktop .circle-wrapper:hover .img-wrapper {
   transform: scale3d(1, 1, 1);
   transform-style: preserve-3d;
 }
@@ -101,16 +102,6 @@ main .circle-list-desktop .transparent.dropdown {
   opacity: 0;
   transform: translate(-50%, 0) scale(0.95);
 }
-
-/* main .circle-list-desktop .door-handle .dropdown {
-  opacity: 1;
-  transform: scale(1);
-} */
-
-/* main .circle-list-desktop .circle-wrapper .img-wrapper:hover ~ .dropdown,
-main .circle-list-desktop .circle-wrapper .dropdown:hover {
-  opacity: 1;
-} */
 
 main .block.circle-list-desktop svg {
   width: 18px;

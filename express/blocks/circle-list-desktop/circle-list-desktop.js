@@ -13,12 +13,14 @@
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
 
+// Fetches images from the spreadsheet
 async function fetchCircleImages(link) {
   const resp = await fetch(`${link}`);
   const json = await resp.json();
   return json.data;
 }
 
+// Fetches the corresponding row in the spreadsheet based on the label name
 const grabImageSet = (category, imageData) => {
   const targetRow = imageData.find((row) => category.toLowerCase() === row.Category.toLowerCase());
   return Object.values(targetRow).slice(1);
@@ -26,7 +28,7 @@ const grabImageSet = (category, imageData) => {
 
 const buildDropdownList = (circle) => {
   const list = createTag('ul', { class: 'dropdown' });
-  list.classList.add('hidden', 'tranparent');
+  list.classList.add('hidden', 'transparent');
   circle.dropDownOptions.forEach((option) => {
     const li = createTag('li');
     const aTag = createTag('a');
@@ -123,9 +125,7 @@ const buildCircleList = (block, circles) => {
 };
 
 // Adds a class to handle transitions for door handle appearing
-function initDoorHandle(wrapper) {
-  const dropDown = wrapper.querySelector('.dropdown');
-  const imgWrapper = wrapper.querySelector('.img-wrapper');
+function initDoorHandle(imgWrapper, dropDown) {
   imgWrapper.addEventListener('mouseenter', () => {
     dropDown.classList.remove('hidden');
     setTimeout(() => {
@@ -134,12 +134,12 @@ function initDoorHandle(wrapper) {
   });
 }
 
-// Resets all the images to their default state and handles classes for transitions
-function initResetDoorHandle(wrapper) {
+// Resets all the images to their default state and handles classes transition:off classes
+function initResetDoorHandle(wrapper, dropDown) {
   wrapper.addEventListener('mouseleave', (e) => {
     const hoveredImgs = Array.from(e.currentTarget.querySelectorAll('img'));
-    const dropDown = wrapper.querySelector('.dropdown');
     const circleWrapper = wrapper.querySelector('.circle-wrapper');
+
     circleWrapper.setAttribute('style', 'z-index: 1');
     dropDown.classList.add('transparent');
     setTimeout(() => {
@@ -155,12 +155,13 @@ function initResetDoorHandle(wrapper) {
 function initResetHeroImage(imgWrapper) {
   const heroImage = imgWrapper.querySelector('.hero-img');
   const altImages = Array.from(imgWrapper.querySelectorAll('.alt-img'));
+
   imgWrapper.addEventListener('mouseleave', () => {
     heroImage.setAttribute('style', 'transform: scale3d(1, 1, 1); transform-style: preserve-3d; transition-property: transform 0.4s; opacity: 1');
     altImages.forEach((altImg) => {
       altImg.setAttribute('style', 'opacity: 0');
     });
-  });
+  }); 
 }
 
 function initImageShuffling(wrapper, block) {
@@ -172,6 +173,7 @@ function initImageShuffling(wrapper, block) {
   const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
 
+  // Handles the shuffling of images based on mouse position
   const shuffle = (e) => {
     circleWrapper.setAttribute('style', 'z-index: 3');
     if (!block.classList.contains('no-animation')) {
@@ -196,6 +198,7 @@ function initImageShuffling(wrapper, block) {
     }
   };
 
+  // Pauses lottie and disables shuffling of images
   const toggleAnimationState = (reduceMotion) => {
     const lottiePlaying = setInterval(() => {
       if (player.hasUpdated) {
@@ -224,9 +227,10 @@ export default async function decorate($block) {
 
   circleWrappers.forEach((wrapper) => {
     const imageWrapper = wrapper.querySelector('.img-wrapper');
+    const dropDown = wrapper.querySelector('.dropdown');
     if (imageWrapper) {
-      initDoorHandle(wrapper);
-      initResetDoorHandle(wrapper);
+      initDoorHandle(imageWrapper, dropDown);
+      initResetDoorHandle(wrapper, dropDown);
       initImageShuffling(wrapper, $block);
       initResetHeroImage(imageWrapper);
     }
