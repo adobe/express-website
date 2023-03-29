@@ -1743,7 +1743,7 @@ export async function decorateTemplateList($block) {
   if (rows === 1) {
     $block.classList.add('large');
     breakpoints = [{
-      media: '(min-width: 400px)',
+      media: '(min-width: 600px)',
       width: '2000',
     }, { width: '750' }];
   }
