@@ -34,18 +34,16 @@ const BlockMediator = (() => {
     }
     const oldValue = get(name);
     stores[name].value = value;
-    return Promise.resolve().then(() => {
-      let success = true;
+    return new Promise((resolve) => {
       const errors = [];
       for (const cb of stores[name].callbacks) {
         try {
           cb({ oldValue, newValue: value });
         } catch (e) {
-          success = false;
           errors.push(e);
         }
       }
-      return { success, errors };
+      resolve(errors);
     });
   };
 
