@@ -43,7 +43,7 @@ const props = {
   limit: 70,
   total: 0,
   start: '',
-  sort: '-remixCount',
+  sort: '-_score,-remixCount',
   masonry: undefined,
   authoringError: false,
   headingTitle: null,
@@ -72,8 +72,7 @@ function trimFormattedFilterText(attr, capitalize) {
 
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
-  const placeholders = await fetchPlaceholders()
-    .then((response) => response);
+  const placeholders = await fetchPlaceholders().then((response) => response);
 
   let grammarTemplate = placeholders['template-placeholder'];
 
@@ -103,7 +102,7 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function formatSearchQuery(filters) {
+function formatSearchQuery(limit, start, sort, filters) {
   const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
   const filterString = prunedFilter.reduce((string, [key, value]) => {
     if (key === prunedFilter[prunedFilter.length - 1][0]) {
@@ -113,12 +112,12 @@ function formatSearchQuery(filters) {
     }
   }, '');
 
-  props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+  return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    formatSearchQuery(props.filters);
+    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
 
     const result = await fetch(props.queryString)
       .then((response) => response.json())
@@ -139,14 +138,15 @@ async function fetchTemplates() {
 
 function fetchTemplatesByTasks(tasks) {
   const tempFilters = { ...props.filters };
+
   if (tasks) {
     tempFilters.tasks = `(${tasks})`;
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    formatSearchQuery(tempFilters);
+    const tempQ = formatSearchQuery(props.limit, '', props.sort, tempFilters);
 
-    return fetch(props.queryString)
+    return fetch(tempQ)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -184,9 +184,9 @@ async function processResponse() {
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
-      const start = new URLSearchParams(nextQuery).get('start')
-        .split(',')[0];
-      props.start = start;
+      const starts = new URLSearchParams(nextQuery).get('start').split(',');
+      starts.pop();
+      props.start = starts.join(',');
     } else {
       props.start = '';
     }
@@ -480,7 +480,7 @@ async function redirectSearch($searchBar) {
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
   let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
-  let searchInput = $searchBar ? $searchBar.value : currentTopic;
+  let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
 
   const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
     const searchValue = $searchBar.value.toLowerCase();
@@ -998,7 +998,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
 
   $searchDropdownHeading.textContent = placeholders.suggestions;
 
-  const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
+  const resp = await fetch('/express/templates/content.json?sheet=seo-templates?limit=10000');
 
   if (resp.ok) {
     const { data } = await resp.json();
@@ -1012,13 +1012,16 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     const dataArray = Object.entries(dataForPage);
 
     if (params.tasks) {
+      const [translatedTasks] = Object.entries(categories).find((cat) => cat[1] === params.tasks);
       dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
+        col[1] = col[1].replace('{{queryTasks}}', translatedTasks);
+        col[1] = col[1].replace('{{QueryTasks}}', titleCase(translatedTasks));
       });
     }
 
     if (params.topics) {
       dataArray.forEach((col) => {
+        col[1] = col[1].replace('{{queryTopics}}', params.topics);
         col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
       });
     }

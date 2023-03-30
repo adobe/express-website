@@ -55,7 +55,7 @@ export async function fetchPageContent(path) {
   return page && page.live !== 'N' ? page : null;
 }
 
-function formatSearchQuery(data) {
+async function formatSearchQuery(data) {
   // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -72,19 +72,15 @@ function formatSearchQuery(data) {
   const dataArray = Object.entries(data);
 
   if (params.tasks && params.phformat) {
+    const placeholders = await fetchPlaceholders().then((result) => result);
+    const categories = JSON.parse(placeholders['task-categories']);
+    const [translatedTasks] = Object.entries(categories).find((cat) => cat[1] === params.tasks);
     dataArray.forEach((col) => {
       col[1] = col[1].replace('{{queryTasks}}', params.tasks);
-    });
-
-    dataArray.forEach((col) => {
       col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
-    });
-
-    dataArray.forEach((col) => {
+      col[1] = col[1].replace('{{translatedTasks}}', translatedTasks);
+      col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks));
       col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
-    });
-
-    dataArray.forEach((col) => {
       col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics ?? ''));
     });
   } else {
@@ -383,7 +379,7 @@ const page = await fetchPageContent(window.location.pathname);
 if (page) {
   await fetchLinkList(page);
   if (getMetadata('template-search-page') === 'Y') {
-    const data = formatSearchQuery(page);
+    const data = await formatSearchQuery(page);
     if (!data) {
       window.location.replace('/express/templates/');
     } else {
