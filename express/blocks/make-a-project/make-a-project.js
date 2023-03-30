@@ -83,6 +83,5 @@ export default function decorate($block) {
     if ($CTA) $CTA.querySelectorAll('a.button').forEach(($button) => $button.classList.add('large'));
   }
   $block.dataset.trackingHeader = 'make-a-project';
-  $links = $block.querySelectorAll('a');
-  $links.forEach(($a) => ($a.dataset.tracking = `custom link ${$a.innerText}`));
+  $block.querySelectorAll('a').forEach(($a) => ($a.dataset.tracking = `custom link ${$a.innerText}`));
 }

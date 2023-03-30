@@ -484,7 +484,6 @@ loadScript(martechURL, () => {
     let sparkEventName;
     let sparkButtonId;
 
-    const $trackingHeader = $a.closest('[data-tracking-header]');
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
     const $contentToggleContainer = $a.closest('.content-toggle');
@@ -664,7 +663,15 @@ loadScript(martechURL, () => {
       sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
     }
 
+    const $trackingHeader = $a.closest('[data-tracking-header]');
     if ($trackingHeader || $a.dataset.tracking) {
+      adobeEventName = `adobe.com:express`;
+      if ($trackingHeader) adobeEventName += ':' + textToName($trackingHeader.dataset.trackingHeader.trim());
+      if ($a.dataset.tracking) {
+        adobeEventName += ':' + textToName($a.dataset.tracking.trim());
+      } else {
+        adobeEventName += ':' + textToName($a.innerText.trim());
+      }
     }
     if (hlx?.experiment) {
       let prefix = '';
