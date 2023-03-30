@@ -125,8 +125,8 @@ const buildCircleList = (block, circles) => {
 };
 
 // Adds a class to handle transitions for door handle appearing
-function initDoorHandle(imgWrapper, dropDown) {
-  imgWrapper.addEventListener('mouseenter', () => {
+function initDoorHandle(imgWrapper, dropDown, circleWrapper) {
+  circleWrapper.addEventListener('mouseenter', () => {
     dropDown.classList.remove('hidden');
     setTimeout(() => {
       dropDown.classList.remove('transparent');
@@ -161,7 +161,7 @@ function initResetHeroImage(imgWrapper) {
     altImages.forEach((altImg) => {
       altImg.setAttribute('style', 'opacity: 0');
     });
-  }); 
+  });
 }
 
 function initImageShuffling(wrapper, block) {
@@ -229,7 +229,7 @@ export default async function decorate($block) {
     const imageWrapper = wrapper.querySelector('.img-wrapper');
     const dropDown = wrapper.querySelector('.dropdown');
     if (imageWrapper) {
-      initDoorHandle(imageWrapper, dropDown);
+      initDoorHandle(imageWrapper, dropDown, wrapper);
       initResetDoorHandle(wrapper, dropDown);
       initImageShuffling(wrapper, $block);
       initResetHeroImage(imageWrapper);
