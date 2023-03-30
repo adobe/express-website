@@ -10,10 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag,
-  addFreePlanWidget,
-} from '../../scripts/scripts.js';
+import { createTag, addFreePlanWidget } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
@@ -85,4 +82,7 @@ export default function decorate($block) {
     const $CTA = $block.querySelector('.make-a-project-CTA');
     if ($CTA) $CTA.querySelectorAll('a.button').forEach(($button) => $button.classList.add('large'));
   }
+  $block.dataset.trackingHeader = 'make-a-project';
+  $links = $block.querySelectorAll('a');
+  $links.forEach(($a) => ($a.dataset.tracking = `custom link ${$a.innerText}`));
 }
