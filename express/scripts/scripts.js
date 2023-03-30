@@ -107,7 +107,7 @@ document.addEventListener('click', () => sampleRUM('click'));
  * Track assets in that appear in the viewport and add populate
  * `viewasset` events to the data layer.
  */
-function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
+function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"],img[src^="https://cdn.cp.adobe.io"]') {
   window.dataLayer = window.dataLayer || [];
 
   const viewAssetObserver = new IntersectionObserver((entries) => {
