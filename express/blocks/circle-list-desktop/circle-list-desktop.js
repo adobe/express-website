@@ -202,7 +202,7 @@ function initImageShuffling(wrapper, block) {
   const toggleAnimationState = (reduceMotion) => {
     const lottiePlaying = setInterval(() => {
       if (player.hasUpdated) {
-        if (reduceMotion === 'on') {
+        if (reduceMotion === true) {
           block.classList.add('no-animation');
           player.setSpeed(0);
           player.seek(200);
