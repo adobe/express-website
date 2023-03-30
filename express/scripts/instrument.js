@@ -19,7 +19,7 @@ import {
   getMetadata,
   checkTesting,
   trackBranchParameters,
-// eslint-disable-next-line import/no-unresolved
+  // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
 // eslint-disable-next-line import/no-unresolved
@@ -45,10 +45,7 @@ if (martech === 'legacy') {
   }
 } else {
   useAlloy = true;
-  if (
-    (window.spark && window.spark.hostname === 'www.stage.adobe.com')
-    || martech === 'alloy-qa'
-  ) {
+  if ((window.spark && window.spark.hostname === 'www.stage.adobe.com') || martech === 'alloy-qa') {
     martechURL = 'https://www.adobe.com/marketingtech/main.standard.qa.js';
   } else {
     martechURL = 'https://www.adobe.com/marketingtech/main.standard.min.js';
@@ -59,24 +56,16 @@ if (useAlloy) {
   w.marketingtech = {
     adobe: {
       launch: {
-        url: (
-          (
-            (window.spark && window.spark.hostname === 'www.stage.adobe.com')
-            || martech === 'alloy-qa'
-          )
+        url:
+          (window.spark && window.spark.hostname === 'www.stage.adobe.com') || martech === 'alloy-qa'
             ? 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-2c94beadc94f-development.js'
-            : 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-5dd5dd2177e6.min.js'
-        ),
+            : 'https://assets.adobedtm.com/d4d114c60e50/a0e989131fd5/launch-5dd5dd2177e6.min.js',
       },
       alloy: {
-        edgeConfigId: (
-          (
-            (window.spark && window.spark.hostname === 'www.stage.adobe.com')
-            || martech === 'alloy-qa'
-          )
+        edgeConfigId:
+          (window.spark && window.spark.hostname === 'www.stage.adobe.com') || martech === 'alloy-qa'
             ? '0f6221fd-db23-4376-8ad7-8dc7c799032f'
-            : 'b2e000b1-98ab-4ade-8c4f-5823d84cf015'
-        ),
+            : 'b2e000b1-98ab-4ade-8c4f-5823d84cf015',
       },
       target: checkTesting(),
       audienceManager: true,
@@ -132,7 +121,7 @@ loadScript(martechURL, () => {
     const splits = text.toLowerCase().split('-');
     const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
     const pathName = camelCase.replace('Jpg', 'JPG').replace('Png', 'PNG').replace('Gif', 'GIF').replace('Mp4', 'MP4');
-    return (pathName);
+    return pathName;
   }
 
   //------------------------------------------------------------------------------------
@@ -153,8 +142,7 @@ loadScript(martechURL, () => {
   document.documentElement.setAttribute('lang', htmlLang);
 
   let category = getMetadata('category');
-  if (!category && (pathname.includes('/create/')
-      || pathname.includes('/feature/'))) {
+  if (!category && (pathname.includes('/create/') || pathname.includes('/feature/'))) {
     category = 'design';
     if (pathname.includes('/image')) category = 'photo';
     if (pathname.includes('/video')) category = 'video';
@@ -162,66 +150,45 @@ loadScript(martechURL, () => {
 
   let sparkLandingPageType;
   // home
-  if (
-    pathname === '/express'
-      || pathname === '/express/'
-  ) {
+  if (pathname === '/express' || pathname === '/express/') {
     sparkLandingPageType = 'home';
     // seo
   } else if (
-    pathname === '/express/create'
-      || pathname.includes('/create/')
-      || pathname === '/express/make'
-      || pathname.includes('/make/')
-      || pathname === '/express/feature'
-      || pathname.includes('/feature/')
-      || pathname === '/express/discover'
-      || pathname.includes('/discover/')
+    pathname === '/express/create' ||
+    pathname.includes('/create/') ||
+    pathname === '/express/make' ||
+    pathname.includes('/make/') ||
+    pathname === '/express/feature' ||
+    pathname.includes('/feature/') ||
+    pathname === '/express/discover' ||
+    pathname.includes('/discover/')
   ) {
     sparkLandingPageType = 'seo';
     // learn
-  } else if (
-    pathname === '/express/tools'
-    || pathname.includes('/tools/')
-  ) {
+  } else if (pathname === '/express/tools' || pathname.includes('/tools/')) {
     sparkLandingPageType = 'quickAction';
-  } else if (
-    pathname === '/express/learn'
-      || (
-        pathname.includes('/learn/')
-        && !pathname.includes('/blog/')
-      )
-  ) {
+  } else if (pathname === '/express/learn' || (pathname.includes('/learn/') && !pathname.includes('/blog/'))) {
     if (pathname.includes('/express-your-brand')) {
       sparkLandingPageType = 'express-your-brand';
     } else {
       sparkLandingPageType = 'learn';
     }
     // blog
-  } else if (
-    pathname === '/express/learn/blog'
-      || pathname.includes('/learn/blog/')
-  ) {
+  } else if (pathname === '/express/learn/blog' || pathname.includes('/learn/blog/')) {
     sparkLandingPageType = 'blog';
     // pricing
-  } else if (
-    pathname.includes('/pricing')
-  ) {
+  } else if (pathname.includes('/pricing')) {
     sparkLandingPageType = 'pricing';
     // edu
-  } else if (
-    pathname.includes('/education/')
-  ) {
+  } else if (pathname.includes('/education/')) {
     sparkLandingPageType = 'edu';
     // other
-  } else if (
-    pathname.includes('/express-your-fandom')
-  ) {
+  } else if (pathname.includes('/express-your-fandom')) {
     sparkLandingPageType = 'express-your-fandom';
   } else {
     sparkLandingPageType = 'other';
   }
-  const sparkUserType = (w.adobeIMS && w.adobeIMS.isSignedInUser()) ? 'knownNotAuth' : 'unknown';
+  const sparkUserType = w.adobeIMS && w.adobeIMS.isSignedInUser() ? 'knownNotAuth' : 'unknown';
   const url = new URL(loc.href);
   const sparkTouchpoint = url.searchParams.get('touchpointName');
 
@@ -436,10 +403,7 @@ loadScript(martechURL, () => {
   }
 
   // Fire the displayPurchasePanel event if it is the pricing site
-  if (
-    sparkLandingPageType === 'pricing'
-      && sparkTouchpoint
-  ) {
+  if (sparkLandingPageType === 'pricing' && sparkTouchpoint) {
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
@@ -492,7 +456,7 @@ loadScript(martechURL, () => {
   function textToName(text) {
     const splits = text.toLowerCase().split(' ');
     const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
-    return (camelCase);
+    return camelCase;
   }
 
   function appendLinkText(eventName, $a) {
@@ -520,6 +484,7 @@ loadScript(martechURL, () => {
     let sparkEventName;
     let sparkButtonId;
 
+    const $trackingHeader = $a.closest('[data-tracking-header]');
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
     const $contentToggleContainer = $a.closest('.content-toggle');
@@ -621,14 +586,18 @@ loadScript(martechURL, () => {
         adobeEventName = 'adobe.com:express:CTA:pricing:viewPlans:Click';
         sparkEventName = 'landing:ctaPressed';
       }
-    // quick actions clicks
+      // quick actions clicks
     } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g))) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
-    } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?express-apps\/animate-from-audio/g))) {
+    } else if (
+      $a.href &&
+      ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) ||
+        $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?express-apps\/animate-from-audio/g))
+    ) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
-    // ToC clicks
+      // ToC clicks
     } else if ($a.closest('.toc-container')) {
       if ($a.classList.contains('toc-toggle')) {
         adobeEventName += 'toc:toggle:Click';
@@ -646,7 +615,7 @@ loadScript(martechURL, () => {
         adobeEventName = appendLinkText(`${adobeEventName}toc:link:Click:`, $a);
         sparkEventName = 'landing:tocLinkPressed';
       }
-    // Default clicks
+      // Default clicks
     } else {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'landing:ctaPressed';
@@ -693,6 +662,19 @@ loadScript(martechURL, () => {
       }
 
       sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
+    }
+
+    if ($trackingHeader || $a.dataset.tracking) {
+    }
+    if (hlx?.experiment) {
+      let prefix = '';
+      if (hlx.experiment?.id) prefix = hlx.experiment.id + ':';
+      if (hlx.experiment?.selectedVariant) {
+        let variant = hlx.experiment.selectedVariant;
+        if (variant.includes('-')) variant = variant.split('-')[1];
+        prefix += variant + ':';
+      }
+      adobeEventName = prefix + adobeEventName;
     }
 
     if (useAlloy) {
@@ -746,16 +728,7 @@ loadScript(martechURL, () => {
   }
 
   function trackVideoAnalytics($video, parameters) {
-    const {
-      videoName,
-      videoId,
-      videoLength,
-      product,
-      videoCategory,
-      videoDescription,
-      videoPlayer,
-      videoMediaType,
-    } = parameters;
+    const { videoName, videoId, videoLength, product, videoCategory, videoDescription, videoPlayer, videoMediaType } = parameters;
 
     set('video.videoInfo.videoName', videoName);
     set('video.videoInfo.videoId', videoId);
@@ -1119,6 +1092,7 @@ loadScript(martechURL, () => {
 
   const processed = {};
   function initHemingway() {
+    if (window.location.hostname === 'localhost') return;
     // poll the dataLayer every 2 seconds
     setInterval(() => {
       // loop through each of the events in the dataLayer
@@ -1268,13 +1242,10 @@ loadScript(martechURL, () => {
     };
 
     if (useAlloy) {
-      alloy('getIdentity')
-        .then((data) => getSegments(data && data.identity ? data.identity.ECID : null));
+      alloy('getIdentity').then((data) => getSegments(data && data.identity ? data.identity.ECID : null));
     } else {
       const visitorId = _satellite.getVisitorId ? _satellite.getVisitorId() : null;
-      getSegments(
-        visitorId ? visitorId.getMarketingCloudVisitorID() : null,
-      );
+      getSegments(visitorId ? visitorId.getMarketingCloudVisitorID() : null);
     }
   }
 

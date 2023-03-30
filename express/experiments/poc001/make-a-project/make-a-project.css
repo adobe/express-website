@@ -1,0 +1,472 @@
+main .section.make-a-project-container {
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+main .section.make-a-project-container > div {
+  margin: 0;
+  padding: 0;
+  max-width: unset;
+}
+
+main .make-a-project {
+  display: flex;
+  flex-direction: column;
+}
+
+main .make-a-project .make-a-project-marquee {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  text-align: left;
+}
+
+main .make-a-project.dark .make-a-project-marquee {
+  background-color: var(--color-gray-800);
+  color: var(--color-white);
+}
+
+main .make-a-project .make-a-project-marquee > div {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+main .make-a-project .make-a-project-marquee h2,
+main .make-a-project .make-a-project-marquee p {
+  margin: 20px 15px;
+}
+
+main .make-a-project .make-a-project-marquee h2 {
+  font-size: var(--heading-font-size-m);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+main .make-a-project.dark .make-a-project-marquee h2 {
+  font-size: var(--heading-font-size-xl);
+  text-align: left;
+}
+
+main .make-a-project p,
+main .make-a-project .make-a-project-description {
+  font-size: var(--body-font-size-xl);
+}
+
+main .make-a-project .make-a-project-description {
+  line-height: var(--body-line-height);
+  margin: 32px auto;
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+main .make-a-project .make-a-project-description > p:first-child {
+  margin-top: 0;
+}
+
+main .make-a-project .make-a-project-description > p:first-child {
+  margin-bottom: 0;
+}
+
+main .make-a-project p:first-child .icon {
+  height: 32px;
+  width: auto;
+}
+
+main .make-a-project .make-a-project-marquee ul {
+  list-style: none;
+  padding: 20px 15px;
+  display: flex;
+  margin: 0;
+  overflow-x: auto;
+  max-width: 100vw;
+}
+
+main .make-a-project li {
+  max-width: 60px;
+  padding-right: 22px;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  text-align: center;
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+}
+
+main .make-a-project li:last-of-type {
+  padding-right: 15px;
+}
+
+main .make-a-project li a:any-link {
+  color: var(--color-white);
+}
+
+main .make-a-project li img,
+main .make-a-project li svg {
+  position: absolute;
+  top: 19px;
+  left: 19px;
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+  display: flex;
+  flex-direction: column;
+}
+
+main .make-a-project li::before {
+  float: left;
+  content: " ";
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--color-gray-700);
+  margin-bottom: 10px;
+}
+
+main .make-a-project .make-a-project-description {
+  padding: 0 30px;
+  text-align: left;
+}
+
+main .make-a-project .make-a-project-description p.button-container {
+  text-align: left;
+}
+
+main .make-a-project .make-a-project-description a.button {
+  margin: 0;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item {
+  margin: 0 24px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item:first-child {
+  margin-left: 0;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item > div,
+main .make-a-project .make-a-project-projectlist .make-a-project-item > div a {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .button-container {
+  margin-top: 12px;
+  padding-bottom: 16px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item a:any-link {
+  font-weight: 400;
+  color: var(--color-info-accent);
+  transition: color 0.3s;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item a:any-link:hover  {
+  color: var(--color-info-accent-hover);
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item picture,
+main .make-a-project .make-a-project-projectlist .make-a-project-item img {
+  max-height: 175px;
+  max-width: 168px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item img {
+  width: auto;
+  height: auto;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item picture,
+main .make-a-project .make-a-project-projectlist .make-a-project-item-svg-image {
+  display: block;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item picture {
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item > div:first-child > div:first-child,
+main .make-a-project .make-a-project-projectlist .make-a-project-item > div:first-child > a > div:first-child {
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 0;
+}
+
+main .make-a-project .make-a-project-projectlist .carousel-platform {
+  align-items: stretch;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item:first-child {
+  padding-left: 12px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon {
+  position: absolute;
+  top: 130px;
+  right: -20px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon > div {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon > div svg,
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon > div img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon:not(:empty) {
+  background: var(--color-black);
+  color: white;
+  border-radius: 100px;
+  height: 50px;
+  width: 50px;
+  box-sizing: border-box;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-numbers {
+  height: 24px;
+  margin-top: 8px;
+  white-space: nowrap;
+  font-size: var(--body-font-size-xs);
+  line-height: 1;
+  color: var(--color-info-accent);
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-numbers:not(:empty) {
+  border-radius: 32px;
+  background: var(--color-info-accent-light);
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon,
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon a:any-link,
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon svg,
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon p {
+  white-space: nowrap;
+  color: white;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon img,
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon svg {
+  object-fit: contain;
+  height: 24px;
+  width: 24px;
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item .make-a-project-icon svg {
+  /* fallback for svg icons that don't have fill="currentColor" */
+  filter: invert(100%) sepia(8%) saturate(7468%) hue-rotate(290deg) brightness(109%) contrast(109%);
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item  .make-a-project-item-svg-image {
+  color: #484848;
+  height: 82px;
+  width: 82px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  box-sizing: border-box;
+  border: 3px dashed var(--color-gray-200);
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item  .make-a-project-item-svg-image svg {
+  height: 36px;
+  width: 36px;
+  color: var(--color-gray-700);
+  /* fallback for svg icons that don't have fill="currentColor" */
+  filter: invert(27%) sepia(7%) saturate(3%) hue-rotate(356deg) brightness(97%) contrast(92%);
+}
+
+main .make-a-project .make-a-project-projectlist .make-a-project-item picture {
+  transition: transform 0.3s ease-in-out;
+}
+
+@media (min-width: 600px) {
+  main .make-a-project .make-a-project-projectlist .make-a-project-item:hover picture {
+    transform: scale(1.05);
+  }
+  
+  main .make-a-project .make-a-project-description {
+    max-width: 1264px;
+  }
+
+  main .make-a-project .make-a-project-marquee > div {
+    max-width: 1264px;
+  }
+
+  main .make-a-project .make-a-project-marquee {
+    height: unset;
+  }
+
+  main .make-a-project .make-a-project-marquee .make-a-project-CTA {
+    padding: 0 40px;
+    box-sizing: border-box;
+  }
+
+  main .make-a-project .make-a-project-marquee > div > div > ul {
+    margin: 0;
+    margin-bottom: 20px;
+    padding-left: 40px;
+  }
+
+  main .make-a-project .make-a-project-description,
+  main .make-a-project .make-a-project-description p.button-container {
+    text-align: center;
+  }
+
+  main .make-a-project .make-a-project-marquee h2,
+  main .make-a-project .make-a-project-marquee p {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  main .make-a-project .make-a-project-projectlist .make-a-project-item:first-child {
+    padding-left: 32px;
+  }
+}
+
+@media (min-width: 900px) {
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container {
+    /* padding-top: 40px; */
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container h2 {
+    font-size: var(--heading-font-size-m);
+  }
+  
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container .carousel-container {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container > div,
+  main .section-wrapper.make-a-project-container + .section-wrapper.template-list-horizontal-container .template-list.horizontal {
+    max-width: 1264px;
+  }
+
+  main .make-a-project .make-a-project-projectlist .make-a-project-item {
+    margin: 0 32px;
+  }
+
+  main .make-a-project .make-a-project-marquee h2 {
+    margin-bottom: 0;
+  }
+}
+
+main .make-a-project:not(.dark) .make-a-project-CTA {
+  max-width: 520px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px 15px;
+}
+
+main .make-a-project:not(.dark) .make-a-project-CTA h2 {
+  margin-left: 0;
+  margin-right: 0;
+  text-align: left;
+}
+
+@media (min-width: 950px) {
+  main .make-a-project:not(.dark) .make-a-project-CTA h2 {
+    text-align: center;
+  }
+
+  main .make-a-project:not(.dark) .make-a-project-CTA {
+    padding-top: 0;
+    padding-bottom: 0;
+    transform: translateY(10px);
+  }
+
+  main .make-a-project:not(.dark) .make-a-project-marquee {
+    padding-top: 8px;
+    padding-bottom: 0;
+  }
+
+  main .make-a-project:not(.dark) .carousel-container {
+    margin-bottom: 0;
+  }
+
+  main .make-a-project:not(.dark) .carousel-platform {
+    padding-bottom: 0;
+  }
+}
+
+main .hero-animation-wrapper + .make-a-project-wrapper .make-a-project-CTA h2 {
+  margin-top: 0;
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper {
+  background: var(--color-gray-100);
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper {
+  background: -webkit-linear-gradient(180deg, var(--color-gray-100) 0%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(180deg, var(--color-gray-100) 0%, rgba(255,255,255,0) 100%);
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .carousel-container .carousel-fader-right {
+  background: -webkit-linear-gradient(90deg, rgba(255,255,255,0) 0%, rgb(252,252,252) 100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgb(252,252,252) 100%);
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .carousel-container .carousel-fader-left {
+  background: -webkit-linear-gradient(90deg, rgb(252,252,252) 0%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(90deg, rgb(252,252,252) 0%, rgba(255,255,255,0) 100%);
+}
+
+/* Specific sizing rules for Intent-Driven Home Page desktop version */
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .make-a-project-item:nth-child(2) img {
+  max-height: 171px;
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .make-a-project-item:nth-child(3) img {
+  max-height: 120px;
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .make-a-project-item:nth-child(5) img {
+  max-height: 111px;
+}
+
+main .hero-animation-wide-container .hero-animation-wrapper + .make-a-project-wrapper .make-a-project-item:nth-child(7) img {
+  max-height: 158px;
+}
+
+main .make-a-project .free-plan-widget {
+  margin: 32px auto -64px;
+}
+
+/* add padding if make a project isn't the first block */
+main .default-content-wrapper + .make-a-project-wrapper > .make-a-project {
+  padding-top: 40px;
+}
+
+main .make-a-project .carousel-container .carousel-platform {
+  padding-top: 0;
+}
