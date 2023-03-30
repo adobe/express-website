@@ -885,7 +885,7 @@ function decorateCategoryList($block, $section, placeholders) {
     const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
     $mobileDrawerWrapper.append($lottieArrows);
     $inWrapper.append($categoriesMobileWrapper);
-    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
     lazyLoadLottiePlayer();
 
     $categoriesDesktopWrapper.classList.add('desktop-only');
@@ -1743,7 +1743,7 @@ export async function decorateTemplateList($block) {
   if (rows === 1) {
     $block.classList.add('large');
     breakpoints = [{
-      media: '(min-width: 400px)',
+      media: '(min-width: 600px)',
       width: '2000',
     }, { width: '750' }];
   }

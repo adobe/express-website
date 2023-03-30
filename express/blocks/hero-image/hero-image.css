@@ -76,7 +76,7 @@ main .hero-image .hero-image-overlay p.button-container a.button:any-link {
 }
 
 
-@media (min-width: 400px) {
+@media (min-width: 600px) {
     main .hero-image {
         padding-top: max( 49%, 375px);
     }
@@ -89,7 +89,7 @@ main .hero-image .hero-image-overlay p.button-container a.button:any-link {
 }
 
 @media (min-width: 740px) {
-    
+
     /* body.no-desktop-brand-header header, body.no-brand-header header {
         height: 64px;
         background-image: unset;
@@ -97,7 +97,7 @@ main .hero-image .hero-image-overlay p.button-container a.button:any-link {
 
     main .hero-image {
         padding-top: 0;
-    }    
+    }
 
     main .hero-image-container > div {
         padding: 0 56px;
@@ -110,7 +110,7 @@ main .hero-image .hero-image-overlay p.button-container a.button:any-link {
         margin: unset;
         padding: 0;
     }
-    
+
     main .hero-image h1 {
         font-size: var(--heading-font-size-xxl);
     }
@@ -120,5 +120,5 @@ main .hero-image .hero-image-overlay p.button-container a.button:any-link {
 @media (min-width: 1800px) {
     main .hero-image-container > div {
         max-width: 65%;
-    }    
+    }
 }

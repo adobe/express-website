@@ -320,16 +320,21 @@ export default async function decorate($block) {
   if (enclosingMain) {
     let payload;
     const $linkList = enclosingMain.querySelector('.link-list-container');
-    const $section = await fetchPlainBlockFromFragment($block, '/express/fragments/plans-comparison', 'plans-comparison');
+    const $oldSection = $block.closest('.section');
+    const $newSection = await fetchPlainBlockFromFragment('/express/fragments/plans-comparison', 'plans-comparison');
 
-    if ($section) {
+    if ($oldSection) {
+      $oldSection.parentNode.replaceChild($newSection, $oldSection);
+    }
+
+    if ($newSection) {
       // hide section to avoid showing broken block
-      $section.style.display = 'none';
+      $newSection.style.display = 'none';
       if ($linkList) {
-        $linkList.before($section);
+        $linkList.before($newSection);
       }
 
-      const $blockFromFragment = $section.querySelector('.plans-comparison');
+      const $blockFromFragment = $newSection.querySelector('.plans-comparison');
       if ($blockFromFragment) {
         payload = await buildPayload($blockFromFragment);
         $blockFromFragment.innerHTML = payload.mainHeading;
@@ -341,7 +346,7 @@ export default async function decorate($block) {
 
         if ($cards) {
           setTimeout(() => {
-            $section.style.removeProperty('display');
+            $newSection.style.removeProperty('display');
             toggleExpandableCard($blockFromFragment, $cards[1], payload, true);
             resizeCards($cards, $featuresWrappers, payload);
             payload.desiredHeight = `${$featuresWrappers[1].offsetHeight}px`;
