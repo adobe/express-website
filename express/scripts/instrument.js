@@ -667,26 +667,16 @@ loadScript(martechURL, () => {
     if ($trackingHeader || $a.dataset.tracking) {
       adobeEventName = `adobe.com:express`;
       let headerString = '';
-      /*       while ($trackingHeader) {
+      while ($trackingHeader) {
         headerString = textToName($trackingHeader.dataset.trackingHeader.trim()) + ':' + headerString;
         $trackingHeader = $trackingHeader.closest('[data-lh]');
       }
- */ adobeEventName += headerString;
+      adobeEventName += headerString;
       if ($a.dataset.ll) {
         adobeEventName += ':' + textToName($a.dataset.ll.trim());
       } else {
         adobeEventName += ':' + textToName($a.innerText.trim());
       }
-    }
-    if (hlx?.experiment) {
-      let prefix = '';
-      if (hlx.experiment?.id) prefix = hlx.experiment.id + ':';
-      if (hlx.experiment?.selectedVariant) {
-        let variant = hlx.experiment.selectedVariant;
-        if (variant.includes('-')) variant = variant.split('-')[1];
-        prefix += variant + ':';
-      }
-      adobeEventName = prefix + adobeEventName;
     }
     if (hlx?.experiment) {
       let prefix = '';
