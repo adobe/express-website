@@ -74,15 +74,19 @@ async function formatSearchQuery(data) {
   if (params.tasks && params.phformat) {
     const placeholders = await fetchPlaceholders().then((result) => result);
     const categories = JSON.parse(placeholders['task-categories']);
-    const [translatedTasks] = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-    dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{queryTasks}}', params.tasks);
-      col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
-      col[1] = col[1].replace('{{translatedTasks}}', translatedTasks);
-      col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks));
-      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
-      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics ?? ''));
-    });
+    if (categories) {
+      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+      const translatedTasks = TasksPair ? TasksPair[0] : params.tasks;
+      dataArray.forEach((col) => {
+        col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
+        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
+        col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
+        col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
+        col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
+        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
+        col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
+      });
+    }
   } else {
     return false;
   }
@@ -139,7 +143,7 @@ function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.path);
-    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.shortTitle);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data.shortTitle);
   }
   return clone;
 }
@@ -158,13 +162,10 @@ function updateSEOLinkList(container, linkPill, list) {
   }
 }
 
-function formatLinkPillText(pageData, linkPillData, pillsMapping) {
+function formatLinkPillText(pageData, linkPillData) {
   const digestedDisplayValue = titleCase(linkPillData.displayValue.replace(/-/g, ' '));
   const digestedChildSibling = titleCase(linkPillData.childSibling.replace(/-/g, ' '));
   const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '').replace(/-/g, ' ')}` : '';
-  const locale = getLocale(window.location);
-  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
 
   const displayTopics = topics && linkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
   let displayText;
@@ -179,14 +180,6 @@ function formatLinkPillText(pageData, linkPillData, pillsMapping) {
       .split(' ')
       .filter((item, i, allItems) => i === allItems.indexOf(item))
       .join(' ').trim();
-  }
-
-  if (pillsMapping) {
-    const alternateText = pillsMapping.find((row) => pageData.path === `${urlPrefix}${row['Express SEO URL']}` && linkPillData.ckgID === row['CKG Pill ID']);
-
-    if (alternateText) {
-      displayText = alternateText[`${localeColumnString}`];
-    }
   }
 
   return displayText;
@@ -206,7 +199,22 @@ async function updateLinkList(container, linkPill, list, pageData) {
       const topicsQuery = `${topics ?? topics} ${d.displayValue}`.split(' ')
         .filter((item, i, allItems) => i === allItems.indexOf(item))
         .join(' ').trim();
-      const displayText = formatLinkPillText(pageData, d, pillsMapping);
+      let displayText = formatLinkPillText(pageData, d);
+
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
+
+      if (pillsMapping) {
+        const alternateText = pillsMapping.find((row) => pageData.path === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
+
+        if (alternateText) {
+          displayText = alternateText[`${localeColumnString}`];
+          if (templatePageData) {
+            templatePageData.altShortTitle = displayText;
+          }
+        }
+      }
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);

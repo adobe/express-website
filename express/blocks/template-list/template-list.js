@@ -497,11 +497,12 @@ async function redirectSearch($searchBar) {
   }
 
   const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const topicUrl = searchInput ? `/${searchInput}` : '';
   const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
+  const searchUrlTemplate = `${urlPrefix}/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
+  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
   if (window.templates && window.templates.data.some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
