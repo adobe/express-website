@@ -277,6 +277,12 @@ async function updateBlocks(data) {
   const linkList = document.querySelector('.link-list.fullwidth');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const seoNav = document.querySelector('.seo-nav');
+  const shortTitle = createTag('meta', { name: 'short-title', content: data.shortTitle });
+
+  if (shortTitle) {
+    const $head = document.querySelector('head');
+    $head.append(shortTitle);
+  }
 
   if (heroAnimation) {
     if (data.heroAnimationTitle) {
