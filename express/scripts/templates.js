@@ -278,6 +278,12 @@ async function updateBlocks(data) {
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const seoNav = document.querySelector('.seo-nav');
 
+  if (data.shortTitle) {
+    const shortTitle = createTag('meta', { name: 'short-title', content: data.shortTitle });
+    const $head = document.querySelector('head');
+    $head.append(shortTitle);
+  }
+
   if (heroAnimation) {
     if (data.heroAnimationTitle) {
       heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template title', data.heroAnimationTitle);
