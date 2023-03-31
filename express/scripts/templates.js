@@ -76,7 +76,7 @@ async function formatSearchQuery(data) {
     const categories = JSON.parse(placeholders['task-categories']);
     if (categories) {
       const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const translatedTasks = TasksPair ? TasksPair[0] : params.tasks;
+      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
       dataArray.forEach((col) => {
         col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
         col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
@@ -225,7 +225,7 @@ async function updateLinkList(container, linkPill, list, pageData) {
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
 
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `${urlPrefix}/express/templates/search?${searchParams}`);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
         searchLinks.push(clone);
       }
@@ -289,16 +289,16 @@ function updateMetadata(data) {
   }
 }
 
-function purgeAllTaskText(data) {
-  const purgedData = data;
+function formatAllTaskText(data) {
+  const formattedData = data;
 
-  if (purgedData.templateTasks === "''" || purgedData.templateTopics === "''") {
-    Object.entries(purgedData).forEach((entry) => {
-      purgedData[entry[0]] = entry[1].replace("''", '');
+  if (formattedData.templateTasks === "''" || formattedData.templateTopics === "''") {
+    Object.entries(formattedData).forEach((entry) => {
+      formattedData[entry[0]] = entry[1].replace("''", '');
     });
   }
 
-  return purgedData;
+  return formattedData;
 }
 
 async function updateBlocks(data) {
@@ -391,7 +391,7 @@ if (page) {
     if (!data) {
       window.location.replace('/express/templates/');
     } else {
-      const purgedData = purgeAllTaskText(data);
+      const purgedData = formatAllTaskText(data);
       updateMetadata(purgedData);
       await updateBlocks(purgedData);
     }

@@ -70,11 +70,7 @@ export default async function getData(env = '', data = {}) {
 }
 
 export async function fetchLinkListFromCKGApi(pageData) {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (pageData.ckgID || params.ckgid) {
+  if (pageData.ckgID) {
     const dataRaw = {
       experienceId: 'templates-browse-v1',
       locale: 'en_US',

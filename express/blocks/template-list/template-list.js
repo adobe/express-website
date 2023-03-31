@@ -13,9 +13,7 @@
 
 import {
   addAnimationToggle,
-  addFreePlanWidget,
   addSearchQueryToHref,
-  arrayToObject,
   createOptimizedPicture,
   createTag,
   decorateMain,
@@ -26,7 +24,6 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   linkImage,
-  titleCase,
   toClassName,
 } from '../../scripts/scripts.js';
 
@@ -948,14 +945,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     enterKeyHint: placeholders.search ?? 'Search',
   });
 
-  // Suggestions Dropdown
-  const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
-  const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
-  const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
-  const $searchScratch = createTag('a', { class: 'search-dropdown-scratch', href: $placeholderTemplate.href });
-  const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
-  const $boldedTaskText = createTag('b');
-
   // Tasks Dropdown
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
   const $taskDropdown = createTag('div', { class: 'task-dropdown' });
@@ -988,63 +977,11 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     }
   }
 
-  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
   $taskDropdown.append($taskDropdownToggle, $taskDropdownList, $taskDropdownChev);
-  $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
-  $searchDropdown.append($searchDropdownHeadingWrapper);
-  $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
-
-  $searchDropdownHeading.textContent = placeholders.suggestions;
-
-  const resp = await fetch('/express/templates/content.json?sheet=seo-templates?limit=10000');
-
-  if (resp.ok) {
-    const { data } = await resp.json();
-    const path = window.location.pathname;
-    let dataForPage = data.find((p) => p.path === path);
-
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-
-    const dataArray = Object.entries(dataForPage);
-
-    if (params.tasks) {
-      const [translatedTasks] = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{queryTasks}}', translatedTasks);
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(translatedTasks));
-      });
-    }
-
-    if (params.topics) {
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{queryTopics}}', params.topics);
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
-      });
-    }
-
-    dataForPage = arrayToObject(dataArray);
-
-    if (dataForPage) {
-      $boldedTaskText.textContent = `${dataForPage.shortTitle} `;
-      $searchDropdownHeading.prepend($boldedTaskText);
-
-      $searchScratchText.textContent = placeholders['search-from-scratch']
-        .replace('{{template-type}}', dataForPage.shortTitle);
-    } else {
-      $searchScratchText.textContent = placeholders['search-from-scratch']
-        .replace('{{template-type}}', '');
-    }
-  } else {
-    $searchScratchText.textContent = placeholders['search-from-scratch']
-      .replace('{{template-type}}', '');
-  }
-
-  await addFreePlanWidget($searchDropdown, true);
+  $searchBarWrapper.append($searchForm, $taskDropdownContainer);
 
   const $stickySearchBarWrapper = $searchBarWrapper.cloneNode({ deep: true });
 
