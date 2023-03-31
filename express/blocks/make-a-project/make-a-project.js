@@ -82,6 +82,7 @@ export default function decorate($block) {
     const $CTA = $block.querySelector('.make-a-project-CTA');
     if ($CTA) $CTA.querySelectorAll('a.button').forEach(($button) => $button.classList.add('large'));
   }
-  $block.dataset.trackingHeader = 'make-a-project';
-  $block.querySelectorAll('a').forEach(($a) => ($a.dataset.tracking = `custom link ${$a.innerText}`));
+  $block.dataset.lh = 'make-a-project';
+  $block.parentNode.dataset.lh = 'block container';
+  $block.querySelectorAll('a').forEach(($a) => ($a.dataset.ll = `custom link ${$a.innerText}`));
 }
