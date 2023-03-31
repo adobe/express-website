@@ -934,8 +934,6 @@ function decorateCategoryList($block, $section, placeholders) {
 async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
-  const $templateListBlock = $section.querySelector('.template-list');
-  const $placeholderTemplate = $templateListBlock.querySelector('a:first-of-type');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
   const $searchForm = createTag('form', { class: 'search-form' });
   const $searchBar = createTag('input', {
