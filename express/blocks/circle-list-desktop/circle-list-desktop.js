@@ -13,6 +13,17 @@
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
 
+const getBrowserName = () => {
+  const browserInfo = navigator.userAgent;
+  if (browserInfo.includes('Opera') || browserInfo.includes('Opr')
+    || browserInfo.includes('Edg') || browserInfo.includes('Chrome')) {
+    return null;
+  } else if (browserInfo.includes('Safari')) {
+    return 'Safari';
+  }
+  return null;
+};
+
 // Fetches images from the spreadsheet
 async function fetchCircleImages(link) {
   const resp = await fetch(`${link}`);
@@ -82,7 +93,10 @@ const extractContent = async (block) => {
   return circleList;
 };
 
-const buildCircleList = (block, circles) => {
+const buildCircleList = (block, circles, browserName) => {
+  if (browserName === 'Safari') {
+    block.classList.add('safari');
+  }
   const circleContainer = createTag('div', { class: 'circles-container' });
   circles.forEach((circle) => {
     const circleWrapper = createTag('div', { class: 'circle-wrapper' });
@@ -222,7 +236,8 @@ function initImageShuffling(wrapper, block) {
 
 export default async function decorate($block) {
   const circleList = await extractContent($block);
-  buildCircleList($block, circleList);
+  const browserName = getBrowserName();
+  buildCircleList($block, circleList, browserName);
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
 
   circleWrappers.forEach((wrapper) => {

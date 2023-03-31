@@ -89,6 +89,9 @@ main .circle-list-desktop .dropdown {
   border-radius: 150px 150px 24px 24px;
   background-color: #E4E5EA;
   padding: 210px 0 10px 0;
+}
+
+main .circle-list-desktop:not(.safari) .dropdown {
   filter: drop-shadow(0px 3px 6px #00000029);
 }
 
