@@ -160,7 +160,7 @@ function initResetDoorHandle(wrapper, dropDown) {
       dropDown.classList.add('hidden');
     }, 201);
     hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform-style: preserve-3d; transition-property: transform 0.4s; z-index: 0');
+      img.setAttribute('style', 'transform-style: preserve-3d; transition: transform 0.4s; z-index: 0');
     });
   });
 }
