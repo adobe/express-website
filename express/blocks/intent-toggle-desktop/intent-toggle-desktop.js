@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { createTag } from '../../scripts/scripts.js';
-import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+import preferenceStore, { preferenceNames } from '../../scripts/preference-store.js';
 
 function toggleSections($sections, buttons, index) {
   $sections.forEach(($section) => {
@@ -65,20 +65,11 @@ function initButton($block, $sections, index) {
   }
 }
 
-function motionReduced() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)') === true
-    || window.matchMedia('(prefers-reduced-motion: reduce)').matches === true;
-}
-
 function buildReduceMotionSwitch($block, container) {
   const reduceMotionSwitch = createTag('div', { class: 'reduce-motion-switch' });
-  const reduceMotionSlider = createTag('div', { class: 'reduce-motion-slider' });
+  const reduceMotionSlider = createTag('button', { class: 'reduce-motion-slider' });
   const reduceMotionKnob = createTag('div', { class: 'reduce-motion-knob' });
   const reduceMotionText = createTag('span', { class: 'reduce-motion-text' });
-
-  const dispatchMotionToggleEvent = () => {
-    preferenceStore.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion') === 'on');
-  };
 
   reduceMotionText.textContent = container.textContent.trim();
   container.innerHTML = '';
@@ -88,41 +79,25 @@ function buildReduceMotionSwitch($block, container) {
   container.prepend(reduceMotionSwitch, reduceMotionText);
   $block.prepend(container);
 
-  if (sessionStorage.getItem('reduceMotion') === null) {
-    if (motionReduced()) {
-      sessionStorage.setItem('reduceMotion', 'on');
+  const initialStore = preferenceStore.init(preferenceNames.reduceMotion);
+
+  if (initialStore.value === true) {
+    reduceMotionSlider.classList.add('on');
+  }
+
+  container.classList.add('reduce-motion-switch-container');
+
+  preferenceStore.subscribe(preferenceNames.reduceMotion, $block, ({ value }) => {
+    if (value) {
       reduceMotionSlider.classList.add('on');
     } else {
-      sessionStorage.setItem('reduceMotion', 'off');
-    }
-  } else if (sessionStorage.getItem('reduceMotion') === 'on') reduceMotionSlider.classList.add('on');
-
-  reduceMotionSwitch.addEventListener('click', () => {
-    reduceMotionSlider.classList.toggle('on');
-    if (sessionStorage.getItem('reduceMotion') === 'on') {
-      sessionStorage.setItem('reduceMotion', 'off');
-    } else {
-      sessionStorage.setItem('reduceMotion', 'on');
-    }
-
-    dispatchMotionToggleEvent();
-  });
-
-  const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  mediaQuery.addEventListener('change', () => {
-    if (mediaQuery.matches) {
-      sessionStorage.setItem('reduceMotion', 'on');
-      reduceMotionSlider.classList.add('on');
-    } else {
-      sessionStorage.setItem('reduceMotion', 'off');
       reduceMotionSlider.classList.remove('on');
     }
-
-    dispatchMotionToggleEvent();
   });
 
-  dispatchMotionToggleEvent();
-  container.classList.add('reduce-motion-switch-container');
+  reduceMotionSwitch.addEventListener('click', () => {
+    preferenceStore.set(preferenceNames.reduceMotion);
+  });
 }
 
 function decorateToggleButtons($block, container) {

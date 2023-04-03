@@ -51,6 +51,7 @@ main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion
 main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion-slider {
     position: absolute;
     cursor: pointer;
+    border: none;
     border-radius: 34px;
     top: 0;
     left: 0;
