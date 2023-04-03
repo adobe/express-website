@@ -353,9 +353,10 @@ async function updateBlocks(data) {
   }
 }
 
-const redirects = await fetch('/redirects.json?limit=99999').then((resp) => resp.json());
-if (redirects) {
-  const toRedirect = redirects.data.find((row) => row.Source === window.location.pathname);
+const redirects = await fetch('/redirects.json?limit=99999');
+if (redirects.ok) {
+  const json = await redirects.json();
+  const toRedirect = json.data.find((row) => row.Source === window.location.pathname);
   if (toRedirect) {
     window.location.assign(toRedirect.Destination);
   }
