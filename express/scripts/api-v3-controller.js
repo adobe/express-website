@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getHelixEnv } from './scripts.js';
+import { getHelixEnv, getLocale } from './scripts.js';
 
 const endpoints = {
   dev: {
@@ -32,6 +32,24 @@ const endpoints = {
   },
 };
 
+export async function getPillWordsMapping() {
+  const locale = getLocale(window.location);
+  const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
+  try {
+    const resp = await fetch('/linklist-qa-mapping.json?limit=100000');
+    const filteredArray = await resp.json();
+    return filteredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+  } catch {
+    const resp = await fetch('/express/linklist-qa-mapping.json?limit=100000');
+    if (resp.ok) {
+      const filteredArray = await resp.json();
+      return filteredArray.data.filter((column) => column[`${localeColumnString}`] !== '');
+    } else {
+      return false;
+    }
+  }
+}
+
 export default async function getData(env = '', data = {}) {
   const endpoint = endpoints[env];
   const response = await fetch(endpoint.url, {
@@ -51,12 +69,8 @@ export default async function getData(env = '', data = {}) {
   }
 }
 
-export async function fetchLInkListFromCKGApi(pageData) {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (pageData.ckgID || params.ckgid) {
+export async function fetchLinkListFromCKGApi(pageData) {
+  if (pageData.ckgID) {
     const dataRaw = {
       experienceId: 'templates-browse-v1',
       locale: 'en_US',
@@ -73,7 +87,7 @@ export async function fetchLInkListFromCKGApi(pageData) {
           filters: [
             {
               categories: [
-                pageData.ckgID ?? params.ckgid,
+                pageData.ckgID,
               ],
             },
           ],
