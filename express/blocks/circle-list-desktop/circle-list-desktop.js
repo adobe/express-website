@@ -13,17 +13,6 @@
 import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
 import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
 
-const getBrowserName = () => {
-  const browserInfo = navigator.userAgent;
-  if (browserInfo.includes('Opera') || browserInfo.includes('Opr')
-    || browserInfo.includes('Edg') || browserInfo.includes('Chrome')) {
-    return null;
-  } else if (browserInfo.includes('Safari')) {
-    return 'Safari';
-  }
-  return null;
-};
-
 // Fetches images from the spreadsheet
 async function fetchCircleImages(link) {
   const resp = await fetch(`${link}`);
@@ -93,10 +82,7 @@ const extractContent = async (block) => {
   return circleList;
 };
 
-const buildCircleList = (block, circles, browserName) => {
-  if (browserName === 'Safari') {
-    block.classList.add('safari');
-  }
+const buildCircleList = (block, circles) => {
   const circleContainer = createTag('div', { class: 'circles-container' });
   circles.forEach((circle) => {
     const circleWrapper = createTag('div', { class: 'circle-wrapper' });
@@ -160,9 +146,24 @@ function initResetDoorHandle(wrapper, dropDown) {
       dropDown.classList.add('hidden');
     }, 201);
     hoveredImgs.forEach((img) => {
-      img.setAttribute('style', 'transform-style: preserve-3d; transition: transform 0.4s; z-index: 0');
+      img.setAttribute('style', 'transform-style: preserve-3d; z-index: 0');
     });
   });
+}
+
+let oldMouseX = null;
+function detectMouseDirection(e) {
+  let direction = null;
+  if (oldMouseX !== null) {
+    const newMouseX = e.clientX;
+    if (newMouseX > oldMouseX) {
+      direction = 'right';
+    } else if (newMouseX < oldMouseX) {
+      direction = 'left';
+    }
+  }
+  oldMouseX = e.clientX;
+  return direction;
 }
 
 // Snaps back to hero image, even if mouse leaves image on partial transition
@@ -171,7 +172,7 @@ function initResetHeroImage(imgWrapper) {
   const altImages = Array.from(imgWrapper.querySelectorAll('.alt-img'));
 
   imgWrapper.addEventListener('mouseleave', () => {
-    heroImage.setAttribute('style', 'transform: scale3d(1, 1, 1); transform-style: preserve-3d; transition-property: transform 0.4s; opacity: 1');
+    heroImage.setAttribute('style', 'transform: scale3d(1, 1, 1); transform-style: preserve-3d; opacity: 1');
     altImages.forEach((altImg) => {
       altImg.setAttribute('style', 'opacity: 0');
     });
@@ -187,26 +188,55 @@ function initImageShuffling(wrapper, block) {
   const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
 
+  function chooseImage(mouseX, add = 0) {
+    const wrapperWidth = imageWrapper.offsetWidth;
+    const switchPxThreshold = wrapperWidth / imageCount;
+    const photoList = Array.from(imageWrapper.children);
+
+    backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
+    photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0');
+    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0');
+    activeImageIndex = Math.floor((mouseX + add) / switchPxThreshold) >= imageCount ? imageCount - 1
+      : Math.floor((mouseX + add) / switchPxThreshold);
+    backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
+    const pxFromImageSwap = (mouseX + add) - activeImageIndex * switchPxThreshold;
+    const minResizeScale = 0.85;
+    const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
+
+    photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 2; transition-property: transform`);
+    photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1; transition-property: none');
+  }
+
   // Handles the shuffling of images based on mouse position
+  let timerId;
   const shuffle = (e) => {
     circleWrapper.setAttribute('style', 'z-index: 3');
     if (!block.classList.contains('no-animation')) {
-      const wrapperWidth = imageWrapper.offsetWidth;
-      const switchPxThreshold = wrapperWidth / imageCount;
       const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
-      const photoList = Array.from(imageWrapper.children);
+      chooseImage(mouseX);
+      // clearTimeout(timerId);
+      // const mouseDirection = detectMouseDirection(e);
 
-      backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-      photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0; transition-property: transform');
-      photoList[backgroundImageIndex].setAttribute('style', 'transform: scale(0.85, 0.85, 0.85); opacity: 0');
-      activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
-        : Math.floor(mouseX / switchPxThreshold);
-      backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-      const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
-      const minResizeScale = 0.85;
-      const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
-      photoList[activeImageIndex].setAttribute('style', `transform: scale3d(${resizeScale}, ${resizeScale}, ${resizeScale}); opacity: 1; z-index: 2; transition-property: none`);
-      photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
+      // if (mouseDirection !== null) {
+      //   timerId = setTimeout(() => {
+      //     let additionalMovement = 0;
+      //     const smoothing = setInterval(() => {
+      //       console.log(mouseDirection);
+      //       console.log(additionalMovement);
+      //       if (mouseDirection === 'right') {
+      //         additionalMovement += 0.1;
+      //       } else if (mouseDirection === 'left') {
+      //         additionalMovement -= 0.1;
+      //       }
+      //       chooseImage(mouseX, additionalMovement);
+      //       if (additionalMovement >= 5 || additionalMovement <= -5) {
+      //         additionalMovement = 0;
+      //         clearInterval(smoothing);
+      //       }
+      //     }, 10);
+      //     chooseImage(mouseX);
+      //   }, 50);
+      // }
     } else {
       wrapper.querySelector('.hero-img').setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
     }
@@ -236,8 +266,7 @@ function initImageShuffling(wrapper, block) {
 
 export default async function decorate($block) {
   const circleList = await extractContent($block);
-  const browserName = getBrowserName();
-  buildCircleList($block, circleList, browserName);
+  buildCircleList($block, circleList);
   const circleWrappers = $block.querySelectorAll('.circles-container > a');
 
   circleWrappers.forEach((wrapper) => {

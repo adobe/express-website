@@ -39,6 +39,7 @@ main .circle-list-desktop .alt-img,
 main .circle-list-desktop .lottie-animation img {
   position: absolute;
   display: block;
+  /* transition: transform 0.4s linear; */
   left: 0;
   top: 0;
   height: 100%;
@@ -87,12 +88,8 @@ main .circle-list-desktop .dropdown {
   transition: opacity 0.2s, transform 0.2s;
   z-index: -1;
   border-radius: 150px 150px 24px 24px;
-  background-color: #E4E5EA;
+  background-color: #E8E8E8;
   padding: 210px 0 10px 0;
-}
-
-main .circle-list-desktop:not(.safari) .dropdown {
-  filter: drop-shadow(0px 3px 6px #00000029);
 }
 
 main .circle-list-desktop .hidden.dropdown {
@@ -159,10 +156,5 @@ main .circle-list-desktop .sub-text {
 }
 
 main .circle-list-desktop .dropdown li:hover {
-  background-color: var(--color-white);
-}
-
-main .circle-list-desktop .dropdown li:hover span {
-  color: #5C5CE0;
-  transition: 0.4s;
+  background-color: #D6D6D6;
 }
