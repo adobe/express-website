@@ -72,7 +72,7 @@ async function formatSearchQuery(data) {
   const dataArray = Object.entries(data);
 
   if (params.tasks && params.phformat) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
+    const placeholders = await fetchPlaceholders();
     const categories = JSON.parse(placeholders['task-categories']);
     if (categories) {
       const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);

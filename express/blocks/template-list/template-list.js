@@ -69,7 +69,7 @@ function trimFormattedFilterText(attr, capitalize) {
 
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
-  const placeholders = await fetchPlaceholders().then((response) => response);
+  const placeholders = await fetchPlaceholders();
 
   let grammarTemplate = placeholders['template-placeholder'];
 
