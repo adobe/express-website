@@ -45,9 +45,10 @@ const buildDropdownList = (circle) => {
 
 const extractContent = async (block) => {
   const circleList = [];
-  const imagesLink = block.firstElementChild.textContent.trim();
+  const imagesLink = block.lastElementChild.textContent.trim();
   const imageData = await fetchCircleImages(imagesLink);
-  const circleRows = Array.from(block.children).slice(1);
+  const circleRows = Array.from(block.children).slice(1, -1);
+  console.log(circleRows);
 
   circleRows.forEach((row) => {
     const circleObject = {};
@@ -188,18 +189,19 @@ function initImageShuffling(wrapper, block) {
   const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
 
-  function chooseImage(mouseX, add = 0) {
+  function chooseImage(e) {
     const wrapperWidth = imageWrapper.offsetWidth;
     const switchPxThreshold = wrapperWidth / imageCount;
     const photoList = Array.from(imageWrapper.children);
+    const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
 
     backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
     photoList[activeImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0; z-index: 0');
     photoList[backgroundImageIndex].setAttribute('style', 'transform: scale3d(0.85, 0.85, 0.85); opacity: 0');
-    activeImageIndex = Math.floor((mouseX + add) / switchPxThreshold) >= imageCount ? imageCount - 1
-      : Math.floor((mouseX + add) / switchPxThreshold);
+    activeImageIndex = Math.floor(mouseX / switchPxThreshold) >= imageCount ? imageCount - 1
+      : Math.floor(mouseX / switchPxThreshold);
     backgroundImageIndex = Math.max(activeImageIndex - 1, 0);
-    const pxFromImageSwap = (mouseX + add) - activeImageIndex * switchPxThreshold;
+    const pxFromImageSwap = mouseX - activeImageIndex * switchPxThreshold;
     const minResizeScale = 0.85;
     const resizeScale = Math.max((100 + pxFromImageSwap - switchPxThreshold) / 100, minResizeScale);
 
@@ -211,11 +213,10 @@ function initImageShuffling(wrapper, block) {
   const shuffle = (e) => {
     circleWrapper.setAttribute('style', 'z-index: 3');
     if (!block.classList.contains('no-animation')) {
-      const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
       let timerId;
 
       clearTimeout(timerId);
-      chooseImage(mouseX);
+      chooseImage(e);
 
       // Need to choose the new state first
       // const mouseDirection = detectMouseDirection(e);
@@ -283,3 +284,4 @@ export default async function decorate($block) {
     }
   });
 }
+
