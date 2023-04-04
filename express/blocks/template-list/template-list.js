@@ -40,7 +40,7 @@ const props = {
     locales: '(en)',
   },
   tailButton: '',
-  limit: 30,
+  limit: 20,
   total: 0,
   start: '',
   sort: '-remixCount',
@@ -196,7 +196,7 @@ async function processResponse() {
   }
 
   const renditionParams = {
-    format: 'png',
+    format: 'jpg',
     dimension: 'width',
     size: 197,
   };
