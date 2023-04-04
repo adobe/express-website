@@ -125,20 +125,6 @@ main .circle-list-desktop .dropdown a {
   display: flex;
 }
 
-main .circle-list-desktop .dropdown li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  height: 32px;
-  width: 190px;
-  margin-left: 10px;
-  margin-right: 10px;
-  list-style-type: none;
-  font-size: 14px;
-  transition: 0.4s;
-}
-
 main .circle-list-desktop .circle-label {
   max-width: 124px;
   z-index: -2;
@@ -153,6 +139,20 @@ main .circle-list-desktop .sub-text {
   font-size: 22px;
   font-weight: 900;
   color: #222222
+}
+
+main .circle-list-desktop .dropdown li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  height: 32px;
+  width: 190px;
+  margin-left: 10px;
+  margin-right: 10px;
+  list-style-type: none;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
 main .circle-list-desktop .dropdown li:hover {

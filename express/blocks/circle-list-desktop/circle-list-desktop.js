@@ -208,13 +208,16 @@ function initImageShuffling(wrapper, block) {
   }
 
   // Handles the shuffling of images based on mouse position
-  let timerId;
   const shuffle = (e) => {
     circleWrapper.setAttribute('style', 'z-index: 3');
     if (!block.classList.contains('no-animation')) {
       const mouseX = e.clientX - wrapper.offsetLeft < 0 ? 0 : e.clientX - wrapper.offsetLeft;
+      let timerId;
+
+      clearTimeout(timerId);
       chooseImage(mouseX);
-      // clearTimeout(timerId);
+
+      // Need to choose the new state first
       // const mouseDirection = detectMouseDirection(e);
 
       // if (mouseDirection !== null) {
