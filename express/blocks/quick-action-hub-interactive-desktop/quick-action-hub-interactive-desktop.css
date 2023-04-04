@@ -100,6 +100,15 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   margin: auto;
 }
 
+.quick-action-hub-interactive-desktop-hover {
+  opacity: 0;
+}
+
+.quick-action-hub-interactive-desktop-hover.active {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
 .quick-action-hub-interactive-desktop-hover-content {
   padding: 24px 24px 14px;
 }
@@ -194,6 +203,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover,
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover {
     background-color: #D6D6D6;
+    transition: background-color 0.4s ease;
   }
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action > img,
