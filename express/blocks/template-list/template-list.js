@@ -40,7 +40,7 @@ const props = {
     locales: '(en)',
   },
   tailButton: '',
-  limit: 1,
+  limit: 70,
   total: 0,
   start: '',
   sort: '-remixCount',
