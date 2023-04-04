@@ -73,7 +73,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   width: 204px;
   padding: 8px 24px;
   border-radius: 8px;
-  background-color: #FBFBFB;
+  background-color: #E8E8E8;
 }
 
 .quick-action-hub-interactive-desktop-hover {
@@ -193,15 +193,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover,
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover {
-    background-color: #2C2C2C;
-    color: var(--color-white);
-  }
-
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover img,
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action.hover svg,
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover img,
-  .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action:hover svg{
-    filter: brightness(0) invert(1);
+    background-color: #D6D6D6;
   }
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .action > img,
