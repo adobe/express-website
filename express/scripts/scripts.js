@@ -1063,6 +1063,7 @@ export async function loadBlock(block, eager = false) {
               await mod.default(block, blockName, document, eager);
             }
           } catch (err) {
+            block.remove();
             // eslint-disable-next-line no-console
             console.log(`failed to load module for ${blockName}`, err);
           }
