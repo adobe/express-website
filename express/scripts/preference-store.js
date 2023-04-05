@@ -23,32 +23,81 @@
  * /express/blocks/feature-grid-desktop/feature-grid-desktop.js#L147
  */
 
+/** pre-defining all the accepted eventNames */
+export const preferenceNames = {
+  reduceMotion: {
+    name: 'reduceMotion',
+    mediaQueryString: '(prefers-reduced-motion: reduce)',
+  },
+};
+
 class PreferenceStore {
   constructor() {
     this.stores = {}; // { [name]: { value, subscribers: [HTMLElement] } }
   }
 
-  /**
-   * Sample usage:
-   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.set(eventNames.reduceMotion, sessionStorage.getItem('reduceMotion'));
-   */
-  set(name, value) {
+  dispatch(name) {
+    const value = localStorage.getItem(name) === 'on';
+
     if (!this.stores[name]) this.stores[name] = { subscribers: [] };
     const store = this.stores[name];
 
-    if (value === this.get(name)) return;
+    if (value !== this.get(name)) {
+      store.value = value;
+      store.subscribers.forEach((sub) => {
+        sub.dispatchEvent(new CustomEvent(name, { detail: store }));
+      });
+    }
 
-    store.value = value;
-    store.subscribers.forEach((sub) => {
-      sub.dispatchEvent(new CustomEvent(name, { detail: value }));
-    });
+    return store;
   }
 
   /**
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.subscribe(eventNames.reduceMotion, node, (value) => {
+   * preferenceStore.init('reduceMotion');
+   */
+  init(name) {
+    const mediaQuery = window.matchMedia(preferenceNames[name].mediaQueryString);
+    const syncBrowserSetting = () => {
+      if (mediaQuery === true || mediaQuery.matches === true) {
+        localStorage.setItem(name, 'on');
+      } else {
+        localStorage.setItem(name, 'off');
+      }
+    };
+
+    if (mediaQuery === true || mediaQuery.matches === true) {
+      syncBrowserSetting();
+    }
+
+    mediaQuery.addEventListener('change', () => {
+      syncBrowserSetting();
+      this.dispatch(name);
+    });
+
+    return this.dispatch(name);
+  }
+
+  /**
+   * Sample usage:
+   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+   * preferenceStore.set('reduceMotion');
+   */
+  toggle(name) {
+    if (localStorage.getItem(name) === 'on') {
+      localStorage.setItem(name, 'off');
+    } else {
+      localStorage.setItem(name, 'on');
+    }
+
+    this.dispatch(name);
+  }
+
+  /**
+   * Sample usage:
+   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+   * preferenceStore.subscribe(eventNames.reduceMotion.name, node, (value) => {
    *   node.append(`${value}`);
    * });
    *
@@ -67,7 +116,7 @@ class PreferenceStore {
   /**
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.unsubscribe(eventNames.reduceMotion, node, (value) => {
+   * preferenceStore.unsubscribe(eventNames.reduceMotion.name, node, (value) => {
    *   node.append(`${value}`);
    * });
    *
@@ -84,7 +133,7 @@ class PreferenceStore {
   /**
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.get(eventNames.reduceMotion);
+   * preferenceStore.get(eventNames.reduceMotion.name);
    */
   get(name) {
     return this.stores[name]?.value;
@@ -92,7 +141,3 @@ class PreferenceStore {
 }
 
 export default new PreferenceStore();
-
-export const eventNames = {
-  reduceMotion: 'reduceMotion',
-};

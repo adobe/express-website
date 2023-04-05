@@ -11,7 +11,7 @@
  */
 
 import { createTag } from '../../scripts/scripts.js';
-import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+import preferenceStore, { preferenceNames } from '../../scripts/preference-store.js';
 
 const ITEM_CLASS = [
   'features',
@@ -130,8 +130,8 @@ export default function decorate(block) {
   });
 
   // react to reduceMotion preference change event
-  const reactToPreference = (reduceMotion) => {
-    if (reduceMotion) {
+  const reactToPreference = ({ value }) => {
+    if (value) {
       gridContainer.classList.remove(ANIMATION_CLS);
       gridItems.forEach((gridItem) => {
         gridItem.classList.remove(ANIMATION_CLS);
@@ -144,9 +144,9 @@ export default function decorate(block) {
     }
   };
 
-  reactToPreference(preferenceStore.get(eventNames.reduceMotion));
+  reactToPreference(preferenceStore.get(preferenceNames.reduceMotion.name));
 
-  preferenceStore.subscribe(eventNames.reduceMotion, block, reactToPreference);
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, reactToPreference);
 
   const footnoteContainer = createTag('div', {
     class: 'footnote-container',
