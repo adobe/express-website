@@ -1,9 +1,13 @@
+main .circle-list-desktop-container {
+  padding-top: 0;
+}
+
 main .circle-list-desktop-container > .circle-list-desktop-wrapper {
   max-width: 1307px;
 }
 
 main .block.circle-list-desktop {
-  height: 200px;
+  height: 368px;
   margin: auto;
 }
 
@@ -17,7 +21,12 @@ main .circle-list-desktop .circle-wrapper {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 8px;
+}
+
+main .circle-list-desktop .subtitle {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 main .circle-list-desktop .img-wrapper,

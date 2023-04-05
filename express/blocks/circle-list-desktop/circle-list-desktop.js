@@ -44,11 +44,21 @@ const buildDropdownList = (circle) => {
 };
 
 const extractContent = async (block) => {
+  const title = block.firstElementChild.querySelector('h1');
+  const gradientText = title.querySelector('em');
+  const subTitle = block.firstElementChild.querySelector('p');
   const circleList = [];
   const imagesLink = block.lastElementChild.textContent.trim();
   const imageData = await fetchCircleImages(imagesLink);
+
+  if (gradientText) {
+    const span = createTag('span', { class: 'gradient-text' });
+    span.innerText = gradientText.innerText;
+    gradientText.replaceWith(span);
+  }
+  gradientText.classList.add('gradient-text');
+  subTitle.classList.add('subtitle');
   const circleRows = Array.from(block.children).slice(1, -1);
-  console.log(circleRows);
 
   circleRows.forEach((row) => {
     const circleObject = {};
@@ -80,6 +90,7 @@ const extractContent = async (block) => {
     circleList.push(circleObject);
   });
   block.innerHTML = '';
+  block.append(title, subTitle);
   return circleList;
 };
 
@@ -213,34 +224,9 @@ function initImageShuffling(wrapper, block) {
   const shuffle = (e) => {
     circleWrapper.setAttribute('style', 'z-index: 3');
     if (!block.classList.contains('no-animation')) {
-      let timerId;
-
-      clearTimeout(timerId);
-      chooseImage(e);
-
-      // Need to choose the new state first
-      // const mouseDirection = detectMouseDirection(e);
-
-      // if (mouseDirection !== null) {
-      //   timerId = setTimeout(() => {
-      //     let additionalMovement = 0;
-      //     const smoothing = setInterval(() => {
-      //       console.log(mouseDirection);
-      //       console.log(additionalMovement);
-      //       if (mouseDirection === 'right') {
-      //         additionalMovement += 0.1;
-      //       } else if (mouseDirection === 'left') {
-      //         additionalMovement -= 0.1;
-      //       }
-      //       chooseImage(mouseX, additionalMovement);
-      //       if (additionalMovement >= 5 || additionalMovement <= -5) {
-      //         additionalMovement = 0;
-      //         clearInterval(smoothing);
-      //       }
-      //     }, 10);
-      //     chooseImage(mouseX);
-      //   }, 50);
-      // }
+      setTimeout(() => {
+        chooseImage(e);
+      }, 200);
     } else {
       wrapper.querySelector('.hero-img').setAttribute('style', 'transform: scale3d(1, 1, 1); opacity: 1; z-index: 1');
     }
