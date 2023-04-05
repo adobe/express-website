@@ -102,35 +102,80 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function formatSearchQuery(limit, start, sort, filters) {
-  const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
-  const filterString = prunedFilter.reduce((string, [key, value]) => {
-    if (key === prunedFilter[prunedFilter.length - 1][0]) {
-      return `${string}${key}:${value}`;
-    } else {
-      return `${string}${key}:${value} AND `;
-    }
-  }, '');
+function formatFilterString(filters) {
+  // FIXME: check how filters can be formed, how it's handling or and and
+  const {
+    // eslint-disable-next-line no-unused-vars
+    animated, locales, premium, tasks, topics,
+  } = filters;
+  let str = '';
+  if (premium === '(false)') {
+    str += '&filters=licensingCategory==free';
+  }
+  if (animated !== '()') {
+    str += `&filters=animated==${animated}`;
+  }
+  if (tasks !== '()') {
+    str += `&filters=tasks==[${/\((.+)\)/.exec(tasks)[1]}]`;
+  }
+  // FIXME: check if q is for topics now
+  if (topics !== '()') {
+    str += `&q=${/\((.+)\)/.exec(topics)[1]}`;
+  }
+  // if (locales !== '()') {
+  //   str += `&filters=language==[${/\((.+)\)/.exec(locales)[1]}]`;
+  // }
 
-  return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
+  return str;
+}
+
+// function formatSearchQuery(limit, start, sort, filters) {
+//   const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
+//   const filterString = prunedFilter.reduce((string, [key, value]) => {
+//     if (key === prunedFilter[prunedFilter.length - 1][0]) {
+//       return `${string}${key}:${value}`;
+//     } else {
+//       return `${string}${key}:${value} AND `;
+//     }
+//   }, '');
+
+//   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
+// }
+
+const buildSearchUrl = (limit, start, sort, filterString) => {
+  // FIXME: orderBy fields are now different.
+  // No more orderBy=-_score,-remixCount and only createDate, relevancy, and priority
+  const base = 'https://spark-search.adobe.io/v3/content';
+  const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
+  const queryType = 'search';
+  return encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}${start && `&start=${start}`}${filterString}`);
+};
+
+async function getContent(url) {
+  return fetch(url, {
+    headers: {
+      'x-api-key': 'projectx_webapp',
+    },
+  }).then((response) => response.json());
 }
 
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
+    props.queryString = buildSearchUrl(
+      props.limit,
+      props.start,
+      props.sort,
+      formatFilterString(props.filters),
+    );
 
-    const result = await fetch(props.queryString)
-      .then((response) => response.json())
-      .then((response) => response);
+    const result = await getContent(props.queryString);
 
-    // eslint-disable-next-line no-underscore-dangle
-    if (result._embedded.total > 0) {
+    if (result?.metadata?.totalHits > 0) {
       return result;
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
-        .then((response) => response.json())
-        .then((response) => response);
+      const fallbackUrl = buildSearchUrl(props.limit, props.start, props.sort, '');
+      return getContent(fallbackUrl);
     }
   }
   return null;
@@ -144,11 +189,9 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const tempQ = formatSearchQuery(props.limit, '', props.sort, tempFilters);
+    const tempQ = buildSearchUrl(props.limit, '', props.sort, formatFilterString(tempFilters));
 
-    return fetch(tempQ)
-      .then((response) => response.json())
-      .then((response) => response);
+    return getContent(tempQ);
   }
 
   return null;
@@ -180,25 +223,24 @@ async function processResponse() {
   let templateFetched;
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
-    templateFetched = response._embedded.results;
+    templateFetched = response.items;
 
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
       const starts = new URLSearchParams(nextQuery).get('start').split(',');
-      starts.pop();
       props.start = starts.join(',');
     } else {
       props.start = '';
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    props.total = response._embedded.total;
+    props.total = response.metadata.totalHits;
   }
 
+  // FIXME: {&page,size,type,fragment}
   const renditionParams = {
-    format: 'jpg',
-    dimension: 'width',
+    // format: 'jpg',
+    // dimension: 'width',
     size: 400,
   };
 
@@ -206,17 +248,16 @@ async function processResponse() {
     return templateFetched.map((template) => {
       const $template = createTag('div');
       const $pictureWrapper = createTag('div');
-
-      ['format', 'dimension', 'size'].forEach((param) => {
-        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
-      });
+      // eslint-disable-next-line no-underscore-dangle
+      let imageHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
+      imageHref = imageHref.replace('{&page,size,type,fragment}', `&size=${renditionParams.size}&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
       const $picture = createTag('img', {
-        src: template.rendition.href,
-        alt: template.title,
+        src: imageHref,
+        alt: template.title['i-default'],
       });
       const $buttonWrapper = createTag('div', { class: 'button-container' });
       const $button = createTag('a', {
-        href: template.branchURL,
+        href: template.customLinks.branchUrl,
         title: placeholders['edit-this-template'] ?? 'Edit this template',
         class: 'button accent',
       });
