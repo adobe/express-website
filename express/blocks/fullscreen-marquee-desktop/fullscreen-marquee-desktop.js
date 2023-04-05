@@ -68,9 +68,8 @@ function styleBackgroundWithScroll($section, $marqueeBgImgSrc) {
   }, { passive: true });
 }
 
-export default function decorate($block) {
-  const $rows = Array.from($block.children);
-  let $video, $videoLink, $marqueeBgContent, $frameBgImageContent, $thumbnailsContent, $editorContent, $contentSection, $videoLooping;
+function initializeConstants($rows, $marqueeBgContent, $frameBgImageContent, $editorContent,
+                             $thumbnailsContent, $videoLink, $videoLooping) {
   $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
     const $headerCols = $cells[0];
@@ -103,84 +102,107 @@ export default function decorate($block) {
       case 'video-looping':
         $videoLooping = $contentCols.textContent;
         break;
-      default: break;
+      default:
+        break;
     }
   });
+  return {$marqueeBgContent, $frameBgImageContent, $editorContent, $thumbnailsContent, $videoLink, $videoLooping};
+}
 
+function buildFullScreenDesktopMarqueeMarkup($video, $frameBgImageContent, $block, $thumbnailsContent, $editorContent, $contentSection) {
+  $video.addEventListener('loadstart', () => {
+    const $flowers = createOptimizedPicture($frameBgImageContent);
+    const $pictureFrameWrapper = createTag('div', {class: 'picture-frame-wrapper'});
+    const $flowersBoard = createTag('div', {class: 'flowers'});
+    const $pictureFrameBackground = createTag('div', {class: 'picture-frame-background'});
+    const $pictureFrame = createTag('div', {class: 'picture-frame'});
+    const $thumbnails = createTag('div', {class: 'picture-frame-thumbnails'});
+
+    const $existingCTA = $block.querySelector('a.button');
+
+    if ($existingCTA) {
+      const $clickableOverlay = createTag('a', {class: 'picture-frame-clickable-layer', href: $existingCTA.href});
+      const $cloneCta = $existingCTA.cloneNode({deep: true});
+      $cloneCta.style.display = 'none';
+
+      $clickableOverlay.append($cloneCta);
+      $pictureFrameWrapper.prepend($clickableOverlay);
+
+      $clickableOverlay.addEventListener('mouseenter', () => {
+        $cloneCta.style.display = 'flex';
+      }, {passive: true});
+      $clickableOverlay.addEventListener('mouseleave', () => {
+        $cloneCta.style.display = 'none';
+      }, {passive: true});
+    }
+
+    const $thumbnailImg = createOptimizedPicture($thumbnailsContent);
+    const $pictureBgImg = createOptimizedPicture($editorContent);
+
+    $video.classList.add('screen-demo');
+    $thumbnailImg.classList.add('leaf-thumbnails');
+
+    $pictureFrame.append($pictureBgImg, $video, $thumbnails);
+    $thumbnails.append($thumbnailImg);
+    $flowersBoard.append($flowers);
+    $pictureFrameWrapper.append(
+        $pictureFrameBackground,
+        $flowersBoard,
+        $pictureFrame,
+    );
+
+    $block.innerHTML = '';
+
+    $block.append($contentSection);
+    $block.append($pictureFrameWrapper);
+
+    window.addEventListener('mousemove', (e) => {
+      const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
+      const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
+
+      $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
+      $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -100px)`;
+      $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
+    }, {passive: true});
+
+  });
+}
+
+function buildContentSection($block, $contentSection) {
   const $h1 = $block.querySelector('h1');
-  const $section = $block.closest('.fullscreen-marquee-desktop-container');
   if ($h1) {
-    $contentSection = $h1.parentNode;
     const $textToColor = $h1.querySelectorAll('em');
     if ($textToColor.length > 0) {
       $textToColor.forEach((span) => {
-        const $coloredText = createTag('span', { class: 'colorful' });
+        const $coloredText = createTag('span', {class: 'colorful'});
         $coloredText.textContent = span.textContent;
         $h1.replaceChild($coloredText, span);
       });
     }
+    $contentSection = $h1.parentNode;
   }
+  return $contentSection;
+}
+
+export default function decorate($block) {
+  const $rows = Array.from($block.children);
+  let $video, $contentSection;
+  const __ret = initializeConstants($rows);
+  let $marqueeBgContent = __ret.$marqueeBgContent;
+  let $frameBgImageContent = __ret.$frameBgImageContent;
+  let $editorContent = __ret.$editorContent;
+  let $thumbnailsContent = __ret.$thumbnailsContent;
+  let $videoLink = __ret.$videoLink;
+  let $videoLooping = __ret.$videoLooping;
+
+  $contentSection = buildContentSection($block, $contentSection);
   if ($marqueeBgContent) {
+    const $section = $block.closest('.fullscreen-marquee-desktop-container');
     styleBackgroundWithScroll($section, $marqueeBgContent);
   }
   $block.append(addFreePlanWidget($block.querySelector('.button-container')));
   $video = transformLinkToAnimation($videoLink, $videoLooping);
   if ($video) {
-    $video.addEventListener('loadstart', () => {
-      const $flowers = createOptimizedPicture($frameBgImageContent);
-      const $pictureFrameWrapper = createTag('div', { class: 'picture-frame-wrapper' });
-      const $flowersBoard = createTag('div', { class: 'flowers' });
-      const $pictureFrameBackground = createTag('div', { class: 'picture-frame-background' });
-      const $pictureFrame = createTag('div', { class: 'picture-frame' });
-      const $thumbnails = createTag('div', { class: 'picture-frame-thumbnails' });
-
-      const $existingCTA = $block.querySelector('a.button');
-
-      if ($existingCTA) {
-        const $clickableOverlay = createTag('a', { class: 'picture-frame-clickable-layer', href: $existingCTA.href });
-        const $cloneCta = $existingCTA.cloneNode({ deep: true });
-        $cloneCta.style.display = 'none';
-
-        $clickableOverlay.append($cloneCta);
-        $pictureFrameWrapper.prepend($clickableOverlay);
-
-        $clickableOverlay.addEventListener('mouseenter', () => {
-          $cloneCta.style.display = 'flex';
-        }, { passive: true });
-        $clickableOverlay.addEventListener('mouseleave', () => {
-          $cloneCta.style.display = 'none';
-        }, { passive: true });
-      }
-
-      const $thumbnailImg = createOptimizedPicture($thumbnailsContent);
-      const $pictureBgImg = createOptimizedPicture($editorContent);
-
-      $video.classList.add('screen-demo');
-      $thumbnailImg.classList.add('leaf-thumbnails');
-
-      $pictureFrame.append($pictureBgImg, $video, $thumbnails);
-      $thumbnails.append($thumbnailImg);
-      $pictureFrameWrapper.append(
-          $pictureFrameBackground,
-          $flowersBoard,
-          $pictureFrame,
-      );
-
-      $flowersBoard.append($flowers);
-      $block.innerHTML = '';
-
-      $block.append($contentSection);
-      $block.append($pictureFrameWrapper);
-
-      window.addEventListener('mousemove', (e) => {
-        const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
-        const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
-
-        $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
-        $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -100px)`;
-        $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
-      }, { passive: true });
-
-    });
+    buildFullScreenDesktopMarqueeMarkup($video, $frameBgImageContent, $block, $thumbnailsContent, $editorContent, $contentSection);
   }
 }
