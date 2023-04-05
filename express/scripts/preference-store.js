@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,20 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * This is a store that provides access to every block for accessibility/ux-related preferences like
- * themes, prefers-reduced-motion, prefers-color-scheme, prefers-contrast, etc.
- * Example of dispatching:
- * /express/blocks/intent-toggle-desktop/intent-toggle-desktop.js#L80
- *
- * Example of subscribing:
- * /express/blocks/feature-grid-desktop/feature-grid-desktop.js#L149
- *
- * Example of getting current value:
- * /express/blocks/feature-grid-desktop/feature-grid-desktop.js#L147
- */
-
-/** pre-defining all the accepted eventNames */
 export const preferenceNames = {
   reduceMotion: {
     name: 'reduceMotion',
@@ -31,113 +17,68 @@ export const preferenceNames = {
   },
 };
 
+const [ON, OFF] = ['on', 'off'];
+
+const get = (name) => localStorage.getItem(name) === ON;
+
 class PreferenceStore {
   constructor() {
-    this.stores = {}; // { [name]: { value, subscribers: [HTMLElement] } }
+    this.subscribers = {}; // { [name]: [HTMLElement]
   }
 
   dispatch(name) {
-    const value = localStorage.getItem(name) === 'on';
-
-    if (!this.stores[name]) this.stores[name] = { subscribers: [] };
-    const store = this.stores[name];
-
-    if (value !== this.get(name)) {
-      store.value = value;
-      store.subscribers.forEach((sub) => {
-        sub.dispatchEvent(new CustomEvent(name, { detail: store }));
-      });
-    }
-
-    return store;
+    const value = get(name);
+    (this.subscribers[name] || []).forEach((sub) => {
+      sub.dispatchEvent(new CustomEvent(name, { detail: { value } }));
+    });
   }
 
   /**
-   * Sample usage:
-   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.init('reduceMotion');
+   * Sample usage: preferenceStore.init(preferenceNames.reduceMotion.name);
    */
   init(name) {
     const mediaQuery = window.matchMedia(preferenceNames[name].mediaQueryString);
-    const syncBrowserSetting = () => {
-      if (mediaQuery === true || mediaQuery.matches === true) {
-        localStorage.setItem(name, 'on');
-      } else {
-        localStorage.setItem(name, 'off');
-      }
-    };
-
-    if (mediaQuery === true || mediaQuery.matches === true) {
-      syncBrowserSetting();
+    if (mediaQuery.matches) {
+      localStorage.setItem(name, ON);
     }
+    this.dispatch(name);
 
-    mediaQuery.addEventListener('change', () => {
-      syncBrowserSetting();
+    mediaQuery.addEventListener('change', (e) => {
+      if (get(name) === e.matches) return;
+      localStorage.setItem(name, e.matches ? ON : OFF);
       this.dispatch(name);
     });
-
-    return this.dispatch(name);
   }
 
-  /**
-   * Sample usage:
-   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.set('reduceMotion');
-   */
   toggle(name) {
-    if (localStorage.getItem(name) === 'on') {
-      localStorage.setItem(name, 'off');
-    } else {
-      localStorage.setItem(name, 'on');
-    }
-
+    localStorage.setItem(name, get(name) ? OFF : ON);
     this.dispatch(name);
   }
 
   /**
-   * Sample usage:
-   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.subscribe(eventNames.reduceMotion.name, node, (value) => {
-   *   node.append(`${value}`);
-   * });
-   *
+   * Sample usage: preferenceStore.subscribe(preferenceNames.reduceMotion.name, node, cb);
    * */
   subscribe(name, block, callback) {
-    if (!this.stores[name]) this.stores[name] = { subscribers: [] };
-    const store = this.stores[name];
-    if (store.subscribers.includes(block)) return;
+    if (!this.subscribers[name]) this.subscribers[name] = [];
+    const blocks = this.subscribers[name];
+    if (blocks.includes(block)) return;
 
-    store.subscribers.push(block);
+    blocks.push(block);
     block.addEventListener(name, (e) => {
       callback(e.detail);
     });
   }
 
   /**
-   * Sample usage:
-   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.unsubscribe(eventNames.reduceMotion.name, node, (value) => {
-   *   node.append(`${value}`);
-   * });
-   *
-   * Note that the callback should be the same one as when you subscribe
+   * Sample usage: preferenceStore.unsubscribe(preferenceNames.reduceMotion.name, node, cb);
    */
   unsubscribe(name, block, callback) {
     const { subscribers } = this.stores[name] || {};
-    if (!subscribers || !subscribers.includes(block)) return;
+    if (!this.subscribers.includes(block)) return;
 
     subscribers.splice(subscribers.indexOf(block), 1);
     block.removeEventListener(name, callback);
   }
-
-  /**
-   * Sample usage:
-   * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.get(eventNames.reduceMotion.name);
-   */
-  get(name) {
-    return this.stores[name]?.value;
-  }
 }
 
-export default new PreferenceStore();
+export default { ...new PreferenceStore(), get };
