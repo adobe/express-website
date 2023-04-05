@@ -180,8 +180,6 @@ const initResetHeroImage = (imgWrapper) => {
 // Handles the shuffling of images based on mouse position
 const initImageShuffling = (wrapper, imageWrapper, block) => {
   const imageCount = imageWrapper.querySelectorAll('img').length;
-  const lottiePlayer = block.querySelector('lottie-player');
-  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
   let activeImageIndex = 0;
   let backgroundImageIndex = 0;
@@ -210,27 +208,6 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
     }
   };
 
-  // Pauses lottie and disables shuffling of images
-  const toggleAnimationState = (reduceMotion) => {
-    const lottiePlaying = setInterval(() => {
-      if (lottiePlayer.hasUpdated) {
-        if (reduceMotion === true) {
-          block.classList.add('no-animation');
-          lottiePlayer.setSpeed(0);
-          lottiePlayer.seek(200);
-        } else {
-          block.classList.remove('no-animation');
-          lottiePlayer.setSpeed(1);
-        }
-        clearInterval(lottiePlaying);
-      }
-    }, 100);
-  };
-
-  toggleAnimationState(reducedMotion);
-  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
-    toggleAnimationState(value);
-  });
   imageWrapper.addEventListener('mousemove', shuffle);
 };
 
@@ -248,5 +225,32 @@ export default async function decorate(block) {
       initResetHeroImage(imageWrapper);
       initResetDoorHandle(wrapper, dropDown);
     }
+  });
+
+  // Pauses lottie and disables shuffling of images
+  const lottiePlayer = block.querySelector('lottie-player');
+  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
+
+  const toggleAnimationState = (reduceMotion) => {
+    const lottiePlaying = setInterval(() => {
+      if (lottiePlayer.hasUpdated) {
+        if (reduceMotion === true) {
+          block.classList.add('no-animation');
+          setTimeout(() => {
+            lottiePlayer.setSpeed(0);
+            lottiePlayer.seek(200);
+          }, 100);
+        } else {
+          block.classList.remove('no-animation');
+          lottiePlayer.setSpeed(1);
+        }
+        clearInterval(lottiePlaying);
+      }
+    }, 100);
+  };
+
+  toggleAnimationState(reducedMotion);
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
+    toggleAnimationState(value);
   });
 }

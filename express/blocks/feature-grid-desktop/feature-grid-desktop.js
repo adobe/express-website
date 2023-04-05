@@ -73,6 +73,7 @@ const observerCallback = (entries, observer) => {
 
 export default function decorate(block) {
   const inputRows = block.querySelectorAll(':scope > div > div');
+  block.innerHTML = '';
   const children = Array.from(inputRows);
   const footnote = children.pop().textContent;
   const gridProps = children.map((child) => {
@@ -144,7 +145,7 @@ export default function decorate(block) {
     }
   };
 
-  reactToPreference(preferenceStore.get(preferenceNames.reduceMotion.name));
+  reactToPreference({ value: preferenceStore.get(preferenceNames.reduceMotion.name) });
 
   preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, reactToPreference);
 
@@ -153,7 +154,6 @@ export default function decorate(block) {
   });
   footnoteContainer.append(footnote);
 
-  block.innerHTML = '';
   block.append(gridContainer);
   block.append(footnoteContainer);
 }
