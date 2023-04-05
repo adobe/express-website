@@ -79,7 +79,7 @@ function buildReduceMotionSwitch($block, container) {
   container.prepend(reduceMotionSwitch, reduceMotionText);
   $block.prepend(container);
 
-  const initialStore = preferenceStore.init(preferenceNames.reduceMotion);
+  const initialStore = preferenceStore.init(preferenceNames.reduceMotion.name);
 
   if (initialStore.value === true) {
     reduceMotionSlider.classList.add('on');
@@ -87,7 +87,7 @@ function buildReduceMotionSwitch($block, container) {
 
   container.classList.add('reduce-motion-switch-container');
 
-  preferenceStore.subscribe(preferenceNames.reduceMotion, $block, ({ value }) => {
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, $block, ({ value }) => {
     if (value) {
       reduceMotionSlider.classList.add('on');
     } else {
@@ -96,7 +96,7 @@ function buildReduceMotionSwitch($block, container) {
   });
 
   reduceMotionSwitch.addEventListener('click', () => {
-    preferenceStore.set(preferenceNames.reduceMotion);
+    preferenceStore.toggle(preferenceNames.reduceMotion.name);
   });
 }
 

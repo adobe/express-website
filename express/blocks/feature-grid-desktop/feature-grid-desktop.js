@@ -144,9 +144,9 @@ export default function decorate(block) {
     }
   };
 
-  reactToPreference(preferenceStore.get(preferenceNames.reduceMotion));
+  reactToPreference(preferenceStore.get(preferenceNames.reduceMotion.name));
 
-  preferenceStore.subscribe(preferenceNames.reduceMotion, block, reactToPreference);
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, reactToPreference);
 
   const footnoteContainer = createTag('div', {
     class: 'footnote-container',

@@ -36,7 +36,7 @@ class PreferenceStore {
     this.stores = {}; // { [name]: { value, subscribers: [HTMLElement] } }
   }
 
-  updateStore(name) {
+  dispatch(name) {
     const value = localStorage.getItem(name) === 'on';
 
     if (!this.stores[name]) this.stores[name] = { subscribers: [] };
@@ -70,10 +70,10 @@ class PreferenceStore {
 
     mediaQuery.addEventListener('change', () => {
       syncBrowserSetting();
-      this.updateStore(name);
+      this.dispatch(name);
     });
 
-    return this.updateStore(name);
+    return this.dispatch(name);
   }
 
   /**
@@ -81,14 +81,14 @@ class PreferenceStore {
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
    * preferenceStore.set('reduceMotion');
    */
-  set(name) {
+  toggle(name) {
     if (localStorage.getItem(name) === 'on') {
       localStorage.setItem(name, 'off');
     } else {
       localStorage.setItem(name, 'on');
     }
 
-    this.updateStore(name);
+    this.dispatch(name);
   }
 
   /**
