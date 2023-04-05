@@ -180,8 +180,6 @@ const initResetHeroImage = (imgWrapper) => {
 // Handles the shuffling of images based on mouse position
 const initImageShuffling = (wrapper, imageWrapper, block) => {
   const imageCount = imageWrapper.querySelectorAll('img').length;
-  const lottiePlayer = block.querySelector('lottie-player');
-  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
   let activeImageIndex = 0;
   let backgroundImageIndex = 0;
@@ -210,7 +208,29 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
     }
   };
 
+  imageWrapper.addEventListener('mousemove', shuffle);
+};
+
+export default async function decorate(block) {
+  const circleList = await extractContent(block);
+  buildCircleList(block, circleList);
+  const circleWrappers = block.querySelectorAll('.circles-container > a');
+
+  circleWrappers.forEach((wrapper) => {
+    const imageWrapper = wrapper.querySelector('.img-wrapper');
+    const dropDown = wrapper.querySelector('.dropdown');
+    if (imageWrapper) {
+      initDoorHandle(imageWrapper, dropDown, wrapper);
+      initImageShuffling(wrapper, imageWrapper, block);
+      initResetHeroImage(imageWrapper);
+      initResetDoorHandle(wrapper, dropDown);
+    }
+  });
+
   // Pauses lottie and disables shuffling of images
+  const lottiePlayer = block.querySelector('lottie-player');
+  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
+
   const toggleAnimationState = (reduceMotion) => {
     const lottiePlaying = setInterval(() => {
       if (lottiePlayer.hasUpdated) {
@@ -230,23 +250,5 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
   toggleAnimationState(reducedMotion);
   preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
     toggleAnimationState(value);
-  });
-  imageWrapper.addEventListener('mousemove', shuffle);
-};
-
-export default async function decorate(block) {
-  const circleList = await extractContent(block);
-  buildCircleList(block, circleList);
-  const circleWrappers = block.querySelectorAll('.circles-container > a');
-
-  circleWrappers.forEach((wrapper) => {
-    const imageWrapper = wrapper.querySelector('.img-wrapper');
-    const dropDown = wrapper.querySelector('.dropdown');
-    if (imageWrapper) {
-      initDoorHandle(imageWrapper, dropDown, wrapper);
-      initImageShuffling(wrapper, imageWrapper, block);
-      initResetHeroImage(imageWrapper);
-      initResetDoorHandle(wrapper, dropDown);
-    }
   });
 }
