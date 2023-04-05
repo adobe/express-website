@@ -53,7 +53,7 @@ function buildHoverContent(title, videoDiv, links) {
     hoverContent.append(widget);
   });
   hoverElem.append(overlay);
-  setTimeout(() => hoverElem.classList.add('active'), 300);
+  setTimeout(() => hoverElem.classList.add('active'), 250);
 
   return hoverElem;
 }
