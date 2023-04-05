@@ -48,6 +48,7 @@ class PreferenceStore {
       localStorage.setItem(name, e.matches ? ON : OFF);
       this.dispatch(name);
     });
+    return get(name);
   }
 
   toggle(name) {
@@ -81,4 +82,7 @@ class PreferenceStore {
   }
 }
 
-export default { ...new PreferenceStore(), get };
+const preferenceStore = new PreferenceStore();
+preferenceStore.get = get;
+
+export default preferenceStore;
