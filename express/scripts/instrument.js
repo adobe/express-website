@@ -145,12 +145,6 @@ loadScript(martechURL, () => {
   const pageName = `adobe.com:${pathSegments.join(':')}`;
 
   const language = getLanguage(getLocale(window.location));
-  const langSplits = language.split('-');
-  langSplits.pop();
-
-  const htmlLang = langSplits.join('-');
-
-  document.documentElement.setAttribute('lang', htmlLang);
 
   let category = getMetadata('category');
   if (!category && (pathname.includes('/create/')

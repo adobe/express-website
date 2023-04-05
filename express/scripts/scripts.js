@@ -10,10 +10,13 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-console */
-
 window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
 window.RUM_HIGH_SAMPLE_RATE = 50;
+
+const TK_IDS = {
+  jp: 'dvg6awq',
+};
 
 /**
  * log RUM if part of the sample.
@@ -2291,13 +2294,20 @@ function decorateLegalCopy(main) {
  */
 async function loadEager() {
   setTheme();
+  const main = document.querySelector('main');
+  if (main) {
+    const language = getLanguage(getLocale(window.location));
+    const langSplits = language.split('-');
+    langSplits.pop();
+    const htmlLang = langSplits.join('-');
+    document.documentElement.setAttribute('lang', htmlLang);
+  }
   if (!window.hlx.lighthouse) await decorateTesting();
 
   if (window.location.href.includes('/express/templates/')) {
     await import('./templates.js');
   }
 
-  const main = document.querySelector('main');
   if (main) {
     await decorateMain(main);
     decorateHeaderAndFooter();
@@ -2451,6 +2461,8 @@ async function loadLazy() {
   loadCSS('/express/styles/lazy-styles.css');
   scrollToHash();
   resolveFragments();
+  const { default: loadFonts } = await import('./fonts.js');
+  loadFonts(TK_IDS[getLocale(window.location)], loadCSS);
   addPromotion();
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
