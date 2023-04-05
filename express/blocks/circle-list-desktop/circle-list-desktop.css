@@ -32,6 +32,11 @@ main .circle-list-desktop .subtitle {
   margin-bottom: 10px;
 }
 
+main .circle-list-desktop .subtitle a {
+  color: var(--color-black);
+  text-decoration: underline;
+}
+
 main .circle-list-desktop .img-wrapper,
 main .circle-list-desktop .lottie-wrapper {
   display: block;
