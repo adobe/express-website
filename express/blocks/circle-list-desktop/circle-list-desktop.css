@@ -3,12 +3,15 @@ main .circle-list-desktop-container {
 }
 
 main .circle-list-desktop-container > .circle-list-desktop-wrapper {
-  max-width: 1307px;
+  max-width: 1306px;
+  padding: 0 16px;
 }
 
 main .block.circle-list-desktop {
   height: 368px;
   margin: auto;
+  padding: 18px 24px;
+  background: var(--color-white);
 }
 
 main .circle-list-desktop .circles-container {

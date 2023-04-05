@@ -10,8 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, getLottie, lazyLoadLottiePlayer } from '../../scripts/scripts.js';
-import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
+import {
+  createTag,
+  getLottie,
+  gradateColorfulText,
+  lazyLoadLottiePlayer,
+} from '../../scripts/scripts.js';
+import preferenceStore, { preferenceNames } from '../../scripts/preference-store.js';
 
 // Fetches images from the spreadsheet
 const fetchCircleImages = async (link) => {
@@ -29,19 +34,13 @@ const grabImageSet = (category, imageData) => {
 const lowerHyphenate = (word) => word.toLowerCase().replaceAll(' ', '-');
 
 const extractContent = async (block) => {
-  const title = block.firstElementChild.querySelector('h1');
-  const gradientText = title.querySelector('em');
+  const title = block.firstElementChild.querySelector('h2, h1');
   const subTitle = block.firstElementChild.querySelector('p');
   const circleList = [];
   const imagesLink = block.lastElementChild.textContent.trim();
   const imageData = await fetchCircleImages(imagesLink);
 
-  if (gradientText) {
-    const span = createTag('span', { class: 'gradient-text' });
-    span.innerText = gradientText.innerText;
-    gradientText.replaceWith(span);
-  }
-  gradientText.classList.add('gradient-text');
+  gradateColorfulText(title);
   subTitle.classList.add('subtitle');
   const circleRows = Array.from(block.children).slice(1, -1);
 
@@ -182,7 +181,7 @@ const initResetHeroImage = (imgWrapper) => {
 const initImageShuffling = (wrapper, imageWrapper, block) => {
   const imageCount = imageWrapper.querySelectorAll('img').length;
   const lottiePlayer = block.querySelector('lottie-player');
-  const reducedMotion = preferenceStore.get(eventNames.reduceMotion);
+  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
   const circleWrapper = wrapper.querySelector('.circle-wrapper');
   let activeImageIndex = 0;
   let backgroundImageIndex = 0;
@@ -229,7 +228,9 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
   };
 
   toggleAnimationState(reducedMotion);
-  preferenceStore.subscribe(eventNames.reduceMotion, block, (value) => toggleAnimationState(value));
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, (value) => {
+    toggleAnimationState(value);
+  });
   imageWrapper.addEventListener('mousemove', shuffle);
 };
 

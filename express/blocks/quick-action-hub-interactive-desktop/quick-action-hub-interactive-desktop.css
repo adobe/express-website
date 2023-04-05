@@ -1,3 +1,7 @@
+main .section.quick-action-hub-interactive-desktop-container[data-toggle] {
+  padding-top: 0;
+}
+
 main .section .quick-action-hub-interactive-desktop {
   display: none;
 }
@@ -6,12 +10,11 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   margin-top: 60px;
 }
 
-.quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-container {
+.quick-action-hub-interactive-desktop  .quick-action-hub-interactive-desktop-container {
   padding-top: 20px;
 }
 
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-header h2 {
-  font-size: var(--heading-font-size-m);
   text-align: center;
 }
 
@@ -207,6 +210,8 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
 @media (min-width: 900px) {
   main .section .quick-action-hub-interactive-desktop {
     display: inline-flex;
+    padding: 18px 24px;
+    width: 100%;
   }
 
   .quick-action-hub-interactive-desktop .third-column {
@@ -236,7 +241,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
     display: block;
   }
   main .section div.quick-action-hub-interactive-desktop-wrapper {
-    max-width: unset;
+    max-width: 1306px;
   }
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-container {
