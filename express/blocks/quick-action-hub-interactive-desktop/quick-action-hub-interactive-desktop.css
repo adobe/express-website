@@ -10,10 +10,6 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   margin-top: 60px;
 }
 
-.quick-action-hub-interactive-desktop  .quick-action-hub-interactive-desktop-container {
-  padding-top: 20px;
-}
-
 .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-header h2 {
   text-align: center;
 }
@@ -210,7 +206,9 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
 @media (min-width: 900px) {
   main .section .quick-action-hub-interactive-desktop {
     display: inline-flex;
+    box-sizing: border-box;
     padding: 18px 24px;
+    background: var(--color-white);
     width: 100%;
   }
 
@@ -240,7 +238,9 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .card {
     display: block;
   }
+
   main .section div.quick-action-hub-interactive-desktop-wrapper {
+    padding: 0 16px;
     max-width: 1306px;
   }
 
