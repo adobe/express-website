@@ -1769,13 +1769,13 @@ export async function decorateTemplateList($block) {
   if ($block.classList.contains('spreadsheet-powered')
     && !$block.classList.contains('apipowered')
     && $block.classList.contains('mini')) {
-    const $buttons = $block.querySelectorAll('a:any-link');
-    $buttons.forEach((button) => {
-      const isPlaceholder = button.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
-      const $2ndDiv = button.querySelector(':scope > div:last-of-type');
+    const links = $block.querySelectorAll('a:any-link');
+    links.forEach((link) => {
+      const isPlaceholder = link.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
+      const $2ndDiv = link.querySelector(':scope > div:last-of-type');
 
       if (isPlaceholder) {
-        button.classList.add('placeholder');
+        link.classList.add('placeholder');
       }
 
       $2ndDiv.classList.add('button-container');
@@ -1878,7 +1878,7 @@ function addBackgroundAnimation($block, animationUrl) {
 }
 
 async function replaceRRTemplateList($block) {
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   const relevantRowsData = await fetchRelevantRows(window.location.pathname);
   props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
 
