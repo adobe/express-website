@@ -120,7 +120,9 @@ export default function decorate($block) {
       });
     }
   }
-  styleBackgroundWithScroll($section, $marqueeBgContent);
+  if ($marqueeBgContent) {
+    styleBackgroundWithScroll($section, $marqueeBgContent);
+  }
   $block.append(addFreePlanWidget($block.querySelector('.button-container')));
   $video = transformLinkToAnimation($videoLink, $videoLooping);
   if ($video) {
