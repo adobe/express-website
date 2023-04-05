@@ -136,7 +136,7 @@ main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .screen-d
   z-index: 2;
   transform-style: preserve-3d;
   transform: translate3d(0px, 0px, 15px);
-  transition: transform 0.5s ease-out, opacity 0.2s;
+  transition: transform 0.5s ease-out;
 }
 
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .picture-frame-clickable-layer {
@@ -173,48 +173,6 @@ main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transition: transform 0.5s ease-out;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flowers .flower {
-  position: absolute;
-  transition: opacity 0.5s ease-out;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flower.flower-0 {
-  top: 40px;
-  left: -80px;
-  width: 115px;
-  transform: rotate(-50deg);
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flower.flower-1 {
-  top: 130px;
-  left: -156px;
-  width: 223px;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flower.flower-2 {
-  bottom: 72px;
-  left: -91px;
-  width: 111px;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flower.flower-3 {
-  top: 110px;
-  right: -100px;
-  width: 142px;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flower.flower-4 {
-  top: 180px;
-  right: -150px;
-  width: 181px;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flower.flower-5 {
-  bottom: 40px;
-  right: -115px;
-  width: 154px;
 }
 
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-thumbnails {
