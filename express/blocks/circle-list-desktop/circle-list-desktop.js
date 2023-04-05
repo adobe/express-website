@@ -228,7 +228,7 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
   };
 
   toggleAnimationState(reducedMotion);
-  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, (value) => {
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
     toggleAnimationState(value);
   });
   imageWrapper.addEventListener('mousemove', shuffle);
