@@ -48,7 +48,6 @@ main .circle-list-desktop .alt-img,
 main .circle-list-desktop .lottie-animation img {
   position: absolute;
   display: block;
-  /* transition: transform 0.4s linear; */
   left: 0;
   top: 0;
   height: 100%;
