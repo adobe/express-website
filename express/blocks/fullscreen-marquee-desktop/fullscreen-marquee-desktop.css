@@ -85,17 +85,15 @@ main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-
   content: '';
   position: absolute;
   border-radius: 24px;
-  height: 125%;
-  width: 150%;
+  height: 100%;
+  width: 100%;
   background-color: #FFFFFF;
   z-index: -1;
   transform: translateZ(26px);
   transition: opacity 0.2s;
   opacity: 0;
   left: 50%;
-  margin-left: -75%;
-  margin-top: -15%;
-  top: 10%;
+  margin-left: -50%;
 }
 
 main .fullscreen-marquee-desktop-container {

@@ -64,7 +64,7 @@ function styleBackgroundWithScroll($section, $marqueeBgImgSrc) {
 
   window.addEventListener('scroll', () => {
     const percentageInView = calculate();
-    $background.style.opacity = `${110 - percentageInView}%`;
+    $background.style.opacity = `${100 - percentageInView}%`;
   }, { passive: true });
 }
 
