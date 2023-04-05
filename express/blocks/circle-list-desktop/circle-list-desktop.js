@@ -236,13 +236,13 @@ export default async function decorate(block) {
       if (lottiePlayer.hasUpdated) {
         if (reduceMotion === true) {
           block.classList.add('no-animation');
-          // lottiePlayer.setSpeed(0);
-          lottiePlayer.seek(200);
-          lottiePlayer.pause();
+          setTimeout(() => {
+            lottiePlayer.setSpeed(0);
+            lottiePlayer.seek(200);
+          }, 100);
         } else {
           block.classList.remove('no-animation');
-          // lottiePlayer.setSpeed(1);
-          lottiePlayer.play();
+          lottiePlayer.setSpeed(1);
         }
         clearInterval(lottiePlaying);
       }
