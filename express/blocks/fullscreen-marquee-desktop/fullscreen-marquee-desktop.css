@@ -7,7 +7,7 @@ main .fullscreen-marquee-desktop-container {
 }
 
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop > div:first-of-type {
-  padding: 100px 0;
+  padding: 30px 0;
 }
 
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .icon.icon-cc-express-logo {
@@ -27,10 +27,15 @@ main .fullscreen-marquee-desktop-container .marquee-background {
   height: 100%;
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.1;
+  opacity: 0;
   z-index: -1;
   transition: opacity 0.1s;
 }
+
+main .fullscreen-marquee-desktop-container .marquee-background img {
+  min-width: 100%;
+}
+
 
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop h1 {
   font-size: 80px;
@@ -80,13 +85,17 @@ main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-
   content: '';
   position: absolute;
   border-radius: 24px;
-  height: 100%;
-  width: 100%;
+  height: 125%;
+  width: 150%;
   background-color: #FFFFFF;
   z-index: -1;
   transform: translateZ(26px);
   transition: opacity 0.2s;
   opacity: 0;
+  left: 50%;
+  margin-left: -75%;
+  margin-top: -15%;
+  top: 10%;
 }
 
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper {
@@ -224,7 +233,8 @@ main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-
   width: 100%;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame picture img {
+main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame img {
   height: 100%;
   display: block;
+  border-radius: 24px;
 }

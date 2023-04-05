@@ -22,7 +22,6 @@ function styleBackgroundWithScroll($section, $marqueeBgImgSrc) {
   const $marqueeBg = createOptimizedPicture($marqueeBgImgSrc);
   $background.append($marqueeBg);
   $section.prepend($background);
-
   const calculate = () => {
     const viewport = {
       top: window.scrollY,
@@ -71,7 +70,7 @@ function styleBackgroundWithScroll($section, $marqueeBgImgSrc) {
 
 export default function decorate($block) {
   const $rows = Array.from($block.children);
-  let $video, $marqueeBgContent, $frameBgImageContent, $thumbnailsContent, $editorContent, $contentSection;
+  let $video, $videoLink, $marqueeBgContent, $frameBgImageContent, $thumbnailsContent, $editorContent, $contentSection, $videoLooping;
   $rows.forEach(($row) => {
     const $cells = Array.from($row.children);
     const $headerCols = $cells[0];
@@ -98,8 +97,11 @@ export default function decorate($block) {
         break;
       case 'video':
         if ($a && $a.textContent.startsWith('https://') && $a.href.endsWith('.mp4')) {
-          $video = transformLinkToAnimation($a);
+          $videoLink = $a;
         }
+        break;
+      case 'video-looping':
+        $videoLooping = $contentCols.textContent;
         break;
       default: break;
     }
@@ -109,7 +111,6 @@ export default function decorate($block) {
   const $section = $block.closest('.fullscreen-marquee-desktop-container');
   if ($h1) {
     $contentSection = $h1.parentNode;
-    $contentSection.classList.add("content-section");
     const $textToColor = $h1.querySelectorAll('em');
     if ($textToColor.length > 0) {
       $textToColor.forEach((span) => {
@@ -121,10 +122,10 @@ export default function decorate($block) {
   }
   styleBackgroundWithScroll($section, $marqueeBgContent);
   $block.append(addFreePlanWidget($block.querySelector('.button-container')));
+  $video = transformLinkToAnimation($videoLink, $videoLooping);
   if ($video) {
     $video.addEventListener('loadstart', () => {
       const $flowers = createOptimizedPicture($frameBgImageContent);
-      const $columnWrapper = $video.parentElement;
       const $pictureFrameWrapper = createTag('div', { class: 'picture-frame-wrapper' });
       const $flowersBoard = createTag('div', { class: 'flowers' });
       const $pictureFrameBackground = createTag('div', { class: 'picture-frame-background' });
@@ -164,22 +165,17 @@ export default function decorate($block) {
       );
 
       $flowersBoard.append($flowers);
-
-      const $fullScreenMarqueeSection = $block.closest('.fullscreen-marquee-desktop');
-      while ($fullScreenMarqueeSection.firstChild) {
-        $fullScreenMarqueeSection.removeChild($fullScreenMarqueeSection.firstChild);
-      }
+      $block.innerHTML = '';
 
       $block.append($contentSection);
       $block.append($pictureFrameWrapper);
-      $columnWrapper.remove();
 
       window.addEventListener('mousemove', (e) => {
         const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
         const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
 
         $pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
-        $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, 150px)`;
+        $flowersBoard.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${0 - rotateX}px, 0px, -100px)`;
         $pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
       }, { passive: true });
 
