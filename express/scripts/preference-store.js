@@ -42,10 +42,13 @@ class PreferenceStore {
     if (!this.stores[name]) this.stores[name] = { subscribers: [] };
     const store = this.stores[name];
 
-    store.value = value;
-    store.subscribers.forEach((sub) => {
-      sub.dispatchEvent(new CustomEvent(name, { detail: store }));
-    });
+    if (value !== this.get(name)) {
+      store.value = value;
+      store.subscribers.forEach((sub) => {
+        sub.dispatchEvent(new CustomEvent(name, { detail: store }));
+      });
+    }
+
     return store;
   }
 
@@ -94,7 +97,7 @@ class PreferenceStore {
   /**
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.subscribe(eventNames.reduceMotion, node, (value) => {
+   * preferenceStore.subscribe(eventNames.reduceMotion.name, node, (value) => {
    *   node.append(`${value}`);
    * });
    *
@@ -113,7 +116,7 @@ class PreferenceStore {
   /**
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.unsubscribe(eventNames.reduceMotion, node, (value) => {
+   * preferenceStore.unsubscribe(eventNames.reduceMotion.name, node, (value) => {
    *   node.append(`${value}`);
    * });
    *
@@ -130,7 +133,7 @@ class PreferenceStore {
   /**
    * Sample usage:
    * import preferenceStore, { eventNames } from '../../scripts/preference-store.js';
-   * preferenceStore.get(eventNames.reduceMotion);
+   * preferenceStore.get(eventNames.reduceMotion.name);
    */
   get(name) {
     return this.stores[name]?.value;
