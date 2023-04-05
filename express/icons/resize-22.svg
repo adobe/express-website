@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="Group_377121" data-name="Group 377121" transform="translate(12030.39 19078.295)">
+    <rect id="Canvas" width="22" height="22" transform="translate(-12030.39 -19078.295)" fill="rgba(255,19,220,0)"/>
+    <path id="Path_968327" data-name="Path 968327" d="M16,1H6A5.006,5.006,0,0,0,1,6V16a5.006,5.006,0,0,0,5,5H16a5.006,5.006,0,0,0,5-5V6a5.006,5.006,0,0,0-5-5Zm3,15a3,3,0,0,1-3,3H6a3,3,0,0,1-3-3V6A3,3,0,0,1,6,3H16a3,3,0,0,1,3,3Z" transform="translate(-12030.39 -19078.295)" fill="#484848"/>
+    <path id="Path_968328" data-name="Path 968328" d="M16,5H12a1,1,0,0,0,0,2h1.588L11.209,9.376a1,1,0,1,0,1.415,1.414L15,8.414V9.99a1,1,0,0,0,2,0V6A1,1,0,0,0,16,5Z" transform="translate(-12030.39 -19078.295)" fill="#484848"/>
+    <path id="Path_968329" data-name="Path 968329" d="M12.91,14.04v.009h0Z" transform="translate(-12030.39 -19078.295)" fill="#484848"/>
+    <path id="Path_968330" data-name="Path 968330" d="M11.06,11.05a1,1,0,1,0-1.22,1.58.981.981,0,0,0,.61.21,1.014,1.014,0,0,0,.79-.39.991.991,0,0,0-.18-1.4Z" transform="translate(-12030.39 -19078.295)" fill="#484848"/>
+    <path id="Path_968331" data-name="Path 968331" d="M11.93,15.229a1.415,1.415,0,0,0,.19-.009,1.036,1.036,0,1,0-.19.009Z" transform="translate(-12030.39 -19078.295)" fill="#484848"/>
+    <circle id="Ellipse_25685" data-name="Ellipse 25685" cx="1" cy="1" r="1" transform="translate(-12019.39 -19062.186)" fill="#484848"/>
+  </g>
+</svg>
