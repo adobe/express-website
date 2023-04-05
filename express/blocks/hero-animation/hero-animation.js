@@ -126,7 +126,7 @@ function transformToVideoLink($cell, $a) {
         }
       }
     });
-
+  $a.href = '';
   $a.addEventListener('click', (e) => {
     e.preventDefault();
     displayVideoModal(vidUrls, title, true);
