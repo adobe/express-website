@@ -673,6 +673,32 @@ loadScript(martechURL, () => {
       }
     }
 
+    let $trackingHeader = $a.closest('[data-lh]');
+    if ($trackingHeader || $a.dataset.ll) {
+      adobeEventName = `adobe.com:express`;
+      let headerString = '';
+      while ($trackingHeader) {
+        headerString = ':' + textToName($trackingHeader.dataset.lh.trim()) + headerString;
+        $trackingHeader = $trackingHeader.parentNode.closest('[data-lh]');
+      }
+      adobeEventName += headerString;
+      if ($a.dataset.ll) {
+        adobeEventName += ':' + textToName($a.dataset.ll.trim());
+      } else {
+        adobeEventName += ':' + textToName($a.innerText.trim());
+      }
+    }
+    if (hlx?.experiment) {
+      let prefix = '';
+      if (hlx.experiment?.id) prefix = hlx.experiment.id + ':';
+      if (hlx.experiment?.selectedVariant) {
+        let variant = hlx.experiment.selectedVariant;
+        if (variant.includes('-')) variant = variant.split('-')[1];
+        prefix += variant + ':';
+      }
+      adobeEventName = prefix + adobeEventName;
+    }
+
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
