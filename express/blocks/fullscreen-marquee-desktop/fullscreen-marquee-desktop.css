@@ -98,6 +98,10 @@ main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-
   top: 10%;
 }
 
+main .fullscreen-marquee-desktop-container {
+  margin-top: 79px;
+}
+
 main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper {
   justify-content: center;
   flex-direction: row;
