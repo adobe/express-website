@@ -79,9 +79,9 @@ function buildReduceMotionSwitch($block, container) {
   container.prepend(reduceMotionSwitch, reduceMotionText);
   $block.prepend(container);
 
-  const initialStore = preferenceStore.init(preferenceNames.reduceMotion.name);
+  const initialValue = preferenceStore.init(preferenceNames.reduceMotion.name);
 
-  if (initialStore.value === true) {
+  if (initialValue) {
     reduceMotionSlider.classList.add('on');
   }
 
