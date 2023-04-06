@@ -8,6 +8,7 @@ main .circle-list-desktop-container > .circle-list-desktop-wrapper {
 }
 
 main .block.circle-list-desktop {
+  display: none;
   height: 368px;
   margin: auto;
   padding: 18px 24px;
@@ -173,4 +174,10 @@ main .circle-list-desktop .dropdown li {
 
 main .circle-list-desktop .dropdown li:hover {
   background-color: #D6D6D6;
+}
+
+@media (min-width: 900px) {
+  main .block.circle-list-desktop {
+    display: block;
+  }
 }

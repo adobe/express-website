@@ -26,7 +26,7 @@ main .intent-toggle-desktop-wrapper {
 }
 
 main .block.intent-toggle-desktop {
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
     border-radius: 33px 33px 0 0;
@@ -180,4 +180,10 @@ main .intent-toggle-desktop .intent-toggle-desktop-buttons-container .tag {
     height: 20px;
     width: 61px;
     border-radius: 4px;
+}
+
+@media (min-width: 900px) {
+    main .block.intent-toggle-desktop {
+        display: flex;
+    }
 }
