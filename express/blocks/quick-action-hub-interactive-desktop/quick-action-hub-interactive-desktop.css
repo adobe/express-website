@@ -201,6 +201,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   main .section .quick-action-hub-interactive-desktop {
     display: inline-flex;
     box-sizing: border-box;
+    justify-content: center;
     padding: 18px 24px;
     background: var(--color-white);
     width: 100%;
