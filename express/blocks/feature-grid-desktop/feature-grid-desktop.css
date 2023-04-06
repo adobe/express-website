@@ -68,14 +68,6 @@ main .feature-grid-desktop {
   grid-gap: var(--grid-item-gap);
   height: var(--grid-container-height);
 }
-.grid-container.enter-animation {
-  opacity: 0;
-}
-.grid-container.enter-animation.entered {
-  animation: 
-    grid-container-scale var(--animation-duration) var(--in-out-quart-bezier) 0.25s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
-    grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
-}
 
 .grid-item {
   background-color: #E1E2E4;
@@ -89,6 +81,12 @@ main .feature-grid-desktop {
 }
 .grid-item.enter-animation {
   opacity: 0;
+}
+.grid-item.enter-animation.entered {
+  opacity: 0;
+  animation: 
+    grid-scale var(--animation-duration) var(--in-out-quart-bezier) 0.25s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
+    grid-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
 
 .grid-item.features { 
@@ -179,12 +177,12 @@ main .feature-grid-desktop {
   background-size: 65%;
 }
 .grid-item.templates.enter-animation.entered {
-  animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
+  animation: grid-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode),
     grid-item-slide-in-right var(--animation-duration) var(--in-out-quart-bezier) 0.5s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
 }
 @media screen and (min-width: 1200px) {
   .grid-item.templates.enter-animation.entered {
-    animation: grid-container-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
+    animation: grid-opacity var(--animation-duration) var(--in-out-quart-bezier) 0s var(--animation-iteration-count) var(--animation-direction) var(--animation-fill-mode);
   }
 }
 
@@ -305,7 +303,7 @@ main .feature-grid-desktop {
 }
 
 
-@keyframes grid-container-scale {
+@keyframes grid-scale {
   0% {
     transform: scale(1.1);
   }
@@ -314,7 +312,7 @@ main .feature-grid-desktop {
   }
 }
 
-@keyframes grid-container-opacity {
+@keyframes grid-opacity {
   0% {
     opacity: 0;
   }

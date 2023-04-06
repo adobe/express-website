@@ -94,14 +94,9 @@ export default function decorate(block) {
   });
 
   // for scroll-in-view animation
-  const containerObserver = new IntersectionObserver(observerCallback, {
-    threshold: 0.5,
-  });
   const itemsObserver = new IntersectionObserver(observerCallback, {
-    threshold: 0.5,
+    threshold: 0.2,
   });
-
-  containerObserver.observe(gridContainer);
 
   const gridItems = gridProps.map((props, index) => renderGridNode(props, index));
 
@@ -124,7 +119,7 @@ export default function decorate(block) {
       });
     }
   };
-  reactToScale();
+  reactToScale(bigLayoutMediaQuery.matches);
 
   bigLayoutMediaQuery.addEventListener('change', (e) => {
     reactToScale(e.matches);
