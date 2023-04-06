@@ -247,12 +247,10 @@ export default async function decorate(block) {
       if (lottiePlayer.hasUpdated) {
         if (reduceMotion === true) {
           block.classList.add('no-animation');
-          setTimeout(() => {
-            console.log('Set speed to 0--------');
-            lottiePlayer.setSpeed(0);
-            lottiePlayer.seek(200);
-            console.log(lottiePlayer);
-          }, 300);
+          console.log('Set speed to 0--------');
+          lottiePlayer.setSpeed(0);
+          lottiePlayer.seek(200);
+          console.log(lottiePlayer);
         } else {
           block.classList.remove('no-animation');
           lottiePlayer.setSpeed(1);
