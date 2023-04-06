@@ -113,7 +113,7 @@ export default function decorate(block) {
   // for 900px layout, ctas are small
   const bigLayoutMediaQuery = window.matchMedia('(min-width: 1200px)');
   const overlayedCTAs = gridContainer.querySelectorAll('.feature-overlay a.button');
-  const reactToMediaQuery = (big) => {
+  const reactToScale = (big) => {
     if (big) {
       overlayedCTAs.forEach((cta) => {
         cta.classList.remove('small');
@@ -124,10 +124,10 @@ export default function decorate(block) {
       });
     }
   };
-  reactToMediaQuery();
+  reactToScale();
 
   bigLayoutMediaQuery.addEventListener('change', (e) => {
-    reactToMediaQuery(e.matches);
+    reactToScale(e.matches);
   });
 
   // react to reduceMotion preference change event
