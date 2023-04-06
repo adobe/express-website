@@ -497,7 +497,7 @@ async function redirectSearch($searchBar) {
   const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const topicUrl = searchInput ? `/${searchInput}` : '';
   const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `${urlPrefix}/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
+  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
   const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
