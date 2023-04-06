@@ -12,7 +12,10 @@
 
 import {
   buildStaticFreePlanWidget,
-  createTag, getLottie, lazyLoadLottiePlayer,
+  createTag,
+  getLottie,
+  gradateColorfulText,
+  lazyLoadLottiePlayer,
   transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
@@ -123,13 +126,7 @@ export default function decorate(block) {
   const header = blockChildren.shift();
   header.classList.add('quick-action-hub-interactive-desktop-header');
   const title = header.querySelector(':scope h2');
-  const gradientText = title.querySelector(':scope em');
-  if (gradientText) {
-    const span = createTag('span', { class: 'gradient-text' });
-    span.textContent = gradientText.textContent;
-    title.insertBefore(span, gradientText.nextSibling);
-    gradientText.remove();
-  }
+  gradateColorfulText(title);
 
   let thirdColumn;
   blockChildren.forEach((el) => {
