@@ -1913,14 +1913,14 @@ async function replaceRRTemplateList($block) {
       }
     }
 
-    $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
-    $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
-    $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
-    $block.innerHTML = $block.innerHTML.replaceAll('default-locale', relevantRowsData.templateLocale || 'en');
-    $block.innerHTML = $block.innerHTML.replaceAll('default-premium', relevantRowsData.templatePremium || '');
-    $block.innerHTML = $block.innerHTML.replaceAll('default-animated', relevantRowsData.templateAnimated || '');
-    $block.innerHTML = $block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/');
-    $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
+    $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '')
+      .replaceAll('default-tasks', relevantRowsData.templateTasks || '')
+      .replaceAll('default-topics', relevantRowsData.templateTopics || '')
+      .replaceAll('default-locale', relevantRowsData.templateLocale || 'en')
+      .replaceAll('default-premium', relevantRowsData.templatePremium || '')
+      .replaceAll('default-animated', relevantRowsData.templateAnimated || '')
+      .replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/')
+      .replaceAll('default-format', relevantRowsData.placeholderFormat || '');
 
     if (relevantRowsData.templateTasks === '') {
       $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
