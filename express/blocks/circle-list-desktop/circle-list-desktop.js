@@ -246,9 +246,10 @@ export default async function decorate(block) {
     const lottiePlaying = setInterval(() => {
       if (lottiePlayer.hasUpdated) {
         if (reduceMotion === true) {
-          console.log('IT is true - I should stop the animation');
           block.classList.add('no-animation');
           setTimeout(() => {
+            console.log('Set speed to 0--------');
+            console.log(lottiePlayer);
             lottiePlayer.setSpeed(0);
             lottiePlayer.seek(200);
           }, 100);
