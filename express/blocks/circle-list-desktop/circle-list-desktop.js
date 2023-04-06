@@ -249,10 +249,10 @@ export default async function decorate(block) {
           block.classList.add('no-animation');
           setTimeout(() => {
             console.log('Set speed to 0--------');
-            console.log(lottiePlayer);
             lottiePlayer.setSpeed(0);
             lottiePlayer.seek(200);
-          }, 100);
+            console.log(lottiePlayer);
+          }, 300);
         } else {
           block.classList.remove('no-animation');
           lottiePlayer.setSpeed(1);
