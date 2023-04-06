@@ -25,6 +25,8 @@ import {
   displayVideoModal,
 } from '../shared/video.js';
 
+import preferenceStore, { preferenceNames } from '../../scripts/preference-store.js';
+
 const animationBreakPointSettings = [
   {
     typeHint: 'default',
@@ -269,6 +271,19 @@ export default async function decorate($block) {
   if ($block.classList.contains('wide')) {
     addAnimationToggle($block);
   }
+
+  // stop animation
+  const reactToPreference = ({ value: nomove }) => {
+    $block.querySelectorAll('video').forEach((video) => {
+      if (nomove) video.pause();
+      else video.play();
+    });
+  };
+  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
+
+  reactToPreference({ value: reducedMotion });
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, $block, reactToPreference);
+
   if (getLocale(window.location) === 'jp') {
     addHeaderSizing($block);
   }

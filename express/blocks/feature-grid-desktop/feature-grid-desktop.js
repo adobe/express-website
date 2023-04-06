@@ -94,14 +94,9 @@ export default function decorate(block) {
   });
 
   // for scroll-in-view animation
-  const containerObserver = new IntersectionObserver(observerCallback, {
-    threshold: 0.5,
-  });
   const itemsObserver = new IntersectionObserver(observerCallback, {
-    threshold: 0.5,
+    threshold: 0.2,
   });
-
-  containerObserver.observe(gridContainer);
 
   const gridItems = gridProps.map((props, index) => renderGridNode(props, index));
 
@@ -113,7 +108,7 @@ export default function decorate(block) {
   // for 900px layout, ctas are small
   const bigLayoutMediaQuery = window.matchMedia('(min-width: 1200px)');
   const overlayedCTAs = gridContainer.querySelectorAll('.feature-overlay a.button');
-  const reactToMediaQuery = (big) => {
+  const reactToScale = (big) => {
     if (big) {
       overlayedCTAs.forEach((cta) => {
         cta.classList.remove('small');
@@ -124,10 +119,10 @@ export default function decorate(block) {
       });
     }
   };
-  reactToMediaQuery();
+  reactToScale(bigLayoutMediaQuery.matches);
 
   bigLayoutMediaQuery.addEventListener('change', (e) => {
-    reactToMediaQuery(e.matches);
+    reactToScale(e.matches);
   });
 
   // react to reduceMotion preference change event
