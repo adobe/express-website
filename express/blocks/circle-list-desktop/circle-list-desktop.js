@@ -240,17 +240,19 @@ export default async function decorate(block) {
   // Pauses lottie and disables shuffling of images
   const lottiePlayer = block.querySelector('lottie-player');
   const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
-  console.log(reducedMotion);
 
   const toggleAnimationState = (reduceMotion) => {
     const lottiePlaying = setInterval(() => {
       if (lottiePlayer.hasUpdated) {
+        console.log(lottiePlayer.hasUpdated);
         if (reduceMotion === true) {
           block.classList.add('no-animation');
-          console.log('Set speed to 0--------');
-          lottiePlayer.setSpeed(0);
-          lottiePlayer.seek(200);
-          console.log(lottiePlayer);
+          setTimeout(() => {
+            console.log('Set speed to 0--------');
+            lottiePlayer.setSpeed(0);
+            lottiePlayer.seek(200);
+            console.log(lottiePlayer);
+          }, 400);
         } else {
           block.classList.remove('no-animation');
           lottiePlayer.setSpeed(1);
