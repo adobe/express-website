@@ -24,17 +24,30 @@ main .circle-list-desktop .circle-wrapper {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-top: 8px;
 }
 
 main .circle-list-desktop .subtitle {
   font-size: 16px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+}
+
+main .circle-list-desktop .subtitle {
+  color: #242424;
 }
 
 main .circle-list-desktop .subtitle a {
-  color: var(--color-black);
+  color: #242424;
   text-decoration: underline;
+}
+
+main .circle-list-desktop .subtitle .highlight-text {
+  display: inline-block;
+  padding-right: 2px;
+  padding-left: 4px;
+  background-color: #DEDEF9;
+  border-radius: 6px;
 }
 
 main .circle-list-desktop .img-wrapper,
