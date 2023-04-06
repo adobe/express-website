@@ -198,7 +198,7 @@ async function processResponse() {
   const renditionParams = {
     format: 'jpg',
     dimension: 'width',
-    size: 201,
+    size: 197,
   };
 
   if (templateFetched) {
