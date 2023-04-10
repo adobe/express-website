@@ -1562,15 +1562,19 @@ async function decorateTesting() {
           }
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
-          // populate ttMETA with hlx experimentation details
-          window.ttMETA = window.ttMETA || [];
+          // populate hlx experimentation details as dynamic variables
+          // for Content Square integration
           const experimentDetails = {
             CampaignId: window.hlx.experiment.id,
             CampaignName: window.hlx.experiment.experimentName,
             OfferId: window.hlx.experiment.selectedVariant,
             OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
           };
-          window.ttMETA.push(experimentDetails);
+          // add dynamic variables
+          for (const propName of Object.keys(experimentDetails)) {
+            // eslint-disable-next-line no-underscore-dangle
+            window._uxa.push(['trackDynamicVariable', { key: propName, value: experimentDetails[propName] }]);
+          }
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
