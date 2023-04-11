@@ -252,7 +252,7 @@ export default async function decorate(block) {
             lottiePlayer.setSpeed(0);
             lottiePlayer.seek(200);
             console.log(lottiePlayer);
-          }, 2000);
+          }, 700);
         } else {
           block.classList.remove('no-animation');
           lottiePlayer.setSpeed(1);
