@@ -237,32 +237,27 @@ export default async function decorate(block) {
     }
   });
 
-  // Pauses lottie and disables shuffling of images
   const lottiePlayer = block.querySelector('lottie-player');
   const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
 
+  // Pauses lottie and disables shuffling of images
   const toggleAnimationState = (reduceMotion) => {
-    const lottiePlaying = setInterval(() => {
-      if (lottiePlayer.hasUpdated) {
-        console.log(lottiePlayer.hasUpdated);
-        if (reduceMotion === true) {
-          block.classList.add('no-animation');
-          setTimeout(() => {
-            console.log('Set speed to 0--------');
-            lottiePlayer.setSpeed(0);
-            lottiePlayer.seek(200);
-            console.log(lottiePlayer);
-          }, 700);
-        } else {
-          block.classList.remove('no-animation');
-          lottiePlayer.setSpeed(1);
-        }
-        clearInterval(lottiePlaying);
+    if (lottiePlayer.hasUpdated) {
+      if (reduceMotion === true) {
+        block.classList.add('no-animation');
+        lottiePlayer.setSpeed(0);
+        lottiePlayer.seek(200);
+      } else {
+        block.classList.remove('no-animation');
+        lottiePlayer.setSpeed(1);
       }
-    }, 100);
+    }
   };
 
-  toggleAnimationState(reducedMotion);
+  lottiePlayer.addEventListener('ready', () => {
+    toggleAnimationState(reducedMotion);
+  });
+
   preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
     toggleAnimationState(value);
   });
