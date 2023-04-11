@@ -2302,11 +2302,6 @@ async function loadEager() {
     const htmlLang = langSplits.join('-');
     document.documentElement.setAttribute('lang', htmlLang);
   }
-  const tkID = TK_IDS[getLocale(window.location)];
-  if (tkID) {
-    const { default: loadFonts } = await import('./fonts.js');
-    loadFonts(tkID, loadCSS);
-  }
   if (!window.hlx.lighthouse) await decorateTesting();
 
   if (window.location.href.includes('/express/templates/')) {
@@ -2470,6 +2465,11 @@ async function loadLazy() {
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
+  const tkID = TK_IDS[getLocale(window.location)];
+  if (tkID) {
+    const { default: loadFonts } = await import('./fonts.js');
+    loadFonts(tkID, loadCSS);
+  }
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
