@@ -2468,7 +2468,7 @@ async function loadLazy() {
   const tkID = TK_IDS[getLocale(window.location)];
   if (tkID) {
     const { default: loadFonts } = await import('./fonts.js');
-    loadFonts(TK_IDS[getLocale(window.location)], loadCSS);
+    loadFonts(tkID, loadCSS);
   }
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
