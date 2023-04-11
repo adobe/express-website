@@ -2461,13 +2461,15 @@ async function loadLazy() {
   loadCSS('/express/styles/lazy-styles.css');
   scrollToHash();
   resolveFragments();
-  const { default: loadFonts } = await import('./fonts.js');
-  loadFonts(TK_IDS[getLocale(window.location)], loadCSS);
   addPromotion();
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
-
+  const tkID = TK_IDS[getLocale(window.location)];
+  if (tkID) {
+    const { default: loadFonts } = await import('./fonts.js');
+    loadFonts(TK_IDS[getLocale(window.location)], loadCSS);
+  }
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
