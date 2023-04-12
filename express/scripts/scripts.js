@@ -1562,18 +1562,23 @@ async function decorateTesting() {
           }
           sampleRUM('experiment', { source: config.id, target: config.selectedVariant });
           console.log(`running experiment (${window.hlx.experiment.id}) -> ${window.hlx.experiment.selectedVariant}`);
-          // populate hlx experimentation details as dynamic variables
-          // for Content Square integration
+          // populate ttMETA with hlx experimentation details
+          window.ttMETA = window.ttMETA || [];
           const experimentDetails = {
             CampaignId: window.hlx.experiment.id,
             CampaignName: window.hlx.experiment.experimentName,
             OfferId: window.hlx.experiment.selectedVariant,
             OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
           };
-          // add dynamic variables
-          for (const propName of Object.keys(experimentDetails)) {
-            // eslint-disable-next-line no-underscore-dangle
-            window._uxa.push(['trackDynamicVariable', { key: propName, value: experimentDetails[propName] }]);
+          window.ttMETA.push(experimentDetails);
+          // add hlx experiment details as dynamic variables
+          // for Content Square integration
+          // eslint-disable-next-line no-underscore-dangle
+          if (window._uxa) {
+            for (const propName of Object.keys(experimentDetails)) {
+              // eslint-disable-next-line no-underscore-dangle
+              window._uxa.push(['trackDynamicVariable', { key: propName, value: experimentDetails[propName] }]);
+            }
           }
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
