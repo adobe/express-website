@@ -1366,7 +1366,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a {
   font-size: 14px;
   font-family: var(--body-font-family);
-  line-height: 16px;
+  line-height: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
