@@ -188,6 +188,7 @@ main .intent-toggle-desktop .card-shadow {
     position: absolute;
     bottom: 100%;
     left: 50%;
+    opacity: 0.5;
     transform: translateX(-50%) rotate(180deg);
     z-index: 2;
 }
