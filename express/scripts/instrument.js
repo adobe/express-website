@@ -695,6 +695,14 @@ loadScript(martechURL, () => {
       sparkButtonId = `${sparkButtonId}${textToName($a.innerText.trim())} ${index}`;
     }
 
+    let assetId;
+    let assetPath;
+    const asset = $a.querySelector('video,img');
+    if (asset) {
+      assetId = asset.currentSrc || asset.src;
+      assetPath = new URL(asset.currentSrc || asset.src).pathname;
+    }
+
     if (useAlloy) {
       _satellite.track('event', {
         xdm: {},
@@ -723,6 +731,10 @@ loadScript(martechURL, () => {
                   buttonId: sparkButtonId || '',
                   sendTimestamp: new Date().getTime(),
                 },
+              },
+              hemingway: {
+                assetId,
+                assetPath,
               },
             },
           },
