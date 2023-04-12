@@ -276,12 +276,13 @@ export default async function decorate($block) {
   const reactToPreference = ({ value: nomove }) => {
     $block.querySelectorAll('video').forEach((video) => {
       if (nomove) video.pause();
-      else video.play();
+      else {
+        video.muted = true;
+        video.play();
+      }
     });
   };
-  const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
-
-  reactToPreference({ value: reducedMotion });
+  reactToPreference({ value: preferenceStore.get(preferenceNames.reduceMotion.name) });
   preferenceStore.subscribe(preferenceNames.reduceMotion.name, $block, reactToPreference);
 
   if (getLocale(window.location) === 'jp') {
