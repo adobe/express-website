@@ -2473,7 +2473,7 @@ async function loadLazy() {
       import('./fonts.js').then((mod) => {
         mod.default(tkID, loadCSS);
       });
-    }, 10000);
+    }, 0);
   }
   debugger;
   sampleRUM('lazy');
