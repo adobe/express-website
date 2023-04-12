@@ -117,4 +117,5 @@ main .split-action .notch-pill {
 
 main .split-action-container {
     transition: opacity 0.2s;
+    z-index: 10;
 }

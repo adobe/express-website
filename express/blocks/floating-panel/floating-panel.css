@@ -1,0 +1,168 @@
+main .section.floating-panel-container {
+    padding: 16px 0 16px 0;
+    position: fixed;
+    background: white;
+    width: 100%;
+    display: none;
+    transition: bottom 0.3s;
+    box-shadow: 0 -8px 8px 2px rgb(102 102 102 / 15%);
+    z-index: 11;
+}
+
+@media screen and (min-width: 900px) {
+    main .section.floating-panel-container {
+        display: block;
+    }
+}
+
+main .section.floating-panel-container .floating-panel-wrapper {
+    max-width: 1280px;
+    padding: 0 32px;
+}
+
+main .section.floating-panel-container .floating-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+@media screen and (min-width: 900px) {
+    main .section.floating-panel-container .floating-panel {
+        flex-direction: unset;
+    }
+}
+
+main .section.floating-panel-container .floating-panel .content-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+main .section.floating-panel-container .floating-panel .content-container h1,
+main .section.floating-panel-container .floating-panel .content-container h2,
+main .section.floating-panel-container .floating-panel .content-container h3,
+main .section.floating-panel-container .floating-panel .content-container h4,
+main .section.floating-panel-container .floating-panel .content-container h5,
+main .section.floating-panel-container .floating-panel .content-container h6,
+main .section.floating-panel-container .floating-panel .content-container p {
+    text-align: left;
+}
+
+main .section.floating-panel-container .floating-panel .content-container h1,
+main .section.floating-panel-container .floating-panel .content-container h2,
+main .section.floating-panel-container .floating-panel .content-container h3,
+main .section.floating-panel-container .floating-panel .content-container h4,
+main .section.floating-panel-container .floating-panel .content-container h5,
+main .section.floating-panel-container .floating-panel .content-container h6 {
+    font-size: 22px;
+    line-height: 24px;
+}
+
+main .section.floating-panel-container .floating-panel .content-container p {
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+}
+
+main .section.floating-panel-container .floating-panel .buttons-container {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+main .section.floating-panel-container .floating-panel .button-container {
+    margin: 0;
+}
+
+main .section.floating-panel-container .floating-panel .button-container:first-of-type a.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 56px;
+    font-size: 16px;
+    line-height: 24px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: var(--color-gray-200);
+    border-radius: 50px;
+    color: var(--color-black);
+    border: none;
+    margin: 0;
+}
+
+main .section.floating-panel-container .floating-panel .button-container:first-of-type a.button:hover {
+    background: var(--color-gray-300);
+}
+
+main .section.floating-panel-container .floating-panel .button-container:last-of-type {
+    display: block;
+    padding: 6px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 100px;
+    background-color: var(--color-gray-200);
+    z-index: 2;
+    pointer-events: auto;
+    transition: background-color .3s, padding .3s, margin-bottom 0.6s ease-out;
+}
+
+main .section.floating-panel-container .floating-panel .button-container:last-of-type a.button {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 48px 0 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 50px;
+    color: var(--color-white);
+    border: none transparent;
+    background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+    background-size: 400% 400%;
+    transition: background-color .3s, color .3s, border .3s, margin .3s, padding .3s;
+    animation: buttonGradient 45s ease infinite;
+}
+
+main .section.floating-panel-container .floating-panel .button-container:last-of-type.scrolled {
+    background-color: transparent;
+}
+
+main .section.floating-panel-container .floating-panel .button-container:last-of-type.scrolled a.button {
+    margin: 0;
+    padding-left: 44px;
+    padding-right: 44px;
+}
+
+main .section.floating-panel-container .floating-panel .floating-panel-lottie {
+    z-index: 0;
+    display: block;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    margin: 0;
+    padding: 4px 0 0;
+    background: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+main .section.floating-panel-container .floating-panel .button-container:last-of-type.scrolled .floating-panel-lottie {
+    display: none;
+}
+
+main .section.floating-panel-container .floating-panel .floating-panel-lottie .lottie-purple-arrows {
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+}

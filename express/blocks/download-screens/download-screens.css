@@ -115,7 +115,7 @@ main .cards.large .card .card-content li {
   font-size: 1.125rem;
 }
 
-@media (min-width:400px) {
+@media (min-width: 600px) {
   main .cards .card {
     width: 344px;
   }

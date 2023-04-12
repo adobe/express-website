@@ -13,9 +13,7 @@
 
 import {
   addAnimationToggle,
-  addFreePlanWidget,
   addSearchQueryToHref,
-  arrayToObject,
   createOptimizedPicture,
   createTag,
   decorateMain,
@@ -26,7 +24,6 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   linkImage,
-  titleCase,
   toClassName,
 } from '../../scripts/scripts.js';
 
@@ -43,7 +40,7 @@ const props = {
   limit: 70,
   total: 0,
   start: '',
-  sort: '-remixCount',
+  sort: '-_score,-remixCount',
   masonry: undefined,
   authoringError: false,
   headingTitle: null,
@@ -72,8 +69,7 @@ function trimFormattedFilterText(attr, capitalize) {
 
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
-  const placeholders = await fetchPlaceholders()
-    .then((response) => response);
+  const placeholders = await fetchPlaceholders();
 
   let grammarTemplate = placeholders['template-placeholder'];
 
@@ -103,7 +99,7 @@ async function populateHeadingPlaceholder(locale) {
   return grammarTemplate;
 }
 
-function formatSearchQuery(filters) {
+function formatSearchQuery(limit, start, sort, filters) {
   const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
   const filterString = prunedFilter.reduce((string, [key, value]) => {
     if (key === prunedFilter[prunedFilter.length - 1][0]) {
@@ -113,12 +109,12 @@ function formatSearchQuery(filters) {
     }
   }, '');
 
-  props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+  return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    formatSearchQuery(props.filters);
+    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
 
     const result = await fetch(props.queryString)
       .then((response) => response.json())
@@ -139,14 +135,15 @@ async function fetchTemplates() {
 
 function fetchTemplatesByTasks(tasks) {
   const tempFilters = { ...props.filters };
+
   if (tasks) {
     tempFilters.tasks = `(${tasks})`;
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    formatSearchQuery(tempFilters);
+    const tempQ = formatSearchQuery(props.limit, '', props.sort, tempFilters);
 
-    return fetch(props.queryString)
+    return fetch(tempQ)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -184,9 +181,9 @@ async function processResponse() {
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
-      const start = new URLSearchParams(nextQuery).get('start')
-        .split(',')[0];
-      props.start = start;
+      const starts = new URLSearchParams(nextQuery).get('start').split(',');
+      starts.pop();
+      props.start = starts.join(',');
     } else {
       props.start = '';
     }
@@ -480,7 +477,7 @@ async function redirectSearch($searchBar) {
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
   let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
-  let searchInput = $searchBar ? $searchBar.value : currentTopic;
+  let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
 
   const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
     const searchValue = $searchBar.value.toLowerCase();
@@ -497,11 +494,12 @@ async function redirectSearch($searchBar) {
   }
 
   const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const topicUrl = searchInput ? `/${searchInput}` : '';
   const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
   const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
+  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
   if (window.templates && window.templates.data.some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
@@ -885,7 +883,7 @@ function decorateCategoryList($block, $section, placeholders) {
     const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
     $mobileDrawerWrapper.append($lottieArrows);
     $inWrapper.append($categoriesMobileWrapper);
-    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/blocks/floating-button/purple-arrows.json');
+    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
     lazyLoadLottiePlayer();
 
     $categoriesDesktopWrapper.classList.add('desktop-only');
@@ -936,8 +934,6 @@ function decorateCategoryList($block, $section, placeholders) {
 async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
-  const $templateListBlock = $section.querySelector('.template-list');
-  const $placeholderTemplate = $templateListBlock.querySelector('a:first-of-type');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
   const $searchForm = createTag('form', { class: 'search-form' });
   const $searchBar = createTag('input', {
@@ -946,14 +942,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
     enterKeyHint: placeholders.search ?? 'Search',
   });
-
-  // Suggestions Dropdown
-  const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
-  const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
-  const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
-  const $searchScratch = createTag('a', { class: 'search-dropdown-scratch', href: $placeholderTemplate.href });
-  const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
-  const $boldedTaskText = createTag('b');
 
   // Tasks Dropdown
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
@@ -987,60 +975,11 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     }
   }
 
-  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
   $taskDropdown.append($taskDropdownToggle, $taskDropdownList, $taskDropdownChev);
-  $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
-  $searchDropdown.append($searchDropdownHeadingWrapper);
-  $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
-
-  $searchDropdownHeading.textContent = placeholders.suggestions;
-
-  const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
-
-  if (resp.ok) {
-    const { data } = await resp.json();
-    const path = window.location.pathname;
-    let dataForPage = data.find((p) => p.path === path);
-
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-
-    const dataArray = Object.entries(dataForPage);
-
-    if (params.tasks) {
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
-      });
-    }
-
-    if (params.topics) {
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
-      });
-    }
-
-    dataForPage = arrayToObject(dataArray);
-
-    if (dataForPage) {
-      $boldedTaskText.textContent = `${dataForPage.shortTitle} `;
-      $searchDropdownHeading.prepend($boldedTaskText);
-
-      $searchScratchText.textContent = placeholders['search-from-scratch']
-        .replace('{{template-type}}', dataForPage.shortTitle);
-    } else {
-      $searchScratchText.textContent = placeholders['search-from-scratch']
-        .replace('{{template-type}}', '');
-    }
-  } else {
-    $searchScratchText.textContent = placeholders['search-from-scratch']
-      .replace('{{template-type}}', '');
-  }
-
-  await addFreePlanWidget($searchDropdown, true);
+  $searchBarWrapper.append($searchForm, $taskDropdownContainer);
 
   const $stickySearchBarWrapper = $searchBarWrapper.cloneNode({ deep: true });
 
@@ -1743,7 +1682,7 @@ export async function decorateTemplateList($block) {
   if (rows === 1) {
     $block.classList.add('large');
     breakpoints = [{
-      media: '(min-width: 400px)',
+      media: '(min-width: 600px)',
       width: '2000',
     }, { width: '750' }];
   }

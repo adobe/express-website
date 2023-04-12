@@ -26,13 +26,20 @@ function show($block) {
 }
 
 function initCTAListener($block, href) {
-  const $buttons = document.querySelectorAll('.button');
-
+  const $buttons = $block.closest('main').querySelectorAll('.button');
   for (let i = 0; i < $buttons.length; i += 1) {
     if ($buttons[i].href === href && !$buttons[i].classList.contains('no-event')) {
       $buttons[i].addEventListener('click', (e) => {
         e.preventDefault();
-        show($block);
+        const buttonOuterWrapper = $buttons[i].parentElement.parentElement;
+        if (buttonOuterWrapper.classList.contains('multifunction')) {
+          if ($buttons[i].parentElement.classList.contains('toolbox-opened')) {
+            buttonOuterWrapper.remove();
+            show($block);
+          }
+        } else {
+          show($block);
+        }
       });
     }
   }
@@ -85,8 +92,10 @@ export default function decorate($block) {
     if (anchor) {
       $buttonsWrapper.append(anchor);
       div.remove();
+      const $buttons = document.querySelectorAll('.button.primaryCTA');
+      const matchingButtons = Array.from($buttons).filter((button) => button.href === anchor.href);
 
-      if (anchor.classList.contains('same-as-floating-button-CTA')) {
+      if (anchor.classList.contains('same-as-floating-button-CTA') || matchingButtons.length > 0) {
         anchor.classList.add('no-event');
         anchor.target = '_self';
         hrefHolder = anchor.href;
@@ -113,7 +122,10 @@ export default function decorate($block) {
 
   if (window.innerWidth < 900) {
     initNotchDragAction($block);
-    initCTAListener($block, hrefHolder);
+
+    document.addEventListener('floatingbuttonloaded', () => {
+      initCTAListener($block, hrefHolder);
+    });
 
     document.dispatchEvent(new Event('splitactionloaded'));
   }
