@@ -1,9 +1,7 @@
 {
   "project": "Express",
-  "outerHost": "express-website--adobe.hlx.live",
   "host": "www.adobe.com",
   "byocdn": true,
-  "pushDownSelector": "#feds-header",
   "plugins": [
     {
       "id": "metadata",
