@@ -2467,9 +2467,15 @@ async function loadLazy() {
   if (!window.hlx.lighthouse) loadMartech();
   const tkID = TK_IDS[getLocale(window.location)];
   if (tkID) {
-    const { default: loadFonts } = await import('./fonts.js');
-    loadFonts(tkID, loadCSS);
+    debugger;
+    setTimeout(() => {
+      debugger;
+      import('./fonts.js').then((mod) => {
+        mod.default(tkID, loadCSS);
+      });
+    }, 10000);
   }
+  debugger;
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
