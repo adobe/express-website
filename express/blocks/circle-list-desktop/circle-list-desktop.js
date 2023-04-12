@@ -42,15 +42,12 @@ const extractContent = async (block) => {
 
   gradateColorfulText(title);
   const highlightText = subTitle.querySelector('em');
-  // const space = highlightText.previousSibling;
-  // space.slice(-1);
-  // console.log(space);
   subTitle.classList.add('subtitle');
   const circleRows = Array.from(block.children).slice(1, -1);
 
   if (highlightText) {
     const span = createTag('span', { class: 'highlight-text' });
-    span.innerText = highlightText.innerText;
+    span.textContent = highlightText.textContent;
     highlightText.replaceWith(span);
   }
 
