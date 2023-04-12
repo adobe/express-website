@@ -125,24 +125,20 @@ export default function decorate(block) {
     reactToScale(e.matches);
   });
 
-  // react to reduceMotion preference change event
-  const reactToPreference = ({ value }) => {
-    if (value) {
-      gridContainer.classList.remove(ANIMATION_CLS);
-      gridItems.forEach((gridItem) => {
-        gridItem.classList.remove(ANIMATION_CLS);
-      });
-    } else {
-      gridContainer.classList.add(ANIMATION_CLS);
-      gridItems.forEach((gridItem) => {
-        gridItem.classList.add(ANIMATION_CLS);
-      });
-    }
+  const reactToPreference = (value) => {
+    [gridContainer, ...gridItems].forEach(({ classList: cl }) => {
+      if (value) cl.remove(ANIMATION_CLS);
+      else cl.add(ANIMATION_CLS);
+    });
   };
 
-  reactToPreference({ value: preferenceStore.get(preferenceNames.reduceMotion.name) });
+  reactToPreference(preferenceStore.get(preferenceNames.reduceMotion.name));
 
-  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, reactToPreference);
+  preferenceStore.subscribe(
+    preferenceNames.reduceMotion.name,
+    block,
+    ({ value }) => value && reactToPreference(value), // no replay
+  );
 
   const footnoteContainer = createTag('div', {
     class: 'footnote-container',
