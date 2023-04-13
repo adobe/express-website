@@ -21,7 +21,7 @@ import {
   fetchRelevantRows,
   getIconElement,
   getLocale,
-  getLottie,
+  getLottie, getMetadata,
   lazyLoadLottiePlayer,
   linkImage,
   toClassName,
@@ -70,8 +70,13 @@ function trimFormattedFilterText(attr, capitalize) {
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
   const placeholders = await fetchPlaceholders();
+  let grammarTemplate;
 
-  let grammarTemplate = placeholders['template-placeholder'];
+  if (getMetadata('template-search-page') === 'Y') {
+    grammarTemplate = placeholders['template-search-grid-heading-placeholder'] || placeholders['template-placeholder'];
+  } else {
+    grammarTemplate = placeholders['template-placeholder'];
+  }
 
   if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
     grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
