@@ -1571,6 +1571,15 @@ async function decorateTesting() {
             OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
           };
           window.ttMETA.push(experimentDetails);
+          // add hlx experiment details as dynamic variables
+          // for Content Square integration
+          // eslint-disable-next-line no-underscore-dangle
+          if (window._uxa) {
+            for (const propName of Object.keys(experimentDetails)) {
+              // eslint-disable-next-line no-underscore-dangle
+              window._uxa.push(['trackDynamicVariable', { key: propName, value: experimentDetails[propName] }]);
+            }
+          }
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
