@@ -1,6 +1,7 @@
 main .section.intent-toggle-desktop-dark-container {
     overflow: visible;
     position: relative;
+    padding-top: 0;
 }
 
 main .section.intent-toggle-desktop-dark-container::before {
@@ -26,7 +27,7 @@ main .intent-toggle-desktop-wrapper {
 }
 
 main .block.intent-toggle-desktop {
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
     border-radius: 33px 33px 0 0;
@@ -180,4 +181,20 @@ main .intent-toggle-desktop .intent-toggle-desktop-buttons-container .tag {
     height: 20px;
     width: 61px;
     border-radius: 4px;
+}
+
+main .intent-toggle-desktop .card-shadow {
+    display: flex;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    opacity: 0.5;
+    transform: translateX(-50%) rotate(180deg);
+    z-index: 2;
+}
+
+@media (min-width: 900px) {
+    main .block.intent-toggle-desktop {
+        display: flex;
+    }
 }

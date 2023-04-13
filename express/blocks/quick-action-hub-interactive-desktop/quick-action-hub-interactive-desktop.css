@@ -2,6 +2,11 @@ main .section.quick-action-hub-interactive-desktop-container[data-toggle] {
   padding-top: 0;
 }
 
+main .section div.quick-action-hub-interactive-desktop-wrapper {
+  padding: 0 16px;
+  max-width: 1306px;
+}
+
 main .section .quick-action-hub-interactive-desktop {
   display: none;
 }
@@ -201,6 +206,7 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
   main .section .quick-action-hub-interactive-desktop {
     display: inline-flex;
     box-sizing: border-box;
+    justify-content: center;
     padding: 18px 24px;
     background: var(--color-white);
     width: 100%;
@@ -231,11 +237,6 @@ main .section .quick-action-hub-interactive-desktop-wrapper:not(:first-child) {
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-list-container .card {
     display: block;
-  }
-
-  main .section div.quick-action-hub-interactive-desktop-wrapper {
-    padding: 0 16px;
-    max-width: 1306px;
   }
 
   .quick-action-hub-interactive-desktop .quick-action-hub-interactive-desktop-container {

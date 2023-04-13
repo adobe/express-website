@@ -12,60 +12,60 @@
 import { createTag } from '../../scripts/scripts.js';
 import preferenceStore, { preferenceNames } from '../../scripts/preference-store.js';
 
-function toggleSections($sections, buttons, index) {
-  $sections.forEach(($section) => {
-    if (buttons[index].dataset.text === $section.dataset.toggle.toLowerCase()) {
-      $section.style.display = 'block';
+function toggleSections(sections, buttons, index) {
+  sections.forEach((section) => {
+    if (buttons[index].dataset.text === section.dataset.toggle.toLowerCase()) {
+      section.style.display = 'block';
     } else {
-      $section.style.display = 'none';
+      section.style.display = 'none';
     }
   });
 }
 
-function initButton($block, $sections, index) {
-  const $enclosingMain = $block.closest('main');
+function initButton(block, sections, index) {
+  const enclosingMain = block.closest('main');
 
-  if ($enclosingMain) {
-    const $buttons = $block.querySelectorAll('.intent-toggle-desktop-button');
-    const $toggleBackground = $block.querySelector('.intent-toggle-background');
+  if (enclosingMain) {
+    const buttons = block.querySelectorAll('.intent-toggle-desktop-button');
+    const toggleBackground = block.querySelector('.intent-toggle-background');
 
-    $buttons[index].addEventListener('click', () => {
-      const $activeButton = $block.querySelector('button.active');
-      const activeButtonWidth = $buttons[index].offsetWidth + 5;
+    buttons[index].addEventListener('click', () => {
+      const activeButton = block.querySelector('button.active');
+      const activeButtonWidth = buttons[index].offsetWidth + 5;
       let leftOffset = index * 10;
 
       for (let i = 0; i < index; i += 1) {
-        leftOffset += $buttons[i].offsetWidth;
+        leftOffset += buttons[i].offsetWidth;
       }
-      $toggleBackground.style.left = `${leftOffset}px`;
-      $toggleBackground.style.width = `${activeButtonWidth}px`;
+      toggleBackground.style.left = `${leftOffset}px`;
+      toggleBackground.style.width = `${activeButtonWidth}px`;
 
-      if ($activeButton !== $buttons[index]) {
-        $activeButton.classList.remove('active');
-        $buttons[index].classList.add('active');
-        toggleSections($sections, $buttons, index);
+      if (activeButton !== buttons[index]) {
+        activeButton.classList.remove('active');
+        buttons[index].classList.add('active');
+        toggleSections(sections, buttons, index);
       }
     });
 
     if (index === 0) {
-      $toggleBackground.classList.add('loading');
+      toggleBackground.classList.add('loading');
       const firstButtonWidthGrabbed = setInterval(() => {
-        if ($buttons[index].offsetWidth > 0) {
-          $toggleBackground.style.width = `${$buttons[index].offsetWidth + 5}px`;
-          $toggleBackground.style.left = 0;
+        if (buttons[index].offsetWidth > 0) {
+          toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
+          toggleBackground.style.left = 0;
           clearInterval(firstButtonWidthGrabbed);
         }
-        $buttons[index].classList.add('active');
-        $toggleBackground.classList.remove('loading');
+        buttons[index].classList.add('active');
+        toggleBackground.classList.remove('loading');
       }, 200);
 
       // initializing the page with first tab sections
-      toggleSections($sections, $buttons, index);
+      toggleSections(sections, buttons, index);
     }
   }
 }
 
-function buildReduceMotionSwitch($block, container) {
+function buildReduceMotionSwitch(block, container) {
   const reduceMotionSwitch = createTag('div', { class: 'reduce-motion-switch' });
   const reduceMotionSlider = createTag('button', { class: 'reduce-motion-slider' });
   const reduceMotionKnob = createTag('div', { class: 'reduce-motion-knob' });
@@ -77,7 +77,7 @@ function buildReduceMotionSwitch($block, container) {
   reduceMotionSwitch.append(reduceMotionSlider);
   reduceMotionSlider.append(reduceMotionKnob);
   container.prepend(reduceMotionSwitch, reduceMotionText);
-  $block.prepend(container);
+  block.prepend(container);
 
   const initialValue = preferenceStore.init(preferenceNames.reduceMotion.name);
 
@@ -87,7 +87,7 @@ function buildReduceMotionSwitch($block, container) {
 
   container.classList.add('reduce-motion-switch-container');
 
-  preferenceStore.subscribe(preferenceNames.reduceMotion.name, $block, ({ value }) => {
+  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
     if (value) {
       reduceMotionSlider.classList.add('on');
     } else {
@@ -100,43 +100,43 @@ function buildReduceMotionSwitch($block, container) {
   });
 }
 
-function decorateToggleButtons($block, container) {
-  const $enclosingMain = $block.closest('main');
-  if ($enclosingMain) {
-    const $sections = $enclosingMain.querySelectorAll('[data-toggle]');
-    const $toggleBackground = createTag('div', { class: 'intent-toggle-background' });
+function decorateToggleButtons(block, container) {
+  const enclosingMain = block.closest('main');
+  if (enclosingMain) {
+    const sections = enclosingMain.querySelectorAll('[data-toggle]');
+    const toggleBackground = createTag('div', { class: 'intent-toggle-background' });
 
     if (container && container.children.length > 0) {
       container.classList.add('intent-toggle-desktop-buttons-container');
       const content = Array.from(container.children);
       container.innerHTML = '';
-      container.prepend($toggleBackground);
-      $block.append(container);
+      container.prepend(toggleBackground);
+      block.append(container);
 
-      content.forEach(($toggle, index) => {
-        const $button = createTag('button', { class: 'intent-toggle-desktop-button' });
-        const tagText = $toggle.textContent.trim().match(/\[(.*?)]/);
+      content.forEach((toggle, index) => {
+        const button = createTag('button', { class: 'intent-toggle-desktop-button' });
+        const tagText = toggle.textContent.trim().match(/\[(.*?)]/);
 
         if (tagText) {
           const [fullText, tagTextContent] = tagText;
-          const $tag = createTag('span', { class: 'tag' });
-          $button.textContent = $toggle.textContent.trim().replace(fullText, '').trim();
-          $button.dataset.text = $button.textContent.toLowerCase();
-          $tag.textContent = tagTextContent;
-          $button.append($tag);
+          const tag = createTag('span', { class: 'tag' });
+          button.textContent = toggle.textContent.trim().replace(fullText, '').trim();
+          button.dataset.text = button.textContent.toLowerCase();
+          tag.textContent = tagTextContent;
+          button.append(tag);
         } else {
-          $button.textContent = $toggle.textContent.trim();
-          $button.dataset.text = $button.textContent.toLowerCase();
+          button.textContent = toggle.textContent.trim();
+          button.dataset.text = button.textContent.toLowerCase();
         }
 
-        container.append($button);
-        initButton(container, $sections, index);
+        container.append(button);
+        initButton(container, sections, index);
       });
     }
   }
 }
 
-function decorateQuickActions($block, container) {
+function decorateQuickActions(block, container) {
   const paragraphs = container.querySelectorAll('p');
   paragraphs.forEach((p) => {
     const img = p.querySelector('img');
@@ -148,15 +148,15 @@ function decorateQuickActions($block, container) {
       p.remove();
     }
   });
-  $block.append(container);
+  block.append(container);
   container.classList.add('quick-action-buttons');
 }
 
-export default function decorate($block) {
-  const $enclosingMain = $block.closest('main');
-  if ($enclosingMain) {
-    const blockRows = Array.from($block.children);
-    $block.innerHTML = '';
+export default function decorate(block) {
+  const enclosingMain = block.closest('main');
+  if (enclosingMain) {
+    const blockRows = Array.from(block.children);
+    block.innerHTML = '';
 
     blockRows.forEach((row) => {
       const columns = Array.from(row.children);
@@ -165,16 +165,21 @@ export default function decorate($block) {
         const contentContainer = columns[1];
 
         if (parameter === 'accessibility') {
-          buildReduceMotionSwitch($block, contentContainer);
+          buildReduceMotionSwitch(block, contentContainer);
         }
 
         if (parameter === 'toggle') {
-          decorateToggleButtons($block, contentContainer);
+          decorateToggleButtons(block, contentContainer);
         }
 
         if (parameter === 'quick actions') {
-          decorateQuickActions($block, contentContainer);
+          decorateQuickActions(block, contentContainer);
         }
+
+        const shadowDiv = createTag('div', { class: 'card-shadow' });
+        const shadow = createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+        shadowDiv.append(shadow);
+        block.append(shadowDiv);
       }
     });
   }
