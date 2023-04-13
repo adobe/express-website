@@ -489,6 +489,66 @@ loadScript(martechURL, () => {
     }
   }
 
+  // Frictionless Quick Actions tracking events
+
+  function sendEventToAdobeAnaltics(eventName) {
+    if (useAlloy) {
+      _satellite.track('event', {
+        xdm: {},
+        data: {
+          eventType: 'web.webinteraction.linkClicks',
+          web: {
+            webInteraction: {
+              name: eventName,
+              linkClicks: {
+                value: 1,
+              },
+              type: 'other',
+            },
+          },
+          _adobe_corpnew: {
+            digitalData: {
+              primaryEvent: {
+                eventInfo: {
+                  eventName,
+                },
+              },
+              spark: {
+                eventData: {
+                  eventName,
+                  sendTimestamp: new Date().getTime(),
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
+  const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
+  if (cclQuickAction.length) {
+    let frictionLessQuctionActionsTrackingEnabled = false;
+    sendEventToAdobeAnaltics('quickAction:uploadPageViewed_frqa');
+    cclQuickAction[0].addEventListener('ccl-quick-action-complete', () => {
+      if (frictionLessQuctionActionsTrackingEnabled) {
+        return;
+      }
+      const $links = d.querySelectorAll('ccl-quick-action a');
+      // for tracking all of the links
+      $links.forEach(($a) => {
+        $a.addEventListener('click', () => {
+          trackButtonClick($a);
+        });
+      });
+      frictionLessQuctionActionsTrackingEnabled = true;
+    });
+  }
+  d.addEventListener('click', (e) => {
+    if (e.target.id === 'mock-file-input') {
+      sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto_frqa');
+    }
+  });
+
   function textToName(text) {
     const splits = text.toLowerCase().split(' ');
     const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
@@ -628,6 +688,13 @@ loadScript(martechURL, () => {
     } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?express-apps\/animate-from-audio/g))) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
+      // Frictionless Quick Actions clicks
+    } else if ($a.closest('ccl-quick-action') && ($a.getAttribute('data-action') === 'Download')) {
+      adobeEventName = 'quickAction:downloadPressed_frqa';
+      sparkEventName = 'quickAction:downloadPressed_frqa';
+    } else if ($a.closest('ccl-quick-action') && ($a.getAttribute('data-action') === 'Editor')) {
+      adobeEventName = 'quickAction:openInEditorPressed_frqa';
+      sparkEventName = 'quickAction:openInEditorPressed_frqa';
     // ToC clicks
     } else if ($a.closest('.toc-container')) {
       if ($a.classList.contains('toc-toggle')) {
