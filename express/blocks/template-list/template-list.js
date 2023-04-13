@@ -20,6 +20,7 @@ import {
   fetchPlaceholders,
   fetchRelevantRows,
   getIconElement,
+  getLanguage,
   getLocale,
   getLottie,
   getMetadata,
@@ -155,6 +156,7 @@ function fetchTemplatesByTasks(tasks) {
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
   const currentTask = props.filters.tasks;
+  const lang = getLanguage(getLocale(window.location));
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
@@ -163,7 +165,7 @@ async function appendCategoryTemplatesCount($section) {
       const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
-      countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
+      countSpan.textContent = `(${json._embedded.total.toLocaleString(lang)})`;
       anchor.append(countSpan);
     }
   }
