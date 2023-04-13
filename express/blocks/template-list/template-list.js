@@ -1174,7 +1174,7 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
 
 async function redrawTemplates($block, $toolBar) {
   const $heading = $toolBar.querySelector('h2');
-  const lang = getLanguage(getLocale(window.location))
+  const lang = getLanguage(getLocale(window.location));
   const currentTotal = props.total.toLocaleString(lang);
   props.templates = [props.templates[0]];
   props.start = '';
