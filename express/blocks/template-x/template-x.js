@@ -19,7 +19,7 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-export default async function decorate(block) {
+function constructProps(block) {
   const props = {
     templates: [],
     filters: {
@@ -37,5 +37,14 @@ export default async function decorate(block) {
     viewAllLink: null,
   };
 
-  constructProps();
+  block.children.forEach((row) => {
+    console.log(row);
+  });
+
+  return props;
+}
+
+export default async function decorate(block) {
+  const props = constructProps(block);
+  console.log(props);
 }
