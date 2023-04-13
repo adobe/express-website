@@ -95,13 +95,25 @@ function initRotation(window, document) {
 export default function decorate(block) {
   const window = block.ownerDocument.defaultView;
   const document = block.ownerDocument;
+  const image = block.classList.contains('image');
 
   // move first image of container outside of div for styling
   const section = block.closest('.section');
-  const picture = section.querySelector('picture');
-  const parent = picture.parentElement;
+  const howto = block;
+  const rows = Array.from(howto.children);
+  let picture;
+  if (image) {
+    const backgroundPictureDiv = rows.shift();
+    picture = backgroundPictureDiv.querySelector('picture');
+    const templateDiv = rows.shift();
+    // TODO add images from here to background Picture
+    templateDiv.remove();
+  } else {
+    picture = section.querySelector('picture');
+    const parent = picture.parentElement;
+    parent.remove();
+  }
   section.prepend(picture);
-  parent.remove();
 
   // join wrappers together
   section.querySelectorAll('.default-content-wrapper').forEach((wrapper, i) => {
@@ -117,9 +129,6 @@ export default function decorate(block) {
       wrapper.remove();
     }
   });
-
-  const howto = block;
-  const rows = Array.from(howto.children);
 
   const heading = section.querySelector('h2, h3, h4');
 
