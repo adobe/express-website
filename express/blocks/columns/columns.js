@@ -188,6 +188,7 @@ export default function decorate($block) {
             linkImage($cell);
           }
         }
+        $a.href = '';
       }
       if ($a && $a.classList.contains('button')) {
         if ($block.className.includes('fullsize')) {
