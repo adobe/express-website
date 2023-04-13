@@ -19,8 +19,15 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
+function camelize(str) {
+  return str.replace(/^\w|[A-Z]|\b\w/g, function(word, index) {
+    return index === 0 ? word.toLowerCase() : word.toUpperCase();
+  }).replace(/\s+/g, '');
+}
+
 function constructProps(block) {
-  const props = {
+  const singleColumnContentTypes = ['title', 'subtitle'];
+  let props = {
     templates: [],
     filters: {
       locales: '(en)',
@@ -29,7 +36,7 @@ function constructProps(block) {
     limit: 70,
     total: 0,
     start: '',
-    sort: '-_score,-remixCount',
+    sortBy: '-_score,-remixCount',
     masonry: undefined,
     authoringError: false,
     headingTitle: null,
@@ -37,8 +44,45 @@ function constructProps(block) {
     viewAllLink: null,
   };
 
-  block.children.forEach((row) => {
-    console.log(row);
+  Array.from(block.children).forEach((row) => {
+    const cols = row.querySelectorAll('div');
+    if (cols.length === 1) {
+      const paragraphs = cols[0].querySelectorAll('p');
+      singleColumnContentTypes.forEach((key, index) => {
+        if (paragraphs[index]) {
+          props[key] = paragraphs[index].textContent.trim();
+        }
+      });
+    } else if (cols.length === 2) {
+      const key = cols[0].querySelector('strong')?.textContent.trim();
+      const value = cols[1].textContent.trim().toLowerCase();
+      if (value) {
+        props[camelize(key)] = value;
+      }
+    } else if (cols.length === 3) {
+      const key = cols[0].querySelector('strong')?.textContent.trim();
+
+      if (key === 'Template Stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
+      }
+
+      if (key === 'Holiday Block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        const graphic = cols[2].querySelector('picture');
+        if (graphic) {
+          props[camelize(key)] = graphic;
+        }
+      }
+
+      if (key === 'Blank Template') {
+        const text = cols[1].querySelector('a')?.textContent.trim();
+        const url = cols[1].querySelector('a')?.href;
+        const graphic = cols[2].querySelector('svg');
+
+        if (text && url && graphic) {
+          props[camelize(key)] = { text, url, graphic };
+        }
+      }
+    }
   });
 
   return props;
@@ -46,5 +90,5 @@ function constructProps(block) {
 
 export default async function decorate(block) {
   const props = constructProps(block);
-  console.log(props);
+  block.innerHTML = '';
 }
