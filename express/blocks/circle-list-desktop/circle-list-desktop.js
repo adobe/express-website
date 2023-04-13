@@ -41,8 +41,15 @@ const extractContent = async (block) => {
   const imageData = await fetchCircleImages(imagesLink);
 
   gradateColorfulText(title);
+  const highlightText = subTitle.querySelector('em');
   subTitle.classList.add('subtitle');
   const circleRows = Array.from(block.children).slice(1, -1);
+
+  if (highlightText) {
+    const span = createTag('span', { class: 'highlight-text' });
+    span.textContent = highlightText.textContent;
+    highlightText.replaceWith(span);
+  }
 
   circleRows.forEach((row) => {
     const circleObject = {};
@@ -211,46 +218,64 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
   imageWrapper.addEventListener('mousemove', shuffle);
 };
 
+const hideCircles = () => {
+  const circles = document.querySelectorAll('.block.circle-list-desktop .circles-container > a');
+  if (window.innerWidth < 1310) {
+    circles[6].classList.add('hide');
+  } else {
+    circles[6].classList.remove('hide');
+  }
+  if (window.innerWidth < 1130) {
+    circles[5].classList.add('hide');
+  } else {
+    circles[5].classList.remove('hide');
+  }
+  if (window.innerWidth < 950) {
+    circles[4].classList.add('hide');
+  } else {
+    circles[4].classList.remove('hide');
+  }
+};
+
 export default async function decorate(block) {
   const circleList = await extractContent(block);
   buildCircleList(block, circleList);
   const circleWrappers = block.querySelectorAll('.circles-container > a');
 
-  circleWrappers.forEach((wrapper) => {
-    const imageWrapper = wrapper.querySelector('.img-wrapper');
-    const dropDown = wrapper.querySelector('.dropdown');
+  circleWrappers.forEach((circleWrapper) => {
+    const imageWrapper = circleWrapper.querySelector('.img-wrapper');
+    const dropDown = circleWrapper.querySelector('.dropdown');
     if (imageWrapper) {
-      initDoorHandle(imageWrapper, dropDown, wrapper);
-      initImageShuffling(wrapper, imageWrapper, block);
+      initDoorHandle(imageWrapper, dropDown, circleWrapper);
+      initImageShuffling(circleWrapper, imageWrapper, block);
       initResetHeroImage(imageWrapper);
-      initResetDoorHandle(wrapper, dropDown);
+      initResetDoorHandle(circleWrapper, dropDown);
     }
   });
 
-  // Pauses lottie and disables shuffling of images
   const lottiePlayer = block.querySelector('lottie-player');
   const reducedMotion = preferenceStore.get(preferenceNames.reduceMotion.name);
 
+  // Pauses lottie and disables shuffling of images
   const toggleAnimationState = (reduceMotion) => {
-    const lottiePlaying = setInterval(() => {
-      if (lottiePlayer.hasUpdated) {
-        if (reduceMotion === true) {
-          block.classList.add('no-animation');
-          setTimeout(() => {
-            lottiePlayer.setSpeed(0);
-            lottiePlayer.seek(200);
-          }, 100);
-        } else {
-          block.classList.remove('no-animation');
-          lottiePlayer.setSpeed(1);
-        }
-        clearInterval(lottiePlaying);
-      }
-    }, 100);
+    if (reduceMotion === true) {
+      block.classList.add('no-animation');
+      lottiePlayer.setSpeed(0);
+      lottiePlayer.seek(200);
+    } else {
+      block.classList.remove('no-animation');
+      lottiePlayer.setSpeed(1);
+    }
   };
 
-  toggleAnimationState(reducedMotion);
+  lottiePlayer.addEventListener('ready', () => {
+    toggleAnimationState(reducedMotion);
+  });
+
   preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
     toggleAnimationState(value);
   });
+
+  hideCircles();
+  window.addEventListener('resize', hideCircles);
 }
