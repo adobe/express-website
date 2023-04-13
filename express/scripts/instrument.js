@@ -533,6 +533,7 @@ loadScript(martechURL, () => {
       if (frictionLessQuctionActionsTrackingEnabled) {
         return;
       }
+      sendEventToAdobeAnaltics('quickAction:assetUploaded_frqa');
       const $links = d.querySelectorAll('ccl-quick-action a');
       // for tracking all of the links
       $links.forEach(($a) => {
