@@ -72,6 +72,7 @@ function trimFormattedFilterText(attr, capitalize) {
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
   const placeholders = await fetchPlaceholders();
+  const lang = getLanguage(getLocale(window.location));
   let grammarTemplate;
 
   if (getMetadata('template-search-page') === 'Y') {
@@ -82,7 +83,7 @@ async function populateHeadingPlaceholder(locale) {
 
   if (grammarTemplate) {
     grammarTemplate = grammarTemplate
-      .replace('{{quantity}}', props.total.toLocaleString('en-US'))
+      .replace('{{quantity}}', props.total.toLocaleString(lang))
       .replace('{{Type}}', heading)
       .replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
 
@@ -836,6 +837,7 @@ function decorateCategoryList($block, $section, placeholders) {
   });
 
   if (params.tasks) {
+    const locale = getLocale(window.location);
     const $blockWrapper = $block.closest('.template-list-wrapper');
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
@@ -870,9 +872,10 @@ function decorateCategoryList($block, $section, placeholders) {
       }
 
       const iconElement = getIconElement(icon);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
       const $a = createTag('a', {
         'data-tasks': targetTasks,
-        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
       });
       [$a.textContent] = category;
 
@@ -1171,7 +1174,8 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
 
 async function redrawTemplates($block, $toolBar) {
   const $heading = $toolBar.querySelector('h2');
-  const currentTotal = props.total.toLocaleString('en-US');
+  const lang = getLanguage(getLocale(window.location))
+  const currentTotal = props.total.toLocaleString(lang);
   props.templates = [props.templates[0]];
   props.start = '';
   $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
@@ -1179,7 +1183,7 @@ async function redrawTemplates($block, $toolBar) {
   });
 
   await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
-    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString(lang));
     updateOptionsStatus($block, $toolBar);
     if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
