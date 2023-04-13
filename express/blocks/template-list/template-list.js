@@ -78,20 +78,23 @@ async function populateHeadingPlaceholder(locale) {
   } else {
     grammarTemplate = placeholders['template-placeholder'];
   }
-  grammarTemplate = grammarTemplate
-    .replace('{{quantity}}', props.total.toLocaleString('en-US'))
-    .replace('{{Type}}', heading)
-    .replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
 
-  if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
+  if (grammarTemplate) {
+    grammarTemplate = grammarTemplate
+      .replace('{{quantity}}', props.total.toLocaleString('en-US'))
+      .replace('{{Type}}', heading)
+      .replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
+
+    if (locale === 'fr') {
+      grammarTemplate.split(' ').forEach((word, index, words) => {
+        if (index + 1 < words.length) {
+          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            grammarTemplate = words.join(' ');
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   return grammarTemplate;
@@ -1527,7 +1530,7 @@ export async function decorateTemplateList($block) {
           } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale) || '';
           }
         }
 
