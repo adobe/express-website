@@ -218,19 +218,38 @@ const initImageShuffling = (wrapper, imageWrapper, block) => {
   imageWrapper.addEventListener('mousemove', shuffle);
 };
 
+const hideCircles = () => {
+  const circles = document.querySelectorAll('.block.circle-list-desktop .circles-container > a');
+  if (window.innerWidth < 1310) {
+    circles[6].classList.add('hide');
+  } else {
+    circles[6].classList.remove('hide');
+  }
+  if (window.innerWidth < 1130) {
+    circles[5].classList.add('hide');
+  } else {
+    circles[5].classList.remove('hide');
+  }
+  if (window.innerWidth < 950) {
+    circles[4].classList.add('hide');
+  } else {
+    circles[4].classList.remove('hide');
+  }
+};
+
 export default async function decorate(block) {
   const circleList = await extractContent(block);
   buildCircleList(block, circleList);
   const circleWrappers = block.querySelectorAll('.circles-container > a');
 
-  circleWrappers.forEach((wrapper) => {
-    const imageWrapper = wrapper.querySelector('.img-wrapper');
-    const dropDown = wrapper.querySelector('.dropdown');
+  circleWrappers.forEach((circleWrapper) => {
+    const imageWrapper = circleWrapper.querySelector('.img-wrapper');
+    const dropDown = circleWrapper.querySelector('.dropdown');
     if (imageWrapper) {
-      initDoorHandle(imageWrapper, dropDown, wrapper);
-      initImageShuffling(wrapper, imageWrapper, block);
+      initDoorHandle(imageWrapper, dropDown, circleWrapper);
+      initImageShuffling(circleWrapper, imageWrapper, block);
       initResetHeroImage(imageWrapper);
-      initResetDoorHandle(wrapper, dropDown);
+      initResetDoorHandle(circleWrapper, dropDown);
     }
   });
 
@@ -256,4 +275,7 @@ export default async function decorate(block) {
   preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
     toggleAnimationState(value);
   });
+
+  hideCircles();
+  window.addEventListener('resize', hideCircles);
 }

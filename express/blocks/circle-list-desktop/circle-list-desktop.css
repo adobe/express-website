@@ -107,6 +107,10 @@ main .circle-list-desktop a {
   font-weight: 400  ;
 }
 
+main .circle-list-desktop a.hide {
+  display: none;
+}
+
 main .circle-list-desktop .dropdown {
   position: absolute;
   display: initial;
