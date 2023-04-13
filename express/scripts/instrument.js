@@ -489,67 +489,6 @@ loadScript(martechURL, () => {
     }
   }
 
-  // Frictionless Quick Actions tracking events
-
-  function sendEventToAdobeAnaltics(eventName) {
-    if (useAlloy) {
-      _satellite.track('event', {
-        xdm: {},
-        data: {
-          eventType: 'web.webinteraction.linkClicks',
-          web: {
-            webInteraction: {
-              name: eventName,
-              linkClicks: {
-                value: 1,
-              },
-              type: 'other',
-            },
-          },
-          _adobe_corpnew: {
-            digitalData: {
-              primaryEvent: {
-                eventInfo: {
-                  eventName,
-                },
-              },
-              spark: {
-                eventData: {
-                  eventName,
-                  sendTimestamp: new Date().getTime(),
-                },
-              },
-            },
-          },
-        },
-      });
-    }
-  }
-  const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
-  if (cclQuickAction.length) {
-    let frictionLessQuctionActionsTrackingEnabled = false;
-    sendEventToAdobeAnaltics('quickAction:uploadPageViewed_frqa');
-    cclQuickAction[0].addEventListener('ccl-quick-action-complete', () => {
-      if (frictionLessQuctionActionsTrackingEnabled) {
-        return;
-      }
-      sendEventToAdobeAnaltics('quickAction:assetUploaded_frqa');
-      const $links = d.querySelectorAll('ccl-quick-action a');
-      // for tracking all of the links
-      $links.forEach(($a) => {
-        $a.addEventListener('click', () => {
-          trackButtonClick($a);
-        });
-      });
-      frictionLessQuctionActionsTrackingEnabled = true;
-    });
-  }
-  d.addEventListener('click', (e) => {
-    if (e.target.id === 'mock-file-input') {
-      sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto_frqa');
-    }
-  });
-
   function textToName(text) {
     const splits = text.toLowerCase().split(' ');
     const camelCase = splits.map((s, i) => (i ? s.charAt(0).toUpperCase() + s.substr(1) : s)).join('');
@@ -812,6 +751,67 @@ loadScript(martechURL, () => {
       digitalData._delete('spark.eventData.eventName');
     }
   }
+
+  // Frictionless Quick Actions tracking events
+
+  function sendEventToAdobeAnaltics(eventName) {
+    if (useAlloy) {
+      _satellite.track('event', {
+        xdm: {},
+        data: {
+          eventType: 'web.webinteraction.linkClicks',
+          web: {
+            webInteraction: {
+              name: eventName,
+              linkClicks: {
+                value: 1,
+              },
+              type: 'other',
+            },
+          },
+          _adobe_corpnew: {
+            digitalData: {
+              primaryEvent: {
+                eventInfo: {
+                  eventName,
+                },
+              },
+              spark: {
+                eventData: {
+                  eventName,
+                  sendTimestamp: new Date().getTime(),
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
+  const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
+  if (cclQuickAction.length) {
+    let frictionLessQuctionActionsTrackingEnabled = false;
+    sendEventToAdobeAnaltics('quickAction:uploadPageViewed_frqa');
+    cclQuickAction[0].addEventListener('ccl-quick-action-complete', () => {
+      if (frictionLessQuctionActionsTrackingEnabled) {
+        return;
+      }
+      sendEventToAdobeAnaltics('quickAction:assetUploaded_frqa');
+      const $links = d.querySelectorAll('ccl-quick-action a');
+      // for tracking all of the links
+      $links.forEach(($a) => {
+        $a.addEventListener('click', () => {
+          trackButtonClick($a);
+        });
+      });
+      frictionLessQuctionActionsTrackingEnabled = true;
+    });
+  }
+  d.addEventListener('click', (e) => {
+    if (e.target.id === 'mock-file-input') {
+      sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto_frqa');
+    }
+  });
 
   function trackVideoAnalytics($video, parameters) {
     const {
