@@ -77,18 +77,10 @@ async function populateHeadingPlaceholder(locale) {
   } else {
     grammarTemplate = placeholders['template-placeholder'];
   }
-
-  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
-  }
-
-  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
-  }
-
-  if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
-  }
+  grammarTemplate = grammarTemplate
+    .replace('{{quantity}}', props.total.toLocaleString('en-US'))
+    .replace('{{Type}}', heading)
+    .replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
 
   if (locale === 'fr') {
     grammarTemplate.split(' ').forEach((word, index, words) => {
