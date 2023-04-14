@@ -618,6 +618,7 @@ async function buildTemplateList(block, props, type) {
 function determineTemplateXType(props) {
   console.log(props);
   return 'fullwidth';
+  //todo: build layers of aspects based on props conditions - i.e. orientation -> style -> usecase
 }
 
 export default async function decorate(block) {
