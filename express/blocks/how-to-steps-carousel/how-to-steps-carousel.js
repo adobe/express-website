@@ -287,7 +287,7 @@ export default async function decorate(block) {
     });
     Promise.all([mobilePromise]).then(() => {
       img.src = canvas.toDataURL('image/jpeg');
-      //templateDiv.remove();
+      templateDiv.remove();
       backgroundPictureDiv.remove();
       const mergedPicture = createTag('picture');
       mergedPicture.append(img);
