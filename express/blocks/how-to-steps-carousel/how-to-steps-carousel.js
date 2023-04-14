@@ -92,27 +92,7 @@ function initRotation(window, document) {
   }
 }
 
-export default function decorate(block) {
-  const window = block.ownerDocument.defaultView;
-  const document = block.ownerDocument;
-  const image = block.classList.contains('image');
-
-  // move first image of container outside of div for styling
-  const section = block.closest('.section');
-  const howto = block;
-  const rows = Array.from(howto.children);
-  let picture;
-  if (image) {
-    const backgroundPictureDiv = rows.shift();
-    picture = backgroundPictureDiv.querySelector('picture');
-    const templateDiv = rows.shift();
-    // TODO add images from here to background Picture
-    templateDiv.remove();
-  } else {
-    picture = section.querySelector('picture');
-    const parent = picture.parentElement;
-    parent.remove();
-  }
+function fillBlock(section, picture, block, document, rows, window) {
   section.prepend(picture);
 
   // join wrappers together
@@ -145,9 +125,9 @@ export default function decorate(block) {
     step: [],
   };
 
-  const numbers = createTag('div', { class: 'tip-numbers', 'aria-role': 'tablist' });
+  const numbers = createTag('div', {class: 'tip-numbers', 'aria-role': 'tablist'});
   block.prepend(numbers);
-  const tips = createTag('div', { class: 'tips' });
+  const tips = createTag('div', {class: 'tips'});
   block.append(tips);
 
   rows.forEach((row, i) => {
@@ -159,7 +139,7 @@ export default function decorate(block) {
 
     const h3 = createTag('h3');
     h3.innerHTML = cells[0].textContent.trim();
-    const text = createTag('div', { class: 'tip-text' });
+    const text = createTag('div', {class: 'tip-text'});
     text.append(h3);
     text.append(cells[1]);
 
@@ -192,7 +172,7 @@ export default function decorate(block) {
         window.clearTimeout(rotationInterval);
       }
 
-      let { target } = e;
+      let {target} = e;
       if (e.target.nodeName.toLowerCase() === 'span') {
         target = e.target.parentElement;
       }
@@ -215,7 +195,7 @@ export default function decorate(block) {
   });
 
   if (includeSchema) {
-    const $schema = createTag('script', { type: 'application/ld+json' });
+    const $schema = createTag('script', {type: 'application/ld+json'});
     $schema.innerHTML = JSON.stringify(schema);
     const $head = document.head;
     $head.append($schema);
@@ -243,5 +223,81 @@ export default function decorate(block) {
     img.addEventListener('error', run);
   } else {
     run();
+  }
+}
+
+function handleTemplateLoad(canvas, ctx, templateImg) {
+  templateImg.style.maxWidth = '552px';
+  templateImg.style.maxHeight = '363px';
+  templateImg.style.objectFit = 'contain';
+  // start and end areas were directly measured and transferred from the spec image
+  const startAreaX = 356;
+  const endAreaX = 914;
+  const startAreaY = 161;
+  const endAreaY = 535;
+  const centerX = (endAreaX - startAreaX) / 2 + startAreaX;
+  const centerY = (endAreaY - startAreaY) / 2 + startAreaY;
+  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
+  templateImg.style.maxWidth = '173px';
+  templateImg.style.maxHeight = '262px';
+  const x = canvas.width / 2;
+  const y = canvas.height / 2;
+  const angleInRadians = 0.0567232; // 3.25 degrees;
+  ctx.translate(x, y);
+  ctx.rotate(angleInRadians);
+  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, 380, -190, templateImg.width, templateImg.height);
+  ctx.rotate(-angleInRadians);
+  ctx.translate(-x, -y);
+}
+
+export default async function decorate(block) {
+  const window = block.ownerDocument.defaultView;
+  const document = block.ownerDocument;
+  const image = block.classList.contains('image');
+
+  // move first image of container outside of div for styling
+  const section = block.closest('.section');
+  const howto = block;
+  const rows = Array.from(howto.children);
+  let picture;
+  if (image) {
+    const backgroundPictureDiv = rows.shift();
+    const backgroundPic = backgroundPictureDiv.querySelector('picture');
+    const backgroundPicImg = backgroundPic.querySelector('img');
+    backgroundPicImg.width = 1140;
+    backgroundPicImg.height = 620;
+    const templateDiv = rows.shift();
+    const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
+    const ctx = canvas.getContext('2d');
+    const templateImages = templateDiv.querySelectorAll('picture');
+    ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
+    const templateImg = templateImages[0].querySelector('img');
+    const img = createTag('img');
+
+    const mobilePromise = new Promise((resolve) => {
+      if (templateImg.complete && templateImg.naturalHeight !== 0) {
+        handleTemplateLoad(canvas, ctx, templateImg);
+        resolve();
+      } else {
+        templateImg.onload = () => {
+          handleTemplateLoad(canvas, ctx, templateImg);
+          resolve();
+        };
+      }
+    });
+    Promise.all([mobilePromise]).then(() => {
+      img.src = canvas.toDataURL('image/jpeg');
+      //templateDiv.remove();
+      backgroundPictureDiv.remove();
+      const mergedPicture = createTag('picture');
+      mergedPicture.append(img);
+      picture = mergedPicture;
+      fillBlock(section, picture, block, document, rows, window);
+    });
+  } else {
+    picture = section.querySelector('picture');
+    const parent = picture.parentElement;
+    parent.remove();
+    fillBlock(section, picture, block, document, rows, window);
   }
 }
