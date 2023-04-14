@@ -58,6 +58,8 @@ main .block.intent-toggle-desktop .reduce-motion-switch-container .reduce-motion
     left: 0;
     right: 0;
     bottom: 0;
+    width: 28px;
+    height: 16px;
     background-color: var(--color-gray-400);
     -webkit-transition: .2s;
     transition: .2s;
