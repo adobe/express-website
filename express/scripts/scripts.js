@@ -10,10 +10,13 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-console */
-
 window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
 window.RUM_HIGH_SAMPLE_RATE = 50;
+
+const TK_IDS = {
+  jp: 'dvg6awq',
+};
 
 /**
  * log RUM if part of the sample.
@@ -1571,6 +1574,15 @@ async function decorateTesting() {
             OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
           };
           window.ttMETA.push(experimentDetails);
+          // add hlx experiment details as dynamic variables
+          // for Content Square integration
+          // eslint-disable-next-line no-underscore-dangle
+          if (window._uxa) {
+            for (const propName of Object.keys(experimentDetails)) {
+              // eslint-disable-next-line no-underscore-dangle
+              window._uxa.push(['trackDynamicVariable', { key: propName, value: experimentDetails[propName] }]);
+            }
+          }
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
@@ -2291,13 +2303,20 @@ function decorateLegalCopy(main) {
  */
 async function loadEager() {
   setTheme();
+  const main = document.querySelector('main');
+  if (main) {
+    const language = getLanguage(getLocale(window.location));
+    const langSplits = language.split('-');
+    langSplits.pop();
+    const htmlLang = langSplits.join('-');
+    document.documentElement.setAttribute('lang', htmlLang);
+  }
   if (!window.hlx.lighthouse) await decorateTesting();
 
   if (window.location.href.includes('/express/templates/')) {
     await import('./templates.js');
   }
 
-  const main = document.querySelector('main');
   if (main) {
     await decorateMain(main);
     decorateHeaderAndFooter();
@@ -2455,7 +2474,11 @@ async function loadLazy() {
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
-
+  const tkID = TK_IDS[getLocale(window.location)];
+  if (tkID) {
+    const { default: loadFonts } = await import('./fonts.js');
+    loadFonts(tkID, loadCSS);
+  }
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
