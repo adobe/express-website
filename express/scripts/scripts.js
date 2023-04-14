@@ -1825,9 +1825,7 @@ async function buildAutoBlocks($main) {
 
         desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
         mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
-      }
 
-      if (floatingCTAData) {
         [desktopButton, mobileButton].forEach((button) => {
           button.classList.add('spreadsheet-powered');
           if ($lastDiv) {
