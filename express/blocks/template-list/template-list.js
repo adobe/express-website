@@ -73,6 +73,7 @@ async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
   const placeholders = await fetchPlaceholders();
   const lang = getLanguage(getLocale(window.location));
+  const wordTemplate = props.total <= 1 ? placeholders['template-word-singular'] : placeholders['template-word-plural'];
   let grammarTemplate;
 
   if (getMetadata('template-search-page') === 'Y') {
@@ -81,9 +82,10 @@ async function populateHeadingPlaceholder(locale) {
     grammarTemplate = placeholders['template-placeholder'];
   }
 
-  if (grammarTemplate) {
+  if (grammarTemplate && wordTemplate) {
     grammarTemplate = grammarTemplate
       .replace('{{quantity}}', props.total.toLocaleString(lang))
+      .replace('{{template}}', wordTemplate)
       .replace('{{Type}}', heading)
       .replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
 
