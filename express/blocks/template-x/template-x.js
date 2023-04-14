@@ -27,7 +27,7 @@ function camelize(str) {
 
 function constructProps(block) {
   const singleColumnContentTypes = ['title', 'subtitle'];
-  let props = {
+  const props = {
     templates: [],
     filters: {
       locales: '(en)',
