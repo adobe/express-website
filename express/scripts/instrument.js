@@ -699,8 +699,14 @@ loadScript(martechURL, () => {
     let assetPath;
     const asset = $a.querySelector('video,img');
     if (asset) {
-      assetId = asset.currentSrc || asset.src;
-      assetPath = new URL(asset.currentSrc || asset.src).pathname;
+      const assetSource = asset.currentSrc || asset.src;
+      const matches = assetSource.match(/cdn\.cp\.adobe\.io.*\/rendition\/([0-9a-f-]+)|\/(media_[0-9a-f]+)/);
+      assetPath = new URL(assetSource).pathname;
+      if (matches) {
+        assetId = matches[1] || matches[2];
+      } else {
+        assetId = assetPath;
+      }
     }
 
     if (useAlloy) {
