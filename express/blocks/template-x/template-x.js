@@ -49,7 +49,6 @@ function constructProps(block) {
     start: '',
     sortBy: '-_score,-remixCount',
     masonry: undefined,
-    authoringError: false,
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
@@ -96,210 +95,7 @@ function constructProps(block) {
   return props;
 }
 
-function formatSearchQuery(props) {
-  const prunedFilter = Object.entries(props.filters).filter(([, value]) => value !== '()');
-  const filterString = prunedFilter.reduce((string, [key, value]) => {
-    if (key === prunedFilter[prunedFilter.length - 1][0]) {
-      return `${string}${key}:(${value})`;
-    } else {
-      return `${string}${key}:(${value}) AND `;
-    }
-  }, '');
-
-  return `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sortBy}&filters=${filterString}`;
-}
-
-async function fetchTemplates(props) {
-  if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    props.queryString = formatSearchQuery(props);
-
-    const result = await fetch(props.queryString)
-      .then((response) => response.json())
-      .then((response) => response);
-
-    // eslint-disable-next-line no-underscore-dangle
-    if (result._embedded.total > 0) {
-      return result;
-    } else {
-      // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sortBy}&filters=locales:(en)`)
-        .then((res) => res.json())
-        .then((res) => res);
-    }
-  }
-
-  return null;
-}
-
-async function processApiResponse(props) {
-  const placeholders = await fetchPlaceholders();
-  const response = await fetchTemplates(props);
-  let templateFetched;
-  if (response) {
-    // eslint-disable-next-line no-underscore-dangle
-    templateFetched = response._embedded.results;
-
-    if ('_links' in response) {
-      // eslint-disable-next-line no-underscore-dangle
-      const nextQuery = response._links.next.href;
-      const starts = new URLSearchParams(nextQuery).get('start').split(',');
-      starts.pop();
-      props.start = starts.join(',');
-    } else {
-      props.start = '';
-    }
-
-    // eslint-disable-next-line no-underscore-dangle
-    props.total = response._embedded.total;
-  }
-
-  const renditionParams = {
-    format: 'jpg',
-    dimension: 'width',
-    size: 400,
-  };
-
-  if (templateFetched) {
-    return templateFetched.map((template) => {
-      const tmpltEl = createTag('div');
-      const picElWrapper = createTag('div');
-
-      ['format', 'dimension', 'size'].forEach((param) => {
-        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
-      });
-      const picEl = createTag('img', {
-        src: template.rendition.href,
-        alt: template.title,
-      });
-      const btnElWrapper = createTag('div', { class: 'button-container' });
-      const btnEl = createTag('a', {
-        href: template.branchURL,
-        title: placeholders['edit-this-template'] ?? 'Edit this template',
-        class: 'button accent',
-      });
-
-      btnEl.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
-      picElWrapper.insertAdjacentElement('beforeend', picEl);
-      btnElWrapper.insertAdjacentElement('beforeend', btnEl);
-      tmpltEl.insertAdjacentElement('beforeend', picElWrapper);
-      tmpltEl.insertAdjacentElement('beforeend', btnElWrapper);
-      return tmpltEl;
-    });
-  } else {
-    return null;
-  }
-}
-
-async function populateHeadingPlaceholder(props) {
-  const locale = getLocale(window.location);
-  const heading = props.title.replace("''", '');
-  const placeholders = await fetchPlaceholders();
-
-  let grammarTemplate = placeholders['template-placeholder'];
-
-  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
-  }
-
-  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
-  }
-
-  if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
-  }
-
-  if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
-        }
-      }
-    });
-  }
-
-  return grammarTemplate;
-}
-
-async function generateToolBar(block, props) {
-  const parent = block.closest('.section');
-  if (parent) {
-    const dcw = parent.querySelector('.default-content-wrapper');
-    const tmpltListWrapper = parent.querySelector('.template-x-wrapper');
-    const $sectionHeading = parent.querySelector('div > h2');
-    let $sectionSlug = null;
-
-    const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
-    const tBar = createTag('div', { class: 'api-templates-toolbar' });
-    const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
-    const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
-
-    if ($sectionHeading.textContent.trim()
-      .indexOf('{{heading_placeholder}}') >= 0) {
-      if (block.classList.contains('spreadsheet-powered') && props.headingTitle) {
-        $sectionHeading.textContent = props.headingTitle || '';
-
-        if (props.headingSlug) {
-          $sectionSlug = createTag('p');
-          $sectionSlug.textContent = props.headingSlug;
-        }
-      } else if (props.authoringError) {
-        $sectionHeading.textContent = props.heading;
-      } else {
-        $sectionHeading.textContent = await populateHeadingPlaceholder(props);
-      }
-    }
-
-    tmpltListWrapper.before(tBarWrapper);
-    tBarWrapper.append(dcw);
-    dcw.append(tBar);
-    tBar.append(contentWrapper, functionsWrapper);
-    contentWrapper.append($sectionHeading);
-
-    if ($sectionSlug) {
-      contentWrapper.append($sectionSlug);
-    }
-  }
-}
-
-async function fetchBlueprint(pathname) {
-  if (window.spark.bluePrint) {
-    return (window.spark.bluePrint);
-  }
-
-  const bpPath = pathname.substr(pathname.indexOf('/', 1))
-    .split('.')[0];
-  const resp = await fetch(`${bpPath}.plain.html`);
-  const body = await resp.text();
-  const $main = createTag('main');
-  $main.innerHTML = body;
-  await decorateMain($main);
-
-  window.spark.bluePrint = $main;
-  return ($main);
-}
-
-async function attachFreeInAppPills(block) {
-  const freeInAppText = await fetchPlaceholders().then((json) => json['free-in-app']);
-
-  const templateLinks = block.querySelectorAll('a.template');
-  for (const templateLink of templateLinks) {
-    if (!block.classList.contains('apipowered')
-      && templateLink.querySelectorAll('.icon-premium').length <= 0
-      && !templateLink.classList.contains('placeholder')
-      && !templateLink.querySelector('.icon-free-badge')
-      && freeInAppText) {
-      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
-      $freeInAppBadge.textContent = freeInAppText;
-      templateLink.querySelector('div').append($freeInAppBadge);
-    }
-  }
-}
-
-function populateTemplates(block, props) {
-  const templates = Array.from(block.children);
+function populateTemplates(block, props, templates) {
   for (let tmplt of templates) {
     const isPlaceholder = tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = tmplt.querySelector(':scope > div:nth-of-type(2)');
@@ -415,6 +211,258 @@ function populateTemplates(block, props) {
 
     if (isPlaceholder) {
       tmplt.classList.add('placeholder');
+    }
+  }
+}
+
+function updateLoadMoreButton(block, props, loadMore) {
+  if (props.start === '') {
+    loadMore.style.display = 'none';
+  } else {
+    loadMore.style.removeProperty('display');
+  }
+}
+
+function formatSearchQuery(props) {
+  const prunedFilter = Object.entries(props.filters).filter(([, value]) => value !== '()');
+  const filterString = prunedFilter.reduce((string, [key, value]) => {
+    if (key === prunedFilter[prunedFilter.length - 1][0]) {
+      return `${string}${key}:(${value})`;
+    } else {
+      return `${string}${key}:(${value}) AND `;
+    }
+  }, '');
+
+  return `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sortBy}&filters=${filterString}`;
+}
+
+async function fetchTemplates(props) {
+  props.queryString = formatSearchQuery(props);
+
+  const result = await fetch(props.queryString)
+    .then((response) => response.json())
+    .then((response) => response);
+
+  // eslint-disable-next-line no-underscore-dangle
+  if (result._embedded.total > 0) {
+    return result;
+  } else {
+    // save fetch if search query returned 0 templates. "Bad result is better than no result"
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sortBy}&filters=locales:(en)`)
+      .then((res) => res.json())
+      .then((res) => res);
+  }
+}
+
+async function processApiResponse(props) {
+  const placeholders = await fetchPlaceholders();
+  const response = await fetchTemplates(props);
+  let templateFetched;
+  if (response) {
+    // eslint-disable-next-line no-underscore-dangle
+    templateFetched = response._embedded.results;
+
+    if ('_links' in response) {
+      // eslint-disable-next-line no-underscore-dangle
+      const nextQuery = response._links.next.href;
+      const starts = new URLSearchParams(nextQuery).get('start').split(',');
+      starts.pop();
+      props.start = starts.join(',');
+    } else {
+      props.start = '';
+    }
+
+    // eslint-disable-next-line no-underscore-dangle
+    props.total = response._embedded.total;
+  }
+
+  const renditionParams = {
+    format: 'jpg',
+    dimension: 'width',
+    size: 400,
+  };
+
+  if (templateFetched) {
+    return templateFetched.map((template) => {
+      const tmpltEl = createTag('div');
+      const picElWrapper = createTag('div');
+
+      ['format', 'dimension', 'size'].forEach((param) => {
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+      });
+      const picEl = createTag('img', {
+        src: template.rendition.href,
+        alt: template.title,
+      });
+      const btnElWrapper = createTag('div', { class: 'button-container' });
+      const btnEl = createTag('a', {
+        href: template.branchURL,
+        title: placeholders['edit-this-template'] ?? 'Edit this template',
+        class: 'button accent',
+      });
+
+      btnEl.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
+      picElWrapper.insertAdjacentElement('beforeend', picEl);
+      btnElWrapper.insertAdjacentElement('beforeend', btnEl);
+      tmpltEl.insertAdjacentElement('beforeend', picElWrapper);
+      tmpltEl.insertAdjacentElement('beforeend', btnElWrapper);
+      return tmpltEl;
+    });
+  } else {
+    return null;
+  }
+}
+
+async function decorateNewTemplates(block, props, options = { reDrawMasonry: false }) {
+  const newTemplates = await processApiResponse(props);
+  const loadMore = block.parentElement.querySelector('.load-more');
+
+  props.templates = props.templates.concat(newTemplates);
+  populateTemplates(block, props, newTemplates);
+
+  const newCells = Array.from(block.querySelectorAll('.template:not(.appear)'));
+
+  if (options.reDrawMasonry) {
+    props.masonry.cells = [props.masonry.cells[0]].concat(newCells);
+  } else {
+    props.masonry.cells = props.masonry.cells.concat(newCells);
+  }
+  props.masonry.draw(newCells);
+
+  if (loadMore) {
+    updateLoadMoreButton(block, props, loadMore);
+  }
+}
+
+async function decorateLoadMoreButton(block, props) {
+  const placeholders = await fetchPlaceholders().then((result) => result);
+  const loadMoreDiv = createTag('div', { class: 'load-more' });
+  const loadMoreButton = createTag('button', { class: 'load-more-button' });
+  const loadMoreText = createTag('p', { class: 'load-more-text' });
+  loadMoreDiv.append(loadMoreButton, loadMoreText);
+  loadMoreText.textContent = placeholders['load-more'];
+  block.insertAdjacentElement('afterend', loadMoreDiv);
+  loadMoreButton.append(getIconElement('plus-icon'));
+
+  loadMoreButton.addEventListener('click', async () => {
+    loadMoreButton.classList.add('disabled');
+    const scrollPosition = window.scrollY;
+    await decorateNewTemplates(block, props);
+    window.scrollTo({
+      top: scrollPosition,
+      left: 0,
+      behavior: 'smooth',
+    });
+    loadMoreButton.classList.remove('disabled');
+  });
+
+  return loadMoreDiv;
+}
+
+async function populateHeadingPlaceholder(props) {
+  const locale = getLocale(window.location);
+  const heading = props.title.replace("''", '');
+  const placeholders = await fetchPlaceholders();
+
+  let grammarTemplate = placeholders['template-placeholder'];
+
+  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
+  }
+
+  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
+  }
+
+  if (grammarTemplate.indexOf('{{type}}') >= 0) {
+    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
+  }
+
+  if (locale === 'fr') {
+    grammarTemplate.split(' ').forEach((word, index, words) => {
+      if (index + 1 < words.length) {
+        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+          grammarTemplate = words.join(' ');
+        }
+      }
+    });
+  }
+
+  return grammarTemplate;
+}
+
+async function generateToolBar(block, props) {
+  const parent = block.closest('.section');
+  if (parent) {
+    const dcw = parent.querySelector('.default-content-wrapper');
+    const tmpltListWrapper = parent.querySelector('.template-x-wrapper');
+    const $sectionHeading = parent.querySelector('div > h2');
+    let $sectionSlug = null;
+
+    const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
+    const tBar = createTag('div', { class: 'api-templates-toolbar' });
+    const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
+    const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
+
+    if ($sectionHeading.textContent.trim()
+      .indexOf('{{heading_placeholder}}') >= 0) {
+      if (block.classList.contains('spreadsheet-powered') && props.headingTitle) {
+        $sectionHeading.textContent = props.headingTitle || '';
+
+        if (props.headingSlug) {
+          $sectionSlug = createTag('p');
+          $sectionSlug.textContent = props.headingSlug;
+        }
+      } else if (props.authoringError) {
+        $sectionHeading.textContent = props.heading;
+      } else {
+        $sectionHeading.textContent = await populateHeadingPlaceholder(props);
+      }
+    }
+
+    tmpltListWrapper.before(tBarWrapper);
+    tBarWrapper.append(dcw);
+    dcw.append(tBar);
+    tBar.append(contentWrapper, functionsWrapper);
+    contentWrapper.append($sectionHeading);
+
+    if ($sectionSlug) {
+      contentWrapper.append($sectionSlug);
+    }
+  }
+}
+
+async function fetchBlueprint(pathname) {
+  if (window.spark.bluePrint) {
+    return (window.spark.bluePrint);
+  }
+
+  const bpPath = pathname.substr(pathname.indexOf('/', 1))
+    .split('.')[0];
+  const resp = await fetch(`${bpPath}.plain.html`);
+  const body = await resp.text();
+  const $main = createTag('main');
+  $main.innerHTML = body;
+  await decorateMain($main);
+
+  window.spark.bluePrint = $main;
+  return ($main);
+}
+
+async function attachFreeInAppPills(block) {
+  const freeInAppText = await fetchPlaceholders().then((json) => json['free-in-app']);
+
+  const templateLinks = block.querySelectorAll('a.template');
+  for (const templateLink of templateLinks) {
+    if (!block.classList.contains('apipowered')
+      && templateLink.querySelectorAll('.icon-premium').length <= 0
+      && !templateLink.classList.contains('placeholder')
+      && !templateLink.querySelector('.icon-free-badge')
+      && freeInAppText) {
+      const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
+      $freeInAppBadge.textContent = freeInAppText;
+      templateLink.querySelector('div').append($freeInAppBadge);
     }
   }
 }
@@ -563,7 +611,7 @@ async function decorateTemplates(block, props) {
   //
   // make copy of children to avoid modifying list while looping
 
-  populateTemplates(block, props);
+  populateTemplates(block, props, templates);
   if (!block.classList.contains('horizontal')) {
     if (rows > 6 || block.classList.contains('sixcols') || block.classList.contains('fullwidth')) {
       /* flex masonry */
@@ -612,13 +660,18 @@ async function buildTemplateList(block, props, type) {
     buildCarousel(':scope > .template', block, false);
   } else {
     addAnimationToggle(block);
+    const loadMore = await decorateLoadMoreButton(block, props);
+    if (loadMore) {
+      updateLoadMoreButton(block, props, loadMore);
+    }
   }
 }
 
 function determineTemplateXType(props) {
+  // todo: build layers of aspects based on props conditions - i.e. orientation -> style -> usecase
+  const type = [];
   console.log(props);
   return 'fullwidth';
-  //todo: build layers of aspects based on props conditions - i.e. orientation -> style -> usecase
 }
 
 export default async function decorate(block) {
