@@ -120,15 +120,20 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"],img[
         viewAssetObserver.unobserve(el);
 
         // Get asset details
+        let assetId;
         let assetPath = el.href // the reference for an a/svg tag
           || el.currentSrc // the active source in a picture/video/audio element
           || el.src; // the source for an image/video/iframe
         assetPath = new URL(assetPath).pathname;
-        const match = assetPath.match(/media_([a-f0-9]+)\.\w+/);
-        const assetFilename = match ? match[0] : assetPath;
+        const matches = assetPath.match(/cdn\.cp\.adobe\.io.*\/rendition\/([0-9a-f-]+)|\/(media_[0-9a-f]+)/);
+        if (matches) {
+          assetId = matches[1] || matches[2];
+        } else {
+          assetId = assetPath;
+        }
         const details = {
           event: 'viewasset',
-          assetId: assetFilename,
+          assetId,
           assetPath,
         };
 
