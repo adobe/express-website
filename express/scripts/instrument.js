@@ -711,6 +711,7 @@ loadScript(martechURL, () => {
 
     if (useAlloy) {
       _satellite.track('event', {
+        documentUnloading: true,
         xdm: {},
         data: {
           eventType: 'web.webinteraction.linkClicks',
