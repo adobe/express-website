@@ -71,6 +71,8 @@ function trimFormattedFilterText(attr, capitalize) {
 
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
+  // special treatment for express/ root url
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
   const lang = getLanguage(getLocale(window.location));
   let grammarTemplate;
@@ -85,7 +87,7 @@ async function populateHeadingPlaceholder(locale) {
     grammarTemplate = grammarTemplate
       .replace('{{quantity}}', props.total.toLocaleString(lang))
       .replace('{{Type}}', heading)
-      .replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
+      .replace('{{type}}', camelHeading);
 
     if (locale === 'fr') {
       grammarTemplate.split(' ').forEach((word, index, words) => {
