@@ -797,6 +797,7 @@ loadScript(martechURL, () => {
         return;
       }
       sendEventToAdobeAnaltics('quickAction:assetUploaded_frqa');
+      sendEventToAdobeAnaltics('project:editorDisplayed_frqa');
       const $links = d.querySelectorAll('ccl-quick-action a');
       // for tracking all of the links
       $links.forEach(($a) => {
