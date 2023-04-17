@@ -510,7 +510,6 @@ loadScript(martechURL, () => {
   }
 
   function trackButtonClick($a) {
-    console.log('click tracked for ', $a);
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
     let sparkButtonId;
