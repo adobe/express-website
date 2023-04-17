@@ -239,7 +239,7 @@ export async function createFloatingButton($block, audience, data) {
   }
 
   document.dispatchEvent(new CustomEvent('floatingbuttonloaded', {
-    details: {
+    detail: {
       block: $floatButtonWrapper,
     },
   }));

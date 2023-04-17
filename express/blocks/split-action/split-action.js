@@ -25,8 +25,8 @@ function show(block) {
   }
 }
 
-function initCTAListener(block, href) {
-  const buttons = block.closest('main').querySelectorAll('.button');
+function initCTAListener(block, href, containedQuery = false) {
+  const buttons = containedQuery ? block.querySelectorAll('.button') : block.closest('main').querySelectorAll('.button');
 
   for (let i = 0; i < buttons.length; i += 1) {
     if (buttons[i].href === href && !buttons[i].classList.contains('no-event')) {
@@ -126,7 +126,7 @@ export default function decorate(block) {
     initCTAListener(block, hrefHolder);
 
     document.addEventListener('floatingbuttonloaded', (e) => {
-      initCTAListener(e.details.block, hrefHolder);
+      initCTAListener(e.detail.block, hrefHolder, true);
     });
 
     document.dispatchEvent(new Event('splitactionloaded'));
