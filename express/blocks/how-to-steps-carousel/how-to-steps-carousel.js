@@ -230,6 +230,7 @@ function handleTemplateLoad(canvas, ctx, templateImg) {
   templateImg.style.maxWidth = '552px';
   templateImg.style.maxHeight = '363px';
   templateImg.style.objectFit = 'contain';
+  templateImg.style.borderRadius = '7px';
   // start and end areas were directly measured and transferred from the spec image
   const startAreaX = 356;
   const endAreaX = 914;
@@ -240,12 +241,12 @@ function handleTemplateLoad(canvas, ctx, templateImg) {
   ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
   templateImg.style.maxWidth = '173px';
   templateImg.style.maxHeight = '262px';
-  const x = canvas.width / 2;
-  const y = canvas.height / 2;
+  const x = Math.floor(canvas.width / 2);
+  const y = Math.floor(canvas.height / 2);
   const angleInRadians = 0.0567232; // 3.25 degrees;
   ctx.translate(x, y);
   ctx.rotate(angleInRadians);
-  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, 380, -190, templateImg.width, templateImg.height);
+  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, x - 201, y - 420, templateImg.width, templateImg.height);
   ctx.rotate(-angleInRadians);
   ctx.translate(-x, -y);
 }
@@ -287,12 +288,12 @@ export default async function decorate(block) {
     });
     Promise.all([mobilePromise]).then(() => {
       img.src = canvas.toDataURL('image/jpeg');
-      //templateDiv.remove();
       backgroundPictureDiv.remove();
       const mergedPicture = createTag('picture');
       mergedPicture.append(img);
       picture = mergedPicture;
       fillBlock(section, picture, block, document, rows, window);
+      templateDiv.remove();
     });
   } else {
     picture = section.querySelector('picture');
