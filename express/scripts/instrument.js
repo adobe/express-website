@@ -1150,6 +1150,7 @@ loadScript(martechURL, () => {
         // track a new event
         if (useAlloy) {
           _satellite.track('event', {
+            xdm: {},
             data: {
               eventType: 'web.webinteraction.linkClicks',
               web: {
