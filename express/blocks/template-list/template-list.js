@@ -37,7 +37,7 @@ const props = {
   templates: [],
   filters: { locales: '(en)' },
   tailButton: '',
-  limit: 70,
+  limit: 10,
   total: 0,
   start: '',
   sort: '-_score,-remixCount',
@@ -112,14 +112,14 @@ function formatFilterString(filters) {
   if (premium === '(false)') {
     str += '&filters=licensingCategory==free';
   }
-  if (animated !== '()') {
+  if (animated && animated !== '()') {
     str += `&filters=animated==${animated}`;
   }
-  if (tasks !== '()') {
+  if (tasks && tasks !== '()') {
     str += `&filters=tasks==[${/\((.+)\)/.exec(tasks)[1]}]`;
   }
   // FIXME: check if q is for topics now
-  if (topics !== '()') {
+  if (topics && topics !== '()') {
     str += `&q=${/\((.+)\)/.exec(topics)[1]}`;
   }
   // if (locales !== '()') {
@@ -142,16 +142,17 @@ function formatFilterString(filters) {
 //   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 // }
 
-const buildSearchUrl = ({
-  limit, start = 0, sort, filters,
-}) => {
+const buildSearchUrl = ({ limit, start, filters }) => {
   // FIXME: orderBy fields are now different.
   // No more orderBy=-_score,-remixCount and only createDate, remixCount, and priority
   const base = 'https://spark-search.adobe.io/v3/content';
   const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
   const queryType = 'search';
   const filterStr = formatFilterString(filters);
-  return encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}&start=${start}${filterStr}`);
+  const startParam = start ? `&start=${start}` : '';
+  const uri = encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}${startParam}${filterStr}`);
+
+  return uri;
 };
 
 async function getContent(url) {
@@ -187,7 +188,7 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const tempQ = buildSearchUrl({ ...props });
+    const tempQ = buildSearchUrl(props);
 
     return getContent(tempQ);
   }
@@ -207,7 +208,7 @@ async function appendCategoryTemplatesCount($section) {
       const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
-      countSpan.textContent = `(${json._embedded.total.toLocaleString(lang)})`;
+      countSpan.textContent = `(${json.metadata.totalHits.toLocaleString(lang)}`;
       anchor.append(countSpan);
     }
   }
@@ -231,7 +232,6 @@ async function processResponse() {
     } else {
       props.start = '';
     }
-
     props.total = response.metadata.totalHits;
   }
 
@@ -240,35 +240,85 @@ async function processResponse() {
     format: 'jpg',
     size: 400,
   };
+  if (!templateFetched) return null;
+  return templateFetched.map((template) => {
+    const $template = createTag('div', { class: 'template-position' });
+    const $buttonWrapper = createTag('div', { class: 'button-container' });
+    const $button = createTag('a', {
+      href: template.customLinks.branchUrl,
+      title: placeholders['edit-this-template'] ?? 'Edit this template',
+      class: 'button accent',
+    });
+    const $pictureWrapper = createTag('div');
+    const videoWrapper = createTag('div');
 
-  if (templateFetched) {
-    return templateFetched.map((template) => {
-      const $template = createTag('div');
-      const $pictureWrapper = createTag('div');
+    // eslint-disable-next-line no-underscore-dangle
+    const imageHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href
+      .replace('{&page,size,type,fragment}',
+        `&size=${renditionParams.size}&type=image/jpg&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
+    if (template.pages[0].rendition?.video) {
       // eslint-disable-next-line no-underscore-dangle
-      let imageHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
-      imageHref = imageHref.replace('{&page,size,type,fragment}', `&size=${renditionParams.size}&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
+      const videoHref = template._links['http://ns.adobe.com/adobecloud/rel/component'].href
+        .replace('{&revision,component_id}',
+          `&revision=0&component_id=${template.pages[0].rendition.video.thumbnail.componentId}`);
+      const video = createTag('video', {
+        loop: true,
+        muted: true,
+        playsinline: '',
+        poster: imageHref,
+        title: template.title['i-default'],
+        preload: 'metadata',
+      });
+      video.append(createTag('source', {
+        src: videoHref,
+        type: 'video/mp4',
+      }));
+      video.addEventListener('loadedmetadata', () => {
+        console.log('loaded metadata: ', video.readyState);
+      });
+      video.addEventListener('loadeddata', () => {
+        console.log('loaded data: ', video.readyState);
+      });
+      video.addEventListener('loadstart', () => {
+        console.log('load start: ', video.readyState);
+      });
+      // TODO: another approach: show an image, only insert the video node when hover
+      $buttonWrapper.addEventListener('mouseenter', () => {
+        console.log('entered');
+        // video.src = videoHref;
+        video.muted = true;
+        video.play().catch((e) => {
+          if (e instanceof DOMException && e.name === 'AbortError') {
+            // ignore
+          }
+        });
+      });
+      $buttonWrapper.addEventListener('mouseleave', () => {
+        console.log('reloading');
+        video.load();
+        // console.log('removing src');
+        // video.src = ''; // need to reset video.src=videoHref
+        // console.log('pausing and set time=0');
+        // video.pause();
+        // video.currentTime = 0;
+      });
+      videoWrapper.insertAdjacentElement('beforeend', video);
+      $template.insertAdjacentElement('beforeend', videoWrapper);
+    } else {
       const $picture = createTag('img', {
         src: imageHref,
         alt: template.title['i-default'],
       });
-      const $buttonWrapper = createTag('div', { class: 'button-container' });
-      const $button = createTag('a', {
-        href: template.customLinks.branchUrl,
-        title: placeholders['edit-this-template'] ?? 'Edit this template',
-        class: 'button accent',
-      });
-
-      $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
       $pictureWrapper.insertAdjacentElement('beforeend', $picture);
-      $buttonWrapper.insertAdjacentElement('beforeend', $button);
       $template.insertAdjacentElement('beforeend', $pictureWrapper);
-      $template.insertAdjacentElement('beforeend', $buttonWrapper);
-      return $template;
-    });
-  } else {
-    return null;
-  }
+    }
+
+    $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
+    $buttonWrapper.insertAdjacentElement('beforeend', $button);
+    $template.insertAdjacentElement('beforeend', $buttonWrapper);
+    // FIXME: this template could get removed() or cloneNode()
+    return $template;
+  });
 }
 
 async function fetchBlueprint(pathname) {
@@ -395,6 +445,7 @@ function populateTemplates($block, templates) {
           $parent.replaceChild($video, $picture);
           $imgLink.remove();
           $video.addEventListener('canplay', () => {
+            console.log('canplay', $video);
             $video.muted = true;
             $video.play();
           });
@@ -497,8 +548,8 @@ async function readRowsFromBlock($block) {
     if (fetchedTemplates) {
       props.templates = props.templates.concat(fetchedTemplates);
       props.templates.forEach((template) => {
-        const clone = template.cloneNode(true);
-        $block.append(clone);
+        // const clone = template.cloneNode(true);
+        $block.append(template);
       });
     }
   } else {
@@ -1885,7 +1936,8 @@ export default async function decorate($block) {
     const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
     buildCarousel(':scope > .template', $block, requireInfiniteScroll);
   } else {
-    addAnimationToggle($block);
+    // FIXME: do we want this?
+    // addAnimationToggle($block);
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday') && !$block.classList.contains('mini')) {

@@ -1,0 +1,3631 @@
+{
+  "id": "TEMPLATE:urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418",
+  "metadata": {
+    "totalHits": 114,
+    "start": "0",
+    "limit": 10
+  },
+  "items": [
+    {
+      "id": "urn:aaid:sc:VA6C2:25e749f0-886a-4283-9b85-0ba3e83ea3e2",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/f2809378-55e9-4093-a349-f465141dfcc9",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-03T21:05:50.635Z",
+      "modifyDate": "2023-03-03T21:05:51.311Z",
+      "name": "f2809378-55e9-4093-a349-f465141dfcc9",
+      "dc:title": {
+        "i-default": "Blue and Red Geometric Video Gamer YouTube Video"
+      },
+      "etags": "d664c5f16e510501b8a22f77ba6bb6b1",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["multiple-pages", "animated", "video"],
+      "topics": [
+        "gamer",
+        "online",
+        "electronics",
+        "play",
+        "video-game",
+        "e-sport",
+        "console",
+        "game",
+        "waves",
+        "texture"
+      ],
+      "availabilityDate": "2023-03-03T21:05:49.670Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "dark green",
+          "coverage": 0.3603,
+          "mode": "RGB",
+          "value": {
+            "r": 3,
+            "g": 28,
+            "b": 32
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.4303,
+          "mode": "RGB",
+          "value": {
+            "r": 1,
+            "g": 8,
+            "b": 11
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.0069,
+          "mode": "RGB",
+          "value": {
+            "r": 127,
+            "g": 132,
+            "b": 124
+          }
+        },
+        {
+          "name": "dark blue",
+          "coverage": 0.1034,
+          "mode": "RGB",
+          "value": {
+            "r": 0,
+            "g": 16,
+            "b": 25
+          }
+        },
+        {
+          "name": "red",
+          "coverage": 0.0992,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 100,
+            "b": 99
+          }
+        },
+        {
+          "name": "dark blue",
+          "coverage": 0.0979,
+          "mode": "RGB",
+          "value": {
+            "r": 5,
+            "g": 23,
+            "b": 33
+          }
+        },
+        {
+          "name": "mud green",
+          "coverage": 0.0206,
+          "mode": "RGB",
+          "value": {
+            "r": 54,
+            "g": 60,
+            "b": 27
+          }
+        },
+        {
+          "name": "dark green",
+          "coverage": 0.4193,
+          "mode": "RGB",
+          "value": {
+            "r": 10,
+            "g": 37,
+            "b": 42
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.0278,
+          "mode": "RGB",
+          "value": {
+            "r": 137,
+            "g": 141,
+            "b": 134
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.4345,
+          "mode": "RGB",
+          "value": {
+            "r": 4,
+            "g": 9,
+            "b": 10
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Adobe Express"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6AF221A5638554DF0A495C7B@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark green",
+              "coverage": 0.3603,
+              "mode": "RGB",
+              "value": {
+                "r": 3,
+                "g": 28,
+                "b": 32
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.4303,
+              "mode": "RGB",
+              "value": {
+                "r": 1,
+                "g": 8,
+                "b": 11
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.0069,
+              "mode": "RGB",
+              "value": {
+                "r": 127,
+                "g": 132,
+                "b": 124
+              }
+            },
+            {
+              "name": "dark blue",
+              "coverage": 0.1034,
+              "mode": "RGB",
+              "value": {
+                "r": 0,
+                "g": 16,
+                "b": 25
+              }
+            },
+            {
+              "name": "red",
+              "coverage": 0.0992,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 100,
+                "b": 99
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "7c1eaabe-f8b3-4367-9d45-018bcc3a392c",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "3e4b6aae-8007-448d-8614-f541084c5c4a",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "5a13bc8e-e68c-4746-a38d-9dddfa8240b3",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 4
+              },
+              "preview": {
+                "componentId": "55e15688-2e64-4cd8-87ec-bc71252d5508",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 4
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark blue",
+              "coverage": 0.0979,
+              "mode": "RGB",
+              "value": {
+                "r": 5,
+                "g": 23,
+                "b": 33
+              }
+            },
+            {
+              "name": "mud green",
+              "coverage": 0.0206,
+              "mode": "RGB",
+              "value": {
+                "r": 54,
+                "g": 60,
+                "b": 27
+              }
+            },
+            {
+              "name": "dark green",
+              "coverage": 0.4193,
+              "mode": "RGB",
+              "value": {
+                "r": 10,
+                "g": 37,
+                "b": 42
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.0278,
+              "mode": "RGB",
+              "value": {
+                "r": 137,
+                "g": 141,
+                "b": 134
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.4345,
+              "mode": "RGB",
+              "value": {
+                "r": 4,
+                "g": 9,
+                "b": 10
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "4b511b12-68ae-477d-92aa-3e3c8fdb8e79",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "4d7e2c3d-b91f-4c6d-a25d-6e39b381a223",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "7f706c59-d566-4645-ab9b-a4e0b5a4dfbb",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 4
+              },
+              "preview": {
+                "componentId": "43fef448-a969-4eb7-a821-fd674934eda8",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 4
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/1BzvMGhrSxb"
+      },
+      "stats": {
+        "remixCount": 3
+      },
+      "styles": ["geometric", "abstract"],
+      "segments": ["personal"],
+      "moods": ["dark"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:25e749f0-886a-4283-9b85-0ba3e83ea3e2/rendition?assetType=TEMPLATE&etag=d664c5f16e510501b8a22f77ba6bb6b1{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:25e749f0-886a-4283-9b85-0ba3e83ea3e2/primary?assetType=TEMPLATE&etag=d664c5f16e510501b8a22f77ba6bb6b1",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:25e749f0-886a-4283-9b85-0ba3e83ea3e2/manifest?assetType=TEMPLATE&etag=d664c5f16e510501b8a22f77ba6bb6b1",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:25e749f0-886a-4283-9b85-0ba3e83ea3e2/component?assetType=TEMPLATE&etag=d664c5f16e510501b8a22f77ba6bb6b1{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Blue and Red Geometric Video Gamer YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:d3dbd19f-2be0-46c3-be69-b5656fce10ec",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/6b86e126-f044-4a62-a3b6-18c8aa9d19e7",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-04-04T23:19:41.351Z",
+      "modifyDate": "2023-04-04T23:19:42.057Z",
+      "name": "6b86e126-f044-4a62-a3b6-18c8aa9d19e7",
+      "dc:title": {
+        "i-default": "Blue and Purple Futuristic Gamer Livestream Youtube Video"
+      },
+      "etags": "\"e9da8294a4ab9f5cb800c48a8f7fbbe8\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["animated", "video"],
+      "topics": [
+        "gamer",
+        "livestream",
+        "stream",
+        "game",
+        "esport",
+        "video game",
+        "live",
+        "glow",
+        "computer",
+        "tech"
+      ],
+      "availabilityDate": "2023-04-04T23:19:40.323Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "light blue",
+          "coverage": 0.1407,
+          "mode": "RGB",
+          "value": {
+            "r": 81,
+            "g": 143,
+            "b": 176
+          }
+        },
+        {
+          "name": "violet",
+          "coverage": 0.221,
+          "mode": "RGB",
+          "value": {
+            "r": 122,
+            "g": 64,
+            "b": 184
+          }
+        },
+        {
+          "name": "purple",
+          "coverage": 0.2752,
+          "mode": "RGB",
+          "value": {
+            "r": 120,
+            "g": 38,
+            "b": 155
+          }
+        },
+        {
+          "name": "royal blue",
+          "coverage": 0.1075,
+          "mode": "RGB",
+          "value": {
+            "r": 25,
+            "g": 83,
+            "b": 160
+          }
+        },
+        {
+          "name": "dark blue",
+          "coverage": 0.2557,
+          "mode": "RGB",
+          "value": {
+            "r": 47,
+            "g": 33,
+            "b": 156
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "13422713641CB3C90A495C79@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "light blue",
+              "coverage": 0.1407,
+              "mode": "RGB",
+              "value": {
+                "r": 81,
+                "g": 143,
+                "b": 176
+              }
+            },
+            {
+              "name": "violet",
+              "coverage": 0.221,
+              "mode": "RGB",
+              "value": {
+                "r": 122,
+                "g": 64,
+                "b": 184
+              }
+            },
+            {
+              "name": "purple",
+              "coverage": 0.2752,
+              "mode": "RGB",
+              "value": {
+                "r": 120,
+                "g": 38,
+                "b": 155
+              }
+            },
+            {
+              "name": "royal blue",
+              "coverage": 0.1075,
+              "mode": "RGB",
+              "value": {
+                "r": 25,
+                "g": 83,
+                "b": 160
+              }
+            },
+            {
+              "name": "dark blue",
+              "coverage": 0.2557,
+              "mode": "RGB",
+              "value": {
+                "r": 47,
+                "g": 33,
+                "b": 156
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "e8f4e442-b333-4248-9cd4-b1cd2a8969b8",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "f5ac9a21-310e-45e8-a493-6cbadf0e1136",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "4b61b629-e043-45b6-86cf-965b94d6b353",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 9
+              },
+              "preview": {
+                "componentId": "6d14aa83-9564-4b71-8fc1-3251bbbff782",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 9
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/AHKVbz1VKyb"
+      },
+      "stats": {
+        "remixCount": 9
+      },
+      "styles": ["psychedelic", "abstract"],
+      "segments": ["all"],
+      "moods": ["playful"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d3dbd19f-2be0-46c3-be69-b5656fce10ec/rendition?assetType=TEMPLATE&etag=e9da8294a4ab9f5cb800c48a8f7fbbe8{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d3dbd19f-2be0-46c3-be69-b5656fce10ec/primary?assetType=TEMPLATE&etag=e9da8294a4ab9f5cb800c48a8f7fbbe8",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d3dbd19f-2be0-46c3-be69-b5656fce10ec/manifest?assetType=TEMPLATE&etag=e9da8294a4ab9f5cb800c48a8f7fbbe8",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d3dbd19f-2be0-46c3-be69-b5656fce10ec/component?assetType=TEMPLATE&etag=e9da8294a4ab9f5cb800c48a8f7fbbe8{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Blue and Purple Futuristic Gamer Livestream Youtube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:eeb17f94-b0f7-4b62-8710-0d6aa7e57b31",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/40ee79f2-47a5-4d23-882e-209a802174ee",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-30T20:05:00.968Z",
+      "modifyDate": "2023-03-30T20:05:01.699Z",
+      "name": "40ee79f2-47a5-4d23-882e-209a802174ee",
+      "dc:title": {
+        "i-default": "Yellow and Blue Bold Gamer Stream YouTube Video"
+      },
+      "etags": "\"0703cbbb02ff262eb0109736ec196803\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["animated", "video"],
+      "topics": [
+        "video game",
+        "streamer",
+        "video game stream",
+        "gradient",
+        "glow",
+        "game",
+        "gaming",
+        "live",
+        "stream",
+        "neon",
+        "gamer",
+        "esport"
+      ],
+      "availabilityDate": "2023-03-30T20:05:00.033Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "white",
+          "coverage": 0.0816,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 251,
+            "b": 250
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.5905,
+          "mode": "RGB",
+          "value": {
+            "r": 33,
+            "g": 31,
+            "b": 31
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.0251,
+          "mode": "RGB",
+          "value": {
+            "r": 137,
+            "g": 134,
+            "b": 129
+          }
+        },
+        {
+          "name": "mud green",
+          "coverage": 0.028,
+          "mode": "RGB",
+          "value": {
+            "r": 95,
+            "g": 89,
+            "b": 63
+          }
+        },
+        {
+          "name": "dark gray",
+          "coverage": 0.2748,
+          "mode": "RGB",
+          "value": {
+            "r": 61,
+            "g": 59,
+            "b": 58
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Andy Smith"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6BD420E2638554DF0A495E44@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "white",
+              "coverage": 0.0816,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 251,
+                "b": 250
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.5905,
+              "mode": "RGB",
+              "value": {
+                "r": 33,
+                "g": 31,
+                "b": 31
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.0251,
+              "mode": "RGB",
+              "value": {
+                "r": 137,
+                "g": 134,
+                "b": 129
+              }
+            },
+            {
+              "name": "mud green",
+              "coverage": 0.028,
+              "mode": "RGB",
+              "value": {
+                "r": 95,
+                "g": 89,
+                "b": 63
+              }
+            },
+            {
+              "name": "dark gray",
+              "coverage": 0.2748,
+              "mode": "RGB",
+              "value": {
+                "r": 61,
+                "g": 59,
+                "b": 58
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "290d5e52-bdb0-4bbf-bc53-4b2b1e82f1ec",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "87c64722-488b-4f74-a32a-5ede05fe6c38",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "e5d990d0-a03a-4b99-892e-ea7914ae3ad9",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 15
+              },
+              "preview": {
+                "componentId": "5fdc1ddb-8c99-4343-91e4-e46fb1fb2cc2",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 15
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/PbiBUnvBCyb"
+      },
+      "stats": {
+        "remixCount": 6
+      },
+      "styles": ["bold"],
+      "segments": ["all"],
+      "moods": ["playful"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:eeb17f94-b0f7-4b62-8710-0d6aa7e57b31/rendition?assetType=TEMPLATE&etag=0703cbbb02ff262eb0109736ec196803{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:eeb17f94-b0f7-4b62-8710-0d6aa7e57b31/primary?assetType=TEMPLATE&etag=0703cbbb02ff262eb0109736ec196803",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:eeb17f94-b0f7-4b62-8710-0d6aa7e57b31/manifest?assetType=TEMPLATE&etag=0703cbbb02ff262eb0109736ec196803",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:eeb17f94-b0f7-4b62-8710-0d6aa7e57b31/component?assetType=TEMPLATE&etag=0703cbbb02ff262eb0109736ec196803{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Yellow and Blue Bold Gamer Stream YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:15397b4c-28db-4218-9890-7962876f1e13",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/c971bc34-ed0a-4d4c-80a3-0840285b0fd3",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-16T15:11:21.603Z",
+      "modifyDate": "2023-03-16T15:11:22.358Z",
+      "name": "c971bc34-ed0a-4d4c-80a3-0840285b0fd3",
+      "dc:title": {
+        "i-default": "Bright Orange and Pink Video Game Streamer YouTube Video"
+      },
+      "etags": "6eba3502cd8528a05eaf8b5f2f90cb35",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["animated", "video"],
+      "topics": [
+        "pop",
+        "streamer",
+        "lower third",
+        "l3rd",
+        "overlay-graphics",
+        "video-game",
+        "stream",
+        "live",
+        "e-sport",
+        "console",
+        "game",
+        "gradient",
+        "gamer"
+      ],
+      "availabilityDate": "2023-03-16T15:11:20.726Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "red",
+          "coverage": 0.2225,
+          "mode": "RGB",
+          "value": {
+            "r": 236,
+            "g": 131,
+            "b": 122
+          }
+        },
+        {
+          "name": "mustard",
+          "coverage": 0.2157,
+          "mode": "RGB",
+          "value": {
+            "r": 242,
+            "g": 191,
+            "b": 89
+          }
+        },
+        {
+          "name": "orange",
+          "coverage": 0.3365,
+          "mode": "RGB",
+          "value": {
+            "r": 238,
+            "g": 152,
+            "b": 111
+          }
+        },
+        {
+          "name": "pink",
+          "coverage": 0.2253,
+          "mode": "RGB",
+          "value": {
+            "r": 232,
+            "g": 85,
+            "b": 148
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Adobe Express"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6BD420E2638554DF0A495E44@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "red",
+              "coverage": 0.2225,
+              "mode": "RGB",
+              "value": {
+                "r": 236,
+                "g": 131,
+                "b": 122
+              }
+            },
+            {
+              "name": "mustard",
+              "coverage": 0.2157,
+              "mode": "RGB",
+              "value": {
+                "r": 242,
+                "g": 191,
+                "b": 89
+              }
+            },
+            {
+              "name": "orange",
+              "coverage": 0.3365,
+              "mode": "RGB",
+              "value": {
+                "r": 238,
+                "g": 152,
+                "b": 111
+              }
+            },
+            {
+              "name": "pink",
+              "coverage": 0.2253,
+              "mode": "RGB",
+              "value": {
+                "r": 232,
+                "g": 85,
+                "b": 148
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "f572b36a-9f10-4851-9f43-c2fc07836d29",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "a27ace70-83b4-40e1-b54a-feaddb8de259",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "f3cb89ed-f3ba-4bc1-8d89-b8618d29630e",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 15
+              },
+              "preview": {
+                "componentId": "785431e6-b6c7-4e73-a6d1-731962e8bf1d",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 15
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/3E2koaL3dyb"
+      },
+      "stats": {
+        "remixCount": 1
+      },
+      "styles": ["bold", "bright"],
+      "segments": ["all"],
+      "moods": ["quirky"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:15397b4c-28db-4218-9890-7962876f1e13/rendition?assetType=TEMPLATE&etag=6eba3502cd8528a05eaf8b5f2f90cb35{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:15397b4c-28db-4218-9890-7962876f1e13/primary?assetType=TEMPLATE&etag=6eba3502cd8528a05eaf8b5f2f90cb35",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:15397b4c-28db-4218-9890-7962876f1e13/manifest?assetType=TEMPLATE&etag=6eba3502cd8528a05eaf8b5f2f90cb35",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:15397b4c-28db-4218-9890-7962876f1e13/component?assetType=TEMPLATE&etag=6eba3502cd8528a05eaf8b5f2f90cb35{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Bright Orange and Pink Video Game Streamer YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:65e51f3c-ef96-4c95-8f2a-2a5d207938e3",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/72fe5ecf-1fff-47ca-aeb5-3a8f102eb771",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-04-04T19:21:57.951Z",
+      "modifyDate": "2023-04-04T19:21:58.561Z",
+      "name": "72fe5ecf-1fff-47ca-aeb5-3a8f102eb771",
+      "dc:title": {
+        "i-default": "White Simple Camping Youtube Video"
+      },
+      "etags": "\"ca6185a1d41cbe93118d4c072155309c\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["animated", "video"],
+      "topics": [
+        "camping",
+        "solo camping",
+        "vlog",
+        "tent",
+        "campfire",
+        "travel",
+        "outdoors",
+        "adventure",
+        "explore",
+        "nature"
+      ],
+      "availabilityDate": "2023-04-04T19:21:56.969Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "dark brown",
+          "coverage": 0.0981,
+          "mode": "RGB",
+          "value": {
+            "r": 59,
+            "g": 30,
+            "b": 8
+          }
+        },
+        {
+          "name": "tan",
+          "coverage": 0.0056,
+          "mode": "RGB",
+          "value": {
+            "r": 131,
+            "g": 97,
+            "b": 29
+          }
+        },
+        {
+          "name": "olive",
+          "coverage": 0.0067,
+          "mode": "RGB",
+          "value": {
+            "r": 142,
+            "g": 137,
+            "b": 85
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.8896,
+          "mode": "RGB",
+          "value": {
+            "r": 8,
+            "g": 5,
+            "b": 4
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Sazan Pasori"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "18BB291063F640140A495E7B@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark brown",
+              "coverage": 0.0981,
+              "mode": "RGB",
+              "value": {
+                "r": 59,
+                "g": 30,
+                "b": 8
+              }
+            },
+            {
+              "name": "tan",
+              "coverage": 0.0056,
+              "mode": "RGB",
+              "value": {
+                "r": 131,
+                "g": 97,
+                "b": 29
+              }
+            },
+            {
+              "name": "olive",
+              "coverage": 0.0067,
+              "mode": "RGB",
+              "value": {
+                "r": 142,
+                "g": 137,
+                "b": 85
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.8896,
+              "mode": "RGB",
+              "value": {
+                "r": 8,
+                "g": 5,
+                "b": 4
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "0221cbf2-c887-40c0-8d03-1237de003c8e",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "c449320d-8882-4525-86dc-89168e9365fc",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "76711d33-40ff-4364-9184-5cbbec59eed6",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 15
+              },
+              "preview": {
+                "componentId": "fa4fdb16-ea46-4ad6-a335-b6162a896643",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 15
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/rpM3qeiVKyb"
+      },
+      "stats": {
+        "remixCount": 1
+      },
+      "styles": ["simple", "minimal"],
+      "segments": ["all"],
+      "moods": ["relaxing"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:65e51f3c-ef96-4c95-8f2a-2a5d207938e3/rendition?assetType=TEMPLATE&etag=ca6185a1d41cbe93118d4c072155309c{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:65e51f3c-ef96-4c95-8f2a-2a5d207938e3/primary?assetType=TEMPLATE&etag=ca6185a1d41cbe93118d4c072155309c",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:65e51f3c-ef96-4c95-8f2a-2a5d207938e3/manifest?assetType=TEMPLATE&etag=ca6185a1d41cbe93118d4c072155309c",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:65e51f3c-ef96-4c95-8f2a-2a5d207938e3/component?assetType=TEMPLATE&etag=ca6185a1d41cbe93118d4c072155309c{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "White Simple Camping Youtube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:e0e3db5f-f1d0-4884-9cec-8b40cb52b9d9",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/8f7fc2d3-738b-4b69-b534-68deeb4ce894",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-02T20:31:12.773Z",
+      "modifyDate": "2023-03-02T20:31:13.597Z",
+      "name": "8f7fc2d3-738b-4b69-b534-68deeb4ce894",
+      "dc:title": {
+        "i-default": "Minimal Informative Photography Titles YouTube Video"
+      },
+      "etags": "4588f792cbe6260f14652aac85eda9ae",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["multiple-pages", "animated", "video"],
+      "topics": [
+        "hobby",
+        "craft",
+        "informative",
+        "titles",
+        "photography",
+        "camera",
+        "film",
+        "photographer",
+        "tips",
+        "tricks"
+      ],
+      "availabilityDate": "2023-03-02T20:31:11.923Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "gray",
+          "coverage": 0.0916,
+          "mode": "RGB",
+          "value": {
+            "r": 122,
+            "g": 126,
+            "b": 123
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.0832,
+          "mode": "RGB",
+          "value": {
+            "r": 81,
+            "g": 59,
+            "b": 43
+          }
+        },
+        {
+          "name": "dark gray",
+          "coverage": 0.2102,
+          "mode": "RGB",
+          "value": {
+            "r": 71,
+            "g": 72,
+            "b": 66
+          }
+        },
+        {
+          "name": "off white",
+          "coverage": 0.0733,
+          "mode": "RGB",
+          "value": {
+            "r": 225,
+            "g": 229,
+            "b": 225
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.5417,
+          "mode": "RGB",
+          "value": {
+            "r": 26,
+            "g": 24,
+            "b": 22
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.2169,
+          "mode": "RGB",
+          "value": {
+            "r": 27,
+            "g": 26,
+            "b": 28
+          }
+        },
+        {
+          "name": "light blue",
+          "coverage": 0.1847,
+          "mode": "RGB",
+          "value": {
+            "r": 128,
+            "g": 140,
+            "b": 159
+          }
+        },
+        {
+          "name": "purple",
+          "coverage": 0.16,
+          "mode": "RGB",
+          "value": {
+            "r": 122,
+            "g": 96,
+            "b": 117
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.1437,
+          "mode": "RGB",
+          "value": {
+            "r": 120,
+            "g": 123,
+            "b": 126
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.2948,
+          "mode": "RGB",
+          "value": {
+            "r": 89,
+            "g": 60,
+            "b": 60
+          }
+        },
+        {
+          "name": "dark gray",
+          "coverage": 0.0638,
+          "mode": "RGB",
+          "value": {
+            "r": 70,
+            "g": 68,
+            "b": 72
+          }
+        },
+        {
+          "name": "dark blue",
+          "coverage": 0.0636,
+          "mode": "RGB",
+          "value": {
+            "r": 57,
+            "g": 64,
+            "b": 82
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.1152,
+          "mode": "RGB",
+          "value": {
+            "r": 91,
+            "g": 60,
+            "b": 64
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.7063,
+          "mode": "RGB",
+          "value": {
+            "r": 24,
+            "g": 24,
+            "b": 24
+          }
+        },
+        {
+          "name": "purple",
+          "coverage": 0.051,
+          "mode": "RGB",
+          "value": {
+            "r": 107,
+            "g": 78,
+            "b": 100
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Adobe Express"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6AF822D6638554E00A495E8B@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "gray",
+              "coverage": 0.0916,
+              "mode": "RGB",
+              "value": {
+                "r": 122,
+                "g": 126,
+                "b": 123
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.0832,
+              "mode": "RGB",
+              "value": {
+                "r": 81,
+                "g": 59,
+                "b": 43
+              }
+            },
+            {
+              "name": "dark gray",
+              "coverage": 0.2102,
+              "mode": "RGB",
+              "value": {
+                "r": 71,
+                "g": 72,
+                "b": 66
+              }
+            },
+            {
+              "name": "off white",
+              "coverage": 0.0733,
+              "mode": "RGB",
+              "value": {
+                "r": 225,
+                "g": 229,
+                "b": 225
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.5417,
+              "mode": "RGB",
+              "value": {
+                "r": 26,
+                "g": 24,
+                "b": 22
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "6bd34798-126a-4228-98d6-b4b43452a3a3",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "bbf51220-f73c-41b9-9caa-1e470e020c46",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "21cca6c6-b942-463c-9eac-1faa3db98b6d",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 5
+              },
+              "preview": {
+                "componentId": "ed6dde80-e3d1-4c4d-ae47-6e50fc40840e",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 5
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "black",
+              "coverage": 0.2169,
+              "mode": "RGB",
+              "value": {
+                "r": 27,
+                "g": 26,
+                "b": 28
+              }
+            },
+            {
+              "name": "light blue",
+              "coverage": 0.1847,
+              "mode": "RGB",
+              "value": {
+                "r": 128,
+                "g": 140,
+                "b": 159
+              }
+            },
+            {
+              "name": "purple",
+              "coverage": 0.16,
+              "mode": "RGB",
+              "value": {
+                "r": 122,
+                "g": 96,
+                "b": 117
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.1437,
+              "mode": "RGB",
+              "value": {
+                "r": 120,
+                "g": 123,
+                "b": 126
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.2948,
+              "mode": "RGB",
+              "value": {
+                "r": 89,
+                "g": 60,
+                "b": 60
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "cdf01502-902b-43aa-891c-4ab9527dc98a",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "1b844694-7a49-440e-8cd4-e8b9073db752",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "b6c7a42a-9781-428c-83b3-552c8d17ad17",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 7
+              },
+              "preview": {
+                "componentId": "8a784a37-8db4-4087-8e76-8be427cacc7b",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 7
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark gray",
+              "coverage": 0.0638,
+              "mode": "RGB",
+              "value": {
+                "r": 70,
+                "g": 68,
+                "b": 72
+              }
+            },
+            {
+              "name": "dark blue",
+              "coverage": 0.0636,
+              "mode": "RGB",
+              "value": {
+                "r": 57,
+                "g": 64,
+                "b": 82
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.1152,
+              "mode": "RGB",
+              "value": {
+                "r": 91,
+                "g": 60,
+                "b": 64
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.7063,
+              "mode": "RGB",
+              "value": {
+                "r": 24,
+                "g": 24,
+                "b": 24
+              }
+            },
+            {
+              "name": "purple",
+              "coverage": 0.051,
+              "mode": "RGB",
+              "value": {
+                "r": 107,
+                "g": 78,
+                "b": 100
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "919c72d6-4e1f-4477-ad2e-df457ecbbe87",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "3afe3417-877c-4137-8b5f-2495f5197815",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "dd87d5de-c112-48ed-a4f5-2547b5e2f54b",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 6
+              },
+              "preview": {
+                "componentId": "0d691c0c-5caa-45da-adc4-d8565911b743",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 6
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/K8leVqkTQxb"
+      },
+      "stats": {
+        "remixCount": 3
+      },
+      "styles": ["minimal", "modern"],
+      "segments": ["all"],
+      "moods": ["mellow", "neutral"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:e0e3db5f-f1d0-4884-9cec-8b40cb52b9d9/rendition?assetType=TEMPLATE&etag=4588f792cbe6260f14652aac85eda9ae{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:e0e3db5f-f1d0-4884-9cec-8b40cb52b9d9/primary?assetType=TEMPLATE&etag=4588f792cbe6260f14652aac85eda9ae",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:e0e3db5f-f1d0-4884-9cec-8b40cb52b9d9/manifest?assetType=TEMPLATE&etag=4588f792cbe6260f14652aac85eda9ae",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:e0e3db5f-f1d0-4884-9cec-8b40cb52b9d9/component?assetType=TEMPLATE&etag=4588f792cbe6260f14652aac85eda9ae{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Minimal Informative Photography Titles YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:c33da458-be62-4d12-8345-884151c879ba",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/5f73c7e1-34f3-4d2b-8cf5-fcd06b8dee81",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-02T21:32:56.466Z",
+      "modifyDate": "2023-03-02T21:32:57.299Z",
+      "name": "5f73c7e1-34f3-4d2b-8cf5-fcd06b8dee81",
+      "dc:title": {
+        "i-default": "Orange and Blue Illustrative Intro YouTube Video"
+      },
+      "etags": "\"133a65d595a0aefe452080432e8f6955\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["multiple-pages", "animated", "video"],
+      "topics": [
+        "expressive",
+        "personality",
+        "content",
+        "intro",
+        "content-creator",
+        "influencer",
+        "day-in-my-life",
+        "morning-routine",
+        "lifestyle",
+        "vlog"
+      ],
+      "availabilityDate": "2023-03-02T21:32:55.619Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "dark brown",
+          "coverage": 0.021,
+          "mode": "RGB",
+          "value": {
+            "r": 105,
+            "g": 63,
+            "b": 59
+          }
+        },
+        {
+          "name": "orange",
+          "coverage": 0.0813,
+          "mode": "RGB",
+          "value": {
+            "r": 234,
+            "g": 105,
+            "b": 23
+          }
+        },
+        {
+          "name": "dark blue",
+          "coverage": 0.0925,
+          "mode": "RGB",
+          "value": {
+            "r": 38,
+            "g": 5,
+            "b": 188
+          }
+        },
+        {
+          "name": "turquoise",
+          "coverage": 0.0628,
+          "mode": "RGB",
+          "value": {
+            "r": 12,
+            "g": 196,
+            "b": 246
+          }
+        },
+        {
+          "name": "mustard",
+          "coverage": 0.7423,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 192,
+            "b": 92
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.1038,
+          "mode": "RGB",
+          "value": {
+            "r": 146,
+            "g": 149,
+            "b": 148
+          }
+        },
+        {
+          "name": "cyan",
+          "coverage": 0.0937,
+          "mode": "RGB",
+          "value": {
+            "r": 184,
+            "g": 212,
+            "b": 220
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.2288,
+          "mode": "RGB",
+          "value": {
+            "r": 80,
+            "g": 51,
+            "b": 40
+          }
+        },
+        {
+          "name": "mustard",
+          "coverage": 0.4525,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 192,
+            "b": 92
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.1212,
+          "mode": "RGB",
+          "value": {
+            "r": 16,
+            "g": 15,
+            "b": 16
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.2269,
+          "mode": "RGB",
+          "value": {
+            "r": 29,
+            "g": 23,
+            "b": 25
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.0665,
+          "mode": "RGB",
+          "value": {
+            "r": 94,
+            "g": 69,
+            "b": 55
+          }
+        },
+        {
+          "name": "mustard",
+          "coverage": 0.1232,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 193,
+            "b": 92
+          }
+        },
+        {
+          "name": "dark gray",
+          "coverage": 0.2657,
+          "mode": "RGB",
+          "value": {
+            "r": 75,
+            "g": 69,
+            "b": 69
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.3177,
+          "mode": "RGB",
+          "value": {
+            "r": 150,
+            "g": 149,
+            "b": 153
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Adobe Express"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6AF822D6638554E00A495E8B@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark brown",
+              "coverage": 0.021,
+              "mode": "RGB",
+              "value": {
+                "r": 105,
+                "g": 63,
+                "b": 59
+              }
+            },
+            {
+              "name": "orange",
+              "coverage": 0.0813,
+              "mode": "RGB",
+              "value": {
+                "r": 234,
+                "g": 105,
+                "b": 23
+              }
+            },
+            {
+              "name": "dark blue",
+              "coverage": 0.0925,
+              "mode": "RGB",
+              "value": {
+                "r": 38,
+                "g": 5,
+                "b": 188
+              }
+            },
+            {
+              "name": "turquoise",
+              "coverage": 0.0628,
+              "mode": "RGB",
+              "value": {
+                "r": 12,
+                "g": 196,
+                "b": 246
+              }
+            },
+            {
+              "name": "mustard",
+              "coverage": 0.7423,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 192,
+                "b": 92
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "91aa2fa8-909e-4453-8601-4714f9363520",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "f5023f7e-6852-4fd9-b637-aac9847c397e",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "9c70837b-fcbe-4e2f-ab14-ebd6bccad85c",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 5
+              },
+              "preview": {
+                "componentId": "73d44da2-c309-483b-8984-59ea8c490bd5",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 5
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "gray",
+              "coverage": 0.1038,
+              "mode": "RGB",
+              "value": {
+                "r": 146,
+                "g": 149,
+                "b": 148
+              }
+            },
+            {
+              "name": "cyan",
+              "coverage": 0.0937,
+              "mode": "RGB",
+              "value": {
+                "r": 184,
+                "g": 212,
+                "b": 220
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.2288,
+              "mode": "RGB",
+              "value": {
+                "r": 80,
+                "g": 51,
+                "b": 40
+              }
+            },
+            {
+              "name": "mustard",
+              "coverage": 0.4525,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 192,
+                "b": 92
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.1212,
+              "mode": "RGB",
+              "value": {
+                "r": 16,
+                "g": 15,
+                "b": 16
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "7eaf79fc-1965-4da7-95f3-6b35be0f48c2",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "c9b5e121-b3c6-4dbc-ac4e-84f8bf138526",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "5931e163-8de6-4999-b842-1988e566b350",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 6
+              },
+              "preview": {
+                "componentId": "c5dc530e-a6d9-46c4-a19a-ebad94e9b2fb",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 6
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "black",
+              "coverage": 0.2269,
+              "mode": "RGB",
+              "value": {
+                "r": 29,
+                "g": 23,
+                "b": 25
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.0665,
+              "mode": "RGB",
+              "value": {
+                "r": 94,
+                "g": 69,
+                "b": 55
+              }
+            },
+            {
+              "name": "mustard",
+              "coverage": 0.1232,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 193,
+                "b": 92
+              }
+            },
+            {
+              "name": "dark gray",
+              "coverage": 0.2657,
+              "mode": "RGB",
+              "value": {
+                "r": 75,
+                "g": 69,
+                "b": 69
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.3177,
+              "mode": "RGB",
+              "value": {
+                "r": 150,
+                "g": 149,
+                "b": 153
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "91162dfb-522c-4552-9fd3-919f424c38c5",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "2b07afe5-5cce-4277-a2f5-7db421374ecc",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "69adee65-705e-48d7-8036-89e1db75bc99",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 4
+              },
+              "preview": {
+                "componentId": "abd864fe-08f2-4f4f-9e5b-788019802ebc",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 4
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/0kmSNgfRQxb"
+      },
+      "stats": {
+        "remixCount": 25
+      },
+      "styles": ["bold", "abstract", "fresh"],
+      "segments": ["all"],
+      "moods": ["groovy", "joyful", "quirky"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:c33da458-be62-4d12-8345-884151c879ba/rendition?assetType=TEMPLATE&etag=133a65d595a0aefe452080432e8f6955{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:c33da458-be62-4d12-8345-884151c879ba/primary?assetType=TEMPLATE&etag=133a65d595a0aefe452080432e8f6955",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:c33da458-be62-4d12-8345-884151c879ba/manifest?assetType=TEMPLATE&etag=133a65d595a0aefe452080432e8f6955",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:c33da458-be62-4d12-8345-884151c879ba/component?assetType=TEMPLATE&etag=133a65d595a0aefe452080432e8f6955{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Orange and Blue Illustrative Intro YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:4f9e5bb3-0f1c-46c0-93e2-a616777c7fb3",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/5d51b69d-ee26-4584-be5c-8ebed998e191",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-02T20:11:21.863Z",
+      "modifyDate": "2023-03-02T20:11:22.813Z",
+      "name": "5d51b69d-ee26-4584-be5c-8ebed998e191",
+      "dc:title": {
+        "i-default": "Blue and Beige Simple Fashion YouTube Video"
+      },
+      "etags": "f59f929a17e69f87ca304125b88373cf",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["multiple-pages", "animated", "video"],
+      "topics": [
+        "fashion",
+        "sophisticated",
+        "womens-fashion",
+        "accessories",
+        "upscale",
+        "clothes",
+        "closet",
+        "wardrobe",
+        "sleek",
+        "style"
+      ],
+      "availabilityDate": "2023-03-02T20:11:20.994Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "black",
+          "coverage": 0.2002,
+          "mode": "RGB",
+          "value": {
+            "r": 19,
+            "g": 20,
+            "b": 18
+          }
+        },
+        {
+          "name": "turquoise",
+          "coverage": 0.1158,
+          "mode": "RGB",
+          "value": {
+            "r": 9,
+            "g": 137,
+            "b": 250
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.0706,
+          "mode": "RGB",
+          "value": {
+            "r": 145,
+            "g": 140,
+            "b": 134
+          }
+        },
+        {
+          "name": "pink",
+          "coverage": 0.5129,
+          "mode": "RGB",
+          "value": {
+            "r": 235,
+            "g": 219,
+            "b": 208
+          }
+        },
+        {
+          "name": "beige",
+          "coverage": 0.1004,
+          "mode": "RGB",
+          "value": {
+            "r": 238,
+            "g": 222,
+            "b": 207
+          }
+        },
+        {
+          "name": "brown",
+          "coverage": 0.0992,
+          "mode": "RGB",
+          "value": {
+            "r": 122,
+            "g": 101,
+            "b": 88
+          }
+        },
+        {
+          "name": "white",
+          "coverage": 0.0978,
+          "mode": "RGB",
+          "value": {
+            "r": 250,
+            "g": 249,
+            "b": 249
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.3856,
+          "mode": "RGB",
+          "value": {
+            "r": 93,
+            "g": 67,
+            "b": 54
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.2783,
+          "mode": "RGB",
+          "value": {
+            "r": 124,
+            "g": 124,
+            "b": 122
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.1391,
+          "mode": "RGB",
+          "value": {
+            "r": 23,
+            "g": 24,
+            "b": 23
+          }
+        },
+        {
+          "name": "dark gray",
+          "coverage": 0.2757,
+          "mode": "RGB",
+          "value": {
+            "r": 71,
+            "g": 68,
+            "b": 69
+          }
+        },
+        {
+          "name": "off white",
+          "coverage": 0.0958,
+          "mode": "RGB",
+          "value": {
+            "r": 227,
+            "g": 221,
+            "b": 225
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.1305,
+          "mode": "RGB",
+          "value": {
+            "r": 39,
+            "g": 36,
+            "b": 37
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.2507,
+          "mode": "RGB",
+          "value": {
+            "r": 121,
+            "g": 119,
+            "b": 119
+          }
+        },
+        {
+          "name": "white",
+          "coverage": 0.2473,
+          "mode": "RGB",
+          "value": {
+            "r": 244,
+            "g": 242,
+            "b": 243
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Adobe Express"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6AF822D6638554E00A495E8B@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "black",
+              "coverage": 0.2002,
+              "mode": "RGB",
+              "value": {
+                "r": 19,
+                "g": 20,
+                "b": 18
+              }
+            },
+            {
+              "name": "turquoise",
+              "coverage": 0.1158,
+              "mode": "RGB",
+              "value": {
+                "r": 9,
+                "g": 137,
+                "b": 250
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.0706,
+              "mode": "RGB",
+              "value": {
+                "r": 145,
+                "g": 140,
+                "b": 134
+              }
+            },
+            {
+              "name": "pink",
+              "coverage": 0.5129,
+              "mode": "RGB",
+              "value": {
+                "r": 235,
+                "g": 219,
+                "b": 208
+              }
+            },
+            {
+              "name": "beige",
+              "coverage": 0.1004,
+              "mode": "RGB",
+              "value": {
+                "r": 238,
+                "g": 222,
+                "b": 207
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "8979c819-30a8-45b6-b206-cbd91d3bc529",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "8ce15a3f-8b53-4f9a-8422-7eca98db83b0",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "89154ec2-8421-47a9-99d6-042301338df0",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 4
+              },
+              "preview": {
+                "componentId": "d9c7ddc0-ec55-40da-8671-e4671c16858b",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 4
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "brown",
+              "coverage": 0.0992,
+              "mode": "RGB",
+              "value": {
+                "r": 122,
+                "g": 101,
+                "b": 88
+              }
+            },
+            {
+              "name": "white",
+              "coverage": 0.0978,
+              "mode": "RGB",
+              "value": {
+                "r": 250,
+                "g": 249,
+                "b": 249
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.3856,
+              "mode": "RGB",
+              "value": {
+                "r": 93,
+                "g": 67,
+                "b": 54
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.2783,
+              "mode": "RGB",
+              "value": {
+                "r": 124,
+                "g": 124,
+                "b": 122
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.1391,
+              "mode": "RGB",
+              "value": {
+                "r": 23,
+                "g": 24,
+                "b": 23
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "2978b6e8-6ee1-41a4-ac7d-3c2bf7e497b7",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "8c26bcee-278e-4a4f-af46-d938f1cff033",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "5d11e691-9e08-41a3-908f-a25fe20599db",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 3
+              },
+              "preview": {
+                "componentId": "6f88594c-a8b6-4ca8-9782-41f4ddb47fba",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 3
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark gray",
+              "coverage": 0.2757,
+              "mode": "RGB",
+              "value": {
+                "r": 71,
+                "g": 68,
+                "b": 69
+              }
+            },
+            {
+              "name": "off white",
+              "coverage": 0.0958,
+              "mode": "RGB",
+              "value": {
+                "r": 227,
+                "g": 221,
+                "b": 225
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.1305,
+              "mode": "RGB",
+              "value": {
+                "r": 39,
+                "g": 36,
+                "b": 37
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.2507,
+              "mode": "RGB",
+              "value": {
+                "r": 121,
+                "g": 119,
+                "b": 119
+              }
+            },
+            {
+              "name": "white",
+              "coverage": 0.2473,
+              "mode": "RGB",
+              "value": {
+                "r": 244,
+                "g": 242,
+                "b": 243
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "51d7024c-af1b-4d07-a180-cb2ff048ae74",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "e80283ea-1ddb-4d87-b73a-d69f93e616b8",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "7c5d99ca-552a-4b47-98b6-3e1fab24bdf5",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 4
+              },
+              "preview": {
+                "componentId": "22d34f10-f455-4fdc-afff-7e05d14fb264",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 4
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/cPPnLhcUQxb"
+      },
+      "stats": {
+        "remixCount": 8
+      },
+      "styles": ["minimal", "simple", "modern"],
+      "segments": ["all"],
+      "moods": ["mellow"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4f9e5bb3-0f1c-46c0-93e2-a616777c7fb3/rendition?assetType=TEMPLATE&etag=f59f929a17e69f87ca304125b88373cf{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4f9e5bb3-0f1c-46c0-93e2-a616777c7fb3/primary?assetType=TEMPLATE&etag=f59f929a17e69f87ca304125b88373cf",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4f9e5bb3-0f1c-46c0-93e2-a616777c7fb3/manifest?assetType=TEMPLATE&etag=f59f929a17e69f87ca304125b88373cf",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4f9e5bb3-0f1c-46c0-93e2-a616777c7fb3/component?assetType=TEMPLATE&etag=f59f929a17e69f87ca304125b88373cf{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Blue and Beige Simple Fashion YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:46ac469b-1334-43e0-abeb-5ca1e744062b",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/9805e7b6-c8d6-435f-82c0-96b9e8e159df",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-04-14T21:35:33.240Z",
+      "modifyDate": "2023-04-14T21:35:33.885Z",
+      "name": "9805e7b6-c8d6-435f-82c0-96b9e8e159df",
+      "dc:title": {
+        "i-default": "Pink and Orange Apartment Tour YouTube Video"
+      },
+      "etags": "\"ac740e28c7bd8155d3c5aaba6eaeabf1\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["animated", "video"],
+      "topics": [
+        "apartment",
+        "lifestyle",
+        "interior",
+        "plant",
+        "loft",
+        "brooklyn",
+        "new york",
+        "interior design",
+        "vlog",
+        "house tour",
+        "home",
+        "house",
+        "tour"
+      ],
+      "availabilityDate": "2023-04-14T21:35:32.086Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "65842138638554DF0A495FD1@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "5bb1f0f1-2dab-4d3e-99d5-03645b29ab43",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "5b9ec28c-169b-4d77-9525-2290defb6bb2",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "ebc1c365-f162-42d3-a1af-6285579069a1",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 11
+              },
+              "preview": {
+                "componentId": "30fdf070-65c6-4cba-a356-426eaedb5af2",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 11
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/i4phGPRb0yb"
+      },
+      "styles": ["bright", "geometric"],
+      "segments": ["personal"],
+      "moods": ["mellow"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:46ac469b-1334-43e0-abeb-5ca1e744062b/rendition?assetType=TEMPLATE&etag=ac740e28c7bd8155d3c5aaba6eaeabf1{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:46ac469b-1334-43e0-abeb-5ca1e744062b/primary?assetType=TEMPLATE&etag=ac740e28c7bd8155d3c5aaba6eaeabf1",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:46ac469b-1334-43e0-abeb-5ca1e744062b/manifest?assetType=TEMPLATE&etag=ac740e28c7bd8155d3c5aaba6eaeabf1",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:46ac469b-1334-43e0-abeb-5ca1e744062b/component?assetType=TEMPLATE&etag=ac740e28c7bd8155d3c5aaba6eaeabf1{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Pink and Orange Apartment Tour YouTube Video"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:4972f9a8-269f-49f1-852c-2f9031e4297a",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:327068ba-43e5-46ab-94e2-a21c39c249b8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_content/6a37a332-317e-4526-8f7c-5320f23d18f3",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-03T21:00:21.474Z",
+      "modifyDate": "2023-03-03T21:00:22.163Z",
+      "name": "6a37a332-317e-4526-8f7c-5320f23d18f3",
+      "dc:title": {
+        "i-default": "Soft Yellow and Black Podcast Promo Youtube Video"
+      },
+      "etags": "dba1efb98e43984c663c41ec58d9f3be",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["multiple-pages", "animated", "video"],
+      "topics": [
+        "music",
+        "history",
+        "education",
+        "podcast",
+        "culture",
+        "music-notes",
+        "musician",
+        "soft",
+        "promotional"
+      ],
+      "availabilityDate": "2023-03-03T21:00:20.476Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["US"],
+      "extractedColors": [
+        {
+          "name": "cream",
+          "coverage": 0.6979,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 250,
+            "b": 187
+          }
+        },
+        {
+          "name": "mud green",
+          "coverage": 0.0139,
+          "mode": "RGB",
+          "value": {
+            "r": 86,
+            "g": 82,
+            "b": 57
+          }
+        },
+        {
+          "name": "brown",
+          "coverage": 0.0171,
+          "mode": "RGB",
+          "value": {
+            "r": 139,
+            "g": 123,
+            "b": 104
+          }
+        },
+        {
+          "name": "olive",
+          "coverage": 0.0532,
+          "mode": "RGB",
+          "value": {
+            "r": 181,
+            "g": 176,
+            "b": 136
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.2179,
+          "mode": "RGB",
+          "value": {
+            "r": 142,
+            "g": 139,
+            "b": 138
+          }
+        },
+        {
+          "name": "cream",
+          "coverage": 0.7737,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 250,
+            "b": 187
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.0552,
+          "mode": "RGB",
+          "value": {
+            "r": 24,
+            "g": 31,
+            "b": 32
+          }
+        },
+        {
+          "name": "dark green",
+          "coverage": 0.0767,
+          "mode": "RGB",
+          "value": {
+            "r": 28,
+            "g": 54,
+            "b": 60
+          }
+        },
+        {
+          "name": "dark gray",
+          "coverage": 0.0519,
+          "mode": "RGB",
+          "value": {
+            "r": 58,
+            "g": 65,
+            "b": 65
+          }
+        },
+        {
+          "name": "olive",
+          "coverage": 0.0424,
+          "mode": "RGB",
+          "value": {
+            "r": 191,
+            "g": 188,
+            "b": 142
+          }
+        },
+        {
+          "name": "olive",
+          "coverage": 0.0417,
+          "mode": "RGB",
+          "value": {
+            "r": 192,
+            "g": 189,
+            "b": 142
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.1189,
+          "mode": "RGB",
+          "value": {
+            "r": 35,
+            "g": 35,
+            "b": 35
+          }
+        },
+        {
+          "name": "mud green",
+          "coverage": 0.0104,
+          "mode": "RGB",
+          "value": {
+            "r": 89,
+            "g": 87,
+            "b": 57
+          }
+        },
+        {
+          "name": "cream",
+          "coverage": 0.829,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 250,
+            "b": 187
+          }
+        }
+      ],
+      "attribution": {
+        "creators": [
+          {
+            "name": "Adobe Express"
+          }
+        ],
+        "vendor": "Adobe Express",
+        "submittedBy": "6AF221A5638554DF0A495C7B@c0b827b66271908b495fe8.e"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "cream",
+              "coverage": 0.6979,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 250,
+                "b": 187
+              }
+            },
+            {
+              "name": "mud green",
+              "coverage": 0.0139,
+              "mode": "RGB",
+              "value": {
+                "r": 86,
+                "g": 82,
+                "b": 57
+              }
+            },
+            {
+              "name": "brown",
+              "coverage": 0.0171,
+              "mode": "RGB",
+              "value": {
+                "r": 139,
+                "g": 123,
+                "b": 104
+              }
+            },
+            {
+              "name": "olive",
+              "coverage": 0.0532,
+              "mode": "RGB",
+              "value": {
+                "r": 181,
+                "g": 176,
+                "b": 136
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.2179,
+              "mode": "RGB",
+              "value": {
+                "r": 142,
+                "g": 139,
+                "b": 138
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "5294b17a-7f8f-4551-b42e-4de449acaf88",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "1554ac80-f936-4333-bcaa-dfd038b5b0d7",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "1903efc4-23cf-4e2c-a077-fb0950486e37",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 13
+              },
+              "preview": {
+                "componentId": "596fd1cf-52f6-4810-abe5-913f98885a8d",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 13
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "cream",
+              "coverage": 0.7737,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 250,
+                "b": 187
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.0552,
+              "mode": "RGB",
+              "value": {
+                "r": 24,
+                "g": 31,
+                "b": 32
+              }
+            },
+            {
+              "name": "dark green",
+              "coverage": 0.0767,
+              "mode": "RGB",
+              "value": {
+                "r": 28,
+                "g": 54,
+                "b": 60
+              }
+            },
+            {
+              "name": "dark gray",
+              "coverage": 0.0519,
+              "mode": "RGB",
+              "value": {
+                "r": 58,
+                "g": 65,
+                "b": 65
+              }
+            },
+            {
+              "name": "olive",
+              "coverage": 0.0424,
+              "mode": "RGB",
+              "value": {
+                "r": 191,
+                "g": 188,
+                "b": 142
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "6335b11e-c409-4967-a197-5b7be58c25df",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "2f625f0a-38ca-4131-991a-25f8751e7112",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "c7fbf868-c3c0-4dd4-a5f3-9f55ce09dddf",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 11
+              },
+              "preview": {
+                "componentId": "b684bc8c-bdf2-413c-b0d8-004961f6d54d",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 11
+              }
+            }
+          }
+        },
+        {
+          "task": {
+            "name": "youtube-video",
+            "size": {
+              "name": "1920x1080px"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "olive",
+              "coverage": 0.0417,
+              "mode": "RGB",
+              "value": {
+                "r": 192,
+                "g": 189,
+                "b": 142
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.1189,
+              "mode": "RGB",
+              "value": {
+                "r": 35,
+                "g": 35,
+                "b": 35
+              }
+            },
+            {
+              "name": "mud green",
+              "coverage": 0.0104,
+              "mode": "RGB",
+              "value": {
+                "r": 89,
+                "g": 87,
+                "b": 57
+              }
+            },
+            {
+              "name": "cream",
+              "coverage": 0.829,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 250,
+                "b": 187
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "c8075792-7c6c-468c-8a33-b91209931173",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "06210880-8135-42b6-ade0-9fa3b441f991",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "image/png"
+              }
+            },
+            "video": {
+              "thumbnail": {
+                "componentId": "9dbbfca0-65c4-4980-a565-f46c19b35c28",
+                "revision": 0,
+                "width": 500,
+                "height": 281,
+                "mediaType": "video/mp4",
+                "duration": 11
+              },
+              "preview": {
+                "componentId": "69274985-e096-498e-ab5a-53fa897765d7",
+                "revision": 0,
+                "width": 1200,
+                "height": 675,
+                "mediaType": "video/mp4",
+                "duration": 11
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/VgBG1PXrSxb"
+      },
+      "stats": {
+        "remixCount": 11
+      },
+      "styles": ["classic", "vintage", "retro"],
+      "segments": ["personal"],
+      "moods": ["mellow"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4972f9a8-269f-49f1-852c-2f9031e4297a/rendition?assetType=TEMPLATE&etag=dba1efb98e43984c663c41ec58d9f3be{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4972f9a8-269f-49f1-852c-2f9031e4297a/primary?assetType=TEMPLATE&etag=dba1efb98e43984c663c41ec58d9f3be",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4972f9a8-269f-49f1-852c-2f9031e4297a/manifest?assetType=TEMPLATE&etag=dba1efb98e43984c663c41ec58d9f3be",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:4972f9a8-269f-49f1-852c-2f9031e4297a/component?assetType=TEMPLATE&etag=dba1efb98e43984c663c41ec58d9f3be{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 675,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": true,
+      "title": {
+        "i-default": "Soft Yellow and Black Podcast Promo Youtube Video"
+      }
+    }
+  ],
+  "_links": {
+    "next": {
+      "href": "https://spark-search.adobe.io/v3/content?queryType=search&collectionId=urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418&q=youtube video&filters=licensingCategory==free&filters=tasks==[flyer]&limit=10&start=10",
+      "templated": false,
+      "name": "ACP"
+    }
+  }
+}

@@ -1,0 +1,1903 @@
+{
+  "id": "TEMPLATE:urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418",
+  "metadata": {
+    "totalHits": 2721,
+    "start": "0",
+    "limit": 10
+  },
+  "items": [
+    {
+      "id": "urn:aaid:sc:VA6C2:602fdaa1-e68d-4ec7-8731-fa6af52aa09e",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:d545eaac-5a65-4abf-9fd8-943054ef8921",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:d545eaac-5a65-4abf-9fd8-943054ef8921"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/8/8f1cfd6d-94ee-4d0c-8a7a-928772e32bff",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-02-07T23:22:41.252Z",
+      "modifyDate": "2023-03-23T15:56:03.502Z",
+      "name": "8f1cfd6d-94ee-4d0c-8a7a-928772e32bff",
+      "dc:title": {
+        "i-default": "Black & Green Gifts Merry Christmas Greeting Card"
+      },
+      "etags": "\"4f14a4d8bba82cc26f2079b6700ce133\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "gift",
+        "green",
+        "merry-christmas",
+        "seasonal",
+        "black",
+        "christmas-tree",
+        "cut-out",
+        "holidaycreations2022",
+        "christmas",
+        "holiday",
+        "xmas"
+      ],
+      "availabilityDate": "2022-10-28T14:00:58.129Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "orange",
+          "coverage": 0.0469,
+          "mode": "RGB",
+          "value": {
+            "r": 214,
+            "g": 176,
+            "b": 137
+          }
+        },
+        {
+          "name": "dark green",
+          "coverage": 0.0427,
+          "mode": "RGB",
+          "value": {
+            "r": 18,
+            "g": 81,
+            "b": 35
+          }
+        },
+        {
+          "name": "khaki",
+          "coverage": 0.0394,
+          "mode": "RGB",
+          "value": {
+            "r": 191,
+            "g": 150,
+            "b": 109
+          }
+        },
+        {
+          "name": "mud green",
+          "coverage": 0.032,
+          "mode": "RGB",
+          "value": {
+            "r": 66,
+            "g": 75,
+            "b": 29
+          }
+        },
+        {
+          "name": "off white",
+          "coverage": 0.839,
+          "mode": "RGB",
+          "value": {
+            "r": 235,
+            "g": 235,
+            "b": 219
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "D39F68F2615B301F0A495FF9@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "dd2c29ee-7b32-4a1e-9264-c51c7b945282",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "0e573d14-b952-4e76-a915-90ad73b8357c",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/3og7XYsqjxb"
+      },
+      "migration": {
+        "cpId": "8f1cfd6d-94ee-4d0c-8a7a-928772e32bff",
+        "cpAlias": "Dfty3YKXZtJLu"
+      },
+      "stats": {
+        "remixCount": 8638
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:602fdaa1-e68d-4ec7-8731-fa6af52aa09e/rendition?assetType=TEMPLATE&etag=4f14a4d8bba82cc26f2079b6700ce133{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:602fdaa1-e68d-4ec7-8731-fa6af52aa09e/primary?assetType=TEMPLATE&etag=4f14a4d8bba82cc26f2079b6700ce133",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:602fdaa1-e68d-4ec7-8731-fa6af52aa09e/manifest?assetType=TEMPLATE&etag=4f14a4d8bba82cc26f2079b6700ce133",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:602fdaa1-e68d-4ec7-8731-fa6af52aa09e/component?assetType=TEMPLATE&etag=4f14a4d8bba82cc26f2079b6700ce133{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Black & Green Gifts Merry Christmas Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:3d4c8246-b807-46f8-adab-05ddb190659a",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:31a29aed-8d8c-4c76-b4c2-6f0ac1d0e8ef",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:31a29aed-8d8c-4c76-b4c2-6f0ac1d0e8ef"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/e/ef35173f-3243-4c4d-b979-6d83e44dce80",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-22T00:05:54.205Z",
+      "modifyDate": "2023-03-22T00:07:00.105Z",
+      "name": "ef35173f-3243-4c4d-b979-6d83e44dce80",
+      "dc:title": {
+        "i-default": "Gray & Black Scalloped Family Photo Christmas Greeting Card"
+      },
+      "etags": "f800f96db7eb6d890cad12b42b8e06eb",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "gift",
+        "woman",
+        "seasonal",
+        "santa-hat",
+        "black",
+        "holidaycreations2022",
+        "girl",
+        "christmas",
+        "holiday",
+        "scalloped",
+        "man",
+        "family",
+        "holly",
+        "xmas",
+        "child"
+      ],
+      "availabilityDate": "2022-10-28T14:29:42.634Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "brown",
+          "coverage": 0.1694,
+          "mode": "RGB",
+          "value": {
+            "r": 143,
+            "g": 106,
+            "b": 84
+          }
+        },
+        {
+          "name": "dark red",
+          "coverage": 0.0973,
+          "mode": "RGB",
+          "value": {
+            "r": 147,
+            "g": 28,
+            "b": 25
+          }
+        },
+        {
+          "name": "dark brown",
+          "coverage": 0.1116,
+          "mode": "RGB",
+          "value": {
+            "r": 88,
+            "g": 57,
+            "b": 44
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.2064,
+          "mode": "RGB",
+          "value": {
+            "r": 155,
+            "g": 154,
+            "b": 147
+          }
+        },
+        {
+          "name": "off white",
+          "coverage": 0.4153,
+          "mode": "RGB",
+          "value": {
+            "r": 227,
+            "g": 226,
+            "b": 222
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "D39F68F2615B301F0A495FF9@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "brown",
+              "coverage": 0.1694,
+              "mode": "RGB",
+              "value": {
+                "r": 143,
+                "g": 106,
+                "b": 84
+              }
+            },
+            {
+              "name": "dark red",
+              "coverage": 0.0973,
+              "mode": "RGB",
+              "value": {
+                "r": 147,
+                "g": 28,
+                "b": 25
+              }
+            },
+            {
+              "name": "dark brown",
+              "coverage": 0.1116,
+              "mode": "RGB",
+              "value": {
+                "r": 88,
+                "g": 57,
+                "b": 44
+              }
+            },
+            {
+              "name": "gray",
+              "coverage": 0.2064,
+              "mode": "RGB",
+              "value": {
+                "r": 155,
+                "g": 154,
+                "b": 147
+              }
+            },
+            {
+              "name": "off white",
+              "coverage": 0.4153,
+              "mode": "RGB",
+              "value": {
+                "r": 227,
+                "g": 226,
+                "b": 222
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "63631c4f-29b6-4e2a-8551-cefb2c045a69",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "53b7bea2-ecce-475d-8ece-821bf1ce4d85",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/gdyIgxdhpyb"
+      },
+      "migration": {
+        "cpId": "ef35173f-3243-4c4d-b979-6d83e44dce80",
+        "cpAlias": "0nPllpRfAp7lZ"
+      },
+      "stats": {
+        "remixCount": 4380
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:3d4c8246-b807-46f8-adab-05ddb190659a/rendition?assetType=TEMPLATE&etag=f800f96db7eb6d890cad12b42b8e06eb{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:3d4c8246-b807-46f8-adab-05ddb190659a/primary?assetType=TEMPLATE&etag=f800f96db7eb6d890cad12b42b8e06eb",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:3d4c8246-b807-46f8-adab-05ddb190659a/manifest?assetType=TEMPLATE&etag=f800f96db7eb6d890cad12b42b8e06eb",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:3d4c8246-b807-46f8-adab-05ddb190659a/component?assetType=TEMPLATE&etag=f800f96db7eb6d890cad12b42b8e06eb{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Gray & Black Scalloped Family Photo Christmas Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:ede9f7da-dd54-4690-914b-1be428147702",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:7b41ce9f-312c-469d-9da9-df7fdcd262c8",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:7b41ce9f-312c-469d-9da9-df7fdcd262c8"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/5/59440292-8588-4844-8ced-4f2125396f91",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-14T01:15:05.616Z",
+      "modifyDate": "2023-03-23T15:24:29.720Z",
+      "name": "59440292-8588-4844-8ced-4f2125396f91",
+      "dc:title": {
+        "i-default": "Gray & Red Deer Christmas Illustration Greeting Card"
+      },
+      "etags": "0c17507eaeb205ba428f2610224e656a",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "deer",
+        "merry-christmas",
+        "seasonal",
+        "paint",
+        "stars",
+        "holidaycreations2022",
+        "christmas",
+        "holiday",
+        "red",
+        "christmas-card",
+        "ornament",
+        "watercolor",
+        "greeting-card",
+        "illustration",
+        "xmas"
+      ],
+      "availabilityDate": "2022-10-14T14:27:17.799Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "off white",
+          "coverage": 0.8442,
+          "mode": "RGB",
+          "value": {
+            "r": 227,
+            "g": 227,
+            "b": 227
+          }
+        },
+        {
+          "name": "pink",
+          "coverage": 0.027,
+          "mode": "RGB",
+          "value": {
+            "r": 234,
+            "g": 185,
+            "b": 188
+          }
+        },
+        {
+          "name": "white",
+          "coverage": 0.0331,
+          "mode": "RGB",
+          "value": {
+            "r": 241,
+            "g": 242,
+            "b": 241
+          }
+        },
+        {
+          "name": "brown",
+          "coverage": 0.0217,
+          "mode": "RGB",
+          "value": {
+            "r": 145,
+            "g": 107,
+            "b": 67
+          }
+        },
+        {
+          "name": "red",
+          "coverage": 0.074,
+          "mode": "RGB",
+          "value": {
+            "r": 225,
+            "g": 48,
+            "b": 51
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "D39F68F2615B301F0A495FF9@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "eb76d1ca-af9b-431e-a5a6-ad2f06caea34",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "d1cde6d1-c0e0-4a5b-9cb6-a2e800cc93ea",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/DS3YfsUGayb"
+      },
+      "migration": {
+        "cpId": "59440292-8588-4844-8ced-4f2125396f91",
+        "cpAlias": "V5DgMRqLS4kub"
+      },
+      "stats": {
+        "remixCount": 14523
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:ede9f7da-dd54-4690-914b-1be428147702/rendition?assetType=TEMPLATE&etag=0c17507eaeb205ba428f2610224e656a{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:ede9f7da-dd54-4690-914b-1be428147702/primary?assetType=TEMPLATE&etag=0c17507eaeb205ba428f2610224e656a",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:ede9f7da-dd54-4690-914b-1be428147702/manifest?assetType=TEMPLATE&etag=0c17507eaeb205ba428f2610224e656a",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:ede9f7da-dd54-4690-914b-1be428147702/component?assetType=TEMPLATE&etag=0c17507eaeb205ba428f2610224e656a{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Gray & Red Deer Christmas Illustration Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:78be88b9-3edf-4286-bd06-335d170a727e",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:33b6d16c-846b-49b3-8a4e-b673c03a98c3",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:33b6d16c-846b-49b3-8a4e-b673c03a98c3"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/3/3511e467-b23e-4b63-952d-3047b62894ba",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-02-07T22:39:38.827Z",
+      "modifyDate": "2023-03-23T15:03:43.364Z",
+      "name": "3511e467-b23e-4b63-952d-3047b62894ba",
+      "dc:title": {
+        "i-default": "Red & Blue Cute Santa's Helper Christmas Greeting Card"
+      },
+      "etags": "c4d89f74072dc15e14f243baa049ffb8",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "seasonal",
+        "handwriting",
+        "stars",
+        "christmas",
+        "holiday",
+        "santa",
+        "red",
+        "blue",
+        "white",
+        "animal",
+        "hat",
+        "dog",
+        "pet",
+        "xmas"
+      ],
+      "availabilityDate": "2022-10-28T07:26:36.290Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "off white",
+          "coverage": 0.0442,
+          "mode": "RGB",
+          "value": {
+            "r": 224,
+            "g": 221,
+            "b": 222
+          }
+        },
+        {
+          "name": "red",
+          "coverage": 0.0518,
+          "mode": "RGB",
+          "value": {
+            "r": 206,
+            "g": 18,
+            "b": 38
+          }
+        },
+        {
+          "name": "dark pink",
+          "coverage": 0.0351,
+          "mode": "RGB",
+          "value": {
+            "r": 177,
+            "g": 148,
+            "b": 145
+          }
+        },
+        {
+          "name": "gray",
+          "coverage": 0.0364,
+          "mode": "RGB",
+          "value": {
+            "r": 184,
+            "g": 176,
+            "b": 174
+          }
+        },
+        {
+          "name": "cyan",
+          "coverage": 0.8326,
+          "mode": "RGB",
+          "value": {
+            "r": 188,
+            "g": 216,
+            "b": 220
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "CDBE359C60EDC20C0A495E6C@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "e167b31c-c02f-41a3-b7a0-3d47c2db6e05",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "0bcdebe7-3583-4258-9fe5-9ec401d79444",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/wWbwH1Fijxb"
+      },
+      "migration": {
+        "cpId": "3511e467-b23e-4b63-952d-3047b62894ba",
+        "cpAlias": "6C8BcdjlbxVHs"
+      },
+      "stats": {
+        "remixCount": 2944
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:78be88b9-3edf-4286-bd06-335d170a727e/rendition?assetType=TEMPLATE&etag=c4d89f74072dc15e14f243baa049ffb8{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:78be88b9-3edf-4286-bd06-335d170a727e/primary?assetType=TEMPLATE&etag=c4d89f74072dc15e14f243baa049ffb8",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:78be88b9-3edf-4286-bd06-335d170a727e/manifest?assetType=TEMPLATE&etag=c4d89f74072dc15e14f243baa049ffb8",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:78be88b9-3edf-4286-bd06-335d170a727e/component?assetType=TEMPLATE&etag=c4d89f74072dc15e14f243baa049ffb8{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Red & Blue Cute Santa's Helper Christmas Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:0261db68-23c2-4179-9138-57a1f25ff7c8",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:180b9e68-c12a-40a5-93b7-5f91ed1122f6",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:180b9e68-c12a-40a5-93b7-5f91ed1122f6"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/c/c79ad92f-3aba-40f1-a07e-9e2309da5dcd",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-12T20:07:32.514Z",
+      "modifyDate": "2023-03-23T16:19:45.594Z",
+      "name": "c79ad92f-3aba-40f1-a07e-9e2309da5dcd",
+      "dc:title": {
+        "i-default": "Red, Pink & White Ho Ho Ho Christmas Greeting Card"
+      },
+      "etags": "5e932ee38ba80ec621c29040cb1b1e35",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "red",
+        "carol",
+        "white",
+        "seasonal",
+        "texture",
+        "winter",
+        "hat",
+        "christmas",
+        "holiday",
+        "lifstyle",
+        "xmas",
+        "santa"
+      ],
+      "availabilityDate": "2022-10-28T08:30:49.576Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "white",
+          "coverage": 0.1508,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 250,
+            "b": 251
+          }
+        },
+        {
+          "name": "dark red",
+          "coverage": 0.0256,
+          "mode": "RGB",
+          "value": {
+            "r": 159,
+            "g": 33,
+            "b": 24
+          }
+        },
+        {
+          "name": "red",
+          "coverage": 0.062,
+          "mode": "RGB",
+          "value": {
+            "r": 208,
+            "g": 70,
+            "b": 63
+          }
+        },
+        {
+          "name": "off white",
+          "coverage": 0.021,
+          "mode": "RGB",
+          "value": {
+            "r": 237,
+            "g": 223,
+            "b": 232
+          }
+        },
+        {
+          "name": "pink",
+          "coverage": 0.7405,
+          "mode": "RGB",
+          "value": {
+            "r": 235,
+            "g": 215,
+            "b": 223
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "2CCD4A4960D4897A0A495E78@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "f7129774-562d-46c4-9e7c-482de7236ee8",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "5d10ec4c-d5a2-425a-8f59-4deea0802a7a",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/JpyhS0SPayb"
+      },
+      "migration": {
+        "cpId": "c79ad92f-3aba-40f1-a07e-9e2309da5dcd",
+        "cpAlias": "nRCqD7JeBQY28"
+      },
+      "stats": {
+        "remixCount": 48
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:0261db68-23c2-4179-9138-57a1f25ff7c8/rendition?assetType=TEMPLATE&etag=5e932ee38ba80ec621c29040cb1b1e35{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:0261db68-23c2-4179-9138-57a1f25ff7c8/primary?assetType=TEMPLATE&etag=5e932ee38ba80ec621c29040cb1b1e35",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:0261db68-23c2-4179-9138-57a1f25ff7c8/manifest?assetType=TEMPLATE&etag=5e932ee38ba80ec621c29040cb1b1e35",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:0261db68-23c2-4179-9138-57a1f25ff7c8/component?assetType=TEMPLATE&etag=5e932ee38ba80ec621c29040cb1b1e35{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Red, Pink & White Ho Ho Ho Christmas Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:d69275d6-548e-4471-98a6-6c72fee50d9e",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:3401ba0a-fb5b-4445-bf4a-7f16aeeccc1f",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:3401ba0a-fb5b-4445-bf4a-7f16aeeccc1f"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/4/479748d8-a37f-4214-8277-72cc5666cc9b",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-23T23:57:23.763Z",
+      "modifyDate": "2023-03-23T23:58:22.440Z",
+      "name": "479748d8-a37f-4214-8277-72cc5666cc9b",
+      "dc:title": {
+        "i-default": "Green and White Christmas Family Greeting Card"
+      },
+      "etags": "b8f19962f2e6e4adff867614209c5fb6",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "gift",
+        "green",
+        "woman",
+        "black-family",
+        "seasonal",
+        "pattern",
+        "winter",
+        "photo",
+        "girl",
+        "christmas",
+        "holiday",
+        "stylish",
+        "white",
+        "african-american",
+        "string-lights",
+        "man",
+        "family",
+        "xmas",
+        "child"
+      ],
+      "availabilityDate": "2022-10-28T14:04:48.649Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "29DB22C060D4891B0A495FD2@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "dark brown",
+              "coverage": 0.0623,
+              "mode": "RGB",
+              "value": {
+                "r": 96,
+                "g": 58,
+                "b": 57
+              }
+            },
+            {
+              "name": "light green",
+              "coverage": 0.037,
+              "mode": "RGB",
+              "value": {
+                "r": 158,
+                "g": 190,
+                "b": 151
+              }
+            },
+            {
+              "name": "dark blue",
+              "coverage": 0.0438,
+              "mode": "RGB",
+              "value": {
+                "r": 23,
+                "g": 16,
+                "b": 45
+              }
+            },
+            {
+              "name": "green",
+              "coverage": 0.7981,
+              "mode": "RGB",
+              "value": {
+                "r": 63,
+                "g": 144,
+                "b": 60
+              }
+            },
+            {
+              "name": "white",
+              "coverage": 0.0589,
+              "mode": "RGB",
+              "value": {
+                "r": 250,
+                "g": 238,
+                "b": 243
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "c4d37250-a094-47aa-8bde-0c34c406b42f",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "dc7a23ca-ac9d-43be-b380-b0dd23be0c86",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/Ims6qkgNpyb"
+      },
+      "migration": {
+        "cpId": "479748d8-a37f-4214-8277-72cc5666cc9b",
+        "cpAlias": "vu5IhS3VSh4gu"
+      },
+      "stats": {
+        "remixCount": 867
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d69275d6-548e-4471-98a6-6c72fee50d9e/rendition?assetType=TEMPLATE&etag=b8f19962f2e6e4adff867614209c5fb6{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d69275d6-548e-4471-98a6-6c72fee50d9e/primary?assetType=TEMPLATE&etag=b8f19962f2e6e4adff867614209c5fb6",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d69275d6-548e-4471-98a6-6c72fee50d9e/manifest?assetType=TEMPLATE&etag=b8f19962f2e6e4adff867614209c5fb6",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d69275d6-548e-4471-98a6-6c72fee50d9e/component?assetType=TEMPLATE&etag=b8f19962f2e6e4adff867614209c5fb6{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Green and White Christmas Family Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:b599305f-1bb9-4bcd-a1ac-598f7f019e45",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:6f1f1cb4-636b-46fe-aaf6-741819c2402f",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:6f1f1cb4-636b-46fe-aaf6-741819c2402f"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/6/67c2c219-3001-49b0-9ab1-c7373cac112f",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-02-07T23:06:10.398Z",
+      "modifyDate": "2023-03-23T15:32:47.998Z",
+      "name": "67c2c219-3001-49b0-9ab1-c7373cac112f",
+      "dc:title": {
+        "i-default": "Green and Pink Hand Drawn Christmas Card"
+      },
+      "etags": "a4987b5d23f80292a5ea8b84f4a01d87",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "holidaycreations2022",
+        "ornament",
+        "seasonal",
+        "pattern",
+        "hand-drawn",
+        "illustration",
+        "christmas",
+        "holiday",
+        "doodle",
+        "decorative",
+        "xmas"
+      ],
+      "availabilityDate": "2022-10-19T14:32:23.959Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "dark green",
+          "coverage": 0.7942,
+          "mode": "RGB",
+          "value": {
+            "r": 5,
+            "g": 124,
+            "b": 88
+          }
+        },
+        {
+          "name": "lilac",
+          "coverage": 0.0111,
+          "mode": "RGB",
+          "value": {
+            "r": 245,
+            "g": 218,
+            "b": 239
+          }
+        },
+        {
+          "name": "emerald",
+          "coverage": 0.1032,
+          "mode": "RGB",
+          "value": {
+            "r": 29,
+            "g": 137,
+            "b": 105
+          }
+        },
+        {
+          "name": "green",
+          "coverage": 0.0087,
+          "mode": "RGB",
+          "value": {
+            "r": 73,
+            "g": 164,
+            "b": 141
+          }
+        },
+        {
+          "name": "cyan",
+          "coverage": 0.0827,
+          "mode": "RGB",
+          "value": {
+            "r": 141,
+            "g": 196,
+            "b": 188
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "5C5657805F0387A40A495FE3@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "5b3087e6-0d2d-405c-adf6-3ada17a197ce",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "177ed812-409b-44bb-9507-e1000ccebbbc",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/qRmCII2Ahxb"
+      },
+      "migration": {
+        "cpId": "67c2c219-3001-49b0-9ab1-c7373cac112f",
+        "cpAlias": "eo3oJUJnCcnGc"
+      },
+      "stats": {
+        "remixCount": 2518
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:b599305f-1bb9-4bcd-a1ac-598f7f019e45/rendition?assetType=TEMPLATE&etag=a4987b5d23f80292a5ea8b84f4a01d87{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:b599305f-1bb9-4bcd-a1ac-598f7f019e45/primary?assetType=TEMPLATE&etag=a4987b5d23f80292a5ea8b84f4a01d87",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:b599305f-1bb9-4bcd-a1ac-598f7f019e45/manifest?assetType=TEMPLATE&etag=a4987b5d23f80292a5ea8b84f4a01d87",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:b599305f-1bb9-4bcd-a1ac-598f7f019e45/component?assetType=TEMPLATE&etag=a4987b5d23f80292a5ea8b84f4a01d87{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Green and Pink Hand Drawn Christmas Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:d54598e2-a5cd-49c5-8a68-b02e07e4bf35",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:31a29aed-8d8c-4c76-b4c2-6f0ac1d0e8ef",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:31a29aed-8d8c-4c76-b4c2-6f0ac1d0e8ef"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/e/edb7600e-0905-4fd4-b830-5d469aa28c80",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-14T04:36:23.877Z",
+      "modifyDate": "2023-03-23T16:36:01.532Z",
+      "name": "edb7600e-0905-4fd4-b830-5d469aa28c80",
+      "dc:title": {
+        "i-default": "Red Ornament Christmas Greeting Card"
+      },
+      "etags": "2284484455e86340257ebfab76dfdb9e",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "red",
+        "ornament",
+        "christmas-decor",
+        "merry-christmas",
+        "seasonal",
+        "christmas",
+        "holiday",
+        "xmas"
+      ],
+      "availabilityDate": "2022-10-28T08:29:38.269Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "dark blue",
+          "coverage": 0.0448,
+          "mode": "RGB",
+          "value": {
+            "r": 20,
+            "g": 51,
+            "b": 70
+          }
+        },
+        {
+          "name": "white",
+          "coverage": 0.0552,
+          "mode": "RGB",
+          "value": {
+            "r": 250,
+            "g": 250,
+            "b": 250
+          }
+        },
+        {
+          "name": "emerald",
+          "coverage": 0.0213,
+          "mode": "RGB",
+          "value": {
+            "r": 104,
+            "g": 129,
+            "b": 86
+          }
+        },
+        {
+          "name": "dark red",
+          "coverage": 0.8275,
+          "mode": "RGB",
+          "value": {
+            "r": 160,
+            "g": 8,
+            "b": 12
+          }
+        },
+        {
+          "name": "olive",
+          "coverage": 0.0511,
+          "mode": "RGB",
+          "value": {
+            "r": 126,
+            "g": 146,
+            "b": 90
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "2CCD4A4960D4897A0A495E78@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "558a874f-4ffa-4cfd-a928-2655fed50434",
+                "revision": 0,
+                "width": 358,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "5824bb1a-d0dc-4c3f-988b-4a6191bb71c1",
+                "revision": 0,
+                "width": 857,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/0bqHekaTayb"
+      },
+      "migration": {
+        "cpId": "edb7600e-0905-4fd4-b830-5d469aa28c80",
+        "cpAlias": "Vvrxpwz4s88KH"
+      },
+      "stats": {
+        "remixCount": 6393
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d54598e2-a5cd-49c5-8a68-b02e07e4bf35/rendition?assetType=TEMPLATE&etag=2284484455e86340257ebfab76dfdb9e{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d54598e2-a5cd-49c5-8a68-b02e07e4bf35/primary?assetType=TEMPLATE&etag=2284484455e86340257ebfab76dfdb9e",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d54598e2-a5cd-49c5-8a68-b02e07e4bf35/manifest?assetType=TEMPLATE&etag=2284484455e86340257ebfab76dfdb9e",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:d54598e2-a5cd-49c5-8a68-b02e07e4bf35/component?assetType=TEMPLATE&etag=2284484455e86340257ebfab76dfdb9e{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 857,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Red Ornament Christmas Greeting Card"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:449ce5fe-e155-470a-818a-f8fc1a11c0d8",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:8564a866-6e9d-454f-af85-de79a13e9b69",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:8564a866-6e9d-454f-af85-de79a13e9b69"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/a/aa30d2cb-2151-4835-a95d-2d263ea443ef",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-02-08T19:45:13.810Z",
+      "modifyDate": "2023-03-23T16:06:40.186Z",
+      "name": "aa30d2cb-2151-4835-a95d-2d263ea443ef",
+      "dc:title": {
+        "i-default": "Green and Orange Illustrated Singing Llama Winter Square Instagram Social Post Graphic"
+      },
+      "etags": "167a050778893cb1ba255c33fd9f4cc7",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "song",
+        "snowflake",
+        "singing",
+        "seasonal",
+        "pattern",
+        "winter",
+        "christmas",
+        "holiday",
+        "llama",
+        "outline",
+        "season",
+        "illustration",
+        "speech-bubble",
+        "santa hat"
+      ],
+      "availabilityDate": "2018-12-06T01:23:59.720Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "emerald",
+          "coverage": 0.7337,
+          "mode": "RGB",
+          "value": {
+            "r": 35,
+            "g": 174,
+            "b": 120
+          }
+        },
+        {
+          "name": "white",
+          "coverage": 0.0163,
+          "mode": "RGB",
+          "value": {
+            "r": 248,
+            "g": 251,
+            "b": 250
+          }
+        },
+        {
+          "name": "red",
+          "coverage": 0.1024,
+          "mode": "RGB",
+          "value": {
+            "r": 248,
+            "g": 121,
+            "b": 93
+          }
+        },
+        {
+          "name": "green",
+          "coverage": 0.1215,
+          "mode": "RGB",
+          "value": {
+            "r": 39,
+            "g": 181,
+            "b": 124
+          }
+        },
+        {
+          "name": "orange",
+          "coverage": 0.0261,
+          "mode": "RGB",
+          "value": {
+            "r": 244,
+            "g": 122,
+            "b": 91
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "91BF3DF05A55507D0A495E41@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "instagram-square-post",
+            "size": {
+              "name": "1080x1080px"
+            }
+          },
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "d85bc6b7-b019-49db-9784-442962d4ba1b",
+                "revision": 0,
+                "width": 500,
+                "height": 500,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "93b41529-537c-4568-aec8-4db96bde0db1",
+                "revision": 0,
+                "width": 1200,
+                "height": 1200,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/V3jGAqWqjxb"
+      },
+      "migration": {
+        "cpId": "aa30d2cb-2151-4835-a95d-2d263ea443ef",
+        "cpAlias": "nQ9OY3ZlgDDe7"
+      },
+      "stats": {
+        "remixCount": 3039
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:449ce5fe-e155-470a-818a-f8fc1a11c0d8/rendition?assetType=TEMPLATE&etag=167a050778893cb1ba255c33fd9f4cc7{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:449ce5fe-e155-470a-818a-f8fc1a11c0d8/primary?assetType=TEMPLATE&etag=167a050778893cb1ba255c33fd9f4cc7",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:449ce5fe-e155-470a-818a-f8fc1a11c0d8/manifest?assetType=TEMPLATE&etag=167a050778893cb1ba255c33fd9f4cc7",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:449ce5fe-e155-470a-818a-f8fc1a11c0d8/component?assetType=TEMPLATE&etag=167a050778893cb1ba255c33fd9f4cc7{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 1200,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Green and Orange Illustrated Singing Llama Winter Square Instagram Social Post Graphic"
+      }
+    },
+    {
+      "id": "urn:aaid:sc:VA6C2:cd7b1c6b-2aba-4616-908d-003e6130895f",
+      "parentDirectoryId": "urn:aaid:sc:VA6C2:770ade5c-fccc-48f4-a45d-5a449b19f9fd",
+      "ancestorAssetIds": [
+        "urn:aaid:directory:b5accaca-1f2d-4311-aa12-e9c537a8fad8",
+        "urn:aaid:directory:61acb9e9-a107-48e0-9e73-80c8031ede18",
+        "urn:aaid:sc:VA6C2:74c05c10-0945-5dd6-9c3d-22851a3d1903",
+        "urn:aaid:sc:VA6C2:b2b850c0-cab8-48be-89db-78909574db16",
+        "urn:aaid:sc:VA6C2:0fabaa0d-a1f7-4cbd-b603-89c6dc35a48a",
+        "urn:aaid:sc:VA6C2:74c60171-633c-4451-867e-d49e5f4e5884",
+        "urn:aaid:sc:VA6C2:1bb25287-eae8-476e-8dab-5c191e525e61",
+        "urn:aaid:sc:VA6C2:c1762c2e-4d9f-4a9d-aee7-c113f2b429f7",
+        "urn:aaid:sc:VA6C2:770ade5c-fccc-48f4-a45d-5a449b19f9fd"
+      ],
+      "path": "/content/assets/content/approved/ccx/template/ccx_migration/f/ff5e3452-1164-41ef-9d32-647dda2e08dc",
+      "contentType": "application/vnd.adobe.hz.express+dcx",
+      "createDate": "2023-03-22T06:53:04.205Z",
+      "modifyDate": "2023-03-22T06:53:46.272Z",
+      "name": "ff5e3452-1164-41ef-9d32-647dda2e08dc",
+      "dc:title": {
+        "i-default": "Beige and Red Modern Christmas Photo Card"
+      },
+      "etags": "\"7d1973431b9bfa4bae4eaf91c2ca1992\"",
+      "assetType": "Template",
+      "status": "approved",
+      "behaviors": ["still"],
+      "topics": [
+        "seasonal",
+        "texture",
+        "kid",
+        "holidaycreations2022",
+        "christmas",
+        "holiday",
+        "cute",
+        "red",
+        "beige",
+        "halftone",
+        "family",
+        "photo-card",
+        "xmas"
+      ],
+      "availabilityDate": "2022-12-12T22:26:06.751Z",
+      "licensingCategory": "free",
+      "language": "en-US",
+      "applicableRegions": ["ZZ"],
+      "extractedColors": [
+        {
+          "name": "gray",
+          "coverage": 0.0984,
+          "mode": "RGB",
+          "value": {
+            "r": 174,
+            "g": 175,
+            "b": 174
+          }
+        },
+        {
+          "name": "white",
+          "coverage": 0.5565,
+          "mode": "RGB",
+          "value": {
+            "r": 251,
+            "g": 250,
+            "b": 243
+          }
+        },
+        {
+          "name": "dark red",
+          "coverage": 0.1242,
+          "mode": "RGB",
+          "value": {
+            "r": 158,
+            "g": 25,
+            "b": 25
+          }
+        },
+        {
+          "name": "black",
+          "coverage": 0.0799,
+          "mode": "RGB",
+          "value": {
+            "r": 28,
+            "g": 40,
+            "b": 41
+          }
+        },
+        {
+          "name": "silver",
+          "coverage": 0.141,
+          "mode": "RGB",
+          "value": {
+            "r": 202,
+            "g": 204,
+            "b": 207
+          }
+        }
+      ],
+      "attribution": {
+        "vendor": "Adobe Express",
+        "submittedBy": "65481DB462618A1B0A495FE1@AdobeID"
+      },
+      "pages": [
+        {
+          "task": {
+            "name": "card-greeting",
+            "size": {
+              "name": "a7-card"
+            }
+          },
+          "extractedColors": [
+            {
+              "name": "gray",
+              "coverage": 0.0984,
+              "mode": "RGB",
+              "value": {
+                "r": 174,
+                "g": 175,
+                "b": 174
+              }
+            },
+            {
+              "name": "white",
+              "coverage": 0.5565,
+              "mode": "RGB",
+              "value": {
+                "r": 251,
+                "g": 250,
+                "b": 243
+              }
+            },
+            {
+              "name": "dark red",
+              "coverage": 0.1242,
+              "mode": "RGB",
+              "value": {
+                "r": 158,
+                "g": 25,
+                "b": 25
+              }
+            },
+            {
+              "name": "black",
+              "coverage": 0.0799,
+              "mode": "RGB",
+              "value": {
+                "r": 28,
+                "g": 40,
+                "b": 41
+              }
+            },
+            {
+              "name": "silver",
+              "coverage": 0.141,
+              "mode": "RGB",
+              "value": {
+                "r": 202,
+                "g": 204,
+                "b": 207
+              }
+            }
+          ],
+          "rendition": {
+            "image": {
+              "thumbnail": {
+                "componentId": "e3463f21-32a2-4d37-b994-8acd96d179b3",
+                "revision": 0,
+                "width": 500,
+                "height": 358,
+                "mediaType": "image/png"
+              },
+              "preview": {
+                "componentId": "ff3732e2-29c2-46a6-a171-a7d13e732164",
+                "revision": 0,
+                "width": 1200,
+                "height": 857,
+                "mediaType": "image/png"
+              }
+            }
+          }
+        }
+      ],
+      "customLinks": {
+        "branchUrl": "https://adobesparkpost.app.link/dyiNGCDhpyb"
+      },
+      "migration": {
+        "cpId": "ff5e3452-1164-41ef-9d32-647dda2e08dc",
+        "cpAlias": "Xd4HLUrZioSG4"
+      },
+      "stats": {
+        "remixCount": 14038
+      },
+      "segments": ["all"],
+      "_links": {
+        "http://ns.adobe.com/adobecloud/rel/rendition": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:cd7b1c6b-2aba-4616-908d-003e6130895f/rendition?assetType=TEMPLATE&etag=7d1973431b9bfa4bae4eaf91c2ca1992{&page,size,type,fragment}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/primary": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:cd7b1c6b-2aba-4616-908d-003e6130895f/primary?assetType=TEMPLATE&etag=7d1973431b9bfa4bae4eaf91c2ca1992",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/manifest": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:cd7b1c6b-2aba-4616-908d-003e6130895f/manifest?assetType=TEMPLATE&etag=7d1973431b9bfa4bae4eaf91c2ca1992",
+          "templated": false,
+          "mode": "id",
+          "name": "ACP"
+        },
+        "http://ns.adobe.com/adobecloud/rel/component": {
+          "href": "https://design-assets.adobeprojectm.com/content/download/express/public/urn:aaid:sc:VA6C2:cd7b1c6b-2aba-4616-908d-003e6130895f/component?assetType=TEMPLATE&etag=7d1973431b9bfa4bae4eaf91c2ca1992{&revision,component_id}",
+          "templated": true,
+          "mode": "id",
+          "name": "ACP"
+        }
+      },
+      "assetTypes": ["Template"],
+      "compositeDetails": {
+        "maxHeight": 857,
+        "maxWidth": 1200,
+        "aspectRatio": 0,
+        "containsStockAssets": false
+      },
+      "animated": false,
+      "title": {
+        "i-default": "Beige and Red Modern Christmas Photo Card"
+      }
+    }
+  ],
+  "_links": {
+    "next": {
+      "href": "https://spark-search.adobe.io/v3/content?queryType=search&collectionId=urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418&q=green hat christmas&filters=licensingCategory==free&filters=tasks==[flyer]&limit=10&start=10",
+      "templated": false,
+      "name": "ACP"
+    }
+  }
+}
