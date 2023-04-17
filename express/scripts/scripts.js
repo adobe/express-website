@@ -124,8 +124,8 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"],img[
         let assetPath = el.href // the reference for an a/svg tag
           || el.currentSrc // the active source in a picture/video/audio element
           || el.src; // the source for an image/video/iframe
-        assetPath = new URL(assetPath).pathname;
         const matches = assetPath.match(/cdn\.cp\.adobe\.io.*\/rendition\/([0-9a-f-]+)|\/(media_[0-9a-f]+)/);
+        assetPath = new URL(assetPath).pathname;
         if (matches) {
           assetId = matches[1] || matches[2];
         } else {
