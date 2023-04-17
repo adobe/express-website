@@ -142,13 +142,16 @@ function formatFilterString(filters) {
 //   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 // }
 
-const buildSearchUrl = (limit, start, sort, filterString) => {
+const buildSearchUrl = ({
+  limit, start = 0, sort, filters,
+}) => {
   // FIXME: orderBy fields are now different.
-  // No more orderBy=-_score,-remixCount and only createDate, relevancy, and priority
+  // No more orderBy=-_score,-remixCount and only createDate, remixCount, and priority
   const base = 'https://spark-search.adobe.io/v3/content';
   const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
   const queryType = 'search';
-  return encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}${start && `&start=${start}`}${filterString}`);
+  const filterStr = formatFilterString(filters);
+  return encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}&start=${start}${filterStr}`);
 };
 
 async function getContent(url) {
@@ -161,12 +164,7 @@ async function getContent(url) {
 
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    props.queryString = buildSearchUrl(
-      props.limit,
-      props.start,
-      props.sort,
-      formatFilterString(props.filters),
-    );
+    props.queryString = buildSearchUrl(props);
 
     const result = await getContent(props.queryString);
 
@@ -174,7 +172,7 @@ async function fetchTemplates() {
       return result;
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      const fallbackUrl = buildSearchUrl(props.limit, props.start, props.sort, '');
+      const fallbackUrl = buildSearchUrl({ ...props, filters: {} });
       return getContent(fallbackUrl);
     }
   }
@@ -189,7 +187,7 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const tempQ = buildSearchUrl(props.limit, '', props.sort, formatFilterString(tempFilters));
+    const tempQ = buildSearchUrl({ ...props });
 
     return getContent(tempQ);
   }
@@ -239,8 +237,7 @@ async function processResponse() {
 
   // FIXME: {&page,size,type,fragment}
   const renditionParams = {
-    // format: 'jpg',
-    // dimension: 'width',
+    format: 'jpg',
     size: 400,
   };
 
