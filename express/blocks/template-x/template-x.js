@@ -56,7 +56,7 @@ function constructProps(block) {
     limit: 70,
     total: 0,
     start: '',
-    sortBy: '-_score,-remixCount',
+    sort: '-_score,-remixCount',
     masonry: undefined,
     headingTitle: null,
     headingSlug: null,
@@ -246,7 +246,7 @@ function formatSearchQuery(props) {
     }
   }, '');
 
-  return `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sortBy}&filters=${filterString}`;
+  return `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
 }
 
 async function fetchTemplates(props) {
@@ -261,7 +261,7 @@ async function fetchTemplates(props) {
     return result;
   } else {
     // save fetch if search query returned 0 templates. "Bad result is better than no result"
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sortBy}&filters=locales:(en)`)
+    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
       .then((res) => res.json())
       .then((res) => res);
   }
@@ -459,11 +459,11 @@ async function attachFreeInAppPills(block) {
   }
 }
 
-async function redirectSearch($searchBar, props) {
+async function redirectSearch(searchBar, props) {
   const placeholders = await fetchPlaceholders().then((result) => result);
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
-  if ($searchBar) {
-    const wrapper = $searchBar.closest('.search-bar-wrapper');
+  if (searchBar) {
+    const wrapper = searchBar.closest('.search-bar-wrapper');
     const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
     props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
   }
@@ -471,10 +471,10 @@ async function redirectSearch($searchBar, props) {
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
   let currentTasks = props.filters.tasks;
   const currentTopic = props.filters.topics;
-  let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
+  let searchInput = searchBar ? searchBar.value.toLowerCase() : currentTopic;
 
   const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
-    const searchValue = $searchBar.value.toLowerCase();
+    const searchValue = searchBar.value.toLowerCase();
     return searchValue.indexOf(word.toLowerCase()) >= 0;
   })).sort((a, b) => b[0].length - a[0].length);
 
@@ -574,59 +574,59 @@ function updateFilterIcon(block) {
 
 function decorateFunctionsContainer(block, section, functions, placeholders) {
   const functionsContainer = createTag('div', { class: 'functions-container' });
-  const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
+  const functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
   Object.entries(functions).forEach((filter) => {
-    const $filterWrapper = filter[1].elements.wrapper;
+    const filterWrapper = filter[1].elements.wrapper;
 
-    Object.entries($filterWrapper.subElements).forEach((part) => {
-      const $innerWrapper = part[1].wrapper;
+    Object.entries(filterWrapper.subElements).forEach((part) => {
+      const innerWrapper = part[1].wrapper;
 
       Object.entries(part[1].subElements).forEach((innerElement) => {
         if (Object.values(innerElement)[1]) {
-          $innerWrapper.append(Object.values(innerElement)[1]);
+          innerWrapper.append(Object.values(innerElement)[1]);
         }
       });
 
-      $filterWrapper.append($innerWrapper);
+      filterWrapper.append(innerWrapper);
     });
-    $functionContainerMobile.append($filterWrapper.cloneNode({ deep: true }));
-    functionsContainer.append($filterWrapper);
+    functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
+    functionsContainer.append(filterWrapper);
   });
 
   // restructure drawer for mobile design
-  const $filterContainer = createTag('div', { class: 'filter-container-mobile' });
-  const $mobileFilterButtonWrapper = createTag('div', { class: 'filter-button-mobile-wrapper' });
-  const $mobileFilterButton = createTag('span', { class: 'filter-button-mobile' });
-  const $drawer = createTag('div', { class: 'filter-drawer-mobile hidden retracted' });
-  const $drawerInnerWrapper = createTag('div', { class: 'filter-drawer-mobile-inner-wrapper' });
-  const $drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
+  const filterContainer = createTag('div', { class: 'filter-container-mobile' });
+  const mobileFilterButtonWrapper = createTag('div', { class: 'filter-button-mobile-wrapper' });
+  const mobileFilterButton = createTag('span', { class: 'filter-button-mobile' });
+  const drawer = createTag('div', { class: 'filter-drawer-mobile hidden retracted' });
+  const drawerInnerWrapper = createTag('div', { class: 'filter-drawer-mobile-inner-wrapper' });
+  const drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
   const $closeButton = getIconElement('search-clear');
-  const $applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
-  const $applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
+  const applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
+  const applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
 
   $closeButton.classList.add('close-drawer');
-  $applyButton.textContent = placeholders['apply-filters'];
+  applyButton.textContent = placeholders['apply-filters'];
 
-  $functionContainerMobile.children[0]
+  functionContainerMobile.children[0]
     .querySelector('.current-option-premium')
     .textContent = `${placeholders.free} ${placeholders['versus-shorthand']} ${placeholders.premium}`;
 
-  $functionContainerMobile.children[1]
+  functionContainerMobile.children[1]
     .querySelector('.current-option-animated')
     .textContent = `${placeholders.static} ${placeholders['versus-shorthand']} ${placeholders.animated}`;
 
-  $drawerInnerWrapper.append(
-    $functionContainerMobile.children[0],
-    $functionContainerMobile.children[1],
+  drawerInnerWrapper.append(
+    functionContainerMobile.children[0],
+    functionContainerMobile.children[1],
   );
 
-  $drawer.append($closeButton, $drawerInnerWrapper);
+  drawer.append($closeButton, drawerInnerWrapper);
 
-  const $buttonsInDrawer = $drawer.querySelectorAll('.button-wrapper');
-  const optionsInDrawer = $drawer.querySelectorAll('.options-wrapper');
+  const buttonsInDrawer = drawer.querySelectorAll('.button-wrapper');
+  const optionsInDrawer = drawer.querySelectorAll('.options-wrapper');
 
-  [$buttonsInDrawer, optionsInDrawer].forEach((category) => {
+  [buttonsInDrawer, optionsInDrawer].forEach((category) => {
     category.forEach((element) => {
       element.classList.add('in-drawer');
       const heading = element.querySelector('.current-option');
@@ -640,54 +640,54 @@ function decorateFunctionsContainer(block, section, functions, placeholders) {
     });
   });
 
-  $mobileFilterButtonWrapper.append(getIconElement('scratch-icon-22'), $mobileFilterButton);
-  $applyButtonWrapper.append($applyButton);
-  $filterContainer.append(
-    $mobileFilterButtonWrapper,
-    $drawer,
-    $applyButtonWrapper,
-    $drawerBackground,
+  mobileFilterButtonWrapper.append(getIconElement('scratch-icon-22'), mobileFilterButton);
+  applyButtonWrapper.append(applyButton);
+  filterContainer.append(
+    mobileFilterButtonWrapper,
+    drawer,
+    applyButtonWrapper,
+    drawerBackground,
   );
-  $functionContainerMobile.prepend($filterContainer);
+  functionContainerMobile.prepend(filterContainer);
 
-  $mobileFilterButton.textContent = placeholders.filter;
-  const $sortButton = $functionContainerMobile.querySelector('.current-option-sort');
-  if ($sortButton) {
-    $sortButton.textContent = placeholders.sort;
-    $sortButton.className = 'filter-mobile-option-heading';
+  mobileFilterButton.textContent = placeholders.filter;
+  const sortButton = functionContainerMobile.querySelector('.current-option-sort');
+  if (sortButton) {
+    sortButton.textContent = placeholders.sort;
+    sortButton.className = 'filter-mobile-option-heading';
   }
 
-  return { mobile: $functionContainerMobile, desktop: functionsContainer };
+  return { mobile: functionContainerMobile, desktop: functionsContainer };
 }
 
 function resetTaskDropdowns(section) {
-  const $taskDropdowns = section.querySelectorAll('.task-dropdown');
-  const $taskDropdownLists = section.querySelectorAll('.task-dropdown-list');
+  const taskDropdowns = section.querySelectorAll('.task-dropdown');
+  const taskDropdownLists = section.querySelectorAll('.task-dropdown-list');
 
-  $taskDropdowns.forEach((dropdown) => {
+  taskDropdowns.forEach((dropdown) => {
     dropdown.classList.remove('active');
   });
 
-  $taskDropdownLists.forEach((list) => {
+  taskDropdownLists.forEach((list) => {
     list.classList.remove('active');
   });
 }
 
 function closeTaskDropdown(toolBar) {
   const section = toolBar.closest('.section.template-x-fullwidth-container');
-  const $searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
-  $searchBarWrappers.forEach(($wrapper) => {
-    const $taskDropdown = $wrapper.querySelector('.task-dropdown');
-    const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
-    $taskDropdown.classList.remove('active');
-    $taskDropdownList.classList.remove('active');
+  const searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
+  searchBarWrappers.forEach((wrapper) => {
+    const taskDropdown = wrapper.querySelector('.task-dropdown');
+    const taskDropdownList = taskDropdown.querySelector('.task-dropdown-list');
+    taskDropdown.classList.remove('active');
+    taskDropdownList.classList.remove('active');
   });
 }
 
-function initSearchFunction(toolBar, props, $stickySearchBarWrapper, $searchBarWrapper) {
+function initSearchFunction(toolBar, props, stickySearchBarWrapper, searchBarWrapper) {
   const section = toolBar.closest('.section.template-x-fullwidth-container');
-  const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
-  const $searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
+  const stickySearchBar = stickySearchBarWrapper.querySelector('input.search-bar');
+  const searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
   const toolbarWrapper = toolBar.parentElement;
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
@@ -699,57 +699,57 @@ function initSearchFunction(toolBar, props, $stickySearchBarWrapper, $searchBarW
     }
   }, { rootMargin: '0px', threshold: 1 });
 
-  searchBarWatcher.observe($searchBarWrapper);
+  searchBarWatcher.observe(searchBarWrapper);
 
-  $searchBarWrappers.forEach(($wrapper) => {
-    const $searchForm = $wrapper.querySelector('.search-form');
-    const $searchBar = $wrapper.querySelector('input.search-bar');
-    const $clear = $wrapper.querySelector('.icon-search-clear');
-    const $taskDropdown = $wrapper.querySelector('.task-dropdown');
-    const $taskDropdownToggle = $taskDropdown.querySelector('.task-dropdown-toggle');
-    const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
-    const $taskOptions = $taskDropdownList.querySelectorAll('.option');
+  searchBarWrappers.forEach((wrapper) => {
+    const searchForm = wrapper.querySelector('.search-form');
+    const searchBar = wrapper.querySelector('input.search-bar');
+    const clear = wrapper.querySelector('.icon-search-clear');
+    const taskDropdown = wrapper.querySelector('.task-dropdown');
+    const taskDropdownToggle = taskDropdown.querySelector('.task-dropdown-toggle');
+    const taskDropdownList = taskDropdown.querySelector('.task-dropdown-list');
+    const taskOptions = taskDropdownList.querySelectorAll('.option');
 
-    $searchBar.addEventListener('click', (e) => {
+    searchBar.addEventListener('click', (e) => {
       e.stopPropagation();
       closeTaskDropdown(toolBar);
     }, { passive: true });
 
-    $searchBar.addEventListener('keyup', () => {
-      if ($searchBar.value !== '') {
-        $clear.style.display = 'inline-block';
+    searchBar.addEventListener('keyup', () => {
+      if (searchBar.value !== '') {
+        clear.style.display = 'inline-block';
       } else {
-        $clear.style.display = 'none';
+        clear.style.display = 'none';
       }
     }, { passive: true });
 
-    $searchForm.addEventListener('submit', async (e) => {
+    searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      await redirectSearch($searchBar, props);
+      await redirectSearch(searchBar, props);
     });
 
-    $clear.addEventListener('click', () => {
-      $searchBar.value = '';
-      $clear.style.display = 'none';
+    clear.addEventListener('click', () => {
+      searchBar.value = '';
+      clear.style.display = 'none';
     }, { passive: true });
 
-    $taskDropdownToggle.addEventListener('click', (e) => {
+    taskDropdownToggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      $taskDropdown.classList.toggle('active');
-      $taskDropdownList.classList.toggle('active');
+      taskDropdown.classList.toggle('active');
+      taskDropdownList.classList.toggle('active');
     }, { passive: true });
 
     document.addEventListener('click', (e) => {
       const { target } = e;
-      if (target !== $taskDropdown && !$taskDropdown.contains(target)) {
-        $taskDropdown.classList.remove('active');
-        $taskDropdownList.classList.remove('active');
+      if (target !== taskDropdown && !taskDropdown.contains(target)) {
+        taskDropdown.classList.remove('active');
+        taskDropdownList.classList.remove('active');
       }
     }, { passive: true });
 
-    $taskOptions.forEach((option) => {
+    taskOptions.forEach((option) => {
       const updateTaskOptions = () => {
-        $taskOptions.forEach((o) => {
+        taskOptions.forEach((o) => {
           if (o !== option) {
             o.classList.remove('active');
           }
@@ -757,7 +757,7 @@ function initSearchFunction(toolBar, props, $stickySearchBarWrapper, $searchBarW
 
         option.classList.add('active');
         props.filters.tasks = `(${option.dataset.tasks})`;
-        $taskDropdownToggle.textContent = option.textContent.trim();
+        taskDropdownToggle.textContent = option.textContent.trim();
         closeTaskDropdown(toolBar);
       };
 
@@ -768,99 +768,104 @@ function initSearchFunction(toolBar, props, $stickySearchBarWrapper, $searchBarW
     });
 
     document.addEventListener('click', (e) => {
-      if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
-        if ($wrapper.classList.contains('sticky-search-bar')) {
-          $wrapper.classList.remove('ready');
-          $wrapper.classList.add('collapsed');
+      if (e.target !== wrapper && !wrapper.contains(e.target)) {
+        if (wrapper.classList.contains('sticky-search-bar')) {
+          wrapper.classList.remove('ready');
+          wrapper.classList.add('collapsed');
         }
       }
     }, { passive: true });
   });
 
-  $stickySearchBar.addEventListener('click', (e) => {
+  stickySearchBar.addEventListener('click', (e) => {
     e.stopPropagation();
 
-    $stickySearchBarWrapper.classList.remove('collapsed');
+    stickySearchBarWrapper.classList.remove('collapsed');
     setTimeout(() => {
-      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
-        $stickySearchBarWrapper.classList.add('ready');
+      if (!stickySearchBarWrapper.classList.contains('collapsed')) {
+        stickySearchBarWrapper.classList.add('ready');
       }
     }, 500);
   }, { passive: true });
 
-  $stickySearchBarWrapper.addEventListener('mouseenter', () => {
-    $stickySearchBarWrapper.classList.remove('collapsed');
+  stickySearchBarWrapper.addEventListener('mouseenter', () => {
+    stickySearchBarWrapper.classList.remove('collapsed');
     setTimeout(() => {
-      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
-        $stickySearchBarWrapper.classList.add('ready');
+      if (!stickySearchBarWrapper.classList.contains('collapsed')) {
+        stickySearchBarWrapper.classList.add('ready');
       }
     }, 500);
   }, { passive: true });
 
-  $stickySearchBarWrapper.addEventListener('mouseleave', () => {
-    if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
-      $stickySearchBarWrapper.classList.remove('ready');
-      $stickySearchBarWrapper.classList.add('collapsed');
+  stickySearchBarWrapper.addEventListener('mouseleave', () => {
+    if (!stickySearchBar || stickySearchBar !== document.activeElement) {
+      stickySearchBarWrapper.classList.remove('ready');
+      stickySearchBarWrapper.classList.add('collapsed');
       resetTaskDropdowns(section);
     }
   }, { passive: true });
 }
 
 function updateLottieStatus(section) {
-  const $drawer = section.querySelector('.filter-drawer-mobile');
-  const $inWrapper = $drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
-  const $lottieArrows = $drawer.querySelector('.lottie-wrapper');
-  if ($lottieArrows) {
-    if ($inWrapper.scrollHeight - $inWrapper.scrollTop === $inWrapper.offsetHeight) {
-      $lottieArrows.style.display = 'none';
-      $drawer.classList.remove('scrollable');
+  const drawer = section.querySelector('.filter-drawer-mobile');
+  const inWrapper = drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
+  const lottieArrows = drawer.querySelector('.lottie-wrapper');
+  if (lottieArrows) {
+    if (inWrapper.scrollHeight - inWrapper.scrollTop === inWrapper.offsetHeight) {
+      lottieArrows.style.display = 'none';
+      drawer.classList.remove('scrollable');
     } else {
-      $lottieArrows.style.removeProperty('display');
-      $drawer.classList.add('scrollable');
+      lottieArrows.style.removeProperty('display');
+      drawer.classList.add('scrollable');
     }
   }
 }
 
 function closeDrawer(toolBar) {
-  const $drawerBackground = toolBar.querySelector('.drawer-background');
-  const $drawer = toolBar.querySelector('.filter-drawer-mobile');
-  const $applyButton = toolBar.querySelector('.apply-filter-button-wrapper');
+  const drawerBackground = toolBar.querySelector('.drawer-background');
+  const drawer = toolBar.querySelector('.filter-drawer-mobile');
+  const applyButton = toolBar.querySelector('.apply-filter-button-wrapper');
 
-  $drawer.classList.add('retracted');
-  $drawerBackground.classList.add('transparent');
-  $applyButton.classList.add('transparent');
+  drawer.classList.add('retracted');
+  drawerBackground.classList.add('transparent');
+  applyButton.classList.add('transparent');
 
   setTimeout(() => {
-    $drawer.classList.add('hidden');
-    $drawerBackground.classList.add('hidden');
-    $applyButton.classList.add('hidden');
+    drawer.classList.add('hidden');
+    drawerBackground.classList.add('hidden');
+    applyButton.classList.add('hidden');
   }, 500);
 }
 
 function updateOptionsStatus(block, props, toolBar) {
-  const $wrappers = toolBar.querySelectorAll('.function-wrapper');
+  const wrappers = toolBar.querySelectorAll('.function-wrapper');
 
-  $wrappers.forEach(($wrapper) => {
-    const $currentOption = $wrapper.querySelector('.current-option');
-    const options = $wrapper.querySelectorAll('.option-button');
+  wrappers.forEach((wrapper) => {
+    const currentOption = wrapper.querySelector('.current-option');
+    const options = wrapper.querySelectorAll('.option-button');
 
     options.forEach((option) => {
-      const paramType = $wrapper.dataset.param;
+      const paramType = wrapper.dataset.param;
       const paramValue = paramType === 'sort' ? option.dataset.value : `(${option.dataset.value})`;
+      if (paramType === 'sort') {
+        console.log(paramType, props[paramType] === paramValue, props, paramValue);
+      }
+
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
         || ((!props.filters[paramType] || props.filters[paramType] === '()') && paramValue === '(remove)')) {
         const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
         let toReorder = false;
-        if (drawerCs.every((className) => !$wrapper.parentElement.classList.contains(className))) {
+        if (drawerCs.every((className) => !wrapper.parentElement.classList.contains(className))) {
           toReorder = true;
         }
 
         if (toReorder) {
           option.parentElement.prepend(option);
         }
-        if ($currentOption) {
-          $currentOption.textContent = option.textContent;
+
+        if (currentOption) {
+          currentOption.textContent = option.textContent;
         }
 
         options.forEach((o) => {
@@ -877,71 +882,71 @@ function updateOptionsStatus(block, props, toolBar) {
 }
 
 function initDrawer(block, props, section, toolBar) {
-  const $filterButton = toolBar.querySelector('.filter-button-mobile-wrapper');
-  const $drawerBackground = toolBar.querySelector('.drawer-background');
-  const $drawer = toolBar.querySelector('.filter-drawer-mobile');
-  const $closeDrawer = toolBar.querySelector('.close-drawer');
-  const $applyButton = toolBar.querySelector('.apply-filter-button-wrapper');
+  const filterButton = toolBar.querySelector('.filter-button-mobile-wrapper');
+  const drawerBackground = toolBar.querySelector('.drawer-background');
+  const drawer = toolBar.querySelector('.filter-drawer-mobile');
+  const closeDrawerBtn = toolBar.querySelector('.close-drawer');
+  const applyButton = toolBar.querySelector('.apply-filter-button-wrapper');
 
-  const $functionWrappers = $drawer.querySelectorAll('.function-wrapper');
+  const functionWrappers = drawer.querySelectorAll('.function-wrapper');
 
   let currentFilters;
 
-  $filterButton.addEventListener('click', () => {
+  filterButton.addEventListener('click', () => {
     currentFilters = { ...props.filters };
-    $drawer.classList.remove('hidden');
-    $drawerBackground.classList.remove('hidden');
-    $applyButton.classList.remove('hidden');
+    drawer.classList.remove('hidden');
+    drawerBackground.classList.remove('hidden');
+    applyButton.classList.remove('hidden');
     updateLottieStatus(section);
     closeTaskDropdown(toolBar);
 
     setTimeout(() => {
-      $drawer.classList.remove('retracted');
-      $drawerBackground.classList.remove('transparent');
-      $applyButton.classList.remove('transparent');
-      $functionWrappers.forEach(($wrapper) => {
-        const $button = $wrapper.querySelector('.button-wrapper');
-        if ($button) {
-          $button.style.maxHeight = `${$button.nextElementSibling.offsetHeight}px`;
+      drawer.classList.remove('retracted');
+      drawerBackground.classList.remove('transparent');
+      applyButton.classList.remove('transparent');
+      functionWrappers.forEach((wrapper) => {
+        const button = wrapper.querySelector('.button-wrapper');
+        if (button) {
+          button.style.maxHeight = `${button.nextElementSibling.offsetHeight}px`;
         }
       });
     }, 100);
   }, { passive: true });
 
-  [$drawerBackground, $closeDrawer].forEach(($element) => {
-    $element.addEventListener('click', () => {
+  [drawerBackground, closeDrawerBtn].forEach((el) => {
+    el.addEventListener('click', () => {
       props.filters = { ...currentFilters };
       closeDrawer(toolBar);
       updateOptionsStatus(block, props, toolBar);
     }, { passive: true });
   });
 
-  $drawer.classList.remove('hidden');
-  $functionWrappers.forEach(($wrapper) => {
-    const $button = $wrapper.querySelector('.button-wrapper');
+  drawer.classList.remove('hidden');
+  functionWrappers.forEach((wrapper) => {
+    const button = wrapper.querySelector('.button-wrapper');
     let maxHeight;
-    if ($button) {
+    if (button) {
       const wrapperMaxHeightGrabbed = setInterval(() => {
-        if ($wrapper.offsetHeight > 0) {
-          maxHeight = `${$wrapper.offsetHeight}px`;
-          $wrapper.style.maxHeight = maxHeight;
+        if (wrapper.offsetHeight > 0) {
+          maxHeight = `${wrapper.offsetHeight}px`;
+          wrapper.style.maxHeight = maxHeight;
           clearInterval(wrapperMaxHeightGrabbed);
         }
       }, 200);
 
-      $button.addEventListener('click', (e) => {
+      button.addEventListener('click', (e) => {
         e.stopPropagation();
-        const button = $wrapper.querySelector('.button-wrapper');
-        if (button) {
-          const minHeight = `${button.offsetHeight - 8}px`;
-          $wrapper.classList.toggle('collapsed');
-          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
+        const btnWrapper = wrapper.querySelector('.button-wrapper');
+        if (btnWrapper) {
+          const minHeight = `${btnWrapper.offsetHeight - 8}px`;
+          wrapper.classList.toggle('collapsed');
+          wrapper.style.maxHeight = wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
         }
       }, { passive: true });
     }
   });
 
-  $drawer.classList.add('hidden');
+  drawer.classList.add('hidden');
 }
 
 function updateQueryURL(functionWrapper, props, option) {
@@ -981,8 +986,8 @@ async function redrawTemplates($block, props, toolBar) {
     updateOptionsStatus($block, props, toolBar);
     if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
-      $viewButtons.forEach(($button) => {
-        $button.classList.remove('active');
+      $viewButtons.forEach((button) => {
+        button.classList.remove('active');
       });
       ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
         $block.classList.remove(className);
@@ -1012,25 +1017,25 @@ async function toggleAnimatedText($block, props, toolBar) {
 }
 
 function initFilterSort(block, props, toolBar) {
-  const $buttons = toolBar.querySelectorAll('.button-wrapper');
+  const buttons = toolBar.querySelectorAll('.button-wrapper');
   const applyFilterButton = toolBar.querySelector('.apply-filter-button');
 
-  if ($buttons.length > 0) {
-    $buttons.forEach(($button) => {
-      const $wrapper = $button.parentElement;
-      const $currentOption = $wrapper.querySelector('span.current-option');
-      const optionsList = $button.nextElementSibling;
+  if (buttons.length > 0) {
+    buttons.forEach((button) => {
+      const wrapper = button.parentElement;
+      const currentOption = wrapper.querySelector('span.current-option');
+      const optionsList = button.nextElementSibling;
       const options = optionsList.querySelectorAll('.option-button');
 
-      $button.addEventListener('click', () => {
-        if (!$button.classList.contains('in-drawer')) {
-          $buttons.forEach((b) => {
-            if ($button !== b) {
+      button.addEventListener('click', () => {
+        if (!button.classList.contains('in-drawer')) {
+          buttons.forEach((b) => {
+            if (button !== b) {
               b.parentElement.classList.remove('opened');
             }
           });
 
-          $wrapper.classList.toggle('opened');
+          wrapper.classList.toggle('opened');
         }
 
         closeTaskDropdown(toolBar);
@@ -1038,12 +1043,12 @@ function initFilterSort(block, props, toolBar) {
 
       options.forEach((option) => {
         const updateOptions = async () => {
-          $buttons.forEach((b) => {
+          buttons.forEach((b) => {
             b.parentElement.classList.remove('opened');
           });
 
-          if ($currentOption) {
-            $currentOption.textContent = option.textContent;
+          if (currentOption) {
+            currentOption.textContent = option.textContent;
           }
 
           options.forEach((o) => {
@@ -1053,27 +1058,17 @@ function initFilterSort(block, props, toolBar) {
           });
           option.classList.add('active');
 
-          updateQueryURL($wrapper, props, option);
+          updateQueryURL(wrapper, props, option);
           updateFilterIcon(block);
 
           if (!optionsList.classList.contains('in-drawer')) {
             await toggleAnimatedText(block, props, toolBar);
           }
 
-          if (!$button.classList.contains('in-drawer')) {
+          if (!button.classList.contains('in-drawer')) {
             await redrawTemplates(block, props, toolBar);
           }
         };
-
-        const radio = option.querySelector('.option-radio');
-        if (radio) {
-          radio.addEventListener('keydown', async (e) => {
-            e.stopPropagation();
-            if (e.keyCode === 13) {
-              await updateOptions();
-            }
-          }, { passive: true });
-        }
 
         option.addEventListener('click', async (e) => {
           e.stopPropagation();
@@ -1083,8 +1078,8 @@ function initFilterSort(block, props, toolBar) {
 
       document.addEventListener('click', (e) => {
         const { target } = e;
-        if (target !== $wrapper && !$wrapper.contains(target) && !$button.classList.contains('in-drawer')) {
-          $wrapper.classList.remove('opened');
+        if (target !== wrapper && !wrapper.contains(target) && !button.classList.contains('in-drawer')) {
+          wrapper.classList.remove('opened');
         }
       }, { passive: true });
     });
@@ -1147,29 +1142,29 @@ function getPlaceholderWidth(block) {
   return width;
 }
 
-function toggleMasonryView(block, props, $button, $toggleButtons) {
+function toggleMasonryView(block, props, button, toggleButtons) {
   const $templatesToView = block.querySelectorAll('.template:not(.placeholder)');
   const blockWrapper = block.closest('.template-x-wrapper');
-  if (!$button.classList.contains('active') && $templatesToView.length > 0) {
-    $toggleButtons.forEach((b) => {
-      if (b !== $button) {
+  if (!button.classList.contains('active') && $templatesToView.length > 0) {
+    toggleButtons.forEach((b) => {
+      if (b !== button) {
         b.classList.remove('active');
       }
     });
 
     ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-      if (className !== `${$button.dataset.view}-view`) {
+      if (className !== `${button.dataset.view}-view`) {
         block.classList.remove(className);
         blockWrapper.classList.remove(className);
       }
     });
-    $button.classList.add('active');
-    block.classList.add(`${$button.dataset.view}-view`);
-    blockWrapper.classList.add(`${$button.dataset.view}-view`);
+    button.classList.add('active');
+    block.classList.add(`${button.dataset.view}-view`);
+    blockWrapper.classList.add(`${button.dataset.view}-view`);
 
     props.masonry.draw();
   } else {
-    $button.classList.remove('active');
+    button.classList.remove('active');
     ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
       block.classList.remove(className);
       blockWrapper.classList.remove(className);
@@ -1192,15 +1187,15 @@ function toggleMasonryView(block, props, $button, $toggleButtons) {
 }
 
 function initViewToggle(block, props, toolBar) {
-  const $toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
+  const toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
 
-  $toggleButtons.forEach(($button, index) => {
+  toggleButtons.forEach((button, index) => {
     if (index === 0) {
-      toggleMasonryView(block, props, $button, $toggleButtons);
+      toggleMasonryView(block, props, button, toggleButtons);
     }
 
-    $button.addEventListener('click', () => {
-      toggleMasonryView(block, props,  $button, $toggleButtons);
+    button.addEventListener('click', () => {
+      toggleMasonryView(block, props, button, toggleButtons);
     }, { passive: true });
   });
 }
