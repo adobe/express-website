@@ -49,44 +49,16 @@ function initButton(block, sections, index) {
 
     if (index === 0) {
       toggleBackground.classList.add('loading');
-
-      const firstButtonWidthGrabbed = () => {
-        function getContentWidth (element) {
-          var styles = getComputedStyle(element)
-          return element.clientWidth
-            - parseFloat(styles.paddingLeft)
-            - parseFloat(styles.paddingRight);
-        }
-
-        if (buttons[index].offsetWidth > 0 && buttons[index].textContent !== '') {
-          const button = buttons[index];
-          const styles = getComputedStyle(button);
-          console.log(styles);
-          console.log(styles.paddingLeft, styles.paddingRight);
-          console.log(button.offsetWidth);
+      const firstButtonWidthGrabbed = setInterval(() => {
+        // Set width threshold to 72, as it was triggering in Safari on a half-formed button
+        if (buttons[index].offsetWidth > 72 && buttons[index].textContent !== '') {
           toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
           toggleBackground.style.left = 0;
-          buttons[index].classList.add('active');
-          toggleBackground.classList.remove('loading');
-        } else {
-          console.log('Calling again!');
-          setTimeout(() => {
-            requestAnimationFrame(firstButtonWidthGrabbed);
-          }, 100);
+          clearInterval(firstButtonWidthGrabbed);
         }
-      };
-
-      requestAnimationFrame(firstButtonWidthGrabbed);
-
-      // const firstButtonWidthGrabbed = setInterval(() => {
-      //   if (buttons[index].offsetWidth > 0 && buttons[index].textContent !== '') {
-      //     toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
-      //     toggleBackground.style.left = 0;
-      //     clearInterval(firstButtonWidthGrabbed);
-      //   }
-      //   buttons[index].classList.add('active');
-      //   toggleBackground.classList.remove('loading');
-      // }, 200);
+        buttons[index].classList.add('active');
+        toggleBackground.classList.remove('loading');
+      }, 200);
 
       // initializing the page with first tab sections
       toggleSections(sections, buttons, index);
