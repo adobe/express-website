@@ -50,7 +50,8 @@ function initButton(block, sections, index) {
     if (index === 0) {
       toggleBackground.classList.add('loading');
       const firstButtonWidthGrabbed = setInterval(() => {
-        if (buttons[index].offsetWidth > 0) {
+        // Set width threshold to 72, as it was triggering in Safari on a half-formed button
+        if (buttons[index].offsetWidth > 72 && buttons[index].textContent !== '') {
           toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
           toggleBackground.style.left = 0;
           clearInterval(firstButtonWidthGrabbed);
