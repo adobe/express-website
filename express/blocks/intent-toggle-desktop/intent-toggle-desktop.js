@@ -49,15 +49,29 @@ function initButton(block, sections, index) {
 
     if (index === 0) {
       toggleBackground.classList.add('loading');
-      const firstButtonWidthGrabbed = setInterval(() => {
-        if (buttons[index].offsetWidth > 0) {
+
+      const firstButtonWidthGrabbed = () => {
+        if (buttons[index].offsetWidth > 0 && buttons[index].textContent !== '') {
           toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
           toggleBackground.style.left = 0;
-          clearInterval(firstButtonWidthGrabbed);
+          buttons[index].classList.add('active');
+          toggleBackground.classList.remove('loading');
+        } else {
+          requestAnimationFrame();
         }
-        buttons[index].classList.add('active');
-        toggleBackground.classList.remove('loading');
-      }, 200);
+      };
+
+      requestAnimationFrame(firstButtonWidthGrabbed);
+
+      // const firstButtonWidthGrabbed = setInterval(() => {
+      //   if (buttons[index].offsetWidth > 0 && buttons[index].textContent !== '') {
+      //     toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
+      //     toggleBackground.style.left = 0;
+      //     clearInterval(firstButtonWidthGrabbed);
+      //   }
+      //   buttons[index].classList.add('active');
+      //   toggleBackground.classList.remove('loading');
+      // }, 200);
 
       // initializing the page with first tab sections
       toggleSections(sections, buttons, index);
