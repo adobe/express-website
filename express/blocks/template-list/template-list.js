@@ -20,8 +20,10 @@ import {
   fetchPlaceholders,
   fetchRelevantRows,
   getIconElement,
+  getLanguage,
   getLocale,
   getLottie,
+  getMetadata,
   lazyLoadLottiePlayer,
   linkImage,
   toClassName,
@@ -69,31 +71,34 @@ function trimFormattedFilterText(attr, capitalize) {
 
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
+  // special treatment for express/ root url
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
+  const lang = getLanguage(getLocale(window.location));
+  let grammarTemplate;
 
-  let grammarTemplate = placeholders['template-placeholder'];
-
-  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
+  if (getMetadata('template-search-page') === 'Y') {
+    grammarTemplate = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
+  } else {
+    grammarTemplate = placeholders['template-placeholder'];
   }
 
-  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
-  }
+  if (grammarTemplate) {
+    grammarTemplate = grammarTemplate
+      .replace('{{quantity}}', props.total.toLocaleString(lang))
+      .replace('{{Type}}', heading)
+      .replace('{{type}}', camelHeading);
 
-  if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
-  }
-
-  if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
+    if (locale === 'fr') {
+      grammarTemplate.split(' ').forEach((word, index, words) => {
+        if (index + 1 < words.length) {
+          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            grammarTemplate = words.join(' ');
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   return grammarTemplate;
@@ -154,6 +159,7 @@ function fetchTemplatesByTasks(tasks) {
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
   const currentTask = props.filters.tasks;
+  const lang = getLanguage(getLocale(window.location));
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
@@ -162,7 +168,7 @@ async function appendCategoryTemplatesCount($section) {
       const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
-      countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
+      countSpan.textContent = `(${json._embedded.total.toLocaleString(lang)})`;
       anchor.append(countSpan);
     }
   }
@@ -833,6 +839,7 @@ function decorateCategoryList($block, $section, placeholders) {
   });
 
   if (params.tasks) {
+    const locale = getLocale(window.location);
     const $blockWrapper = $block.closest('.template-list-wrapper');
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
@@ -867,9 +874,10 @@ function decorateCategoryList($block, $section, placeholders) {
       }
 
       const iconElement = getIconElement(icon);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
       const $a = createTag('a', {
         'data-tasks': targetTasks,
-        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
       });
       [$a.textContent] = category;
 
@@ -1168,7 +1176,8 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
 
 async function redrawTemplates($block, $toolBar) {
   const $heading = $toolBar.querySelector('h2');
-  const currentTotal = props.total.toLocaleString('en-US');
+  const lang = getLanguage(getLocale(window.location));
+  const currentTotal = props.total.toLocaleString(lang);
   props.templates = [props.templates[0]];
   props.start = '';
   $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
@@ -1176,7 +1185,7 @@ async function redrawTemplates($block, $toolBar) {
   });
 
   await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
-    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString(lang));
     updateOptionsStatus($block, $toolBar);
     if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
@@ -1529,7 +1538,7 @@ export async function decorateTemplateList($block) {
           } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale) || '';
           }
         }
 

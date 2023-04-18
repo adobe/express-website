@@ -154,8 +154,15 @@ function updateSEOLinkList(container, linkPill, list) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y'
-        && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
+      const currentLocale = getLocale(window.location);
+      const templatePageData = templatePages.find((p) => {
+        const targetLocale = /^[a-z]{2}$/.test(p.path.split('/')[1]) ? p.path.split('/')[1] : 'us';
+        const isLive = p.live === 'Y';
+        const titleMatch = p.shortTitle.toLowerCase() === d.childSibling.toLowerCase();
+        const localeMatch = currentLocale === targetLocale;
+
+        return isLive && titleMatch && localeMatch;
+      });
       const clone = replaceLinkPill(linkPill, templatePageData);
       container.append(clone);
     });
@@ -219,7 +226,7 @@ async function updateLinkList(container, linkPill, list, pageData) {
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID && (getLocale(window.location) === 'us' || getHelixEnv().name !== 'prod')) {
+      } else if (d.ckgID) {
         const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
