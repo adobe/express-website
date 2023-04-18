@@ -226,7 +226,7 @@ async function updateLinkList(container, linkPill, list, pageData) {
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID && (getLocale(window.location) === 'us' || getHelixEnv().name !== 'prod')) {
+      } else if (d.ckgID) {
         const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
