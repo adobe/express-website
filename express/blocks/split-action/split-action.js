@@ -13,11 +13,11 @@
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 
 function show(block) {
-  const body = document.querySelector('body');
-  body.style.overflow = 'hidden';
+  const body = block.closest('body');
   const blockWrapper = block.parentNode;
   if (blockWrapper.parentElement.classList.contains('split-action-container')) {
     blockWrapper.parentElement.classList.remove('hidden');
+    body.style.overflow = 'hidden';
     setTimeout(() => {
       blockWrapper.parentElement.classList.remove('transparent');
       block.style.bottom = '0';
@@ -25,8 +25,8 @@ function show(block) {
   }
 }
 
-function initCTAListener(block, href, containedQuery = false) {
-  const buttons = containedQuery ? block.querySelectorAll('.button') : block.closest('main').querySelectorAll('.button');
+function initCTAListener(block, href, targetBlock) {
+  const buttons = targetBlock ? targetBlock.querySelectorAll('.button') : block.closest('main').querySelectorAll('.button');
 
   for (let i = 0; i < buttons.length; i += 1) {
     if (buttons[i].href === href && !buttons[i].classList.contains('no-event')) {
@@ -126,7 +126,7 @@ export default function decorate(block) {
     initCTAListener(block, hrefHolder);
 
     document.addEventListener('floatingbuttonloaded', (e) => {
-      initCTAListener(e.detail.block, hrefHolder, true);
+      initCTAListener(block, hrefHolder, e.detail.block);
     });
 
     document.dispatchEvent(new Event('splitactionloaded'));
