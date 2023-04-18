@@ -51,14 +51,28 @@ function initButton(block, sections, index) {
       toggleBackground.classList.add('loading');
 
       const firstButtonWidthGrabbed = () => {
+        function getContentWidth (element) {
+          var styles = getComputedStyle(element)
+          return element.clientWidth
+            - parseFloat(styles.paddingLeft)
+            - parseFloat(styles.paddingRight);
+        }
+
         if (buttons[index].offsetWidth > 0 && buttons[index].textContent !== '') {
-          console.log(buttons[index].offsetWidth);
+          const button = buttons[index];
+          const styles = getComputedStyle(button);
+          console.log(styles);
+          console.log(styles.paddingLeft, styles.paddingRight);
+          console.log(button.offsetWidth);
           toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
           toggleBackground.style.left = 0;
           buttons[index].classList.add('active');
           toggleBackground.classList.remove('loading');
         } else {
-          requestAnimationFrame(firstButtonWidthGrabbed);
+          console.log('Calling again!');
+          setTimeout(() => {
+            requestAnimationFrame(firstButtonWidthGrabbed);
+          }, 100);
         }
       };
 
