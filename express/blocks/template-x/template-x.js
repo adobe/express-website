@@ -36,6 +36,15 @@ function camelize(str) {
   return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
 }
 
+function handlelize(str) {
+  return str.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/(\W+|\s+)/g, '-') // Replace space and other characters by hyphen
+    .replace(/--+/g, '-') // Replaces multiple hyphens by one hyphen
+    .replace(/(^-+|-+$)/g, '') // Remove extra hyphens from beginning or end of the string
+    .toLowerCase(); // To lowercase
+}
+
 function constructProps(block) {
   const singleColumnContentTypes = ['title', 'subtitle'];
   const props = {
@@ -59,11 +68,15 @@ function constructProps(block) {
     const key = cols[0].querySelector('strong')?.textContent.trim().toLowerCase();
     if (cols.length === 1) {
       const paragraphs = cols[0].querySelectorAll('p');
-      singleColumnContentTypes.forEach((k, i) => {
-        if (paragraphs[i]) {
-          props[k] = paragraphs[i].textContent.trim();
-        }
-      });
+      if (paragraphs.length > 0) {
+        singleColumnContentTypes.forEach((k, i) => {
+          if (paragraphs[i]) {
+            props[k] = paragraphs[i].textContent.trim();
+          }
+        });
+      } else {
+        props.title = cols[0].textContent.trim();
+      }
     } else if (cols.length === 2) {
       const value = cols[1].textContent.trim();
       if (key && value) {
@@ -224,9 +237,9 @@ function updateLoadMoreButton(block, props, loadMore) {
 }
 
 function formatSearchQuery(props) {
-  const prunedFilter = Object.entries(props.filters).filter(([, value]) => value !== '()');
-  const filterString = prunedFilter.reduce((string, [key, value]) => {
-    if (key === prunedFilter[prunedFilter.length - 1][0]) {
+  const filtersArray = Object.entries(props.filters);
+  const filterString = filtersArray.reduce((string, [key, value]) => {
+    if (key === filtersArray[filtersArray.length - 1][0]) {
       return `${string}${key}:(${value})`;
     } else {
       return `${string}${key}:(${value}) AND `;
@@ -364,7 +377,7 @@ async function populateHeadingPlaceholder(props) {
   const heading = props.title.replace("''", '');
   const placeholders = await fetchPlaceholders();
 
-  let grammarTemplate = placeholders['template-placeholder'];
+  let grammarTemplate = props.templateStats || placeholders['template-placeholder'];
 
   if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
     grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
@@ -395,41 +408,20 @@ async function populateHeadingPlaceholder(props) {
 async function generateToolBar(block, props) {
   const parent = block.closest('.section');
   if (parent) {
-    const dcw = parent.querySelector('.default-content-wrapper');
     const tmpltListWrapper = parent.querySelector('.template-x-wrapper');
-    const $sectionHeading = parent.querySelector('div > h2');
-    let $sectionSlug = null;
 
+    const sectionHeading = createTag('h2');
     const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
     const tBar = createTag('div', { class: 'api-templates-toolbar' });
     const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
     const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
-    if ($sectionHeading.textContent.trim()
-      .indexOf('{{heading_placeholder}}') >= 0) {
-      if (block.classList.contains('spreadsheet-powered') && props.headingTitle) {
-        $sectionHeading.textContent = props.headingTitle || '';
-
-        if (props.headingSlug) {
-          $sectionSlug = createTag('p');
-          $sectionSlug.textContent = props.headingSlug;
-        }
-      } else if (props.authoringError) {
-        $sectionHeading.textContent = props.heading;
-      } else {
-        $sectionHeading.textContent = await populateHeadingPlaceholder(props);
-      }
-    }
+    sectionHeading.textContent = await populateHeadingPlaceholder(props);
 
     tmpltListWrapper.before(tBarWrapper);
-    tBarWrapper.append(dcw);
-    dcw.append(tBar);
+    tBarWrapper.append(tBar);
     tBar.append(contentWrapper, functionsWrapper);
-    contentWrapper.append($sectionHeading);
-
-    if ($sectionSlug) {
-      contentWrapper.append($sectionSlug);
-    }
+    contentWrapper.append(sectionHeading);
   }
 }
 
@@ -467,6 +459,799 @@ async function attachFreeInAppPills(block) {
   }
 }
 
+async function redirectSearch($searchBar, props) {
+  const placeholders = await fetchPlaceholders().then((result) => result);
+  const taskMap = JSON.parse(placeholders['task-name-mapping']);
+  if ($searchBar) {
+    const wrapper = $searchBar.closest('.search-bar-wrapper');
+    const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
+    props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
+  }
+
+  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+  let currentTasks = props.filters.tasks;
+  const currentTopic = props.filters.topics;
+  let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
+
+  const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
+    const searchValue = $searchBar.value.toLowerCase();
+    return searchValue.indexOf(word.toLowerCase()) >= 0;
+  })).sort((a, b) => b[0].length - a[0].length);
+
+  if (tasksFoundInInput.length > 0) {
+    tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
+      searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
+    });
+
+    searchInput = searchInput.trim();
+    [[currentTasks]] = tasksFoundInInput;
+  }
+
+  const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+  const topicUrl = searchInput ? `/${searchInput}` : '';
+  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
+  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
+  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
+  const pathMatch = (e) => e.path === targetPath;
+  if (window.templates && window.templates.data.some(pathMatch)) {
+    window.location = `${window.location.origin}${targetPath}`;
+  } else {
+    window.location = searchUrl;
+  }
+}
+
+function makeTemplateFunctions(placeholders) {
+  const functions = {
+    premium: {
+      placeholders: JSON.parse(placeholders['template-filter-premium']),
+      elements: {},
+      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
+    },
+    animated: {
+      placeholders: JSON.parse(placeholders['template-filter-animated']),
+      elements: {},
+      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
+    },
+    sort: {
+      placeholders: JSON.parse(placeholders['template-sort']),
+      elements: {},
+      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
+    },
+  };
+
+  Object.entries(functions).forEach((entry) => {
+    entry[1].elements.wrapper = createTag('div', {
+      class: `function-wrapper function-${Object.values(entry)[0]}`,
+      'data-param': Object.values(entry)[0],
+    });
+
+    entry[1].elements.wrapper.subElements = {
+      button: {
+        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
+        subElements: {
+          iconHolder: createTag('span', { class: 'icon-holder' }),
+          textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+          chevIcon: getIconElement('drop-down-arrow'),
+        },
+      },
+      options: {
+        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
+        subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
+          const icon = getIconElement(entry[1].icons[subIndex]);
+          const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
+          [optionButton.textContent] = Object.values(option);
+          optionButton.prepend(icon);
+          return optionButton;
+        }),
+      },
+    };
+
+    const $span = entry[1].elements.wrapper.subElements.button.subElements.textSpan;
+    [[$span.textContent]] = Object.entries(entry[1].placeholders);
+  });
+
+  return functions;
+}
+
+function updateFilterIcon(block) {
+  const section = block.closest('.section.template-x-fullwidth-container');
+  const functionWrapper = section.querySelectorAll('.function-wrapper');
+  const optionsWrapper = section.querySelectorAll('.options-wrapper');
+
+  functionWrapper.forEach((wrap, index) => {
+    const iconHolder = wrap.querySelector('.icon-holder');
+    const activeOption = optionsWrapper[index].querySelector('.option-button.active');
+    if (iconHolder && activeOption) {
+      const activeIcon = activeOption.querySelector('.icon');
+      if (activeIcon) {
+        iconHolder.innerHTML = activeIcon.outerHTML;
+      }
+    }
+  });
+}
+
+function decorateFunctionsContainer(block, section, functions, placeholders) {
+  const functionsContainer = createTag('div', { class: 'functions-container' });
+  const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
+
+  Object.entries(functions).forEach((filter) => {
+    const $filterWrapper = filter[1].elements.wrapper;
+
+    Object.entries($filterWrapper.subElements).forEach((part) => {
+      const $innerWrapper = part[1].wrapper;
+
+      Object.entries(part[1].subElements).forEach((innerElement) => {
+        if (Object.values(innerElement)[1]) {
+          $innerWrapper.append(Object.values(innerElement)[1]);
+        }
+      });
+
+      $filterWrapper.append($innerWrapper);
+    });
+    $functionContainerMobile.append($filterWrapper.cloneNode({ deep: true }));
+    functionsContainer.append($filterWrapper);
+  });
+
+  // restructure drawer for mobile design
+  const $filterContainer = createTag('div', { class: 'filter-container-mobile' });
+  const $mobileFilterButtonWrapper = createTag('div', { class: 'filter-button-mobile-wrapper' });
+  const $mobileFilterButton = createTag('span', { class: 'filter-button-mobile' });
+  const $drawer = createTag('div', { class: 'filter-drawer-mobile hidden retracted' });
+  const $drawerInnerWrapper = createTag('div', { class: 'filter-drawer-mobile-inner-wrapper' });
+  const $drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
+  const $closeButton = getIconElement('search-clear');
+  const $applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
+  const $applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
+
+  $closeButton.classList.add('close-drawer');
+  $applyButton.textContent = placeholders['apply-filters'];
+
+  $functionContainerMobile.children[0]
+    .querySelector('.current-option-premium')
+    .textContent = `${placeholders.free} ${placeholders['versus-shorthand']} ${placeholders.premium}`;
+
+  $functionContainerMobile.children[1]
+    .querySelector('.current-option-animated')
+    .textContent = `${placeholders.static} ${placeholders['versus-shorthand']} ${placeholders.animated}`;
+
+  $drawerInnerWrapper.append(
+    $functionContainerMobile.children[0],
+    $functionContainerMobile.children[1],
+  );
+
+  $drawer.append($closeButton, $drawerInnerWrapper);
+
+  const $buttonsInDrawer = $drawer.querySelectorAll('.button-wrapper');
+  const optionsInDrawer = $drawer.querySelectorAll('.options-wrapper');
+
+  [$buttonsInDrawer, optionsInDrawer].forEach((category) => {
+    category.forEach((element) => {
+      element.classList.add('in-drawer');
+      const heading = element.querySelector('.current-option');
+      const iconHolder = element.querySelector('.icon-holder');
+      if (heading) {
+        heading.className = 'filter-mobile-option-heading';
+      }
+      if (iconHolder) {
+        iconHolder.remove();
+      }
+    });
+  });
+
+  $mobileFilterButtonWrapper.append(getIconElement('scratch-icon-22'), $mobileFilterButton);
+  $applyButtonWrapper.append($applyButton);
+  $filterContainer.append(
+    $mobileFilterButtonWrapper,
+    $drawer,
+    $applyButtonWrapper,
+    $drawerBackground,
+  );
+  $functionContainerMobile.prepend($filterContainer);
+
+  $mobileFilterButton.textContent = placeholders.filter;
+  const $sortButton = $functionContainerMobile.querySelector('.current-option-sort');
+  if ($sortButton) {
+    $sortButton.textContent = placeholders.sort;
+    $sortButton.className = 'filter-mobile-option-heading';
+  }
+
+  return { mobile: $functionContainerMobile, desktop: functionsContainer };
+}
+
+function resetTaskDropdowns(section) {
+  const $taskDropdowns = section.querySelectorAll('.task-dropdown');
+  const $taskDropdownLists = section.querySelectorAll('.task-dropdown-list');
+
+  $taskDropdowns.forEach((dropdown) => {
+    dropdown.classList.remove('active');
+  });
+
+  $taskDropdownLists.forEach((list) => {
+    list.classList.remove('active');
+  });
+}
+
+function closeTaskDropdown(toolBar) {
+  const section = toolBar.closest('.section.template-x-fullwidth-container');
+  const $searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
+  $searchBarWrappers.forEach(($wrapper) => {
+    const $taskDropdown = $wrapper.querySelector('.task-dropdown');
+    const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
+    $taskDropdown.classList.remove('active');
+    $taskDropdownList.classList.remove('active');
+  });
+}
+
+function initSearchFunction(toolBar, props, $stickySearchBarWrapper, $searchBarWrapper) {
+  const section = toolBar.closest('.section.template-x-fullwidth-container');
+  const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
+  const $searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
+  const toolbarWrapper = toolBar.parentElement;
+
+  const searchBarWatcher = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) {
+      toolbarWrapper.classList.add('sticking');
+      resetTaskDropdowns(section);
+    } else {
+      toolbarWrapper.classList.remove('sticking');
+    }
+  }, { rootMargin: '0px', threshold: 1 });
+
+  searchBarWatcher.observe($searchBarWrapper);
+
+  $searchBarWrappers.forEach(($wrapper) => {
+    const $searchForm = $wrapper.querySelector('.search-form');
+    const $searchBar = $wrapper.querySelector('input.search-bar');
+    const $clear = $wrapper.querySelector('.icon-search-clear');
+    const $taskDropdown = $wrapper.querySelector('.task-dropdown');
+    const $taskDropdownToggle = $taskDropdown.querySelector('.task-dropdown-toggle');
+    const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
+    const $taskOptions = $taskDropdownList.querySelectorAll('.option');
+
+    $searchBar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeTaskDropdown(toolBar);
+    }, { passive: true });
+
+    $searchBar.addEventListener('keyup', () => {
+      if ($searchBar.value !== '') {
+        $clear.style.display = 'inline-block';
+      } else {
+        $clear.style.display = 'none';
+      }
+    }, { passive: true });
+
+    $searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await redirectSearch($searchBar, props);
+    });
+
+    $clear.addEventListener('click', () => {
+      $searchBar.value = '';
+      $clear.style.display = 'none';
+    }, { passive: true });
+
+    $taskDropdownToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      $taskDropdown.classList.toggle('active');
+      $taskDropdownList.classList.toggle('active');
+    }, { passive: true });
+
+    document.addEventListener('click', (e) => {
+      const { target } = e;
+      if (target !== $taskDropdown && !$taskDropdown.contains(target)) {
+        $taskDropdown.classList.remove('active');
+        $taskDropdownList.classList.remove('active');
+      }
+    }, { passive: true });
+
+    $taskOptions.forEach((option) => {
+      const updateTaskOptions = () => {
+        $taskOptions.forEach((o) => {
+          if (o !== option) {
+            o.classList.remove('active');
+          }
+        });
+
+        option.classList.add('active');
+        props.filters.tasks = `(${option.dataset.tasks})`;
+        $taskDropdownToggle.textContent = option.textContent.trim();
+        closeTaskDropdown(toolBar);
+      };
+
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        updateTaskOptions();
+      }, { passive: true });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target !== $wrapper && !$wrapper.contains(e.target)) {
+        if ($wrapper.classList.contains('sticky-search-bar')) {
+          $wrapper.classList.remove('ready');
+          $wrapper.classList.add('collapsed');
+        }
+      }
+    }, { passive: true });
+  });
+
+  $stickySearchBar.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    $stickySearchBarWrapper.classList.remove('collapsed');
+    setTimeout(() => {
+      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
+        $stickySearchBarWrapper.classList.add('ready');
+      }
+    }, 500);
+  }, { passive: true });
+
+  $stickySearchBarWrapper.addEventListener('mouseenter', () => {
+    $stickySearchBarWrapper.classList.remove('collapsed');
+    setTimeout(() => {
+      if (!$stickySearchBarWrapper.classList.contains('collapsed')) {
+        $stickySearchBarWrapper.classList.add('ready');
+      }
+    }, 500);
+  }, { passive: true });
+
+  $stickySearchBarWrapper.addEventListener('mouseleave', () => {
+    if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
+      $stickySearchBarWrapper.classList.remove('ready');
+      $stickySearchBarWrapper.classList.add('collapsed');
+      resetTaskDropdowns(section);
+    }
+  }, { passive: true });
+}
+
+function updateLottieStatus(section) {
+  const $drawer = section.querySelector('.filter-drawer-mobile');
+  const $inWrapper = $drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
+  const $lottieArrows = $drawer.querySelector('.lottie-wrapper');
+  if ($lottieArrows) {
+    if ($inWrapper.scrollHeight - $inWrapper.scrollTop === $inWrapper.offsetHeight) {
+      $lottieArrows.style.display = 'none';
+      $drawer.classList.remove('scrollable');
+    } else {
+      $lottieArrows.style.removeProperty('display');
+      $drawer.classList.add('scrollable');
+    }
+  }
+}
+
+function closeDrawer(toolBar) {
+  const $drawerBackground = toolBar.querySelector('.drawer-background');
+  const $drawer = toolBar.querySelector('.filter-drawer-mobile');
+  const $applyButton = toolBar.querySelector('.apply-filter-button-wrapper');
+
+  $drawer.classList.add('retracted');
+  $drawerBackground.classList.add('transparent');
+  $applyButton.classList.add('transparent');
+
+  setTimeout(() => {
+    $drawer.classList.add('hidden');
+    $drawerBackground.classList.add('hidden');
+    $applyButton.classList.add('hidden');
+  }, 500);
+}
+
+function updateOptionsStatus(block, props, toolBar) {
+  const $wrappers = toolBar.querySelectorAll('.function-wrapper');
+
+  $wrappers.forEach(($wrapper) => {
+    const $currentOption = $wrapper.querySelector('.current-option');
+    const options = $wrapper.querySelectorAll('.option-button');
+
+    options.forEach((option) => {
+      const paramType = $wrapper.dataset.param;
+      const paramValue = paramType === 'sort' ? option.dataset.value : `(${option.dataset.value})`;
+      if (props[paramType] === paramValue
+        || props.filters[paramType] === paramValue
+        || ((!props.filters[paramType] || props.filters[paramType] === '()') && paramValue === '(remove)')) {
+        const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
+        let toReorder = false;
+        if (drawerCs.every((className) => !$wrapper.parentElement.classList.contains(className))) {
+          toReorder = true;
+        }
+
+        if (toReorder) {
+          option.parentElement.prepend(option);
+        }
+        if ($currentOption) {
+          $currentOption.textContent = option.textContent;
+        }
+
+        options.forEach((o) => {
+          if (option !== o) {
+            o.classList.remove('active');
+          }
+        });
+        option.classList.add('active');
+      }
+    });
+
+    updateFilterIcon(block);
+  });
+}
+
+function initDrawer(block, props, section, toolBar) {
+  const $filterButton = toolBar.querySelector('.filter-button-mobile-wrapper');
+  const $drawerBackground = toolBar.querySelector('.drawer-background');
+  const $drawer = toolBar.querySelector('.filter-drawer-mobile');
+  const $closeDrawer = toolBar.querySelector('.close-drawer');
+  const $applyButton = toolBar.querySelector('.apply-filter-button-wrapper');
+
+  const $functionWrappers = $drawer.querySelectorAll('.function-wrapper');
+
+  let currentFilters;
+
+  $filterButton.addEventListener('click', () => {
+    currentFilters = { ...props.filters };
+    $drawer.classList.remove('hidden');
+    $drawerBackground.classList.remove('hidden');
+    $applyButton.classList.remove('hidden');
+    updateLottieStatus(section);
+    closeTaskDropdown(toolBar);
+
+    setTimeout(() => {
+      $drawer.classList.remove('retracted');
+      $drawerBackground.classList.remove('transparent');
+      $applyButton.classList.remove('transparent');
+      $functionWrappers.forEach(($wrapper) => {
+        const $button = $wrapper.querySelector('.button-wrapper');
+        if ($button) {
+          $button.style.maxHeight = `${$button.nextElementSibling.offsetHeight}px`;
+        }
+      });
+    }, 100);
+  }, { passive: true });
+
+  [$drawerBackground, $closeDrawer].forEach(($element) => {
+    $element.addEventListener('click', () => {
+      props.filters = { ...currentFilters };
+      closeDrawer(toolBar);
+      updateOptionsStatus(block, props, toolBar);
+    }, { passive: true });
+  });
+
+  $drawer.classList.remove('hidden');
+  $functionWrappers.forEach(($wrapper) => {
+    const $button = $wrapper.querySelector('.button-wrapper');
+    let maxHeight;
+    if ($button) {
+      const wrapperMaxHeightGrabbed = setInterval(() => {
+        if ($wrapper.offsetHeight > 0) {
+          maxHeight = `${$wrapper.offsetHeight}px`;
+          $wrapper.style.maxHeight = maxHeight;
+          clearInterval(wrapperMaxHeightGrabbed);
+        }
+      }, 200);
+
+      $button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const button = $wrapper.querySelector('.button-wrapper');
+        if (button) {
+          const minHeight = `${button.offsetHeight - 8}px`;
+          $wrapper.classList.toggle('collapsed');
+          $wrapper.style.maxHeight = $wrapper.classList.contains('collapsed') ? minHeight : maxHeight;
+        }
+      }, { passive: true });
+    }
+  });
+
+  $drawer.classList.add('hidden');
+}
+
+function updateQueryURL(functionWrapper, props, option) {
+  const paramType = functionWrapper.dataset.param;
+  const paramValue = option.dataset.value;
+
+  if (paramType === 'sort') {
+    props.sort = paramValue;
+  } else {
+    const filtersObj = props.filters;
+
+    if (paramType in filtersObj) {
+      if (paramValue === 'remove') {
+        delete filtersObj[paramType];
+      } else {
+        filtersObj[paramType] = `(${paramValue})`;
+      }
+    } else if (paramValue !== 'remove') {
+      filtersObj[paramType] = `(${paramValue})`;
+    }
+
+    props.filters = filtersObj;
+  }
+}
+
+async function redrawTemplates($block, props, toolBar) {
+  const $heading = toolBar.querySelector('h2');
+  const currentTotal = props.total.toLocaleString('en-US');
+  props.templates = [props.templates[0]];
+  props.start = '';
+  $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
+    $card.remove();
+  });
+
+  await decorateNewTemplates($block, props, { reDrawMasonry: true }).then(() => {
+    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+    updateOptionsStatus($block, props, toolBar);
+    if ($block.querySelectorAll('.template').length <= 0) {
+      const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
+      $viewButtons.forEach(($button) => {
+        $button.classList.remove('active');
+      });
+      ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+        $block.classList.remove(className);
+      });
+    }
+  });
+}
+
+async function toggleAnimatedText($block, props, toolBar) {
+  const section = $block.closest('.section.template-x-fullwidth-container');
+  const toolbarWrapper = toolBar.parentElement;
+
+  if (section) {
+    const placeholders = await fetchPlaceholders();
+    const existingText = section.querySelector('.animated-template-text');
+    const animatedTemplateText = createTag('h5', { class: 'animated-template-text' });
+    animatedTemplateText.textContent = placeholders['open-to-see-animation'];
+
+    if (existingText) {
+      existingText.remove();
+    }
+
+    if (props.filters.animated === '(true)') {
+      toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
+    }
+  }
+}
+
+function initFilterSort(block, props, toolBar) {
+  const $buttons = toolBar.querySelectorAll('.button-wrapper');
+  const applyFilterButton = toolBar.querySelector('.apply-filter-button');
+
+  if ($buttons.length > 0) {
+    $buttons.forEach(($button) => {
+      const $wrapper = $button.parentElement;
+      const $currentOption = $wrapper.querySelector('span.current-option');
+      const optionsList = $button.nextElementSibling;
+      const options = optionsList.querySelectorAll('.option-button');
+
+      $button.addEventListener('click', () => {
+        if (!$button.classList.contains('in-drawer')) {
+          $buttons.forEach((b) => {
+            if ($button !== b) {
+              b.parentElement.classList.remove('opened');
+            }
+          });
+
+          $wrapper.classList.toggle('opened');
+        }
+
+        closeTaskDropdown(toolBar);
+      }, { passive: true });
+
+      options.forEach((option) => {
+        const updateOptions = async () => {
+          $buttons.forEach((b) => {
+            b.parentElement.classList.remove('opened');
+          });
+
+          if ($currentOption) {
+            $currentOption.textContent = option.textContent;
+          }
+
+          options.forEach((o) => {
+            if (option !== o) {
+              o.classList.remove('active');
+            }
+          });
+          option.classList.add('active');
+
+          updateQueryURL($wrapper, props, option);
+          updateFilterIcon(block);
+
+          if (!optionsList.classList.contains('in-drawer')) {
+            await toggleAnimatedText(block, props, toolBar);
+          }
+
+          if (!$button.classList.contains('in-drawer')) {
+            await redrawTemplates(block, props, toolBar);
+          }
+        };
+
+        const radio = option.querySelector('.option-radio');
+        if (radio) {
+          radio.addEventListener('keydown', async (e) => {
+            e.stopPropagation();
+            if (e.keyCode === 13) {
+              await updateOptions();
+            }
+          }, { passive: true });
+        }
+
+        option.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          await updateOptions();
+        }, { passive: true });
+      });
+
+      document.addEventListener('click', (e) => {
+        const { target } = e;
+        if (target !== $wrapper && !$wrapper.contains(target) && !$button.classList.contains('in-drawer')) {
+          $wrapper.classList.remove('opened');
+        }
+      }, { passive: true });
+    });
+
+    if (applyFilterButton) {
+      applyFilterButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await redrawTemplates(block, props, toolBar);
+        closeDrawer(toolBar);
+        await toggleAnimatedText(block, props, toolBar);
+      });
+    }
+
+    // sync current filter & sorting method with toolbar current options
+    updateOptionsStatus(block, props, toolBar);
+    updateFilterIcon(block);
+  }
+}
+
+function getPlaceholderWidth(block) {
+  let width;
+  if (window.innerWidth >= 900) {
+    if (block.classList.contains('sm-view')) {
+      width = 165;
+    }
+
+    if (block.classList.contains('md-view')) {
+      width = 258.5;
+    }
+
+    if (block.classList.contains('lg-view')) {
+      width = 352;
+    }
+  } else if (window.innerWidth >= 600) {
+    if (block.classList.contains('sm-view')) {
+      width = 165;
+    }
+
+    if (block.classList.contains('md-view')) {
+      width = 227.33;
+    }
+
+    if (block.classList.contains('lg-view')) {
+      width = 352;
+    }
+  } else {
+    if (block.classList.contains('sm-view')) {
+      width = 106.33;
+    }
+
+    if (block.classList.contains('md-view')) {
+      width = 165.5;
+    }
+
+    if (block.classList.contains('lg-view')) {
+      width = 335;
+    }
+  }
+
+  return width;
+}
+
+function toggleMasonryView(block, props, $button, $toggleButtons) {
+  const $templatesToView = block.querySelectorAll('.template:not(.placeholder)');
+  const blockWrapper = block.closest('.template-x-wrapper');
+  if (!$button.classList.contains('active') && $templatesToView.length > 0) {
+    $toggleButtons.forEach((b) => {
+      if (b !== $button) {
+        b.classList.remove('active');
+      }
+    });
+
+    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+      if (className !== `${$button.dataset.view}-view`) {
+        block.classList.remove(className);
+        blockWrapper.classList.remove(className);
+      }
+    });
+    $button.classList.add('active');
+    block.classList.add(`${$button.dataset.view}-view`);
+    blockWrapper.classList.add(`${$button.dataset.view}-view`);
+
+    props.masonry.draw();
+  } else {
+    $button.classList.remove('active');
+    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+      block.classList.remove(className);
+      blockWrapper.classList.remove(className);
+    });
+
+    props.masonry.draw();
+  }
+
+  const placeholder = block.querySelector('.template.placeholder');
+  const ratios = props.placeholderFormat;
+  const width = getPlaceholderWidth(block);
+
+  if (ratios[1]) {
+    const height = (ratios[1] / ratios[0]) * width;
+    placeholder.style = `height: ${height - 21}px`;
+    if (width / height > 1.3) {
+      placeholder.classList.add('wide');
+    }
+  }
+}
+
+function initViewToggle(block, props, toolBar) {
+  const $toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
+
+  $toggleButtons.forEach(($button, index) => {
+    if (index === 0) {
+      toggleMasonryView(block, props, $button, $toggleButtons);
+    }
+
+    $button.addEventListener('click', () => {
+      toggleMasonryView(block, props,  $button, $toggleButtons);
+    }, { passive: true });
+  });
+}
+
+function initToolbarShadow(block, toolbar) {
+  const toolbarWrapper = toolbar.parentElement;
+  document.addEventListener('scroll', () => {
+    if (toolbarWrapper.getBoundingClientRect().top <= 0) {
+      toolbarWrapper.classList.add('with-box-shadow');
+    } else {
+      toolbarWrapper.classList.remove('with-box-shadow');
+    }
+  });
+}
+
+async function decorateToolbar(block, props) {
+  const section = block.closest('.section');
+
+  if (section) {
+    const placeholders = await fetchPlaceholders();
+    const toolBar = section.querySelector('.api-templates-toolbar');
+
+    if (toolBar) {
+      const toolBarFirstWrapper = toolBar.querySelector('.wrapper-content-search');
+      const functionsWrapper = toolBar.querySelector('.wrapper-functions');
+
+      const viewsWrapper = createTag('div', { class: 'views' });
+
+      const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
+      smView.append(getIconElement('small_grid'));
+      const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
+      mdView.append(getIconElement('medium_grid'));
+      const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
+      lgView.append(getIconElement('large_grid'));
+
+      const functionsObj = makeTemplateFunctions(placeholders);
+      const functions = decorateFunctionsContainer(block, section, functionsObj, placeholders);
+
+      viewsWrapper.append(smView, mdView, lgView);
+      functionsWrapper.append(viewsWrapper, functions.desktop);
+
+      toolBar.append(toolBarFirstWrapper, functionsWrapper, functions.mobile);
+
+      initDrawer(block, props, section, toolBar);
+      initFilterSort(block, props, toolBar);
+      initViewToggle(block, props, toolBar);
+      initToolbarShadow(block, toolBar);
+    }
+  }
+}
+
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
   const placeholders = await fetchPlaceholders();
@@ -481,13 +1266,12 @@ async function decorateTemplates(block, props) {
         // single text directly in div
         : [block.firstElementChild.textContent.trim()]);
     block.innerHTML = '';
-    const tls = Array.from(block.closest('main')
-      .querySelectorAll('.template-list'));
+    const tls = Array.from(block.closest('main').querySelectorAll('.template-x'));
     const i = tls.indexOf(block);
 
     const bluePrint = await fetchBlueprint(window.location.pathname);
 
-    const $bpBlocks = bluePrint.querySelectorAll('.template-list');
+    const $bpBlocks = bluePrint.querySelectorAll('.template-x');
     if ($bpBlocks[i] && $bpBlocks[i].className === block.className) {
       block.innerHTML = $bpBlocks[i].innerHTML;
     } else if ($bpBlocks.length > 1 && $bpBlocks[i].className !== block.className) {
@@ -625,7 +1409,7 @@ async function decorateTemplates(block, props) {
         props.masonry.draw();
       });
     } else {
-      block.classList.add('template-list-complete');
+      block.classList.add('template-x-complete');
     }
   }
 
@@ -640,9 +1424,12 @@ async function buildTemplateList(block, props, type) {
   const parent = block.closest('.section.template-x-container');
   if (parent) {
     parent.classList.remove('template-x-container');
-    parent.classList.add(`template-x-${type}-container`);
+    parent.classList.add(`template-x-${type.join('-')}-container`);
   }
-  block.classList.add(type);
+
+  type.forEach((typeName) => {
+    block.classList.add(typeName);
+  });
 
   const templates = await processApiResponse(props);
   if (templates) {
@@ -656,22 +1443,44 @@ async function buildTemplateList(block, props, type) {
   await generateToolBar(block, props);
   await decorateTemplates(block, props);
 
-  if (type === 'horizontal') {
-    buildCarousel(':scope > .template', block, false);
-  } else {
-    addAnimationToggle(block);
+  // templates are finished rendering at this point.
+
+  if (props.loadMoreTemplates) {
     const loadMore = await decorateLoadMoreButton(block, props);
     if (loadMore) {
       updateLoadMoreButton(block, props, loadMore);
     }
   }
+
+  if (props.toolBar) {
+    await decorateToolbar(block, props);
+  }
+
+  if (props.horizontal) {
+    buildCarousel(':scope > .template', block, false);
+  } else {
+    addAnimationToggle(block);
+  }
 }
 
 function determineTemplateXType(props) {
-  // todo: build layers of aspects based on props conditions - i.e. orientation -> style -> usecase
+  // todo: build layers of aspects based on props conditions - i.e. orientation -> style -> use case
   const type = [];
-  console.log(props);
-  return 'fullwidth';
+
+  // orientation aspect
+  if (props.horizontal) type.push('horizontal');
+
+  // style aspect
+  if (props.width.toLowerCase() === 'full') type.push('fullwidth');
+  if (props.width.toLowerCase() === 'sixcols') type.push('sixcols');
+  if (props.mini) type.push('mini');
+
+  // use case aspect
+  if (props.holidayBlock) type.push('holiday');
+  if (props.collaborationBlock) type.push('collaboration');
+
+  console.log(props, type);
+  return type;
 }
 
 export default async function decorate(block) {
