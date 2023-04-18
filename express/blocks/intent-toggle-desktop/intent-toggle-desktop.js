@@ -58,7 +58,7 @@ function initButton(block, sections, index) {
           buttons[index].classList.add('active');
           toggleBackground.classList.remove('loading');
         } else {
-          requestAnimationFrame();
+          requestAnimationFrame(firstButtonWidthGrabbed);
         }
       };
 
