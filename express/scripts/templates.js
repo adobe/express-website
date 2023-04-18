@@ -395,15 +395,6 @@ async function updateBlocks(data) {
   }
 }
 
-const redirects = await fetch('/redirects.json?limit=99999');
-if (redirects.ok) {
-  const json = await redirects.json();
-  const toRedirect = json.data.find((row) => row.Source === window.location.pathname);
-  if (toRedirect) {
-    window.location.assign(toRedirect.Destination);
-  }
-}
-
 const page = await fetchPageContent(window.location.pathname);
 
 if (page) {
