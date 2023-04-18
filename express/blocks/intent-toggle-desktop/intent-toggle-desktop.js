@@ -52,6 +52,7 @@ function initButton(block, sections, index) {
 
       const firstButtonWidthGrabbed = () => {
         if (buttons[index].offsetWidth > 0 && buttons[index].textContent !== '') {
+          console.log(buttons[index].offsetWidth);
           toggleBackground.style.width = `${buttons[index].offsetWidth + 5}px`;
           toggleBackground.style.left = 0;
           buttons[index].classList.add('active');
