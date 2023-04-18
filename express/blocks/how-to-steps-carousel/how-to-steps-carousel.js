@@ -43,7 +43,7 @@ function activate(block, target) {
     const window = block.ownerDocument.defaultView;
     const document = block.ownerDocument;
 
-    const { documentElement } = document;
+    const {documentElement} = document;
     const vw = Math.max(
       documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
       window && window.innerWidth ? window.innerWidth : 0,
@@ -226,29 +226,42 @@ function fillBlock(section, picture, block, document, rows, window) {
   }
 }
 
+function roundedImage(x, y, width, height, radius, ctx) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
 function handleTemplateLoad(canvas, ctx, templateImg) {
-  templateImg.style.maxWidth = '552px';
-  templateImg.style.maxHeight = '363px';
+  templateImg.style.maxWidth = '562px';
+  templateImg.style.maxHeight = '377px';
   templateImg.style.objectFit = 'contain';
   templateImg.style.borderRadius = '7px';
   // start and end areas were directly measured and transferred from the spec image
-  const startAreaX = 356;
-  const endAreaX = 914;
-  const startAreaY = 161;
-  const endAreaY = 535;
-  const centerX = (endAreaX - startAreaX) / 2 + startAreaX;
-  const centerY = (endAreaY - startAreaY) / 2 + startAreaY;
+  const centerX = 640;
+  const centerY = 347;
+  ctx.save();
+  roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height, 7, ctx);
+  ctx.clip();
   ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
-  templateImg.style.maxWidth = '173px';
-  templateImg.style.maxHeight = '262px';
-  const x = Math.floor(canvas.width / 2);
-  const y = Math.floor(canvas.height / 2);
-  const angleInRadians = 0.0567232; // 3.25 degrees;
-  ctx.translate(x, y);
-  ctx.rotate(angleInRadians);
-  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, x - 201, y - 420, templateImg.width, templateImg.height);
-  ctx.rotate(-angleInRadians);
-  ctx.translate(-x, -y);
+  ctx.restore();
+  templateImg.style.maxWidth = '178px';
+  templateImg.style.maxHeight = '273px';
+  const centerMobileX = 1035;
+  const centerMobileY = 277;
+  ctx.save();
+  roundedImage(centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2), templateImg.width, templateImg.height, 7, ctx);
+  ctx.clip();
+  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2), templateImg.width, templateImg.height);
+  ctx.restore();
 }
 
 export default async function decorate(block) {
@@ -268,7 +281,7 @@ export default async function decorate(block) {
     backgroundPicImg.width = 1140;
     backgroundPicImg.height = 620;
     const templateDiv = rows.shift();
-    const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
+    const canvas = createTag('canvas', {width: backgroundPicImg.width, height: backgroundPicImg.height});
     const ctx = canvas.getContext('2d');
     const templateImages = templateDiv.querySelectorAll('picture');
     ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);

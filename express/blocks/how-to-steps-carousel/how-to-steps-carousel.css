@@ -3,10 +3,6 @@ main .how-to-steps-carousel-container {
   padding: 0;
 }
 
-main .how-to-steps-carousel-container > picture {
-  width: 100%;
-}
-
 main .how-to-steps-carousel-container > picture > img {
   width: 100%;
   margin-bottom: 56px;
@@ -71,7 +67,7 @@ main .how-to-steps-carousel .tips .tip.active {
   100% { opacity:1; }
 }
 
-@-moz-keyframes fadeIn { 
+@-moz-keyframes fadeIn {
   0% { opacity:0; }
   100% { opacity:1; }
 }
