@@ -1479,7 +1479,6 @@ function determineTemplateXType(props) {
   if (props.holidayBlock) type.push('holiday');
   if (props.collaborationBlock) type.push('collaboration');
 
-  console.log(props, type);
   return type;
 }
 

@@ -272,7 +272,7 @@ main .template-x.horizontal {
 
 main .template-x.horizontal.fullwidth {
     max-width: none;
-    padding: 0 16px;
+    padding-right: 16px;
     display: block;
     margin-left: auto;
 }
@@ -295,12 +295,12 @@ main .template-x.horizontal .template video {
     width: auto;
 }
 
-main .template-x.horizontal h4 {
+main .template-x-wrapper .template-title.horizontal h4 {
     font-size: 22px;
     line-height: 26px;
 }
 
-main .template-x.horizontal .template:not(.placeholder) .template-link {
+main .template-x-wrapper .template-title.horizontal .template:not(.placeholder) .template-link {
     display: none;
 }
 
@@ -468,8 +468,13 @@ main .template-x .template.placeholder {
     border: 2px dashed var(--color-gray-300);
     height: 242px;
     width: 200px;
-    margin: 21px 11px 53px 11px;
+    margin: 21px auto 53px;
     padding: 0;
+}
+
+main .template-x.horizontal .template.placeholder,
+main .template-x.horizontal.fullwidth .template.placeholder {
+    margin: 0 11px;
 }
 
 main .template-x.sixcols .template.placeholder,
@@ -743,7 +748,7 @@ main .template-x.fullwidth.sm-view > .masonry-col {
     main .template-x.sixcols .template.placeholder,
     main .template-x.fullwidth .template.placeholder {
         width: 145px;
-        margin: 21px;
+        margin: 21px auto;
     }
 
     /* template-x inside columns */
