@@ -282,6 +282,7 @@ export default async function decorate(block) {
     backgroundPicImg.height = 620;
     const templateDiv = rows.shift();
     const canvas = createTag('canvas', {width: backgroundPicImg.width, height: backgroundPicImg.height});
+
     const ctx = canvas.getContext('2d');
     const templateImages = templateDiv.querySelectorAll('picture');
     ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
@@ -299,8 +300,8 @@ export default async function decorate(block) {
         };
       }
     });
-    Promise.all([mobilePromise]).then(() => {
-      img.src = canvas.toDataURL('image/jpeg');
+    mobilePromise.then(() => {
+      img.src = canvas.toDataURL('image/png');
       backgroundPictureDiv.remove();
       const mergedPicture = createTag('picture');
       mergedPicture.append(img);
