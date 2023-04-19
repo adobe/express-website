@@ -1639,14 +1639,13 @@ export async function decorateTemplateList($block) {
     const $parent = $block.closest('.section');
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a')
-      .forEach(($a) => {
-        $a.className = 'template-title-link';
-        const p = $a.closest('p');
-        if (p) {
-          p.classList.remove('button-container');
-        }
-      });
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      const p = $a.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
+    });
 
     if ($parent && $parent.classList.contains('toc-container')) {
       const $tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });

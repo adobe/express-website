@@ -115,38 +115,38 @@ main .template-x.fullwidth.lg-view > .masonry-col {
     text-align: center;
 }
 
-main .template-x .template-title {
+main .template-x-wrapper .template-title {
     margin: 0 12px 20px 12px;
 }
 
-main .template-x .template-title > div {
+main .template-x-wrapper .template-title.with-link > div {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: flex-start;
 }
 
-main .template-x .template-title > div > * {
+main .template-x-wrapper .template-title.horizontal > div > * {
     text-align: left;
     margin: 0;
 }
 
-main .template-x .template-title p {
+main .template-x-wrapper .template-title.horizontal p {
     margin-top: 8px;
     width: fit-content;
     font-size: var(--body-font-size-m);
 }
 
-main .template-x .template-link,
-main .template-x .template-title-link {
+main .template-x-wrapper .template-link,
+main .template-x-wrapper .template-title-link {
     text-decoration: none;
     padding-left: 16px;
     padding-top: 6px;
     display: flex;
 }
 
-main .template-x .template-link::after,
-main .template-x .template-title-link::after {
+main .template-x-wrapper .template-link::after,
+main .template-x-wrapper .template-title-link::after {
     display: flex;
     width: 6px;
     height: 6px;
@@ -164,12 +164,12 @@ main .template-x .template-title-link::after {
     margin-right: 2.25px;
 }
 
-main .template-x .template-title-link {
+main .template-x-wrapper .template-title-link {
     padding: 0;
     white-space: nowrap;
 }
 
-main .template-x .template-title-link::after {
+main .template-x-wrapper .template-title-link::after {
     margin-top: 7px;
 }
 
@@ -605,6 +605,10 @@ main .template-x-wrapper .load-more {
     background: linear-gradient(#ffffff00, #ffffff, #ffffff);
 }
 
+main .template-x-wrapper .template-x.horizontal ~ .load-more {
+    display: none;
+}
+
 main .template-x-wrapper .load-more-button {
     width: 88px;
     height: 48px;
@@ -706,12 +710,12 @@ main .template-x.fullwidth.sm-view > .masonry-col {
         max-width: 187px;
     }
 
-    main .template-x .template-title > div {
+    main .template-x-wrapper .template-title.with-link > div {
         flex-direction: row;
         justify-content: space-between;
     }
 
-    main .template-x .template-title > div > * {
+    main .template-x-wrapper .template-title.horizontal > div > * {
         text-align: left;
     }
 

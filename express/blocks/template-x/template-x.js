@@ -45,8 +45,63 @@ function handlelize(str) {
     .toLowerCase(); // To lowercase
 }
 
+async function processContentRow(block, props) {
+  const placeholders = await fetchPlaceholders();
+  const parent = block.closest('.section');
+
+  const templateTitle = createTag('div', { class: 'template-title' });
+  templateTitle.innerHTML = props.contentRow.outerHTML;
+
+  const aTags = templateTitle.querySelectorAll(':scope a');
+  if (aTags.length > 0) {
+    templateTitle.classList.add('with-link');
+    aTags.forEach((aTag) => {
+      aTag.className = 'template-title-link';
+      const p = aTag.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
+    });
+  }
+
+  block.before(templateTitle);
+
+  if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
+
+  if (parent && parent.classList.contains('toc-container')) {
+    const tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
+    const tocSlot = createTag('div', { class: 'toc-slot' });
+    const h2 = props.contentRow.querySelector('h2');
+    if (h2) {
+      h2.parentElement.prepend(tocCollidingArea);
+      tocCollidingArea.append(tocSlot, h2);
+    }
+  }
+
+  if (block.classList.contains('collaboration')) {
+    const $titleHeading = props.contentRow.querySelector('h3');
+    const anchorLink = createTag('a', {
+      class: 'collaboration-anchor',
+      href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
+    });
+    const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
+    $clipboardTag.textContent = placeholders['tag-copied'];
+
+    anchorLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(anchorLink.href);
+      anchorLink.classList.add('copied');
+      setTimeout(() => {
+        anchorLink.classList.remove('copied');
+      }, 2000);
+    });
+
+    anchorLink.append($clipboardTag);
+    $titleHeading.append(anchorLink);
+  }
+}
+
 function constructProps(block) {
-  const singleColumnContentTypes = ['title', 'subtitle'];
   const props = {
     templates: [],
     filters: {
@@ -67,16 +122,7 @@ function constructProps(block) {
     const cols = row.querySelectorAll('div');
     const key = cols[0].querySelector('strong')?.textContent.trim().toLowerCase();
     if (cols.length === 1) {
-      const paragraphs = cols[0].querySelectorAll('p');
-      if (paragraphs.length > 0) {
-        singleColumnContentTypes.forEach((k, i) => {
-          if (paragraphs[i]) {
-            props[k] = paragraphs[i].textContent.trim();
-          }
-        });
-      } else {
-        props.title = cols[0].textContent.trim();
-      }
+      [props.contentRow] = cols;
     } else if (cols.length === 2) {
       const value = cols[1].textContent.trim();
       if (key && value) {
@@ -1249,7 +1295,6 @@ async function decorateToolbar(block, props) {
 
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
-  const placeholders = await fetchPlaceholders();
   let rows = block.children.length;
   if ((rows === 0 || block.querySelectorAll('img').length === 0) && locale !== 'us') {
     const i18nTexts = block.firstElementChild
@@ -1313,52 +1358,6 @@ async function decorateTemplates(block, props) {
   }
 
   const templates = Array.from(block.children);
-  // process single column first row as title
-  if (templates[0] && templates[0].children.length === 1) {
-    const parent = block.closest('.section');
-    const titleRow = templates.shift();
-    titleRow.classList.add('template-title');
-    titleRow.querySelectorAll(':scope a')
-      .forEach((aTag) => {
-        aTag.className = 'template-title-link';
-        const p = aTag.closest('p');
-        if (p) {
-          p.classList.remove('button-container');
-        }
-      });
-
-    if (parent && parent.classList.contains('toc-container')) {
-      const tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
-      const tocSlot = createTag('div', { class: 'toc-slot' });
-      const h2 = titleRow.querySelector('h2');
-      if (h2) {
-        h2.parentElement.prepend(tocCollidingArea);
-        tocCollidingArea.append(tocSlot, h2);
-      }
-    }
-
-    if (block.classList.contains('collaboration')) {
-      const $titleHeading = titleRow.querySelector('h3');
-      const anchorLink = createTag('a', {
-        class: 'collaboration-anchor',
-        href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
-      });
-      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      $clipboardTag.textContent = placeholders['tag-copied'];
-
-      anchorLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigator.clipboard.writeText(anchorLink.href);
-        anchorLink.classList.add('copied');
-        setTimeout(() => {
-          anchorLink.classList.remove('copied');
-        }, 2000);
-      });
-
-      anchorLink.append($clipboardTag);
-      $titleHeading.append(anchorLink);
-    }
-  }
 
   rows = templates.length;
   let breakpoints = [{ width: '400' }];
@@ -1417,7 +1416,7 @@ async function decorateTemplates(block, props) {
 
 async function buildTemplateList(block, props, type = false) {
   if (type) {
-    const parent = block.closest('.section.template-x-container');
+    const parent = block.closest('.section');
     if (parent) {
       parent.classList.remove('template-x-container');
       parent.classList.add(`template-x-${type.join('-')}-container`);
@@ -1428,6 +1427,8 @@ async function buildTemplateList(block, props, type = false) {
     });
   }
 
+  await processContentRow(block, props);
+
   const templates = await processApiResponse(props);
   if (templates) {
     props.templates = props.templates.concat(templates);
@@ -1436,7 +1437,10 @@ async function buildTemplateList(block, props, type = false) {
     });
   }
 
-  await generateToolBar(block, props);
+  if (props.toolBar) {
+    await generateToolBar(block, props);
+  }
+
   await decorateTemplates(block, props);
 
   // templates are finished rendering at this point.
@@ -1452,7 +1456,7 @@ async function buildTemplateList(block, props, type = false) {
     await decorateToolbar(block, props);
   }
 
-  if (props.horizontal) {
+  if (props.orientation && props.orientation.toLowerCase() === 'horizontal') {
     buildCarousel(':scope > .template', block, false);
   } else {
     addAnimationToggle(block);
@@ -1464,11 +1468,11 @@ function determineTemplateXType(props) {
   const type = [];
 
   // orientation aspect
-  if (props.horizontal) type.push('horizontal');
+  if (props.orientation && props.orientation.toLowerCase() === 'horizontal') type.push('horizontal');
 
   // style aspect
-  if (props.width.toLowerCase() === 'full') type.push('fullwidth');
-  if (props.width.toLowerCase() === 'sixcols') type.push('sixcols');
+  if (props.width && props.width.toLowerCase() === 'full') type.push('fullwidth');
+  if (props.width && props.width.toLowerCase() === 'sixcols') type.push('sixcols');
   if (props.mini) type.push('mini');
 
   // use case aspect
