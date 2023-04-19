@@ -399,7 +399,7 @@ const page = await fetchPageContent(window.location.pathname);
 
 if (page) {
   await fetchLinkList(page);
-  if (getMetadata('template-search-page') === 'Y') {
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     const data = await formatSearchQuery(page);
     if (!data) {
       window.location.replace('/express/templates/');
