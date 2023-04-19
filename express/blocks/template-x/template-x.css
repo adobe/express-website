@@ -587,11 +587,11 @@ main .template-x.flex-masonry .template.appear {
     opacity: 1;
 }
 
-main .template-x-fullwidth-container .template-x-wrapper {
+main .template-x-wrapper {
     position: relative;
 }
 
-main .template-x-fullwidth-container .load-more {
+main .template-x-wrapper .load-more {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -605,7 +605,7 @@ main .template-x-fullwidth-container .load-more {
     background: linear-gradient(#ffffff00, #ffffff, #ffffff);
 }
 
-main .template-x-fullwidth-container .load-more-button {
+main .template-x-wrapper .load-more-button {
     width: 88px;
     height: 48px;
     display: flex;
@@ -620,21 +620,21 @@ main .template-x-fullwidth-container .load-more-button {
     transition: background-color 0.2s;
 }
 
-main .template-x-fullwidth-container .load-more-button:hover {
+main .template-x-wrapper .load-more-button:hover {
     background-color: var(--color-gray-700);
 }
 
-main .template-x-fullwidth-container .load-more-button.disabled {
+main .template-x-wrapper .load-more-button.disabled {
     pointer-events: none;
     opacity: 0.5;
 }
 
-main .template-x-fullwidth-container .load-more-button > .icon-plus-icon {
+main .template-x-wrapper .load-more-button > .icon-plus-icon {
     height: 22px;
     width: 22px;
 }
 
-main .template-x-fullwidth-container .load-more-text {
+main .template-x-wrapper .load-more-text {
     margin-top: 8px;
     font-weight: 700;
     font-size: 18px;

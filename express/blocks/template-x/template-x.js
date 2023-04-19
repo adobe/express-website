@@ -100,7 +100,7 @@ function constructProps(block) {
     } else if (cols.length === 4) {
       if (key === 'blank template') {
         cols[0].remove();
-        props.templates.push(row.cloneNode(true));
+        props.templates.push(row);
       }
     }
   });
@@ -1415,23 +1415,24 @@ async function decorateTemplates(block, props) {
   document.dispatchEvent(linksPopulated);
 }
 
-async function buildTemplateList(block, props, type) {
-  const parent = block.closest('.section.template-x-container');
-  if (parent) {
-    parent.classList.remove('template-x-container');
-    parent.classList.add(`template-x-${type.join('-')}-container`);
-  }
+async function buildTemplateList(block, props, type = false) {
+  if (type) {
+    const parent = block.closest('.section.template-x-container');
+    if (parent) {
+      parent.classList.remove('template-x-container');
+      parent.classList.add(`template-x-${type.join('-')}-container`);
+    }
 
-  type.forEach((typeName) => {
-    block.classList.add(typeName);
-  });
+    type.forEach((typeName) => {
+      block.classList.add(typeName);
+    });
+  }
 
   const templates = await processApiResponse(props);
   if (templates) {
     props.templates = props.templates.concat(templates);
     props.templates.forEach((template) => {
-      const clone = template.cloneNode(true);
-      block.append(clone);
+      block.append(template);
     });
   }
 
@@ -1481,5 +1482,5 @@ function determineTemplateXType(props) {
 export default async function decorate(block) {
   const props = constructProps(block);
   block.innerHTML = '';
-  await buildTemplateList(block, props, determineTemplateXType(props));
+  await buildTemplateList(block, props, determineTemplateXType(props) || false);
 }
