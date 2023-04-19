@@ -35,9 +35,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const props = {
   templates: [],
-  filters: {
-    locales: '(en)',
-  },
+  filters: {},
   tailButton: '',
   limit: 70,
   total: 0,
@@ -118,6 +116,7 @@ function formatSearchQuery(limit, start, sort, filters) {
 }
 
 async function fetchTemplates() {
+  const locale = getLocale(window.location);
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
     props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
 
@@ -130,7 +129,7 @@ async function fetchTemplates() {
       return result;
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
+      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${locale} or en)`)
         .then((response) => response.json())
         .then((response) => response);
     }

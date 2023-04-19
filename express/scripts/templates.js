@@ -215,7 +215,7 @@ async function updateLinkList(container, linkPill, list, pageData) {
       if (pillsMapping) {
         const alternateText = pillsMapping.find((row) => pageData.path === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
 
-        if (alternateText) {
+        if (alternateText && alternateText[`${localeColumnString}`]) {
           displayText = alternateText[`${localeColumnString}`];
           if (templatePageData) {
             templatePageData.altShortTitle = displayText;
