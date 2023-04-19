@@ -151,14 +151,18 @@ main .how-to-steps-carousel-container .icon {
   height: 56px;
 }
 
-@media (min-width: 600px) {
-  main .how-to-steps-carousel-container > div {
-    margin: 0 88px;
-    padding: 80px 88px;
-  }
+main .how-to-steps-carousel-container > div {
+  margin: 0 20px;
+  padding: 80px 88px;
+}
 
+main .how-to-steps-carousel-container > picture > img {
+  margin-bottom: 80px;
+}
+
+@media (min-width: 600px) {
   main .how-to-steps-carousel-container > picture > img {
-    margin-bottom: 80px;
+    margin: 0;
     object-position: right;
     object-fit: cover;
     min-height: 100%;
@@ -170,9 +174,7 @@ main .how-to-steps-carousel-container .icon {
     margin-top: 64px;
     margin-bottom: 80px;
   }
-}
 
-@media (min-width: 900px) {
   main .how-to-steps-carousel-container {
     display: flex;
     justify-content: center;
@@ -180,15 +182,11 @@ main .how-to-steps-carousel-container .icon {
   }
 
   main .how-to-steps-carousel-container > div {
-    margin: 0 120px 0 20px;
+    margin: 0 20px 0 20px;
     padding: 80px 70px;
     width: 50%;
     height: 100%;
     max-width: 600px;
-  }
-
-  main .how-to-steps-carousel-container > picture > img {
-    margin: 0;
   }
 
   main .how-to-steps-carousel-container.no-cover > div {
@@ -202,7 +200,9 @@ main .how-to-steps-carousel-container .icon {
   main .how-to-steps-carousel-container.no-cover > picture > img {
     object-fit: contain;
   }
+}
 
+@media (min-width: 900px) {
   main .how-to-steps-carousel-container > div p.button-container {
     margin: 0;
     margin-top: 40px;

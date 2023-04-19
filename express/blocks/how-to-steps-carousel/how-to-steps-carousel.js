@@ -49,18 +49,12 @@ function activate(block, target) {
       window && window.innerWidth ? window.innerWidth : 0,
     );
 
-    if (vw >= 900) {
-      const container = block.parentElement.parentElement;
-      const picture = container.querySelector('picture');
-      const img = picture.querySelector('img');
-      const panelHeight = block.parentElement.offsetHeight;
-      const imgHeight = img.naturalHeight;
-      if (imgHeight < panelHeight) {
-        container.classList.add('no-cover');
-      } else {
-        picture.style.height = `${panelHeight || imgHeight}px`;
-      }
-    }
+    const container = block.parentElement.parentElement;
+    const picture = container.querySelector('picture');
+    const img = picture.querySelector('img');
+    const panelHeight = block.parentElement.offsetHeight;
+    const imgHeight = img.naturalHeight;
+    picture.style.height = `${panelHeight || imgHeight}px`;
 
     fixedImageSize = true;
   }
