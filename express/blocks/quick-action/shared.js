@@ -148,7 +148,7 @@ export class CCXQuickActionElement extends HTMLElement {
 
   // eslint-disable-next-line class-methods-use-this
   handleNavigateToPostEditor(data, autoDownload = false) {
-    const host = 'https://project-marvel-theo-web-8569.fracture.adobeprojectm.com';
+    const host = 'https://express-stage.adobeprojectm.com';
     const action = 'remove-background';
     const { repositoryId, transientToken } = data;
     const path = '/design/post/new';
