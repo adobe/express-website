@@ -79,7 +79,7 @@
 			['ph_fil', '/'],
 			['pl', '/'],
 			['pr', '/es/'],
-			['pt', '/br/'],	
+			['pt', '/br/'],
 			['pt-BR', '/br/'],
 			['qa_ar', '/'],
 			['qa_en', '/'],
@@ -102,10 +102,10 @@
 			['za', '/'],
 			['zh-Hans-CN', '/cn/' ],
 			['zh-Hant-TW', '/tw/'],
-		]	
+		]
 	);
 
-	
+
 	(function (win, doc) {
 		const eduRedirectPath = 'education/express/';
 		const eduWithoutPrefix = '/edu';
@@ -113,9 +113,13 @@
 		const eduWithExpressPrefix = '/express/edu'
 		const adobeDomain = 'www.adobe.com';
 		const protocol = 'https://';
-	
+
 		const { hostname, href, pathname, port, search } = win.location;
 		if (hostname === 'localhost')  return;
+		if (pathname.endsWith('.html')) {
+			console.log('path with .html, try extensionless');
+			win.location.replace(pathname.substring(0, pathname.lastIndexOf('.')));
+		}
 
 		let userLocale, redirectURL, redirectMapping, valueInMap;
 		const noop = ()=>{};
@@ -126,34 +130,34 @@
 			redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
-			win.location.replace(redirectURL);	
+			win.location.replace(redirectURL);
 		}
 	 	else if (pathname.includes(eduWithoutPrefix) && search ) {
-	
+
 			[_, userLocale] =   search.split('=');
-			valueInMap = redirectMap.get(userLocale); 
+			valueInMap = redirectMap.get(userLocale);
 			if (hostname !== adobeDomain){
-				redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;	
+				redirectMapping =  valueInMap ? `${valueInMap}${eduRedirectPath}` : `/${eduRedirectPath}`;
 			}
 			else {
-				redirectMapping =  valueInMap ? `${valueInMap}${educationSuffix}` : `/${educationSuffix}`;	
+				redirectMapping =  valueInMap ? `${valueInMap}${educationSuffix}` : `/${educationSuffix}`;
 			}
 			redirectURL = `${protocol}${adobeDomain}${redirectMapping}`;
 			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
-			win.location.replace(redirectURL);	
+			win.location.replace(redirectURL);
 		}
 		else {
 			[_, userLocale] = pathname.split('/');
-			valueInMap = redirectMap.get(userLocale); 
-			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`; 
+			valueInMap = redirectMap.get(userLocale);
+			doc.cookie = `international = ${userLocale}; Path = /; domain = .adobe.com`;
 			valueInMap ? win.location.replace( href.replace(`/${userLocale}/`, valueInMap)) : noop;
 		}
 	}(window, document));
 
-	
+
   </script>
   <style>
-	
+
 	.error-404 main {
 		visibility: visible;
 	    background-image: url(https://adobe.com/content/dam/acom/en/error-pages/images/404-1440x612_edge2.jpg);
@@ -183,7 +187,7 @@
 	.error-404 footer, .error-404 .feds-navBar-wrapper {
 		margin-top: 0;
 	}
-	
+
   </style>
   <esi:include src="/head.html" onerror="continue"/>
 </head>
@@ -191,7 +195,7 @@
   <!--  header -->
   <header><esi:include src="/header.plain.html" onerror="continue"/></header>
   <!--  main content -->
-  <main> 
+  <main>
 	  <div>
 		<h2>These are uncharted waters.</h2>
 		<p><i>Searching for something? Try one of the links below</i></p>
@@ -200,7 +204,7 @@
 			<a href="https://adobe.com/search.html">Search Adobe.com</a>
 		</nav>
 		<cite>
-			<a href="https://www.behance.net/rsvn" target="_blank">The Story Begins Here by Risfan Fardiansyah</a>	
+			<a href="https://www.behance.net/rsvn" target="_blank">The Story Begins Here by Risfan Fardiansyah</a>
 		</cite>
 	  </div>
   </main>
