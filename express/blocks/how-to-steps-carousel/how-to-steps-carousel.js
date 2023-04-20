@@ -235,22 +235,22 @@ function roundedImage(x, y, width, height, radius, ctx) {
 }
 
 function handleTemplateLoad(canvas, ctx, templateImg) {
-  templateImg.style.maxWidth = '562px';
-  templateImg.style.maxHeight = '377px';
+  templateImg.style.maxWidth = '986px';
+  templateImg.style.maxHeight = '652px';
   templateImg.style.objectFit = 'contain';
   templateImg.style.borderRadius = '7px';
   // start and end areas were directly measured and transferred from the spec image
-  const centerX = 640;
-  const centerY = 347;
+  const centerX = 1123;
+  const centerY = 600;
   ctx.save();
   roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height, 7, ctx);
   ctx.clip();
   ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
   ctx.restore();
-  templateImg.style.maxWidth = '178px';
-  templateImg.style.maxHeight = '273px';
-  const centerMobileX = 1035;
-  const centerMobileY = 277;
+  templateImg.style.maxWidth = '312px';
+  templateImg.style.maxHeight = '472px';
+  const centerMobileX = 1816;
+  const centerMobileY = 479;
   ctx.save();
   roundedImage(centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2), templateImg.width, templateImg.height, 7, ctx);
   ctx.clip();
@@ -272,8 +272,8 @@ export default async function decorate(block) {
     const backgroundPictureDiv = rows.shift();
     const backgroundPic = backgroundPictureDiv.querySelector('picture');
     const backgroundPicImg = backgroundPic.querySelector('img');
-    backgroundPicImg.width = 1140;
-    backgroundPicImg.height = 620;
+    backgroundPicImg.width = 2000;
+    backgroundPicImg.height = 1072;
     const templateDiv = rows.shift();
     const canvas = createTag('canvas', {width: backgroundPicImg.width, height: backgroundPicImg.height});
 

@@ -158,6 +158,7 @@ main .how-to-steps-carousel-container > div {
 
 main .how-to-steps-carousel-container > picture > img {
   margin-bottom: 80px;
+  width: calc(100% - 40px);
 }
 
 @media (min-width: 600px) {
@@ -180,29 +181,13 @@ main .how-to-steps-carousel-container > picture > img {
     justify-content: center;
     align-items: start;
   }
-
-  main .how-to-steps-carousel-container > div {
-    margin: 0 20px 0 20px;
-    padding: 80px 70px;
-    width: 50%;
-    height: 100%;
-    max-width: 600px;
-  }
-
-  main .how-to-steps-carousel-container.no-cover > div {
-    margin: 0 0 0 20px;
-  }
-
-  main .how-to-steps-carousel-container.no-cover > picture {
-    width: unset;
-  }
-
-  main .how-to-steps-carousel-container.no-cover > picture > img {
-    object-fit: contain;
-  }
 }
 
 @media (min-width: 900px) {
+  main .how-to-steps-carousel-container > div {
+    margin: 0 80px;
+  }
+
   main .how-to-steps-carousel-container > div p.button-container {
     margin: 0;
     margin-top: 40px;
