@@ -2313,9 +2313,9 @@ async function loadEager() {
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
-  // if (window.location.href.includes('/express/templates/')) {
+  if (window.location.href.includes('/express/templates/')) {
     await import('./templates.js');
-  // }
+  }
 
   if (main) {
     await decorateMain(main);

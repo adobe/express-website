@@ -428,11 +428,10 @@ if (page) {
   } else {
     await updateBlocks(page);
   }
-} 
-// else {
-//   const env = getHelixEnv();
+} else {
+  const env = getHelixEnv();
 
-//   if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
-//     window.location.replace('/404');
-//   }
-// }
+  if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
+    window.location.replace('/404');
+  }
+}
