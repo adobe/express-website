@@ -116,7 +116,7 @@
 
 		const { hostname, href, pathname, port, search } = win.location;
 		if (hostname === 'localhost')  return;
-		if (pathname.endsWith('.html')) {
+		if (pathname.endsWith('.html') && pathname !== '404.html') {
 			console.log('path with .html, try extensionless');
 			win.location.replace(pathname.substring(0, pathname.lastIndexOf('.')));
 		}
