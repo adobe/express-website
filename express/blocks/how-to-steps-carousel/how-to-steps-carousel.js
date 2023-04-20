@@ -38,17 +38,6 @@ function reset(block) {
 function activate(block, target) {
   if (!fixedImageSize) {
     // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
-
-    // get viewport width
-    const window = block.ownerDocument.defaultView;
-    const document = block.ownerDocument;
-
-    const {documentElement} = document;
-    const vw = Math.max(
-      documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
-      window && window.innerWidth ? window.innerWidth : 0,
-    );
-
     const container = block.parentElement.parentElement;
     const picture = container.querySelector('picture');
     const img = picture.querySelector('img');
@@ -86,7 +75,7 @@ function initRotation(window, document) {
   }
 }
 
-function fillBlock(section, picture, block, document, rows, window) {
+function buildHowToStepsCarousel(section, picture, block, document, rows, window) {
   section.prepend(picture);
 
   // join wrappers together
@@ -119,9 +108,9 @@ function fillBlock(section, picture, block, document, rows, window) {
     step: [],
   };
 
-  const numbers = createTag('div', {class: 'tip-numbers', 'aria-role': 'tablist'});
+  const numbers = createTag('div', { class: 'tip-numbers', 'aria-role': 'tablist' });
   block.prepend(numbers);
-  const tips = createTag('div', {class: 'tips'});
+  const tips = createTag('div', { class: 'tips' });
   block.append(tips);
 
   rows.forEach((row, i) => {
@@ -133,7 +122,7 @@ function fillBlock(section, picture, block, document, rows, window) {
 
     const h3 = createTag('h3');
     h3.innerHTML = cells[0].textContent.trim();
-    const text = createTag('div', {class: 'tip-text'});
+    const text = createTag('div', { class: 'tip-text' });
     text.append(h3);
     text.append(cells[1]);
 
@@ -166,7 +155,7 @@ function fillBlock(section, picture, block, document, rows, window) {
         window.clearTimeout(rotationInterval);
       }
 
-      let {target} = e;
+      let { target } = e;
       if (e.target.nodeName.toLowerCase() === 'span') {
         target = e.target.parentElement;
       }
@@ -189,7 +178,7 @@ function fillBlock(section, picture, block, document, rows, window) {
   });
 
   if (includeSchema) {
-    const $schema = createTag('script', {type: 'application/ld+json'});
+    const $schema = createTag('script', { type: 'application/ld+json' });
     $schema.innerHTML = JSON.stringify(schema);
     const $head = document.head;
     $head.append($schema);
@@ -238,23 +227,28 @@ function handleTemplateLoad(canvas, ctx, templateImg) {
   templateImg.style.maxWidth = '986px';
   templateImg.style.maxHeight = '652px';
   templateImg.style.objectFit = 'contain';
-  templateImg.style.borderRadius = '7px';
   // start and end areas were directly measured and transferred from the spec image
   const centerX = 1123;
   const centerY = 600;
   ctx.save();
-  roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height, 7, ctx);
+  roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2),
+    templateImg.width, templateImg.height, 7, ctx);
   ctx.clip();
-  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerX - (templateImg.width / 2), centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
+  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth,
+    templateImg.naturalHeight, centerX - (templateImg.width / 2),
+    centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
   ctx.restore();
   templateImg.style.maxWidth = '312px';
   templateImg.style.maxHeight = '472px';
   const centerMobileX = 1816;
   const centerMobileY = 479;
   ctx.save();
-  roundedImage(centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2), templateImg.width, templateImg.height, 7, ctx);
+  roundedImage(centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2),
+    templateImg.width, templateImg.height, 7, ctx);
   ctx.clip();
-  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight, centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2), templateImg.width, templateImg.height);
+  ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight,
+    centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2),
+    templateImg.width, templateImg.height);
   ctx.restore();
 }
 
@@ -275,7 +269,7 @@ export default async function decorate(block) {
     backgroundPicImg.width = 2000;
     backgroundPicImg.height = 1072;
     const templateDiv = rows.shift();
-    const canvas = createTag('canvas', {width: backgroundPicImg.width, height: backgroundPicImg.height});
+    const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
 
     const ctx = canvas.getContext('2d');
     const templateImages = templateDiv.querySelectorAll('picture');
@@ -283,7 +277,7 @@ export default async function decorate(block) {
     const templateImg = templateImages[0].querySelector('img');
     const img = createTag('img');
 
-    const mobilePromise = new Promise((resolve) => {
+    const promise = new Promise((resolve) => {
       if (templateImg.complete && templateImg.naturalHeight !== 0) {
         handleTemplateLoad(canvas, ctx, templateImg);
         resolve();
@@ -294,19 +288,19 @@ export default async function decorate(block) {
         };
       }
     });
-    mobilePromise.then(() => {
+    promise.then(() => {
       img.src = canvas.toDataURL('image/png');
       backgroundPictureDiv.remove();
       const mergedPicture = createTag('picture');
       mergedPicture.append(img);
       picture = mergedPicture;
-      fillBlock(section, picture, block, document, rows, window);
+      buildHowToStepsCarousel(section, picture, block, document, rows, window);
       templateDiv.remove();
     });
   } else {
     picture = section.querySelector('picture');
     const parent = picture.parentElement;
     parent.remove();
-    fillBlock(section, picture, block, document, rows, window);
+    buildHowToStepsCarousel(section, picture, block, document, rows, window);
   }
 }

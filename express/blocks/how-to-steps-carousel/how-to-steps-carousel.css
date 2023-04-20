@@ -181,6 +181,10 @@ main .how-to-steps-carousel-container > picture > img {
     justify-content: center;
     align-items: start;
   }
+
+  main .how-to-steps-carousel-container > div {
+    max-width: 600px;
+  }
 }
 
 @media (min-width: 900px) {
