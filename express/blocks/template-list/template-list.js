@@ -33,6 +33,8 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
+import useInputAutocomplete from './useInputAutocomplete.js';
+
 const props = {
   templates: [],
   filters: { locales: '(en)' },
@@ -821,6 +823,25 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
         $clear.style.display = 'none';
       }
     }, { passive: true });
+    const suggestionList = createTag('li', { class: 'autocomplete-suggestions' });
+    $wrapper.insertAdjacentElement('afterend', suggestionList);
+    const suggestionsListUIUpdateCB = (suggestions) => {
+      suggestionList.innerHTML = '';
+      suggestions.forEach((item) => {
+        const ul = createTag('ul');
+        ul.append(item.query);
+        ul.addEventListener('click', () => {
+          if (item.query === $searchBar.value) return;
+          $searchBar.value = item.query;
+          $searchBar.dispatchEvent(new Event('input'));
+        });
+        suggestionList.append(ul);
+      });
+    };
+    const { inputHandler } = useInputAutocomplete(
+      suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 5 },
+    );
+    $searchBar.addEventListener('input', inputHandler);
 
     $searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();

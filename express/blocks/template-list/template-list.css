@@ -2447,3 +2447,17 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
     padding-top: 0;
   }
 }
+
+
+main .autocomplete-suggestions {
+  color: green;
+  list-style-type: none;
+  padding: 10px 40px 10px 286px;
+  margin: auto;
+  max-width: 560px;
+  position: relative;
+}
+
+main .autocomplete-suggestions > ul {
+  cursor: pointer;
+}
