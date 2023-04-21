@@ -35,9 +35,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const props = {
   templates: [],
-  filters: {
-    locales: '(en)',
-  },
+  filters: { locales: '(en)' },
   tailButton: '',
   limit: 70,
   total: 0,
@@ -130,7 +128,7 @@ async function fetchTemplates() {
       return result;
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
+      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
         .then((response) => response.json())
         .then((response) => response);
     }
@@ -1639,14 +1637,13 @@ export async function decorateTemplateList($block) {
     const $parent = $block.closest('.section');
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a')
-      .forEach(($a) => {
-        $a.className = 'template-title-link';
-        const p = $a.closest('p');
-        if (p) {
-          p.classList.remove('button-container');
-        }
-      });
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      const p = $a.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
+    });
 
     if ($parent && $parent.classList.contains('toc-container')) {
       const $tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });

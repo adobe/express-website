@@ -45,8 +45,63 @@ function handlelize(str) {
     .toLowerCase(); // To lowercase
 }
 
+async function processContentRow(block, props) {
+  const placeholders = await fetchPlaceholders();
+  const parent = block.closest('.section');
+
+  const templateTitle = createTag('div', { class: 'template-title' });
+  templateTitle.innerHTML = props.contentRow.outerHTML;
+
+  const aTags = templateTitle.querySelectorAll(':scope a');
+  if (aTags.length > 0) {
+    templateTitle.classList.add('with-link');
+    aTags.forEach((aTag) => {
+      aTag.className = 'template-title-link';
+      const p = aTag.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
+    });
+  }
+
+  block.before(templateTitle);
+
+  if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
+
+  if (parent && parent.classList.contains('toc-container')) {
+    const tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
+    const tocSlot = createTag('div', { class: 'toc-slot' });
+    const h2 = props.contentRow.querySelector('h2');
+    if (h2) {
+      h2.parentElement.prepend(tocCollidingArea);
+      tocCollidingArea.append(tocSlot, h2);
+    }
+  }
+
+  if (block.classList.contains('collaboration')) {
+    const $titleHeading = props.contentRow.querySelector('h3');
+    const anchorLink = createTag('a', {
+      class: 'collaboration-anchor',
+      href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
+    });
+    const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
+    $clipboardTag.textContent = placeholders['tag-copied'];
+
+    anchorLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(anchorLink.href);
+      anchorLink.classList.add('copied');
+      setTimeout(() => {
+        anchorLink.classList.remove('copied');
+      }, 2000);
+    });
+
+    anchorLink.append($clipboardTag);
+    $titleHeading.append(anchorLink);
+  }
+}
+
 function constructProps(block) {
-  const singleColumnContentTypes = ['title', 'subtitle'];
   const props = {
     templates: [],
     filters: {
@@ -67,16 +122,7 @@ function constructProps(block) {
     const cols = row.querySelectorAll('div');
     const key = cols[0].querySelector('strong')?.textContent.trim().toLowerCase();
     if (cols.length === 1) {
-      const paragraphs = cols[0].querySelectorAll('p');
-      if (paragraphs.length > 0) {
-        singleColumnContentTypes.forEach((k, i) => {
-          if (paragraphs[i]) {
-            props[k] = paragraphs[i].textContent.trim();
-          }
-        });
-      } else {
-        props.title = cols[0].textContent.trim();
-      }
+      [props.contentRow] = cols;
     } else if (cols.length === 2) {
       const value = cols[1].textContent.trim();
       if (key && value) {
@@ -236,34 +282,57 @@ function updateLoadMoreButton(block, props, loadMore) {
   }
 }
 
-function formatSearchQuery(props) {
-  const filtersArray = Object.entries(props.filters);
-  const filterString = filtersArray.reduce((string, [key, value]) => {
-    if (key === filtersArray[filtersArray.length - 1][0]) {
-      return `${string}${key}:(${value})`;
-    } else {
-      return `${string}${key}:(${value}) AND `;
-    }
-  }, '');
+function formatFilterString(filters) {
+  // FIXME: check how filters can be formed, how it's handling or and and
+  const {
+    // eslint-disable-next-line no-unused-vars
+    animated, locales, premium, tasks, topics,
+  } = filters;
+  let str = '';
+  if (premium === 'false') {
+    str += '&filters=licensingCategory==free';
+  }
+  if (animated && animated !== '()') {
+    str += `&filters=animated==${animated}`;
+  }
+  if (tasks && tasks !== '()') {
+    str += `&filters=tasks==[${/(.+)/.exec(tasks)[1]}]`;
+  }
+  // FIXME: check if q is for topics now
+  if (topics && topics !== '()') {
+    str += `&q=${/(.+)/.exec(topics)[1]}`;
+  }
+  // if (locales !== '()') {
+  //   str += `&filters=language==[${/\((.+)\)/.exec(locales)[1]}]`;
+  // }
 
-  return `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+  return str;
 }
 
+const fetchSearchUrl = async ({ limit, start, filters }) => {
+  // FIXME: orderBy fields are now different.
+  const base = 'https://spark-search.adobe.io/v3/content';
+  const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
+  const queryType = 'search';
+  const filterStr = formatFilterString(filters);
+  const startParam = start ? `&start=${start}` : '';
+  const url = encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}${startParam}${filterStr}`);
+
+  return fetch(url, {
+    headers: {
+      'x-api-key': 'projectx_webapp',
+    },
+  }).then((response) => response.json());
+};
+
 async function fetchTemplates(props) {
-  props.queryString = formatSearchQuery(props);
+  const result = await fetchSearchUrl(props);
 
-  const result = await fetch(props.queryString)
-    .then((response) => response.json())
-    .then((response) => response);
-
-  // eslint-disable-next-line no-underscore-dangle
-  if (result._embedded.total > 0) {
+  if (result?.metadata?.totalHits > 0) {
     return result;
   } else {
     // save fetch if search query returned 0 templates. "Bad result is better than no result"
-    return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
-      .then((res) => res.json())
-      .then((res) => res);
+    return fetchSearchUrl({ ...props, filters: {} });
   }
 }
 
@@ -273,57 +342,97 @@ async function processApiResponse(props) {
   let templateFetched;
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
-    templateFetched = response._embedded.results;
+    templateFetched = response.items;
 
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
       const starts = new URLSearchParams(nextQuery).get('start').split(',');
-      starts.pop();
       props.start = starts.join(',');
     } else {
       props.start = '';
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    props.total = response._embedded.total;
+    props.total = response.metadata.totalHits;
   }
 
   const renditionParams = {
     format: 'jpg',
-    dimension: 'width',
+    // dimension: 'width',
     size: 400,
   };
 
-  if (templateFetched) {
-    return templateFetched.map((template) => {
-      const tmpltEl = createTag('div');
-      const picElWrapper = createTag('div');
-
-      ['format', 'dimension', 'size'].forEach((param) => {
-        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
-      });
-      const picEl = createTag('img', {
-        src: template.rendition.href,
-        alt: template.title,
-      });
-      const btnElWrapper = createTag('div', { class: 'button-container' });
-      const btnEl = createTag('a', {
-        href: template.branchURL,
-        title: placeholders['edit-this-template'] ?? 'Edit this template',
-        class: 'button accent',
-      });
-
-      btnEl.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
-      picElWrapper.insertAdjacentElement('beforeend', picEl);
-      btnElWrapper.insertAdjacentElement('beforeend', btnEl);
-      tmpltEl.insertAdjacentElement('beforeend', picElWrapper);
-      tmpltEl.insertAdjacentElement('beforeend', btnElWrapper);
-      return tmpltEl;
-    });
-  } else {
+  if (!templateFetched) {
     return null;
   }
+  return templateFetched.map((template) => {
+    const tmpltEl = createTag('div');
+    const btnElWrapper = createTag('div', { class: 'button-container' });
+    const btnEl = createTag('a', {
+      href: template.customLinks.branchUrl,
+      title: placeholders['edit-this-template'] ?? 'Edit this template',
+      class: 'button accent',
+    });
+    const picElWrapper = createTag('div');
+    const videoWrapper = createTag('div');
+
+    // eslint-disable-next-line no-underscore-dangle
+    const imageHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href
+      .replace('{&page,size,type,fragment}',
+        `&size=${renditionParams.size}&type=image/jpg&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
+
+    if (template.pages[0].rendition?.video) {
+      // eslint-disable-next-line no-underscore-dangle
+      const videoHref = template._links['http://ns.adobe.com/adobecloud/rel/component'].href
+        .replace('{&revision,component_id}',
+          `&revision=0&component_id=${template.pages[0].rendition.video.thumbnail.componentId}`);
+      const video = createTag('video', {
+        loop: true,
+        muted: true,
+        playsinline: '',
+        poster: imageHref,
+        title: template.title['i-default'],
+        preload: 'metadata',
+      });
+      video.append(createTag('source', {
+        src: videoHref,
+        type: 'video/mp4',
+      }));
+      // TODO: another approach: show an image, only insert the video node when hover
+      btnElWrapper.addEventListener('mouseenter', () => {
+        // video.src = videoHref;
+        video.muted = true;
+        video.play().catch((e) => {
+          if (e instanceof DOMException && e.name === 'AbortError') {
+            // ignore
+          }
+        });
+      });
+      btnElWrapper.addEventListener('mouseleave', () => {
+        // console.log('reloading');
+        // video.load();
+        // console.log('removing src');
+        // video.src = ''; // need to reset video.src=videoHref
+        // console.log('pausing and set time=0');
+        video.pause();
+        video.currentTime = 0;
+      });
+      videoWrapper.insertAdjacentElement('beforeend', video);
+      tmpltEl.insertAdjacentElement('beforeend', videoWrapper);
+    } else {
+      const picEl = createTag('img', {
+        src: imageHref,
+        alt: template.title['i-default'],
+      });
+      picElWrapper.insertAdjacentElement('beforeend', picEl);
+      tmpltEl.insertAdjacentElement('beforeend', picElWrapper);
+    }
+
+    btnEl.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
+    btnElWrapper.insertAdjacentElement('beforeend', btnEl);
+    tmpltEl.insertAdjacentElement('beforeend', btnElWrapper);
+    return tmpltEl;
+  });
 }
 
 async function decorateNewTemplates(block, props, options = { reDrawMasonry: false }) {
@@ -348,7 +457,7 @@ async function decorateNewTemplates(block, props, options = { reDrawMasonry: fal
 }
 
 async function decorateLoadMoreButton(block, props) {
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   const loadMoreDiv = createTag('div', { class: 'load-more' });
   const loadMoreButton = createTag('button', { class: 'load-more-button' });
   const loadMoreText = createTag('p', { class: 'load-more-text' });
@@ -460,7 +569,7 @@ async function attachFreeInAppPills(block) {
 }
 
 async function redirectSearch(searchBar, props) {
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if (searchBar) {
     const wrapper = searchBar.closest('.search-bar-wrapper');
@@ -684,128 +793,6 @@ function closeTaskDropdown(toolBar) {
   });
 }
 
-function initSearchFunction(toolBar, props, stickySearchBarWrapper, searchBarWrapper) {
-  const section = toolBar.closest('.section.template-x-fullwidth-container');
-  const stickySearchBar = stickySearchBarWrapper.querySelector('input.search-bar');
-  const searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
-  const toolbarWrapper = toolBar.parentElement;
-
-  const searchBarWatcher = new IntersectionObserver((entries) => {
-    if (!entries[0].isIntersecting) {
-      toolbarWrapper.classList.add('sticking');
-      resetTaskDropdowns(section);
-    } else {
-      toolbarWrapper.classList.remove('sticking');
-    }
-  }, { rootMargin: '0px', threshold: 1 });
-
-  searchBarWatcher.observe(searchBarWrapper);
-
-  searchBarWrappers.forEach((wrapper) => {
-    const searchForm = wrapper.querySelector('.search-form');
-    const searchBar = wrapper.querySelector('input.search-bar');
-    const clear = wrapper.querySelector('.icon-search-clear');
-    const taskDropdown = wrapper.querySelector('.task-dropdown');
-    const taskDropdownToggle = taskDropdown.querySelector('.task-dropdown-toggle');
-    const taskDropdownList = taskDropdown.querySelector('.task-dropdown-list');
-    const taskOptions = taskDropdownList.querySelectorAll('.option');
-
-    searchBar.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeTaskDropdown(toolBar);
-    }, { passive: true });
-
-    searchBar.addEventListener('keyup', () => {
-      if (searchBar.value !== '') {
-        clear.style.display = 'inline-block';
-      } else {
-        clear.style.display = 'none';
-      }
-    }, { passive: true });
-
-    searchForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await redirectSearch(searchBar, props);
-    });
-
-    clear.addEventListener('click', () => {
-      searchBar.value = '';
-      clear.style.display = 'none';
-    }, { passive: true });
-
-    taskDropdownToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      taskDropdown.classList.toggle('active');
-      taskDropdownList.classList.toggle('active');
-    }, { passive: true });
-
-    document.addEventListener('click', (e) => {
-      const { target } = e;
-      if (target !== taskDropdown && !taskDropdown.contains(target)) {
-        taskDropdown.classList.remove('active');
-        taskDropdownList.classList.remove('active');
-      }
-    }, { passive: true });
-
-    taskOptions.forEach((option) => {
-      const updateTaskOptions = () => {
-        taskOptions.forEach((o) => {
-          if (o !== option) {
-            o.classList.remove('active');
-          }
-        });
-
-        option.classList.add('active');
-        props.filters.tasks = `(${option.dataset.tasks})`;
-        taskDropdownToggle.textContent = option.textContent.trim();
-        closeTaskDropdown(toolBar);
-      };
-
-      option.addEventListener('click', (e) => {
-        e.stopPropagation();
-        updateTaskOptions();
-      }, { passive: true });
-    });
-
-    document.addEventListener('click', (e) => {
-      if (e.target !== wrapper && !wrapper.contains(e.target)) {
-        if (wrapper.classList.contains('sticky-search-bar')) {
-          wrapper.classList.remove('ready');
-          wrapper.classList.add('collapsed');
-        }
-      }
-    }, { passive: true });
-  });
-
-  stickySearchBar.addEventListener('click', (e) => {
-    e.stopPropagation();
-
-    stickySearchBarWrapper.classList.remove('collapsed');
-    setTimeout(() => {
-      if (!stickySearchBarWrapper.classList.contains('collapsed')) {
-        stickySearchBarWrapper.classList.add('ready');
-      }
-    }, 500);
-  }, { passive: true });
-
-  stickySearchBarWrapper.addEventListener('mouseenter', () => {
-    stickySearchBarWrapper.classList.remove('collapsed');
-    setTimeout(() => {
-      if (!stickySearchBarWrapper.classList.contains('collapsed')) {
-        stickySearchBarWrapper.classList.add('ready');
-      }
-    }, 500);
-  }, { passive: true });
-
-  stickySearchBarWrapper.addEventListener('mouseleave', () => {
-    if (!stickySearchBar || stickySearchBar !== document.activeElement) {
-      stickySearchBarWrapper.classList.remove('ready');
-      stickySearchBarWrapper.classList.add('collapsed');
-      resetTaskDropdowns(section);
-    }
-  }, { passive: true });
-}
-
 function updateLottieStatus(section) {
   const drawer = section.querySelector('.filter-drawer-mobile');
   const inWrapper = drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
@@ -981,19 +968,19 @@ async function redrawTemplates($block, props, toolBar) {
     $card.remove();
   });
 
-  await decorateNewTemplates($block, props, { reDrawMasonry: true }).then(() => {
-    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-    updateOptionsStatus($block, props, toolBar);
-    if ($block.querySelectorAll('.template').length <= 0) {
-      const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
-      $viewButtons.forEach((button) => {
-        button.classList.remove('active');
-      });
-      ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-        $block.classList.remove(className);
-      });
-    }
-  });
+  await decorateNewTemplates($block, props, { reDrawMasonry: true });
+
+  $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+  updateOptionsStatus($block, props, toolBar);
+  if ($block.querySelectorAll('.template').length <= 0) {
+    const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
+    $viewButtons.forEach((button) => {
+      button.classList.remove('active');
+    });
+    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+      $block.classList.remove(className);
+    });
+  }
 }
 
 async function toggleAnimatedText($block, props, toolBar) {
@@ -1249,7 +1236,6 @@ async function decorateToolbar(block, props) {
 
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
-  const placeholders = await fetchPlaceholders();
   let rows = block.children.length;
   if ((rows === 0 || block.querySelectorAll('img').length === 0) && locale !== 'us') {
     const i18nTexts = block.firstElementChild
@@ -1313,52 +1299,6 @@ async function decorateTemplates(block, props) {
   }
 
   const templates = Array.from(block.children);
-  // process single column first row as title
-  if (templates[0] && templates[0].children.length === 1) {
-    const parent = block.closest('.section');
-    const titleRow = templates.shift();
-    titleRow.classList.add('template-title');
-    titleRow.querySelectorAll(':scope a')
-      .forEach((aTag) => {
-        aTag.className = 'template-title-link';
-        const p = aTag.closest('p');
-        if (p) {
-          p.classList.remove('button-container');
-        }
-      });
-
-    if (parent && parent.classList.contains('toc-container')) {
-      const tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
-      const tocSlot = createTag('div', { class: 'toc-slot' });
-      const h2 = titleRow.querySelector('h2');
-      if (h2) {
-        h2.parentElement.prepend(tocCollidingArea);
-        tocCollidingArea.append(tocSlot, h2);
-      }
-    }
-
-    if (block.classList.contains('collaboration')) {
-      const $titleHeading = titleRow.querySelector('h3');
-      const anchorLink = createTag('a', {
-        class: 'collaboration-anchor',
-        href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
-      });
-      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      $clipboardTag.textContent = placeholders['tag-copied'];
-
-      anchorLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigator.clipboard.writeText(anchorLink.href);
-        anchorLink.classList.add('copied');
-        setTimeout(() => {
-          anchorLink.classList.remove('copied');
-        }, 2000);
-      });
-
-      anchorLink.append($clipboardTag);
-      $titleHeading.append(anchorLink);
-    }
-  }
 
   rows = templates.length;
   let breakpoints = [{ width: '400' }];
@@ -1415,9 +1355,9 @@ async function decorateTemplates(block, props) {
   document.dispatchEvent(linksPopulated);
 }
 
-async function buildTemplateList(block, props, type = false) {
-  if (type) {
-    const parent = block.closest('.section.template-x-container');
+async function buildTemplateList(block, props, type = []) {
+  if (type?.length > 0) {
+    const parent = block.closest('.section');
     if (parent) {
       parent.classList.remove('template-x-container');
       parent.classList.add(`template-x-${type.join('-')}-container`);
@@ -1428,6 +1368,8 @@ async function buildTemplateList(block, props, type = false) {
     });
   }
 
+  await processContentRow(block, props);
+
   const templates = await processApiResponse(props);
   if (templates) {
     props.templates = props.templates.concat(templates);
@@ -1436,7 +1378,10 @@ async function buildTemplateList(block, props, type = false) {
     });
   }
 
-  await generateToolBar(block, props);
+  if (props.toolBar) {
+    await generateToolBar(block, props);
+  }
+
   await decorateTemplates(block, props);
 
   // templates are finished rendering at this point.
@@ -1452,10 +1397,11 @@ async function buildTemplateList(block, props, type = false) {
     await decorateToolbar(block, props);
   }
 
-  if (props.horizontal) {
+  if (props.orientation && props.orientation.toLowerCase() === 'horizontal') {
     buildCarousel(':scope > .template', block, false);
   } else {
-    addAnimationToggle(block);
+    // FIXME: what is this for?
+    // addAnimationToggle(block);
   }
 }
 
@@ -1464,23 +1410,22 @@ function determineTemplateXType(props) {
   const type = [];
 
   // orientation aspect
-  if (props.horizontal) type.push('horizontal');
+  if (props.orientation && props.orientation.toLowerCase() === 'horizontal') type.push('horizontal');
 
   // style aspect
-  if (props.width.toLowerCase() === 'full') type.push('fullwidth');
-  if (props.width.toLowerCase() === 'sixcols') type.push('sixcols');
+  if (props.width && props.width.toLowerCase() === 'full') type.push('fullwidth');
+  if (props.width && props.width.toLowerCase() === 'sixcols') type.push('sixcols');
   if (props.mini) type.push('mini');
 
   // use case aspect
   if (props.holidayBlock) type.push('holiday');
   if (props.collaborationBlock) type.push('collaboration');
 
-  console.log(props, type);
   return type;
 }
 
 export default async function decorate(block) {
   const props = constructProps(block);
   block.innerHTML = '';
-  await buildTemplateList(block, props, determineTemplateXType(props) || false);
+  await buildTemplateList(block, props, determineTemplateXType(props));
 }
