@@ -18,6 +18,7 @@ import {
   decorateMain,
   fetchPlaceholders,
   getIconElement,
+  getLanguage,
   getLocale,
   linkImage,
   toClassName,
@@ -54,7 +55,7 @@ async function processContentRow(block, props) {
     });
   }
 
-  block.before(templateTitle);
+  block.prepend(templateTitle);
 
   if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
 
@@ -147,33 +148,34 @@ function constructProps(block) {
 function populateTemplates(block, props, templates) {
   for (let tmplt of templates) {
     const isPlaceholder = tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
-    const $linkContainer = tmplt.querySelector(':scope > div:nth-of-type(2)');
-    const $rowWithLinkInFirstCol = tmplt.querySelector(':scope > div:first-of-type > a');
+    const linkContainer = tmplt.querySelector(':scope > div:nth-of-type(2)');
+    const rowWithLinkInFirstCol = tmplt.querySelector(':scope > div:first-of-type > a');
+    const innerWrapper = block.querySelector('.template-x-inner-wrapper');
 
-    if ($linkContainer) {
-      const $link = $linkContainer.querySelector(':scope a');
-      if ($link) {
+    if (innerWrapper && linkContainer) {
+      const link = linkContainer.querySelector(':scope a');
+      if (link) {
         const aTag = createTag('a', {
-          href: $link.href ? addSearchQueryToHref($link.href) : '#',
+          href: link.href ? addSearchQueryToHref(link.href) : '#',
         });
 
         aTag.append(...tmplt.children);
         tmplt.remove();
         tmplt = aTag;
-        block.append(aTag);
+        innerWrapper.append(aTag);
 
         // convert A to SPAN
-        const $newLink = createTag('span', { class: 'template-link' });
-        $newLink.append($link.textContent.trim());
+        const newLink = createTag('span', { class: 'template-link' });
+        newLink.append(link.textContent.trim());
 
-        $linkContainer.innerHTML = '';
-        $linkContainer.append($newLink);
+        linkContainer.innerHTML = '';
+        linkContainer.append(newLink);
       }
     }
 
-    if ($rowWithLinkInFirstCol && !tmplt.querySelector('img')) {
-      props.tailButton = $rowWithLinkInFirstCol;
-      $rowWithLinkInFirstCol.remove();
+    if (rowWithLinkInFirstCol && !tmplt.querySelector('img')) {
+      props.tailButton = rowWithLinkInFirstCol;
+      rowWithLinkInFirstCol.remove();
     }
 
     if (tmplt.children.length === 3) {
@@ -286,15 +288,15 @@ function formatFilterString(filters) {
     str += `&filters=animated==${animated}`;
   }
   if (tasks && tasks !== '()') {
-    str += `&filters=tasks==[${/(.+)/.exec(tasks)[1]}]`;
+    str += `&filters=tasks==[${tasks}]`;
   }
   // FIXME: check if q is for topics now
   if (topics && topics !== '()') {
-    str += `&q=${/(.+)/.exec(topics)[1]}`;
+    str += `&q=${topics}`;
   }
-  // if (locales !== '()') {
-  //   str += `&filters=language==[${/\((.+)\)/.exec(locales)[1]}]`;
-  // }
+  if (locales !== '()') {
+    str += `&filters=language==${locales.split('OR').map((l) => getLanguage(l))}`;
+  }
 
   return str;
 }
@@ -348,13 +350,13 @@ async function processApiResponse(props) {
 
   const renditionParams = {
     format: 'jpg',
-    // dimension: 'width',
     size: 400,
   };
 
   if (!templateFetched) {
     return null;
   }
+
   return templateFetched.map((template) => {
     const tmpltEl = createTag('div');
     const btnElWrapper = createTag('div', { class: 'button-container' });
@@ -579,25 +581,25 @@ function makeTemplateFunctions(placeholders) {
 
   Object.entries(functions).forEach((entry) => {
     entry[1].elements.wrapper = createTag('div', {
-      class: `function-wrapper function-${Object.values(entry)[0]}`,
-      'data-param': Object.values(entry)[0],
+      class: `function-wrapper function-${entry[0]}`,
+      'data-param': entry[0],
     });
 
     entry[1].elements.wrapper.subElements = {
       button: {
-        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
+        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
         subElements: {
           iconHolder: createTag('span', { class: 'icon-holder' }),
-          textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+          textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
           chevIcon: getIconElement('drop-down-arrow'),
         },
       },
       options: {
-        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
+        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
         subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
           const icon = getIconElement(entry[1].icons[subIndex]);
-          const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
-          [optionButton.textContent] = Object.values(option);
+          const optionButton = createTag('div', { class: 'option-button', 'data-value': option[1] });
+          [optionButton.textContent] = option;
           optionButton.prepend(icon);
           return optionButton;
         }),
@@ -632,15 +634,15 @@ function decorateFunctionsContainer(block, section, functions, placeholders) {
   const functionsContainer = createTag('div', { class: 'functions-container' });
   const functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
-  Object.entries(functions).forEach((filter) => {
-    const filterWrapper = filter[1].elements.wrapper;
+  Object.values(functions).forEach((filter) => {
+    const filterWrapper = filter.elements.wrapper;
 
-    Object.entries(filterWrapper.subElements).forEach((part) => {
-      const innerWrapper = part[1].wrapper;
+    Object.values(filterWrapper.subElements).forEach((part) => {
+      const innerWrapper = part.wrapper;
 
-      Object.entries(part[1].subElements).forEach((innerElement) => {
-        if (Object.values(innerElement)[1]) {
-          innerWrapper.append(Object.values(innerElement)[1]);
+      Object.values(part.subElements).forEach((innerElement) => {
+        if (innerElement) {
+          innerWrapper.append(innerElement);
         }
       });
 
@@ -890,32 +892,32 @@ function updateQueryURL(functionWrapper, props, option) {
   }
 }
 
-async function redrawTemplates($block, props, toolBar) {
-  const $heading = toolBar.querySelector('h2');
+async function redrawTemplates(block, props, toolBar) {
+  const heading = toolBar.querySelector('h2');
   const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
   props.start = '';
-  $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
-    $card.remove();
+  block.querySelectorAll('.template:not(.placeholder)').forEach((card) => {
+    card.remove();
   });
 
-  await decorateNewTemplates($block, props, { reDrawMasonry: true });
+  await decorateNewTemplates(block, props, { reDrawMasonry: true });
 
-  $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-  updateOptionsStatus($block, props, toolBar);
-  if ($block.querySelectorAll('.template').length <= 0) {
+  heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+  updateOptionsStatus(block, props, toolBar);
+  if (block.querySelectorAll('.template').length <= 0) {
     const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
     $viewButtons.forEach((button) => {
       button.classList.remove('active');
     });
     ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-      $block.classList.remove(className);
+      block.classList.remove(className);
     });
   }
 }
 
-async function toggleAnimatedText($block, props, toolBar) {
-  const section = $block.closest('.section.template-x-fullwidth-container');
+async function toggleAnimatedText(block, props, toolBar) {
+  const section = block.closest('.section.template-x-fullwidth-container');
   const toolbarWrapper = toolBar.parentElement;
 
   if (section) {
@@ -1167,6 +1169,8 @@ async function decorateToolbar(block, props) {
 
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
+  const innerWrapper = block.querySelector('.template-x-inner-wrapper');
+
   let rows = block.children.length;
   if ((rows === 0 || block.querySelectorAll('img').length === 0) && locale !== 'us') {
     const i18nTexts = block.firstElementChild
@@ -1229,13 +1233,13 @@ async function decorateTemplates(block, props) {
     }
   }
 
-  const templates = Array.from(block.children);
+  const templates = Array.from(innerWrapper.children);
 
   rows = templates.length;
   let breakpoints = [{ width: '400' }];
 
   if (rows > 6 && !block.classList.contains('horizontal')) {
-    block.classList.add('masonry');
+    innerWrapper.classList.add('masonry');
   }
 
   if (rows === 1) {
@@ -1262,14 +1266,20 @@ async function decorateTemplates(block, props) {
   // make copy of children to avoid modifying list while looping
 
   populateTemplates(block, props, templates);
-  if (!block.classList.contains('horizontal')) {
+  if (props.orientation.toLowerCase() !== 'horizontal') {
     if (rows > 6 || block.classList.contains('sixcols') || block.classList.contains('fullwidth')) {
       /* flex masonry */
-      const cells = Array.from(block.children);
-      block.classList.remove('masonry');
-      block.classList.add('flex-masonry');
 
-      props.masonry = new Masonry(block, cells);
+      if (innerWrapper) {
+        const cells = Array.from(innerWrapper.children);
+        innerWrapper.classList.remove('masonry');
+        innerWrapper.classList.add('flex-masonry');
+        props.masonry = new Masonry(innerWrapper, cells);
+      } else {
+        block.remove();
+        return null;
+      }
+
       props.masonry.draw();
       window.addEventListener('resize', () => {
         props.masonry.draw();
@@ -1288,13 +1298,8 @@ async function decorateTemplates(block, props) {
 
 async function buildTemplateList(block, props, type = []) {
   if (type?.length > 0) {
-    const parent = block.closest('.section');
-    if (parent) {
-      parent.classList.remove('template-x-container');
-      parent.classList.add(`template-x-${type.join('-')}-container`);
-    }
-
     type.forEach((typeName) => {
+      block.parentElement.classList.add(typeName);
       block.classList.add(typeName);
     });
   }
@@ -1303,9 +1308,11 @@ async function buildTemplateList(block, props, type = []) {
 
   const templates = await processApiResponse(props);
   if (templates) {
+    const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
+    block.append(blockInnerWrapper);
     props.templates = props.templates.concat(templates);
     props.templates.forEach((template) => {
-      block.append(template);
+      blockInnerWrapper.append(template);
     });
   }
 
@@ -1329,9 +1336,13 @@ async function buildTemplateList(block, props, type = []) {
   }
 
   if (props.orientation && props.orientation.toLowerCase() === 'horizontal') {
-    buildCarousel(':scope > .template', block, false);
-  } else {
-    // FIXME: what is this for?
+    const innerWrapper = block.querySelector('.template-x-inner-wrapper');
+    if (innerWrapper) {
+      buildCarousel(':scope > .template', innerWrapper, false);
+    } else {
+      block.remove();
+      return null;
+    }
   }
 }
 
