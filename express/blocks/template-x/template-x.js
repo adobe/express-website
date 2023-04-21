@@ -20,6 +20,8 @@ import {
   getIconElement,
   getLanguage,
   getLocale,
+  getLottie,
+  lazyLoadLottiePlayer,
   linkImage,
   toClassName,
 } from '../../scripts/scripts.js';
@@ -38,7 +40,6 @@ function camelize(str) {
 
 async function processContentRow(block, props) {
   const placeholders = await fetchPlaceholders();
-  const parent = block.closest('.section');
 
   const templateTitle = createTag('div', { class: 'template-title' });
   templateTitle.innerHTML = props.contentRow.outerHTML;
@@ -59,24 +60,14 @@ async function processContentRow(block, props) {
 
   if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
 
-  if (parent && parent.classList.contains('toc-container')) {
-    const tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
-    const tocSlot = createTag('div', { class: 'toc-slot' });
-    const h2 = props.contentRow.querySelector('h2');
-    if (h2) {
-      h2.parentElement.prepend(tocCollidingArea);
-      tocCollidingArea.append(tocSlot, h2);
-    }
-  }
-
   if (block.classList.contains('collaboration')) {
-    const $titleHeading = props.contentRow.querySelector('h3');
+    const titleHeading = props.contentRow.querySelector('h3');
     const anchorLink = createTag('a', {
       class: 'collaboration-anchor',
-      href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
+      href: `${document.URL.replace(/#.*$/, '')}#${titleHeading.id}`,
     });
-    const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-    $clipboardTag.textContent = placeholders['tag-copied'];
+    const clipboardTag = createTag('span', { class: 'clipboard-tag' });
+    clipboardTag.textContent = placeholders['tag-copied'];
 
     anchorLink.addEventListener('click', (e) => {
       e.preventDefault();
@@ -87,8 +78,8 @@ async function processContentRow(block, props) {
       }, 2000);
     });
 
-    anchorLink.append($clipboardTag);
-    $titleHeading.append(anchorLink);
+    anchorLink.append(clipboardTag);
+    titleHeading.append(anchorLink);
   }
 }
 
@@ -180,8 +171,8 @@ function populateTemplates(block, props, templates) {
 
     if (tmplt.children.length === 3) {
       // look for options in last cell
-      const $overlayCell = tmplt.querySelector(':scope > div:last-of-type');
-      const option = $overlayCell.textContent.trim();
+      const overlayCell = tmplt.querySelector(':scope > div:last-of-type');
+      const option = overlayCell.textContent.trim();
       if (option) {
         if (isPlaceholder) {
           // add aspect ratio to template
@@ -214,7 +205,7 @@ function populateTemplates(block, props, templates) {
           tmplt.children[0].append($icon);
         }
       }
-      $overlayCell.remove();
+      overlayCell.remove();
     }
 
     if (!tmplt.querySelectorAll(':scope > div > *').length) {
@@ -237,14 +228,14 @@ function populateTemplates(block, props, templates) {
         tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
         const picture = tmplt.querySelector('picture');
         if (picture) {
-          const $img = tmplt.querySelector('img');
+          const img = tmplt.querySelector('img');
           const video = createTag('video', {
             playsinline: '',
             autoplay: '',
             loop: '',
             muted: '',
-            poster: $img.getAttribute('src'),
-            title: $img.getAttribute('alt'),
+            poster: img.getAttribute('src'),
+            title: img.getAttribute('alt'),
           });
           video.append(createTag('source', {
             src: videoLink,
@@ -740,6 +731,108 @@ function updateLottieStatus(block) {
   }
 }
 
+async function decorateCategoryList(block, props) {
+  const placeholders = await fetchPlaceholders();
+  const locale = getLocale(window.location);
+  const mobileDrawerWrapper = block.querySelector('.filter-drawer-mobile');
+  const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
+  const categories = JSON.parse(placeholders['task-categories']);
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
+  const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper collapsed' });
+  const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
+  const categoriesToggle = getIconElement('drop-down-arrow');
+  const $categories = createTag('ul', { class: 'category-list' });
+
+  categoriesToggleWrapper.append(categoriesToggle);
+  categoriesDesktopWrapper.append(categoriesToggleWrapper, $categories);
+
+  Object.entries(categories).forEach((category, index) => {
+    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+    const targetTasks = category[1];
+    const currentTasks = props.filters.tasks ? props.filters.tasks : "''";
+    const currentTopic = props.filters.topics;
+
+    const $listItem = createTag('li');
+    if (category[1] === currentTasks) {
+      $listItem.classList.add('active');
+    }
+
+    let icon;
+    if (categoryIcons[index] && categoryIcons[index] !== '') {
+      icon = categoryIcons[index];
+    } else {
+      icon = 'template-static';
+    }
+
+    const iconElement = getIconElement(icon);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    const $a = createTag('a', {
+      'data-tasks': targetTasks,
+      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+    });
+    [$a.textContent] = category;
+
+    $a.prepend(iconElement);
+    $listItem.append($a);
+    $categories.append($listItem);
+  });
+
+  const categoriesMobileWrapper = categoriesDesktopWrapper.cloneNode({ deep: true });
+  const mobileCategoriesToggle = createTag('span', { class: 'category-list-toggle' });
+  mobileCategoriesToggle.textContent = placeholders['jump-to-category'];
+  categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')?.replaceWith(mobileCategoriesToggle);
+  const lottieArrows = createTag('a', { class: 'lottie-wrapper' });
+  mobileDrawerWrapper.append(lottieArrows);
+  drawerWrapper.append(categoriesMobileWrapper);
+  lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
+  lazyLoadLottiePlayer();
+
+  categoriesDesktopWrapper.classList.add('desktop-only');
+
+  block.prepend(categoriesDesktopWrapper);
+  block.classList.add('with-categories-list');
+
+  const toggleButton = categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
+  toggleButton.append(getIconElement('drop-down-arrow'));
+  toggleButton.addEventListener('click', () => {
+    const listWrapper = toggleButton.parentElement;
+    toggleButton.classList.toggle('collapsed');
+    if (toggleButton.classList.contains('collapsed')) {
+      if (listWrapper.classList.contains('desktop-only')) {
+        listWrapper.classList.add('collapsed');
+        listWrapper.style.maxHeight = '40px';
+      } else {
+        listWrapper.classList.add('collapsed');
+        listWrapper.style.maxHeight = '24px';
+      }
+    } else {
+      listWrapper.classList.remove('collapsed');
+      listWrapper.style.maxHeight = '1000px';
+    }
+
+    setTimeout(() => {
+      if (!listWrapper.classList.contains('desktop-only')) {
+        updateLottieStatus(block);
+      }
+    }, 510);
+  }, { passive: true });
+
+  lottieArrows.addEventListener('click', () => {
+    drawerWrapper.scrollBy({
+      top: 300,
+      behavior: 'smooth',
+    });
+  }, { passive: true });
+
+  drawerWrapper.addEventListener('scroll', () => {
+    updateLottieStatus(block);
+  }, { passive: true });
+
+  categoriesToggleWrapper.addEventListener('click', () => {
+    categoriesDesktopWrapper.classList.toggle('collapsed');
+  }, { passive: true });
+}
+
 function closeDrawer(toolBar) {
   const drawerBackground = toolBar.querySelector('.drawer-background');
   const drawer = toolBar.querySelector('.filter-drawer-mobile');
@@ -1207,15 +1300,15 @@ async function decorateTemplates(block, props) {
     if (!heroPicture && bluePrint) {
       const bpHeroImage = bluePrint.querySelector('div:first-of-type img');
       if (bpHeroImage) {
-        const $heroSection = document.querySelector('main .hero');
+        const heroSection = document.querySelector('main .hero');
         const $heroDiv = document.querySelector('main .hero > div');
 
-        if ($heroSection && !$heroDiv) {
+        if (heroSection && !$heroDiv) {
           const p = createTag('p');
           const pic = createTag('picture', { class: 'hero-bg' });
           pic.appendChild(bpHeroImage);
           p.append(pic);
-          $heroSection.classList.remove('hero-noimage');
+          heroSection.classList.remove('hero-noimage');
           $heroDiv.prepend(p);
         }
       }
@@ -1239,9 +1332,9 @@ async function decorateTemplates(block, props) {
     }, { width: '750' }];
   }
 
-  block.querySelectorAll(':scope picture > img').forEach(($img) => {
-    const { src, alt } = $img;
-    $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+  block.querySelectorAll(':scope picture > img').forEach((img) => {
+    const { src, alt } = img;
+    img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
   });
 
   // find the edit link and turn the template DIV into the A
@@ -1323,6 +1416,8 @@ async function buildTemplateList(block, props, type = []) {
 
   if (props.toolBar) {
     await decorateToolbar(block, props);
+    await decorateCategoryList(block, props);
+    // TODO: add fx appendCategoryTemplatesCount(block)
   }
 
   if (props.orientation && props.orientation.toLowerCase() === 'horizontal') {
@@ -1345,6 +1440,7 @@ function determineTemplateXType(props) {
   // style aspect
   if (props.width && props.width.toLowerCase() === 'full') type.push('fullwidth');
   if (props.width && props.width.toLowerCase() === 'sixcols') type.push('sixcols');
+  if (props.width && props.width.toLowerCase() === 'fourcols') type.push('fourcols');
   if (props.mini) type.push('mini');
 
   // use case aspect
