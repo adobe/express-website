@@ -767,10 +767,10 @@ loadScript(martechURL, () => {
     trackBranchParameters($links);
 
     // for tracking all of the links
-    $links.forEach(($a) => {
-      $a.addEventListener('click', () => {
-        trackButtonClick($a);
-      });
+    d.addEventListener('click', (event) => {
+      if (event.target.tagName === 'A') {
+        trackButtonClick(event.target);
+      }
     });
 
     // for tracking the faq
