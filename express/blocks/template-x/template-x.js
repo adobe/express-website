@@ -464,7 +464,7 @@ async function decorateLoadMoreButton(block, props) {
   const loadMoreText = createTag('p', { class: 'load-more-text' });
   loadMoreDiv.append(loadMoreButton, loadMoreText);
   loadMoreText.textContent = placeholders['load-more'];
-  block.insertAdjacentElement('afterend', loadMoreDiv);
+  block.append(loadMoreDiv);
   loadMoreButton.append(getIconElement('plus-icon'));
 
   loadMoreButton.addEventListener('click', async () => {
@@ -482,9 +482,12 @@ async function decorateLoadMoreButton(block, props) {
   return loadMoreDiv;
 }
 
-async function populateHeadingPlaceholder(props) {
+async function insertTemplateStats(props) {
   const locale = getLocale(window.location);
-  const heading = props.title.replace("''", '');
+
+  const heading = props.contentRow.textContent;
+  if (!heading) return null;
+
   const placeholders = await fetchPlaceholders();
 
   let grammarTemplate = props.templateStats || placeholders['template-placeholder'];
@@ -516,23 +519,18 @@ async function populateHeadingPlaceholder(props) {
 }
 
 async function generateToolBar(block, props) {
-  const parent = block.closest('.section');
-  if (parent) {
-    const tmpltListWrapper = parent.querySelector('.template-x-wrapper');
+  const sectionHeading = createTag('h2');
+  const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
+  const tBar = createTag('div', { class: 'api-templates-toolbar' });
+  const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
+  const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
-    const sectionHeading = createTag('h2');
-    const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
-    const tBar = createTag('div', { class: 'api-templates-toolbar' });
-    const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
-    const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
+  sectionHeading.textContent = await insertTemplateStats(props);
 
-    sectionHeading.textContent = await populateHeadingPlaceholder(props);
-
-    tmpltListWrapper.before(tBarWrapper);
-    tBarWrapper.append(tBar);
-    tBar.append(contentWrapper, functionsWrapper);
-    contentWrapper.append(sectionHeading);
-  }
+  block.prepend(tBarWrapper);
+  tBarWrapper.append(tBar);
+  tBar.append(contentWrapper, functionsWrapper);
+  contentWrapper.append(sectionHeading);
 }
 
 async function fetchBlueprint(pathname) {
@@ -566,49 +564,6 @@ async function attachFreeInAppPills(block) {
       $freeInAppBadge.textContent = freeInAppText;
       templateLink.querySelector('div').append($freeInAppBadge);
     }
-  }
-}
-
-async function redirectSearch(searchBar, props) {
-  const placeholders = await fetchPlaceholders();
-  const taskMap = JSON.parse(placeholders['task-name-mapping']);
-  if (searchBar) {
-    const wrapper = searchBar.closest('.search-bar-wrapper');
-    const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
-    props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
-  }
-
-  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-  let currentTasks = props.filters.tasks;
-  const currentTopic = props.filters.topics;
-  let searchInput = searchBar ? searchBar.value.toLowerCase() : currentTopic;
-
-  const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
-    const searchValue = searchBar.value.toLowerCase();
-    return searchValue.indexOf(word.toLowerCase()) >= 0;
-  })).sort((a, b) => b[0].length - a[0].length);
-
-  if (tasksFoundInInput.length > 0) {
-    tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
-      searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
-    });
-
-    searchInput = searchInput.trim();
-    [[currentTasks]] = tasksFoundInInput;
-  }
-
-  const locale = getLocale(window.location);
-  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const topicUrl = searchInput ? `/${searchInput}` : '';
-  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
-  const pathMatch = (e) => e.path === targetPath;
-  if (window.templates && window.templates.data.some(pathMatch)) {
-    window.location = `${window.location.origin}${targetPath}`;
-  } else {
-    window.location = searchUrl;
   }
 }
 
@@ -666,9 +621,8 @@ function makeTemplateFunctions(placeholders) {
 }
 
 function updateFilterIcon(block) {
-  const section = block.closest('.section.template-x-fullwidth-container');
-  const functionWrapper = section.querySelectorAll('.function-wrapper');
-  const optionsWrapper = section.querySelectorAll('.options-wrapper');
+  const functionWrapper = block.querySelectorAll('.function-wrapper');
+  const optionsWrapper = block.querySelectorAll('.options-wrapper');
 
   functionWrapper.forEach((wrap, index) => {
     const iconHolder = wrap.querySelector('.icon-holder');
@@ -682,7 +636,7 @@ function updateFilterIcon(block) {
   });
 }
 
-function decorateFunctionsContainer(block, section, functions, placeholders) {
+function decorateFunctionsContainer(block, functions, placeholders) {
   const functionsContainer = createTag('div', { class: 'functions-container' });
   const functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
@@ -770,22 +724,8 @@ function decorateFunctionsContainer(block, section, functions, placeholders) {
   return { mobile: functionContainerMobile, desktop: functionsContainer };
 }
 
-function resetTaskDropdowns(section) {
-  const taskDropdowns = section.querySelectorAll('.task-dropdown');
-  const taskDropdownLists = section.querySelectorAll('.task-dropdown-list');
-
-  taskDropdowns.forEach((dropdown) => {
-    dropdown.classList.remove('active');
-  });
-
-  taskDropdownLists.forEach((list) => {
-    list.classList.remove('active');
-  });
-}
-
-function closeTaskDropdown(toolBar) {
-  const section = toolBar.closest('.section.template-x-fullwidth-container');
-  const searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
+function closeTaskDropdown(block) {
+  const searchBarWrappers = block.querySelectorAll('.search-bar-wrapper');
   searchBarWrappers.forEach((wrapper) => {
     const taskDropdown = wrapper.querySelector('.task-dropdown');
     const taskDropdownList = taskDropdown.querySelector('.task-dropdown-list');
@@ -794,8 +734,8 @@ function closeTaskDropdown(toolBar) {
   });
 }
 
-function updateLottieStatus(section) {
-  const drawer = section.querySelector('.filter-drawer-mobile');
+function updateLottieStatus(block) {
+  const drawer = block.querySelector('.filter-drawer-mobile');
   const inWrapper = drawer.querySelector('.filter-drawer-mobile-inner-wrapper');
   const lottieArrows = drawer.querySelector('.lottie-wrapper');
   if (lottieArrows) {
@@ -835,9 +775,6 @@ function updateOptionsStatus(block, props, toolBar) {
     options.forEach((option) => {
       const paramType = wrapper.dataset.param;
       const paramValue = paramType === 'sort' ? option.dataset.value : `(${option.dataset.value})`;
-      if (paramType === 'sort') {
-        console.log(paramType, props[paramType] === paramValue, props, paramValue);
-      }
 
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
@@ -869,7 +806,7 @@ function updateOptionsStatus(block, props, toolBar) {
   });
 }
 
-function initDrawer(block, props, section, toolBar) {
+function initDrawer(block, props, toolBar) {
   const filterButton = toolBar.querySelector('.filter-button-mobile-wrapper');
   const drawerBackground = toolBar.querySelector('.drawer-background');
   const drawer = toolBar.querySelector('.filter-drawer-mobile');
@@ -885,8 +822,8 @@ function initDrawer(block, props, section, toolBar) {
     drawer.classList.remove('hidden');
     drawerBackground.classList.remove('hidden');
     applyButton.classList.remove('hidden');
-    updateLottieStatus(section);
-    closeTaskDropdown(toolBar);
+    updateLottieStatus(block);
+    closeTaskDropdown(block);
 
     setTimeout(() => {
       drawer.classList.remove('retracted');
@@ -985,22 +922,19 @@ async function redrawTemplates(block, props, toolBar) {
 }
 
 async function toggleAnimatedText(block, props, toolBar) {
-  const section = block.closest('.section.template-x-fullwidth-container');
   const toolbarWrapper = toolBar.parentElement;
 
-  if (section) {
-    const placeholders = await fetchPlaceholders();
-    const existingText = section.querySelector('.animated-template-text');
-    const animatedTemplateText = createTag('h5', { class: 'animated-template-text' });
-    animatedTemplateText.textContent = placeholders['open-to-see-animation'];
+  const placeholders = await fetchPlaceholders();
+  const existingText = block.querySelector('.animated-template-text');
+  const animatedTemplateText = createTag('h5', { class: 'animated-template-text' });
+  animatedTemplateText.textContent = placeholders['open-to-see-animation'];
 
-    if (existingText) {
-      existingText.remove();
-    }
+  if (existingText) {
+    existingText.remove();
+  }
 
-    if (props.filters.animated === '(true)') {
-      toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
-    }
+  if (props.filters.animated === '(true)') {
+    toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
   }
 }
 
@@ -1200,38 +1134,34 @@ function initToolbarShadow(block, toolbar) {
 }
 
 async function decorateToolbar(block, props) {
-  const section = block.closest('.section');
+  const placeholders = await fetchPlaceholders();
+  const toolBar = block.querySelector('.api-templates-toolbar');
 
-  if (section) {
-    const placeholders = await fetchPlaceholders();
-    const toolBar = section.querySelector('.api-templates-toolbar');
+  if (toolBar) {
+    const toolBarFirstWrapper = toolBar.querySelector('.wrapper-content-search');
+    const functionsWrapper = toolBar.querySelector('.wrapper-functions');
 
-    if (toolBar) {
-      const toolBarFirstWrapper = toolBar.querySelector('.wrapper-content-search');
-      const functionsWrapper = toolBar.querySelector('.wrapper-functions');
+    const viewsWrapper = createTag('div', { class: 'views' });
 
-      const viewsWrapper = createTag('div', { class: 'views' });
+    const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
+    smView.append(getIconElement('small_grid'));
+    const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
+    mdView.append(getIconElement('medium_grid'));
+    const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
+    lgView.append(getIconElement('large_grid'));
 
-      const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
-      smView.append(getIconElement('small_grid'));
-      const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
-      mdView.append(getIconElement('medium_grid'));
-      const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
-      lgView.append(getIconElement('large_grid'));
+    const functionsObj = makeTemplateFunctions(placeholders);
+    const functions = decorateFunctionsContainer(block, functionsObj, placeholders);
 
-      const functionsObj = makeTemplateFunctions(placeholders);
-      const functions = decorateFunctionsContainer(block, section, functionsObj, placeholders);
+    viewsWrapper.append(smView, mdView, lgView);
+    functionsWrapper.append(viewsWrapper, functions.desktop);
 
-      viewsWrapper.append(smView, mdView, lgView);
-      functionsWrapper.append(viewsWrapper, functions.desktop);
+    toolBar.append(toolBarFirstWrapper, functionsWrapper, functions.mobile);
 
-      toolBar.append(toolBarFirstWrapper, functionsWrapper, functions.mobile);
-
-      initDrawer(block, props, section, toolBar);
-      initFilterSort(block, props, toolBar);
-      initViewToggle(block, props, toolBar);
-      initToolbarShadow(block, toolBar);
-    }
+    initDrawer(block, props, toolBar);
+    initFilterSort(block, props, toolBar);
+    initViewToggle(block, props, toolBar);
+    initToolbarShadow(block, toolBar);
   }
 }
 
@@ -1345,7 +1275,6 @@ async function decorateTemplates(block, props) {
         props.masonry = new Masonry(innerWrapper, cells);
       } else {
         block.remove();
-        return null;
       }
 
       props.masonry.draw();
@@ -1372,7 +1301,9 @@ async function buildTemplateList(block, props, type = []) {
     });
   }
 
-  await processContentRow(block, props);
+  if (!props.templateStats) {
+    await processContentRow(block, props);
+  }
 
   const templates = await processApiResponse(props);
   if (templates) {
@@ -1409,7 +1340,6 @@ async function buildTemplateList(block, props, type = []) {
       buildCarousel(':scope > .template', innerWrapper, false);
     } else {
       block.remove();
-      return null;
     }
   }
 }
