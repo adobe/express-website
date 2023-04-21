@@ -2,8 +2,8 @@ main .template-x-horizontal-fullwidth-container {
     padding-top: 0;
 }
 
-main .template-x-fullwidth-container > div,
-main .template-x-fullwidth-container > div {
+main .template-x-wrapper.fullwidth,
+main .template-x-wrapper.fullwidth {
     max-width: none;
     padding: 0;
 }
@@ -33,7 +33,7 @@ main .template-x-horizontal-fullwidth-mini-spreadsheet-powered-container p {
     text-align: left;
 }
 
-main .template-x.template-x-complete {
+main .template-x.template-x-complete .template-x-inner-wrapper {
     min-height: unset;
 }
 
@@ -50,7 +50,7 @@ main .template-x-horizontal-fullwidth-collaboration-container .default-content-w
     line-height: 24px;
 }
 
-main .template-x {
+main .template-x .template-x-inner-wrapper {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -60,16 +60,16 @@ main .template-x {
     text-align: left;
 }
 
-main .template-x.sixcols,
-main .template-x.fullwidth {
+main .template-x.sixcols .template-x-inner-wrapper,
+main .template-x.fullwidth .template-x-inner-wrapper {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
 }
 
-main .template-x.fullwidth.sm-view,
-main .template-x.fullwidth.md-view,
-main .template-x.fullwidth.lg-view {
+main .template-x.fullwidth.sm-view .template-x-inner-wrapper,
+main .template-x.fullwidth.md-view .template-x-inner-wrapper,
+main .template-x.fullwidth.lg-view .template-x-inner-wrapper {
     padding: 0 28px;
 }
 
@@ -95,22 +95,22 @@ main .template-x-wrapper.with-categories-list .template-x.fullwidth {
     }
 }
 
-main .template-x.sixcols > .masonry-col,
-main .template-x.fullwidth > .masonry-col {
+main .template-x.sixcols > .template-x-inner-wrapper > .masonry-col,
+main .template-x.fullwidth > .template-x-inner-wrapper > .masonry-col {
     max-width: 175px;
 }
 
-main .template-x.fullwidth.sm-view > .masonry-col {
+main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 165px;
     text-align: center;
 }
 
-main .template-x.fullwidth.md-view > .masonry-col {
+main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 258.5px;
     text-align: center;
 }
 
-main .template-x.fullwidth.lg-view > .masonry-col {
+main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 352px;
     text-align: center;
 }
@@ -583,12 +583,12 @@ main .template-x .template.placeholder div:nth-of-type(2) {
     min-height: 28px;
 }
 
-main .template-x.flex-masonry .template {
+main .template-x .template-x-inner-wrapper.flex-masonry .template {
     opacity: 0;
     transition: opacity .3s;
 }
 
-main .template-x.flex-masonry .template.appear {
+main .template-x .template-x-inner-wrapper.flex-masonry .template.appear {
     opacity: 1;
 }
 
@@ -649,33 +649,33 @@ main .template-x-wrapper .load-more-text {
     font-size: 18px;
 }
 
-main .template-x.fullwidth.lg-view > .masonry-col {
+main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 335px;
     text-align: center;
 }
 
-main .template-x.fullwidth.md-view > .masonry-col {
+main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 165.5px;
     text-align: center;
 }
 
-main .template-x.fullwidth.sm-view > .masonry-col {
+main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 106.33px;
     text-align: center;
 }
 
 @media (min-width: 600px) {
-    main .template-x.fullwidth.lg-view > .masonry-col {
+    main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
         max-width: 352px;
         text-align: center;
     }
 
-    main .template-x.fullwidth.md-view > .masonry-col {
+    main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
         max-width: 227.33px;
         text-align: center;
     }
 
-    main .template-x.fullwidth.sm-view > .masonry-col {
+    main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
         max-width: 165px;
         text-align: center;
     }
@@ -698,20 +698,20 @@ main .template-x.fullwidth.sm-view > .masonry-col {
         max-width: 900px;
     }
 
-    main .template-x-sixcols-container > div {
+    main .template-x-wrapper.sixcols {
         max-width: 748px;
     }
 
-    main .template-x-fullwidth-container > div,
+    main .template-x-wrapper.fullwidth,
     main .template-x-fullwidth-container > .default-content-wrapper,
-    main .template-x-fullwidth-container > div,
+    main .template-x-wrapper.fullwidth,
     main .template-x-fullwidth-container > .default-content-wrapper {
         max-width: none;
         padding: 0 28px;
     }
 
-    main .template-x.sixcols > .masonry-col,
-    main .template-x.fullwidth > .masonry-col {
+    main .template-x.sixcols > .template-x-inner-wrapper > .masonry-col,
+    main .template-x.fullwidth > .template-x-inner-wrapper > .masonry-col {
         max-width: 187px;
     }
 
@@ -724,12 +724,12 @@ main .template-x.fullwidth.sm-view > .masonry-col {
         text-align: left;
     }
 
-    main .template-x.sixcols > .masonry-col,
-    main .template-x.fullwidth > .masonry-col {
+    main .template-x.sixcols > .template-x-inner-wrapper > .masonry-col,
+    main .template-x.fullwidth > .template-x-inner-wrapper > .masonry-col {
         max-width: 187px;
     }
 
-    main .template-x.fullwidth.md-view > .masonry-col {
+    main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
         max-width: 258.5px;
         text-align: center;
     }
@@ -753,7 +753,7 @@ main .template-x.fullwidth.sm-view > .masonry-col {
 
     /* template-x inside columns */
 
-    main .columns .template-x {
+    main .columns .template-x .template-x-inner-wrapper {
         margin-top: 0;
         margin-left: 40px;
     }
@@ -764,22 +764,21 @@ main .template-x.fullwidth.sm-view > .masonry-col {
 }
 
 @media (min-width: 1200px) {
-    main .template-x-fourcols-container > div {
+    main .template-x-wrapper.fourcols {
         max-width: 1200px;
     }
 
-    main .template-x-sixcols-container > div {
+    main .template-x-wrapper.sixcols {
         max-width: 1122px;
     }
 
-    main .template-x-fullwidth-container > div,
-    main .template-x-fullwidth-container > div {
+    main .template-x-wrapper.fullwidth {
         max-width: none;
     }
 
     /* template-x inside columns */
 
-    main .columns .template-x {
+    main .columns .template-x .template-x-inner-wrapper {
         flex-direction: row;
         flex-wrap: nowrap;
         justify-content: flex-start;
@@ -2078,9 +2077,8 @@ main .template-x.horizontal .carousel-platform {
         max-width: 1024px;
     }
 
-    main .template-x.horizontal.fullwidth > div,
-    main .section.template-x-horizontal-fullwidth-container > div,
-    main .section.template-x-horizontal-fullwidth-collaboration-container > div {
+    main .template-x.horizontal.fullwidth .template-x-inner-wrapper > div,
+    main .template-x-wrapper.horizontal.fullwidth {
         max-width: none;
     }
 
