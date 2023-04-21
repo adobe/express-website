@@ -16,8 +16,7 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
-// eslint-disable-next-line import/no-unresolved
-import Context from '../../scripts/context.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 const ENABLE_PRICING_MODAL_AUDIENCE = 'enablePricingModal';
 
@@ -31,7 +30,7 @@ function enablePricingModal() {
   }
 
   // "production" mode: check for audience
-  const audiences = Context.get('audiences');
+  const audiences = BlockMediator.get('audiences');
   return audiences && audiences.includes(ENABLE_PRICING_MODAL_AUDIENCE);
 }
 
