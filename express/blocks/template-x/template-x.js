@@ -12,7 +12,6 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  addAnimationToggle,
   addSearchQueryToHref,
   createOptimizedPicture,
   createTag,
@@ -34,15 +33,6 @@ function wordStartsWithVowels(word) {
 
 function camelize(str) {
   return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
-}
-
-function handlelize(str) {
-  return str.normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove accents
-    .replace(/(\W+|\s+)/g, '-') // Replace space and other characters by hyphen
-    .replace(/--+/g, '-') // Replaces multiple hyphens by one hyphen
-    .replace(/(^-+|-+$)/g, '') // Remove extra hyphens from beginning or end of the string
-    .toLowerCase(); // To lowercase
 }
 
 async function processContentRow(block, props) {
@@ -568,49 +558,6 @@ async function attachFreeInAppPills(block) {
   }
 }
 
-async function redirectSearch(searchBar, props) {
-  const placeholders = await fetchPlaceholders();
-  const taskMap = JSON.parse(placeholders['task-name-mapping']);
-  if (searchBar) {
-    const wrapper = searchBar.closest('.search-bar-wrapper');
-    const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
-    props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
-  }
-
-  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-  let currentTasks = props.filters.tasks;
-  const currentTopic = props.filters.topics;
-  let searchInput = searchBar ? searchBar.value.toLowerCase() : currentTopic;
-
-  const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
-    const searchValue = searchBar.value.toLowerCase();
-    return searchValue.indexOf(word.toLowerCase()) >= 0;
-  })).sort((a, b) => b[0].length - a[0].length);
-
-  if (tasksFoundInInput.length > 0) {
-    tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
-      searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
-    });
-
-    searchInput = searchInput.trim();
-    [[currentTasks]] = tasksFoundInInput;
-  }
-
-  const locale = getLocale(window.location);
-  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const topicUrl = searchInput ? `/${searchInput}` : '';
-  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
-  const pathMatch = (e) => e.path === targetPath;
-  if (window.templates && window.templates.data.some(pathMatch)) {
-    window.location = `${window.location.origin}${targetPath}`;
-  } else {
-    window.location = searchUrl;
-  }
-}
-
 function makeTemplateFunctions(placeholders) {
   const functions = {
     premium: {
@@ -769,19 +716,6 @@ function decorateFunctionsContainer(block, section, functions, placeholders) {
   return { mobile: functionContainerMobile, desktop: functionsContainer };
 }
 
-function resetTaskDropdowns(section) {
-  const taskDropdowns = section.querySelectorAll('.task-dropdown');
-  const taskDropdownLists = section.querySelectorAll('.task-dropdown-list');
-
-  taskDropdowns.forEach((dropdown) => {
-    dropdown.classList.remove('active');
-  });
-
-  taskDropdownLists.forEach((list) => {
-    list.classList.remove('active');
-  });
-}
-
 function closeTaskDropdown(toolBar) {
   const section = toolBar.closest('.section.template-x-fullwidth-container');
   const searchBarWrappers = section.querySelectorAll('.search-bar-wrapper');
@@ -834,9 +768,6 @@ function updateOptionsStatus(block, props, toolBar) {
     options.forEach((option) => {
       const paramType = wrapper.dataset.param;
       const paramValue = paramType === 'sort' ? option.dataset.value : `(${option.dataset.value})`;
-      if (paramType === 'sort') {
-        console.log(paramType, props[paramType] === paramValue, props, paramValue);
-      }
 
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
@@ -1401,7 +1332,6 @@ async function buildTemplateList(block, props, type = []) {
     buildCarousel(':scope > .template', block, false);
   } else {
     // FIXME: what is this for?
-    // addAnimationToggle(block);
   }
 }
 

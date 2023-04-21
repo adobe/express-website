@@ -308,7 +308,7 @@ function formatAllTaskText(data) {
   return formattedData;
 }
 
-async function updateDefaultItems(data, template) {
+async function replaceDefaultPlaceholders(data, template) {
   template.innerHTML = template.innerHTML.replaceAll('default-title', data.shortTitle || '');
   template.innerHTML = template.innerHTML.replaceAll('default-tasks', data.templateTasks || '');
   template.innerHTML = template.innerHTML.replaceAll('default-topics', data.templateTopics || '');
@@ -373,10 +373,10 @@ async function updateBlocks(data) {
   }
 
   if (templateList) {
-    updateDefaultItems(data, templateList);
+    replaceDefaultPlaceholders(data, templateList);
   }
   if (templateX) {
-    updateDefaultItems(data, templateX);
+    replaceDefaultPlaceholders(data, templateX);
   }
 
   if (seoNav) {
