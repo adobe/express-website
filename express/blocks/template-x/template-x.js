@@ -738,7 +738,7 @@ async function decorateCategoryList(block, props) {
   const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
   const categories = JSON.parse(placeholders['task-categories']);
   const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
-  const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper collapsed' });
+  const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const categoriesToggle = getIconElement('drop-down-arrow');
   const $categories = createTag('ul', { class: 'category-list' });
@@ -826,10 +826,6 @@ async function decorateCategoryList(block, props) {
 
   drawerWrapper.addEventListener('scroll', () => {
     updateLottieStatus(block);
-  }, { passive: true });
-
-  categoriesToggleWrapper.addEventListener('click', () => {
-    categoriesDesktopWrapper.classList.toggle('collapsed');
   }, { passive: true });
 }
 
