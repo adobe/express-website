@@ -308,10 +308,29 @@ function formatAllTaskText(data) {
   return formattedData;
 }
 
+async function replaceDefaultPlaceholders(data, template) {
+  template.innerHTML = template.innerHTML.replaceAll('default-title', data.shortTitle || '');
+  template.innerHTML = template.innerHTML.replaceAll('default-tasks', data.templateTasks || '');
+  template.innerHTML = template.innerHTML.replaceAll('default-topics', data.templateTopics || '');
+  template.innerHTML = template.innerHTML.replaceAll('default-locale', data.templateLocale || 'en');
+  template.innerHTML = template.innerHTML.replaceAll('default-premium', data.templatePremium || '');
+  template.innerHTML = template.innerHTML.replaceAll('default-animated', data.templateAnimated || '');
+  template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
+  template.innerHTML = template.innerHTML.replaceAll('default-format', data.placeholderFormat || '');
+
+  if (data.templateTasks === '') {
+    const placeholders = await fetchPlaceholders().then((result) => result);
+    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+  } else {
+    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', data.createText || '');
+  }
+}
+
 async function updateBlocks(data) {
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const linkList = document.querySelector('.link-list.fullwidth');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
+  const templateX = document.querySelector('.template-x');
   const seoNav = document.querySelector('.seo-nav');
 
   if (data.shortTitle) {
@@ -354,21 +373,10 @@ async function updateBlocks(data) {
   }
 
   if (templateList) {
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale || 'en');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat || '');
-
-    if (data.templateTasks === '') {
-      const placeholders = await fetchPlaceholders().then((result) => result);
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
-    }
+    replaceDefaultPlaceholders(data, templateList);
+  }
+  if (templateX) {
+    replaceDefaultPlaceholders(data, templateX);
   }
 
   if (seoNav) {
