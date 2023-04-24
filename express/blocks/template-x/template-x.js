@@ -91,7 +91,7 @@ function constructProps(block) {
     },
     renditionParams: {
       format: 'jpg',
-      size: 220,
+      size: 100,
     },
     tailButton: '',
     limit: 70,
@@ -1144,11 +1144,9 @@ function getPlaceholderWidth(block) {
 }
 
 async function toggleMasonryView(block, props, button, toggleButtons) {
-  props.start = '';
-  props.templates = [];
-  await decorateNewTemplates(block, props, { reDrawMasonry: true });
   const templatesToView = block.querySelectorAll('.template:not(.placeholder)');
   const blockWrapper = block.closest('.template-x-wrapper');
+
   if (!button.classList.contains('active') && templatesToView.length > 0) {
     toggleButtons.forEach((b) => {
       if (b !== button) {
@@ -1190,34 +1188,44 @@ async function toggleMasonryView(block, props, button, toggleButtons) {
   }
 }
 
-async function initViewToggle(block, props, toolBar) {
+async function loadBetterAssetsInBackground(block, props) {
+  props.renditionParams.size = 400;
+  props.start = '';
+  block.templates = [];
+
+  const newTemplates = await processApiResponse(props);
+  const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
+  if (existingTemplates.length > 0) {
+    existingTemplates.forEach((tmplt) => {
+      const { href } = tmplt;
+      const targetDiv = newTemplates.find((t) => t.querySelector('a')?.href === href);
+      if (targetDiv) {
+        targetDiv.style = 'position: absolute; opacity: 0;';
+        block.append(targetDiv);
+        const mediaDiv = targetDiv.querySelector('picture, img, video');
+        if (mediaDiv) {
+          mediaDiv.addEventListener('load', () => {
+            targetDiv.removeAttribute('style');
+            tmplt.replaceChild(targetDiv, tmplt.querySelector('div'));
+          });
+        }
+      }
+    });
+  }
+}
+
+function initViewToggle(block, props, toolBar) {
   const toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
   block.classList.add('sm-view');
   block.parentElement.classList.add('sm-view');
+  toggleButtons[0].classList.add('active');
+  loadBetterAssetsInBackground(block, props);
 
-  toggleButtons.forEach((button, index) => {
-    if (index === 0) {
-      button.classList.add('active');
-    }
+  toggleButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      if (button.dataset.view === 'sm') {
-        props.renditionParams.size = 220;
-      }
-
-      if (button.dataset.view === 'md') {
-        props.renditionParams.size = 320;
-      }
-
-      if (button.dataset.view === 'lg') {
-        props.renditionParams.size = 420;
-      }
-
       toggleMasonryView(block, props, button, toggleButtons);
     }, { passive: true });
   });
-
-  props.renditionParams.size = 420;
-  props.templates = await processApiResponse(props);
 }
 
 function initToolbarShadow(block, toolbar) {
@@ -1258,7 +1266,7 @@ async function decorateToolbar(block, props) {
 
     initDrawer(block, props, toolBar);
     initFilterSort(block, props, toolBar);
-    await initViewToggle(block, props, toolBar);
+    initViewToggle(block, props, toolBar);
     initToolbarShadow(block, toolBar);
   }
 }
