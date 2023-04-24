@@ -89,6 +89,10 @@ function constructProps(block) {
     filters: {
       locales: '(en)',
     },
+    renditionParams: {
+      format: 'jpg',
+      size: 220,
+    },
     tailButton: '',
     limit: 70,
     total: 0,
@@ -339,11 +343,6 @@ async function processApiResponse(props) {
     props.total = response.metadata.totalHits;
   }
 
-  const renditionParams = {
-    format: 'jpg',
-    size: 400,
-  };
-
   if (!templateFetched) {
     return null;
   }
@@ -362,7 +361,7 @@ async function processApiResponse(props) {
     // eslint-disable-next-line no-underscore-dangle
     const imageHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href
       .replace('{&page,size,type,fragment}',
-        `&size=${renditionParams.size}&type=image/jpg&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
+        `&size=${props.renditionParams.size}&type=image/jpg&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
 
     if (template.pages[0].rendition?.video) {
       // eslint-disable-next-line no-underscore-dangle
@@ -1144,10 +1143,13 @@ function getPlaceholderWidth(block) {
   return width;
 }
 
-function toggleMasonryView(block, props, button, toggleButtons) {
-  const $templatesToView = block.querySelectorAll('.template:not(.placeholder)');
+async function toggleMasonryView(block, props, button, toggleButtons) {
+  props.start = '';
+  props.templates = [];
+  await decorateNewTemplates(block, props, { reDrawMasonry: true });
+  const templatesToView = block.querySelectorAll('.template:not(.placeholder)');
   const blockWrapper = block.closest('.template-x-wrapper');
-  if (!button.classList.contains('active') && $templatesToView.length > 0) {
+  if (!button.classList.contains('active') && templatesToView.length > 0) {
     toggleButtons.forEach((b) => {
       if (b !== button) {
         b.classList.remove('active');
@@ -1188,18 +1190,34 @@ function toggleMasonryView(block, props, button, toggleButtons) {
   }
 }
 
-function initViewToggle(block, props, toolBar) {
+async function initViewToggle(block, props, toolBar) {
   const toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
+  block.classList.add('sm-view');
+  block.parentElement.classList.add('sm-view');
 
   toggleButtons.forEach((button, index) => {
     if (index === 0) {
-      toggleMasonryView(block, props, button, toggleButtons);
+      button.classList.add('active');
     }
-
     button.addEventListener('click', () => {
+      if (button.dataset.view === 'sm') {
+        props.renditionParams.size = 220;
+      }
+
+      if (button.dataset.view === 'md') {
+        props.renditionParams.size = 320;
+      }
+
+      if (button.dataset.view === 'lg') {
+        props.renditionParams.size = 420;
+      }
+
       toggleMasonryView(block, props, button, toggleButtons);
     }, { passive: true });
   });
+
+  props.renditionParams.size = 420;
+  props.templates = await processApiResponse(props);
 }
 
 function initToolbarShadow(block, toolbar) {
@@ -1240,7 +1258,7 @@ async function decorateToolbar(block, props) {
 
     initDrawer(block, props, toolBar);
     initFilterSort(block, props, toolBar);
-    initViewToggle(block, props, toolBar);
+    await initViewToggle(block, props, toolBar);
     initToolbarShadow(block, toolBar);
   }
 }
