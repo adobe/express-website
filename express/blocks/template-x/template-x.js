@@ -1200,6 +1200,7 @@ async function loadBetterAssetsInBackground(block, props) {
       const { href } = tmplt;
       const targetDiv = newTemplates.find((t) => t.querySelector('a')?.href === href);
       if (targetDiv) {
+        targetDiv.querySelector('a')?.remove();
         targetDiv.style = 'position: absolute; opacity: 0;';
         block.append(targetDiv);
         const mediaDiv = targetDiv.querySelector('picture, img, video');
