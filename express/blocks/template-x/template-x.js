@@ -91,7 +91,7 @@ function constructProps(block) {
     },
     renditionParams: {
       format: 'jpg',
-      size: 100,
+      size: 151,
     },
     tailButton: '',
     limit: 70,
