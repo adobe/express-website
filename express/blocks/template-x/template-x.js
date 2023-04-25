@@ -1100,9 +1100,9 @@ async function decorateToolbar(block, props) {
 async function loadBetterAssetsInBackground(block, props) {
   props.renditionParams.size = 400;
   props.start = '';
-  block.templates = [];
+  props.templates = [];
 
-  const newTemplates = await processApiResponse(props);
+  const newTemplates = await fetchAndRenderTemplates(props);
   const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
   if (existingTemplates.length > 0) {
     existingTemplates.forEach((tmplt) => {

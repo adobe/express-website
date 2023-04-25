@@ -98,11 +98,6 @@ export default async function fetchAndRenderTemplates(props) {
     props.start = '';
   }
 
-  const renditionParams = {
-    format: 'jpg',
-    size: 400,
-  };
-
   props.total = response.metadata.totalHits;
 
   return response.items
@@ -132,7 +127,7 @@ export default async function fetchAndRenderTemplates(props) {
       const videoThumbnailId = template.pages[0].rendition?.video?.thumbnail?.componentId;
       const imageHref = renditionLinkHref.replace(
         '{&page,size,type,fragment}',
-        `&size=${renditionParams.size}&type=image/jpg&fragment=id=${imageThumbnailId}`,
+        `&size=${props.renditionParams.size}&type=image/jpg&fragment=id=${imageThumbnailId}`,
       );
 
       if (videoThumbnailId && componentLinkHref) {
