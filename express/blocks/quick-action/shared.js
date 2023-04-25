@@ -88,6 +88,7 @@ export class CCXQuickActionElement extends HTMLElement {
         config: {
           'should-use-cloud-storage': true,
           'preview-only': true,
+          'suppress-analytics': true,
           'should-download-in-editor': true,
           'hide-work-space': true,
         },
