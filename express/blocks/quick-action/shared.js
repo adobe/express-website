@@ -148,7 +148,7 @@ export class CCXQuickActionElement extends HTMLElement {
 
   // eslint-disable-next-line class-methods-use-this
   handleNavigateToPostEditor(data, autoDownload = false) {
-    const host = 'https://express-stage.adobeprojectm.com';
+    const host = 'https://express.adobe.com';
     const action = 'remove-background';
     const { repositoryId, transientToken } = data;
     const path = '/design/post/new';
@@ -161,9 +161,6 @@ export class CCXQuickActionElement extends HTMLElement {
     params.append('repositoryId', repositoryId);
     if (transientToken) {
       params.append('transientToken', transientToken);
-    }
-    if (window.hlx.experiment && window.hlx.experiment.selectedVariant) {
-      params.append('experience', window.hlx.experiment.selectedVariant);
     }
     const encodeUrl = `${host}/sp${path}?${params.toString()}`;
     window.location.replace(encodeUrl);
