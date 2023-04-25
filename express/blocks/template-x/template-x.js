@@ -18,7 +18,6 @@ import {
   decorateMain,
   fetchPlaceholders,
   getIconElement,
-  getLanguage,
   getLocale,
   getLottie,
   lazyLoadLottiePlayer,
@@ -29,6 +28,8 @@ import {
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
+
+import fetchAndRenderTemplates from './search-api-v3.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -265,161 +266,8 @@ function updateLoadMoreButton(block, props, loadMore) {
   }
 }
 
-function formatFilterString(filters) {
-  // FIXME: check how filters can be formed, how it's handling or and and
-  const {
-    // eslint-disable-next-line no-unused-vars
-    animated, locales, premium, tasks, topics,
-  } = filters;
-  let str = '';
-  if (premium === 'false') {
-    str += '&filters=licensingCategory==free';
-  }
-  if (animated && animated !== '()') {
-    str += `&filters=animated==${animated}`;
-  }
-  if (tasks && tasks !== '()') {
-    str += `&filters=tasks==[${tasks}]`;
-  }
-  // FIXME: check if q is for topics now
-  if (topics && topics !== '()') {
-    str += `&q=${topics}`;
-  }
-  if (locales !== '()') {
-    str += `&filters=language==${locales.split('OR').map((l) => getLanguage(l))}`;
-  }
-
-  return str;
-}
-
-const fetchSearchUrl = async ({ limit, start, filters }) => {
-  // FIXME: orderBy fields are now different.
-  const base = 'https://spark-search.adobe.io/v3/content';
-  const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
-  const queryType = 'search';
-  const filterStr = formatFilterString(filters);
-  const startParam = start ? `&start=${start}` : '';
-  const url = encodeURI(`${base}?collectionId=${collectionId}&queryType=${queryType}&limit=${limit}${startParam}${filterStr}`);
-
-  return fetch(url, {
-    headers: {
-      'x-api-key': 'projectx_webapp',
-    },
-  }).then((response) => response.json());
-};
-
-async function fetchTemplates(props) {
-  const result = await fetchSearchUrl(props);
-
-  if (result?.metadata?.totalHits > 0) {
-    return result;
-  } else {
-    // save fetch if search query returned 0 templates. "Bad result is better than no result"
-    return fetchSearchUrl({ ...props, filters: {} });
-  }
-}
-
-async function processApiResponse(props) {
-  const placeholders = await fetchPlaceholders();
-  const response = await fetchTemplates(props);
-  let templateFetched;
-  if (response) {
-    // eslint-disable-next-line no-underscore-dangle
-    templateFetched = response.items;
-
-    if ('_links' in response) {
-      // eslint-disable-next-line no-underscore-dangle
-      const nextQuery = response._links.next.href;
-      const starts = new URLSearchParams(nextQuery).get('start').split(',');
-      props.start = starts.join(',');
-    } else {
-      props.start = '';
-    }
-
-    props.total = response.metadata.totalHits;
-  }
-
-  const renditionParams = {
-    format: 'jpg',
-    size: 400,
-  };
-
-  if (!templateFetched) {
-    return null;
-  }
-
-  return templateFetched.map((template) => {
-    const tmpltEl = createTag('div');
-    const btnElWrapper = createTag('div', { class: 'button-container' });
-    const btnEl = createTag('a', {
-      href: template.customLinks.branchUrl,
-      title: placeholders['edit-this-template'] ?? 'Edit this template',
-      class: 'button accent',
-    });
-    const picElWrapper = createTag('div');
-    const videoWrapper = createTag('div');
-
-    // eslint-disable-next-line no-underscore-dangle
-    const imageHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href
-      .replace('{&page,size,type,fragment}',
-        `&size=${renditionParams.size}&type=image/jpg&fragment=id=${template.pages[0].rendition.image.thumbnail.componentId}`);
-
-    if (template.pages[0].rendition?.video) {
-      // eslint-disable-next-line no-underscore-dangle
-      const videoHref = template._links['http://ns.adobe.com/adobecloud/rel/component'].href
-        .replace('{&revision,component_id}',
-          `&revision=0&component_id=${template.pages[0].rendition.video.thumbnail.componentId}`);
-      const video = createTag('video', {
-        loop: true,
-        muted: true,
-        playsinline: '',
-        poster: imageHref,
-        title: template.title['i-default'],
-        preload: 'metadata',
-      });
-      video.append(createTag('source', {
-        src: videoHref,
-        type: 'video/mp4',
-      }));
-      // TODO: another approach: show an image, only insert the video node when hover
-      btnElWrapper.addEventListener('mouseenter', () => {
-        // video.src = videoHref;
-        video.muted = true;
-        video.play().catch((e) => {
-          if (e instanceof DOMException && e.name === 'AbortError') {
-            // ignore
-          }
-        });
-      });
-      btnElWrapper.addEventListener('mouseleave', () => {
-        // console.log('reloading');
-        // video.load();
-        // console.log('removing src');
-        // video.src = ''; // need to reset video.src=videoHref
-        // console.log('pausing and set time=0');
-        video.pause();
-        video.currentTime = 0;
-      });
-      videoWrapper.insertAdjacentElement('beforeend', video);
-      tmpltEl.insertAdjacentElement('beforeend', videoWrapper);
-    } else {
-      const picEl = createTag('img', {
-        src: imageHref,
-        alt: template.title['i-default'],
-      });
-      picElWrapper.insertAdjacentElement('beforeend', picEl);
-      tmpltEl.insertAdjacentElement('beforeend', picElWrapper);
-    }
-
-    btnEl.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
-    btnElWrapper.insertAdjacentElement('beforeend', btnEl);
-    tmpltEl.insertAdjacentElement('beforeend', btnElWrapper);
-    return tmpltEl;
-  });
-}
-
 async function decorateNewTemplates(block, props, options = { reDrawMasonry: false }) {
-  const newTemplates = await processApiResponse(props);
+  const newTemplates = await fetchAndRenderTemplates(props);
   const loadMore = block.parentElement.querySelector('.load-more');
 
   props.templates = props.templates.concat(newTemplates);
@@ -1385,7 +1233,7 @@ async function buildTemplateList(block, props, type = []) {
     await processContentRow(block, props);
   }
 
-  const templates = await processApiResponse(props);
+  const templates = await fetchAndRenderTemplates(props);
   if (templates) {
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
     block.append(blockInnerWrapper);
