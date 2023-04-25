@@ -1188,39 +1188,11 @@ async function toggleMasonryView(block, props, button, toggleButtons) {
   }
 }
 
-async function loadBetterAssetsInBackground(block, props) {
-  props.renditionParams.size = 400;
-  props.start = '';
-  block.templates = [];
-
-  const newTemplates = await processApiResponse(props);
-  const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
-  if (existingTemplates.length > 0) {
-    existingTemplates.forEach((tmplt) => {
-      const { href } = tmplt;
-      const targetDiv = newTemplates.find((t) => t.querySelector('a')?.href === href);
-      if (targetDiv) {
-        targetDiv.querySelector('a')?.remove();
-        targetDiv.style = 'position: absolute; opacity: 0;';
-        block.append(targetDiv);
-        const mediaDiv = targetDiv.querySelector('picture, img, video');
-        if (mediaDiv) {
-          mediaDiv.addEventListener('load', () => {
-            targetDiv.removeAttribute('style');
-            tmplt.replaceChild(targetDiv, tmplt.querySelector('div'));
-          });
-        }
-      }
-    });
-  }
-}
-
 function initViewToggle(block, props, toolBar) {
   const toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
   block.classList.add('sm-view');
   block.parentElement.classList.add('sm-view');
   toggleButtons[0].classList.add('active');
-  loadBetterAssetsInBackground(block, props);
 
   toggleButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -1269,6 +1241,33 @@ async function decorateToolbar(block, props) {
     initFilterSort(block, props, toolBar);
     initViewToggle(block, props, toolBar);
     initToolbarShadow(block, toolBar);
+  }
+}
+
+async function loadBetterAssetsInBackground(block, props) {
+  props.renditionParams.size = 400;
+  props.start = '';
+  block.templates = [];
+
+  const newTemplates = await processApiResponse(props);
+  const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
+  if (existingTemplates.length > 0) {
+    existingTemplates.forEach((tmplt) => {
+      const { href } = tmplt;
+      const targetDiv = newTemplates.find((t) => t.querySelector('a')?.href === href);
+      if (targetDiv) {
+        targetDiv.querySelector('a')?.remove();
+        targetDiv.style = 'position: absolute; opacity: 0;';
+        block.append(targetDiv);
+        const mediaDiv = targetDiv.querySelector('picture, img, video');
+        if (mediaDiv) {
+          mediaDiv.addEventListener('load', () => {
+            targetDiv.removeAttribute('style');
+            tmplt.replaceChild(targetDiv, tmplt.querySelector('div'));
+          });
+        }
+      }
+    });
   }
 }
 
@@ -1392,6 +1391,8 @@ async function decorateTemplates(block, props) {
       block.classList.add('template-x-complete');
     }
   }
+
+  loadBetterAssetsInBackground(block, props);
 
   await attachFreeInAppPills(block);
 

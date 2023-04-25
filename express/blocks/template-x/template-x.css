@@ -203,14 +203,6 @@ main .template-x .template > div:first-child > a:any-link {
 
 main .template-x .template img, main .template-x .template video {
     border-radius: 7px;
-}
-
-main .template-x.lg-view .template img,
-main .template-x.lg-view .template video,
-main .template-x.md-view .template img,
-main .template-x.md-view .template video,
-main .template-x.sm-view .template img,
-main .template-x.sm-view .template video {
     width: 100%;
 }
 
