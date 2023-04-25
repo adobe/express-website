@@ -1263,7 +1263,7 @@ async function loadBetterAssetsInBackground(block, props) {
         if (mediaDiv) {
           mediaDiv.addEventListener('load', () => {
             targetDiv.removeAttribute('style');
-            tmplt.replaceChild(targetDiv, tmplt.querySelector('div'));
+            tmplt.replaceChild(targetDiv.querySelector('div'), tmplt.querySelector('div'));
           });
         }
       }
