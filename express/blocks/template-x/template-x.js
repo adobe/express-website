@@ -1097,28 +1097,36 @@ async function decorateToolbar(block, props) {
   }
 }
 
-async function loadBetterAssetsInBackground(block, props) {
-  props.renditionParams.size = 400;
-  props.start = '';
-  props.templates = [];
+function updateURLParameter(url, param, paramVal) {
+  let newAdditionalURL = '';
+  let tempArray = url.split('?');
+  const baseURL = tempArray[0];
+  const additionalURL = tempArray[1];
+  let temp = '';
+  if (additionalURL) {
+    tempArray = additionalURL.split('&');
+    for (let i = 0; i < tempArray.length; i += 1) {
+      if (tempArray[i].split('=')[0] !== param) {
+        newAdditionalURL += temp + tempArray[i];
+        temp = '&';
+      }
+    }
+  }
 
-  const newTemplates = await fetchAndRenderTemplates(props);
+  const rowText = `${temp}${param}=${paramVal}`;
+  return `${baseURL}?${newAdditionalURL}${rowText}`;
+}
+
+function loadBetterAssetsInBackground(block, props) {
+  props.renditionParams.size = 400;
   const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
   if (existingTemplates.length > 0) {
     existingTemplates.forEach((tmplt) => {
-      const { href } = tmplt;
-      const targetDiv = newTemplates.find((t) => t.querySelector('a')?.href === href);
-      if (targetDiv) {
-        targetDiv.querySelector('a')?.remove();
-        targetDiv.style = 'position: absolute; opacity: 0;';
-        block.append(targetDiv);
-        const mediaDiv = targetDiv.querySelector('picture, img, video');
-        if (mediaDiv) {
-          mediaDiv.addEventListener('load', () => {
-            targetDiv.removeAttribute('style');
-            tmplt.replaceChild(targetDiv.querySelector('div'), tmplt.querySelector('div'));
-          });
-        }
+      const img = tmplt.querySelector('img');
+      if (img && img.src) {
+        img.addEventListener('load', () => {
+          img.src = updateURLParameter(img.src, 'size', 400);
+        });
       }
     });
   }
@@ -1245,8 +1253,6 @@ async function decorateTemplates(block, props) {
     }
   }
 
-  loadBetterAssetsInBackground(block, props);
-
   await attachFreeInAppPills(block);
 
   const templateLinks = block.querySelectorAll('a.template');
@@ -1331,4 +1337,5 @@ export default async function decorate(block) {
   const props = constructProps(block);
   block.innerHTML = '';
   await buildTemplateList(block, props, determineTemplateXType(props));
+  loadBetterAssetsInBackground(block, props);
 }
