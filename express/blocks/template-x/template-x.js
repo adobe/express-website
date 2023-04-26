@@ -30,7 +30,7 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import fetchAndRenderTemplates from './search-api-v3.js';
+import fetchAndRenderTemplates from './template-search-api-v3.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -111,7 +111,11 @@ function constructProps(block) {
   const props = {
     templates: [],
     filters: {
-      locales: '(en)',
+      locales: 'en',
+    },
+    renditionParams: {
+      format: 'jpg',
+      size: 151,
     },
     renditionParams: {
       format: 'jpg',
@@ -121,7 +125,7 @@ function constructProps(block) {
     limit: 70,
     total: 0,
     start: '',
-    sort: '-_score,-remixCount',
+    sort: 'Most Viewed',
     masonry: undefined,
     headingTitle: null,
     headingSlug: null,
