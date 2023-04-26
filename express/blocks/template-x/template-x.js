@@ -1147,7 +1147,7 @@ function loadBetterAssetsInBackground(block, props) {
       if (img && img.src) {
         const updateImgRes = () => {
           const imgParams = new URLSearchParams(img.src);
-          if (imgParams.get('size') !== '400') {
+          if (parseInt(imgParams.get('size'), 10) < 400) {
             img.src = updateURLParameter(img.src, 'size', 400);
           } else {
             img.removeEventListener('load', updateImgRes);
