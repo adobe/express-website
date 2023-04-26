@@ -114,7 +114,7 @@ function renderAnimatedTemplate(template, renditionParams, btnElWrapper) {
   const imageThumbnailId = template.pages[0].rendition.image?.thumbnail.componentId;
   const imageHref = renditionLinkHref.replace(
     '{&page,size,type,fragment}',
-    `&size=${template.pages[0].rendition.image.thumbnail.width}&type=image/jpg&fragment=id=${imageThumbnailId}`,
+    `&size=${renditionParams.size}&type=image/jpg&fragment=id=${imageThumbnailId}`,
   );
   const videoHref = componentLinkHref?.replace(
     '{&revision,component_id}',
@@ -166,7 +166,7 @@ function renderStillTemplate(template, renditionParams) {
   const imageThumbnailId = template.pages[0].rendition.image?.thumbnail.componentId;
   const imageHref = renditionLinkHref.replace(
     '{&page,size,type,fragment}',
-    `&size=${template.pages[0].rendition.image.thumbnail.width}&type=image/jpg&fragment=id=${imageThumbnailId}`,
+    `&size=${renditionParams.size}&type=image/jpg&fragment=id=${imageThumbnailId}`,
   );
   const img = createTag('img', {
     src: imageHref,
