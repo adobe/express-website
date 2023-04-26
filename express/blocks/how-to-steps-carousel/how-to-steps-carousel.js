@@ -18,6 +18,7 @@ import {
 } from '../../scripts/scripts.js';
 
 let rotationInterval;
+let fixedImageSize = false;
 
 function reset(block) {
   const window = block.ownerDocument.defaultView;
@@ -30,16 +31,38 @@ function reset(block) {
 
   delete picture.style.height;
   container.classList.remove('no-cover');
+
+  fixedImageSize = false;
 }
 
 function activate(block, target) {
-  // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
-  const container = block.parentElement.parentElement;
-  const picture = container.querySelector('picture');
-  const img = picture.querySelector('img');
-  const panelHeight = block.parentElement.offsetHeight;
-  const imgHeight = img.naturalHeight;
-  picture.style.height = `${panelHeight || imgHeight}px`;
+  console.log(!fixedImageSize);
+  if (!fixedImageSize) {
+    // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
+
+    // get viewport width
+    const window = block.ownerDocument.defaultView;
+    const document = block.ownerDocument;
+
+    const { documentElement } = document;
+    const vw = Math.max(
+      documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
+      window && window.innerWidth ? window.innerWidth : 0,
+    );
+
+    if (vw >= 900) {
+
+      const container = block.parentElement.parentElement;
+      const picture = container.querySelector('picture');
+      const img = picture.querySelector('img');
+      const panelHeight = block.parentElement.offsetHeight;
+      const imgHeight = img.naturalHeight;
+
+      picture.style.height = `${panelHeight || imgHeight}px`;
+    }
+
+    fixedImageSize = true;
+  }
 
   // de-activate all
   block.querySelectorAll('.tip, .tip-number').forEach((item) => {
