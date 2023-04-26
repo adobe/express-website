@@ -246,56 +246,40 @@ function layerTemplateImage(canvas, ctx, templateImg) {
   templateImg.style.objectFit = 'contain';
 
   return new Promise((outerResolve) => {
-    new Promise((resolve) => {
       let prevWidth;
-      const obs = new ResizeObserver((changes) => {
-        for (const change of changes) {
-          if (change.contentRect.width === prevWidth) return;
-          prevWidth = change.contentRect.width;
-          if (prevWidth <= 986 && change.contentRect.height <= 652) {
-            const centerX = 1123;
-            const centerY = 600;
-            ctx.save();
-            roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2),
-              templateImg.width, templateImg.height, 7, ctx);
-            ctx.clip();
-            ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth,
-              templateImg.naturalHeight, centerX - (templateImg.width / 2),
-              centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
-            ctx.restore();
-            obs.disconnect();
-            resolve();
+
+    const drawImage = (centerX, centerY, maxWidth, maxHeight) => {
+      return new Promise((resolve) => {
+        const obs = new ResizeObserver((changes) => {
+          for (const change of changes) {
+
+            if (change.contentRect.width === prevWidth) return;
+            prevWidth = change.contentRect.width;
+            if (prevWidth <= maxWidth && change.contentRect.height <= maxHeight) {
+              ctx.save();
+              roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2),
+                templateImg.width, templateImg.height, 7, ctx);
+              ctx.clip();
+              ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth,
+                templateImg.naturalHeight, centerX - (templateImg.width / 2),
+                centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
+              ctx.restore();
+              obs.disconnect();
+              resolve();
+            }
           }
-        }
+        });
+        obs.observe(templateImg);
       });
-      obs.observe(templateImg);
-    }).then(() => {
-      let prevWidth;
-      templateImg.style.maxWidth = '312px';
-      templateImg.style.maxHeight = '472px';
-      const obs = new ResizeObserver((changes) => {
-        for (const change of changes) {
-          if (change.contentRect.width === prevWidth) return;
-          prevWidth = change.contentRect.width;
-          if (prevWidth <= 312 && change.contentRect.height <= 472) {
-            const centerMobileX = 1816;
-            const centerMobileY = 479;
-            ctx.save();
-            roundedImage(centerMobileX - (templateImg.width / 2),
-              centerMobileY - (templateImg.height / 2),
-              templateImg.width, templateImg.height, 7, ctx);
-            ctx.clip();
-            ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth, templateImg.naturalHeight,
-              centerMobileX - (templateImg.width / 2), centerMobileY - (templateImg.height / 2),
-              templateImg.width, templateImg.height);
-            ctx.restore();
-            obs.disconnect();
-            outerResolve();
-          }
-        }
-      });
-      obs.observe(templateImg);
-    });
+    };
+
+    drawImage(1123, 600, 986, 652)
+      .then(() => {
+        templateImg.style.maxWidth = '312px';
+        templateImg.style.maxHeight = '472px';
+        return drawImage(1816, 479, 312, 472);
+      })
+      .then(() => outerResolve());
   });
 }
 
@@ -314,14 +298,18 @@ export default async function decorate(block) {
     const backgroundPic = backgroundPictureDiv.querySelector('picture');
     const backgroundPicImg = backgroundPic.querySelector('img');
 
-    new Promise((resolve) => {
-      if (backgroundPicImg.complete && backgroundPicImg.naturalHeight !== 0) resolve();
-      else {
-        backgroundPicImg.onload = () => {
-          resolve();
-        };
-      }
-    }).then(() => {
+    const loadImage = (img) => {
+      return new Promise((resolve) => {
+        if (img.complete && img.naturalHeight !== 0) resolve();
+        else {
+          img.onload = () => {
+            resolve();
+          };
+        }
+      });
+    };
+
+    loadImage(backgroundPicImg).then(() => {
       backgroundPicImg.width = 2000;
       backgroundPicImg.height = 1072;
       const templateDiv = rows.shift();
@@ -332,14 +320,7 @@ export default async function decorate(block) {
       const templateImages = templateDiv.querySelectorAll('picture');
       const templateImg = templateImages[0].querySelector('img');
 
-      new Promise((resolve) => {
-        if (templateImg.complete && templateImg.naturalHeight !== 0) resolve();
-        else {
-          templateImg.onload = () => {
-            resolve();
-          };
-        }
-      }).then(() => {
+      return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
           const img = createTag('img');
           img.src = canvas.toDataURL('image/png');
