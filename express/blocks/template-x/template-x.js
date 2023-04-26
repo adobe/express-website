@@ -18,6 +18,7 @@ import {
   decorateMain,
   fetchPlaceholders,
   getIconElement,
+  getLanguage,
   getLocale,
   getLottie,
   lazyLoadLottiePlayer,
@@ -318,8 +319,10 @@ async function decorateLoadMoreButton(block, props) {
 
 async function insertTemplateStats(props) {
   const locale = getLocale(window.location);
-
+  const lang = getLanguage(getLocale(window.location));
+  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   const heading = props.contentRow.textContent;
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   if (!heading) return null;
 
   const placeholders = await fetchPlaceholders();
@@ -327,7 +330,7 @@ async function insertTemplateStats(props) {
   let grammarTemplate = props.templateStats || placeholders['template-placeholder'];
 
   if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', templateCount);
   }
 
   if (grammarTemplate.indexOf('{{Type}}') >= 0) {
@@ -335,7 +338,7 @@ async function insertTemplateStats(props) {
   }
 
   if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
+    grammarTemplate = grammarTemplate.replace('{{type}}', camelHeading);
   }
 
   if (locale === 'fr') {
@@ -1122,7 +1125,7 @@ function loadBetterAssetsInBackground(block, props) {
   const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
   if (existingTemplates.length > 0) {
     existingTemplates.forEach((tmplt) => {
-      const img = tmplt.querySelector('img');
+      const img = tmplt.querySelector('div:first-of-type > img');
       if (img && img.src) {
         img.addEventListener('load', () => {
           img.src = updateURLParameter(img.src, 'size', 400);
