@@ -1127,9 +1127,16 @@ function loadBetterAssetsInBackground(block, props) {
     existingTemplates.forEach((tmplt) => {
       const img = tmplt.querySelector('div:first-of-type > img');
       if (img && img.src) {
-        img.addEventListener('load', () => {
-          img.src = updateURLParameter(img.src, 'size', 400);
-        });
+        const updateImgRes = () => {
+          const imgParams = new URLSearchParams(img.src);
+          if (imgParams.get('size') !== '400') {
+            img.src = updateURLParameter(img.src, 'size', 400);
+          } else {
+            img.removeEventListener('load', updateImgRes);
+          }
+        };
+
+        img.addEventListener('load', updateImgRes);
       }
     });
   }
@@ -1271,7 +1278,7 @@ async function buildTemplateList(block, props, type = []) {
     });
   }
 
-  if (!props.templateStats) {
+  if (!props.templateStats && !props.toolBar) {
     await processContentRow(block, props);
   }
 
