@@ -19,6 +19,7 @@ import {
   fetchPlaceholders,
   getIconElement,
   getLocale,
+  getLanguage,
   getLottie,
   lazyLoadLottiePlayer,
   linkImage,
