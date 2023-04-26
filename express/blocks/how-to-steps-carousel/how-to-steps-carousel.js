@@ -35,35 +35,34 @@ function reset(block) {
   fixedImageSize = false;
 }
 
-function activate(block, target) {
-  console.log(!fixedImageSize);
-  if (!fixedImageSize) {
+const loadImage = (img) => new Promise((resolve) => {
+  if (img.complete && img.naturalHeight !== 0) resolve();
+  else {
+    img.onload = () => {
+      resolve();
+    };
+  }
+});
+
+function setPictureHeight(block, override) {
+  console.log(!fixedImageSize || override);
+  if (!fixedImageSize || override) {
     // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
-
-    // get viewport width
-    const window = block.ownerDocument.defaultView;
-    const document = block.ownerDocument;
-
-    const { documentElement } = document;
-    const vw = Math.max(
-      documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
-      window && window.innerWidth ? window.innerWidth : 0,
-    );
-
-    if (vw >= 900) {
-
-      const container = block.parentElement.parentElement;
-      const picture = container.querySelector('picture');
-      const img = picture.querySelector('img');
+    const container = block.parentElement.parentElement;
+    const picture = container.querySelector('picture');
+    const img = picture.querySelector('img');
+    loadImage(img).then(() => {
       const panelHeight = block.parentElement.offsetHeight;
       const imgHeight = img.naturalHeight;
 
       picture.style.height = `${panelHeight || imgHeight}px`;
-    }
-
+    });
     fixedImageSize = true;
   }
+}
 
+function activate(block, target) {
+  setPictureHeight(block);
   // de-activate all
   block.querySelectorAll('.tip, .tip-number').forEach((item) => {
     item.classList.remove('active');
@@ -92,8 +91,6 @@ function initRotation(window, document) {
 }
 
 function buildHowToStepsCarousel(section, picture, block, document, rows, window) {
-  section.prepend(picture);
-
   // join wrappers together
   section.querySelectorAll('.default-content-wrapper').forEach((wrapper, i) => {
     if (i === 0) {
@@ -208,21 +205,11 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, window
     });
   }
 
-  const img = picture.querySelector('img');
-  const run = () => {
-    // slgiht delay to allow panel to size correctly
-    window.setTimeout(() => {
-      activate(block, block.querySelector('.tip-number.tip-1'));
-      initRotation(window, document);
-    }, 0);
-  };
-
-  if (!img.complete) {
-    img.addEventListener('load', run);
-    img.addEventListener('error', run);
-  } else {
-    run();
-  }
+  // slgiht delay to allow panel to size correctly
+  window.setTimeout(() => {
+    activate(block, block.querySelector('.tip-number.tip-1'));
+    initRotation(window, document);
+  }, 100);
 }
 
 function roundedImage(x, y, width, height, radius, ctx) {
@@ -246,32 +233,28 @@ function layerTemplateImage(canvas, ctx, templateImg) {
   templateImg.style.objectFit = 'contain';
 
   return new Promise((outerResolve) => {
-      let prevWidth;
-
-    const drawImage = (centerX, centerY, maxWidth, maxHeight) => {
-      return new Promise((resolve) => {
-        const obs = new ResizeObserver((changes) => {
-          for (const change of changes) {
-
-            if (change.contentRect.width === prevWidth) return;
-            prevWidth = change.contentRect.width;
-            if (prevWidth <= maxWidth && change.contentRect.height <= maxHeight) {
-              ctx.save();
-              roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2),
-                templateImg.width, templateImg.height, 7, ctx);
-              ctx.clip();
-              ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth,
-                templateImg.naturalHeight, centerX - (templateImg.width / 2),
-                centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
-              ctx.restore();
-              obs.disconnect();
-              resolve();
-            }
+    let prevWidth;
+    const drawImage = (centerX, centerY, maxWidth, maxHeight) => new Promise((resolve) => {
+      const obs = new ResizeObserver((changes) => {
+        for (const change of changes) {
+          if (change.contentRect.width === prevWidth) return;
+          prevWidth = change.contentRect.width;
+          if (prevWidth <= maxWidth && change.contentRect.height <= maxHeight) {
+            ctx.save();
+            roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2),
+              templateImg.width, templateImg.height, 7, ctx);
+            ctx.clip();
+            ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth,
+              templateImg.naturalHeight, centerX - (templateImg.width / 2),
+              centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
+            ctx.restore();
+            obs.disconnect();
+            resolve();
           }
-        });
-        obs.observe(templateImg);
+        }
       });
-    };
+      obs.observe(templateImg);
+    });
 
     drawImage(1123, 600, 986, 652)
       .then(() => {
@@ -293,28 +276,21 @@ export default async function decorate(block) {
   const howto = block;
   const rows = Array.from(howto.children);
   let picture;
+
   if (image) {
     const backgroundPictureDiv = rows.shift();
     const backgroundPic = backgroundPictureDiv.querySelector('picture');
     const backgroundPicImg = backgroundPic.querySelector('img');
-
-    const loadImage = (img) => {
-      return new Promise((resolve) => {
-        if (img.complete && img.naturalHeight !== 0) resolve();
-        else {
-          img.onload = () => {
-            resolve();
-          };
-        }
-      });
-    };
+    const templateDiv = rows.shift();
 
     loadImage(backgroundPicImg).then(() => {
       backgroundPicImg.width = 2000;
       backgroundPicImg.height = 1072;
-      const templateDiv = rows.shift();
+      section.prepend(backgroundPic);
+      backgroundPic.style.visibility = 'hidden';
+      templateDiv.style.position = 'absolute';
+      templateDiv.style.top = '-1000px';
       const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
-
       const ctx = canvas.getContext('2d');
       ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
       const templateImages = templateDiv.querySelectorAll('picture');
@@ -328,8 +304,10 @@ export default async function decorate(block) {
           const mergedPicture = createTag('picture');
           mergedPicture.append(img);
           picture = mergedPicture;
-          buildHowToStepsCarousel(section, picture, block, document, rows, window);
           templateDiv.remove();
+          section.querySelector('picture').remove();
+          section.prepend(picture);
+          setPictureHeight(block, true);
         });
       });
     });
@@ -337,6 +315,7 @@ export default async function decorate(block) {
     picture = section.querySelector('picture');
     const parent = picture.parentElement;
     parent.remove();
-    buildHowToStepsCarousel(section, picture, block, document, rows, window);
+    section.prepend(picture);
   }
+  buildHowToStepsCarousel(section, picture, block, document, rows, window);
 }
