@@ -73,6 +73,7 @@ async function populateHeadingPlaceholder(locale) {
   const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
   const lang = getLanguage(getLocale(window.location));
+  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   let grammarTemplate;
 
   if (getMetadata('template-search-page') === 'Y') {
@@ -83,7 +84,7 @@ async function populateHeadingPlaceholder(locale) {
 
   if (grammarTemplate) {
     grammarTemplate = grammarTemplate
-      .replace('{{quantity}}', props.total.toLocaleString(lang))
+      .replace('{{quantity}}', templateCount)
       .replace('{{Type}}', heading)
       .replace('{{type}}', camelHeading);
 
