@@ -76,11 +76,11 @@ export class Masonry {
         colWidth = 120;
       }
 
-      if (this.wrapper.classList.contains('md-view')) {
+      if (block.classList.contains('md-view')) {
         colWidth = 172;
       }
 
-      if (this.wrapper.classList.contains('lg-view')) {
+      if (block.classList.contains('lg-view')) {
         colWidth = 340;
       }
     }
