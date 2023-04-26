@@ -16,8 +16,8 @@ import {
   addFreePlanWidget,
 } from '../../scripts/scripts.js';
 
-function styleBackgroundWithScroll(section, marqueeBgImgSrc) {
-  const background = block.querySelector('.hero-bg');
+function styleBackgroundWithScroll(section) {
+  const background = section.querySelector('.hero-bg');
   const calculate = () => {
     const viewport = {
       top: window.scrollY,
@@ -25,6 +25,7 @@ function styleBackgroundWithScroll(section, marqueeBgImgSrc) {
     };
 
     const elementBoundingRect = section.getBoundingClientRect();
+
     const elementPos = {
       top: elementBoundingRect.y + window.scrollY,
       bottom: elementBoundingRect.y + elementBoundingRect.height + window.scrollY,
@@ -62,67 +63,54 @@ function styleBackgroundWithScroll(section, marqueeBgImgSrc) {
     const percentageInView = calculate();
     background.style.opacity = `${100 - percentageInView}%`;
   }, {
-    passive: true
+    passive: true,
   });
 }
 
-function initializeConstants(rows, marqueeBgContent, frameBgImageContent, editorContent,
-                             thumbnailsContent, videoLink, videoLooping) {
-  console.log(rows);
-  
+function initializeConstants(rows) {
+  const parameters = {
+    thumbnailsContent: null,
+    marqueeBgContent: null,
+  };
+
   rows.forEach((row) => {
     const cells = Array.from(row.children);
-    frameBgImageContent = rows[1].querySelector('img').src;
-    editorContent = rows[2].querySelector('img').src;
     const headerCols = cells[0];
     const contentCols = cells[1];
     const anchor = headerCols?.querySelector('a');
+
+    parameters.frameBgImageContent = rows[1].querySelector('img').src;
+    parameters.editorContent = rows[2].querySelector('img').src;
+
     if (anchor && anchor.textContent.startsWith('https://') && anchor.href.endsWith('.mp4')) {
-      videoLink = anchor;
+      parameters.videoLink = anchor;
     }
-    videoLooping = contentCols?.textContent?.indexOf('Y') > 0 ? 'yes' : 'no';
+
+    parameters.videoLooping = contentCols?.textContent?.indexOf('Y') > 0 ? 'yes' : 'no';
   });
-  
-  return { 
-    marqueeBgContent,
-    frameBgImageContent,
-    editorContent,
-    thumbnailsContent,
-    videoLink,
-    videoLooping
-  };
+
+  return parameters;
 }
 
-function buildFullScreenDesktopMarqueeMarkup(video, frameBgImageContent, block, thumbnailsContent, editorContent, contentSection) {
+function buildFullScreenDesktopMarqueeMarkup(video, block, contentSection, parameters) {
   video.addEventListener('loadstart', () => {
-    const frameBg = createOptimizedPicture(frameBgImageContent);
-    const pictureFrameWrapper = createTag('div', {
-      class: 'picture-frame-wrapper'
-    });
-    const marqueeBg = createTag('div', {
-      class: 'hero-bg'
-    });
-    const pictureFrameBackground = createTag('div', {
-      class: 'picture-frame-background'
-    });
-    const pictureFrame = createTag('div', {
-      class: 'picture-frame'
-    });
-    const thumbnails = createTag('div', {
-      class: 'picture-frame-thumbnails'
-    });
+    const frameBg = createOptimizedPicture(parameters.frameBgImageContent);
+    const pictureFrameWrapper = createTag('div', { class: 'picture-frame-wrapper' });
+    const marqueeBg = createTag('div', { class: 'hero-bg' });
+    const pictureFrameBackground = createTag('div', { class: 'picture-frame-background' });
+    const pictureFrame = createTag('div', { class: 'picture-frame' });
+    const thumbnails = createTag('div', { class: 'picture-frame-thumbnails' });
 
     const existingCTA = block.querySelector('a.button');
     const doubleCTA = block.querySelector('.double');
     const singleCTA = block.querySelector('.single');
+
     if (existingCTA) {
       const clickableOverlay = createTag('a', {
         class: 'picture-frame-clickable-layer',
-        href: existingCTA.href
+        href: existingCTA.href,
       });
-      const cloneCta = existingCTA.cloneNode({
-        deep: true
-      });
+      const cloneCta = existingCTA.cloneNode({ deep: true });
       cloneCta.style.display = 'none';
 
       clickableOverlay.append(cloneCta);
@@ -134,22 +122,19 @@ function buildFullScreenDesktopMarqueeMarkup(video, frameBgImageContent, block, 
         singleCTA.style.opacity = '1';
         doubleCTA.style.display = 'none';
         doubleCTA.style.opacity = '0';
-      }, {
-        passive: true
-      });
+      }, { passive: true });
+
       clickableOverlay.addEventListener('mouseleave', () => {
         cloneCta.style.display = 'none';
         singleCTA.style.display = 'none';
         singleCTA.style.opacity = '0';
         doubleCTA.style.display = 'block';
         doubleCTA.style.opacity = '1';
-      }, {
-        passive: true
-      });
+      }, { passive: true });
     }
 
-    const thumbnailImg = createOptimizedPicture(thumbnailsContent);
-    const pictureBgImg = createOptimizedPicture(editorContent);
+    const thumbnailImg = createOptimizedPicture(parameters.thumbnailsContent);
+    const pictureBgImg = createOptimizedPicture(parameters.editorContent);
 
     video.classList.add('screen-demo');
     thumbnailImg.classList.add('leaf-thumbnails');
@@ -157,10 +142,7 @@ function buildFullScreenDesktopMarqueeMarkup(video, frameBgImageContent, block, 
     pictureFrame.append(pictureBgImg, video, thumbnails);
     thumbnails.append(thumbnailImg);
     marqueeBg.append(frameBg);
-    pictureFrameWrapper.append(
-        pictureFrameBackground,
-        pictureFrame,
-    );
+    pictureFrameWrapper.append(pictureFrameBackground, pictureFrame);
 
     block.innerHTML = '';
 
@@ -174,34 +156,34 @@ function buildFullScreenDesktopMarqueeMarkup(video, frameBgImageContent, block, 
 
       pictureFrame.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
       pictureFrameBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
-    }, {
-      passive: true
-    });
-
+    }, { passive: true });
   });
 }
 
 function buildCTAContainer(button, className) {
   const ctaContainer = createTag('div', {
-    class: className
+    class: className,
   });
-  ctaContainer.innerHTML = button.innerHTML; 
-  button.replaceWith(ctaContainer); 
+  ctaContainer.innerHTML = button.innerHTML;
+  button.replaceWith(ctaContainer);
 }
 
-function buildContentSection(block, contentSection) {
+function buildContentSection(block) {
   const h1 = block.querySelector('h1');
   const p = block.querySelector('p');
   const buttonContainer = block.querySelector('.button-container');
   const singleButton = buttonContainer.nextElementSibling;
   const doubleButton = singleButton.nextElementSibling;
+
+  let contentSection;
+
   if (h1) {
     const textToColor = h1.querySelectorAll('em');
-    // TODO: need to check the styles are ok to proceed with
+
     if (textToColor.length > 0) {
       textToColor.forEach((span) => {
         const coloredText = createTag('span', {
-          class: 'colorful'
+          class: 'colorful',
         });
         coloredText.textContent = span.textContent;
         h1.replaceChild(coloredText, span);
@@ -211,10 +193,9 @@ function buildContentSection(block, contentSection) {
   }
   if (p) {
     const paragraphText = createTag('div', {
-      class: 'sub-copy'
+      class: 'sub-copy',
     });
     paragraphText.textContent = p.textContent;
-    console.log(paragraphText);
     p.replaceWith(paragraphText);
   }
   buildCTAContainer(singleButton, 'double');
@@ -230,24 +211,18 @@ function buildContentSection(block, contentSection) {
 }
 
 export default function decorate(block) {
-  const rows = Array.from(block.children);
-  let video, contentSection;
-  const ret = initializeConstants(rows);
-  let marqueeBgContent = ret.marqueeBgContent;
-  let frameBgImageContent = ret.frameBgImageContent;
-  let editorContent = ret.editorContent;
-  let thumbnailsContent = ret.thumbnailsContent;
-  let videoLink = ret.videoLink;
-  let videoLooping = ret.videoLooping;
+  const parameters = initializeConstants(Array.from(block.children));
+  const contentSection = buildContentSection(block);
+  const video = transformLinkToAnimation(parameters.videoLink, parameters.videoLooping);
 
-  contentSection = buildContentSection(block, contentSection);
-  if (marqueeBgContent) {
+  if (parameters.marqueeBgContent) {
     const section = block.closest('.fullscreen-marquee-desktop-container');
-    styleBackgroundWithScroll(section, frameBgImageContent);
+    styleBackgroundWithScroll(section, parameters.frameBgImageContent);
   }
+
   block.append(addFreePlanWidget(block.querySelector('.button-container')));
-  video = transformLinkToAnimation(videoLink, videoLooping);
+
   if (video) {
-    buildFullScreenDesktopMarqueeMarkup(video, frameBgImageContent, block, thumbnailsContent, editorContent, contentSection);
+    buildFullScreenDesktopMarqueeMarkup(video, block, contentSection, parameters);
   }
 }
