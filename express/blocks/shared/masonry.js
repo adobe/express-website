@@ -35,7 +35,7 @@ export class Masonry {
 
   // set up fresh grid if necessary
   setupColumns() {
-    const block = this.wrapper.parentElement;
+    const block = this.classList.contains('template-list') ? this.wrapper : this.wrapper.parentElement;
     let result = 1;
     let colWidth = 264;
     if (block.classList.contains('sixcols')) {
