@@ -18,7 +18,6 @@ import {
   decorateMain,
   fetchPlaceholders,
   getIconElement,
-  getLanguage,
   getLocale,
   getLottie,
   lazyLoadLottiePlayer,
