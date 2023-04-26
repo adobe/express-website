@@ -273,6 +273,8 @@ export class Masonry {
     if (workList.length > 0) {
       // draw rest
       this.draw(workList);
+    } else if (this.wrapper.classList.contains('template-list')) {
+      this.wrapper.classList.add('template-list-complete');
     } else {
       this.wrapper.parentElement.classList.add('template-x-complete');
     }
