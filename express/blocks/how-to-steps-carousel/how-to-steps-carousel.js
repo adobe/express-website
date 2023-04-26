@@ -214,7 +214,7 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, window
     window.setTimeout(() => {
       activate(block, block.querySelector('.tip-number.tip-1'));
       initRotation(window, document);
-    }, 200);
+    }, 0);
   };
 
   if (!img.complete) {
