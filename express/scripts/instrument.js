@@ -22,8 +22,7 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
-// eslint-disable-next-line import/no-unresolved
-import Context from './context.js';
+import BlockMediator from './block-mediator.js';
 
 // this saves on file size when this file gets minified...
 const w = window;
@@ -145,12 +144,6 @@ loadScript(martechURL, () => {
   const pageName = `adobe.com:${pathSegments.join(':')}`;
 
   const language = getLanguage(getLocale(window.location));
-  const langSplits = language.split('-');
-  langSplits.pop();
-
-  const htmlLang = langSplits.join('-');
-
-  document.documentElement.setAttribute('lang', htmlLang);
 
   let category = getMetadata('category');
   if (!category && (pathname.includes('/create/')
@@ -774,10 +767,10 @@ loadScript(martechURL, () => {
     trackBranchParameters($links);
 
     // for tracking all of the links
-    $links.forEach(($a) => {
-      $a.addEventListener('click', () => {
-        trackButtonClick($a);
-      });
+    d.addEventListener('click', (event) => {
+      if (event.target.tagName === 'A') {
+        trackButtonClick(event.target);
+      }
     });
 
     // for tracking the faq
@@ -1194,16 +1187,16 @@ loadScript(martechURL, () => {
     [24793488, 'enableReverseVideoRating'],
   ];
 
-  Context.set('audiences', []);
-  Context.set('segments', []);
+  BlockMediator.set('audiences', []);
+  BlockMediator.set('segments', []);
 
   function getAudiences() {
     const getSegments = (ecid) => {
       if (ecid) {
         w.setAudienceManagerSegments = (json) => {
           if (json && json.segments && json.segments.includes(RETURNING_VISITOR_SEGMENT_ID)) {
-            const audiences = Context.get('audiences');
-            const segments = Context.get('segments');
+            const audiences = BlockMediator.get('audiences');
+            const segments = BlockMediator.get('segments');
             audiences.push(ENABLE_PRICING_MODAL_AUDIENCE);
             segments.push(RETURNING_VISITOR_SEGMENT_ID);
 
@@ -1253,8 +1246,8 @@ loadScript(martechURL, () => {
 
           QUICK_ACTION_SEGMENTS.forEach((QUICK_ACTION_SEGMENT) => {
             if (json && json.segments && json.segments.includes(QUICK_ACTION_SEGMENT[0])) {
-              const audiences = Context.get('audiences');
-              const segments = Context.get('segments');
+              const audiences = BlockMediator.get('audiences');
+              const segments = BlockMediator.get('segments');
               audiences.push(QUICK_ACTION_SEGMENT[1]);
               segments.push(QUICK_ACTION_SEGMENT[0]);
             }
