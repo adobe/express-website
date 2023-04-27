@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -35,36 +35,33 @@ function reset(block) {
   fixedImageSize = false;
 }
 
-function activate(block, target) {
-  if (!fixedImageSize) {
+const loadImage = (img) => new Promise((resolve) => {
+  if (img.complete && img.naturalHeight !== 0) resolve();
+  else {
+    img.onload = () => {
+      resolve();
+    };
+  }
+});
+
+function setPictureHeight(block, override) {
+  if (!fixedImageSize || override) {
     // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
-
-    // get viewport width
-    const window = block.ownerDocument.defaultView;
-    const document = block.ownerDocument;
-
-    const { documentElement } = document;
-    const vw = Math.max(
-      documentElement && documentElement.clientWidth ? documentElement.clientWidth : 0,
-      window && window.innerWidth ? window.innerWidth : 0,
-    );
-
-    if (vw >= 900) {
-      const container = block.parentElement.parentElement;
-      const picture = container.querySelector('picture');
-      const img = picture.querySelector('img');
+    const container = block.parentElement.parentElement;
+    const picture = container.querySelector('picture');
+    const img = picture.querySelector('img');
+    loadImage(img).then(() => {
       const panelHeight = block.parentElement.offsetHeight;
       const imgHeight = img.naturalHeight;
-      if (imgHeight < panelHeight) {
-        container.classList.add('no-cover');
-      } else {
-        picture.style.height = `${panelHeight || imgHeight}px`;
-      }
-    }
 
+      picture.style.height = `${panelHeight || imgHeight}px`;
+    });
     fixedImageSize = true;
   }
+}
 
+function activate(block, target) {
+  setPictureHeight(block);
   // de-activate all
   block.querySelectorAll('.tip, .tip-number').forEach((item) => {
     item.classList.remove('active');
@@ -92,17 +89,7 @@ function initRotation(window, document) {
   }
 }
 
-export default function decorate(block) {
-  const window = block.ownerDocument.defaultView;
-  const document = block.ownerDocument;
-
-  // move first image of container outside of div for styling
-  const section = block.closest('.section');
-  const picture = section.querySelector('picture');
-  const parent = picture.parentElement;
-  section.prepend(picture);
-  parent.remove();
-
+function buildHowToStepsCarousel(section, picture, block, document, rows, window) {
   // join wrappers together
   section.querySelectorAll('.default-content-wrapper').forEach((wrapper, i) => {
     if (i === 0) {
@@ -117,9 +104,6 @@ export default function decorate(block) {
       wrapper.remove();
     }
   });
-
-  const howto = block;
-  const rows = Array.from(howto.children);
 
   const heading = section.querySelector('h2, h3, h4');
 
@@ -220,19 +204,115 @@ export default function decorate(block) {
     });
   }
 
-  const img = picture.querySelector('img');
-  const run = () => {
-    // slgiht delay to allow panel to size correctly
-    window.setTimeout(() => {
-      activate(block, block.querySelector('.tip-number.tip-1'));
-      initRotation(window, document);
-    }, 200);
-  };
+  // slgiht delay to allow panel to size correctly
+  window.setTimeout(() => {
+    activate(block, block.querySelector('.tip-number.tip-1'));
+    initRotation(window, document);
+  }, 100);
+}
 
-  if (!img.complete) {
-    img.addEventListener('load', run);
-    img.addEventListener('error', run);
+function roundedImage(x, y, width, height, radius, ctx) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function layerTemplateImage(canvas, ctx, templateImg) {
+  // start and end areas were directly measured and transferred from the spec image
+  templateImg.style.maxWidth = '986px';
+  templateImg.style.maxHeight = '652px';
+  templateImg.style.objectFit = 'contain';
+
+  return new Promise((outerResolve) => {
+    let prevWidth;
+    const drawImage = (centerX, centerY, maxWidth, maxHeight) => new Promise((resolve) => {
+      const obs = new ResizeObserver((changes) => {
+        for (const change of changes) {
+          if (change.contentRect.width === prevWidth) return;
+          prevWidth = change.contentRect.width;
+          if (prevWidth <= maxWidth && change.contentRect.height <= maxHeight) {
+            ctx.save();
+            roundedImage(centerX - (templateImg.width / 2), centerY - (templateImg.height / 2),
+              templateImg.width, templateImg.height, 7, ctx);
+            ctx.clip();
+            ctx.drawImage(templateImg, 0, 0, templateImg.naturalWidth,
+              templateImg.naturalHeight, centerX - (templateImg.width / 2),
+              centerY - (templateImg.height / 2), templateImg.width, templateImg.height);
+            ctx.restore();
+            obs.disconnect();
+            resolve();
+          }
+        }
+      });
+      obs.observe(templateImg);
+    });
+
+    drawImage(1123, 600, 986, 652)
+      .then(() => {
+        templateImg.style.maxWidth = '312px';
+        templateImg.style.maxHeight = '472px';
+        return drawImage(1816, 479, 312, 472);
+      })
+      .then(() => outerResolve());
+  });
+}
+
+export default async function decorate(block) {
+  const window = block.ownerDocument.defaultView;
+  const document = block.ownerDocument;
+  const image = block.classList.contains('image');
+
+  // move first image of container outside of div for styling
+  const section = block.closest('.section');
+  const howto = block;
+  const rows = Array.from(howto.children);
+  let picture;
+
+  if (image) {
+    const backgroundPictureDiv = rows.shift();
+    const backgroundPic = backgroundPictureDiv.querySelector('picture');
+    const backgroundPicImg = backgroundPic.querySelector('img');
+    const templateDiv = rows.shift();
+
+    loadImage(backgroundPicImg).then(() => {
+      backgroundPicImg.width = 2000;
+      backgroundPicImg.height = 1072;
+      picture = backgroundPic;
+      section.prepend(picture);
+
+      const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
+      const sources = backgroundPic.querySelectorAll(':scope > source');
+      sources.forEach((source) => source.remove());
+      const templateImages = templateDiv.querySelectorAll('picture');
+      const templateImg = templateImages[0].querySelector('img');
+      templateImg.style.visibility = 'hidden';
+      templateImg.style.position = 'absolute';
+      return loadImage(templateImg).then(() => {
+        layerTemplateImage(canvas, ctx, templateImg).then(() => {
+          templateDiv.remove();
+          const img = createTag('img');
+          img.src = canvas.toDataURL('image/png');
+          backgroundPic.append(img);
+          backgroundPicImg.remove();
+          setPictureHeight(block, true);
+        });
+      });
+    });
   } else {
-    run();
+    picture = section.querySelector('picture');
+    const parent = picture.parentElement;
+    parent.remove();
+    section.prepend(picture);
   }
+  buildHowToStepsCarousel(section, picture, block, document, rows, window);
 }
