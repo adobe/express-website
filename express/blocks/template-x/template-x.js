@@ -19,6 +19,7 @@ import {
   fetchPlaceholders,
   getIconElement,
   getLocale,
+  getLanguage,
   getLottie,
   lazyLoadLottiePlayer,
   linkImage,
@@ -40,19 +41,40 @@ function camelize(str) {
 }
 
 async function processContentRow(block, props) {
-  const placeholders = await fetchPlaceholders();
+  // const placeholders = await fetchPlaceholders();
 
   const templateTitle = createTag('div', { class: 'template-title' });
   templateTitle.innerHTML = props.contentRow.outerHTML;
 
   const aTags = templateTitle.querySelectorAll(':scope a');
+  const contentDiv = templateTitle.querySelector('div[data-valign=middle]');
   if (aTags.length > 0) {
+    const contentWrapper = createTag('div', { class: 'content-wrapper' });
+    const contents = templateTitle.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span');
+
+    contents.forEach((el) => {
+      contentWrapper.append(el);
+    });
+
+    if (contentDiv) {
+      contentDiv.append(contentWrapper);
+    } else {
+      templateTitle.append(contentWrapper);
+    }
+
     templateTitle.classList.add('with-link');
     aTags.forEach((aTag) => {
       aTag.className = 'template-title-link';
       const p = aTag.closest('p');
       if (p) {
+        if (contentDiv) {
+          contentDiv.append(p);
+        } else {
+          templateTitle.append(p);
+        }
+
         p.classList.remove('button-container');
+        p.classList.add('show-more-wrapper');
       }
     });
   }
@@ -61,27 +83,28 @@ async function processContentRow(block, props) {
 
   if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
 
-  if (block.classList.contains('collaboration')) {
-    const titleHeading = props.contentRow.querySelector('h3');
-    const anchorLink = createTag('a', {
-      class: 'collaboration-anchor',
-      href: `${document.URL.replace(/#.*$/, '')}#${titleHeading.id}`,
-    });
-    const clipboardTag = createTag('span', { class: 'clipboard-tag' });
-    clipboardTag.textContent = placeholders['tag-copied'];
-
-    anchorLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      navigator.clipboard.writeText(anchorLink.href);
-      anchorLink.classList.add('copied');
-      setTimeout(() => {
-        anchorLink.classList.remove('copied');
-      }, 2000);
-    });
-
-    anchorLink.append(clipboardTag);
-    titleHeading.append(anchorLink);
-  }
+  // todo: build collaboration and holiday variants
+  // if (block.classList.contains('collaboration')) {
+  //   const titleHeading = props.contentRow.querySelector('h3');
+  //   const anchorLink = createTag('a', {
+  //     class: 'collaboration-anchor',
+  //     href: `${document.URL.replace(/#.*$/, '')}#${titleHeading.id}`,
+  //   });
+  //   const clipboardTag = createTag('span', { class: 'clipboard-tag' });
+  //   clipboardTag.textContent = placeholders['tag-copied'];
+  //
+  //   anchorLink.addEventListener('click', (e) => {
+  //     e.preventDefault();
+  //     navigator.clipboard.writeText(anchorLink.href);
+  //     anchorLink.classList.add('copied');
+  //     setTimeout(() => {
+  //       anchorLink.classList.remove('copied');
+  //     }, 2000);
+  //   });
+  //
+  //   anchorLink.append(clipboardTag);
+  //   titleHeading.append(anchorLink);
+  // }
 }
 
 function constructProps(block) {
@@ -112,9 +135,12 @@ function constructProps(block) {
       [props.contentRow] = cols;
     } else if (cols.length === 2) {
       const value = cols[1].textContent.trim();
+
       if (key && value) {
         if (['tasks', 'topics', 'locales'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
           props.filters[camelize(key)] = value;
+        } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
+          props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
         } else {
           props[camelize(key)] = value;
         }
@@ -318,8 +344,10 @@ async function decorateLoadMoreButton(block, props) {
 
 async function insertTemplateStats(props) {
   const locale = getLocale(window.location);
-
+  const lang = getLanguage(getLocale(window.location));
+  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   const heading = props.contentRow.textContent;
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   if (!heading) return null;
 
   const placeholders = await fetchPlaceholders();
@@ -327,7 +355,7 @@ async function insertTemplateStats(props) {
   let grammarTemplate = props.templateStats || placeholders['template-placeholder'];
 
   if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
+    grammarTemplate = grammarTemplate.replace('{{quantity}}', templateCount);
   }
 
   if (grammarTemplate.indexOf('{{Type}}') >= 0) {
@@ -335,7 +363,7 @@ async function insertTemplateStats(props) {
   }
 
   if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
+    grammarTemplate = grammarTemplate.replace('{{type}}', camelHeading);
   }
 
   if (locale === 'fr') {
@@ -350,21 +378,6 @@ async function insertTemplateStats(props) {
   }
 
   return grammarTemplate;
-}
-
-async function generateToolBar(block, props) {
-  const sectionHeading = createTag('h2');
-  const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
-  const tBar = createTag('div', { class: 'api-templates-toolbar' });
-  const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
-  const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
-
-  sectionHeading.textContent = await insertTemplateStats(props);
-
-  block.prepend(tBarWrapper);
-  tBarWrapper.append(tBar);
-  tBar.append(contentWrapper, functionsWrapper);
-  contentWrapper.append(sectionHeading);
 }
 
 async function fetchBlueprint(pathname) {
@@ -996,10 +1009,11 @@ function getPlaceholderWidth(block) {
   return width;
 }
 
-function toggleMasonryView(block, props, button, toggleButtons) {
-  const $templatesToView = block.querySelectorAll('.template:not(.placeholder)');
+async function toggleMasonryView(block, props, button, toggleButtons) {
+  const templatesToView = block.querySelectorAll('.template:not(.placeholder)');
   const blockWrapper = block.closest('.template-x-wrapper');
-  if (!button.classList.contains('active') && $templatesToView.length > 0) {
+
+  if (!button.classList.contains('active') && templatesToView.length > 0) {
     toggleButtons.forEach((b) => {
       if (b !== button) {
         b.classList.remove('active');
@@ -1042,12 +1056,11 @@ function toggleMasonryView(block, props, button, toggleButtons) {
 
 function initViewToggle(block, props, toolBar) {
   const toggleButtons = toolBar.querySelectorAll('.view-toggle-button ');
+  block.classList.add('sm-view');
+  block.parentElement.classList.add('sm-view');
+  toggleButtons[0].classList.add('active');
 
-  toggleButtons.forEach((button, index) => {
-    if (index === 0) {
-      toggleMasonryView(block, props, button, toggleButtons);
-    }
-
+  toggleButtons.forEach((button) => {
     button.addEventListener('click', () => {
       toggleMasonryView(block, props, button, toggleButtons);
     }, { passive: true });
@@ -1067,12 +1080,20 @@ function initToolbarShadow(block, toolbar) {
 
 async function decorateToolbar(block, props) {
   const placeholders = await fetchPlaceholders();
-  const toolBar = block.querySelector('.api-templates-toolbar');
+  const sectionHeading = createTag('h2');
+  const tBarWrapper = createTag('div', { class: 'toolbar-wrapper' });
+  const tBar = createTag('div', { class: 'api-templates-toolbar' });
+  const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
+  const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
-  if (toolBar) {
-    const toolBarFirstWrapper = toolBar.querySelector('.wrapper-content-search');
-    const functionsWrapper = toolBar.querySelector('.wrapper-functions');
+  sectionHeading.textContent = await insertTemplateStats(props);
 
+  block.prepend(tBarWrapper);
+  tBarWrapper.append(tBar);
+  tBar.append(contentWrapper, functionsWrapper);
+  contentWrapper.append(sectionHeading);
+
+  if (tBar) {
     const viewsWrapper = createTag('div', { class: 'views' });
 
     const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
@@ -1088,12 +1109,54 @@ async function decorateToolbar(block, props) {
     viewsWrapper.append(smView, mdView, lgView);
     functionsWrapper.append(viewsWrapper, functions.desktop);
 
-    toolBar.append(toolBarFirstWrapper, functionsWrapper, functions.mobile);
+    tBar.append(contentWrapper, functionsWrapper, functions.mobile);
 
-    initDrawer(block, props, toolBar);
-    initFilterSort(block, props, toolBar);
-    initViewToggle(block, props, toolBar);
-    initToolbarShadow(block, toolBar);
+    initDrawer(block, props, tBar);
+    initFilterSort(block, props, tBar);
+    initViewToggle(block, props, tBar);
+    initToolbarShadow(block, tBar);
+  }
+}
+
+function updateURLParameter(url, param, paramVal) {
+  let newAdditionalURL = '';
+  let tempArray = url.split('?');
+  const baseURL = tempArray[0];
+  const additionalURL = tempArray[1];
+  let temp = '';
+  if (additionalURL) {
+    tempArray = additionalURL.split('&');
+    for (let i = 0; i < tempArray.length; i += 1) {
+      if (tempArray[i].split('=')[0] !== param) {
+        newAdditionalURL += temp + tempArray[i];
+        temp = '&';
+      }
+    }
+  }
+
+  const rowText = `${temp}${param}=${paramVal}`;
+  return `${baseURL}?${newAdditionalURL}${rowText}`;
+}
+
+function loadBetterAssetsInBackground(block, props) {
+  props.renditionParams.size = 400;
+  const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
+  if (existingTemplates.length > 0) {
+    existingTemplates.forEach((tmplt) => {
+      const img = tmplt.querySelector('div:first-of-type > img');
+      if (img && img.src) {
+        const updateImgRes = () => {
+          const imgParams = new URLSearchParams(img.src);
+          if (imgParams.get('size') !== '400') {
+            img.src = updateURLParameter(img.src, 'size', 400);
+          } else {
+            img.removeEventListener('load', updateImgRes);
+          }
+        };
+
+        img.addEventListener('load', updateImgRes);
+      }
+    });
   }
 }
 
@@ -1247,10 +1310,6 @@ async function buildTemplateList(block, props, type = []) {
     });
   }
 
-  if (props.toolBar) {
-    await generateToolBar(block, props);
-  }
-
   await decorateTemplates(block, props);
 
   // templates are finished rendering at this point.
@@ -1302,4 +1361,5 @@ export default async function decorate(block) {
   const props = constructProps(block);
   block.innerHTML = '';
   await buildTemplateList(block, props, determineTemplateXType(props));
+  loadBetterAssetsInBackground(block, props);
 }
