@@ -73,10 +73,10 @@ function activate(block, target) {
   block.querySelectorAll(`.tip-${i}`).forEach((elem) => elem.classList.add('active'));
 }
 
-function initRotation(howToWindow, document) {
+function initRotation(howToWindow, howToDocument) {
   if (howToWindow && !rotationInterval) {
     rotationInterval = howToWindow.setInterval(() => {
-      document.querySelectorAll('.tip-numbers').forEach((numbers) => {
+      howToDocument.querySelectorAll('.tip-numbers').forEach((numbers) => {
         // find next adjacent sibling of the currently activated tip
         let activeAdjacentSibling = numbers.querySelector('.tip-number.active+.tip-number');
         if (!activeAdjacentSibling) {
@@ -89,7 +89,7 @@ function initRotation(howToWindow, document) {
   }
 }
 
-function buildHowToStepsCarousel(section, picture, block, document, rows, howToWindow) {
+function buildHowToStepsCarousel(section, picture, block, howToDocument, rows, howToWindow) {
   // join wrappers together
   section.querySelectorAll('.default-content-wrapper').forEach((wrapper, i) => {
     if (i === 0) {
@@ -116,7 +116,7 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, howToW
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'HowTo',
-    name: (heading && heading.textContent.trim()) || document.title,
+    name: (heading && heading.textContent.trim()) || howToDocument.title,
     step: [],
   };
 
@@ -192,7 +192,7 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, howToW
   if (includeSchema) {
     const $schema = createTag('script', { type: 'application/ld+json' });
     $schema.innerHTML = JSON.stringify(schema);
-    const $head = document.head;
+    const $head = howToDocument.head;
     $head.append($schema);
   }
 
@@ -200,14 +200,14 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, howToW
     howToWindow.addEventListener('resize', () => {
       reset(block);
       activate(block, block.querySelector('.tip-number.tip-1'));
-      initRotation(howToWindow, document);
+      initRotation(howToWindow, howToDocument);
     });
   }
 
   // slgiht delay to allow panel to size correctly
   howToWindow.setTimeout(() => {
     activate(block, block.querySelector('.tip-number.tip-1'));
-    initRotation(howToWindow, document);
+    initRotation(howToWindow, howToDocument);
   }, 100);
 }
 
@@ -267,7 +267,7 @@ function layerTemplateImage(canvas, ctx, templateImg) {
 
 export default async function decorate(block) {
   const howToWindow = block.ownerDocument.defaultView;
-  const document = block.ownerDocument;
+  const howToDocument = block.ownerDocument;
   const image = block.classList.contains('image');
 
   // move first image of container outside of div for styling
@@ -314,5 +314,5 @@ export default async function decorate(block) {
     parent.remove();
     section.prepend(picture);
   }
-  buildHowToStepsCarousel(section, picture, block, document, rows, howToWindow);
+  buildHowToStepsCarousel(section, picture, block, howToDocument, rows, howToWindow);
 }
