@@ -232,13 +232,13 @@ main .template-x + .button-container > a {
     margin: 0;
 }
 
-main .template-x .template:not(.placeholder) .icon {
+/* main .template-x .template:not(.placeholder) .icon {
     position: absolute;
     width: 30px;
     height: 30px;
-    bottom: 6px;
-    right: 6px;
-}
+    bottom: 8px;
+    right: 8px;
+} */
 
 main .template-x .template:not(.placeholder) .icon-free-badge {
     height: 24px;
@@ -365,11 +365,11 @@ main .template-x.horizontal.fullwidth .template {
     width: auto;
 }
 
-main .template-x .template:not(.placeholder) > div:first-of-type {
+/* main .template-x .template:not(.placeholder) > div:first-of-type {
     overflow: hidden;
     border-radius: 7px;
     line-height: 0;
-}
+} */
 
 main .template-x.horizontal .template:not(.placeholder) img,
 main .template-x.horizontal .template:not(.placeholder) video,
@@ -387,21 +387,23 @@ main .template-x.sixcols .template:hover:not(.placeholder) img,
 main .template-x.sixcols .template:hover:not(.placeholder) video,
 main .template-x.fullwidth .template:hover:not(.placeholder) img,
 main .template-x.fullwidth .template:hover:not(.placeholder) video {
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 main .template-x.horizontal .template:not(.placeholder) .button-container,
 main .template-x.sixcols .template:not(.placeholder) .button-container,
 main .template-x.fullwidth .template:not(.placeholder) .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 120%;
+    height: calc(120% + 8px);
     border-radius: 7px;
-    background-color: rgba(0, 0, 0, 0.5);
-    top: 0;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     opacity: 0;
     transition: opacity .3s ease-in-out;
     will-change: opacity;
@@ -2464,4 +2466,84 @@ main .template-x-horizontal-holiday-container.expanded .animation-background {
     main .template-x-horizontal-holiday-container .template-x-wrapper.expanded {
         padding-top: 0;
     }
+}
+
+main .template .still-wrapper .image-wrapper {
+    position: relative;
+}
+
+main .template .still-wrapper .image-wrapper .free-tag {
+    position: absolute;
+    height: 24px;
+    display: flex;
+    border-radius: 1000px;
+    align-items: center;
+    font-weight: 500;
+    width: max-content;
+    top: 8px;
+    right: 8px;
+    color: var(--color-white);
+    font-size: 12px;
+    line-height: 16px;
+    padding: 0 12px;
+    background: #000000B3;
+}
+
+main .template .still-wrapper .image-wrapper .icon-premium {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 8px;
+    right: 8px;
+}
+
+main .template .still-wrapper .image-wrapper .icon-tiktok {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    bottom: 8px;
+    left: 8px;
+}
+
+main .template .still-wrapper .image-wrapper .remix-cnt {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #000000B3;
+    opacity: 0.7;
+    color: white;
+    border-radius: 8px;
+    text-align: center;
+    padding: 2px 6px;
+    font-size: var(--body-font-size-s);
+}
+
+main .template .still-wrapper .creator-span {
+    line-height: 20px;
+    font-size: var(--body-font-size-s);
+}
+
+main .template .button-container {
+    opacity: 0;
+    background-color: white;
+    padding: 8px;
+    z-index: 99;
+}
+
+main .template .button-container .media-wrapper {
+    position: relative;
+}
+
+main .template .button-container a {
+    margin: 6px;
+}
+
+main .template .button-container .media-wrapper .icon-plus {
+    z-index: 1;
+    cursor: pointer;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 8px;
+    right: 8px;
 }
