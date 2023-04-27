@@ -21,9 +21,9 @@ let rotationInterval;
 let fixedImageSize = false;
 
 function reset(block) {
-  const window = block.ownerDocument.defaultView;
+  const howToWindow = block.ownerDocument.defaultView;
 
-  window.clearInterval(rotationInterval);
+  howToWindow.clearInterval(rotationInterval);
   rotationInterval = null;
 
   const container = block.parentElement.parentElement;
@@ -73,9 +73,9 @@ function activate(block, target) {
   block.querySelectorAll(`.tip-${i}`).forEach((elem) => elem.classList.add('active'));
 }
 
-function initRotation(window, document) {
-  if (window && !rotationInterval) {
-    rotationInterval = window.setInterval(() => {
+function initRotation(howToWindow, document) {
+  if (howToWindow && !rotationInterval) {
+    rotationInterval = howToWindow.setInterval(() => {
       document.querySelectorAll('.tip-numbers').forEach((numbers) => {
         // find next adjacent sibling of the currently activated tip
         let activeAdjacentSibling = numbers.querySelector('.tip-number.active+.tip-number');
@@ -89,7 +89,7 @@ function initRotation(window, document) {
   }
 }
 
-function buildHowToStepsCarousel(section, picture, block, document, rows, window) {
+function buildHowToStepsCarousel(section, picture, block, document, rows, howToWindow) {
   // join wrappers together
   section.querySelectorAll('.default-content-wrapper').forEach((wrapper, i) => {
     if (i === 0) {
@@ -164,7 +164,7 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, window
 
     number.addEventListener('click', (e) => {
       if (rotationInterval) {
-        window.clearTimeout(rotationInterval);
+        howToWindow.clearTimeout(rotationInterval);
       }
 
       let { target } = e;
@@ -196,18 +196,18 @@ function buildHowToStepsCarousel(section, picture, block, document, rows, window
     $head.append($schema);
   }
 
-  if (window) {
-    window.addEventListener('resize', () => {
+  if (howToWindow) {
+    howToWindow.addEventListener('resize', () => {
       reset(block);
       activate(block, block.querySelector('.tip-number.tip-1'));
-      initRotation(window, document);
+      initRotation(howToWindow, document);
     });
   }
 
   // slgiht delay to allow panel to size correctly
-  window.setTimeout(() => {
+  howToWindow.setTimeout(() => {
     activate(block, block.querySelector('.tip-number.tip-1'));
-    initRotation(window, document);
+    initRotation(howToWindow, document);
   }, 100);
 }
 
@@ -266,7 +266,7 @@ function layerTemplateImage(canvas, ctx, templateImg) {
 }
 
 export default async function decorate(block) {
-  const window = block.ownerDocument.defaultView;
+  const howToWindow = block.ownerDocument.defaultView;
   const document = block.ownerDocument;
   const image = block.classList.contains('image');
 
@@ -314,5 +314,5 @@ export default async function decorate(block) {
     parent.remove();
     section.prepend(picture);
   }
-  buildHowToStepsCarousel(section, picture, block, document, rows, window);
+  buildHowToStepsCarousel(section, picture, block, document, rows, howToWindow);
 }
