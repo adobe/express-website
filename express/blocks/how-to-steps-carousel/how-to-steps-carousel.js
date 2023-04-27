@@ -280,7 +280,6 @@ export default async function decorate(block) {
     const backgroundPictureDiv = rows.shift();
     const backgroundPic = backgroundPictureDiv.querySelector('picture');
     const backgroundPicImg = backgroundPic.querySelector('img');
-
     const templateDiv = rows.shift();
 
     loadImage(backgroundPicImg).then(() => {
@@ -296,14 +295,15 @@ export default async function decorate(block) {
       sources.forEach((source) => source.remove());
       const templateImages = templateDiv.querySelectorAll('picture');
       const templateImg = templateImages[0].querySelector('img');
-
+      templateImg.style.visibility = 'hidden';
+      templateImg.style.position = 'absolute';
       return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
           templateDiv.remove();
-          const img = createTag('img', { src: canvas.toDataURL('image/png') });
+          const img = createTag('img');
+          img.src = canvas.toDataURL('image/png');
           backgroundPic.append(img);
           backgroundPicImg.remove();
-
           setPictureHeight(block, true);
         });
       });
