@@ -45,7 +45,6 @@ const loadImage = (img) => new Promise((resolve) => {
 });
 
 function setPictureHeight(block, override) {
-  console.log(!fixedImageSize || override);
   if (!fixedImageSize || override) {
     // trick to fix the image height when vw > 900 and avoid image resize when toggling the tips
     const container = block.parentElement.parentElement;
@@ -281,32 +280,30 @@ export default async function decorate(block) {
     const backgroundPictureDiv = rows.shift();
     const backgroundPic = backgroundPictureDiv.querySelector('picture');
     const backgroundPicImg = backgroundPic.querySelector('img');
+
     const templateDiv = rows.shift();
 
     loadImage(backgroundPicImg).then(() => {
       backgroundPicImg.width = 2000;
       backgroundPicImg.height = 1072;
-      section.prepend(backgroundPic);
-      backgroundPic.style.visibility = 'hidden';
-      templateDiv.style.position = 'absolute';
-      templateDiv.style.top = '-1000px';
+      picture = backgroundPic;
+      section.prepend(picture);
+
       const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
       const ctx = canvas.getContext('2d');
       ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
+      const sources = backgroundPic.querySelectorAll(':scope > source');
+      sources.forEach((source) => source.remove());
       const templateImages = templateDiv.querySelectorAll('picture');
       const templateImg = templateImages[0].querySelector('img');
 
       return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
-          const img = createTag('img');
-          img.src = canvas.toDataURL('image/png');
-          backgroundPictureDiv.remove();
-          const mergedPicture = createTag('picture');
-          mergedPicture.append(img);
-          picture = mergedPicture;
           templateDiv.remove();
-          section.querySelector('picture').remove();
-          section.prepend(picture);
+          const img = createTag('img', { src: canvas.toDataURL('image/png') });
+          backgroundPic.append(img);
+          backgroundPicImg.remove();
+
           setPictureHeight(block, true);
         });
       });
