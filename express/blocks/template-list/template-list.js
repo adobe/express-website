@@ -533,25 +533,25 @@ function makeTemplateFunctions(placeholders) {
 
   Object.entries(functions).forEach((entry) => {
     entry[1].elements.wrapper = createTag('div', {
-      class: `function-wrapper function-${Object.values(entry)[0]}`,
-      'data-param': Object.values(entry)[0],
+      class: `function-wrapper function-${entry[0]}`,
+      'data-param': entry[0],
     });
 
     entry[1].elements.wrapper.subElements = {
       button: {
-        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
+        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
         subElements: {
           iconHolder: createTag('span', { class: 'icon-holder' }),
-          textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+          textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
           chevIcon: getIconElement('drop-down-arrow'),
         },
       },
       options: {
-        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
+        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
         subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
           const icon = getIconElement(entry[1].icons[subIndex]);
-          const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
-          [optionButton.textContent] = Object.values(option);
+          const optionButton = createTag('div', { class: 'option-button', 'data-value': option[1] });
+          [optionButton.textContent] = option;
           optionButton.prepend(icon);
           return optionButton;
         }),
@@ -586,15 +586,15 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $functionsContainer = createTag('div', { class: 'functions-container' });
   const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
-  Object.entries(functions).forEach((filter) => {
-    const $filterWrapper = filter[1].elements.wrapper;
+  Object.values(functions).forEach((filter) => {
+    const $filterWrapper = filter.elements.wrapper;
 
-    Object.entries($filterWrapper.subElements).forEach((part) => {
-      const $innerWrapper = part[1].wrapper;
+    Object.values($filterWrapper.subElements).forEach((part) => {
+      const $innerWrapper = part.wrapper;
 
-      Object.entries(part[1].subElements).forEach((innerElement) => {
-        if (Object.values(innerElement)[1]) {
-          $innerWrapper.append(Object.values(innerElement)[1]);
+      Object.values(part.subElements).forEach((innerElement) => {
+        if (innerElement) {
+          $innerWrapper.append(innerElement);
         }
       });
 
@@ -1637,14 +1637,13 @@ export async function decorateTemplateList($block) {
     const $parent = $block.closest('.section');
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a')
-      .forEach(($a) => {
-        $a.className = 'template-title-link';
-        const p = $a.closest('p');
-        if (p) {
-          p.classList.remove('button-container');
-        }
-      });
+    $titleRow.querySelectorAll(':scope a').forEach(($a) => {
+      $a.className = 'template-title-link';
+      const p = $a.closest('p');
+      if (p) {
+        p.classList.remove('button-container');
+      }
+    });
 
     if ($parent && $parent.classList.contains('toc-container')) {
       const $tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
