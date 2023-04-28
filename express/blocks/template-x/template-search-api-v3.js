@@ -100,5 +100,6 @@ export function isValidTemplate(template) {
     && template.title?.['i-default']
     && template.pages?.[0]?.rendition?.image?.thumbnail?.componentId
     && template._links?.['http://ns.adobe.com/adobecloud/rel/rendition']?.href?.replace
+    && template._links?.['http://ns.adobe.com/adobecloud/rel/component']?.href?.replace
     && isValidBehaviors(template.behaviors);
 }

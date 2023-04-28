@@ -20,9 +20,12 @@ function shortenTitle(title) {
   return title.length > 19 ? `${title.slice(0, 19)}...` : title;
 }
 
-function templateHasVideo(template) {
-  return !!template.pages[0].rendition?.video?.thumbnail?.componentId
-    && !!template._links?.['http://ns.adobe.com/adobecloud/rel/component']?.href;
+function containsVideo(page) {
+  return !!page?.rendition?.video?.thumbnail?.componentId;
+}
+
+function isVideoFirst(template) {
+  return containsVideo(template.pages[0]);
 }
 
 function getTemplateTitle(template) {
@@ -68,7 +71,7 @@ function renderStillWrapper(template, props) {
     imgWrapper.append(premiumIcon);
   }
 
-  if (templateHasVideo(template)) {
+  if (isVideoFirst(template)) {
     const videoIcon = getIconElement('tiktok');
     imgWrapper.append(videoIcon);
   }
@@ -94,17 +97,15 @@ function extractImageThumbnail(page) {
   return page.rendition.image?.thumbnail;
 }
 
-function getTemplateImageSrc(template, index) {
-  const renditionLinkHref = extractRenditionLinkHref(template);
-  const thumbnail = extractImageThumbnail(template.pages[index]);
+function getTemplateImageSrc(renditionLinkHref, page) {
+  const thumbnail = extractImageThumbnail(page);
   return renditionLinkHref.replace(
     '{&page,size,type,fragment}', `&size=${thumbnail.width}&type=image/jpg&fragment=id=${thumbnail.componentId}`,
   );
 }
 
-function getTemplateVideoSrc(template, index) {
-  const componentLinkHref = extractComponentLinkHref(template);
-  const videoThumbnailId = extractVideoThumbnailId(template.pages[index]);
+function getTemplateVideoSrc(componentLinkHref, page) {
+  const videoThumbnailId = extractVideoThumbnailId(page);
   return componentLinkHref.replace(
     '{&revision,component_id}',
     `&revision=0&component_id=${videoThumbnailId}`,
@@ -130,104 +131,124 @@ function renderCTA(placeholders, branchUrl) {
   return btnEl;
 }
 
-function renderMedia(template) {
-  const templateTitle = getTemplateTitle(template);
-  const pageIterator = {
+function getPageIterator(pages) {
+  return {
     i: 0,
     next() {
-      this.i = (this.i + 1) % template.pages.length;
-      return this;
+      this.i = (this.i + 1) % pages.length;
     },
     reset() {
       this.i = 0;
-      return this;
     },
-    getIndex() {
-      return this.i;
+    current() {
+      return pages[this.i];
     },
   };
+}
 
-  if (templateHasVideo(template)) {
-    const video = createTag('video', {
-      muted: true,
-      playsinline: '',
-      title: templateTitle,
-      poster: getTemplateImageSrc(template, pageIterator.getIndex()),
+function renderRotatingVideos(pages, { renditionLinkHref, componentLinkHref, templateTitle }) {
+  const pageIterator = getPageIterator(pages);
+  const video = createTag('video', {
+    muted: true,
+    playsinline: '',
+    title: templateTitle,
+    poster: getTemplateImageSrc(renditionLinkHref, pageIterator.current()),
+  });
+  const videoSource = createTag('source', {
+    src: getTemplateVideoSrc(componentLinkHref, pageIterator.current()),
+    type: 'video/mp4',
+  });
+  video.append(videoSource);
+  const playVideo = () => {
+    video.poster = getTemplateImageSrc(renditionLinkHref, pageIterator.current());
+    videoSource.src = getTemplateVideoSrc(componentLinkHref, pageIterator.current());
+    video.load();
+    video.muted = true;
+    video.play().catch((e) => {
+      if (e instanceof DOMException && e.name === 'AbortError') {
+        // ignore
+      } else {
+        throw e;
+      }
     });
-    const videoSource = createTag('source', {
-      src: getTemplateVideoSrc(template, pageIterator.getIndex()),
-      type: 'video/mp4',
-    });
-    video.append(videoSource);
-    const playVideo = () => {
-      video.poster = getTemplateImageSrc(template, pageIterator.getIndex());
-      videoSource.src = getTemplateVideoSrc(template, pageIterator.getIndex());
-      video.load();
-      video.muted = true;
-      video.play().catch((e) => {
-        if (e instanceof DOMException && e.name === 'AbortError') {
-          // ignore
-        } else {
-          throw e;
-        }
-      });
-    };
-    const cleanupVideo = () => {
-      video.pause();
-      video.currentTime = 0;
-      pageIterator.reset();
-    };
-    video.addEventListener('ended', () => {
+  };
+  const cleanup = () => {
+    video.pause();
+    video.currentTime = 0;
+    pageIterator.reset();
+  };
+  video.addEventListener('ended', () => {
+    pageIterator.next();
+    playVideo();
+  });
+  return { node: video, cleanup, hover: playVideo };
+}
+
+function renderRotatingImages(pages, { templateTitle, renditionLinkHref }) {
+  const pageIterator = getPageIterator(pages);
+  const img = createTag('img', { src: '', alt: templateTitle });
+  let playImageIntervalId;
+  const playImage = () => {
+    img.src = getTemplateImageSrc(renditionLinkHref, pageIterator.current());
+    playImageIntervalId = setInterval(() => {
       pageIterator.next();
-      playVideo();
-    });
-    return { node: video, cleanup: cleanupVideo, hover: playVideo };
-  } else {
-    const img = createTag('img', { src: '', alt: templateTitle });
-    let playImageIntervalId;
-    const playImage = () => {
-      img.src = getTemplateImageSrc(template, pageIterator.getIndex());
-      playImageIntervalId = setInterval(() => {
-        pageIterator.next();
-        img.src = getTemplateImageSrc(template, pageIterator.getIndex());
-      }, 2000);
-    };
-    const cleanupImage = () => {
-      pageIterator.reset();
-      clearInterval(playImageIntervalId);
-    };
-    return { node: img, cleanup: cleanupImage, hover: playImage };
-  }
+      img.src = getTemplateImageSrc(renditionLinkHref, pageIterator.current());
+    }, 2000);
+  };
+  const cleanup = () => {
+    pageIterator.reset();
+    clearInterval(playImageIntervalId);
+  };
+  return { node: img, cleanup, hover: playImage };
 }
 
 function renderMediaWrapper(template) {
   const mediaWrapper = createTag('div', { class: 'media-wrapper' });
+
+  // TODO: reduce memory with LRU cache or memoization with ttl
   let renderedMedia = null;
 
-  const enterCB = () => {
-    // TODO: reduce memory with LRU cache or memoization with ttl
+  const templateTitle = getTemplateTitle(template);
+  const renditionLinkHref = extractRenditionLinkHref(template);
+  const componentLinkHref = extractComponentLinkHref(template);
+  const { branchUrl } = template.customLinks;
+  const templateInfo = {
+    templateTitle,
+    branchUrl,
+    renditionLinkHref,
+    componentLinkHref,
+  };
+
+  const enterHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!renderedMedia) {
-      renderedMedia = renderMedia(template);
+      // don't let image interrupt flow of videos
+      renderedMedia = isVideoFirst(template)
+        ? renderRotatingVideos(
+          template.pages.filter((page) => containsVideo(page)), templateInfo,
+        )
+        : renderRotatingImages(template.pages, templateInfo);
       mediaWrapper.append(renderedMedia.node);
     }
     renderedMedia.hover();
   };
-  const leaveCB = () => {
+  const leaveHandler = () => {
     renderedMedia.cleanup();
   };
 
-  mediaWrapper.append(renderShareIcon(template.customLinks.branchUrl));
-  return { mediaWrapper, enterCB, leaveCB };
+  mediaWrapper.append(renderShareIcon(branchUrl));
+  return { mediaWrapper, enterHandler, leaveHandler };
 }
 
 function renderHoverWrapper(template, placeholders) {
   const btnContainer = createTag('div', { class: 'button-container' });
 
-  const { mediaWrapper, enterCB, leaveCB } = renderMediaWrapper(template);
+  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template);
 
   btnContainer.append(mediaWrapper);
-  btnContainer.addEventListener('mouseenter', enterCB);
-  btnContainer.addEventListener('mouseleave', leaveCB);
+  btnContainer.addEventListener('mouseenter', enterHandler);
+  btnContainer.addEventListener('mouseleave', leaveHandler);
 
   const cta = renderCTA(placeholders, template.customLinks.branchUrl);
   btnContainer.append(cta);
