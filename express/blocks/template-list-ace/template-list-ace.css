@@ -3,20 +3,20 @@ main .template-list-horizontal-fullwidth-container {
 }
 
 main .template-list-fullwidth-container > div,
-main .template-list-fullwidth-apipowered-container > div {
+main .template-list-ace-fullwidth-container > div {
   max-width: none;
   padding: 0;
 }
 
 main .template-list-fullwidth-container > .default-content-wrapper,
-main .template-list-fullwidth-apipowered-container > .default-content-wrapper {
+main .template-list-ace-fullwidth-container > .default-content-wrapper {
   padding: 0 15px;
 }
 
 main .template-list-fullwidth-container .default-content-wrapper h2,
 main .template-list-fullwidth-container .default-content-wrapper p,
-main .template-list-fullwidth-apipowered-container .default-content-wrapper h2,
-main .template-list-fullwidth-apipowered-container .default-content-wrapper p {
+main .template-list-ace-fullwidth-container .default-content-wrapper h2,
+main .template-list-ace-fullwidth-container .default-content-wrapper p {
   margin: 0;
   text-align: left;
 }
@@ -61,10 +61,12 @@ main .template-list-ace {
 }
 
 main .template-list-ace.sixcols,
-main .template-list-ace.fullwidth {
+main .template-list-ace.fullwidth .templates-container {
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
+  display: flex;
+  width: 100%;
 }
 
 main .template-list-ace.fullwidth.sm-view,
@@ -100,17 +102,17 @@ main .template-list-ace.fullwidth > .masonry-col {
   max-width: 175px;
 }
 
-main .template-list-ace.fullwidth.sm-view > .masonry-col {
+main .template-list-ace.fullwidth.sm-view > .templates-container .masonry-col {
   max-width: 165px;
   text-align: center;
 }
 
-main .template-list-ace.fullwidth.md-view > .masonry-col {
+main .template-list-ace.fullwidth.md-view > .templates-container .masonry-col {
   max-width: 258.5px;
   text-align: center;
 }
 
-main .template-list-ace.fullwidth.lg-view > .masonry-col {
+main .template-list-ace.fullwidth.lg-view > .templates-container .masonry-col {
   max-width: 352px;
   text-align: center;
 }
@@ -348,16 +350,16 @@ main .template-list-ace.horizontal.mini .template .icon-free-badge {
 }
 
 main .template-list-ace.sixcols .template,
-main .template-list-ace.fullwidth .template {
+main .template-list-ace.fullwidth .templates-container .template {
   position: relative;
   display: inline-flex;
   width: 165px;
   margin: 5px;
 }
 
-main .template-list-ace.fullwidth.lg-view .template,
-main .template-list-ace.fullwidth.md-view .template,
-main .template-list-ace.fullwidth.sm-view .template {
+main .template-list-ace.fullwidth.lg-view .templates-container .template,
+main .template-list-ace.fullwidth.md-view .templates-container .template,
+main .template-list-ace.fullwidth.sm-view .templates-container .template {
   width: 92%;
 }
 
@@ -587,11 +589,11 @@ main .template-list-ace.flex-masonry .template.appear {
   opacity: 1;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper {
+main .template-list-ace-fullwidth-container .template-list-wrapper {
   position: relative;
 }
 
-main .template-list-fullwidth-apipowered-container .load-more {
+main .template-list-ace-fullwidth-container .load-more {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -605,7 +607,7 @@ main .template-list-fullwidth-apipowered-container .load-more {
   background: linear-gradient(#ffffff00, #ffffff, #ffffff);
 }
 
-main .template-list-fullwidth-apipowered-container .load-more-button {
+main .template-list-ace-fullwidth-container .load-more-button {
   width: 88px;
   height: 48px;
   display: flex;
@@ -620,53 +622,53 @@ main .template-list-fullwidth-apipowered-container .load-more-button {
   transition: background-color 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .load-more-button:hover {
+main .template-list-ace-fullwidth-container .load-more-button:hover {
   background-color: var(--color-gray-700);
 }
 
-main .template-list-fullwidth-apipowered-container .load-more-button.disabled {
+main .template-list-ace-fullwidth-container .load-more-button.disabled {
   pointer-events: none;
   opacity: 0.5;
 }
 
-main .template-list-fullwidth-apipowered-container .load-more-button > .icon-plus-icon {
+main .template-list-ace-fullwidth-container .load-more-button > .icon-plus-icon {
   height: 22px;
   width: 22px;
 }
 
-main .template-list-fullwidth-apipowered-container .load-more-text {
+main .template-list-ace-fullwidth-container .load-more-text {
   margin-top: 8px;
   font-weight: 700;
   font-size: 18px;
 }
 
-main .template-list-ace.fullwidth.lg-view > .masonry-col {
+main .template-list-ace.fullwidth.lg-view .templates-container > .masonry-col {
   max-width: 335px;
   text-align: center;
 }
 
-main .template-list-ace.fullwidth.md-view > .masonry-col {
+main .template-list-ace.fullwidth.md-view .templates-container > .masonry-col {
   max-width: 165.5px;
   text-align: center;
 }
 
-main .template-list-ace.fullwidth.sm-view > .masonry-col {
+main .template-list-ace.fullwidth.sm-view .templates-container > .masonry-col {
   max-width: 106.33px;
   text-align: center;
 }
 
 @media (min-width: 600px) {
-  main .template-list-ace.fullwidth.lg-view > .masonry-col {
+  main .template-list-ace.fullwidth.lg-view .templates-container > .masonry-col {
     max-width: 352px;
     text-align: center;
   }
 
-  main .template-list-ace.fullwidth.md-view > .masonry-col {
+  main .template-list-ace.fullwidth.md-view .templates-container > .masonry-col {
     max-width: 227.33px;
     text-align: center;
   }
 
-  main .template-list-ace.fullwidth.sm-view > .masonry-col {
+  main .template-list-ace.fullwidth.sm-view .templates-container > .masonry-col {
     max-width: 165px;
     text-align: center;
   }
@@ -695,14 +697,14 @@ main .template-list-ace.fullwidth.sm-view > .masonry-col {
 
   main .template-list-fullwidth-container > div,
   main .template-list-fullwidth-container > .default-content-wrapper,
-  main .template-list-fullwidth-apipowered-container > div,
-  main .template-list-fullwidth-apipowered-container > .default-content-wrapper {
+  main .template-list-ace-fullwidth-container > div,
+  main .template-list-ace-fullwidth-container > .default-content-wrapper {
     max-width: none;
     padding: 0 28px;
   }
 
   main .template-list-ace.sixcols > .masonry-col,
-  main .template-list-ace.fullwidth > .masonry-col {
+  main .template-list-ace.fullwidth .templates-container > .masonry-col {
     max-width: 187px;
   }
 
@@ -716,11 +718,11 @@ main .template-list-ace.fullwidth.sm-view > .masonry-col {
   }
 
   main .template-list-ace.sixcols > .masonry-col,
-  main .template-list-ace.fullwidth > .masonry-col {
+  main .template-list-ace.fullwidth .templates-container > .masonry-col {
     max-width: 187px;
   }
 
-  main .template-list-ace.fullwidth.md-view > .masonry-col {
+  main .template-list-ace.fullwidth.md-view .templates-container > .masonry-col {
     max-width: 258.5px;
     text-align: center;
   }
@@ -764,7 +766,7 @@ main .template-list-ace.fullwidth.sm-view > .masonry-col {
   }
 
   main .template-list-fullwidth-container > div,
-  main .template-list-fullwidth-apipowered-container > div {
+  main .template-list-ace-fullwidth-container > div {
     max-width: none;
   }
 
@@ -787,7 +789,7 @@ main .template-list-ace.fullwidth.sm-view > .masonry-col {
   }
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper {
+main .template-list-ace-fullwidth-container .search-bar-wrapper {
   position: relative;
   max-width: 560px;
   padding: 0 28px;
@@ -796,7 +798,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper {
   transition: max-width 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-bar {
   box-sizing: border-box;
   margin: 0;
   font-family: var(--body-font-family);
@@ -811,17 +813,17 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
   transition: max-width 0.5s, padding-right 0.5s, padding-left 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar::placeholder {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-bar::placeholder {
   transition: color 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus-visible,
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-bar:focus {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-bar:focus-visible,
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-bar:focus {
   border: #444444 2px solid;
   outline: none;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.icon-search {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .icon.icon-search {
   position: absolute;
   z-index: 1;
   height: 16px;
@@ -833,7 +835,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.ico
   left: 160px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.icon-search-clear {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .icon.icon-search-clear {
   position: absolute;
   z-index: 1;
   height: 16px;
@@ -844,11 +846,11 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.ico
   right: 40px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list .icon {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list .icon {
   margin-right: 4px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown {
   position: absolute;
   background: var(--color-white);
   box-sizing: border-box;
@@ -861,15 +863,15 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   box-shadow: 0 0 16px #00000015;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar .search-dropdown {
+main .template-list-ace-fullwidth-container .search-bar-wrapper.sticky-search-bar .search-dropdown {
   max-width: unset;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown.hidden {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown.hidden {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .icon {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .icon {
   position: unset;
   z-index: unset;
   height: 22px;
@@ -878,19 +880,19 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   transform: unset;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-heading-wrapper {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .search-dropdown-heading-wrapper {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
   line-height: 22px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-heading {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .search-dropdown-heading {
   color: var(--color-gray-500);
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -898,15 +900,15 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   font-weight: 700;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon.icon-flyer-icon-22 {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon.icon-flyer-icon-22 {
   filter: invert(21%) sepia(34%) saturate(36) hue-rotate(-136deg) brightness(119%) contrast(85%);
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon.icon-arrow-right {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .search-dropdown-scratch .icon.icon-arrow-right {
   width: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .free-plan-widget {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .free-plan-widget {
   margin-top: 16px;
   position: relative;
   background-color: var(--color-gray-100);
@@ -919,12 +921,12 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   white-space: nowrap;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .free-plan-widget > div {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .free-plan-widget > div {
   display: flex;
   align-items: center;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .free-plan-widget > div > div:first-child {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .free-plan-widget > div > div:first-child {
   position: relative;
   margin-right: 6px;
   width: 14px;
@@ -933,7 +935,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   border-radius: 50%;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .free-plan-widget > div > div:first-child img {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .free-plan-widget > div > div:first-child img {
   position: absolute;
   top: 3px;
   left: 3px;
@@ -942,7 +944,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-d
   max-height: 8px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-container {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-container {
   position: absolute;
   max-width: 120px;
   margin: 0;
@@ -950,20 +952,20 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   transition: max-width 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar .task-dropdown-container {
+main .template-list-ace-fullwidth-container .search-bar-wrapper.sticky-search-bar .task-dropdown-container {
   z-index: 2;
   overflow: hidden;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.collapsed .task-dropdown-container {
+main .template-list-ace-fullwidth-container .search-bar-wrapper.collapsed .task-dropdown-container {
   max-width: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.ready .task-dropdown-container {
+main .template-list-ace-fullwidth-container .search-bar-wrapper.ready .task-dropdown-container {
   overflow: unset;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown {
   position: relative;
   margin: 2px;
   background-color: var(--color-gray-200);
@@ -973,7 +975,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   height: 37px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown .icon.icon-drop-down-arrow {
   height: 10px;
   width: 10px;
   position: absolute;
@@ -983,11 +985,11 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   pointer-events: none;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown.active .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown.active .icon.icon-drop-down-arrow {
   transform: rotate(180deg);
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-toggle {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-toggle {
   font-family: var(--body-font-family);
   color: #242424;
   font-size: 14px;
@@ -1006,7 +1008,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   transition: background-color 0.2s, border 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-toggle:after {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-toggle:after {
   content: '';
   position: absolute;
   right: 0;
@@ -1016,11 +1018,11 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   height: calc(100% - 8px);
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-toggle:hover {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-toggle:hover {
   background-color: var(--color-gray-200);
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list {
   position: absolute;
   display: flex;
   width: 240px;
@@ -1040,28 +1042,28 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   transition: max-height 0.2s, padding 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar {
   width: 12px;
 }
 
 /* Handle */
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb {
   background: var(--color-gray-200);
   border: 2px var(--color-white) solid;
   border-radius: 12px;
 }
 
 /* Handle on hover */
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb:hover {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list::-webkit-scrollbar-thumb:hover {
   background: var(--color-gray-300);
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list.active {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list.active {
   max-height: 400px;
   padding: 12px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option {
   font-size: 14px;
   font-weight: 400;
   font-family: var(--body-font-family);
@@ -1074,14 +1076,14 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
   align-items: center;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option:hover,
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option.active
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option:hover,
+main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option.active
 {
   background-color: var(--color-gray-200);
   color: var(--color-info-accent);
 }
 
-/*main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option .option-radio {*/
+/*main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option .option-radio {*/
 /*  display: block;*/
 /*  height: 12px;*/
 /*  width: 12px;*/
@@ -1092,32 +1094,32 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dro
 /*  margin-right: 10px;*/
 /*}*/
 
-/*main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option:hover .option-radio {*/
+/*main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option:hover .option-radio {*/
 /*  border: #4646C6 6px solid;*/
 /*  max-height: 4px;*/
 /*  max-width: 4px;*/
 /*  border-radius: 50%;*/
 /*}*/
 
-/*main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option:active .option-radio {*/
+/*main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option:active .option-radio {*/
 /*  border: #3D3DB4 6px solid;*/
 /*  max-height: 4px;*/
 /*  max-width: 4px;*/
 /*  border-radius: 50%;*/
 /*}*/
 
-/*main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option .option-radio:focus-visible {*/
+/*main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option .option-radio:focus-visible {*/
 /*  outline-offset: 4px;*/
 /*}*/
 
-/*main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list li.option.active .option-radio {*/
+/*main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list li.option.active .option-radio {*/
 /*  border: var(--color-info-accent) 6px solid;*/
 /*  max-height: 4px;*/
 /*  max-width: 4px;*/
 /*  border-radius: 50%;*/
 /*}*/
 
-main .template-list-fullwidth-apipowered-container .animated-template-text {
+main .template-list-ace-fullwidth-container .animated-template-text {
   margin-top: -28px;
   background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
   background-size: 400% 400%;
@@ -1130,15 +1132,15 @@ main .template-list-fullwidth-apipowered-container .animated-template-text {
 }
 
 @media (min-width: 600px) {
-  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .task-dropdown-list {
+  main .template-list-ace-fullwidth-container .search-bar-wrapper .task-dropdown-list {
     right: 0;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .task-dropdown-list {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper .task-dropdown-list {
     left: 0;
   }
 
-  main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking {
+  main .template-list-ace-fullwidth-container .toolbar-wrapper.sticking {
     padding-left: 40px;
     padding-right: 40px;
     margin: 0;
@@ -1146,7 +1148,7 @@ main .template-list-fullwidth-apipowered-container .animated-template-text {
   }
 }
 
-main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
+main .template-list-ace-fullwidth-container .toolbar-wrapper {
   padding: 0;
   background: var(--color-gray-100);
   position: sticky;
@@ -1154,7 +1156,7 @@ main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
   top: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
+main .template-list-ace-fullwidth-container .api-templates-toolbar {
   position: relative;
   z-index: 1;
   margin: 28px 0px;
@@ -1167,18 +1169,18 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
   gap: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .api-templates-toolbar {
+main .template-list-ace-fullwidth-container .toolbar-wrapper.sticking .api-templates-toolbar {
   box-sizing: border-box;
   border-radius: 0;
   padding: 16px;
   width: 100%;
 }
 
-main .template-list-fullwidth-apipowered-container .toolbar-wrapper.with-box-shadow {
+main .template-list-ace-fullwidth-container .toolbar-wrapper.with-box-shadow {
   box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-content-search {
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
@@ -1188,17 +1190,17 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   flex-basis: 100%;
 }
 
-main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .wrapper-content-search {
+main .template-list-ace-fullwidth-container .toolbar-wrapper.sticking .wrapper-content-search {
   width: 100%;
   padding-left: 48px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar h2 {
+main .template-list-ace-fullwidth-container .api-templates-toolbar h2 {
   font-size: 18px;
   line-height: 24px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper {
   margin: 0;
   width: 100%;
   position: absolute;
@@ -1208,43 +1210,43 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .searc
   padding: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed .icon-search {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper.collapsed .icon-search {
   left: 12px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .icon-search {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper .icon-search {
   left: 132px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper .icon-search-clear {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper .icon-search-clear {
   right: 12px;
 }
 
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon-search-clear,
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar.collapsed .icon-search-clear,
-main .template-list-fullwidth-apipowered-container .search-bar-wrapper.sticky-search-bar.collapsed .search-dropdown {
+main .template-list-ace-fullwidth-container .search-bar-wrapper .icon-search-clear,
+main .template-list-ace-fullwidth-container .search-bar-wrapper.sticky-search-bar.collapsed .icon-search-clear,
+main .template-list-ace-fullwidth-container .search-bar-wrapper.sticky-search-bar.collapsed .search-dropdown {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .search-bar-wrapper {
+main .template-list-ace-fullwidth-container .toolbar-wrapper.sticking .search-bar-wrapper {
   display: unset;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper.collapsed {
   max-width: 42px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar {
   padding: 0;
   max-width: 42px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar::placeholder,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar::placeholder,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .search-bar-wrapper.collapsed .search-bar {
   color: transparent;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions {
   display: flex;
   justify-content: space-between;
   flex-grow: 1;
@@ -1252,35 +1254,35 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   gap: 24px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .icon {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .icon {
   display: block;
   padding-right: 6px;
   height: 18px;
   width: 18px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .icon-holder .icon {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .icon-holder .icon {
   min-width: 18px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .views .icon {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .views .icon {
   height: 22px;
   width: 22px;
   padding-right: unset;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .current-option {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .current-option {
   font-family: var(--body-font-family);
   font-size: 14px;
   line-height: 24px;
@@ -1290,13 +1292,13 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   text-overflow: ellipsis;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-sort {
   cursor: pointer;
   user-select: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper {
   background-color: var(--color-gray-200);
   padding: 4px 8px;
   border-radius: 8px;
@@ -1306,11 +1308,11 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   transition: background-color 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper:hover {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .function-wrapper:hover {
   background-color: var(--color-gray-300);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper {
   position: absolute;
   box-sizing: border-box;
   z-index: 1;
@@ -1326,7 +1328,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   box-shadow: 0 3px 6px #00000016;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper {
   position: absolute;
   box-sizing: border-box;
   z-index: 1;
@@ -1343,27 +1345,27 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   box-shadow: 0 3px 6px #00000016;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper .icon {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-sort .options-wrapper .icon {
   padding-right: 4px;
   height: 18px;
   width: 18px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .options-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .function-wrapper.opened .options-wrapper {
   display: flex;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .function-wrapper.opened .button-wrapper .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .function-wrapper.opened .button-wrapper .icon.icon-drop-down-arrow {
   transform: rotate(180deg);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li {
   margin-bottom: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a {
   font-size: 14px;
   font-family: var(--body-font-family);
   line-height: 18px;
@@ -1376,95 +1378,95 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   transition: background-color 0.2s, color 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li.active > a {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li.active > a {
   font-weight: 600;
   color: var(--color-info-accent);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a > span {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a > span {
   margin-left: 4px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active
 {
   background-color: var(--color-gray-200);
   color: var(--color-info-accent);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active
 {
   border-radius: 8px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .icon,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button .icon,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li .icon{
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .icon,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button .icon,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li .icon{
   height: 18px;
   width: 18px;
   padding-right: 6px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover .option-radio,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover .option-radio {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover .option-radio,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover .option-radio {
   border: #4646C6 6px solid;
   max-height: 4px;
   max-width: 4px;
   border-radius: 50%;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:active .option-radio,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:active .option-radio {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:active .option-radio,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:active .option-radio {
   border: #3D3DB4 6px solid;
   max-height: 4px;
   max-width: 4px;
   border-radius: 50%;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .option-radio:focus-visible,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button .option-radio:focus-visible {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button .option-radio:focus-visible,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button .option-radio:focus-visible {
   outline-offset: 4px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button.active .option-radio,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active .option-radio {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button.active .option-radio,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active .option-radio {
   border: #5c5ce0 6px solid;
   max-height: 4px;
   max-width: 4px;
   border-radius: 50%;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .views {
   display: flex;
   gap: 8px;
   min-width: 82px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .views .view-toggle-button {
   opacity: 0.16;
   height: 22px;
   transition: opacity 0.2s;
   cursor: pointer;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button:hover {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .views .view-toggle-button:hover {
   opacity: 0.27;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .views .view-toggle-button.active {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .views .view-toggle-button.active {
   opacity: 1;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .button-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .button-wrapper {
   display: flex;
   align-items: center;
   position: relative;
   padding-right: 24px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .button-wrapper .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .button-wrapper .icon.icon-drop-down-arrow {
   height: 10px;
   width: 10px;
   position: absolute;
@@ -1474,15 +1476,15 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .butto
   padding-right: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile-inner-wrapper .function-wrapper .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile-inner-wrapper .function-wrapper .icon.icon-drop-down-arrow {
   transform: rotate(180deg);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile-inner-wrapper .function-wrapper.collapsed .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile-inner-wrapper .function-wrapper.collapsed .icon.icon-drop-down-arrow {
   transform: rotate(0deg);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile {
   position: fixed;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -1499,7 +1501,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   transition: transform 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.scrollable::before {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.scrollable::before {
   content: '';
   position: absolute;
   z-index: 1;
@@ -1510,25 +1512,25 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   background: linear-gradient(#ffffff00, #ffffff90, #ffffff);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .filter-drawer-mobile-inner-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .filter-drawer-mobile-inner-wrapper {
   text-align: right;
   height: 100%;
   overflow: auto;
   padding-bottom: 76px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .filter-drawer-mobile-inner-wrapper::-webkit-scrollbar {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .filter-drawer-mobile-inner-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .close-drawer {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .close-drawer {
   margin-left: auto;
   cursor: pointer;
   height: 18px;
   width: 18px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background {
   z-index: 3;
   position: fixed;
   background: var(--color-gray-600);
@@ -1539,16 +1541,16 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   transition: opacity 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background.hidden {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background.hidden {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background.transparent {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-container-mobile .drawer-background.transparent {
   opacity: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .button-wrapper {
   font-family: var(--body-font-family);
   cursor: pointer;
   display: flex;
@@ -1556,50 +1558,50 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
   align-items: center;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper {
   margin-bottom: 8px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper span {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .filter-drawer-mobile .button-wrapper span {
   font-size: 14px;
   line-height: 24px;
   font-weight: 700;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper .icon,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper .icon {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper .icon,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .button-wrapper .icon {
   height: 18px;
   width: 18px;
   display: block;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper .icon.icon-drop-down-arrow,
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .button-wrapper .icon.icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-button-mobile-wrapper .icon.icon-drop-down-arrow,
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .button-wrapper .icon.icon-drop-down-arrow {
   height: 10px;
   width: 10px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .function-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .function-wrapper {
   padding: 12px 0;
   border-top: var(--color-gray-200) 1px solid;
   overflow: hidden;
   transition: max-height 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .function-wrapper:first-of-type {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .function-wrapper:first-of-type {
   border-top: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .options-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .options-wrapper {
   display: flex;
   flex-direction: column;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .options-wrapper .option-button:before {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile .options-wrapper .option-button:before {
   margin-right: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply-filter-button-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .apply-filter-button-wrapper {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1613,15 +1615,15 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply
   transition: opacity 0.2s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply-filter-button-wrapper.hidden {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .apply-filter-button-wrapper.hidden {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply-filter-button-wrapper.transparent {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .apply-filter-button-wrapper.transparent {
   opacity: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply-filter-button {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .apply-filter-button {
   width: 276px;
   height: 32px;
   font-size: 16px;
@@ -1631,30 +1633,30 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .apply
   justify-content: center;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.hidden {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.hidden {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.retracted {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .filter-drawer-mobile.retracted {
   transform: translateX(100%);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper {
   padding: 12px 0;
   border-top: var(--color-gray-200) 1px solid;
   overflow: auto;
   transition: max-height 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper.collapsed {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper.collapsed {
   overflow: hidden;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper::-webkit-scrollbar {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper {
   margin-bottom: 8px;
   cursor: pointer;
   display: flex;
@@ -1664,19 +1666,19 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
   padding-right: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper > .icon {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper > .icon {
   height: 22px;
   width: 22px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list-toggle {
   font-family: var(--body-font-family);
   font-size: 14px;
   line-height: 24px;
   font-weight: 700;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper .icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper .icon-drop-down-arrow {
   height: 10px;
   width: 10px;
   position: absolute;
@@ -1684,26 +1686,26 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
   transform: rotate(180deg);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper.collapsed .icon-drop-down-arrow {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list-toggle-wrapper.collapsed .icon-drop-down-arrow {
   transform: rotate(0deg);
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list {
   margin: 0;
   list-style: none;
   padding-left: unset;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list li {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list li {
   margin-bottom: 12px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list li > .category-list-template-count {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list li > .category-list-template-count {
   font-family: var(--body-font-family);
   margin-left: 2px;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .category-list-wrapper .category-list li a {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .category-list-wrapper .category-list li a {
   color: var(--color-black);
   font-weight: 400;
   font-size: 14px;
@@ -1711,24 +1713,24 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .categ
   cursor: pointer;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .lottie-wrapper {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .lottie-wrapper {
   position: fixed;
   z-index: 2;
   bottom: 76px;
   right: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .api-templates-toolbar .lottie-wrapper .lottie {
+main .template-list-ace-fullwidth-container .api-templates-toolbar .lottie-wrapper .lottie {
   height: 54px;
   width: 54px;
   pointer-events: none;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list {
   display: flex;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-wrapper {
   text-align: left;
   padding-top: 32px;
   padding-left: 40px;
@@ -1739,27 +1741,27 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   transition: max-height 0.5s;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper::-webkit-scrollbar {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only {
   display: none;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list.sm-view .category-list-wrapper {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list.sm-view .category-list-wrapper {
   width: 165px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list.md-view .category-list-wrapper {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list.md-view .category-list-wrapper {
   width: 258px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list.lg-view .category-list-wrapper {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list.lg-view .category-list-wrapper {
   width: 352px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-toggle-wrapper {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-toggle-wrapper {
   margin-bottom: 16px;
   display: flex;
   gap: 4px;
@@ -1768,12 +1770,12 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   padding-right: 16px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-toggle-wrapper .icon.icon-template-free {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-toggle-wrapper .icon.icon-template-free {
   height: 18px;
   width: 18px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-toggle {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-toggle {
   font-family: var(--body-font-family);
   font-size: 16px;
   line-height: 24px;
@@ -1781,7 +1783,7 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   white-space: nowrap;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul {
   list-style: none;
   max-height: 800px;
   overflow: hidden;
@@ -1789,31 +1791,31 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   padding-left: 0;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul > li {
   margin-bottom: 4px;
   padding: 4px 8px;
   border-radius: 8px;
   transition: background-color .2s, color .2s;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li:hover {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul > li:hover {
   background-color: var(--color-gray-200);
   color: var(--color-info-accent);
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li.active > a {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul > li.active > a {
   color: var(--color-info-accent);
   font-weight: 600;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li .icon {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul > li .icon {
   height: 18px;
   width: 18px;
   display: block;
   padding-right: 6px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > a {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul > li > a {
   font-family: var(--body-font-family);
   color: var(--color-black);
   font-weight: 400;
@@ -1825,13 +1827,13 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   align-items: center;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list ul > li > a > .category-list-template-count {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list ul > li > a > .category-list-template-count {
   font-family: var(--body-font-family);
   margin-left: 2px;
   font-size: 14px;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-resize {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-resize {
   font-family: var(--body-font-family);
   color: var(--color-gray-500);
   position: relative;
@@ -1841,7 +1843,7 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   background: var(--color-white);
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-resize.collapsed:after {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-resize.collapsed:after {
   content: '';
   position: absolute;
   width: 100%;
@@ -1850,7 +1852,7 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   bottom: 100%;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-resize:before {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-resize:before {
   content: '⎼';
   font-weight: 400;
   margin-right: 4px;
@@ -1865,25 +1867,25 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   border-radius: 50%;
 }
 
-main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-resize.collapsed:before {
+main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-resize.collapsed:before {
   content: '+';
   padding-top: 2px;
   padding-bottom: 4px;
 }
 
 @media (min-width: 600px) {
-  main .template-list-fullwidth-apipowered-container .toolbar-wrapper {
+  main .template-list-ace-fullwidth-container .toolbar-wrapper {
     margin: 40px;
     border-radius: 12px;
   }
 
-  main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only {
+  main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only {
     display: unset;
   }
 }
 
 @media (min-width: 900px) {
-  main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper {
+  main .template-list-ace-fullwidth-container .template-list-wrapper.with-categories-list .category-list-wrapper {
     text-align: left;
     padding-top: 32px;
     padding-left: 12px;
@@ -1991,28 +1993,28 @@ main .template-list-ace.horizontal .carousel-platform {
     width: 150px;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar {
     border-radius: 12px;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .functions-container {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions .functions-container {
     display: flex;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer {
     display: none;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-content-search {
     flex-basis: unset;
     padding-right: 16px;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .options-wrapper {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-sort:hover .options-wrapper {
     display: flex;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .function-sort:hover .button-wrapper .icon.icon-drop-down-arrow {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .functions-drawer .function-sort:hover .button-wrapper .icon.icon-drop-down-arrow {
     transform: rotate(180deg);
   }
 }
@@ -2043,29 +2045,29 @@ main .template-list-ace.horizontal .carousel-platform {
     max-width: 800px;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar h2 {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar h2 {
     font-size: 22px;
     line-height: 24px;
     width: max-content;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-functions {
     flex-grow: 0;
   }
 
-  main .template-list-fullwidth-apipowered-container .toolbar-wrapper.sticking .wrapper-content-search {
+  main .template-list-ace-fullwidth-container .toolbar-wrapper.sticking .wrapper-content-search {
     width: auto;
   }
 
-  main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-content-search .search-bar-wrapper {
+  main .template-list-ace-fullwidth-container .api-templates-toolbar .wrapper-content-search .search-bar-wrapper {
     width: 480px;
   }
 
-  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .search-dropdown-heading {
+  main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .search-dropdown-heading {
     display: unset;
   }
 
-  main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-dropdown .free-plan-widget {
+  main .template-list-ace-fullwidth-container .search-bar-wrapper .search-dropdown .free-plan-widget {
     gap: 32px;
   }
 }

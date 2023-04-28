@@ -26,7 +26,7 @@ const props = {
   templates: [],
   filters: { locales: '(en)' },
   tailButton: '',
-  limit: 20,
+  limit: 30,
   total: 0,
   start: '',
   sort: '-_score,-remixCount',
@@ -130,14 +130,14 @@ async function processResponse() {
   }
 }
 
-async function readRowsFromBlock($block) {
+async function readRowsFromBlock($block, templatesContainer) {
   const fetchedTemplates = await processResponse();
 
   if (fetchedTemplates) {
     props.templates = props.templates.concat(fetchedTemplates);
     props.templates.forEach((template) => {
       const clone = template.cloneNode(true);
-      $block.append(clone);
+      templatesContainer.append(clone);
     });
   }
 }
@@ -262,11 +262,10 @@ function populateTemplates($block, templates) {
   }
 }
 
-export async function decorateTemplateList(block, placeholders) {
-  const templates = Array.from(block.children);
+export async function decorateTemplateList(block, placeholders, templatesContainer) {
+  const templates = Array.from(templatesContainer.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
-    const $parent = block.closest('.section');
     const $titleRow = templates.shift();
     $titleRow.classList.add('template-title');
     $titleRow.querySelectorAll(':scope a')
@@ -277,56 +276,24 @@ export async function decorateTemplateList(block, placeholders) {
           p.classList.remove('button-container');
         }
       });
-
-    if ($parent && $parent.classList.contains('toc-container')) {
-      const $tocCollidingArea = createTag('div', { class: 'toc-colliding-area' });
-      const $tocSlot = createTag('div', { class: 'toc-slot' });
-      const h2 = $titleRow.querySelector('h2');
-      if (h2) {
-        h2.parentElement.prepend($tocCollidingArea);
-        $tocCollidingArea.append($tocSlot, h2);
-      }
-    }
-
-    if (block.classList.contains('collaboration')) {
-      const $titleHeading = $titleRow.querySelector('h3');
-      const $anchorLink = createTag('a', {
-        class: 'collaboration-anchor',
-        href: `${document.URL.replace(/#.*$/, '')}#${$titleHeading.id}`,
-      });
-      const $clipboardTag = createTag('span', { class: 'clipboard-tag' });
-      $clipboardTag.textContent = placeholders['tag-copied'];
-
-      $anchorLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigator.clipboard.writeText($anchorLink.href);
-        $anchorLink.classList.add('copied');
-        setTimeout(() => {
-          $anchorLink.classList.remove('copied');
-        }, 2000);
-      });
-
-      $anchorLink.append($clipboardTag);
-      $titleHeading.append($anchorLink);
-    }
   }
 
   const rows = templates.length;
   let breakpoints = [{ width: '400' }];
 
-  if (rows > 6 && !block.classList.contains('horizontal')) {
-    block.classList.add('masonry');
+  if (rows > 6 && !templatesContainer.classList.contains('horizontal')) {
+    templatesContainer.classList.add('masonry');
   }
 
   if (rows === 1) {
-    block.classList.add('large');
+    templatesContainer.classList.add('large');
     breakpoints = [{
       media: '(min-width: 600px)',
       width: '2000',
     }, { width: '750' }];
   }
 
-  block.querySelectorAll(':scope picture > img').forEach(($img) => {
+  templatesContainer.querySelectorAll(':scope picture > img').forEach(($img) => {
     const { src, alt } = $img;
     $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
   });
@@ -341,21 +308,21 @@ export async function decorateTemplateList(block, placeholders) {
   //
   // make copy of children to avoid modifying list while looping
 
-  populateTemplates(block, templates);
-  if (!block.classList.contains('horizontal')) {
-    if (rows > 6 || block.classList.contains('sixcols') || block.classList.contains('fullwidth')) {
+  populateTemplates(templatesContainer, templates);
+  if (!templatesContainer.classList.contains('horizontal')) {
+    if (rows > 6 || templatesContainer.classList.contains('sixcols') || templatesContainer.classList.contains('fullwidth')) {
       /* flex masonry */
-      const cells = Array.from(block.children);
-      block.classList.remove('masonry');
-      block.classList.add('flex-masonry');
+      const cells = Array.from(templatesContainer.children);
+      templatesContainer.classList.remove('masonry');
+      templatesContainer.classList.add('flex-masonry');
 
-      props.masonry = new Masonry(block, cells);
+      props.masonry = new Masonry(templatesContainer, cells);
       props.masonry.draw();
       window.addEventListener('resize', () => {
         props.masonry.draw();
       });
     } else {
-      block.classList.add('template-list-complete');
+      templatesContainer.classList.add('template-list-complete');
     }
   }
 }
@@ -372,9 +339,11 @@ export default async function decorate(block) {
   const searchRows = rows.shift().querySelectorAll('div');
   const button = searchRows[1].querySelector('a');
   const suggestions = searchRows[2].querySelectorAll(':scope > p');
-  await readRowsFromBlock(block);
+  const templatesContainer = createTag('div', { class: 'templates-container' });
+  block.append(templatesContainer);
+  await readRowsFromBlock(block, templatesContainer);
 
-  await decorateTemplateList(block, placeholders);
+  await decorateTemplateList(block, placeholders, templatesContainer);
   // if ($block.classList.contains('spreadsheet-powered')) {
   //   const placeholders = await fetchPlaceholders().then((result) => result);
   //   const relevantRowsData = await fetchRelevantRows(window.location.pathname);
