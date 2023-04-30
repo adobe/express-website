@@ -2501,6 +2501,7 @@ main .template .still-wrapper .image-wrapper .icon-tiktok {
     position: absolute;
     width: 30px;
     height: 30px;
+    background-color: white;
     bottom: 8px;
     left: 8px;
 }
@@ -2527,6 +2528,9 @@ main .template .button-container {
     opacity: 0;
     background-color: white;
     padding: 8px;
+}
+
+main .template .button-container:hover {
     z-index: 99;
 }
 
@@ -2539,11 +2543,52 @@ main .template .button-container a {
 }
 
 main .template .button-container .media-wrapper .icon-plus {
-    z-index: 1;
     cursor: pointer;
     position: absolute;
-    width: 30px;
-    height: 30px;
     top: 8px;
     right: 8px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border-radius: 30px;
+}
+
+main .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip {
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 130px;
+    background-color: #33AB84;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px;
+    top: 8px;
+    left: calc(100%);
+    font-size: var(--body-font-size-s);
+}
+
+main .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip .icon-checkmark {
+    width: 10px;
+    height: 10px;
+    border-radius: 30px;
+    background-color: brown;
+    padding: 2px;
+}
+
+main .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip.display-tooltip {
+    visibility: visible;
+}
+
+main .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #33AB84 transparent transparent;
 }

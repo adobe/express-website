@@ -54,7 +54,7 @@ function renderStillWrapper(template, props) {
 
   const remixCount = template.stats?.remixCount || 0;
   const isFree = template.licensingCategory === 'free';
-  const creator = template.attribution?.creators?.filter((c) => c !== 'Adobe Express')?.[0]?.name || null;
+  const creator = template.attribution?.creators?.filter((c) => c.name && c.name !== 'Adobe Express')?.[0]?.name || null;
 
   const remixSpan = createTag('span', { class: 'remix-cnt' });
   remixSpan.append(`${rewordRemixCount(remixCount)} views`);
@@ -112,12 +112,32 @@ function getTemplateVideoSrc(componentLinkHref, page) {
   );
 }
 
-function renderShareIcon(branchUrl) {
+function renderShareWrapper(branchUrl) {
+  const text = 'Copied to clipboard';
+  const wrapper = createTag('div', { class: 'share-icon-wrapper' });
   const shareIcon = getIconElement('plus');
+  const tooltip = createTag('div', {
+    class: 'shared-tooltip',
+    'aria-label': text,
+    role: 'tooltip',
+    tabindex: '-1',
+  });
+  let timeoutId = null;
   shareIcon.addEventListener('click', async () => {
     await navigator.clipboard.writeText(branchUrl);
+    tooltip.classList.add('display-tooltip');
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      tooltip.classList.remove('display-tooltip');
+    }, 2500);
   });
-  return shareIcon;
+
+  const checkmarkIcon = getIconElement('checkmark');
+  tooltip.append(checkmarkIcon);
+  tooltip.append(text);
+  wrapper.append(shareIcon);
+  wrapper.append(tooltip);
+  return wrapper;
 }
 
 function renderCTA(placeholders, branchUrl) {
@@ -230,6 +250,7 @@ function renderMediaWrapper(template) {
         )
         : renderRotatingImages(template.pages, templateInfo);
       mediaWrapper.append(renderedMedia.node);
+      mediaWrapper.append(renderShareWrapper(branchUrl));
     }
     renderedMedia.hover();
   };
@@ -237,7 +258,6 @@ function renderMediaWrapper(template) {
     renderedMedia.cleanup();
   };
 
-  mediaWrapper.append(renderShareIcon(branchUrl));
   return { mediaWrapper, enterHandler, leaveHandler };
 }
 
