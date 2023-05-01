@@ -1735,14 +1735,12 @@ export async function fetchPlainBlockFromFragment(url, blockName) {
 export async function fetchFloatingCta(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
+  const expId = window.hlx.experiment.run
+  const challenger = window.hlx.experiment.selectedVariant
   let sheet;
+  let floatingBtnData;
 
-  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/express/floating-cta-dev.json?limit=10000';
-  } else {
-    sheet = '/express/floating-cta.json?limit=10000';
-  }
-
+  async function fetchFloatingBtnData(sheet, expId = '', challenger = '') {
   if (!window.floatingCta) {
     try {
       const locale = getLocale(window.location);
@@ -1758,7 +1756,11 @@ export async function fetchFloatingCta(path) {
   if (window.floatingCta.length) {
     const candidates = window.floatingCta.filter((p) => {
       const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
-      return path === p.path || path.match(urlToMatch);
+      if (expId !== '' && challenger !== '' && path !== 'default') {
+        return (path === p.path || path.match(urlToMatch)) && p.expID === expId && p.challengerID === challenger;
+      } else {
+        return path === p.path || path.match(urlToMatch);
+      }
     }).sort((a, b) => b.path.length - a.path.length);
 
     if (env && env.name === 'stage') {
@@ -1767,8 +1769,28 @@ export async function fetchFloatingCta(path) {
 
     return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
   }
+  return null
+}
 
-  return null;
+  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
+    sheet = '/express/floating-cta-dev.json?limit=10000';
+  } else {
+    sheet = '/express/floating-cta.json?limit=10000';
+  }
+
+  if (expId && challenger) {
+    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
+    const floatingBtnData = fetchFloatingBtnData(expSheet, expId, challenger);
+  }
+
+  if (floatingBtnData) {
+    console.log(floatingBtnData);
+    return floatingBtnData;
+  } else {
+    return fetchFloatingBtnData(sheet);
+  }
+
+
 }
 
 async function buildAutoBlocks($main) {
