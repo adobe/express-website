@@ -1548,7 +1548,6 @@ async function decorateTesting() {
         console.error('config is null');
         return;
       }
-      console.log(config);
       if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
         console.log('run', config.run, config.audience);
@@ -1737,6 +1736,7 @@ export async function fetchFloatingCta(path) {
   const dev = new URLSearchParams(window.location.search).get('dev');
   const expId = window.hlx.experiment.run
   const challenger = window.hlx.experiment.selectedVariant
+  const expStatus = window.hlx.experiment.status
   let sheet;
   let floatingBtnData;
 
@@ -1756,6 +1756,8 @@ export async function fetchFloatingCta(path) {
   if (window.floatingCta.length) {
     const candidates = window.floatingCta.filter((p) => {
       const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
+      // console.log(challenger, p.challengerID);
+      // console.log(p.challengerID === challenger);
       if (expId !== '' && challenger !== '' && path !== 'default') {
         return (path === p.path || path.match(urlToMatch)) && p.expID === expId && p.challengerID === challenger;
       } else {
@@ -1778,19 +1780,15 @@ export async function fetchFloatingCta(path) {
     sheet = '/express/floating-cta.json?limit=10000';
   }
 
-  if (expId && challenger) {
+  if (expId && challenger && expStatus !== 'inactive') {
     const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
     const floatingBtnData = fetchFloatingBtnData(expSheet, expId, challenger);
   }
 
-  if (floatingBtnData) {
-    console.log(floatingBtnData);
-    return floatingBtnData;
-  } else {
-    return fetchFloatingBtnData(sheet);
+  if (!floatingBtnData) {
+    floatingBtnData = fetchFloatingBtnData(sheet);
   }
-
-
+  return floatingBtnData
 }
 
 async function buildAutoBlocks($main) {
