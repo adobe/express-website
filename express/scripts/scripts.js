@@ -1735,7 +1735,7 @@ export async function fetchFloatingCta(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   const experiment = window.hlx.experiment;
-  const experimentStatus = experiment ? experiment.status : null;
+  const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
   let sheet;
   let floatingBtnData;
 
@@ -1779,7 +1779,7 @@ export async function fetchFloatingCta(path) {
     sheet = '/express/floating-cta.json?limit=10000';
   }
 
-  if (experimentStatus.toLowerCase() === 'active') {
+  if (experimentStatus === 'active') {
     const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
     const floatingBtnData = fetchFloatingBtnData(expSheet);
   }
