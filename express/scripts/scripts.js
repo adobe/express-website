@@ -1734,13 +1734,12 @@ export async function fetchPlainBlockFromFragment(url, blockName) {
 export async function fetchFloatingCta(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
-  const expId = window.hlx.experiment.run
-  const challenger = window.hlx.experiment.selectedVariant
-  const expStatus = window.hlx.experiment.status
+  const experiment = window.hlx.experiment;
+  const experimentStatus = experiment ? experiment.status : null;
   let sheet;
   let floatingBtnData;
 
-  async function fetchFloatingBtnData(sheet, expId = '', challenger = '') {
+  async function fetchFloatingBtnData(sheet) {
   if (!window.floatingCta) {
     try {
       const locale = getLocale(window.location);
@@ -1756,10 +1755,10 @@ export async function fetchFloatingCta(path) {
   if (window.floatingCta.length) {
     const candidates = window.floatingCta.filter((p) => {
       const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
-      // console.log(challenger, p.challengerID);
-      // console.log(p.challengerID === challenger);
-      if (expId !== '' && challenger !== '' && path !== 'default') {
-        return (path === p.path || path.match(urlToMatch)) && p.expID === expId && p.challengerID === challenger;
+      if (experiment && path !== 'default') {
+        const expId = experiment.run;
+        const challengerId = experiment.selectedVariant;
+        return (path === p.path || path.match(urlToMatch)) && p.expID === expId && p.challengerID === challengerId;
       } else {
         return path === p.path || path.match(urlToMatch);
       }
@@ -1780,9 +1779,9 @@ export async function fetchFloatingCta(path) {
     sheet = '/express/floating-cta.json?limit=10000';
   }
 
-  if (expId && challenger && expStatus !== 'inactive') {
+  if (experimentStatus.toLowerCase() === 'active') {
     const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
-    const floatingBtnData = fetchFloatingBtnData(expSheet, expId, challenger);
+    const floatingBtnData = fetchFloatingBtnData(expSheet);
   }
 
   if (!floatingBtnData) {
