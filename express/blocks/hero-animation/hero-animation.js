@@ -109,6 +109,7 @@ function transformToVideoLink($cell, $a) {
   $a.addEventListener('click', (e) => {
     e.preventDefault();
   });
+  $a.setAttribute('rel', 'nofollow');
   const title = $a.textContent.trim();
   // gather video urls from all links in cell
   const vidUrls = [];
@@ -126,7 +127,6 @@ function transformToVideoLink($cell, $a) {
         }
       }
     });
-  $a.href = '';
   $a.addEventListener('click', (e) => {
     e.preventDefault();
     displayVideoModal(vidUrls, title, true);
