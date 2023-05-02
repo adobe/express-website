@@ -326,6 +326,39 @@ export async function decorateTemplateList(block, placeholders, templatesContain
     }
   }
 }
+
+function createDropdown(titleRow, placeholders) {
+  const title = titleRow.querySelector(':scope h2');
+  const dropdownTexts = placeholders['template-list-ace-categories-dropdown'].split(',');
+  const dropdown = createTag('select');
+  dropdownTexts.forEach((text) => {
+    const trimmedText = text.trim();
+    const option = createTag('option', { value: trimmedText });
+    option.textContent = trimmedText;
+    dropdown.append(option);
+  });
+  title.innerHTML = title.innerHTML.replaceAll('{{ace-dropdown}}', dropdown.outerHTML);
+}
+
+function createSearch(searchRows, placeholders, titleRow) {
+  const searchForm = createTag('form', { class: 'search-form' });
+  const searchBar = createTag('input', {
+    class: 'search-bar',
+    type: 'text',
+    placeholder: placeholders['template-list-ace-search-hint'] ?? 'Describe what you want to generate...',
+    enterKeyHint: placeholders.search ?? 'Search',
+  });
+  searchForm.append(searchBar);
+  const button = searchRows[1];
+  searchForm.append(button);
+  const titleRowDiv = titleRow.querySelector(':scope > div');
+  const title = titleRowDiv.querySelector(':scope > h2');
+  title.innerHTML = title.innerHTML + searchForm.outerHTML;
+  titleRowDiv.classList.add('title-search');
+  //titleRowDiv.append(searchForm);
+
+  const suggestions = searchRows[2].querySelectorAll(':scope > p');
+}
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
   block.innerHTML = block.innerHTML.replaceAll('{{template-list-ace-title}}', placeholders['template-list-ace-title'])
@@ -335,15 +368,20 @@ export default async function decorate(block) {
 
   const rows = Array.from(block.children);
   const titleRow = rows.shift();
-  const title = titleRow.querySelector(':scope h2');
-  const searchRows = rows.shift().querySelectorAll('div');
-  const button = searchRows[1].querySelector('a');
-  const suggestions = searchRows[2].querySelectorAll(':scope > p');
+  createDropdown(titleRow, placeholders);
+  const searchRows = rows.shift();
+  createSearch(searchRows.querySelectorAll('div'), placeholders, titleRow);
+  const placeholdersRow = rows.shift();
+  searchRows.remove();
+  placeholdersRow.remove();
   const templatesContainer = createTag('div', { class: 'templates-container' });
   block.append(templatesContainer);
   await readRowsFromBlock(block, templatesContainer);
 
   await decorateTemplateList(block, placeholders, templatesContainer);
+
+
+
   // if ($block.classList.contains('spreadsheet-powered')) {
   //   const placeholders = await fetchPlaceholders().then((result) => result);
   //   const relevantRowsData = await fetchRelevantRows(window.location.pathname);

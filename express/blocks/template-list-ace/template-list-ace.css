@@ -2228,6 +2228,49 @@ main .template-list-ace.collaboration .carousel-container {
   margin-left: 6px;
 }
 
+main .template-list-ace form {
+  /* This bit sets up the horizontal layout */
+  display:flex;
+  flex-direction:row;
+
+  /* This bit draws the box around it */
+  border:1px solid grey;
+  border-radius: 50px;
+
+  /* I've used padding so you can see the edges of the elements. */
+  padding-left:20px;
+  height: 50px
+}
+
+main .template-list-ace input {
+  /* Tell the input to use all the available space */
+  flex-grow:2;
+  /* And hide the input's outline, so the form looks like the outline */
+  border-radius: 50px;
+  border: 0
+}
+
+/* remove the input focus blue box, it will be in the wrong place. */
+main .template-list-ace input:focus {
+  outline: none;
+}
+
+/* remove the input focus blue box, it will be in the wrong place. */
+main .template-list-ace form .button-container a {
+  margin: 6px;
+}
+
+/* Add the focus effect to the form so it contains the button */
+main .template-list-ace form:focus-within {
+  outline: 1px solid blue
+}
+
+main .template-list-ace .title-search {
+  width: 600px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 @media (min-width: 900px) {
   main .template-list-ace.collaboration .carousel-container {
     margin-left: 0;
