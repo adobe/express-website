@@ -18,9 +18,32 @@ import {
   getIconElement,
   linkImage,
   toClassName,
+  loadScript,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
+const IMS_COMMERCE_CLIENT_ID = 'aos_milo_commerce';
+const IMS_PROD_URL = 'https://auth.services.adobe.com/imslib/imslib.min.js';
+
+const getImsToken = async () => {
+  window.adobeid = {
+    client_id: IMS_COMMERCE_CLIENT_ID,
+    environment: 'prod',
+    scope: 'AdobeID,openid',
+  };
+  const promise = new Promise((resolve) => {
+    const callback = () => {
+      if (!window.adobeIMS.isSignedInUser()) {
+        window.adobeIMS.signIn();
+      }
+      resolve();
+    };
+    if (!window.adobeIMS) {
+      loadScript(IMS_PROD_URL, callback);
+    }
+  });
+  await promise;
+};
 
 const props = {
   templates: [],
@@ -340,6 +363,16 @@ function createDropdown(titleRow, placeholders) {
   title.innerHTML = title.innerHTML.replaceAll('{{ace-dropdown}}', dropdown.outerHTML);
 }
 
+function openModal(search) {
+  const modalContent = createTag('div');
+  modalContent.style.height = '500px';
+  modalContent.style.width = '500px';
+  //const results =
+  import('../modal/modal.js').then((mod) => {
+    mod.getModal(null, { class: 'locale-modal-v2', id: 'locale-modal-v2', content: modalContent, closeEvent: 'closeModal' });
+  });
+}
+
 function createSearch(searchRows, placeholders, titleRow) {
   const searchForm = createTag('form', { class: 'search-form' });
   const searchBar = createTag('input', {
@@ -351,15 +384,24 @@ function createSearch(searchRows, placeholders, titleRow) {
   searchForm.append(searchBar);
   const button = searchRows[1];
   searchForm.append(button);
+
   const titleRowDiv = titleRow.querySelector(':scope > div');
   const title = titleRowDiv.querySelector(':scope > h2');
-  title.innerHTML = title.innerHTML + searchForm.outerHTML;
+  title.innerHTML += searchForm.outerHTML;
+  const buttonLink = title.querySelector(':scope a');
+  buttonLink.href = '#';
+  buttonLink.addEventListener('click', function (event) {
+    event.preventDefault();
+    openModal(searchBar.value);
+  });
+
   titleRowDiv.classList.add('title-search');
   //titleRowDiv.append(searchForm);
 
   const suggestions = searchRows[2].querySelectorAll(':scope > p');
 }
 export default async function decorate(block) {
+  await getImsToken();
   const placeholders = await fetchPlaceholders();
   block.innerHTML = block.innerHTML.replaceAll('{{template-list-ace-title}}', placeholders['template-list-ace-title'])
     .replaceAll('{{template-list-ace-button}}', placeholders['template-list-ace-button'])
@@ -379,6 +421,7 @@ export default async function decorate(block) {
   await readRowsFromBlock(block, templatesContainer);
 
   await decorateTemplateList(block, placeholders, templatesContainer);
+
 
 
 
