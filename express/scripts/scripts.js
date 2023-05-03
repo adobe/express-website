@@ -1256,7 +1256,6 @@ export function standardizeBranchLinks(main, block) {
 
         if (isPostEditorLink) {
           const parentBlock = btn.closest('.block');
-          const urlParams = new URLSearchParams(window.location.search);
           const { experiment } = window.hlx;
           const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
           let placement = 'outside-blocks';
@@ -1282,10 +1281,6 @@ export function standardizeBranchLinks(main, block) {
 
           const templateSearchTag = getMetadata('short-title');
           const pageUrl = window.location.pathname;
-          const sdid = urlParams.get('sdid');
-          const mv = urlParams.get('mv');
-          const promoId = urlParams.get('promoid');
-          const cgen = urlParams.get('cgen');
 
           const url = new URL(btn.href);
           const params = url.searchParams;
@@ -1296,22 +1291,6 @@ export function standardizeBranchLinks(main, block) {
 
           if (pageUrl) {
             params.set('url', pageUrl);
-          }
-
-          if (sdid) {
-            urlParams.set('sdid', sdid);
-          }
-
-          if (cgen) {
-            urlParams.set('cgen', cgen);
-          }
-
-          if (promoId) {
-            params.set('promoid', promoId);
-          }
-
-          if (mv) {
-            params.set('mv', mv);
           }
 
           if (experimentStatus === 'active') {
