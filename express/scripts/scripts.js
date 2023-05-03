@@ -1252,7 +1252,7 @@ export function standardizeBranchLinks(main, block) {
   if (btns.length > 0) {
     btns.forEach((btn) => {
       if (btn.href) {
-        const isPostEditorLink = postEditorLinksAllowList.some((el) => btn.href.includes(el));
+        const isPostEditorLink = btn.href.match('adobesparkpost.app.link');
 
         if (isPostEditorLink) {
           const parentBlock = btn.closest('.block');
