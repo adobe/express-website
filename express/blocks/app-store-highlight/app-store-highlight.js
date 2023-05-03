@@ -17,7 +17,7 @@ import {
   getIcon,
   getIconElement,
   getMetadata,
-  getMobileOperatingSystem,
+  getMobileOperatingSystem, standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 const imageSrcs = [
@@ -273,4 +273,5 @@ export default async function decorate($block) {
   decorateGallery($block, payload);
   decorateAppStoreIcon($block, payload);
   initScrollAnimation($block);
+  standardizeBranchLinks($block.closest('main'), $block);
 }

@@ -15,7 +15,7 @@ import {
   getIcon,
   getMobileOperatingSystem,
   fetchPlaceholders,
-  getIconElement,
+  getIconElement, standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 async function buildPayload() {
@@ -186,6 +186,7 @@ export default async function decorate($block) {
     const payload = await buildPayload();
     decorateBanner($block, payload);
     addCloseBtn($block);
+    standardizeBranchLinks($block.closest('main'), $block);
 
     if (Array.isArray(window.floatingCta) && window.floatingCta.length) {
       const db = window.floatingCta[0];

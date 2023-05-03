@@ -383,7 +383,7 @@ export default async function decorate($block) {
         }
 
         document.dispatchEvent(new Event('planscomparisonloaded'));
-        standardizeBranchLinks($block.closest('main'), $block);
+        standardizeBranchLinks($blockFromFragment.closest('main'), $blockFromFragment);
       }
     }
   }
