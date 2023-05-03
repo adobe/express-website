@@ -1531,12 +1531,6 @@ async function decorateTesting() {
   try {
     // let reason = '';
     const usp = new URLSearchParams(window.location.search);
-    const martech = usp.get('martech');
-    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-      // eslint-disable-next-line no-console
-      console.log('rushing martech');
-      loadScript('/express/scripts/instrument.js', null, 'module');
-    }
 
     const experiment = getExperiment();
     const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
@@ -1599,6 +1593,12 @@ async function decorateTesting() {
           }
         }
       }
+    }
+    const martech = usp.get('martech');
+    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+      // eslint-disable-next-line no-console
+      console.log('rushing martech');
+      loadScript('/express/scripts/instrument.js', null, 'module');
     }
   } catch (e) {
     console.log('error testing', e);
