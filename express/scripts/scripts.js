@@ -1771,7 +1771,7 @@ export async function fetchFloatingCta(path) {
       return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
     }
     return null;
-};
+  }
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
     spreadsheet = '/express/floating-cta-dev.json?limit=10000';
