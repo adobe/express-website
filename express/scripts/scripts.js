@@ -1247,6 +1247,89 @@ export function addSearchQueryToHref(href) {
   return url.toString();
 }
 
+export function standardizeBranchLinks(main, block) {
+  const btns = block ? block.querySelectorAll('a, button') : main.querySelectorAll('a, button');
+  if (btns.length > 0) {
+    btns.forEach((btn) => {
+      if (btn.href) {
+        const isPostEditorLink = postEditorLinksAllowList.some((el) => btn.href.includes(el));
+
+        if (isPostEditorLink) {
+          const parentBlock = btn.closest('.block');
+          const urlParams = new URLSearchParams(window.location.search);
+          const { experiment } = window.hlx;
+          const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
+          let placement = 'outside-blocks';
+
+          if (parentBlock) {
+            const blockName = parentBlock.dataset.blockName || parentBlock.classList[2];
+            const sameBlocks = main.querySelectorAll(`.${blockName}`);
+
+            if (sameBlocks.length > 1) {
+              sameBlocks.forEach((b, i) => {
+                if (b === parentBlock) {
+                  placement = `${blockName}-${i + 1}`;
+                }
+              });
+            } else {
+              placement = blockName;
+            }
+
+            if (['template-list', 'template-x'].includes(blockName) && btn.classList.contains('placeholder')) {
+              placement = 'blank-template-cta';
+            }
+          }
+
+          const templateSearchTag = getMetadata('short-title');
+          const pageUrl = window.location.pathname;
+          const sdid = urlParams.get('sdid');
+          const mv = urlParams.get('mv');
+          const promoId = urlParams.get('promoid');
+          const cgen = urlParams.get('cgen');
+
+          const url = new URL(btn.href);
+          const params = url.searchParams;
+
+          if (templateSearchTag) {
+            params.set('search', templateSearchTag);
+          }
+
+          if (pageUrl) {
+            params.set('url', pageUrl);
+          }
+
+          if (sdid) {
+            urlParams.set('sdid', sdid);
+          }
+
+          if (cgen) {
+            urlParams.set('cgen', cgen);
+          }
+
+          if (promoId) {
+            params.set('promoid', promoId);
+          }
+
+          if (mv) {
+            params.set('mv', mv);
+          }
+
+          if (experimentStatus === 'active') {
+            params.set('expid', `${experiment.id}-${experiment.selectedVariant}`);
+          }
+
+          if (placement) {
+            params.set('ctaid', placement);
+          }
+
+          url.search = params.toString();
+          btn.href = url.toString();
+        }
+      }
+    });
+  }
+}
+
 export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
@@ -2483,6 +2566,7 @@ async function loadLazy() {
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   trackViewedAssetsInDataLayer();
+  standardizeBranchLinks(main);
 }
 
 /**
