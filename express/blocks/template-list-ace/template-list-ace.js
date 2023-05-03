@@ -23,8 +23,10 @@ import {
 
 import { Masonry } from '../shared/masonry.js';
 
-import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
 import { requestGeneration, waitForGeneration } from './ace-api.js';
+
+import { buildCarousel } from '../shared/carousel.js';
+
 import renderTemplate from './template-rendering.js';
 
 const IMS_COMMERCE_CLIENT_ID = 'aos_milo_commerce';
@@ -72,26 +74,97 @@ const props = {
   viewAllLink: null,
 };
 
+function formatSearchQuery(limit, start, sort, filters) {
+  const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
+  const filterString = prunedFilter.reduce((string, [key, value]) => {
+    if (key === prunedFilter[prunedFilter.length - 1][0]) {
+      return `${string}${key}:${value}`;
+    } else {
+      return `${string}${key}:${value} AND `;
+    }
+  }, '');
+
+  return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
+}
+
+async function fetchTemplates() {
+  if (!props.authoringError && Object.keys(props.filters).length !== 0) {
+    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
+
+    const result = await fetch(props.queryString)
+      .then((response) => response.json())
+      .then((response) => response);
+
+    // eslint-disable-next-line no-underscore-dangle
+    if (result._embedded.total > 0) {
+      return result;
+    } else {
+      // save fetch if search query returned 0 templates. "Bad result is better than no result"
+      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
+        .then((response) => response.json())
+        .then((response) => response);
+    }
+  }
+  return null;
+}
+
 async function fetchAndRenderTemplates() {
-  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
-  if (!response || !response.items || !Array.isArray(response.items)) {
+  const placeholders = await fetchPlaceholders();
+  const response = await fetchTemplates();
+  let templateFetched;
+  if (response) {
+    // eslint-disable-next-line no-underscore-dangle
+    templateFetched = response._embedded.results;
+
+    if ('_links' in response) {
+      // eslint-disable-next-line no-underscore-dangle
+      const nextQuery = response._links.next.href;
+      const starts = new URLSearchParams(nextQuery).get('start').split(',');
+      starts.pop();
+      props.start = starts.join(',');
+    } else {
+      props.start = '';
+    }
+
+    // eslint-disable-next-line no-underscore-dangle
+    props.total = response._embedded.total;
+  }
+
+  const renditionParams = {
+    format: 'jpg',
+    dimension: 'width',
+    size: 400,
+  };
+
+  if (templateFetched) {
+    return templateFetched.map((template) => {
+      const $template = createTag('div');
+      const $pictureWrapper = createTag('div');
+
+      ['format', 'dimension', 'size'].forEach((param) => {
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+      });
+      const $picture = createTag('img', {
+        src: template.rendition.href,
+        alt: template.title,
+      });
+      const $buttonWrapper = createTag('div', { class: 'button-container' });
+      const $button = createTag('a', {
+        href: template.branchURL,
+        title: placeholders['edit-this-template'] ?? 'Edit this template',
+        class: 'button accent',
+      });
+
+      $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
+      $pictureWrapper.insertAdjacentElement('beforeend', $picture);
+      $buttonWrapper.insertAdjacentElement('beforeend', $button);
+      $template.insertAdjacentElement('beforeend', $pictureWrapper);
+      $template.insertAdjacentElement('beforeend', $buttonWrapper);
+      return $template;
+    });
+  } else {
     return null;
   }
-
-  if ('_links' in response) {
-    // eslint-disable-next-line no-underscore-dangle
-    const nextQuery = response._links.next.href;
-    const starts = new URLSearchParams(nextQuery).get('start').split(',');
-    props.start = starts.join(',');
-  } else {
-    props.start = '';
-  }
-
-  props.total = response.metadata.totalHits;
-
-  return response.items
-    .filter((item) => isValidTemplate(item))
-    .map((template) => renderTemplate(template, placeholders, props));
 }
 
 async function readRowsFromBlock($block, templatesContainer) {
@@ -236,35 +309,83 @@ export async function decorateTemplateList(block, placeholders, templatesContain
   // make copy of children to avoid modifying list while looping
 
   populateTemplates(templatesContainer, templates);
-  if (!templatesContainer.classList.contains('horizontal')) {
-    if (rows > 6 || templatesContainer.classList.contains('sixcols') || templatesContainer.classList.contains('fullwidth')) {
-      /* flex masonry */
-      const cells = Array.from(templatesContainer.children);
-      templatesContainer.classList.remove('masonry');
-      templatesContainer.classList.add('flex-masonry');
+}
 
-      props.masonry = new Masonry(templatesContainer, cells);
-      props.masonry.draw();
-      window.addEventListener('resize', () => {
-        props.masonry.draw();
-      });
-    } else {
-      templatesContainer.classList.add('template-list-complete');
+function removeOnClickOutsideElement(element, event, button) {
+  const func = (evt) => {
+    if (event === evt) return; // ignore initial click event
+    let targetEl = evt.target;
+    while (targetEl) {
+      if (targetEl === element) {
+        // click inside
+        return;
+      }
+      // Go up the DOM
+      targetEl = targetEl.parentNode;
     }
+    // This is a click outside.
+    element.remove();
+    button.setAttribute('aria-expanded', false);
+    document.removeEventListener('click', func);
+  };
+  document.addEventListener('click', func);
+}
+
+function decorateForOnPickerSelect(option, list) {
+  option.addEventListener('click', () => {
+    list.remove();
+    const selectedElem = list.querySelector('.selected');
+    if (selectedElem) {
+      selectedElem.classList.remove('selected');
+    }
+    option.classList.add('selected');
+    console.log(option.textContent);
+  });
+}
+
+function openPicker(button, texts, dropText, event) {
+  if (document.querySelector('main .template-list-ace .picker')) {
+    return;
   }
+  const list = createTag('ul', { class: 'picker' });
+  texts.forEach((d) => {
+    const span = createTag('span');
+    span.textContent = d;
+    decorateForOnPickerSelect(span, list);
+    const li = createTag('li');
+    li.appendChild(span);
+    list.appendChild(li);
+  });
+  button.appendChild(list);
+  button.setAttribute('aria-expanded', true);
+  removeOnClickOutsideElement(list, event, button);
 }
 
 function createDropdown(titleRow, placeholders) {
-  const title = titleRow.querySelector(':scope h2');
+  const title = titleRow.querySelector(':scope h1');
   const dropdownTexts = placeholders['template-list-ace-categories-dropdown'].split(',');
-  const dropdown = createTag('select');
-  dropdownTexts.forEach((text) => {
-    const trimmedText = text.trim();
-    const option = createTag('option', { value: trimmedText });
-    option.textContent = trimmedText;
-    dropdown.append(option);
+  const downArrow = createTag('img', {
+    class: 'icon down-arrow',
+    src: '../../express/icons/drop-down-arrow.svg',
+    width: 15,
+    height: 9,
   });
+  const dropdown = createTag('div', {
+    class: 'picker-open', role: 'button', 'aria-haspopup': true, 'aria-expanded': false,
+  });
+  const dropdownText = createTag('span', { class: 'picker-open-text' });
+  dropdownText.textContent = dropdownTexts[0];
+  dropdownText.appendChild(downArrow);
+  dropdown.append(dropdownText);
+
   title.innerHTML = title.innerHTML.replaceAll('{{ace-dropdown}}', dropdown.outerHTML);
+
+  const drop = title.querySelector('.picker-open');
+  const dropText = title.querySelector('.picker-open-text');
+
+  dropText.addEventListener('click', (e) => {
+    openPicker(drop, dropdownTexts, dropText, e);
+  });
 }
 
 function renderLoader() {
@@ -319,7 +440,7 @@ async function fetchAndRenderResults(query, modalContentWrapper) {
       generatedTemplate.append(renderRateResult(result));
       generatedTemplate.append(renderReportButton(result));
       return generatedTemplate;
-    })
+    });
   const generatedRow = createTag('div', { class: 'generated-row' });
   images.forEach((image) => {
     generatedRow.append(image);
@@ -344,7 +465,9 @@ function openModal(query, searchBar) {
   modalContent.style.width = '1200px';
   modalContent.append(renderModalContent(query, searchBar));
   import('../modal/modal.js').then((mod) => {
-    mod.getModal(null, { class: 'locale-modal-v2', id: 'locale-modal-v2', content: modalContent, closeEvent: 'closeModal' });
+    mod.getModal(null, {
+      class: 'locale-modal-v2', id: 'locale-modal-v2', content: modalContent, closeEvent: 'closeModal',
+    });
   });
 }
 
@@ -361,7 +484,7 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   searchForm.append(button);
 
   const titleRowDiv = titleRow.querySelector(':scope > div');
-  const title = titleRowDiv.querySelector(':scope > h2');
+  const title = titleRowDiv.querySelector(':scope > h1');
   // title.innerHTML += searchForm.outerHTML;
   title.append(searchForm);
   const buttonLink = title.querySelector(':scope a');
@@ -396,6 +519,8 @@ export default async function decorate(block) {
     .replaceAll('{{template-list-ace-suggestions-title}}', placeholders['template-list-ace-suggestions-title'])
     .replaceAll('{{template-list-ace-suggestions}}', placeholders['template-list-ace-suggestions']);
 
+  props.filters.tasks = '(poster)';
+  props.sort = '-_score,-remixCount';
   const rows = Array.from(block.children);
   const titleRow = rows.shift();
   createDropdown(titleRow, placeholders);
@@ -409,4 +534,5 @@ export default async function decorate(block) {
   await readRowsFromBlock(block, templatesContainer);
 
   await decorateTemplateList(block, placeholders, templatesContainer);
+  buildCarousel(':scope .template', block, true);
 }
