@@ -2409,6 +2409,7 @@ async function loadEager() {
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
+    standardizeBranchLinks(main);
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
@@ -2566,7 +2567,6 @@ async function loadLazy() {
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   trackViewedAssetsInDataLayer();
-  standardizeBranchLinks(main);
 }
 
 /**
