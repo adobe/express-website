@@ -1300,11 +1300,11 @@ export function standardizeBranchLinks(main, block) {
           }
 
           if (sdid) {
-            urlParams.set('sdid', sdid);
+            params.set('sdid', sdid);
           }
 
           if (cgen) {
-            urlParams.set('cgen', cgen);
+            params.set('cgen', cgen);
           }
 
           if (promoId) {
