@@ -1756,9 +1756,9 @@ export async function fetchFloatingCta(path) {
     const candidates = window.floatingCta.filter((p) => {
       const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
       if (experiment && path !== 'default') {
-        const expId = experiment.run;
-        const challengerId = experiment.selectedVariant;
-        return (path === p.path || path.match(urlToMatch)) && p.expID === expId && p.challengerID === challengerId;
+        return (path === p.path || path.match(urlToMatch))
+          && p.expID === experiment.run
+          && p.challengerID === experiment.selectedVariant;
       } else {
         return path === p.path || path.match(urlToMatch);
       }
@@ -1781,11 +1781,11 @@ export async function fetchFloatingCta(path) {
 
   if (experimentStatus === 'active') {
     const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
-    const floatingBtnData = fetchFloatingBtnData(expSheet);
+    floatingBtnData = await fetchFloatingBtnData(expSheet);
   }
 
   if (!floatingBtnData) {
-    floatingBtnData = fetchFloatingBtnData(sheet);
+    floatingBtnData = await fetchFloatingBtnData(sheet);
   }
   return floatingBtnData
 }
