@@ -14,6 +14,7 @@ import {
   createFloatingButton,
   collectFloatingButtonData,
 } from '../shared/floating-cta.js';
+import { standardizeBranchLinks } from '../../scripts/scripts.js';
 
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
@@ -30,6 +31,7 @@ export default async function decorate($block) {
       $parentSection ? audience : null,
       data,
     );
+    standardizeBranchLinks($block.closest('main'), $block);
   } else {
     $block.parentElement.remove();
   }

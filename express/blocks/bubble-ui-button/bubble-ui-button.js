@@ -14,6 +14,7 @@ import {
   createTag,
   getIconElement,
   getLocale,
+  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 import {
@@ -406,5 +407,6 @@ export default async function decorate($block) {
 
     const data = await collectFloatingButtonData();
     await createMultiFunctionButton($block, data, audience);
+    standardizeBranchLinks($block.closest('main'), $block);
   }
 }
