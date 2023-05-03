@@ -1734,49 +1734,49 @@ export async function fetchPlainBlockFromFragment(url, blockName) {
 export async function fetchFloatingCta(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
-  const experiment = window.hlx.experiment;
+  const { experiment } = window.hlx;
   const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
-  let sheet;
+  let spreadsheet;
   let floatingBtnData;
 
   async function fetchFloatingBtnData(sheet) {
-  if (!window.floatingCta) {
-    try {
-      const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}${sheet}`);
-      window.floatingCta = resp.ok ? (await resp.json()).data : [];
-    } catch {
-      const resp = await fetch(sheet);
-      window.floatingCta = resp.ok ? (await resp.json()).data : [];
-    }
-  }
-
-  if (window.floatingCta.length) {
-    const candidates = window.floatingCta.filter((p) => {
-      const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
-      if (experiment && path !== 'default') {
-        return (path === p.path || path.match(urlToMatch))
-          && p.expID === experiment.run
-          && p.challengerID === experiment.selectedVariant;
-      } else {
-        return path === p.path || path.match(urlToMatch);
+    if (!window.floatingCta) {
+      try {
+        const locale = getLocale(window.location);
+        const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+        const resp = await fetch(`${urlPrefix}${sheet}`);
+        window.floatingCta = resp.ok ? (await resp.json()).data : [];
+      } catch {
+        const resp = await fetch(sheet);
+        window.floatingCta = resp.ok ? (await resp.json()).data : [];
       }
-    }).sort((a, b) => b.path.length - a.path.length);
-
-    if (env && env.name === 'stage') {
-      return candidates[0] || null;
     }
 
-    return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
-  }
-  return null
-}
+    if (window.floatingCta.length) {
+      const candidates = window.floatingCta.filter((p) => {
+        const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
+        if (experiment && path !== 'default') {
+          return (path === p.path || path.match(urlToMatch))
+            && p.expID === experiment.run
+            && p.challengerID === experiment.selectedVariant;
+        } else {
+          return path === p.path || path.match(urlToMatch);
+        }
+      }).sort((a, b) => b.path.length - a.path.length);
+
+      if (env && env.name === 'stage') {
+        return candidates[0] || null;
+      }
+
+      return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
+    }
+    return null;
+};
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/express/floating-cta-dev.json?limit=10000';
+    spreadsheet = '/express/floating-cta-dev.json?limit=10000';
   } else {
-    sheet = '/express/floating-cta.json?limit=10000';
+    spreadsheet = '/express/floating-cta.json?limit=10000';
   }
 
   if (experimentStatus === 'active') {
@@ -1785,9 +1785,9 @@ export async function fetchFloatingCta(path) {
   }
 
   if (!floatingBtnData) {
-    floatingBtnData = await fetchFloatingBtnData(sheet);
+    floatingBtnData = await fetchFloatingBtnData(spreadsheet);
   }
-  return floatingBtnData
+  return floatingBtnData;
 }
 
 async function buildAutoBlocks($main) {
