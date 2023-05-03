@@ -1548,6 +1548,7 @@ async function decorateTesting() {
         console.error('config is null');
         return;
       }
+      console.log(config);
       if (toCamelCase(config.status) === 'active' || forcedExperiment) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
         console.log('run', config.run, config.audience);
