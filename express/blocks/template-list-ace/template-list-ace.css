@@ -2492,3 +2492,75 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
     padding-top: 0;
   }
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-wrapper {
+  text-align: center;
+}
+
+.loader-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+
+.loader-container-big {
+  height: 400px;
+}
+
+.big-loader {
+  border: 40px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 40px solid;
+  width: 200px;
+  height: 200px;
+  animation: spin 2s linear infinite;
+  color: #5c5ce0;
+}
+
+.loader-text {
+  font-size: var(--heading-font-size-xl);
+}
+
+.generated-template-image {
+  height: 450px;
+}
+
+.generated-template-image-wrapper {
+  position: relative;
+}
+
+.generated-row {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+}
+
+.feedback-wrapper {
+  display: flex;
+  justify-content: space-around;
+  border-radius: 30px;
+  background-color: #f3f3f3;
+  color: black;
+  padding: 8px;
+  position: absolute;
+  font-size: var(--body-font-size-s);
+}
+
+.feedback-wrapper.feedback-report {
+  bottom: 9px;
+  right: 9px;
+}
+
+.feedback-wrapper.feedback-rate {
+  bottom: 9px;
+  left: 9px;
+}
