@@ -1900,6 +1900,11 @@ main .template-list-ace .picker-open,
   color: #242424;
 }
 
+main .template-list-ace .picker-open:hover,
+#generated-results-modal .modal-content .picker-open:hover {
+  cursor: pointer;
+}
+
 main .template-list-ace .picker-open .icon,
 #generated-results-modal .modal-content .picker-open .icon {
   filter: invert(38%) sepia(90%) saturate(604%) hue-rotate(206deg) brightness(87%) contrast(103%);
@@ -1932,7 +1937,7 @@ main .template-list-ace .picker,
 
 main .template-list-ace .picker li,
 #generated-results-modal .modal-content .picker li {
-  list-style-type: none
+  list-style-type: none;
 }
 
 main .template-list-ace .picker li span,
@@ -1945,8 +1950,18 @@ main .template-list-ace .picker li span,
   border-radius: 10px;
 }
 
-main .template-list-ace .picker li span.selected,
-#generated-results-modal .modal-content .picker li span.selected {
+main .template-list-ace .picker li span .check-arrow,
+#generated-results-modal .modal-content .picker li span .check-arrow {
+  float: right;
+  top: 9px;
+  position: relative;
+  filter: invert(37%) sepia(44%) saturate(6567%) hue-rotate(231deg) brightness(87%) contrast(96%);
+}
+
+
+
+main .template-list-ace .picker-open span.selected,
+#generated-results-modal .modal-content .picker-open span.selected {
   color: #4f4fda;
 }
 
@@ -1961,10 +1976,14 @@ main .template-list-ace .picker li:last-of-type span,
   margin-bottom: 14px;
 }
 
+main .template-list-ace li span:hover,
+#generated-results-modal .modal-content li span:hover {
+  cursor: pointer;
+}
+
 main .template-list-ace li:not(:first-of-type) span:hover,
 #generated-results-modal .modal-content li:not(:first-of-type) span:hover {
   background-color: rgb(229 229 229);
-  color: #242424;
   text-decoration: none;
 }
 

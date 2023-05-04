@@ -16,12 +16,9 @@ import {
   createTag,
   fetchPlaceholders,
   getIconElement,
-  linkImage,
   toClassName,
   loadScript,
 } from '../../scripts/scripts.js';
-
-import { Masonry } from '../shared/masonry.js';
 
 import { renderModalContent } from './results-modal.js';
 
@@ -325,12 +322,21 @@ function removeOnClickOutsideElement(element, event, button) {
   document.addEventListener('click', func);
 }
 
-function decorateForOnPickerSelect(option, list) {
+function decorateForOnPickerSelect(option, list, dropdownText, firstElem) {
   option.addEventListener('click', () => {
     list.remove();
-    const selectedElem = list.querySelector('.selected');
-    if (selectedElem) {
-      selectedElem.classList.remove('selected');
+    const downArrow = createTag('img', {
+      class: 'icon down-arrow',
+      src: '../../express/icons/drop-down-arrow.svg',
+      width: 15,
+      height: 9,
+    });
+    dropdownText.textContent = option.textContent;
+    dropdownText.appendChild(downArrow);
+    if (firstElem) {
+      dropdownText.classList.remove('selected');
+    } else if (!dropdownText.classList.contains('selected')) {
+      dropdownText.classList.add('selected');
     }
     option.classList.add('selected');
     console.log(option.textContent);
@@ -342,13 +348,23 @@ function openPicker(button, texts, dropText, event) {
     return;
   }
   const list = createTag('ul', { class: 'picker' });
-  texts.forEach((d) => {
+  texts.forEach((d, index) => {
     const span = createTag('span');
     span.textContent = d;
-    decorateForOnPickerSelect(span, list);
     const li = createTag('li');
     li.appendChild(span);
+    if (index !== 0 && d === dropText.textContent) {
+      span.classList.add('selected');
+      const checkArrow = createTag('img', {
+        class: 'icon check-arrow',
+        src: '../../express/icons/checkmark.svg',
+        width: 15,
+        height: 15,
+      });
+      span.appendChild(checkArrow);
+    }
     list.appendChild(li);
+    decorateForOnPickerSelect(span, list, dropText, index === 0);
   });
   button.appendChild(list);
   button.setAttribute('aria-expanded', true);
