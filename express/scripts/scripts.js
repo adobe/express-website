@@ -1265,7 +1265,7 @@ export async function standardizeBranchLinks(main, block) {
           let placement = 'outside-blocks';
 
           if (parentBlock) {
-            const blockName = parentBlock.dataset.blockName || parentBlock.classList[2];
+            const blockName = parentBlock.dataset.blockName || parentBlock.classList[0];
             const sameBlocks = main.querySelectorAll(`.${blockName}`);
 
             if (sameBlocks.length > 1) {

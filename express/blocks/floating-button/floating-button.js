@@ -26,12 +26,12 @@ export default async function decorate($block) {
     const $parentSection = $block.closest('.section');
     const data = await collectFloatingButtonData($block);
 
-    await createFloatingButton(
+    const blockWrapper = await createFloatingButton(
       $block,
       $parentSection ? audience : null,
       data,
     );
-    standardizeBranchLinks($block.closest('main'), $block);
+    standardizeBranchLinks(blockWrapper.closest('main'), blockWrapper);
   } else {
     $block.parentElement.remove();
   }

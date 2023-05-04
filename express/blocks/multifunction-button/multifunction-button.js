@@ -95,6 +95,8 @@ export async function createMultiFunctionButton($block, data, audience) {
     .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
   buildMultifunctionToolBox($buttonWrapper, data);
+
+  return $buttonWrapper;
 }
 
 export default async function decorate($block) {
@@ -105,7 +107,7 @@ export default async function decorate($block) {
     }
 
     const data = await collectFloatingButtonData();
-    await createMultiFunctionButton($block, data, audience);
-    standardizeBranchLinks($block.closest('main'), $block);
+    const blockWrapper = await createMultiFunctionButton($block, data, audience);
+    standardizeBranchLinks(blockWrapper.closest('main'), blockWrapper);
   }
 }
