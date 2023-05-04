@@ -6,298 +6,135 @@ main .fullscreen-marquee-desktop-container {
   height: 100%;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop > div:first-of-type {
-  padding: 30px 0;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .icon.icon-cc-express-logo {
-  display: unset;
-  height: 32px;
-  width: auto;
-  margin: 0 auto;
-}
-
-main .fullscreen-marquee-desktop-container .marquee-background {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  min-width: 100%;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.1s;
-}
-
-main .fullscreen-marquee-desktop-container .marquee-background img {
-  min-width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-
-/* main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop p {
-  justify-content: center;
-  max-width: 650px;
-  margin: 16px auto;
-} */
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .button-container > a.button {
-  padding: 12px 24px;
+main .fullscreen-marquee-desktop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 120px;
+  overflow: hidden;
+  padding-bottom: 160px;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop h1 > span.colorful {
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1160px;
+  font-family: Adobeclean, sans-serif;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading h1 {
+  font-size: 80px;
+  line-height: 90px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading p {
+  justify-content: center;
+  max-width: 680px;
+  margin: 10px 0;
+  font-size: 18px;
+  line-height: 30px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading .button-container {
+  display: flex;
+  align-items: center;
+}
+
+main .fullscreen-marquee-desktop-heading h1 em {
+  font-style: normal;
   background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
   background-size: 400% 400%;
   -webkit-animation: buttonGradient 45s ease infinite;
   -moz-animation: buttonGradient 45s ease infinite;
   animation: buttonGradient 45s ease infinite;
-  -webkit-background-clip: text;
   background-clip: text;
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-main .section.fullscreen-marquee-desktop-container div.fullscreen-marquee-desktop > div > div.picture-frame {
-  position: relative;
-  box-sizing: border-box;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  height: 100%;
-  width: 100%;
-  border-radius: 24px;
-  display: block;
-  z-index: 1;
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease-out;
-}
-
-/* main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .picture-frame:before {
-  content: '';
-  position: absolute;
-  border-radius: 24px;
-  height: 100%;
-  width: 100%;
-  background-color: #FFFFFF;
-  z-index: -1;
-  transform: translateZ(26px);
-  transition: opacity 0.2s;
-  opacity: 0;
-  left: 50%;
-  margin-left: -50%;
-} */
-
-main .fullscreen-marquee-desktop-container {
-  margin-top: 79px;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper {
-  justify-content: center;
-  flex-direction: row;
-  text-align: center;
-  align-items: center;
-  display: flex;
-  position: relative;
-  padding: 16px;
-  height: 518px;
-  width: 770px;
-  margin: auto;
-  will-change: transform;
-  border-radius: 24px;
-  transition: transform 0.5s ease-out;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-background {
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 42px;
-  background-color: #f3f3f3;
-  box-shadow: 0 0 40px 20px hsl(0deg 0% 63% / 24%);
-  transition: transform 0.5s ease-out;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .screen-demo {
-  border-radius: 10px;
-  position: absolute;
-  top: 86px;
-  right: 176px;
-  height: 60%;
-  z-index: 2;
-  transform-style: preserve-3d;
-  transform: translate3d(0px, 0px, 15px);
-  transition: transform 0.5s ease-out;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .picture-frame-clickable-layer {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  cursor: pointer;
-  z-index: 3;
-  transform: translateZ(100px);
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .picture-frame-clickable-layer > .button {
-  position: absolute;
-  justify-content: center;
-  align-items: center;
-  left: 50%;
   top: 50%;
+  left: 50%;
+  z-index: -5;
+  opacity: .1;
   transform: translate(-50%, -50%);
-  padding: 12px 32px;
-  border-radius: 32px;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .flowers .flower,
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .picture-frame-clickable-layer:hover ~ .picture-frame:before {
-  opacity: 0.5;
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame {
+  margin-top: 40px;
+  position: relative;
+  width: 800px;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-wrapper .flowers {
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-background {
   position: absolute;
-  display: block;
-  z-index: -1;
-  height: 100%;
-  width: 155%;
+  top: -15px;
+  left: -15px;
+  width: calc(100% + 30px);
+  height: calc(100% + 30px);
+  z-index: -5;
+  background-color: #f3f3f3;
+  border-radius: 42px;
   transform-style: preserve-3d;
-  backface-visibility: hidden;
   transition: transform 0.5s ease-out;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-thumbnails {
-  position: absolute;
-  display: block;
-  left: 68px;
-  bottom: 8px;
-  height: 70%;
-  width: 180px;
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app {
   transform-style: preserve-3d;
-  backface-visibility: hidden;
   transition: transform 0.5s ease-out;
-  transform: translate3d(0px, 0px, 15px);
-  z-index: 1;
 }
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame-thumbnails .leaf-thumbnails {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
 
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .picture-frame img {
-  height: 100%;
-  display: block;
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app img {
   border-radius: 24px;
 }
 
-/* new design styles */
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop h1 {
-  width: 910px;
-  color: #000;
-  text-align: center;
-  text-transform: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0;
-  margin: auto;
-  /* margin-bottom: -18px; */
-  font-family: Adobeclean, sans-serif;
-  font-size: 60px;
-  font-weight: 900;
-  line-height: 70px;
-  display: block;
-  /* position: absolute; */
-}
-
-.headline-highlight-text {
-  -webkit-text-fill-color: transparent;
-  /* background-image: url(https://assets.website-files.com/643a0da…/643a0da…_ccxgradient.png); image not present */
-  background-position: 50% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop p {
-  display: inline-block;
-}
-
-.hero-bg {
-  width: 100vw;
-  height: 1200px;
-  object-fit: cover;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+main .fullscreen-marquee-desktop-app-frame-highlight {
   position: absolute;
-  overflow: hidden;
-  opacity: 0.1;
-}
-.single {
-  height: 100px;
-  margin-top: 30px;
-  justify-content: center;
-  align-items: center;
-  display: none;
-}
-.single img {
-  width: 350px;
-}
-.double {
-  margin-bottom: 30px;
-}
-.double picture {
-  display: inline-block;
-  width: 200px;
-  height: 90px;
-}
-
-.double img {
-  z-index: 5;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0;
-  margin-top: 30px;
-  padding-left: 0;
-  padding-right: 0;
-  display: flex;
-  position: relative;
-}
-main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop .sub-copy {
-  z-index: 2;
-  width: 740px;
-  color: #000;
-  text-align: center;
-  margin: auto;
-  margin-top: 10px;
-  /* margin-bottom: -93px; */
-  padding-bottom: 0;
-  font-family: Adobeclean, sans-serif;
-  font-size: 18px;
-  line-height: 30px;
-  /* position: absolute; */
-}
-.hero_content {
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  margin-top: 210px;
+  height: 100%;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 24px;
 }
 
-@media screen and (min-width: 1280px) {
-  main .fullscreen-marquee-desktop-container .fullscreen-marquee-desktop h1 {
-    width: 1210px;
-    font-size: 80px;
-    line-height: 90px;
- }
- .hero-content {
-  margin-top: 250px;
- }
+main .fullscreen-marquee-desktop-app-frame-highlight:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  opacity: 1;
+  pointer-events: initial;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 60px;
+  left: 222px;
+  width: 547px;
+  height: 308px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
+  height: 90%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app {
+  display: block;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app img {
+  vertical-align: middle;
 }
