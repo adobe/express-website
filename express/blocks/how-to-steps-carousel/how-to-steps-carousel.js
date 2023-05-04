@@ -226,9 +226,6 @@ function roundedImage(x, y, width, height, radius, ctx) {
 }
 
 function layerTemplateImage(canvas, ctx, templateImg) {
-  // start and end areas were directly measured and transferred from the spec image
-  templateImg.style.maxWidth = '986px';
-  templateImg.style.maxHeight = '652px';
   templateImg.style.objectFit = 'contain';
 
   return new Promise((outerResolve) => {
@@ -253,14 +250,13 @@ function layerTemplateImage(canvas, ctx, templateImg) {
         }
       });
       obs.observe(templateImg);
+      templateImg.style.maxWidth = `${maxWidth}px`;
+      templateImg.style.maxHeight = `${maxHeight}px`;
     });
 
+    // start and end areas were directly measured and transferred from the spec image
     drawImage(1123, 600, 986, 652)
-      .then(() => {
-        templateImg.style.maxWidth = '312px';
-        templateImg.style.maxHeight = '472px';
-        return drawImage(1816, 479, 312, 472);
-      })
+      .then(() => drawImage(1816, 479, 312, 472))
       .then(() => outerResolve());
   });
 }
