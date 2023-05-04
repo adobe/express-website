@@ -61,7 +61,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
   top: 50%;
   left: 50%;
   z-index: -5;
-  opacity: .1;
+  opacity: 0;
   transform: translate(-50%, -50%);
 }
 
@@ -81,12 +81,12 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-background {
   background-color: #f3f3f3;
   border-radius: 42px;
   transform-style: preserve-3d;
-  transition: transform 0.5s ease-out;
+  transition: transform 1s cubic-bezier(0.22, 0.78, 0.24, 0.98);
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app {
   transform-style: preserve-3d;
-  transition: transform 0.5s ease-out;
+  transition: transform 1s cubic-bezier(0.22, 0.78, 0.24, 0.98);
 }
 
 

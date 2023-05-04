@@ -112,6 +112,17 @@ export default async function decorate(block) {
   if (parameters.background) {
     parameters.background.classList.add('fullscreen-marquee-desktop-background');
     block.append(parameters.background);
+
+    window.addEventListener('scroll', () => {
+      const progress = window.scrollY * 100 / block.offsetHeight;
+      let opacityValue = (progress / 1000) * 4;
+
+      if (opacityValue > .4) {
+        opacityValue = .4;
+      }
+
+      parameters.background.style = `opacity: ${opacityValue}`;
+    });
   }
 
   if (parameters.app && parameters.editor && parameters.content) {
