@@ -89,8 +89,8 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app {
   transition: transform 1s cubic-bezier(0.22, 0.78, 0.24, 0.98);
 }
 
-
-main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app img {
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-image img {
+  width: 800px;
   border-radius: 24px;
 }
 

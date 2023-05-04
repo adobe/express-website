@@ -11,55 +11,102 @@
  */
 import {
   addFreePlanWidget,
+  createOptimizedPicture,
   createTag,
+  fetchPlaceholders,
   transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
-function buildAppFrame(parameters) {
-  const appFrame = createTag('div', { class: 'fullscreen-marquee-desktop-app-frame' });
+function buildContent(content) {
+  const contentLink = content.querySelector('a');
+  let formattedContent = content;
 
-  if (parameters.app) {
-    const app = createTag('div', { class: 'fullscreen-marquee-desktop-app' });
-    app.append(parameters.app);
-    appFrame.append(app);
-
-    parameters.app = app;
-
-    const appBackground = createTag('div', { class: 'fullscreen-marquee-desktop-app-background' });
-    appFrame.append(appBackground);
-
-    window.addEventListener('mousemove', (e) => {
-      const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
-      const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
-
-      app.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
-      appBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
-    }, { passive: true });
+  if (contentLink && contentLink.href.endsWith('.mp4')) {
+    const video = new URL(contentLink.href);
+    const looping = ['true', 'yes', 'on'].includes(video.searchParams.get('looping')) ? 'yes' : null;
+    formattedContent = transformLinkToAnimation(contentLink, looping);
   }
 
-  if (parameters.content) {
-    const contentContainer = createTag('div', { class: 'fullscreen-marquee-desktop-app-content-container' });
-    parameters.content.classList.add('fullscreen-marquee-desktop-app-content');
+  return formattedContent;
+}
 
-    parameters.app.append(contentContainer);
-    contentContainer.append(parameters.content);
+function buildHeading(block, heading) {
+  heading.classList.add('fullscreen-marquee-desktop-heading');
+  return heading;
+}
 
-    if (parameters.cta) {
-      const appHighlight = createTag('a', {
-        class: 'fullscreen-marquee-desktop-app-frame-highlight',
-        href: parameters.cta.href,
-      });
+function buildBackground(block, background) {
+  background.classList.add('fullscreen-marquee-desktop-background');
 
-      const dupeCta = parameters.cta.cloneNode(true);
+  window.addEventListener('scroll', () => {
+    const progress = (window.scrollY * 100) / block.offsetHeight;
+    let opacityValue = (progress / 1000) * 10;
 
-      appHighlight.append(dupeCta);
-      appFrame.append(appHighlight);
+    if (opacityValue > 0.6) {
+      opacityValue = 0.6;
     }
-  }
 
-  if (parameters.editor) {
-    parameters.editor.classList.add('fullscreen-marquee-desktop-app-editor');
-    parameters.app.append(parameters.editor);
+    background.style = `opacity: ${opacityValue}`;
+  });
+
+  return background;
+}
+
+async function buildApp(block, content) {
+  const appBackground = createTag('div', { class: 'fullscreen-marquee-desktop-app-background' });
+  const appFrame = createTag('div', { class: 'fullscreen-marquee-desktop-app-frame' });
+  const app = createTag('div', { class: 'fullscreen-marquee-desktop-app' });
+  const contentContainer = createTag('div', { class: 'fullscreen-marquee-desktop-app-content-container' });
+  const cta = block.querySelector('.button-container a');
+  let appImage;
+  let editor;
+
+  await fetchPlaceholders().then((placeholders) => {
+    let variant;
+
+    if (block.classList.contains('video')) {
+      variant = 'video';
+    } else {
+      variant = 'image';
+    }
+
+    appImage = createOptimizedPicture(placeholders[`fullscreen-marquee-desktop-${variant}-app`]);
+    editor = createOptimizedPicture(placeholders[`fullscreen-marquee-desktop-${variant}-editor`]);
+
+    appImage.classList.add('fullscreen-marquee-desktop-app-image');
+  });
+
+  editor.classList.add('fullscreen-marquee-desktop-app-editor');
+  content.classList.add('fullscreen-marquee-desktop-app-content');
+
+  window.addEventListener('mousemove', (e) => {
+    const rotateX = ((e.clientX * 10) / (window.innerWidth / 2) - 10);
+    const rotateY = -((e.clientY * 10) / (window.innerHeight / 2) - 10);
+
+    app.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, 0px)`;
+    appBackground.style.transform = `rotateX(${rotateY}deg) rotateY(${rotateX}deg) translate3d(${rotateX}px, 0px, -50px)`;
+  }, { passive: true });
+
+  contentContainer.append(content);
+  app.append(appImage);
+  app.append(contentContainer);
+  appFrame.append(app);
+  appFrame.append(appBackground);
+  app.append(editor);
+
+  if (cta) {
+    cta.classList.add('xlarge');
+
+    const highlightCta = cta.cloneNode(true);
+    const appHighlight = createTag('a', {
+      class: 'fullscreen-marquee-desktop-app-frame-highlight',
+      href: cta.href,
+    });
+
+    await addFreePlanWidget(cta.parentElement);
+
+    appHighlight.append(highlightCta);
+    appFrame.append(appHighlight);
   }
 
   return appFrame;
@@ -67,65 +114,25 @@ function buildAppFrame(parameters) {
 
 export default async function decorate(block) {
   const rows = Array.from(block.children);
-  const content = rows[1];
-
-  const parameters = {
-    heading: rows[0].querySelector('div'),
-    background: rows[2].querySelector('picture') || null,
-    app: rows[3].querySelector('picture') || null,
-    editor: rows[4].querySelector('picture') || null,
-  };
-
-  if (content) {
-    const contentLink = content.querySelector('a');
-
-    if (contentLink && contentLink.href.endsWith('.mp4')) {
-      const video = new URL(contentLink.href);
-      const looping = ['true', 'yes', 'on'].includes(video.searchParams.get('looping')) ? 'yes' : null;
-
-      parameters.content = transformLinkToAnimation(contentLink, looping);
-    } else {
-      parameters.content = content;
-    }
-  }
+  const heading = rows[0] ? rows[0].querySelector('div') : null;
+  const background = rows[2] ?? null;
+  let content = rows[1] ?? null;
 
   block.innerHTML = '';
 
-  if (parameters.heading) {
-    parameters.heading.classList.add('fullscreen-marquee-desktop-heading');
-    block.append(parameters.heading);
-
-    const buttonContainer = parameters.heading.querySelector('.button-container');
-
-    if (buttonContainer) {
-      const cta = buttonContainer.querySelector('a');
-      await addFreePlanWidget(buttonContainer);
-
-      cta.classList.add('xlarge');
-
-      if (cta) {
-        parameters.cta = cta;
-      }
-    }
+  if (content) {
+    content = buildContent(content);
   }
 
-  if (parameters.background) {
-    parameters.background.classList.add('fullscreen-marquee-desktop-background');
-    block.append(parameters.background);
-
-    window.addEventListener('scroll', () => {
-      const progress = (window.scrollY * 100) / block.offsetHeight;
-      let opacityValue = (progress / 1000) * 10;
-
-      if (opacityValue > 0.6) {
-        opacityValue = 0.6;
-      }
-
-      parameters.background.style = `opacity: ${opacityValue}`;
-    });
+  if (background) {
+    block.append(buildBackground(block, background));
   }
 
-  if (parameters.app && parameters.editor && parameters.content) {
-    block.append(buildAppFrame(parameters));
+  if (heading) {
+    block.append(buildHeading(block, heading));
+  }
+
+  if (content) {
+    block.append(await buildApp(block, content));
   }
 }
