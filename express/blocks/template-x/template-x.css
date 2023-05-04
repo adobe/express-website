@@ -118,6 +118,10 @@ main .template-x-wrapper .template-title {
     margin: 0 12px 20px 12px;
 }
 
+main .template-x-container .template-x-wrapper:not(:has(.toolbar-wrapper)) {
+    padding-top: 140px;
+}
+
 main .template-x-wrapper .template-title.with-link > div {
     display: flex;
     flex-direction: column;
