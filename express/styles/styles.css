@@ -1009,7 +1009,6 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
 
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
   position: relative;
-  margin-top: 5px;
   margin-right: 6px;
   width: 14px;
   height: 14px;
@@ -1020,6 +1019,7 @@ main .block .button-container.free-plan-container .free-plan-bullet .free-plan-b
 main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
   display: flex;
   font-size: 16px;
+  align-items: center;
 }
 
 main .block .free-plan-optout {
