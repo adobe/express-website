@@ -387,8 +387,10 @@ function createDropdown(titleRow, placeholders) {
   dropdownText.textContent = dropdownTexts[0];
   dropdownText.appendChild(downArrow);
   dropdown.append(dropdownText);
-
+  const span = createTag('span');
+  span.style.flexBasis = '100%';
   title.innerHTML = title.innerHTML.replaceAll('{{ace-dropdown}}', dropdown.outerHTML);
+  title.innerHTML = title.innerHTML.replaceAll('{{breakline}}', span.outerHTML);
 
   const drop = title.querySelector('.picker-open');
   const dropText = title.querySelector('.picker-open-text');

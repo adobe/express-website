@@ -1848,11 +1848,12 @@ main .template-list-ace form,
   margin-left: 12px;
 }
 
-main .template-list-ace input,
-#generated-results-modal .modal-content input {
+main .template-list-ace .search-bar,
+#generated-results-modal .modal-content .search-bar {
   flex-grow:2;
   border-radius: 50px;
-  border: 0
+  border: 0;
+  width: 300px;
 }
 
 /* remove the input focus blue box, it will be in the wrong place. */
