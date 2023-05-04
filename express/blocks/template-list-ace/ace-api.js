@@ -15,6 +15,8 @@ import { mockId, mockData } from './mocks.js';
 
 const useMock = false;
 
+const base = 'https://api.xstudio.adobe.com/templates';
+
 function uuidv4() {
   // return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
   //   (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
@@ -49,7 +51,6 @@ export async function requestGeneration({
   fetchExisting = false,
 }) {
   if (useMock) return { jobId: mockId, status: 'in-progress' };
-  const base = 'https://api.xstudio.adobe.com/templates';
   const queryParam = `&query=${query}`;
   const numParam = `&num_results=${num_results}`;
   const localeParam = `&locale=${locale}`;
@@ -71,7 +72,7 @@ export async function requestGeneration({
 
 export async function monitorGeneration(jobId) {
   if (useMock) return mockData;
-  const url = `https://api.xstudio.adobe.com/templates/monitor?jobId=${jobId}`;
+  const url = `${base}/monitor?jobId=${jobId}`;
   const { status, results, reason } = await fetch(url).then((response) => response.json());
   return { status, results, reason };
 }
@@ -103,4 +104,41 @@ export async function waitForGeneration(jobId, wait = 2000) {
       reject(new Error(JSON.stringify({ status, results, reason: 'unexpected status' })));
     }, wait);
   });
+}
+
+export const FEEDBACK_CATEGORIES = Object.freeze({
+  THUMBS_UP: 'thumbs_up',
+  THUMBS_DOWN: 'thumbs_down',
+  REPORT_ABUSE: 'report_abuse',
+});
+
+export async function postFeedback(id, category, notes) {
+  if (!Object.values(FEEDBACK_CATEGORIES).includes(category)) {
+    throw new Error(`Invalid category: ${category}`);
+  }
+  if (useMock) return { result: 'Feedback recorded successfully' };
+  const url = `${base}/feedback`;
+  const body = JSON.stringify({ id, category, notes });
+  let response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) throw new Error('not ok');
+    return response.json();
+  } catch (err) {
+    // back up since API people still working on this
+    response = await fetch(url.replace('/templates', ''), {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+  return response.json();
 }

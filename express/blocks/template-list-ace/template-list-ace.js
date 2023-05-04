@@ -23,11 +23,9 @@ import {
 
 import { Masonry } from '../shared/masonry.js';
 
-import { requestGeneration, waitForGeneration } from './ace-api.js';
+import { renderModalContent } from './results-modal.js';
 
 import { buildCarousel } from '../shared/carousel.js';
-
-import renderTemplate from './template-rendering.js';
 
 const IMS_COMMERCE_CLIENT_ID = 'aos_milo_commerce';
 const IMS_PROD_URL = 'https://auth.services.adobe.com/imslib/imslib.min.js';
@@ -54,11 +52,7 @@ const getImsToken = async () => {
 
 const props = {
   templates: [],
-  filters: {
-    locales: 'en',
-    animated: 'false',
-    premium: 'false',
-  },
+  filters: { locales: '(en)' },
   renditionParams: {
     format: 'jpg',
     size: 400,
@@ -67,8 +61,9 @@ const props = {
   limit: 10,
   total: 0,
   start: '',
-  sort: 'Most Viewed',
+  sort: '-_score,-remixCount',
   masonry: undefined,
+  authoringError: false,
   headingTitle: null,
   headingSlug: null,
   viewAllLink: null,
@@ -109,8 +104,7 @@ async function fetchTemplates() {
 }
 
 async function fetchAndRenderTemplates() {
-  const placeholders = await fetchPlaceholders();
-  const response = await fetchTemplates();
+  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates()]);
   let templateFetched;
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
@@ -388,85 +382,14 @@ function createDropdown(titleRow, placeholders) {
   });
 }
 
-function renderLoader() {
-  const wrapper = createTag('div', { class: 'loader-wrapper' });
-  const spinnerContainer = createTag('div', { class: 'loader-container loader-container-big' });
-  spinnerContainer.append(createTag('div', { class: 'big-loader' }));
-  wrapper.append(spinnerContainer);
-  const text = createTag('span', { class: 'loader-text' });
-  text.textContent = 'Generating templates... This could take 30 seconds or more.';
-  wrapper.append(text);
-  return wrapper;
-}
-
-function renderRateResult(result) {
-  const wrapper = createTag('div', { class: 'feedback-wrapper feedback-rate' });
-  wrapper.append('Rate this result');
-  wrapper.append('up');
-  wrapper.append('down');
-  return wrapper;
-}
-
-function renderReportButton(result) {
-  const wrapper = createTag('div', { class: 'feedback-wrapper feedback-report' });
-  wrapper.append('Report');
-  wrapper.append('Flag');
-  return wrapper;
-}
-
-async function fetchAndRenderResults(query, modalContentWrapper) {
-  const { jobId, status } = await requestGeneration({ query, num_results: 4 });
-  if (status !== 'in-progress') {
-    modalContentWrapper.append('Error generating templates!');
-    return;
-  }
-  let results;
-  try {
-    results = await waitForGeneration(jobId, 2000);
-  } catch (e) {
-    console.error(e);
-    modalContentWrapper.append('Error generating templates!');
-    return;
-  }
-  const images = results
-    .filter((result) => result.generated)
-    .map((result) => {
-      const { thumbnail } = result;
-      const image = createTag('img', { src: thumbnail, class: 'generated-template-image' });
-      // generatedTemplate.append(image);
-      // modalContentWrapper.append(generatedTemplate);
-      const generatedTemplate = createTag('div', { class: 'generated-template-image-wrapper' });
-      generatedTemplate.append(image);
-      generatedTemplate.append(renderRateResult(result));
-      generatedTemplate.append(renderReportButton(result));
-      return generatedTemplate;
-    });
-  const generatedRow = createTag('div', { class: 'generated-row' });
-  images.forEach((image) => {
-    generatedRow.append(image);
-  });
-  modalContentWrapper.append(generatedRow);
-}
-
-function renderModalContent(search, searchBar) {
-  const modalContentWrapper = createTag('div', { class: 'modal-content' });
-  // modalContentWrapper.append(searchBar);
-  const loading = renderLoader();
-  modalContentWrapper.append(loading);
-  fetchAndRenderResults(search, modalContentWrapper).then(() => {
-    loading.remove();
-  });
-  return modalContentWrapper;
-}
-
-function openModal(query, searchBar) {
+function openModal(query, searchForm, cleanup) {
   const modalContent = createTag('div');
-  modalContent.style.height = '800px';
+  modalContent.style.height = '740px';
   modalContent.style.width = '1200px';
-  modalContent.append(renderModalContent(query, searchBar));
+  modalContent.append(renderModalContent(query, searchForm, cleanup));
   import('../modal/modal.js').then((mod) => {
     mod.getModal(null, {
-      class: 'locale-modal-v2', id: 'locale-modal-v2', content: modalContent, closeEvent: 'closeModal',
+      class: 'generated-results-modal', id: 'generated-results-modal', content: modalContent, closeEvent: 'closeGeneratedResultsModal',
     });
   });
 }
@@ -487,6 +410,9 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   const title = titleRowDiv.querySelector(':scope > h1');
   // title.innerHTML += searchForm.outerHTML;
   title.append(searchForm);
+  const cleanup = () => {
+    titleRowDiv.append(title);
+  };
   const buttonLink = title.querySelector(':scope a');
   buttonLink.href = '#';
   buttonLink.addEventListener('click', (event) => {
@@ -495,7 +421,10 @@ function createSearchBar(searchRows, placeholders, titleRow) {
       alert('search should not be empty!');
       return;
     }
-    openModal(searchBar.value, searchBar);
+    openModal(searchBar.value, title);
+  });
+  window.addEventListener('milo:modal:closed', () => {
+    cleanup();
   });
 
   titleRowDiv.classList.add('title-search');
