@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import {
-  buildStaticFreePlanWidget,
+  addFreePlanWidget,
   createTag,
   transformLinkToAnimation,
 } from '../../scripts/scripts.js';
@@ -99,11 +99,9 @@ export default async function decorate(block) {
 
     if (buttonContainer) {
       const cta = buttonContainer.querySelector('a');
-      const freePlanWidget = await buildStaticFreePlanWidget();
+      await addFreePlanWidget(buttonContainer);
 
       cta.classList.add('xlarge');
-
-      buttonContainer.append(freePlanWidget);
 
       if (cta) {
         parameters.cta = cta;
