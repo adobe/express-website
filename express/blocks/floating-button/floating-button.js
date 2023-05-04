@@ -14,7 +14,8 @@ import {
   createFloatingButton,
   collectFloatingButtonData,
 } from '../shared/floating-cta.js';
-import BlockMediator from '../../scripts/block-mediator';
+
+import BlockMediator from '../../scripts/block-mediator.js';
 
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {

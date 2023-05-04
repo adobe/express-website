@@ -25,7 +25,7 @@ import {
   buildToolBoxStructure,
   initToolBox,
 } from '../shared/floating-cta.js';
-import BlockMediator from '../../scripts/block-mediator';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 const bubbleUI = {
   addEventListeners(boxBottom) {
