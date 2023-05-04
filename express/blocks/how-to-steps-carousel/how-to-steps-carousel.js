@@ -273,14 +273,17 @@ export default async function decorate(block) {
   let picture;
 
   if (image) {
+    const canvasWidth = 2000;
+    const canvasHeight = 1072;
     const backgroundPictureDiv = rows.shift();
     const link = backgroundPictureDiv.querySelector('a');
     const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createTag('picture');
-    const backgroundPicImg = backgroundPic.querySelector('img') ?? createTag('img', { src: link.href, width: 2000, height: 1072 });
-    link?.remove();
-    backgroundPicImg.style.maxWidth = '2000px';
-    backgroundPicImg.style.maxHeight = '1072px';
-    backgroundPic.appendChild(backgroundPicImg);
+    const backgroundPicImg = backgroundPic.querySelector('img') ?? createTag('img', { src: link.href });
+    if (link) {
+      backgroundPic.appendChild(backgroundPicImg);
+      link.remove();
+    }
+
     const templateDiv = rows.shift();
     const templateImages = templateDiv.querySelectorAll('picture');
     const templateImg = templateImages[0].querySelector('img');
@@ -288,12 +291,12 @@ export default async function decorate(block) {
     templateImg.style.position = 'absolute';
 
     loadImage(backgroundPicImg).then(() => {
+      backgroundPicImg.width = canvasWidth;
       picture = backgroundPic;
       section.prepend(picture);
-
-      const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
+      const canvas = createTag('canvas', { width: canvasWidth, height: canvasHeight });
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
+      ctx.drawImage(backgroundPicImg, 0, 0, canvasWidth, canvasHeight);
       const sources = backgroundPic.querySelectorAll(':scope > source');
       sources.forEach((source) => source.remove());
       return loadImage(templateImg).then(() => {
