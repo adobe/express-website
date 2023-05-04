@@ -1255,6 +1255,7 @@ export function standardizeBranchLinks(main, block) {
         const isPostEditorLink = btn.href.match('adobesparkpost.app.link');
 
         if (isPostEditorLink) {
+          const placeholders = fetchPlaceholders();
           const parentBlock = btn.closest('.block');
           const currentUrl = new URL(window.location.href);
           const urlParams = currentUrl.searchParams;
@@ -1291,7 +1292,9 @@ export function standardizeBranchLinks(main, block) {
           const url = new URL(btn.href);
           const params = url.searchParams;
 
-          if (templateSearchTag) {
+          if (templateSearchTag
+          && placeholders['search-branch-links']
+          && placeholders['search-branch-links'].split(',').includes(btn.href)) {
             params.set('search', templateSearchTag);
           }
 
