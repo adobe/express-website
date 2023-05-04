@@ -101,6 +101,8 @@ export default async function decorate(block) {
       const cta = buttonContainer.querySelector('a');
       const freePlanWidget = await buildStaticFreePlanWidget();
 
+      cta.classList.add('xlarge');
+
       buttonContainer.append(freePlanWidget);
 
       if (cta) {
@@ -114,11 +116,11 @@ export default async function decorate(block) {
     block.append(parameters.background);
 
     window.addEventListener('scroll', () => {
-      const progress = window.scrollY * 100 / block.offsetHeight;
-      let opacityValue = (progress / 1000) * 4;
+      const progress = (window.scrollY * 100) / block.offsetHeight;
+      let opacityValue = (progress / 1000) * 10;
 
-      if (opacityValue > .4) {
-        opacityValue = .4;
+      if (opacityValue > 0.6) {
+        opacityValue = 0.6;
       }
 
       parameters.background.style = `opacity: ${opacityValue}`;

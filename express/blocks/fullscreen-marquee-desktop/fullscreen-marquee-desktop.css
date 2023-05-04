@@ -110,11 +110,6 @@ main .fullscreen-marquee-desktop-app-frame-highlight {
   transition: opacity .1s ease-in-out;
 }
 
-main .fullscreen-marquee-desktop-app-frame-highlight .button {
-  padding: 12px 24px;
-  border-radius: 32px;
-}
-
 main .fullscreen-marquee-desktop-app-frame-highlight:hover {
   background-color: rgba(255, 255, 255, 0.3);
   opacity: 1;
