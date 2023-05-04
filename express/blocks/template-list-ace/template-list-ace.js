@@ -59,7 +59,6 @@ const props = {
   total: 0,
   start: '',
   sort: '-_score,-remixCount',
-  masonry: undefined,
   authoringError: false,
   headingTitle: null,
   headingSlug: null,
@@ -162,7 +161,7 @@ async function readRowsFromBlock($block, templatesContainer) {
   const fetchedTemplates = await fetchAndRenderTemplates();
 
   if (fetchedTemplates) {
-    props.templates = props.templates.concat(fetchedTemplates);
+    props.templates = fetchedTemplates;
     props.templates.forEach((template) => {
       const clone = template.cloneNode(true);
       templatesContainer.append(clone);
@@ -254,6 +253,7 @@ function populateTemplates($block, templates) {
 }
 
 export async function decorateTemplateList(block, placeholders, templatesContainer) {
+  debugger;
   const templates = Array.from(templatesContainer.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
@@ -271,10 +271,6 @@ export async function decorateTemplateList(block, placeholders, templatesContain
 
   const rows = templates.length;
   let breakpoints = [{ width: '400' }];
-
-  if (rows > 6 && !templatesContainer.classList.contains('horizontal')) {
-    templatesContainer.classList.add('masonry');
-  }
 
   if (rows === 1) {
     templatesContainer.classList.add('large');
@@ -322,7 +318,7 @@ function removeOnClickOutsideElement(element, event, button) {
   document.addEventListener('click', func);
 }
 
-function decorateForOnPickerSelect(option, list, dropdownText, firstElem) {
+function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block, placeholders) {
   option.addEventListener('click', () => {
     list.remove();
     const downArrow = createTag('img', {
@@ -338,12 +334,13 @@ function decorateForOnPickerSelect(option, list, dropdownText, firstElem) {
     } else if (!dropdownText.classList.contains('selected')) {
       dropdownText.classList.add('selected');
     }
+    loadTemplates(block, placeholders, firstElem ? '' : option.textContent);
     option.classList.add('selected');
     console.log(option.textContent);
   });
 }
 
-function openPicker(button, texts, dropText, event) {
+function openPicker(button, texts, dropText, event, block, placeholders) {
   if (document.querySelector('main .template-list-ace .picker')) {
     return;
   }
@@ -364,14 +361,30 @@ function openPicker(button, texts, dropText, event) {
       span.appendChild(checkArrow);
     }
     list.appendChild(li);
-    decorateForOnPickerSelect(span, list, dropText, index === 0);
+    decorateForOnPickerSelect(span, list, dropText, index === 0, block, placeholders);
   });
   button.appendChild(list);
   button.setAttribute('aria-expanded', true);
   removeOnClickOutsideElement(list, event, button);
 }
 
-function createDropdown(titleRow, placeholders) {
+async function loadTemplates(block, placeholders, topic) {
+  if (topic) {
+    props.filters.topics = topic;
+  } else {
+    delete props.filters.topics;
+  }
+  const existingContainer = block.querySelector('.templates-container');
+  if (existingContainer) existingContainer.remove();
+  const templatesContainer = createTag('div', { class: 'templates-container' });
+  block.append(templatesContainer);
+  await readRowsFromBlock(block, templatesContainer);
+
+  await decorateTemplateList(block, placeholders, templatesContainer);
+  //buildCarousel(':scope .template', block, true);
+}
+
+function createDropdown(titleRow, placeholders, block) {
   const title = titleRow.querySelector(':scope h1');
   const dropdownTexts = placeholders['template-list-ace-categories-dropdown'].split(',');
   const downArrow = createTag('img', {
@@ -396,7 +409,7 @@ function createDropdown(titleRow, placeholders) {
   const dropText = title.querySelector('.picker-open-text');
 
   dropText.addEventListener('click', (e) => {
-    openPicker(drop, dropdownTexts, dropText, e);
+    openPicker(drop, dropdownTexts, dropText, e, block, placeholders);
   });
 }
 
@@ -441,6 +454,7 @@ function createSearchBar(searchRows, placeholders, titleRow) {
     }
     openModal(searchBar.value, title);
   });
+  // todo I don't think we need this jingle
   window.addEventListener('milo:modal:closed', () => {
     cleanup();
   });
@@ -470,16 +484,11 @@ export default async function decorate(block) {
   props.sort = '-_score,-remixCount';
   const rows = Array.from(block.children);
   const titleRow = rows.shift();
-  createDropdown(titleRow, placeholders);
+  createDropdown(titleRow, placeholders, block);
   const searchRows = rows.shift();
   createSearchBar(searchRows.querySelectorAll('div'), placeholders, titleRow);
   const placeholdersRow = rows.shift();
   searchRows.remove();
   placeholdersRow.remove();
-  const templatesContainer = createTag('div', { class: 'templates-container' });
-  block.append(templatesContainer);
-  await readRowsFromBlock(block, templatesContainer);
-
-  await decorateTemplateList(block, placeholders, templatesContainer);
-  buildCarousel(':scope .template', block, true);
+  await loadTemplates(block, placeholders, '');
 }
