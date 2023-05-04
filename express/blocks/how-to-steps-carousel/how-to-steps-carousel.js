@@ -274,13 +274,20 @@ export default async function decorate(block) {
 
   if (image) {
     const backgroundPictureDiv = rows.shift();
-    const backgroundPic = backgroundPictureDiv.querySelector('picture');
-    const backgroundPicImg = backgroundPic.querySelector('img');
+    const link = backgroundPictureDiv.querySelector('a');
+    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createTag('picture');
+    const backgroundPicImg = backgroundPic.querySelector('img') ?? createTag('img', { src: link.href, width: 2000, height: 1072 });
+    link?.remove();
+    backgroundPicImg.style.maxWidth = '2000px';
+    backgroundPicImg.style.maxHeight = '1072px';
+    backgroundPic.appendChild(backgroundPicImg);
     const templateDiv = rows.shift();
+    const templateImages = templateDiv.querySelectorAll('picture');
+    const templateImg = templateImages[0].querySelector('img');
+    templateImg.style.visibility = 'hidden';
+    templateImg.style.position = 'absolute';
 
     loadImage(backgroundPicImg).then(() => {
-      backgroundPicImg.width = 2000;
-      backgroundPicImg.height = 1072;
       picture = backgroundPic;
       section.prepend(picture);
 
@@ -289,10 +296,6 @@ export default async function decorate(block) {
       ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
       const sources = backgroundPic.querySelectorAll(':scope > source');
       sources.forEach((source) => source.remove());
-      const templateImages = templateDiv.querySelectorAll('picture');
-      const templateImg = templateImages[0].querySelector('img');
-      templateImg.style.visibility = 'hidden';
-      templateImg.style.position = 'absolute';
       return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
           templateDiv.remove();

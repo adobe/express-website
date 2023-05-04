@@ -1267,6 +1267,7 @@ export function decorateButtons(block = document) {
     if (!noButtonBlocks.includes(blockName)
       && originalHref !== linkText
       && !(linkText.startsWith('https') && linkText.includes('/media_'))
+      && !(linkText.startsWith('https') && linkText.includes('.svg'))
       && !linkText.includes('hlx.blob.core.windows.net')
       && !linkText.endsWith(' >')
       && !linkText.endsWith(' ›')) {
