@@ -1247,7 +1247,8 @@ export function addSearchQueryToHref(href) {
   return url.toString();
 }
 
-export function standardizeBranchLinks(main, block) {
+export async function standardizeBranchLinks(main, block) {
+  const placeholders = await fetchPlaceholders();
   const btns = block ? block.querySelectorAll('a, button') : main.querySelectorAll('a, button');
   if (btns.length > 0) {
     btns.forEach((btn) => {
@@ -1255,9 +1256,9 @@ export function standardizeBranchLinks(main, block) {
         const isPostEditorLink = btn.href.match('adobesparkpost.app.link');
 
         if (isPostEditorLink) {
-          const placeholders = fetchPlaceholders();
           const parentBlock = btn.closest('.block');
           const currentUrl = new URL(window.location.href);
+          const btnUrl = new URL(btn.href);
           const urlParams = currentUrl.searchParams;
           const { experiment } = window.hlx;
           const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
@@ -1288,13 +1289,13 @@ export function standardizeBranchLinks(main, block) {
           const mv = urlParams.get('mv');
           const promoId = urlParams.get('promoid');
           const cgen = urlParams.get('cgen');
-
           const url = new URL(btn.href);
           const params = url.searchParams;
 
           if (templateSearchTag
-          && placeholders['search-branch-links']
-          && placeholders['search-branch-links'].split(',').includes(btn.href)) {
+            && placeholders['search-branch-links']
+            && placeholders['search-branch-links'].split(',')
+              .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
             params.set('search', templateSearchTag);
           }
 
@@ -2413,7 +2414,7 @@ async function loadEager() {
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
-    standardizeBranchLinks(main);
+    await standardizeBranchLinks(main);
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
