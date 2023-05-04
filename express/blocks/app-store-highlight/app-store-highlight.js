@@ -17,7 +17,8 @@ import {
   getIcon,
   getIconElement,
   getMetadata,
-  getMobileOperatingSystem, standardizeBranchLinks,
+  getMobileOperatingSystem,
+  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 const imageSrcs = [

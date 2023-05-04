@@ -15,7 +15,8 @@ import {
   getIcon,
   getMobileOperatingSystem,
   fetchPlaceholders,
-  getIconElement, standardizeBranchLinks,
+  getIconElement,
+  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 async function buildPayload() {

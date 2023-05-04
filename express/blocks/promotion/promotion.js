@@ -19,7 +19,6 @@ import {
   toClassName,
   createOptimizedPicture,
   trackBranchParameters,
-// eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 const PROMOTION_FOLDER = 'express/promotions';

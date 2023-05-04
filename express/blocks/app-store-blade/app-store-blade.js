@@ -12,7 +12,12 @@
 
 import {
   createOptimizedPicture,
-  createTag, fetchPlaceholders, getIcon, getIconElement, getMetadata, standardizeBranchLinks,
+  createTag,
+  fetchPlaceholders,
+  getIcon,
+  getIconElement,
+  getMetadata,
+  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 /**
