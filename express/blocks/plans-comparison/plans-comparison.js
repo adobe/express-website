@@ -16,7 +16,6 @@ import {
   getIconElement,
   getOffer,
   fetchPlainBlockFromFragment,
-  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 async function fetchPlan(planUrl) {
@@ -383,7 +382,6 @@ export default async function decorate($block) {
         }
 
         document.dispatchEvent(new Event('planscomparisonloaded'));
-        standardizeBranchLinks($blockFromFragment.closest('main'), $blockFromFragment);
       }
     }
   }

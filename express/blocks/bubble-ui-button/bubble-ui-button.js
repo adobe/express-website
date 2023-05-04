@@ -14,7 +14,6 @@ import {
   createTag,
   getIconElement,
   getLocale,
-  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 import {
@@ -409,6 +408,10 @@ export default async function decorate($block) {
 
     const data = await collectFloatingButtonData();
     const blockWrapper = await createMultiFunctionButton($block, data, audience);
-    standardizeBranchLinks(blockWrapper.closest('main'), blockWrapper);
+    const blockLinks = blockWrapper.querySelectorAll('a');
+    if (blockLinks && blockLinks.length > 0) {
+      const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+      document.dispatchEvent(linksPopulated);
+    }
   }
 }

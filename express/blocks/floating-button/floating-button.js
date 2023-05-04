@@ -14,7 +14,6 @@ import {
   createFloatingButton,
   collectFloatingButtonData,
 } from '../shared/floating-cta.js';
-import { standardizeBranchLinks } from '../../scripts/scripts.js';
 
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
@@ -31,7 +30,12 @@ export default async function decorate($block) {
       $parentSection ? audience : null,
       data,
     );
-    standardizeBranchLinks(blockWrapper.closest('main'), blockWrapper);
+
+    const blockLinks = blockWrapper.querySelectorAll('a');
+    if (blockLinks && blockLinks.length > 0) {
+      const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+      document.dispatchEvent(linksPopulated);
+    }
   } else {
     $block.parentElement.remove();
   }

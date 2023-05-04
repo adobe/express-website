@@ -17,7 +17,6 @@ import {
   getIcon,
   getIconElement,
   getMetadata,
-  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 /**
@@ -238,5 +237,9 @@ export default async function decorate($block) {
   $block.innerHTML = '';
 
   decorateBlade($block, payload);
-  standardizeBranchLinks($block.closest('main'), $block);
+  const blockLinks = $block.querySelectorAll('a');
+  if (blockLinks && blockLinks.length > 0) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+    document.dispatchEvent(linksPopulated);
+  }
 }

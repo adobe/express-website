@@ -16,7 +16,6 @@ import {
   getMobileOperatingSystem,
   fetchPlaceholders,
   getIconElement,
-  standardizeBranchLinks,
 } from '../../scripts/scripts.js';
 
 async function buildPayload() {
@@ -187,7 +186,6 @@ export default async function decorate($block) {
     const payload = await buildPayload();
     decorateBanner($block, payload);
     addCloseBtn($block);
-    standardizeBranchLinks($block.closest('main'), $block);
 
     if (Array.isArray(window.floatingCta) && window.floatingCta.length) {
       const db = window.floatingCta[0];
@@ -203,6 +201,12 @@ export default async function decorate($block) {
         initScrollDirection($block);
         watchFloatingButtonState($block);
       }, 1000);
+    }
+
+    const blockLinks = $block.querySelectorAll('a');
+    if (blockLinks && blockLinks.length > 0) {
+      const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+      document.dispatchEvent(linksPopulated);
     }
   }
 }

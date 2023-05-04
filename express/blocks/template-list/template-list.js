@@ -25,7 +25,7 @@ import {
   getLottie,
   getMetadata,
   lazyLoadLottiePlayer,
-  linkImage, standardizeBranchLinks,
+  linkImage,
   toClassName,
 } from '../../scripts/scripts.js';
 
@@ -1864,6 +1864,4 @@ export default async function decorate($block) {
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
     addBackgroundAnimation($block, props.backgroundAnimation);
   }
-
-  standardizeBranchLinks($block.closest('main'), $block);
 }

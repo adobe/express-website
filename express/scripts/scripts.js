@@ -1247,94 +1247,6 @@ export function addSearchQueryToHref(href) {
   return url.toString();
 }
 
-export async function standardizeBranchLinks(main, block) {
-  const placeholders = await fetchPlaceholders();
-  const btns = block ? block.querySelectorAll('a, button') : main.querySelectorAll('a, button');
-  if (btns.length > 0) {
-    btns.forEach((btn) => {
-      if (btn.href) {
-        const isPostEditorLink = btn.href.match('adobesparkpost.app.link');
-
-        if (isPostEditorLink) {
-          const parentBlock = btn.closest('.block');
-          const currentUrl = new URL(window.location.href);
-          const btnUrl = new URL(btn.href);
-          const urlParams = currentUrl.searchParams;
-          const { experiment } = window.hlx;
-          const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
-          let placement = 'outside-blocks';
-
-          if (parentBlock) {
-            const blockName = parentBlock.dataset.blockName || parentBlock.classList[0];
-            const sameBlocks = main.querySelectorAll(`.${blockName}`);
-
-            if (sameBlocks.length > 1) {
-              sameBlocks.forEach((b, i) => {
-                if (b === parentBlock) {
-                  placement = `${blockName}-${i + 1}`;
-                }
-              });
-            } else {
-              placement = blockName;
-            }
-
-            if (['template-list', 'template-x'].includes(blockName) && btn.classList.contains('placeholder')) {
-              placement = 'blank-template-cta';
-            }
-          }
-
-          const templateSearchTag = getMetadata('short-title');
-          const pageUrl = window.location.pathname;
-          const sdid = urlParams.get('sdid');
-          const mv = urlParams.get('mv');
-          const promoId = urlParams.get('promoid');
-          const cgen = urlParams.get('cgen');
-          const url = new URL(btn.href);
-          const params = url.searchParams;
-
-          if (templateSearchTag
-            && placeholders['search-branch-links']
-            && placeholders['search-branch-links'].split(',')
-              .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
-            params.set('search', templateSearchTag);
-          }
-
-          if (pageUrl) {
-            params.set('url', pageUrl);
-          }
-
-          if (sdid) {
-            params.set('sdid', sdid);
-          }
-
-          if (cgen) {
-            params.set('cgen', cgen);
-          }
-
-          if (promoId) {
-            params.set('promoid', promoId);
-          }
-
-          if (mv) {
-            params.set('mv', mv);
-          }
-
-          if (experimentStatus === 'active') {
-            params.set('expid', `${experiment.id}-${experiment.selectedVariant}`);
-          }
-
-          if (placement) {
-            params.set('ctaid', placement);
-          }
-
-          url.search = params.toString();
-          btn.href = url.toString();
-        }
-      }
-    });
-  }
-}
-
 export function decorateButtons(block = document) {
   const noButtonBlocks = ['template-list', 'icon-list'];
   block.querySelectorAll(':scope a').forEach(($a) => {
@@ -2414,7 +2326,6 @@ async function loadEager() {
     displayEnv();
     displayOldLinkWarning();
     wordBreakJapanese();
-    await standardizeBranchLinks(main);
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
@@ -2649,10 +2560,41 @@ function registerPerformanceLogger() {
   }
 }
 
-export function trackBranchParameters($links) {
+function getPlacement(btn) {
+  const parentBlock = btn.closest('.block');
+  let placement = 'outside-blocks';
+
+  if (parentBlock) {
+    const blockName = parentBlock.dataset.blockName || parentBlock.classList[0];
+    const sameBlocks = btn.closest('main')?.querySelectorAll(`.${blockName}`);
+
+    if (sameBlocks && sameBlocks.length > 1) {
+      sameBlocks.forEach((b, i) => {
+        if (b === parentBlock) {
+          placement = `${blockName}-${i + 1}`;
+        }
+      });
+    } else {
+      placement = blockName;
+    }
+
+    if (['template-list', 'template-x'].includes(blockName) && btn.classList.contains('placeholder')) {
+      placement = 'blank-template-cta';
+    }
+  }
+
+  return placement;
+}
+
+export async function trackBranchParameters($links) {
+  const placeholders = await fetchPlaceholders();
   const rootUrl = new URL(window.location.href);
   const rootUrlParameters = rootUrl.searchParams;
 
+  const { experiment } = window.hlx;
+  const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
+  const templateSearchTag = getMetadata('short-title');
+  const pageUrl = window.location.pathname;
   const sdid = rootUrlParameters.get('sdid');
   const mv = rootUrlParameters.get('mv');
   const sKwcId = rootUrlParameters.get('s_kwcid');
@@ -2661,51 +2603,73 @@ export function trackBranchParameters($links) {
   const trackingId = rootUrlParameters.get('trackingid');
   const cgen = rootUrlParameters.get('cgen');
 
-  if (sdid || mv || sKwcId || efId || promoId || trackingId || cgen) {
-    $links.forEach(($a) => {
-      if ($a.href && $a.href.match('adobesparkpost.app.link')) {
-        const buttonUrl = new URL($a.href);
-        const urlParams = buttonUrl.searchParams;
+  $links.forEach(($a) => {
+    if ($a.href && $a.href.match('adobesparkpost.app.link')) {
+      const btnUrl = new URL($a.href);
+      const urlParams = btnUrl.searchParams;
+      const placement = getPlacement($a);
 
-        if (sdid) {
-          urlParams.set('~campaign_id', sdid);
-        }
-
-        if (mv) {
-          urlParams.set('~customer_campaign', mv);
-        }
-
-        if (sKwcId) {
-          const sKwcIdParameters = sKwcId.split('!');
-
-          if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
-            urlParams.set('~customer_placement', 'Google%20AdWords');
-          }
-
-          if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
-            urlParams.set('~keyword', sKwcIdParameters[8]);
-          }
-        }
-
-        if (promoId) {
-          urlParams.set('~ad_id', promoId);
-        }
-
-        if (trackingId) {
-          urlParams.set('~keyword_id', trackingId);
-        }
-
-        if (cgen) {
-          urlParams.set('~customer_keyword', cgen);
-        }
-
-        urlParams.set('~feature', 'paid%20advertising');
-
-        buttonUrl.search = urlParams.toString();
-        $a.href = buttonUrl.toString();
+      if (templateSearchTag
+        && placeholders['search-branch-links']
+        && placeholders['search-branch-links'].split(',')
+          .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
+        urlParams.set('search', templateSearchTag);
       }
-    });
-  }
+
+      if (pageUrl) {
+        urlParams.set('url', pageUrl);
+      }
+
+      if (sdid) {
+        urlParams.set('sdid', sdid);
+      }
+
+      if (mv) {
+        urlParams.set('mv', mv);
+      }
+
+      if (efId) {
+        urlParams.set('efid', efId);
+      }
+
+      if (sKwcId) {
+        const sKwcIdParameters = sKwcId.split('!');
+
+        if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
+          urlParams.set('customer_placement', 'Google%20AdWords');
+        }
+
+        if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+          urlParams.set('keyword', sKwcIdParameters[8]);
+        }
+      }
+
+      if (promoId) {
+        urlParams.set('promoid', promoId);
+      }
+
+      if (trackingId) {
+        urlParams.set('keywordid', trackingId);
+      }
+
+      if (cgen) {
+        urlParams.set('cgen', cgen);
+      }
+
+      if (experimentStatus === 'active') {
+        urlParams.set('expid', `${experiment.id}-${experiment.selectedVariant}`);
+      }
+
+      if (placement) {
+        urlParams.set('ctaid', placement);
+      }
+
+      urlParams.set('feature', 'paid%20advertising');
+
+      btnUrl.search = urlParams.toString();
+      $a.href = btnUrl.toString();
+    }
+  });
 }
 
 if (window.name.includes('performance')) registerPerformanceLogger();

@@ -23,7 +23,7 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   linkImage,
-  toClassName, standardizeBranchLinks,
+  toClassName,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -1362,5 +1362,4 @@ export default async function decorate(block) {
   block.innerHTML = '';
   await buildTemplateList(block, props, determineTemplateXType(props));
   loadBetterAssetsInBackground(block, props);
-  standardizeBranchLinks(block.closest('main'), $block);
 }

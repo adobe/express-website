@@ -94,6 +94,5 @@ export default async function decorate($block) {
   if ($links) {
     const linksPopulated = new CustomEvent('linkspopulated', { detail: $links });
     document.dispatchEvent(linksPopulated);
-    trackBranchParameters($links);
   }
 }
