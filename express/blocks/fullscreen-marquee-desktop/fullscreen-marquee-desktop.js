@@ -57,6 +57,11 @@ function buildAppFrame(parameters) {
     }
   }
 
+  if (parameters.editor) {
+    parameters.editor.classList.add('fullscreen-marquee-desktop-app-editor');
+    parameters.app.append(parameters.editor);
+  }
+
   return appFrame;
 }
 
