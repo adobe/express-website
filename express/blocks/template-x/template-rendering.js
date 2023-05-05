@@ -12,10 +12,6 @@
 /* eslint-disable no-underscore-dangle */
 import { createTag, getIconElement } from '../../scripts/scripts.js';
 
-function rewordRemixCount(remixCount) {
-  return remixCount > 1000 ? `${Math.floor(remixCount / 1000)}k` : remixCount;
-}
-
 function shortenTitle(title) {
   return title.length > 19 ? `${title.slice(0, 19)}...` : title;
 }
@@ -30,55 +26,6 @@ function isVideoFirst(template) {
 
 function getTemplateTitle(template) {
   return template.title['i-default'];
-}
-
-function renderStillWrapper(template, props) {
-  const stillWrapper = createTag('div', { class: 'still-wrapper' });
-
-  const templateTitle = getTemplateTitle(template);
-  const renditionLinkHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
-  const imageThumbnailId = template.pages[0].rendition.image?.thumbnail.componentId;
-
-  const thumbnailImageHref = renditionLinkHref.replace(
-    '{&page,size,type,fragment}',
-    `&size=${props.renditionParams.size}&type=image/jpg&fragment=id=${imageThumbnailId}`,
-  );
-
-  const imgWrapper = createTag('div', { class: 'image-wrapper' });
-
-  const img = createTag('img', {
-    src: thumbnailImageHref,
-    alt: templateTitle,
-  });
-  imgWrapper.insertAdjacentElement('beforeend', img);
-
-  const remixCount = template.stats?.remixCount || 0;
-  const isFree = template.licensingCategory === 'free';
-  const creator = template.attribution?.creators?.filter((c) => c.name && c.name !== 'Adobe Express')?.[0]?.name || null;
-
-  const remixSpan = createTag('span', { class: 'remix-cnt' });
-  remixSpan.append(`${rewordRemixCount(remixCount)} views`);
-  const freeTag = createTag('span', { class: 'free-tag' });
-  const creatorDiv = createTag('div', { class: 'creator-span' });
-  creatorDiv.append(creator || shortenTitle(templateTitle));
-
-  imgWrapper.append(remixSpan);
-  if (isFree) {
-    freeTag.append('Free');
-    imgWrapper.append(freeTag);
-  } else {
-    const premiumIcon = getIconElement('premium');
-    imgWrapper.append(premiumIcon);
-  }
-
-  if (isVideoFirst(template)) {
-    const videoIcon = getIconElement('tiktok');
-    imgWrapper.append(videoIcon);
-  }
-
-  stillWrapper.append(imgWrapper);
-  stillWrapper.append(creatorDiv);
-  return stillWrapper;
 }
 
 function extractRenditionLinkHref(template) {
@@ -97,14 +44,40 @@ function extractImageThumbnail(page) {
   return page.rendition.image?.thumbnail;
 }
 
-function getTemplateImageSrc(renditionLinkHref, page) {
+function extractImagePreview(page) {
+  return page.rendition.image?.preview;
+}
+
+function getWidthHeightRatio(page) {
+  const preview = extractImagePreview(page);
+  return preview.width / preview.height;
+}
+
+// API takes size param as the longest side
+function widthToSize(widthHeightRatio, targetWidth) {
+  if (widthHeightRatio >= 1) {
+    return targetWidth;
+  }
+  return Math.round(targetWidth / widthHeightRatio);
+}
+
+function getImageThumbnailSrc(renditionLinkHref, page) {
   const thumbnail = extractImageThumbnail(page);
   return renditionLinkHref.replace(
-    '{&page,size,type,fragment}', `&size=${thumbnail.width}&type=image/jpg&fragment=id=${thumbnail.componentId}`,
+    '{&page,size,type,fragment}',
+    `&size=${widthToSize(getWidthHeightRatio(page), thumbnail.width)}&type=image/jpg&fragment=id=${thumbnail.componentId}`,
   );
 }
 
-function getTemplateVideoSrc(componentLinkHref, page) {
+function getImageCustomWidthSrc(renditionLinkHref, page, width) {
+  const thumbnail = extractImageThumbnail(page);
+  return renditionLinkHref.replace(
+    '{&page,size,type,fragment}',
+    `&size=${widthToSize(getWidthHeightRatio(page), width)}&type=image/jpg&fragment=id=${thumbnail.componentId}`,
+  );
+}
+
+function getVideoSrc(componentLinkHref, page) {
   const videoThumbnailId = extractVideoThumbnailId(page);
   return componentLinkHref.replace(
     '{&revision,component_id}',
@@ -172,16 +145,16 @@ function renderRotatingVideos(pages, { renditionLinkHref, componentLinkHref, tem
     muted: true,
     playsinline: '',
     title: templateTitle,
-    poster: getTemplateImageSrc(renditionLinkHref, pageIterator.current()),
+    poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
   });
   const videoSource = createTag('source', {
-    src: getTemplateVideoSrc(componentLinkHref, pageIterator.current()),
+    src: getVideoSrc(componentLinkHref, pageIterator.current()),
     type: 'video/mp4',
   });
   video.append(videoSource);
   const playVideo = () => {
-    video.poster = getTemplateImageSrc(renditionLinkHref, pageIterator.current());
-    videoSource.src = getTemplateVideoSrc(componentLinkHref, pageIterator.current());
+    video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
+    videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
     video.load();
     video.muted = true;
     video.play().catch((e) => {
@@ -209,10 +182,10 @@ function renderRotatingImages(pages, { templateTitle, renditionLinkHref }) {
   const img = createTag('img', { src: '', alt: templateTitle });
   let playImageIntervalId;
   const playImage = () => {
-    img.src = getTemplateImageSrc(renditionLinkHref, pageIterator.current());
+    img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
     playImageIntervalId = setInterval(() => {
       pageIterator.next();
-      img.src = getTemplateImageSrc(renditionLinkHref, pageIterator.current());
+      img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
     }, 2000);
   };
   const cleanup = () => {
@@ -274,6 +247,49 @@ function renderHoverWrapper(template, placeholders) {
   btnContainer.append(cta);
 
   return btnContainer;
+}
+
+function renderStillWrapper(template, props) {
+  const stillWrapper = createTag('div', { class: 'still-wrapper' });
+
+  const templateTitle = getTemplateTitle(template);
+  const renditionLinkHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
+
+  const thumbnailImageHref = getImageCustomWidthSrc(renditionLinkHref,
+    template.pages[0], props.renditionParams.size);
+
+  const imgWrapper = createTag('div', { class: 'image-wrapper' });
+
+  const img = createTag('img', {
+    src: thumbnailImageHref,
+    alt: templateTitle,
+  });
+  imgWrapper.insertAdjacentElement('beforeend', img);
+
+  const isFree = template.licensingCategory === 'free';
+  const creator = template.attribution?.creators?.filter((c) => c.name && c.name !== 'Adobe Express')?.[0]?.name || null;
+
+  const freeTag = createTag('span', { class: 'free-tag' });
+  const creatorDiv = createTag('div', { class: 'creator-span' });
+  creatorDiv.append(creator || shortenTitle(templateTitle));
+
+  if (isFree) {
+    freeTag.append('Free');
+    imgWrapper.append(freeTag);
+  } else {
+    const premiumIcon = getIconElement('premium');
+    imgWrapper.append(premiumIcon);
+  }
+
+  if (isVideoFirst(template)) {
+    const videoIcon = getIconElement('tiktok');
+    imgWrapper.append(videoIcon);
+  }
+
+  stillWrapper.append(imgWrapper);
+  // TODO: API not ready for creator yet
+  // stillWrapper.append(creatorDiv);
+  return stillWrapper;
 }
 
 export default function renderTemplate(template, placeholders, props) {
