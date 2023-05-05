@@ -13,6 +13,7 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
+  createOptimizedPicture,
   createTag, fetchPlaceholders,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
@@ -277,8 +278,9 @@ export default async function decorate(block) {
     const placeholderImgUrl = backgroundPictureDiv.querySelector('div');
     const placeholders = await fetchPlaceholders();
     const url = placeholderImgUrl.textContent.replaceAll('how-to-steps-carousel-background-img', placeholders['how-to-steps-carousel-background-img']);
-    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createTag('picture');
-    const backgroundPicImg = backgroundPic.querySelector('img') ?? createTag('img', { src: url });
+    const eagerLoad = document.querySelector('.block') === block;
+    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createOptimizedPicture(url, 'template in express', eagerLoad);
+    const backgroundPicImg = backgroundPic.querySelector('img');
 
     if (placeholderImgUrl) {
       backgroundPic.appendChild(backgroundPicImg);
