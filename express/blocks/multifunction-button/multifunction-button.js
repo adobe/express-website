@@ -94,6 +94,8 @@ export async function createMultiFunctionButton($block, data, audience) {
     .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
   buildMultifunctionToolBox($buttonWrapper, data);
+
+  return $buttonWrapper;
 }
 
 export default async function decorate($block) {

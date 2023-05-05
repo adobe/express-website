@@ -18,7 +18,8 @@ import {
   createTag,
   decorateMain,
   fetchPlaceholders,
-  fetchRelevantRows,
+  fetchPlainBlockFromFragment,
+  fetchRelevantRows, fixIcons,
   getIconElement,
   getLanguage,
   getLocale,
@@ -1709,6 +1710,23 @@ export async function decorateTemplateList($block) {
   // make copy of children to avoid modifying list while looping
 
   populateTemplates($block, templates);
+
+  if ($block.classList.contains('spreadsheet-powered')
+    && !$block.classList.contains('apipowered')
+    && $block.classList.contains('mini')) {
+    const links = $block.querySelectorAll('a:any-link');
+    links.forEach((link) => {
+      const isPlaceholder = link.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
+      const $2ndDiv = link.querySelector(':scope > div:last-of-type');
+
+      if (isPlaceholder) {
+        link.classList.add('placeholder');
+      }
+
+      $2ndDiv.classList.add('button-container');
+    });
+  }
+
   if (!$block.classList.contains('horizontal')) {
     if (rows > 6 || $block.classList.contains('sixcols') || $block.classList.contains('fullwidth')) {
       /* flex masonry */
@@ -1804,36 +1822,64 @@ function addBackgroundAnimation($block, animationUrl) {
   }
 }
 
+async function replaceRRTemplateList($block) {
+  const placeholders = await fetchPlaceholders();
+  const relevantRowsData = await fetchRelevantRows(window.location.pathname);
+  props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
+
+  if (relevantRowsData) {
+    $block.closest('.section').dataset.audience = 'mobile';
+    props.headingTitle = relevantRowsData.header || null;
+    props.headingSlug = relevantRowsData.shortTitle || null;
+    props.viewAllLink = relevantRowsData.viewAllLink || null;
+
+    if (relevantRowsData.manualTemplates === 'Y') {
+      const $sectionFromFragment = await fetchPlainBlockFromFragment(`/express/fragments/relevant-rows/${relevantRowsData.templateFragment}`, 'template-list');
+      const $newBlock = $sectionFromFragment.querySelector('.template-list');
+
+      if ($newBlock) {
+        const $section = $block.closest('.section');
+        const $sectionHeading = $section.querySelector('div.default-content-wrapper > h2');
+        let $sectionSlug = null;
+
+        if ($sectionHeading.textContent.trim().indexOf('{{heading_placeholder}}') >= 0) {
+          if ($block.classList.contains('spreadsheet-powered') && props.headingTitle) {
+            $sectionHeading.textContent = props.headingTitle || '';
+
+            if (props.headingSlug) {
+              $sectionSlug = createTag('p');
+              $sectionSlug.textContent = props.headingSlug;
+            }
+          }
+        }
+        $block.classList.remove('apipowered');
+        $block.innerHTML = $newBlock.innerHTML;
+        await fixIcons($block);
+      }
+    }
+
+    $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '')
+      .replaceAll('default-tasks', relevantRowsData.templateTasks || '')
+      .replaceAll('default-topics', relevantRowsData.templateTopics || '')
+      .replaceAll('default-locale', relevantRowsData.templateLocale || 'en')
+      .replaceAll('default-premium', relevantRowsData.templatePremium || '')
+      .replaceAll('default-animated', relevantRowsData.templateAnimated || '')
+      .replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/')
+      .replaceAll('default-format', relevantRowsData.placeholderFormat || '');
+
+    if (relevantRowsData.templateTasks === '') {
+      $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+    } else {
+      $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
+    }
+  } else {
+    $block.remove();
+  }
+}
+
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
-    const relevantRowsData = await fetchRelevantRows(window.location.pathname);
-    props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
-
-    if (relevantRowsData) {
-      $block.closest('.section').dataset.audience = 'mobile';
-
-      props.headingTitle = relevantRowsData.header || null;
-      props.headingSlug = relevantRowsData.shortTitle || null;
-      props.viewAllLink = relevantRowsData.viewAllLink || null;
-
-      $block.innerHTML = $block.innerHTML.replaceAll('default-title', relevantRowsData.shortTitle || '');
-      $block.innerHTML = $block.innerHTML.replaceAll('default-tasks', relevantRowsData.templateTasks || '');
-      $block.innerHTML = $block.innerHTML.replaceAll('default-topics', relevantRowsData.templateTopics || '');
-      $block.innerHTML = $block.innerHTML.replaceAll('default-locale', relevantRowsData.templateLocale || 'en');
-      $block.innerHTML = $block.innerHTML.replaceAll('default-premium', relevantRowsData.templatePremium || '');
-      $block.innerHTML = $block.innerHTML.replaceAll('default-animated', relevantRowsData.templateAnimated || '');
-      $block.innerHTML = $block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', relevantRowsData.createLink || '/');
-      $block.innerHTML = $block.innerHTML.replaceAll('default-format', relevantRowsData.placeholderFormat || '');
-
-      if (relevantRowsData.templateTasks === '') {
-        $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-      } else {
-        $block.innerHTML = $block.innerHTML.replaceAll('default-create-link-text', relevantRowsData.createText || '');
-      }
-    } else {
-      $block.remove();
-    }
+    await replaceRRTemplateList($block);
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
@@ -1858,7 +1904,7 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('mini') || $block.classList.contains('apipowered')) {
-    decorateTailButton($block);
+    await decorateTailButton($block);
   }
 
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
