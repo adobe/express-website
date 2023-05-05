@@ -1893,8 +1893,8 @@ function splitSections($main) {
 function setTheme() {
   let theme = getMeta('theme');
   if (!theme && (window.location.pathname.startsWith('/express')
-  || window.location.pathname.startsWith('/education'))) {
-    // mega nav, suppress brand header
+  || window.location.pathname.startsWith('/education') || window.location.pathname.startsWith('/drafts'))) {
+    // mega nav, suppress brand header 
     theme = 'no-brand-header';
   }
   const $body = document.body;
