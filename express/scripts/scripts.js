@@ -1842,24 +1842,18 @@ async function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     if (!window.floatingCtasLoaded) {
       const floatingCTAData = await fetchFloatingCta(window.location.pathname);
-      const defaultButton = await fetchFloatingCta('default');
       let desktopButton;
       let mobileButton;
 
       if (floatingCTAData) {
         const buttonTypes = {
-          desktop: floatingCTAData.desktop || defaultButton.desktop,
-          mobile: floatingCTAData.mobile || defaultButton.mobile,
+          desktop: floatingCTAData.desktop,
+          mobile: floatingCTAData.mobile,
         };
 
         desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
         mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
-      } else if (defaultButton) {
-        desktopButton = buildBlock(defaultButton.desktop, 'desktop');
-        mobileButton = buildBlock(defaultButton.mobile, 'mobile');
-      }
 
-      if (floatingCTAData || defaultButton) {
         [desktopButton, mobileButton].forEach((button) => {
           button.classList.add('spreadsheet-powered');
           if ($lastDiv) {
