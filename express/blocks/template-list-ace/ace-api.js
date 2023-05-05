@@ -62,11 +62,15 @@ export async function requestGeneration({
 
   const url = encodeURI(`${base}?${queryParam}${numParam}${localeParam}${optionalParams}`);
 
-  const { jobId, status } = await fetch(url, {
+  const res = await fetch(url, {
     headers: {
       'x-request-id': requestId,
     },
-  }).then((response) => response.json());
+  });
+  if (!res.ok) {
+    throw new Error(`Error requesting generation: ${res.status} ${res.statusText}`);
+  }
+  const { jobId, status } = await res.json();
   return { jobId, status };
 }
 
@@ -77,34 +81,11 @@ export async function monitorGeneration(jobId) {
   return { status, results, reason };
 }
 
-const MONITOR_STATUS = Object.freeze({
+export const MONITOR_STATUS = Object.freeze({
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',
   FAILED: 'failed',
 });
-
-export async function waitForGeneration(jobId, wait = 2000) {
-  return new Promise((resolve, reject) => {
-    const interval = setInterval(async () => {
-      console.log('monitoring: ', jobId);
-      const { status, results, reason } = await monitorGeneration(jobId);
-      console.log('got: ', status);
-      if (status === MONITOR_STATUS.IN_PROGRESS) return;
-
-      if (status === MONITOR_STATUS.COMPLETED) {
-        clearInterval(interval);
-        resolve(results);
-      }
-
-      if (status === MONITOR_STATUS.FAILED || reason) {
-        clearInterval(interval);
-        reject(new Error(JSON.stringify({ status })));
-      }
-
-      reject(new Error(JSON.stringify({ status, results, reason: 'unexpected status' })));
-    }, wait);
-  });
-}
 
 export const FEEDBACK_CATEGORIES = Object.freeze({
   THUMBS_UP: 'thumbs_up',
@@ -119,26 +100,12 @@ export async function postFeedback(id, category, notes) {
   if (useMock) return { result: 'Feedback recorded successfully' };
   const url = `${base}/feedback`;
   const body = JSON.stringify({ id, category, notes });
-  let response;
-  try {
-    response = await fetch(url, {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) throw new Error('not ok');
-    return response.json();
-  } catch (err) {
-    // back up since API people still working on this
-    response = await fetch(url.replace('/templates', ''), {
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }
+  const response = await fetch(url, {
+    method: 'POST',
+    body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return response.json();
 }

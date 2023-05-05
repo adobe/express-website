@@ -413,15 +413,25 @@ function createDropdown(titleRow, placeholders, block) {
   });
 }
 
-function openModal(query, searchForm, cleanup) {
+function openModal(query, titleRow) {
+  const titleRowDiv = titleRow.querySelector(':scope > div');
+  const title = titleRowDiv.querySelector(':scope > h1');
+
   const modalContent = createTag('div');
   modalContent.style.height = '740px';
   modalContent.style.width = '1200px';
-  modalContent.append(renderModalContent(query, searchForm, cleanup));
+  const { renderedModal, fetchingState } = renderModalContent(query, title);
+  modalContent.append(renderedModal);
   import('../modal/modal.js').then((mod) => {
     mod.getModal(null, {
       class: 'generated-results-modal', id: 'generated-results-modal', content: modalContent, closeEvent: 'closeGeneratedResultsModal',
     });
+  });
+
+  // cleanup upon modal closing
+  window.addEventListener('milo:modal:closed', () => {
+    titleRowDiv.append(title);
+    clearInterval(fetchingState.intervalId);
   });
 }
 
@@ -441,9 +451,6 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   const title = titleRowDiv.querySelector(':scope > h1');
   // title.innerHTML += searchForm.outerHTML;
   title.append(searchForm);
-  const cleanup = () => {
-    titleRowDiv.append(title);
-  };
   const buttonLink = title.querySelector(':scope a');
   buttonLink.href = '#';
   buttonLink.addEventListener('click', (event) => {
@@ -452,11 +459,7 @@ function createSearchBar(searchRows, placeholders, titleRow) {
       alert('search should not be empty!');
       return;
     }
-    openModal(searchBar.value, title);
-  });
-  // todo I don't think we need this jingle
-  window.addEventListener('milo:modal:closed', () => {
-    cleanup();
+    openModal(searchBar.value, titleRow);
   });
 
   titleRowDiv.classList.add('title-search');
@@ -466,12 +469,12 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   return searchBar;
 }
 
-function isProd(url) {
-  return !/\.hlx/.test(url);
+function isProdOrLocal() {
+  return !window.location.host.includes('adobe.com') || window.location.host.includes('localhost:3000');
 }
 
 export default async function decorate(block) {
-  if (!isProd(window.location.href)) {
+  if (!isProdOrLocal()) {
     await getImsToken();
   }
   const placeholders = await fetchPlaceholders();

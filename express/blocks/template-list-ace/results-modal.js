@@ -13,30 +13,29 @@
 import { createTag } from '../../scripts/scripts.js';
 import {
   requestGeneration,
-  waitForGeneration,
   postFeedback,
+  monitorGeneration,
+  MONITOR_STATUS,
   FEEDBACK_CATEGORIES,
 } from './ace-api.js';
+import useProgressManager from './progress-manager.js';
 
-export function renderLoader() {
-  const wrapper = createTag('div', { class: 'loader-wrapper' });
-  const spinnerContainer = createTag('div', { class: 'loader-container loader-container-big' });
-  spinnerContainer.append(createTag('div', { class: 'big-loader' }));
-  wrapper.append(spinnerContainer);
-  const text = createTag('span', { class: 'loader-text' });
-  text.textContent = 'Generating templates... This could take 30 seconds or more.';
-  wrapper.append(text);
-  return wrapper;
-}
+const NUM_PLACEHOLDERS = 4;
+const MONITOR_INTERVAL = 2000;
+const AVG_GENERATION_TIME = 12000;
 
 function getVoteHandler(id, category) {
   return async (e) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const { result: feedbackRes, error } = await postFeedback(id, category, 'Rate this result: thumbs_down');
+      const { result: feedbackRes, error } = await postFeedback(
+        id,
+        category,
+        'Rate this result: thumbs_down',
+      );
       if (error) throw new Error(error);
-      console.log(feedbackRes);
+      alert(feedbackRes);
     } catch (err) {
       console.error(err);
     }
@@ -50,13 +49,17 @@ export function renderRateResult(result) {
   const upvoteLink = createTag('button', { class: 'feedback-rate-button' });
   downvoteLink.append('👎');
   upvoteLink.append('👍');
-  downvoteLink.addEventListener('click', getVoteHandler(result.id, FEEDBACK_CATEGORIES.THUMBS_DOWN));
+  downvoteLink.addEventListener(
+    'click',
+    getVoteHandler(result.id, FEEDBACK_CATEGORIES.THUMBS_DOWN),
+  );
   upvoteLink.addEventListener('click', getVoteHandler(result.id, FEEDBACK_CATEGORIES.THUMBS_UP));
   wrapper.append(downvoteLink);
   wrapper.append(upvoteLink);
   return wrapper;
 }
 
+// eslint-disable-next-line no-unused-vars
 export function renderReportButton(result) {
   const wrapper = createTag('div', { class: 'feedback-report' });
   wrapper.append('Report');
@@ -96,15 +99,75 @@ function renderTemplate(result) {
   return templateWrapper;
 }
 
-async function fetchAndRenderResults(query, modalContentWrapper) {
-  const { jobId, status } = await requestGeneration({ query, num_results: 4 });
+async function waitForGeneration(jobId, progressManager, fetchingState) {
+  return new Promise((resolve, reject) => {
+    fetchingState.intervalId = setInterval(async () => {
+      const res = await monitorGeneration(jobId);
+      const { status, results, reason } = res;
+      if (status === MONITOR_STATUS.IN_PROGRESS) {
+        progressManager.update(Math.floor(results.length / NUM_PLACEHOLDERS) * 100);
+        return;
+      } else if (status === MONITOR_STATUS.COMPLETED) {
+        progressManager.update(100);
+        clearInterval(fetchingState.intervalId);
+        resolve(results);
+      } else if (status === MONITOR_STATUS.FAILED || reason) {
+        clearInterval(fetchingState.intervalId);
+        reject(new Error(JSON.stringify({ status })));
+      }
+
+      reject(new Error(JSON.stringify({ status, results, reason: 'unexpected status' })));
+    }, MONITOR_INTERVAL);
+  });
+}
+
+export function renderLoader() {
+  const wrapper = createTag('div', { class: 'loader-wrapper' });
+  const textRow = createTag('div', { class: 'loader-text-row' });
+  const text = createTag('span', { class: 'loader-text' });
+  text.textContent = 'Loading results…';
+  const percentage = createTag('span', { class: 'loader-percentage' });
+  percentage.textContent = '0%';
+  textRow.append(text);
+  textRow.append(percentage);
+  wrapper.append(textRow);
+
+  const progressBar = createTag('div', { class: 'loader-progress-bar' });
+  progressBar.append(createTag('div'));
+  wrapper.append(progressBar);
+
+  const placeholderRow = createTag('div', { class: 'loader-placeholder-row' });
+  for (let i = 0; i < NUM_PLACEHOLDERS; i += 1) {
+    placeholderRow.append(createTag('div', { class: 'loader-placeholder' }));
+  }
+  wrapper.append(placeholderRow);
+  return wrapper;
+}
+
+function updateProgressBar(percentage) {
+  const percentageEl = document.querySelector('.loader-percentage');
+  const progressBar = document.querySelector('.loader-progress-bar div');
+  if (!percentageEl || !progressBar) return;
+  percentageEl.textContent = `${percentage}%`;
+  progressBar.style.width = `${percentage}%`;
+}
+
+async function fetchAndRenderResults(query, modalContentWrapper, fetchingState) {
+  const progressManager = useProgressManager(updateProgressBar, 1000, {
+    avgCallingTimes: AVG_GENERATION_TIME / MONITOR_INTERVAL,
+    sample: 3,
+  });
+  const { jobId, status } = await requestGeneration({ query, num_results: NUM_PLACEHOLDERS });
   if (status !== 'in-progress') {
-    modalContentWrapper.append('Error generating templates!');
+    modalContentWrapper.append(`Error requesting generation: ${jobId} ${status}`);
     return;
   }
+  // consider the first 6-12% as the time for triggering generation
+  progressManager.update(Math.random() * 6 + 6);
   let results;
+
   try {
-    results = await waitForGeneration(jobId, 2000);
+    results = await waitForGeneration(jobId, progressManager, fetchingState);
   } catch (e) {
     console.error(e);
     modalContentWrapper.append('Error generating templates!');
@@ -124,12 +187,15 @@ async function fetchAndRenderResults(query, modalContentWrapper) {
 }
 
 export function renderModalContent(search, title) {
-  const modalContentWrapper = createTag('div', { class: 'modal-content' });
-  modalContentWrapper.append(title);
+  const renderedModal = createTag('div', { class: 'modal-content' });
+  renderedModal.append(title);
   const loading = renderLoader();
-  modalContentWrapper.append(loading);
-  fetchAndRenderResults(search, modalContentWrapper).then(() => {
-    loading.remove();
+  renderedModal.append(loading);
+  const fetchingState = { intervalId: null };
+  fetchAndRenderResults(search, renderedModal, fetchingState).then(() => {
+    setTimeout(() => {
+      loading.remove();
+    }, 1500);
   });
-  return modalContentWrapper;
+  return { renderedModal, fetchingState };
 }
