@@ -13,7 +13,7 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
-  createTag,
+  createTag, fetchPlaceholders,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
@@ -50,12 +50,9 @@ function setPictureHeight(block, override) {
     const container = block.parentElement.parentElement;
     const picture = container.querySelector('picture');
     const img = picture.querySelector('img');
-    loadImage(img).then(() => {
-      const panelHeight = block.parentElement.offsetHeight;
-      const imgHeight = img.naturalHeight;
-
-      picture.style.height = `${panelHeight || imgHeight}px`;
-    });
+    const panelHeight = block.parentElement.offsetHeight;
+    const imgHeight = img.naturalHeight;
+    picture.style.height = `${panelHeight || imgHeight}px`;
     fixedImageSize = true;
   }
 }
@@ -275,25 +272,30 @@ export default async function decorate(block) {
   if (image) {
     const canvasWidth = 2000;
     const canvasHeight = 1072;
-    const backgroundPictureDiv = rows.shift();
-    const link = backgroundPictureDiv.querySelector('a');
-    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createTag('picture');
-    const backgroundPicImg = backgroundPic.querySelector('img') ?? createTag('img', { src: link.href });
-    if (link) {
-      backgroundPic.appendChild(backgroundPicImg);
-      link.remove();
-    }
 
+    const backgroundPictureDiv = rows.shift();
+    const placeholderImgUrl = backgroundPictureDiv.querySelector('div');
+    const placeholders = await fetchPlaceholders();
+    const url = placeholderImgUrl.textContent.replaceAll('how-to-steps-carousel-background-img', placeholders['how-to-steps-carousel-background-img']);
+    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createTag('picture');
+    const backgroundPicImg = backgroundPic.querySelector('img') ?? createTag('img', { src: url });
+
+    if (placeholderImgUrl) {
+      backgroundPic.appendChild(backgroundPicImg);
+      placeholderImgUrl.remove();
+    }
     const templateDiv = rows.shift();
     const templateImages = templateDiv.querySelectorAll('picture');
     const templateImg = templateImages[0].querySelector('img');
     templateImg.style.visibility = 'hidden';
     templateImg.style.position = 'absolute';
+    backgroundPicImg.style.width = `${canvasWidth}px`;
+    if (window.screen.width < 600) backgroundPicImg.style.height = `${window.screen.width * 0.536}px`;
+    picture = backgroundPic;
+    section.prepend(picture);
 
     loadImage(backgroundPicImg).then(() => {
       backgroundPicImg.width = canvasWidth;
-      picture = backgroundPic;
-      section.prepend(picture);
       const canvas = createTag('canvas', { width: canvasWidth, height: canvasHeight });
       const ctx = canvas.getContext('2d');
       ctx.drawImage(backgroundPicImg, 0, 0, canvasWidth, canvasHeight);
@@ -301,6 +303,7 @@ export default async function decorate(block) {
       sources.forEach((source) => source.remove());
       return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
+          console.log('entered');
           templateDiv.remove();
           const img = createTag('img');
           img.src = canvas.toDataURL('image/png');
