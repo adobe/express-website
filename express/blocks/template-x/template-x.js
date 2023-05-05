@@ -23,6 +23,7 @@ import {
   lazyLoadLottiePlayer,
   linkImage,
   toClassName,
+  getLanguage,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
