@@ -24,10 +24,19 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-function buildOptionalParams(category, sync, force, fetchExisting) {
+function buildOptionalParams({
+  category,
+  subcategory,
+  sync,
+  force,
+  fetchExisting,
+}) {
   const optionalParams = [];
   if (category) {
     optionalParams.push(`category=${category}`);
+  }
+  if (subcategory) {
+    optionalParams.push(`subcategory=${subcategory}`);
   }
   if (sync) {
     optionalParams.push(`sync=${sync}`);
@@ -46,21 +55,26 @@ export async function requestGeneration({
   query,
   locale = 'en-us',
   category = 'poster',
+  subcategory = null,
   sync = false,
   force = false,
-  fetchExisting = false,
+  fetchExisting = true,
 }) {
+  console.log('requested');
   if (useMock) return { jobId: mockId, status: 'in-progress' };
-  const queryParam = `&query=${query}`;
-  const numParam = `&num_results=${num_results}`;
-  const localeParam = `&locale=${locale}`;
-  // TODO: add this after finalizing with API team
-  const optionalParams = true
-    ? ''
-    : `&${buildOptionalParams(category, sync, force, fetchExisting)}`;
+  const queryParam = `query=${query}`;
+  const numParam = `num_results=${num_results}`;
+  const localeParam = `locale=${locale}`;
+  const optionalParams = `${buildOptionalParams({
+    category,
+    subcategory,
+    sync,
+    force,
+    fetchExisting,
+  })}`;
   const requestId = uuidv4();
 
-  const url = encodeURI(`${base}?${queryParam}${numParam}${localeParam}${optionalParams}`);
+  const url = encodeURI(`${base}?${queryParam}&${numParam}&${localeParam}&${optionalParams}`);
 
   const res = await fetch(url, {
     headers: {
@@ -75,9 +89,14 @@ export async function requestGeneration({
 }
 
 export async function monitorGeneration(jobId) {
+  console.log('monitoring');
   if (useMock) return mockData;
   const url = `${base}/monitor?jobId=${jobId}`;
-  const { status, results, reason } = await fetch(url).then((response) => response.json());
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Error monitoring progress: ${res.status} ${res.statusText}`);
+  }
+  const { status, results, reason } = await res.json();
   return { status, results, reason };
 }
 

@@ -19,8 +19,9 @@ import {
   toClassName,
   loadScript,
 } from '../../scripts/scripts.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
-import { renderModalContent } from './results-modal.js';
+import { renderModalContent, fetchResults, renderResults } from './results-modal.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
@@ -82,8 +83,7 @@ async function fetchTemplates() {
     props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
 
     const result = await fetch(props.queryString)
-      .then((response) => response.json())
-      .then((response) => response);
+      .then((response) => response.json());
 
     // eslint-disable-next-line no-underscore-dangle
     if (result._embedded.total > 0) {
@@ -91,8 +91,7 @@ async function fetchTemplates() {
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
       return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
-        .then((response) => response.json())
-        .then((response) => response);
+        .then((response) => response.json());
     }
   }
   return null;
@@ -317,6 +316,7 @@ function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block,
     });
     dropdownText.textContent = option.textContent;
     dropdownText.appendChild(downArrow);
+    BlockMediator.get('ace-state').dropdownValue = option.textContent;
     if (firstElem) {
       dropdownText.classList.remove('selected');
     } else if (!dropdownText.classList.contains('selected')) {
@@ -404,26 +404,19 @@ function createDropdown(titleRow, placeholders, block) {
   });
 }
 
-function openModal(query, titleRow) {
-  const titleRowDiv = titleRow.querySelector(':scope > div');
-  const title = titleRowDiv.querySelector(':scope > h1');
-
-  const modalContent = createTag('div');
-  modalContent.style.height = '740px';
-  modalContent.style.width = '1200px';
-  const { renderedModal, fetchingState } = renderModalContent(query, title);
-  modalContent.append(renderedModal);
+async function openModal() {
+  const modal = createTag('div');
+  modal.style.height = '740px';
+  modal.style.width = '1200px';
+  const modalContent = createTag('div', { class: 'modal-content' });
+  modal.append(modalContent);
+  BlockMediator.get('ace-state').modalContent = modalContent;
   import('../modal/modal.js').then((mod) => {
     mod.getModal(null, {
-      class: 'generated-results-modal', id: 'generated-results-modal', content: modalContent, closeEvent: 'closeGeneratedResultsModal',
+      class: 'generated-results-modal', id: 'generated-results-modal', content: modal, closeEvent: 'closeGeneratedResultsModal',
     });
   });
-
-  // cleanup upon modal closing
-  window.addEventListener('milo:modal:closed', () => {
-    titleRowDiv.append(title);
-    clearInterval(fetchingState.intervalId);
-  });
+  renderModalContent();
 }
 
 function createSearchBar(searchRows, placeholders, titleRow) {
@@ -433,6 +426,13 @@ function createSearchBar(searchRows, placeholders, titleRow) {
     type: 'text',
     placeholder: placeholders['template-list-ace-search-hint'] ?? 'Describe what you want to generate...',
     enterKeyHint: placeholders.search ?? 'Search',
+  });
+  const aceState = BlockMediator.get('ace-state');
+
+  window.addEventListener('milo:modal:closed', () => {
+    // IMPORTANT: clear ongoing search + sync search bar value
+    searchBar.value = aceState.query;
+    clearInterval(aceState.fetchingState.intervalId);
   });
   searchForm.append(searchBar);
   const button = searchRows[1];
@@ -444,13 +444,16 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   title.append(searchForm);
   const buttonLink = title.querySelector(':scope a');
   buttonLink.href = '#';
-  buttonLink.addEventListener('click', (event) => {
+  buttonLink.addEventListener('click', async (event) => {
     event.preventDefault();
     if (!searchBar.value) {
       alert('search should not be empty!');
       return;
     }
-    openModal(searchBar.value, titleRow);
+    aceState.query = searchBar.value;
+    openModal();
+    const results = await fetchResults();
+    await renderResults(results);
   });
 
   titleRowDiv.classList.add('title-search');
@@ -464,11 +467,22 @@ function isProdOrLocal() {
   return !window.location.host.includes('adobe.com') || window.location.host.includes('localhost:3000');
 }
 
+function initState({ placeholders }) {
+  BlockMediator.set('ace-state', {
+    dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0],
+    query: null,
+    placeholders,
+    fetchingState: { intervalId: null, progressManager: null },
+    modalContent: null,
+  });
+}
+
 export default async function decorate(block) {
   if (!isProdOrLocal()) {
     await getImsToken();
   }
   const placeholders = await fetchPlaceholders();
+  initState({ placeholders });
   block.innerHTML = block.innerHTML.replaceAll('{{template-list-ace-title}}', placeholders['template-list-ace-title'])
     .replaceAll('{{template-list-ace-button}}', placeholders['template-list-ace-button'])
     .replaceAll('{{template-list-ace-suggestions-title}}', placeholders['template-list-ace-suggestions-title'])
@@ -484,5 +498,6 @@ export default async function decorate(block) {
   const placeholdersRow = rows.shift();
   searchRows.remove();
   placeholdersRow.remove();
+
   await loadTemplates(block, placeholders, '');
 }

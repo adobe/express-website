@@ -56,5 +56,11 @@ export default function useProgressManager(
       intervalId = setInterval(moveOne, duration / (curr - playingPercentage));
     }
   };
-  return { update };
+  const reset = () => {
+    playingPercentage = 0;
+    curr = 0;
+    clearInterval(intervalId);
+    updateUI(0);
+  };
+  return { update, reset };
 }

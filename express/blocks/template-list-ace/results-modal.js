@@ -19,10 +19,13 @@ import {
   FEEDBACK_CATEGORIES,
 } from './ace-api.js';
 import useProgressManager from './progress-manager.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 const NUM_PLACEHOLDERS = 4;
 const MONITOR_INTERVAL = 2000;
 const AVG_GENERATION_TIME = 12000;
+const PROGRESS_ANIMATION_DURATION = 1000;
+const PROGRESS_BAR_LINGER_DURATION = 500;
 
 function getVoteHandler(id, category) {
   return async (e) => {
@@ -99,24 +102,31 @@ function renderTemplate(result) {
   return templateWrapper;
 }
 
-async function waitForGeneration(jobId, progressManager, fetchingState) {
+async function waitForGeneration(jobId) {
+  const { fetchingState } = BlockMediator.get('ace-state');
+  const { progressManager } = fetchingState;
+
+  clearInterval(fetchingState.intervalId);
   return new Promise((resolve, reject) => {
     fetchingState.intervalId = setInterval(async () => {
       const res = await monitorGeneration(jobId);
       const { status, results, reason } = res;
       if (status === MONITOR_STATUS.IN_PROGRESS) {
         progressManager.update(Math.floor(results.length / NUM_PLACEHOLDERS) * 100);
-        return;
       } else if (status === MONITOR_STATUS.COMPLETED) {
         progressManager.update(100);
         clearInterval(fetchingState.intervalId);
-        resolve(results);
+        setTimeout(() => {
+          resolve(results);
+        }, PROGRESS_ANIMATION_DURATION + PROGRESS_BAR_LINGER_DURATION);
       } else if (status === MONITOR_STATUS.FAILED || reason) {
         clearInterval(fetchingState.intervalId);
         reject(new Error(JSON.stringify({ status })));
+      } else {
+        clearInterval(fetchingState.intervalId);
+        reject(new Error(JSON.stringify({ status, results, reason: 'unexpected status' })));
       }
-
-      reject(new Error(JSON.stringify({ status, results, reason: 'unexpected status' })));
+      console.log('monitoring generation', fetchingState.intervalId);
     }, MONITOR_INTERVAL);
   });
 }
@@ -141,7 +151,9 @@ export function renderLoader() {
     placeholderRow.append(createTag('div', { class: 'loader-placeholder' }));
   }
   wrapper.append(placeholderRow);
-  return wrapper;
+
+  const { modalContent } = BlockMediator.get('ace-state');
+  modalContent.append(wrapper);
 }
 
 function updateProgressBar(percentage) {
@@ -152,50 +164,159 @@ function updateProgressBar(percentage) {
   progressBar.style.width = `${percentage}%`;
 }
 
-async function fetchAndRenderResults(query, modalContentWrapper, fetchingState) {
-  const progressManager = useProgressManager(updateProgressBar, 1000, {
-    avgCallingTimes: AVG_GENERATION_TIME / MONITOR_INTERVAL,
-    sample: 3,
-  });
-  const { jobId, status } = await requestGeneration({ query, num_results: NUM_PLACEHOLDERS });
-  if (status !== 'in-progress') {
-    modalContentWrapper.append(`Error requesting generation: ${jobId} ${status}`);
-    return;
+export async function fetchResults({ repeat = false } = {}) {
+  const {
+    query,
+    dropdownValue,
+    fetchingState,
+    placeholders,
+  } = BlockMediator.get('ace-state');
+  if (!fetchingState.progressManager) {
+    fetchingState.progressManager = useProgressManager(
+      updateProgressBar,
+      PROGRESS_ANIMATION_DURATION,
+      {
+        avgCallingTimes: AVG_GENERATION_TIME / MONITOR_INTERVAL,
+        sample: 3,
+      },
+    );
   }
-  // consider the first 6-12% as the time for triggering generation
-  progressManager.update(Math.random() * 6 + 6);
-  let results;
+  const oldLoader = document.querySelector('.loader-wrapper');
+  if (oldLoader) {
+    fetchingState.progressManager.reset();
+    oldLoader.style.display = 'block';
+  } else {
+    renderLoader();
+  }
+  const oldResults = document.querySelector('.generated-results-wrapper');
+  if (oldResults) {
+    oldResults.remove();
+  }
 
-  try {
-    results = await waitForGeneration(jobId, progressManager, fetchingState);
-  } catch (e) {
-    console.error(e);
-    modalContentWrapper.append('Error generating templates!');
-    return;
+  const requestConfig = {
+    query,
+    num_results: NUM_PLACEHOLDERS,
+    locale: 'en-us',
+    category: 'poster',
+    subcategory: (
+      dropdownValue
+        && dropdownValue !== placeholders['template-list-ace-categories-dropdown']?.split(',')?.[0]
+    ) || null,
+    force: false,
+    fetchExisting: true,
+  };
+  if (repeat) {
+    requestConfig.force = true;
+    requestConfig.fetchExisting = false;
   }
-  const images = results
-    .filter((result) => result.generated)
-    .map((result) => renderTemplate(result));
-  const generatedRow = createTag('div', { class: 'generated-row' });
-  const title = createTag('div', { class: 'generated-title' });
-  title.textContent = "Here's results";
-  images.forEach((image) => {
-    generatedRow.append(image);
-  });
-  modalContentWrapper.append(title);
-  modalContentWrapper.append(generatedRow);
+  const { jobId, status } = await requestGeneration(requestConfig);
+  if (!['in-progress', 'completed'].includes(status)) {
+    throw new Error(`Error requesting generation: ${jobId} ${status}`);
+  }
+
+  // consider the first 6-12% as the time for triggering generation
+  fetchingState.progressManager.update(Math.random() * 6 + 6);
+
+  return waitForGeneration(jobId);
 }
 
-export function renderModalContent(search, title) {
-  const renderedModal = createTag('div', { class: 'modal-content' });
-  renderedModal.append(title);
-  const loading = renderLoader();
-  renderedModal.append(loading);
-  const fetchingState = { intervalId: null };
-  fetchAndRenderResults(search, renderedModal, fetchingState).then(() => {
-    setTimeout(() => {
-      loading.remove();
-    }, 1500);
+export async function renderResults(results) {
+  const { modalContent } = BlockMediator.get('ace-state');
+
+  const oldLoader = document.querySelector('.loader-wrapper');
+  if (oldLoader) {
+    oldLoader.style.display = 'none';
+  }
+
+  const generatedResultsWrapper = createTag('div', { class: 'generated-results-wrapper' });
+
+  const generatedTitle = createTag('div', { class: 'generated-title' });
+  generatedTitle.textContent = 'Here\'s results';
+  const generatedRow = createTag('div', { class: 'generated-row' });
+  results
+    .filter((result) => result.generated)
+    .map((result) => renderTemplate(result))
+    .forEach((image) => {
+      generatedRow.append(image);
+    });
+  generatedResultsWrapper.append(generatedTitle);
+  generatedResultsWrapper.append(generatedRow);
+  modalContent.append(generatedResultsWrapper);
+}
+
+function createModalSearch() {
+  const aceState = BlockMediator.get('ace-state');
+  const { placeholders, query } = aceState;
+  const searchForm = createTag('form', { class: 'search-form' });
+  const searchBar = createTag('input', {
+    class: 'search-bar',
+    type: 'text',
+    placeholder: placeholders['template-list-ace-search-hint'] ?? 'Describe what you want to generate...',
+    enterKeyHint: placeholders.search ?? 'Search',
   });
-  return { renderedModal, fetchingState };
+  searchBar.value = query;
+  searchForm.append(searchBar);
+
+  const button = createTag('button', { class: 'search-button', title: placeholders['template-list-ace-button-refresh'] ?? 'Refresh results' });
+  button.textContent = placeholders['template-list-ace-button-refresh'] ?? 'Refresh results';
+  let repeat = false;
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (!searchBar.value) {
+      alert('search should not be empty!');
+      return;
+    }
+    if (searchBar.value === aceState.query) {
+      repeat = true;
+    } else {
+      repeat = false;
+    }
+    aceState.query = searchBar.value;
+    button.disabled = true;
+    try {
+      const results = await fetchResults({ repeat });
+      await renderResults(results);
+    } catch (err) {
+      console.error(err);
+    }
+
+    button.disabled = false;
+  });
+  searchForm.append(button);
+  return searchForm;
+}
+
+function createModalDropdown() {
+  const { placeholders, dropdownValue } = BlockMediator.get('ace-state');
+  const dropdownText = placeholders['template-list-ace-title'];
+  const dropdown = createTag('h1', { class: 'modal-dropdown' });
+  const texts = dropdownText.split('{{breakline}}')[0].trim().split('{{ace-dropdown}}');
+  dropdown.append(texts[0].trim());
+  const categorySpan = createTag('span', { class: 'modal-dropdown-category' });
+  categorySpan.append(dropdownValue);
+  dropdown.append(categorySpan);
+  dropdown.append(texts[1].trim());
+  return dropdown;
+}
+
+function renderTitleRow() {
+  const { placeholders } = BlockMediator.get('ace-state');
+  const titleRow = createTag('div', { class: 'modal-title-row' });
+  const dropdown = createModalDropdown();
+  const scratchWrapper = createTag('div', { class: 'scratch-wrapper' });
+  const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
+  noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
+  const fromScratchButton = createTag('button', { class: 'from-scratch-button' });
+  fromScratchButton.textContent = placeholders['template-list-ace-from-scratch'] ?? 'Create from scratch';
+  scratchWrapper.append(noGuidanceSpan);
+  scratchWrapper.append(fromScratchButton);
+  titleRow.append(dropdown);
+  titleRow.append(scratchWrapper);
+  return titleRow;
+}
+
+export function renderModalContent() {
+  const { modalContent } = BlockMediator.get('ace-state');
+  modalContent.append(renderTitleRow());
+  modalContent.append(createModalSearch());
 }
