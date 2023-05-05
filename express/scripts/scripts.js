@@ -2664,8 +2664,6 @@ export async function trackBranchParameters($links) {
         urlParams.set('ctaid', placement);
       }
 
-      urlParams.set('feature', 'paid%20advertising');
-
       btnUrl.search = urlParams.toString();
       $a.href = btnUrl.toString();
     }
