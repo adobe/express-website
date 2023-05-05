@@ -15,6 +15,8 @@ import {
   collectFloatingButtonData,
 } from '../shared/floating-cta.js';
 
+import BlockMediator from '../../scripts/block-mediator.js';
+
 export default async function decorate($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     const audience = $block.querySelector(':scope > div').textContent.trim();
@@ -25,11 +27,24 @@ export default async function decorate($block) {
     const $parentSection = $block.closest('.section');
     const data = await collectFloatingButtonData($block);
 
-    await createFloatingButton(
+    const blockWrapper = await createFloatingButton(
       $block,
       $parentSection ? audience : null,
       data,
     );
+
+    const promoBar = BlockMediator.get('promobar');
+    const currentBottom = parseInt(blockWrapper.style.bottom, 10);
+
+    if (promoBar && promoBar.rendered) {
+      blockWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+    }
+
+    BlockMediator.subscribe('promobar', (e) => {
+      if (!e.newValue.rendered) {
+        blockWrapper.style.bottom = currentBottom ? `${currentBottom - promoBar.block.offsetHeight}px` : '';
+      }
+    });
   } else {
     $block.parentElement.remove();
   }

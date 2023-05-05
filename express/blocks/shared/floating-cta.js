@@ -243,6 +243,7 @@ export async function createFloatingButton($block, audience, data) {
       block: $floatButtonWrapper,
     },
   }));
+
   return $floatButtonWrapper;
 }
 
