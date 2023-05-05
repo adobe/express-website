@@ -1267,7 +1267,6 @@ export function decorateButtons(block = document) {
     if (!noButtonBlocks.includes(blockName)
       && originalHref !== linkText
       && !(linkText.startsWith('https') && linkText.includes('/media_'))
-      && !(linkText.startsWith('https') && linkText.includes('.svg'))
       && !linkText.includes('hlx.blob.core.windows.net')
       && !linkText.endsWith(' >')
       && !linkText.endsWith(' ›')) {
@@ -2107,7 +2106,7 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
  * @param {Element} main The main element
  */
 function decoratePictures(main) {
-  main.querySelectorAll('img[src*="/media_"').forEach((img, i) => {
+  main.querySelectorAll('img[src*="/media_"]').forEach((img, i) => {
     const newPicture = createOptimizedPicture(img.src, img.alt, !i);
     const picture = img.closest('picture');
     if (picture) picture.parentElement.replaceChild(newPicture, picture);
