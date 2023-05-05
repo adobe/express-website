@@ -240,8 +240,14 @@ export async function createFloatingButton($block, audience, data) {
       }
       if ($e.intersectionRatio > 0 || $e.isIntersecting) {
         $floatButtonWrapper.classList.add('floating-button--intersecting');
+        $floatButtonWrapper.style.bottom = '';
       } else {
         $floatButtonWrapper.classList.remove('floating-button--intersecting');
+        if (promoBar.block) {
+          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+        } else if (currentBottom) {
+          $floatButtonWrapper.style.bottom = currentBottom;
+        }
       }
     }, {
       root: null,
