@@ -24,6 +24,8 @@ import {
   closeToolBox,
 } from '../shared/floating-cta.js';
 
+import BlockMediator from '../../scripts/block-mediator.js';
+
 function toggleMultifunctionToolBox($wrapper, $lottie, data, userInitiated = true) {
   if (userInitiated) {
     $wrapper.classList.remove('initial-load');
@@ -94,6 +96,8 @@ export async function createMultiFunctionButton($block, data, audience) {
     .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
   buildMultifunctionToolBox($buttonWrapper, data);
+
+  return $buttonWrapper;
 }
 
 export default async function decorate($block) {
@@ -104,6 +108,18 @@ export default async function decorate($block) {
     }
 
     const data = await collectFloatingButtonData();
-    await createMultiFunctionButton($block, data, audience);
+    const blockWrapper = await createMultiFunctionButton($block, data, audience);
+    const promoBar = BlockMediator.get('promobar');
+    const currentBottom = parseInt(blockWrapper.style.bottom, 10);
+
+    if (promoBar && promoBar.rendered) {
+      blockWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+    }
+
+    BlockMediator.subscribe('promobar', (e) => {
+      if (!e.newValue.rendered) {
+        blockWrapper.style.bottom = currentBottom ? `${currentBottom - promoBar.block.offsetHeight}px` : '';
+      }
+    });
   }
 }

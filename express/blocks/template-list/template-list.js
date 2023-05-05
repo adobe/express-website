@@ -13,9 +13,7 @@
 
 import {
   addAnimationToggle,
-  addFreePlanWidget,
   addSearchQueryToHref,
-  arrayToObject,
   createOptimizedPicture,
   createTag,
   decorateMain,
@@ -23,11 +21,12 @@ import {
   fetchPlainBlockFromFragment,
   fetchRelevantRows, fixIcons,
   getIconElement,
+  getLanguage,
   getLocale,
   getLottie,
+  getMetadata,
   lazyLoadLottiePlayer,
   linkImage,
-  titleCase,
   toClassName,
 } from '../../scripts/scripts.js';
 
@@ -37,14 +36,12 @@ import { buildCarousel } from '../shared/carousel.js';
 
 const props = {
   templates: [],
-  filters: {
-    locales: '(en)',
-  },
+  filters: { locales: '(en)' },
   tailButton: '',
   limit: 70,
   total: 0,
   start: '',
-  sort: '-remixCount',
+  sort: '-_score,-remixCount',
   masonry: undefined,
   authoringError: false,
   headingTitle: null,
@@ -73,38 +70,40 @@ function trimFormattedFilterText(attr, capitalize) {
 
 async function populateHeadingPlaceholder(locale) {
   const heading = props.heading.replace("''", '');
-  const placeholders = await fetchPlaceholders()
-    .then((response) => response);
+  // special treatment for express/ root url
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
+  const placeholders = await fetchPlaceholders();
+  const lang = getLanguage(getLocale(window.location));
+  let grammarTemplate;
 
-  let grammarTemplate = placeholders['template-placeholder'];
-
-  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', props.total.toLocaleString('en-US'));
+  if (getMetadata('template-search-page') === 'Y') {
+    grammarTemplate = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
+  } else {
+    grammarTemplate = placeholders['template-placeholder'];
   }
 
-  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
-  }
+  if (grammarTemplate) {
+    grammarTemplate = grammarTemplate
+      .replace('{{quantity}}', props.total.toLocaleString(lang))
+      .replace('{{Type}}', heading)
+      .replace('{{type}}', camelHeading);
 
-  if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', heading.charAt(0).toLowerCase() + heading.slice(1));
-  }
-
-  if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
+    if (locale === 'fr') {
+      grammarTemplate.split(' ').forEach((word, index, words) => {
+        if (index + 1 < words.length) {
+          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            grammarTemplate = words.join(' ');
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   return grammarTemplate;
 }
 
-function formatSearchQuery(filters) {
+function formatSearchQuery(limit, start, sort, filters) {
   const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
   const filterString = prunedFilter.reduce((string, [key, value]) => {
     if (key === prunedFilter[prunedFilter.length - 1][0]) {
@@ -114,12 +113,12 @@ function formatSearchQuery(filters) {
     }
   }, '');
 
-  props.queryString = `https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=${filterString}`;
+  return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    formatSearchQuery(props.filters);
+    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
 
     const result = await fetch(props.queryString)
       .then((response) => response.json())
@@ -130,7 +129,7 @@ async function fetchTemplates() {
       return result;
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(en)`)
+      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
         .then((response) => response.json())
         .then((response) => response);
     }
@@ -140,14 +139,15 @@ async function fetchTemplates() {
 
 function fetchTemplatesByTasks(tasks) {
   const tempFilters = { ...props.filters };
+
   if (tasks) {
     tempFilters.tasks = `(${tasks})`;
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    formatSearchQuery(tempFilters);
+    const tempQ = formatSearchQuery(props.limit, '', props.sort, tempFilters);
 
-    return fetch(props.queryString)
+    return fetch(tempQ)
       .then((response) => response.json())
       .then((response) => response);
   }
@@ -158,6 +158,7 @@ function fetchTemplatesByTasks(tasks) {
 async function appendCategoryTemplatesCount($section) {
   const categories = $section.querySelectorAll('ul.category-list > li');
   const currentTask = props.filters.tasks;
+  const lang = getLanguage(getLocale(window.location));
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
@@ -166,7 +167,7 @@ async function appendCategoryTemplatesCount($section) {
       const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
-      countSpan.textContent = `(${json._embedded.total.toLocaleString('en-US')})`;
+      countSpan.textContent = `(${json._embedded.total.toLocaleString(lang)})`;
       anchor.append(countSpan);
     }
   }
@@ -185,9 +186,9 @@ async function processResponse() {
     if ('_links' in response) {
       // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
-      const start = new URLSearchParams(nextQuery).get('start')
-        .split(',')[0];
-      props.start = start;
+      const starts = new URLSearchParams(nextQuery).get('start').split(',');
+      starts.pop();
+      props.start = starts.join(',');
     } else {
       props.start = '';
     }
@@ -481,7 +482,7 @@ async function redirectSearch($searchBar) {
   const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
   let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
-  let searchInput = $searchBar ? $searchBar.value : currentTopic;
+  let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
 
   const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
     const searchValue = $searchBar.value.toLowerCase();
@@ -498,11 +499,12 @@ async function redirectSearch($searchBar) {
   }
 
   const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const topicUrl = searchInput ? `/${searchInput}` : '';
   const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
   const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = locale === 'us' ? `/express/templates${taskUrl}${topicUrl}` : `/${locale}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = locale === 'us' ? `${window.location.origin}${searchUrlTemplate}` : `${window.location.origin}/${locale}${searchUrlTemplate}`;
+  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
   if (window.templates && window.templates.data.some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
@@ -836,6 +838,7 @@ function decorateCategoryList($block, $section, placeholders) {
   });
 
   if (params.tasks) {
+    const locale = getLocale(window.location);
     const $blockWrapper = $block.closest('.template-list-wrapper');
     const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
     const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
@@ -870,9 +873,10 @@ function decorateCategoryList($block, $section, placeholders) {
       }
 
       const iconElement = getIconElement(icon);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
       const $a = createTag('a', {
         'data-tasks': targetTasks,
-        href: `/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
       });
       [$a.textContent] = category;
 
@@ -937,8 +941,6 @@ function decorateCategoryList($block, $section, placeholders) {
 async function decorateSearchFunctions($toolBar, $section, placeholders) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
-  const $templateListBlock = $section.querySelector('.template-list');
-  const $placeholderTemplate = $templateListBlock.querySelector('a:first-of-type');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
   const $searchForm = createTag('form', { class: 'search-form' });
   const $searchBar = createTag('input', {
@@ -947,14 +949,6 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     placeholder: placeholders['template-search-placeholder'] ?? 'Search for over 50,000 templates',
     enterKeyHint: placeholders.search ?? 'Search',
   });
-
-  // Suggestions Dropdown
-  const $searchDropdown = createTag('div', { class: 'search-dropdown hidden' });
-  const $searchDropdownHeadingWrapper = createTag('div', { class: 'search-dropdown-heading-wrapper' });
-  const $searchDropdownHeading = createTag('span', { class: 'search-dropdown-heading' });
-  const $searchScratch = createTag('a', { class: 'search-dropdown-scratch', href: $placeholderTemplate.href });
-  const $searchScratchText = createTag('span', { class: 'search-dropdown-scratch-text' });
-  const $boldedTaskText = createTag('b');
 
   // Tasks Dropdown
   const $taskDropdownContainer = createTag('div', { class: 'task-dropdown-container' });
@@ -988,60 +982,11 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
     }
   }
 
-  $searchScratch.append(getIconElement('flyer-icon-22'), $searchScratchText, getIconElement('arrow-right'));
   $searchForm.append($searchBar);
   $searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
   $taskDropdownContainer.append($taskDropdown);
   $taskDropdown.append($taskDropdownToggle, $taskDropdownList, $taskDropdownChev);
-  $searchDropdownHeadingWrapper.append($searchDropdownHeading, $searchScratch);
-  $searchDropdown.append($searchDropdownHeadingWrapper);
-  $searchBarWrapper.append($searchForm, $searchDropdown, $taskDropdownContainer);
-
-  $searchDropdownHeading.textContent = placeholders.suggestions;
-
-  const resp = await fetch('/express/templates/content.json?sheet=seo-templates');
-
-  if (resp.ok) {
-    const { data } = await resp.json();
-    const path = window.location.pathname;
-    let dataForPage = data.find((p) => p.path === path);
-
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-
-    const dataArray = Object.entries(dataForPage);
-
-    if (params.tasks) {
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
-      });
-    }
-
-    if (params.topics) {
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics));
-      });
-    }
-
-    dataForPage = arrayToObject(dataArray);
-
-    if (dataForPage) {
-      $boldedTaskText.textContent = `${dataForPage.shortTitle} `;
-      $searchDropdownHeading.prepend($boldedTaskText);
-
-      $searchScratchText.textContent = placeholders['search-from-scratch']
-        .replace('{{template-type}}', dataForPage.shortTitle);
-    } else {
-      $searchScratchText.textContent = placeholders['search-from-scratch']
-        .replace('{{template-type}}', '');
-    }
-  } else {
-    $searchScratchText.textContent = placeholders['search-from-scratch']
-      .replace('{{template-type}}', '');
-  }
-
-  await addFreePlanWidget($searchDropdown, true);
+  $searchBarWrapper.append($searchForm, $taskDropdownContainer);
 
   const $stickySearchBarWrapper = $searchBarWrapper.cloneNode({ deep: true });
 
@@ -1230,7 +1175,8 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
 
 async function redrawTemplates($block, $toolBar) {
   const $heading = $toolBar.querySelector('h2');
-  const currentTotal = props.total.toLocaleString('en-US');
+  const lang = getLanguage(getLocale(window.location));
+  const currentTotal = props.total.toLocaleString(lang);
   props.templates = [props.templates[0]];
   props.start = '';
   $block.querySelectorAll('.template:not(.placeholder)').forEach(($card) => {
@@ -1238,7 +1184,7 @@ async function redrawTemplates($block, $toolBar) {
   });
 
   await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
-    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+    $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString(lang));
     updateOptionsStatus($block, $toolBar);
     if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
@@ -1591,7 +1537,7 @@ export async function decorateTemplateList($block) {
           } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = await populateHeadingPlaceholder(locale);
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale) || '';
           }
         }
 
@@ -1744,7 +1690,7 @@ export async function decorateTemplateList($block) {
   if (rows === 1) {
     $block.classList.add('large');
     breakpoints = [{
-      media: '(min-width: 400px)',
+      media: '(min-width: 600px)',
       width: '2000',
     }, { width: '750' }];
   }

@@ -46,8 +46,6 @@ main .fullscreen-marquee-container .fullscreen-marquee p {
 
 main .fullscreen-marquee-container .fullscreen-marquee .button-container > a.button {
   padding: 12px 24px;
-  align-items: center;
-  justify-content: center;
   border-radius: 120px;
 }
 

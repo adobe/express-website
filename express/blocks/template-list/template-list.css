@@ -1261,6 +1261,10 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapp
   width: 18px;
 }
 
+main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .icon-holder .icon {
+  min-width: 18px;
+}
+
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .wrapper-functions .views .icon {
   height: 22px;
   width: 22px;
@@ -1364,11 +1368,13 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .funct
 main .template-list-fullwidth-apipowered-container .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a {
   font-size: 14px;
   font-family: var(--body-font-family);
-  line-height: 24px;
+  line-height: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 4px 8px;
+  text-align: left;
+  padding: 7px 16px 7px 8px;
+  word-break: keep-all;
   transition: background-color 0.2s, color 0.2s;
 }
 

@@ -36,4 +36,7 @@
   <sitemap>
     <loc>https://www.adobe.com/express/sitemap-blog.xml</loc>
   </sitemap>
+  <sitemap>
+    <loc>https://www.adobe.com/express/sitemap-seo-templates.xml</loc>
+  </sitemap>
 </sitemapindex>

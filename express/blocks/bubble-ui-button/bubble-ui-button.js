@@ -25,6 +25,7 @@ import {
   buildToolBoxStructure,
   initToolBox,
 } from '../shared/floating-cta.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 const bubbleUI = {
   addEventListeners(boxBottom) {
@@ -405,6 +406,18 @@ export default async function decorate($block) {
     }
 
     const data = await collectFloatingButtonData();
-    await createMultiFunctionButton($block, data, audience);
+    const blockWrapper = await createMultiFunctionButton($block, data, audience);
+    const promoBar = BlockMediator.get('promobar');
+    const currentBottom = parseInt(blockWrapper.style.bottom, 10);
+
+    if (promoBar && promoBar.rendered) {
+      blockWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+    }
+
+    BlockMediator.subscribe('promobar', (e) => {
+      if (!e.newValue.rendered) {
+        blockWrapper.style.bottom = currentBottom ? `${currentBottom - promoBar.block.offsetHeight}px` : '';
+      }
+    });
   }
 }

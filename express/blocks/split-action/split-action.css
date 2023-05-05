@@ -92,9 +92,9 @@ main .split-action > .buttons-wrapper > a.button:last-of-type {
     margin: 8px 0 0 0;
 }
 
-main .split-action > .buttons-wrapper > a.button.same-as-floating-button-CTA {
+main .split-action > .buttons-wrapper > a.button[target="_self"] {
     padding: 14px 11px;
-    display: unset!important;
+    display: unset;
     background-color: transparent;
     color: var(--color-white);
 }

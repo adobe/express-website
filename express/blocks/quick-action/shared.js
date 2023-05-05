@@ -88,6 +88,7 @@ export class CCXQuickActionElement extends HTMLElement {
         config: {
           'should-use-cloud-storage': true,
           'preview-only': true,
+          'suppress-analytics': true,
           'should-download-in-editor': true,
           'hide-work-space': true,
         },
@@ -151,8 +152,7 @@ export class CCXQuickActionElement extends HTMLElement {
     const host = 'https://express.adobe.com';
     const action = 'remove-background';
     const { repositoryId, transientToken } = data;
-    const path = '/sp/design/post/new';
-    const loginUrl = '/sp/login?destination=';
+    const path = '/design/post/new';
     const params = new URLSearchParams();
     params.append('workflow', 'quicktask');
     params.append('r', 'qtImaging');
@@ -163,10 +163,8 @@ export class CCXQuickActionElement extends HTMLElement {
     if (transientToken) {
       params.append('transientToken', transientToken);
     }
-    const encodeUrl = encodeURIComponent(`${host}${path}?${params.toString()}`);
-    const url = `${host}${loginUrl}${encodeUrl}`;
-    // FIXME: verify if this is the right URL
-    window.location.replace(url);
+    const encodeUrl = `${host}/sp${path}?${params.toString()}`;
+    window.location.replace(encodeUrl);
   }
 
   async render() {

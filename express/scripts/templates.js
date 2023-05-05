@@ -16,10 +16,12 @@ import {
   createTag,
   fetchPlaceholders,
   getLocale,
+  getMetadata,
 } from './scripts.js';
 
 import {
-  fetchLInkListFromCKGApi,
+  fetchLinkListFromCKGApi,
+  getPillWordsMapping,
 } from './api-v3-controller.js';
 
 export function findMatchExistingSEOPage(path) {
@@ -53,7 +55,7 @@ export async function fetchPageContent(path) {
   return page && page.live !== 'N' ? page : null;
 }
 
-function formatSearchQuery(data) {
+async function formatSearchQuery(data) {
   // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -70,21 +72,21 @@ function formatSearchQuery(data) {
   const dataArray = Object.entries(data);
 
   if (params.tasks && params.phformat) {
-    dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{queryTasks}}', params.tasks);
-    });
-
-    dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks));
-    });
-
-    dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{placeholderRatio}}', params.phformat);
-    });
-
-    dataArray.forEach((col) => {
-      col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics ?? ''));
-    });
+    const placeholders = await fetchPlaceholders();
+    const categories = JSON.parse(placeholders['task-categories']);
+    if (categories) {
+      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+      dataArray.forEach((col) => {
+        col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
+        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
+        col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
+        col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
+        col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
+        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
+        col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
+      });
+    }
   } else {
     return false;
   }
@@ -96,11 +98,20 @@ async function fetchLinkList(data) {
   if (!window.linkLists) {
     window.linkLists = {};
     if (!window.linkLists.ckgData) {
-      const response = await fetchLInkListFromCKGApi(data);
+      const response = await fetchLinkListFromCKGApi(data);
       // catch data from CKG API, if empty, use top priority categories sheet
       if (response && response.queryResults[0].facets) {
         window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
-          const formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
+          let formattedTasks;
+          if (getMetadata('template-search-page') === 'Y') {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+              get: (searchParams, prop) => searchParams.get(prop),
+            });
+            formattedTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
+          } else {
+            formattedTasks = titleCase(data.templateTasks).replace(/[$@%"]/g, '');
+          }
+
           return {
             parent: formattedTasks,
             'child-siblings': `${titleCase(ckgItem.displayValue)} ${formattedTasks}`,
@@ -132,7 +143,7 @@ function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.path);
-    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.shortTitle);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data.shortTitle);
   }
   return clone;
 }
@@ -143,20 +154,27 @@ function updateSEOLinkList(container, linkPill, list) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const templatePageData = templatePages.find((p) => p.live === 'Y'
-        && p.shortTitle.toLowerCase() === d.childSibling.toLowerCase());
+      const currentLocale = getLocale(window.location);
+      const templatePageData = templatePages.find((p) => {
+        const targetLocale = /^[a-z]{2}$/.test(p.path.split('/')[1]) ? p.path.split('/')[1] : 'us';
+        const isLive = p.live === 'Y';
+        const titleMatch = p.shortTitle.toLowerCase() === d.childSibling.toLowerCase();
+        const localeMatch = currentLocale === targetLocale;
+
+        return isLive && titleMatch && localeMatch;
+      });
       const clone = replaceLinkPill(linkPill, templatePageData);
       container.append(clone);
     });
   }
 }
 
-function formatLinkPillText(pageData, LinkPillData) {
-  const digestedDisplayValue = titleCase(LinkPillData.displayValue.replace(/-/g, ' '));
-  const digestedChildSibling = titleCase(LinkPillData.childSibling.replace(/-/g, ' '));
+function formatLinkPillText(pageData, linkPillData) {
+  const digestedDisplayValue = titleCase(linkPillData.displayValue.replace(/-/g, ' '));
+  const digestedChildSibling = titleCase(linkPillData.childSibling.replace(/-/g, ' '));
   const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '').replace(/-/g, ' ')}` : '';
 
-  const displayTopics = topics && LinkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
+  const displayTopics = topics && linkPillData.childSibling.indexOf(titleCase(topics)) < 0 ? titleCase(topics) : '';
   let displayText;
 
   if (pageData.templateTasks) {
@@ -174,8 +192,9 @@ function formatLinkPillText(pageData, LinkPillData) {
   return displayText;
 }
 
-function updateLinkList(container, linkPill, list, pageData) {
+async function updateLinkList(container, linkPill, list, pageData) {
   const templatePages = window.templates.data ?? [];
+  const pillsMapping = await getPillWordsMapping();
   const pageLinks = [];
   const searchLinks = [];
   container.innerHTML = '';
@@ -184,19 +203,36 @@ function updateLinkList(container, linkPill, list, pageData) {
     list.forEach((d) => {
       const topics = pageData.templateTopics !== '" "' ? `${pageData.templateTopics.replace(/[$@%"]/g, '')}` : '';
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
-      const topicsQuery = `${topics ?? topics} ${d.displayValue}`;
-      const displayText = formatLinkPillText(pageData, d);
+      const topicsQuery = `${topics ?? topics} ${d.displayValue}`.split(' ')
+        .filter((item, i, allItems) => i === allItems.indexOf(item))
+        .join(' ').trim();
+      let displayText = formatLinkPillText(pageData, d);
+
+      const locale = getLocale(window.location);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
+
+      if (pillsMapping) {
+        const alternateText = pillsMapping.find((row) => pageData.path === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
+
+        if (alternateText && alternateText[`${localeColumnString}`]) {
+          displayText = alternateText[`${localeColumnString}`];
+          if (templatePageData) {
+            templatePageData.altShortTitle = displayText;
+          }
+        }
+      }
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID && getLocale(window.location) === 'us') {
+      } else if (d.ckgID) {
         const currentTasks = pageData.templateTasks ? pageData.templateTasks.replace(/[$@%"]/g, '') : ' ';
 
         const searchParams = `tasks=${currentTasks}&phformat=${pageData.placeholderFormat}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
 
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `/express/templates/search?${searchParams}`);
+        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `${urlPrefix}/express/templates/search?${searchParams}`);
         clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
         searchLinks.push(clone);
       }
@@ -260,16 +296,16 @@ function updateMetadata(data) {
   }
 }
 
-function purgeAllTaskText(data) {
-  const purgedData = data;
+function formatAllTaskText(data) {
+  const formattedData = data;
 
-  if (purgedData.templateTasks === "''" || purgedData.templateTopics === "''") {
-    Object.entries(purgedData).forEach((entry) => {
-      purgedData[entry[0]] = entry[1].replace("''", '');
+  if (formattedData.templateTasks === "''" || formattedData.templateTopics === "''") {
+    Object.entries(formattedData).forEach((entry) => {
+      formattedData[entry[0]] = entry[1].replace("''", '');
     });
   }
 
-  return purgedData;
+  return formattedData;
 }
 
 async function updateBlocks(data) {
@@ -277,6 +313,12 @@ async function updateBlocks(data) {
   const linkList = document.querySelector('.link-list.fullwidth');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const seoNav = document.querySelector('.seo-nav');
+
+  if (data.shortTitle) {
+    const shortTitle = createTag('meta', { name: 'short-title', content: data.shortTitle });
+    const $head = document.querySelector('head');
+    $head.append(shortTitle);
+  }
 
   if (heroAnimation) {
     if (data.heroAnimationTitle) {
@@ -357,17 +399,17 @@ const page = await fetchPageContent(window.location.pathname);
 
 if (page) {
   await fetchLinkList(page);
-  if (window.location.pathname === '/express/templates/search') {
-    const data = formatSearchQuery(page);
+  if (getMetadata('template-search-page') === 'Y') {
+    const data = await formatSearchQuery(page);
     if (!data) {
       window.location.replace('/express/templates/');
     } else {
-      const purgedData = purgeAllTaskText(data);
+      const purgedData = formatAllTaskText(data);
       updateMetadata(purgedData);
-      updateBlocks(purgedData);
+      await updateBlocks(purgedData);
     }
   } else {
-    updateBlocks(page);
+    await updateBlocks(page);
   }
 } else {
   const env = getHelixEnv();

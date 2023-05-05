@@ -10,10 +10,13 @@
  * governing permissions and limitations under the License.
  */
 /* eslint-disable no-console */
-
 window.RUM_GENERATION = 'ccx-gen-4-experiment-high-sample-rate';
 window.RUM_LOW_SAMPLE_RATE = 100;
 window.RUM_HIGH_SAMPLE_RATE = 50;
+
+const TK_IDS = {
+  jp: 'dvg6awq',
+};
 
 /**
  * log RUM if part of the sample.
@@ -1528,12 +1531,6 @@ async function decorateTesting() {
   try {
     // let reason = '';
     const usp = new URLSearchParams(window.location.search);
-    const martech = usp.get('martech');
-    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
-      // eslint-disable-next-line no-console
-      console.log('rushing martech');
-      loadScript('/express/scripts/instrument.js', null, 'module');
-    }
 
     const experiment = getExperiment();
     const [forcedExperiment, forcedVariant] = usp.get('experiment') ? usp.get('experiment').split('/') : [];
@@ -1541,12 +1538,8 @@ async function decorateTesting() {
     if (experiment) {
       console.log('experiment', experiment);
       const config = await getExperimentConfig(experiment);
-      if (!config) {
-        console.error('config is null');
-        return;
-      }
-      console.log(config);
-      if (toCamelCase(config.status) === 'active' || forcedExperiment) {
+      console.log('config -->', config);
+      if (config && (toCamelCase(config.status) === 'active' || forcedExperiment)) {
         config.run = forcedExperiment || checkExperimentAudience(toClassName(config.audience));
         console.log('run', config.run, config.audience);
 
@@ -1571,6 +1564,15 @@ async function decorateTesting() {
             OfferName: window.hlx.experiment.variants[window.hlx.experiment.selectedVariant].label,
           };
           window.ttMETA.push(experimentDetails);
+          // add hlx experiment details as dynamic variables
+          // for Content Square integration
+          // eslint-disable-next-line no-underscore-dangle
+          if (window._uxa) {
+            for (const propName of Object.keys(experimentDetails)) {
+              // eslint-disable-next-line no-underscore-dangle
+              window._uxa.push(['trackDynamicVariable', { key: propName, value: experimentDetails[propName] }]);
+            }
+          }
           if (config.selectedVariant !== 'control') {
             const currentPath = window.location.pathname;
             const pageIndex = config.variants.control.pages.indexOf(currentPath);
@@ -1587,6 +1589,12 @@ async function decorateTesting() {
           }
         }
       }
+    }
+    const martech = usp.get('martech');
+    if ((checkTesting() && (martech !== 'off') && (martech !== 'delay')) || martech === 'rush') {
+      // eslint-disable-next-line no-console
+      console.log('rushing martech');
+      loadScript('/express/scripts/instrument.js', null, 'module');
     }
   } catch (e) {
     console.log('error testing', e);
@@ -1723,40 +1731,60 @@ export async function fetchPlainBlockFromFragment(url, blockName) {
 export async function fetchFloatingCta(path) {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
-  let sheet;
+  const { experiment } = window.hlx;
+  const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
+  let spreadsheet;
+  let floatingBtnData;
+
+  async function fetchFloatingBtnData(sheet) {
+    if (!window.floatingCta) {
+      try {
+        const locale = getLocale(window.location);
+        const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+        const resp = await fetch(`${urlPrefix}${sheet}`);
+        window.floatingCta = resp.ok ? (await resp.json()).data : [];
+      } catch {
+        const resp = await fetch(sheet);
+        window.floatingCta = resp.ok ? (await resp.json()).data : [];
+      }
+    }
+
+    if (window.floatingCta.length) {
+      const candidates = window.floatingCta.filter((p) => {
+        const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
+        if (experiment && path !== 'default') {
+          return (path === p.path || path.match(urlToMatch))
+            && p.expID === experiment.run
+            && p.challengerID === experiment.selectedVariant;
+        } else {
+          return path === p.path || path.match(urlToMatch);
+        }
+      }).sort((a, b) => b.path.length - a.path.length);
+
+      if (env && env.name === 'stage') {
+        return candidates[0] || null;
+      }
+
+      return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
+    }
+    return null;
+  }
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/express/floating-cta-dev.json?limit=10000';
+    spreadsheet = '/express/floating-cta-dev.json?limit=10000';
   } else {
-    sheet = '/express/floating-cta.json?limit=10000';
+    spreadsheet = '/express/floating-cta.json?limit=10000';
   }
 
-  if (!window.floatingCta) {
-    try {
-      const locale = getLocale(window.location);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}${sheet}`);
-      window.floatingCta = resp.ok ? (await resp.json()).data : [];
-    } catch {
-      const resp = await fetch(sheet);
-      window.floatingCta = resp.ok ? (await resp.json()).data : [];
-    }
+  if (experimentStatus === 'active') {
+    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
+    floatingBtnData = await fetchFloatingBtnData(expSheet);
   }
 
-  if (window.floatingCta.length) {
-    const candidates = window.floatingCta.filter((p) => {
-      const urlToMatch = p.path.includes('*') ? convertGlobToRe(p.path) : p.path;
-      return path === p.path || path.match(urlToMatch);
-    }).sort((a, b) => b.path.length - a.path.length);
-
-    if (env && env.name === 'stage') {
-      return candidates[0] || null;
-    }
-
-    return candidates[0] && candidates[0].live !== 'N' ? candidates[0] : null;
+  if (!floatingBtnData) {
+    floatingBtnData = await fetchFloatingBtnData(spreadsheet);
   }
-
-  return null;
+  return floatingBtnData;
 }
 
 async function buildAutoBlocks($main) {
@@ -1814,24 +1842,18 @@ async function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     if (!window.floatingCtasLoaded) {
       const floatingCTAData = await fetchFloatingCta(window.location.pathname);
-      const defaultButton = await fetchFloatingCta('default');
       let desktopButton;
       let mobileButton;
 
       if (floatingCTAData) {
         const buttonTypes = {
-          desktop: floatingCTAData.desktop || defaultButton.desktop,
-          mobile: floatingCTAData.mobile || defaultButton.mobile,
+          desktop: floatingCTAData.desktop,
+          mobile: floatingCTAData.mobile,
         };
 
         desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
         mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
-      } else if (defaultButton) {
-        desktopButton = buildBlock(defaultButton.desktop, 'desktop');
-        mobileButton = buildBlock(defaultButton.mobile, 'mobile');
-      }
 
-      if (floatingCTAData || defaultButton) {
         [desktopButton, mobileButton].forEach((button) => {
           button.classList.add('spreadsheet-powered');
           if ($lastDiv) {
@@ -2055,7 +2077,7 @@ function displayEnv() {
  * @param {Array} breakpoints breakpoints and corresponding params (eg. width)
  */
 
-export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+export function createOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }]) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
@@ -2291,13 +2313,20 @@ function decorateLegalCopy(main) {
  */
 async function loadEager() {
   setTheme();
+  const main = document.querySelector('main');
+  if (main) {
+    const language = getLanguage(getLocale(window.location));
+    const langSplits = language.split('-');
+    langSplits.pop();
+    const htmlLang = langSplits.join('-');
+    document.documentElement.setAttribute('lang', htmlLang);
+  }
   if (!window.hlx.lighthouse) await decorateTesting();
 
   if (window.location.href.includes('/express/templates/')) {
     await import('./templates.js');
   }
 
-  const main = document.querySelector('main');
   if (main) {
     await decorateMain(main);
     decorateHeaderAndFooter();
@@ -2455,7 +2484,11 @@ async function loadLazy() {
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();
-
+  const tkID = TK_IDS[getLocale(window.location)];
+  if (tkID) {
+    const { default: loadFonts } = await import('./fonts.js');
+    loadFonts(tkID, loadCSS);
+  }
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
