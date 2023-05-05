@@ -372,7 +372,7 @@ async function loadTemplates(block, placeholders, topic) {
   await readRowsFromBlock(block, templatesContainer);
 
   await decorateTemplateList(block, placeholders, templatesContainer);
-  buildCarousel(':scope .template', block, true);
+  buildCarousel(':scope .template', block, false);
 }
 
 function createDropdown(titleRow, placeholders, block) {

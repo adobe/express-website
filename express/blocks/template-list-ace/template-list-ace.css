@@ -2243,16 +2243,43 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   width: 0%;
 }
 
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+
 #generated-results-modal .modal-content .loader-wrapper .loader-placeholder-row > div {
   display: inline-block;
   width: var(--generated-loader-placeholder-width);
   height: var(--generated-template-max-height);
   margin: var(--generated-template-margin);
   border-radius: var(--generated-template-border-radius);
-  background: transparent linear-gradient(221deg, #EAEAEA 0%, #FFFFFF 33%, #C9C9C9 49%, #E0E0E0 60%, #FEFEFE 72%, #FFFFFF 100%) 0% 0% no-repeat padding-box;
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  background-size: 200% 100%;
+  animation: shine 1.5s linear infinite;
   mix-blend-mode: multiply;
   border: 1px solid #CECECE;
 }
+
+/*@keyframes shine {*/
+/*  to {*/
+/*    background-position-y: 100%;*/
+/*  }*/
+/*}*/
+
+/*#generated-results-modal .modal-content .loader-wrapper .loader-placeholder-row > div {*/
+/*  display: inline-block;*/
+/*  width: var(--generated-loader-placeholder-width);*/
+/*  height: var(--generated-template-max-height);*/
+/*  margin: var(--generated-template-margin);*/
+/*  border-radius: var(--generated-template-border-radius);*/
+/*  background: transparent linear-gradient(221deg, #EAEAEA 0%, #FFFFFF 33%, #C9C9C9 49%, #E0E0E0 60%, #FEFEFE 72%, #FFFFFF 100%);*/
+/*  background-size: 100% 400%;*/
+/*  animation: shine 2s linear infinite;*/
+/*  mix-blend-mode: multiply;*/
+/*  border: 1px solid #CECECE;*/
+/*}*/
 
 #generated-results-modal .modal-content .loader-wrapper .loader-placeholder-row > div:last-child {
   margin-right: 0;
