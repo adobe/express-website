@@ -206,7 +206,7 @@ export async function createFloatingButton($block, audience, data) {
         $floatButtonWrapper.style.bottom = '';
       } else {
         $floatButtonWrapper.classList.remove('floating-button--hidden');
-        if (promoBar.block) {
+        if (promoBar && promoBar.block) {
           $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
         } else if (currentBottom) {
           $floatButtonWrapper.style.bottom = currentBottom;
@@ -243,7 +243,7 @@ export async function createFloatingButton($block, audience, data) {
         $floatButtonWrapper.style.bottom = '';
       } else {
         $floatButtonWrapper.classList.remove('floating-button--intersecting');
-        if (promoBar.block) {
+        if (promoBar && promoBar.block) {
           $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
         } else if (currentBottom) {
           $floatButtonWrapper.style.bottom = currentBottom;
