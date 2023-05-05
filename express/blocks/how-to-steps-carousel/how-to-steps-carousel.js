@@ -280,7 +280,7 @@ export default async function decorate(block) {
     const url = placeholderImgUrl.textContent.replaceAll('how-to-steps-carousel-background-img', placeholders['how-to-steps-carousel-background-img']);
     const eagerLoad = document.querySelector('.block') === block;
     const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createOptimizedPicture(url, 'template in express', eagerLoad);
-    const backgroundPicImg = backgroundPic.querySelector('img');
+    const backgroundPicImg = backgroundPic.querySelector('img', { alt: 'template in express' });
 
     if (placeholderImgUrl) {
       backgroundPic.appendChild(backgroundPicImg);
