@@ -63,7 +63,6 @@ main .template-x-inner-wrapper {
 main .template-x.sixcols .template-x-inner-wrapper,
 main .template-x.fullwidth .template-x-inner-wrapper {
     flex-direction: row;
-    flex-wrap: nowrap;
     justify-content: center;
 }
 
@@ -117,6 +116,14 @@ main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
 
 main .template-x-wrapper .template-title {
     margin: 0 12px 20px 12px;
+}
+
+main .template-x-container .template-x-wrapper:not(:has(.toolbar-wrapper)) {
+    padding-top: 60px;
+}
+
+main .template-x-container:not(.horizontal) .template-title h2 {
+    padding-top: 80px;
 }
 
 main .template-x-wrapper .template-title.with-link > div {
@@ -231,14 +238,6 @@ main .template-x.large .template img {
 main .template-x + .button-container > a {
     margin: 0;
 }
-
-/* main .template-x .template:not(.placeholder) .icon {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    bottom: 8px;
-    right: 8px;
-} */
 
 main .template-x .template:not(.placeholder) .icon-free-badge {
     height: 24px;
@@ -365,12 +364,6 @@ main .template-x.horizontal.fullwidth .template {
     width: auto;
 }
 
-/* main .template-x .template:not(.placeholder) > div:first-of-type {
-    overflow: hidden;
-    border-radius: 7px;
-    line-height: 0;
-} */
-
 main .template-x.horizontal .template:not(.placeholder) img,
 main .template-x.horizontal .template:not(.placeholder) video,
 main .template-x.sixcols .template:not(.placeholder) img,
@@ -381,21 +374,9 @@ main .template-x.fullwidth .template:not(.placeholder) video {
     will-change: transform;
 }
 
-main .template-x.horizontal .template:hover:not(.placeholder) img,
-main .template-x.horizontal .template:hover:not(.placeholder) video,
-main .template-x.sixcols .template:hover:not(.placeholder) img,
-main .template-x.sixcols .template:hover:not(.placeholder) video,
-main .template-x.fullwidth .template:hover:not(.placeholder) img,
-main .template-x.fullwidth .template:hover:not(.placeholder) video {
-    /* transform: scale(1.1); */
-}
-
 main .template-x.horizontal .template:not(.placeholder) .button-container,
 main .template-x.sixcols .template:not(.placeholder) .button-container,
 main .template-x.fullwidth .template:not(.placeholder) .button-container {
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
     position: absolute;
     width: 120%;
     height: calc(120% + 8px);
@@ -657,28 +638,28 @@ main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
 }
 
 main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
-    max-width: 165.5px;
+    max-width: 156px;
     text-align: center;
 }
 
 main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
-    max-width: 106.33px;
+    max-width: 100px;
     text-align: center;
 }
 
 @media (min-width: 600px) {
     main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 352px;
+        max-width: 328px;
         text-align: center;
     }
 
     main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 227.33px;
+        max-width: 200px;
         text-align: center;
     }
 
     main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 165px;
+        max-width: 156px;
         text-align: center;
     }
 
@@ -732,7 +713,7 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
     }
 
     main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 258.5px;
+        max-width: 243px;
         text-align: center;
     }
 
@@ -1740,7 +1721,7 @@ main .template-x.with-categories-list .category-list-wrapper::-webkit-scrollbar 
 
 main .template-x.with-categories-list .category-list-wrapper.desktop-only {
     display: none;
-    padding: 32px 80px 0 40px;
+    padding: 32px 0 0 40px;
 }
 
 main .template-x.with-categories-list .category-list-toggle-wrapper {
@@ -1856,7 +1837,7 @@ main .template-x.with-categories-list .category-list-resize:after {
         height: 100%;
         width: 100%;
         transition: opacity 0.2s;
-        background: linear-gradient(90deg, #ffffff 56%, #ffffff00 100%);
+        background: linear-gradient(90deg, #ffffff 50%, #ffffff50 88%, #ffffff00 100%);
     }
 
     main .template-x.with-categories-list .category-list-wrapper.desktop-only {
@@ -1875,6 +1856,7 @@ main .template-x.with-categories-list .category-list-resize:after {
 
     main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover {
         min-width: max-content;
+        padding-right: 160px;
         overflow: visible;
     }
 

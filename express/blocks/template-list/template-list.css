@@ -21,7 +21,8 @@ main .template-list-fullwidth-apipowered-container .default-content-wrapper p {
   text-align: left;
 }
 
-main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container h2 {
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container h2,
+main .template-list-horizontal-fullwidth-mini-apipowered-spreadsheet-powered-container .default-content-wrapper h2{
   margin: 20px 12px 0 12px;
   text-align: left;
 }
@@ -324,17 +325,18 @@ main .template-list.horizontal.mini .template.placeholder > div:first-of-type {
   padding-top: 16px;
 }
 
-main .template-list.horizontal.mini .template.placeholder svg {
-  height: 18px;
-  width: 18px;
-}
-
 main .template-list.horizontal.mini .template.placeholder .template-link {
   font-size: 12px;
 }
 
-main .template-list.horizontal.mini .template img,
-main .template-list.horizontal.mini .template video {
+main .template-list.horizontal.mini .template.placeholder svg,
+main .template-list.horizontal.mini .template.placeholder picture > img {
+  height: 18px;
+  width: 18px;
+}
+
+main .template-list.horizontal.mini .template:not(.placeholder) img,
+main .template-list.horizontal.mini .template:not(.placeholder) video {
   object-fit: cover;
   height: 100px;
 }

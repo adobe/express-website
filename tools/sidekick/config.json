@@ -1,14 +1,12 @@
 {
   "project": "Express",
-  "outerHost": "express-website--adobe.hlx.live",
   "host": "www.adobe.com",
   "byocdn": true,
-  "pushDownSelector": "#feds-header",
   "plugins": [
     {
       "id": "metadata",
       "title": "Meta Data Inspector",
-      "url": "https://main--express-website--adobe.hlx.page/tools/metadata/inspector.html",
+      "url": "https://main--express--adobecom.hlx.page/tools/metadata/inspector.html",
       "environments": [ "edit" ],
       "excludePaths": [ "/**" ],
       "includePaths": [ "**metadata.xlsx**" ]
@@ -16,7 +14,7 @@
     {
       "id": "templates",
       "title": "Templates",
-      "url": "https://main--express-website--adobe.hlx.page/tools/templates/picker.html",
+      "url": "https://main--express--adobecom.hlx.page/tools/templates/picker.html",
       "environments": [ "edit" ],
       "excludePaths": [ "/**" ],
       "includePaths": [ "**.docx**" ]

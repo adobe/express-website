@@ -20,7 +20,7 @@ function formatFilterString(filters) {
     tasks,
     topics,
   } = filters;
-  let str = '&filters=behaviors==multiple-pages';
+  let str = '';
   if (premium && animated !== 'all') {
     if (premium.toLowerCase() === 'false') {
       str += '&filters=licensingCategory==free';
