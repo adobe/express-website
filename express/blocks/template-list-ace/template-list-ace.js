@@ -74,7 +74,6 @@ function formatSearchQuery(limit, start, sort, filters) {
       return `${string}${key}:${value} AND `;
     }
   }, '');
-
   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
@@ -105,16 +104,6 @@ async function fetchAndRenderTemplates() {
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
     templateFetched = response._embedded.results;
-
-    if ('_links' in response) {
-      // eslint-disable-next-line no-underscore-dangle
-      const nextQuery = response._links.next.href;
-      const starts = new URLSearchParams(nextQuery).get('start').split(',');
-      starts.pop();
-      props.start = starts.join(',');
-    } else {
-      props.start = '';
-    }
 
     // eslint-disable-next-line no-underscore-dangle
     props.total = response._embedded.total;
@@ -253,7 +242,6 @@ function populateTemplates($block, templates) {
 }
 
 export async function decorateTemplateList(block, placeholders, templatesContainer) {
-  debugger;
   const templates = Array.from(templatesContainer.children);
   // process single column first row as title
   if (templates[0] && templates[0].children.length === 1) {
@@ -374,14 +362,17 @@ async function loadTemplates(block, placeholders, topic) {
   } else {
     delete props.filters.topics;
   }
-  const existingContainer = block.querySelector('.templates-container');
-  if (existingContainer) existingContainer.remove();
+  const existingTemplatesContainer = block.querySelector('.templates-container');
+  if (existingTemplatesContainer) existingTemplatesContainer.remove();
+  const existingCarouselContainer = block.querySelector('.carousel-container');
+  if (existingCarouselContainer) existingCarouselContainer.remove();
+
   const templatesContainer = createTag('div', { class: 'templates-container' });
   block.append(templatesContainer);
   await readRowsFromBlock(block, templatesContainer);
 
   await decorateTemplateList(block, placeholders, templatesContainer);
-  //buildCarousel(':scope .template', block, true);
+  buildCarousel(':scope .template', block, true);
 }
 
 function createDropdown(titleRow, placeholders, block) {
