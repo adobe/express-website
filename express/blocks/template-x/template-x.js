@@ -19,18 +19,19 @@ import {
   fetchPlaceholders,
   getIconElement,
   getLocale,
-  getLanguage,
   getLottie,
   lazyLoadLottiePlayer,
   linkImage,
   toClassName,
+  getLanguage,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import fetchAndRenderTemplates from './template-search-api-v3.js';
+import { fetchTemplates, isValidTemplate} from './template-search-api-v3.js';
+import renderTemplate from './template-rendering.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -40,41 +41,43 @@ function camelize(str) {
   return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
 }
 
+async function fetchAndRenderTemplates(props) {
+  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
+  if (!response || !response.items || !Array.isArray(response.items)) {
+    return null;
+  }
+
+  if ('_links' in response) {
+    // eslint-disable-next-line no-underscore-dangle
+    const nextQuery = response._links.next.href;
+    const starts = new URLSearchParams(nextQuery).get('start').split(',');
+    props.start = starts.join(',');
+  } else {
+    props.start = '';
+  }
+
+  props.total = response.metadata.totalHits;
+
+  return response.items
+    .filter((item) => isValidTemplate(item))
+    .map((template) => renderTemplate(template, placeholders, props));
+}
+
 async function processContentRow(block, props) {
-  // const placeholders = await fetchPlaceholders();
+  const placeholders = await fetchPlaceholders();
 
   const templateTitle = createTag('div', { class: 'template-title' });
   templateTitle.innerHTML = props.contentRow.outerHTML;
 
   const aTags = templateTitle.querySelectorAll(':scope a');
-  const contentDiv = templateTitle.querySelector('div[data-valign=middle]');
+
   if (aTags.length > 0) {
-    const contentWrapper = createTag('div', { class: 'content-wrapper' });
-    const contents = templateTitle.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span');
-
-    contents.forEach((el) => {
-      contentWrapper.append(el);
-    });
-
-    if (contentDiv) {
-      contentDiv.append(contentWrapper);
-    } else {
-      templateTitle.append(contentWrapper);
-    }
-
     templateTitle.classList.add('with-link');
     aTags.forEach((aTag) => {
       aTag.className = 'template-title-link';
       const p = aTag.closest('p');
       if (p) {
-        if (contentDiv) {
-          contentDiv.append(p);
-        } else {
-          templateTitle.append(p);
-        }
-
         p.classList.remove('button-container');
-        p.classList.add('show-more-wrapper');
       }
     });
   }
@@ -168,7 +171,7 @@ function constructProps(block) {
 }
 
 function populateTemplates(block, props, templates) {
-  for (let tmplt of templates) {
+  for (const tmplt of templates) {
     const isPlaceholder = tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const linkContainer = tmplt.querySelector(':scope > div:nth-of-type(2)');
     const rowWithLinkInFirstCol = tmplt.querySelector(':scope > div:first-of-type > a');
@@ -177,21 +180,24 @@ function populateTemplates(block, props, templates) {
     if (innerWrapper && linkContainer) {
       const link = linkContainer.querySelector(':scope a');
       if (link) {
-        const aTag = createTag('a', {
-          href: link.href ? addSearchQueryToHref(link.href) : '#',
-        });
+        // const aTag = createTag('a', {
+        //   href: link.href ? addSearchQueryToHref(link.href) : '#',
+        // });
 
-        aTag.append(...tmplt.children);
-        tmplt.remove();
-        tmplt = aTag;
-        innerWrapper.append(aTag);
+        // aTag.append(...tmplt.children);
+        // tmplt.remove();
+        // tmplt = aTag;
+        // innerWrapper.append(aTag);
+        innerWrapper.append(tmplt);
 
-        // convert A to SPAN
-        const newLink = createTag('span', { class: 'template-link' });
-        newLink.append(link.textContent.trim());
+        if (isPlaceholder) {
+          // convert A to SPAN
+          const newLink = createTag('span', { class: 'template-link' });
+          newLink.append(link.textContent.trim());
 
-        linkContainer.innerHTML = '';
-        linkContainer.append(newLink);
+          linkContainer.innerHTML = '';
+          linkContainer.append(newLink);
+        }
       }
     }
 
@@ -244,43 +250,6 @@ function populateTemplates(block, props, templates) {
       tmplt.remove();
     }
     tmplt.classList.add('template');
-
-    // wrap "linked images" with link
-    const imgLink = tmplt.querySelector(':scope > div:first-of-type a');
-    if (imgLink) {
-      const parent = imgLink.closest('div');
-      if (!imgLink.href.includes('.mp4')) {
-        linkImage(parent);
-      } else {
-        let videoLink = imgLink.href;
-        if (videoLink.includes('/media_')) {
-          videoLink = `./media_${videoLink.split('/media_')[1]}`;
-        }
-        tmplt.querySelectorAll(':scope br').forEach(($br) => $br.remove());
-        const picture = tmplt.querySelector('picture');
-        if (picture) {
-          const img = tmplt.querySelector('img');
-          const video = createTag('video', {
-            playsinline: '',
-            autoplay: '',
-            loop: '',
-            muted: '',
-            poster: img.getAttribute('src'),
-            title: img.getAttribute('alt'),
-          });
-          video.append(createTag('source', {
-            src: videoLink,
-            type: 'video/mp4',
-          }));
-          parent.replaceChild(video, picture);
-          imgLink.remove();
-          video.addEventListener('canplay', () => {
-            video.muted = true;
-            video.play();
-          });
-        }
-      }
-    }
 
     if (isPlaceholder) {
       tmplt.classList.add('placeholder');
@@ -1361,5 +1330,4 @@ export default async function decorate(block) {
   const props = constructProps(block);
   block.innerHTML = '';
   await buildTemplateList(block, props, determineTemplateXType(props));
-  loadBetterAssetsInBackground(block, props);
 }
