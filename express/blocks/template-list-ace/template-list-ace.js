@@ -42,6 +42,9 @@ const props = {
   viewAllLink: null,
 };
 
+let createTemplateLink;
+let createTemplateImgSrc;
+
 function formatSearchQuery(limit, start, sort, filters) {
   const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
   const filterString = prunedFilter.reduce((string, [key, value]) => {
@@ -218,19 +221,6 @@ function populateTemplates($block, templates) {
 
 export async function decorateTemplateList(block, placeholders, templatesContainer) {
   const templates = Array.from(templatesContainer.children);
-  // process single column first row as title
-  if (templates[0] && templates[0].children.length === 1) {
-    const $titleRow = templates.shift();
-    $titleRow.classList.add('template-title');
-    $titleRow.querySelectorAll(':scope a')
-      .forEach(($a) => {
-        $a.className = 'template-title-link';
-        const p = $a.closest('p');
-        if (p) {
-          p.classList.remove('button-container');
-        }
-      });
-  }
 
   const rows = templates.length;
   let breakpoints = [{ width: '400' }];
@@ -247,16 +237,6 @@ export async function decorateTemplateList(block, placeholders, templatesContain
     const { src, alt } = $img;
     $img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
   });
-
-  // find the edit link and turn the template DIV into the A
-  // A
-  // +- DIV
-  //    +- PICTURE
-  // +- DIV
-  //    +- SPAN
-  //       +- "Edit this template"
-  //
-  // make copy of children to avoid modifying list while looping
 
   populateTemplates(templatesContainer, templates);
 }
@@ -332,18 +312,42 @@ function openPicker(button, texts, dropText, event, block, placeholders) {
   removeOnClickOutsideElement(list, event, button);
 }
 
+function createPlaceholder() {
+  const existingCreateTemplate = createTag('div');
+  const div1 = createTag('div');
+  const svg = createTag('img', {
+    src: createTemplateImgSrc,
+    class: 'icon',
+    alt: 'plus',
+    loading: 'eager',
+  });
+  div1.appendChild(svg);
+  const div2 = createTag('div');
+  const a = createTag('a', { href: createTemplateLink });
+  div2.appendChild(a);
+  existingCreateTemplate.appendChild(div1);
+  existingCreateTemplate.appendChild(div2);
+  return existingCreateTemplate;
+}
+
 async function loadTemplates(block, placeholders, topic) {
   if (topic) {
     props.filters.topics = topic;
   } else {
     delete props.filters.topics;
   }
+
+  const titleRow = block.querySelector('.template-title');
+  titleRow.textContent = placeholders['template-list-ace-templates-title']?.replaceAll('{{category}}', topic);
+
+  const placeholder = createPlaceholder();
   const existingTemplatesContainer = block.querySelector('.templates-container');
   if (existingTemplatesContainer) existingTemplatesContainer.remove();
   const existingCarouselContainer = block.querySelector('.carousel-container');
   if (existingCarouselContainer) existingCarouselContainer.remove();
 
   const templatesContainer = createTag('div', { class: 'templates-container' });
+  templatesContainer.appendChild(placeholder);
   block.append(templatesContainer);
   await readRowsFromBlock(block, templatesContainer);
 
@@ -457,18 +461,26 @@ export default async function decorate(block) {
   block.innerHTML = block.innerHTML.replaceAll('{{template-list-ace-title}}', placeholders['template-list-ace-title'])
     .replaceAll('{{template-list-ace-button}}', placeholders['template-list-ace-button'])
     .replaceAll('{{template-list-ace-suggestions-title}}', placeholders['template-list-ace-suggestions-title'])
-    .replaceAll('{{template-list-ace-suggestions}}', placeholders['template-list-ace-suggestions']);
-
+    .replaceAll('{{template-list-ace-suggestions}}', placeholders['template-list-ace-suggestions'])
+    .replaceAll('{{category}}', '');
   props.filters.tasks = '(poster)';
   props.sort = '-_score,-remixCount';
   const rows = Array.from(block.children);
   const titleRow = rows.shift();
+  titleRow.classList.add('title-search-container');
   createDropdown(titleRow, placeholders, block);
   const searchRows = rows.shift();
   createSearchBar(searchRows.querySelectorAll('div'), placeholders, titleRow);
-  const placeholdersRow = rows.shift();
+  const templatesTitleRow = rows.shift();
+  if (templatesTitleRow) {
+    templatesTitleRow.classList.add('template-title');
+  }
+  const templatesRow = rows.shift();
+  createTemplateLink = templatesRow.querySelector(':scope a')?.src ?? placeholders['template-list-ace-create-template-link'];
+  createTemplateImgSrc = templatesRow.querySelector(':scope img').src;
+
   searchRows.remove();
-  placeholdersRow.remove();
+  templatesRow.remove();
 
   await loadTemplates(block, placeholders, '');
 }

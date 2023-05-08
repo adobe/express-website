@@ -126,62 +126,14 @@ main .template-list-ace.fullwidth.lg-view > .templates-container .masonry-col {
 }
 
 main .template-list-ace .template-title {
-  margin: 0 12px 20px 12px;
+  float: left;
+  width: 100%;
+  color: #242424;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 22px;
 }
 
-main .template-list-ace .template-title > div {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-}
-
-main .template-list-ace .template-title > div > * {
-  text-align: left;
-  margin: 0;
-}
-
-main .template-list-ace .template-title p {
-  margin-top: 8px;
-  width: fit-content;
-  font-size: var(--body-font-size-m);
-}
-
-main .template-list-ace .template-link,
-main .template-list-ace .template-title-link {
-  text-decoration: none;
-  padding-left: 16px;
-  padding-top: 6px;
-  display: flex;
-}
-
-main .template-list-ace .template-link::after,
-main .template-list-ace .template-title-link::after {
-  display: flex;
-  width: 6px;
-  height: 6px;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-bottom-width: 2px;
-  border-right-width: 2px;
-  border-style: solid;
-  border-color: var(--color-info-accent);
-  transform-origin: 75% 75%;
-  transform: rotate( -45deg );
-  content: "";
-  margin-top: 5px;
-  margin-left: 5px;
-  margin-right: 2.25px;
-}
-
-main .template-list-ace .template-title-link {
-  padding: 0;
-  white-space: nowrap;
-}
-
-main .template-list-ace .template-title-link::after {
-  margin-top: 7px;
-}
 
 main .template-list-ace .template p {
   margin: 0;
@@ -379,6 +331,7 @@ main .template-list-ace .template:not(.placeholder) > div:first-of-type {
   overflow: hidden;
   border-radius: 7px;
   line-height: 0;
+  height: 100%;
 }
 
 main .template-list-ace.horizontal .template:not(.placeholder) img,
@@ -389,6 +342,8 @@ main .template-list-ace.fullwidth .template:not(.placeholder) img,
 main .template-list-ace.fullwidth .template:not(.placeholder) video {
   transition: transform .3s ease-in-out;
   will-change: transform;
+  height: 100%;
+  object-fit: cover;
 }
 
 main .template-list-ace.horizontal .template:hover:not(.placeholder) img,
@@ -559,8 +514,8 @@ main .template-list-ace.sm-view .template.placeholder > div:first-of-type {
 
 main .template-list-ace .template.placeholder > div:first-of-type > img,
 main .template-list-ace .template.placeholder > div:first-of-type > svg {
-  width: 44px;
-  height: 44px;
+  width: 26px;
+  height: 26px;
 }
 
 main .template-list-ace.fullwidth.sm-view .template.placeholder > div:first-of-type > img,
@@ -716,15 +671,6 @@ main .template-list-ace.fullwidth.sm-view .templates-container > .masonry-col {
     max-width: 187px;
   }
 
-  main .template-list-ace .template-title > div {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  main .template-list-ace .template-title > div > * {
-    text-align: left;
-  }
-
   main .template-list-ace.sixcols > .masonry-col,
   main .template-list-ace.fullwidth .templates-container > .masonry-col {
     max-width: 187px;
@@ -745,12 +691,14 @@ main .template-list-ace.fullwidth.sm-view .templates-container > .masonry-col {
   main .template-list-ace.fullwidth .template:not(.placeholder) {
     margin: 11px 11px 9px 11px; /* make up for 4px height overlap in first child div */
     height: 256px;
+    width: 166px;
   }
 
   main .template-list-ace.sixcols .template.placeholder,
   main .template-list-ace.fullwidth .template.placeholder {
-    width: 145px;
-    margin: 21px;
+    width: 150px;
+    height: 256px;
+    margin: 11px 11px 9px 11px;
   }
 
   /* template-list inside columns */
@@ -1717,42 +1665,6 @@ main .template-list-ace.mini {
   min-height: unset;
 }
 
-main .template-list-horizontal-fullwidth-mini-container .template-list-ace .template-title {
-  margin-bottom: 8px;
-}
-
-main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list-ace .template-title h2 {
-  -webkit-hyphens: none; /* safari */
-  hyphens: none;
-  display: inline;
-}
-
-main .template-list-horizontal-fullwidth-mini-container.toc-container .template-list-ace .template-title .toc-slot {
-  display: inline;
-  width: 116px;
-  height: 44px;
-  float: right;
-}
-
-main .template-list-horizontal-fullwidth-mini-container .template-list-ace .template-title p:last-of-type {
-  margin-top: 16px;
-  font-weight: 800;
-}
-
-main .template-list-horizontal-fullwidth-mini-container .template-list-ace .template-title p:first-of-type {
-  margin-bottom: 8px;
-}
-
-main .template-list-horizontal-fullwidth-mini-container .template-list-ace .template-title p:last-of-type {
-  margin-top: 16px;
-  font-weight: 800;
-}
-
-main .template-list-horizontal-fullwidth-mini-container .template-title .icon {
-  height: unset;
-  width: 167px;
-}
-
 main .template-list-horizontal-fullwidth-mini-container .template-list-ace .carousel-fader-left,
 main .template-list-horizontal-fullwidth-mini-container .template-list-ace .carousel-fader-right {
   display: none;
@@ -1768,79 +1680,6 @@ main .template-list-ace.collaboration {
   margin-bottom: 40px;
 }
 
-main .template-list-ace.collaboration .template-title > div {
-  display: block;
-  position: relative;
-}
-
-main .template-list-ace.collaboration .template-title .social-links {
-  display: flex;
-  gap: 12px;
-}
-
-main .template-list-ace.collaboration .template-title .social-links a.template-title-link {
-  height: 22px;
-  width: 22px;
-}
-
-main .template-list-ace.collaboration .template-title .social-links a.template-title-link svg {
-  height: 100%;
-  width: 100%;
-}
-
-main .template-list-ace.collaboration .template-title .social-links a.template-title-link:after {
-  content: unset;
-}
-
-main .template-list-ace.collaboration .template-title > div > h3 {
-  scroll-margin: 72px;
-  display: flex;
-  gap: 8px;
-  font-size: 22px;
-  line-height: 25px;
-  color: var(--color-black);
-}
-
-main .template-list-ace.collaboration .template-title p:first-of-type {
-  max-width: 600px;
-  margin: 16px 0;
-}
-
-main .template-list-ace.collaboration .template-title p:last-of-type {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
-
-main .template-list-ace.collaboration .template-title > div > h3 .collaboration-anchor {
-  display: inline-block;
-  position: relative;
-  height: 24px;
-  width: 24px;
-  min-width: 24px;
-  background-image: url('/express/icons/link.svg');
-  background-repeat: no-repeat;
-  cursor: pointer;
-}
-
-main .template-list-ace.collaboration .template-title > div > h3 .collaboration-anchor .clipboard-tag {
-  background-color: #268e6c;
-  color: var(--color-white);
-  white-space: nowrap;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 6px;
-  position: absolute;
-  right: 0;
-  bottom: 32px;
-  opacity: 0;
-  transition: left 0.2s ease-in-out, opacity 0.2s ease-in-out;
-}
-
-main .template-list-ace.collaboration .template-title > div > h3 .collaboration-anchor.copied .clipboard-tag {
-  opacity: 1;
-}
-
 main .template-list-ace.collaboration .carousel-container {
   margin-left: 6px;
 }
@@ -1851,8 +1690,15 @@ main .template-list-ace form {
   border:1px solid grey;
   border-radius: 50px;
   padding-left:20px;
-  height: 50px;
+  height: 58px;
   margin-left: 12px;
+}
+
+main .template-list-ace .search-bar::placeholder {
+  font-style: italic;
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: 0px;
 }
 
 main .template-list-ace .search-bar,
@@ -1860,7 +1706,9 @@ main .template-list-ace .search-bar,
   flex-grow:2;
   border-radius: 50px;
   border: 0;
-  width: 300px;
+  width: 330px;
+  font-size: 20px;
+  line-height: 20px;
 }
 
 /* remove the input focus blue box, it will be in the wrong place. */
@@ -1881,9 +1729,15 @@ main .template-list-ace form:focus-within,
   outline: 1px solid blue
 }
 
-main .template-list-ace .title-search,
-#generated-results-modal .modal-content .title-search {
+main .template-list-ace .title-search-container,
+#generated-results-modal .modal-content {
+  width: 100%
+}
+
+main .template-list-ace .title-search-container .title-search,
+#generated-results-modal .modal-content .title-search-container .title-search {
   width: 660px;
+  margin: auto;
 }
 
 main .template-list-ace h1,
@@ -1895,6 +1749,7 @@ main .template-list-ace h1,
   justify-content: center;
   display: flex;
   margin-bottom: 65px;
+  line-height: 4rem;
 }
 
 main .template-list-ace .picker-open,
@@ -1903,7 +1758,7 @@ main .template-list-ace .picker-open,
   border-radius: 16px;
   opacity: 1;
   font-size: 27px;
-  margin: 2px 6px 23px;
+  margin: 0 6px 18px;
   letter-spacing: 0px;
   color: #242424;
 }
@@ -1928,7 +1783,7 @@ main .template-list-ace .picker-open-text,
   color: #c8c8c8;
   font-size: 27px;
   display: inline-block;
-  padding: 12px 16px;
+  padding: 0 16px;
 }
 
 main .template-list-ace .picker,
@@ -1956,6 +1811,7 @@ main .template-list-ace .picker li span,
   padding: 5px 10px;
   font-size: 26px;
   border-radius: 10px;
+  line-height: 26px;
 }
 
 main .template-list-ace .picker li span .check-arrow,
@@ -1996,28 +1852,6 @@ main .template-list-ace li:not(:first-of-type) span:hover,
 @media (min-width: 900px) {
   main .template-list-ace.collaboration .carousel-container {
     margin-left: 0;
-  }
-}
-
-@media (min-width: 1200px) {
-  main .template-list-horizontal-fullwidth-mini-container .template-list-ace.mini {
-    display: none;
-  }
-
-  main .template-list-ace.collaboration .template-title > div > h3 {
-    gap: 12px;
-  }
-
-  main .template-list-ace.collaboration .template-title > div > h3 .collaboration-anchor .clipboard-tag {
-    right: unset;
-    bottom: unset;
-    top: 50%;
-    left: 48px;
-    transform: translateY(-50%);
-  }
-
-  main .template-list-ace.collaboration .template-title > div > h3 .collaboration-anchor.copied .clipboard-tag {
-    left: 28px;
   }
 }
 
@@ -2264,7 +2098,7 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
  @keyframes shine {
   to {
     background-position-y: 100%;
-  } 
+  }
 }
 
 #generated-results-modal .modal-content .loader-wrapper .loader-placeholder-row > div {
