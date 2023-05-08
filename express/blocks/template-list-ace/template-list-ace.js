@@ -17,36 +17,12 @@ import {
   fetchPlaceholders,
   getIconElement,
   toClassName,
-  loadScript,
 } from '../../scripts/scripts.js';
 import BlockMediator from '../../scripts/block-mediator.js';
 
 import { renderModalContent, fetchResults, renderResults } from './results-modal.js';
 
 import { buildCarousel } from '../shared/carousel.js';
-
-const IMS_COMMERCE_CLIENT_ID = 'aos_milo_commerce';
-const IMS_PROD_URL = 'https://auth.services.adobe.com/imslib/imslib.min.js';
-
-const getImsToken = async () => {
-  window.adobeid = {
-    client_id: IMS_COMMERCE_CLIENT_ID,
-    environment: 'prod',
-    scope: 'AdobeID,openid',
-  };
-  const promise = new Promise((resolve) => {
-    const callback = () => {
-      if (!window.adobeIMS.isSignedInUser()) {
-        window.adobeIMS.signIn();
-      }
-      resolve();
-    };
-    if (!window.adobeIMS) {
-      loadScript(IMS_PROD_URL, callback);
-    }
-  });
-  await promise;
-};
 
 const props = {
   templates: [],
@@ -473,8 +449,8 @@ function initState({ placeholders }) {
 }
 
 export default async function decorate(block) {
-  if (window.location.host.includes('localhost:3000')) {
-    await getImsToken();
+  if (!window.location.host.includes('localhost:3000')) {
+    return;
   }
   const placeholders = await fetchPlaceholders();
   initState({ placeholders });
