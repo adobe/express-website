@@ -280,7 +280,6 @@ function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block,
     }
     loadTemplates(block, placeholders, firstElem ? '' : option.textContent);
     option.classList.add('selected');
-    console.log(option.textContent);
   });
 }
 
@@ -404,7 +403,7 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   const searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
-    placeholder: placeholders['template-list-ace-search-hint'] ?? 'Describe what you want to generate...',
+    placeholder: placeholders['template-list-ace-search-hint'],
     enterKeyHint: placeholders.search ?? 'Search',
   });
   const aceState = BlockMediator.get('ace-state');

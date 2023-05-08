@@ -1694,6 +1694,12 @@ main .template-list-ace form {
   margin-left: 12px;
 }
 
+main .template-list-ace .search-form a {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  border-radius: 100px;
+}
+
 main .template-list-ace .search-bar::placeholder {
   font-style: italic;
   font-size: 18px;
@@ -1720,7 +1726,7 @@ main .template-list-ace input:focus,
 /* remove the input focus blue box, it will be in the wrong place. */
 main .template-list-ace form .button-container a,
 #generated-results-modal .modal-content form .button-container a {
-  margin: 6px;
+  margin: 7px 6px;
 }
 
 /* Add the focus effect to the form so it contains the button */
