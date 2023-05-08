@@ -630,11 +630,11 @@ loadScript(martechURL, () => {
       sparkEventName = 'quickAction:ctaPressed';
       // Frictionless Quick Actions clicks
     } else if ($a.closest('ccl-quick-action') && ($a.getAttribute('data-action') === 'Download')) {
-      adobeEventName = 'quickAction:downloadPressed_frqa';
-      sparkEventName = 'quickAction:downloadPressed_frqa';
+      adobeEventName = 'quickAction:downloadPressed';
+      sparkEventName = 'quickAction:downloadPressed';
     } else if ($a.closest('ccl-quick-action') && ($a.getAttribute('data-action') === 'Editor')) {
-      adobeEventName = 'quickAction:openInEditorPressed_frqa';
-      sparkEventName = 'quickAction:openInEditorPressed_frqa';
+      adobeEventName = 'quickAction:openInEditorPressed';
+      sparkEventName = 'quickAction:openInEditorPressed';
     // ToC clicks
     } else if ($a.closest('.toc-container')) {
       if ($a.classList.contains('toc-toggle')) {
@@ -791,13 +791,13 @@ loadScript(martechURL, () => {
   const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
   if (cclQuickAction.length) {
     let frictionLessQuctionActionsTrackingEnabled = false;
-    sendEventToAdobeAnaltics('quickAction:uploadPageViewed_frqa');
+    sendEventToAdobeAnaltics('quickAction:uploadPageViewed');
     cclQuickAction[0].addEventListener('ccl-quick-action-complete', () => {
       if (frictionLessQuctionActionsTrackingEnabled) {
         return;
       }
-      sendEventToAdobeAnaltics('quickAction:assetUploaded_frqa');
-      sendEventToAdobeAnaltics('project:editorDisplayed_frqa');
+      sendEventToAdobeAnaltics('quickAction:assetUploaded');
+      sendEventToAdobeAnaltics('project:editorDisplayed');
       const $links = d.querySelectorAll('ccl-quick-action a');
       // for tracking all of the links
       $links.forEach(($a) => {
@@ -810,7 +810,7 @@ loadScript(martechURL, () => {
   }
   d.addEventListener('click', (e) => {
     if (e.target.id === 'mock-file-input') {
-      sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto_frqa');
+      sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto');
     }
   });
 
