@@ -462,11 +462,6 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   const suggestions = searchRows[2].querySelectorAll(':scope > p');
   return searchBar;
 }
-
-function isProdOrLocal() {
-  return !window.location.host.includes('adobe.com') || window.location.host.includes('localhost:3000');
-}
-
 function initState({ placeholders }) {
   BlockMediator.set('ace-state', {
     dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0],
@@ -478,7 +473,7 @@ function initState({ placeholders }) {
 }
 
 export default async function decorate(block) {
-  if (!isProdOrLocal()) {
+  if (window.location.host.includes('localhost:3000')) {
     await getImsToken();
   }
   const placeholders = await fetchPlaceholders();
