@@ -14,8 +14,8 @@
 
 import {
   createOptimizedPicture,
-  createTag, fetchPlaceholders,
-// eslint-disable-next-line import/no-unresolved
+  createTag,
+  fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
 let rotationInterval;
@@ -287,8 +287,7 @@ export default async function decorate(block) {
       placeholderImgUrl.remove();
     }
     const templateDiv = rows.shift();
-    const templateImages = templateDiv.querySelectorAll('picture');
-    const templateImg = templateImages[0].querySelector('img');
+    const templateImg = templateDiv.querySelector(':scope picture > img');
     templateImg.style.visibility = 'hidden';
     templateImg.style.position = 'absolute';
     backgroundPicImg.style.width = `${canvasWidth}px`;
@@ -305,7 +304,6 @@ export default async function decorate(block) {
       sources.forEach((source) => source.remove());
       return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
-          console.log('entered');
           templateDiv.remove();
           const img = createTag('img');
           img.src = canvas.toDataURL('image/png');
