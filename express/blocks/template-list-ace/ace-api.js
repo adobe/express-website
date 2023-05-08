@@ -24,6 +24,12 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
+AbortSignal.timeout ??= function timeout(ms) {
+  const ctrl = new AbortController();
+  setTimeout(() => ctrl.abort(), ms);
+  return ctrl.signal;
+};
+
 function buildOptionalParams({
   category,
   subcategory,
@@ -58,7 +64,7 @@ export async function requestGeneration({
   subcategory = null,
   sync = false,
   force = false,
-  fetchExisting = true,
+  fetchExisting = false,
 }) {
   console.log('requested');
   if (useMock) return { jobId: mockId, status: 'in-progress' };
@@ -80,6 +86,7 @@ export async function requestGeneration({
     headers: {
       'x-request-id': requestId,
     },
+    signal: AbortSignal.timeout(5000),
   });
   if (!res.ok) {
     throw new Error(`Error requesting generation: ${res.status} ${res.statusText}`);
@@ -92,7 +99,10 @@ export async function monitorGeneration(jobId) {
   console.log('monitoring');
   if (useMock) return mockData;
   const url = `${base}/monitor?jobId=${jobId}`;
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(5000),
+  });
+  console.log({ monitorRes: res });
   if (!res.ok) {
     throw new Error(`Error monitoring progress: ${res.status} ${res.statusText}`);
   }
@@ -125,6 +135,7 @@ export async function postFeedback(id, category, notes) {
     headers: {
       'Content-Type': 'application/json',
     },
+    signal: AbortSignal.timeout(5000),
   });
   return response.json();
 }

@@ -385,15 +385,14 @@ function createDropdown(titleRow, placeholders, block) {
 
 async function openModal() {
   const modal = createTag('div');
-  modal.style.height = '740px';
+  modal.style.height = '840px';
   modal.style.width = '1200px';
   const modalContent = createTag('div', { class: 'modal-content' });
   modal.append(modalContent);
   BlockMediator.get('ace-state').modalContent = modalContent;
-  import('../modal/modal.js').then((mod) => {
-    mod.getModal(null, {
-      class: 'generated-results-modal', id: 'generated-results-modal', content: modal, closeEvent: 'closeGeneratedResultsModal',
-    });
+  const mod = await import('../modal/modal.js');
+  mod.getModal(null, {
+    class: 'generated-results-modal', id: 'generated-results-modal', content: modal, closeEvent: 'closeGeneratedResultsModal',
   });
   renderModalContent();
 }
@@ -411,6 +410,7 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   window.addEventListener('milo:modal:closed', () => {
     // IMPORTANT: clear ongoing search + sync search bar value
     searchBar.value = aceState.query;
+    aceState.fetchingState.results = null;
     clearInterval(aceState.fetchingState.intervalId);
   });
   searchForm.append(searchBar);
@@ -430,9 +430,9 @@ function createSearchBar(searchRows, placeholders, titleRow) {
       return;
     }
     aceState.query = searchBar.value;
-    openModal();
-    const results = await fetchResults();
-    await renderResults(results);
+    await openModal();
+    await fetchResults();
+    renderResults();
   });
 
   titleRowDiv.classList.add('title-search');
@@ -443,10 +443,10 @@ function createSearchBar(searchRows, placeholders, titleRow) {
 }
 function initState({ placeholders }) {
   BlockMediator.set('ace-state', {
-    dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0],
+    dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0].trim(),
     query: null,
     placeholders,
-    fetchingState: { intervalId: null, progressManager: null },
+    fetchingState: { intervalId: null, progressManager: null, results: null },
     modalContent: null,
   });
 }

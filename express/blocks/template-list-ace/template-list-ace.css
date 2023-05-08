@@ -1735,8 +1735,7 @@ main .template-list-ace form:focus-within,
   outline: 1px solid blue
 }
 
-main .template-list-ace .title-search-container,
-#generated-results-modal .modal-content {
+main .template-list-ace .title-search-container{
   width: 100%
 }
 
@@ -2228,10 +2227,6 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   padding: 10px 10px 10px 30px;
 }
 
-#generated-results-modal .modal-content .search-form input {
-  font-size: 20px;
-}
-
 #generated-results-modal .modal-content .search-form .search-button {
   padding:25px 25px;
   border-radius: 30px;
@@ -2249,4 +2244,9 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
 #generated-results-modal .modal-content .search-form .search-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+#generated-results-modal .modal-content .error-display {
+  text-align: center;
+  line-height: 300%;
 }
