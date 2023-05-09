@@ -68,7 +68,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame {
   margin-top: 40px;
   position: relative;
-  width: 800px;
+  width: 950px;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-background {
@@ -90,7 +90,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app {
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-image img {
-  width: 800px;
+  width: 950px;
   border-radius: 24px;
 }
 
@@ -141,9 +141,9 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscre
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor {
   position: absolute;
-  top: 48px;
-  left: 54px;
-  width: 169px;
+  top: 58px;
+  left: 66px;
+  width: 196px;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor img {

@@ -40,7 +40,7 @@ function buildBackground(block, background) {
 
   window.addEventListener('scroll', () => {
     const progress = (window.scrollY * 100) / block.offsetHeight;
-    let opacityValue = (progress / 1000) * 10;
+    let opacityValue = ((progress - 10) / 1000) * 40;
 
     if (opacityValue > 0.6) {
       opacityValue = 0.6;
@@ -64,10 +64,10 @@ async function buildApp(block, content) {
   await fetchPlaceholders().then((placeholders) => {
     let variant;
 
-    if (block.classList.contains('video')) {
-      variant = 'video';
-    } else {
+    if (block.classList.contains('image')) {
       variant = 'image';
+    } else {
+      variant = 'video';
     }
 
     appImage = createOptimizedPicture(placeholders[`fullscreen-marquee-desktop-${variant}-app`]);
