@@ -63,6 +63,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
   z-index: -5;
   opacity: 0;
   transform: translate(-50%, -50%);
+  transition: .5s opacity ease
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame {
