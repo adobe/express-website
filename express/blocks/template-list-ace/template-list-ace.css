@@ -1715,6 +1715,7 @@ main .template-list-ace .search-bar,
   width: 330px;
   font-size: 20px;
   line-height: 20px;
+  cursor: pointer;
 }
 
 /* remove the input focus blue box, it will be in the wrong place. */

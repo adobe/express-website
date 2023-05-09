@@ -30,7 +30,7 @@ export function findDetails(hash, el) {
 
 function closeModal(modal) {
   const { id } = modal;
-  const closeEvent = new Event('milo:modal:closed');
+  const closeEvent = new Event(`milo:modal:closed:${id}`);
   window.dispatchEvent(closeEvent);
 
   document.querySelectorAll(`#${id}`).forEach((mod) => {
@@ -83,7 +83,7 @@ export async function getModal(details, custom) {
   const { id } = details || custom;
 
   const dialog = createTag('div', { class: 'dialog-modal', id });
-  const loadedEvent = new Event('milo:modal:loaded');
+  const loadedEvent = new Event(`milo:modal:loaded:${id}`);
 
   if (custom) getCustomModal(custom, dialog);
   if (details) await getPathModal(details.path, dialog);

@@ -21,6 +21,7 @@ import {
 import useProgressManager from './progress-manager.js';
 import { openReportModal } from './report-modal.js';
 import BlockMediator from '../../scripts/block-mediator.js';
+import { createDropdown } from './template-list-ace.js';
 
 const NUM_PLACEHOLDERS = 4;
 const MONITOR_INTERVAL = 2000;
@@ -28,6 +29,8 @@ const AVG_GENERATION_TIME = 20000;
 const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
 const REQUEST_GENERATION_RETRIES = 3;
+
+let dropdownSubscription;
 
 function getVoteHandler(id, category) {
   return async (e) => {
@@ -353,24 +356,13 @@ function createModalSearch(modalContent) {
 
   return searchForm;
 }
-
-function createModalDropdown() {
-  const { placeholders, dropdownValue } = BlockMediator.get('ace-state');
-  const dropdownText = placeholders['template-list-ace-title'];
-  const dropdown = createTag('h1', { class: 'modal-dropdown' });
-  const texts = dropdownText.split('{{breakline}}')[0].trim().split('{{ace-dropdown}}');
-  dropdown.append(texts[0].trim());
-  const categorySpan = createTag('span', { class: 'modal-dropdown-category' });
-  categorySpan.append(dropdownValue);
-  dropdown.append(categorySpan);
-  dropdown.append(texts[1].trim());
-  return dropdown;
-}
-
 function createTitleRow() {
   const { placeholders, createTemplateLink } = BlockMediator.get('ace-state');
   const titleRow = createTag('div', { class: 'modal-title-row' });
-  const dropdown = createModalDropdown();
+  const title = createTag('h1');
+  titleRow.appendChild(title);
+  title.textContent = placeholders['template-list-ace-modal-title'];
+  dropdownSubscription = createDropdown(titleRow, placeholders);
   const scratchWrapper = createTag('div', { class: 'scratch-wrapper' });
   const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
   noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
@@ -382,12 +374,14 @@ function createTitleRow() {
   fromScratchButton.textContent = placeholders['template-list-ace-from-scratch'] ?? 'Create from scratch';
   scratchWrapper.append(noGuidanceSpan);
   scratchWrapper.append(fromScratchButton);
-  titleRow.append(dropdown);
   titleRow.append(scratchWrapper);
   return titleRow;
 }
 
-export function renderModalContent(modalContent) {
+export function renderModalContent(modalContent, modalId) {
   modalContent.append(createTitleRow());
   modalContent.append(createModalSearch(modalContent));
+  window.addEventListener(`milo:modal:closed:${modalId}`, () => {
+    if (dropdownSubscription) dropdownSubscription();
+  });
 }

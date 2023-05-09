@@ -261,56 +261,6 @@ function removeOnClickOutsideElement(element, event, button) {
   document.addEventListener('click', func);
 }
 
-function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block, placeholders) {
-  option.addEventListener('click', () => {
-    list.remove();
-    const downArrow = createTag('img', {
-      class: 'icon down-arrow',
-      src: '../../express/icons/drop-down-arrow.svg',
-      width: 15,
-      height: 9,
-    });
-    dropdownText.textContent = option.textContent;
-    dropdownText.appendChild(downArrow);
-    BlockMediator.get('ace-state').dropdownValue = option.textContent;
-    if (firstElem) {
-      dropdownText.classList.remove('selected');
-    } else if (!dropdownText.classList.contains('selected')) {
-      dropdownText.classList.add('selected');
-    }
-    loadTemplates(block, placeholders, firstElem ? '' : option.textContent);
-    option.classList.add('selected');
-  });
-}
-
-function openPicker(button, texts, dropText, event, block, placeholders) {
-  if (document.querySelector('main .template-list-ace .picker')) {
-    return;
-  }
-  const list = createTag('ul', { class: 'picker' });
-  texts.forEach((d, index) => {
-    const span = createTag('span');
-    span.textContent = d;
-    const li = createTag('li');
-    li.appendChild(span);
-    if (index !== 0 && d === dropText.textContent) {
-      span.classList.add('selected');
-      const checkArrow = createTag('img', {
-        class: 'icon check-arrow',
-        src: '../../express/icons/checkmark.svg',
-        width: 15,
-        height: 15,
-      });
-      span.appendChild(checkArrow);
-    }
-    list.appendChild(li);
-    decorateForOnPickerSelect(span, list, dropText, index === 0, block, placeholders);
-  });
-  button.appendChild(list);
-  button.setAttribute('aria-expanded', true);
-  removeOnClickOutsideElement(list, event, button);
-}
-
 function createPlaceholder() {
   const existingCreateTemplate = createTag('div');
   const div1 = createTag('div');
@@ -354,21 +304,53 @@ async function loadTemplates(block, placeholders, topic) {
   buildCarousel(':scope .template', block, false);
 }
 
-function createDropdown(titleRow, placeholders, block) {
+function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block, placeholders) {
+  option.addEventListener('click', () => {
+    list.remove();
+    BlockMediator.set('ace-dropdown', option.textContent);
+    if (block && placeholders) {
+      loadTemplates(block, placeholders, firstElem ? '' : option.textContent);
+    }
+    option.classList.add('selected');
+  });
+}
+
+function openPicker(button, texts, dropText, event, block, placeholders) {
+  if (document.querySelector('main .template-list-ace .picker')) {
+    return;
+  }
+  const list = createTag('ul', { class: 'picker' });
+  texts.forEach((d, index) => {
+    const span = createTag('span');
+    span.textContent = d;
+    const li = createTag('li');
+    li.appendChild(span);
+    if (index !== 0 && d === dropText.textContent) {
+      span.classList.add('selected');
+      const checkArrow = createTag('img', {
+        class: 'icon check-arrow',
+        src: '../../express/icons/checkmark.svg',
+        width: 15,
+        height: 15,
+      });
+      span.appendChild(checkArrow);
+    }
+    list.appendChild(li);
+    decorateForOnPickerSelect(span, list, dropText, index === 0, block, placeholders);
+  });
+  button.appendChild(list);
+  button.setAttribute('aria-expanded', true);
+  removeOnClickOutsideElement(list, event, button);
+}
+
+export function createDropdown(titleRow, placeholders, block) {
   const title = titleRow.querySelector(':scope h1');
   const dropdownTexts = placeholders['template-list-ace-categories-dropdown'].split(',');
-  const downArrow = createTag('img', {
-    class: 'icon down-arrow',
-    src: '../../express/icons/drop-down-arrow.svg',
-    width: 15,
-    height: 9,
-  });
+
   const dropdown = createTag('div', {
     class: 'picker-open', role: 'button', 'aria-haspopup': true, 'aria-expanded': false,
   });
   const dropdownText = createTag('span', { class: 'picker-open-text' });
-  dropdownText.textContent = dropdownTexts[0];
-  dropdownText.appendChild(downArrow);
   dropdown.append(dropdownText);
   const span = createTag('span');
   span.style.flexBasis = '100%';
@@ -381,6 +363,28 @@ function createDropdown(titleRow, placeholders, block) {
   dropText.addEventListener('click', (e) => {
     openPicker(drop, dropdownTexts, dropText, e, block, placeholders);
   });
+  const subscription = BlockMediator.subscribe('ace-dropdown', (change) => {
+    const downArrow = createTag('img', {
+      class: 'icon down-arrow',
+      src: '../../express/icons/drop-down-arrow.svg',
+      width: 15,
+      height: 9,
+    });
+    dropText.textContent = change.newValue;
+    dropText.appendChild(downArrow);
+    if (change.newValue === dropdownTexts[0]) {
+      dropText.classList.remove('selected');
+    } else if (!dropText.classList.contains('selected')) {
+      dropText.classList.add('selected');
+    }
+  });
+  const dropdownVal = BlockMediator.get('ace-dropdown');
+  if (dropdownVal) {
+    BlockMediator.set('ace-dropdown', dropdownVal);
+  } else {
+    BlockMediator.set('ace-dropdown', dropdownTexts[0]);
+  }
+  return subscription;
 }
 
 async function openModal() {
@@ -391,10 +395,11 @@ async function openModal() {
   modal.append(modalContent);
   BlockMediator.get('ace-state').modalContent = modalContent;
   const mod = await import('../modal/modal.js');
+  const id = 'generated-results-modal';
   mod.getModal(null, {
-    class: 'generated-results-modal', id: 'generated-results-modal', content: modal, closeEvent: 'closeGeneratedResultsModal',
+    class: 'generated-results-modal', id, content: modal, closeEvent: 'closeGeneratedResultsModal',
   });
-  renderModalContent(modalContent);
+  renderModalContent(modalContent, id);
   return modalContent;
 }
 

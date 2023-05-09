@@ -60,9 +60,10 @@ export async function openReportModal() {
   modal.append(reportModalContent);
   BlockMediator.get('ace-state').reportModalContent = reportModalContent;
   const mod = await import('../modal/modal.js');
+  const modalId = 'report-modal';
   mod.getModal(null, {
     class: 'report-modal',
-    id: 'report-modal',
+    id: modalId,
     content: modal,
     closeEvent: 'closeReportModal',
   });
