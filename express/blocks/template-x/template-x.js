@@ -41,6 +41,37 @@ function camelize(str) {
   return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
 }
 
+function getTextColorBasedOnBackground(colorString) {
+  let r;
+  let g;
+  let b;
+
+  if (colorString.match(/^rgb/)) {
+    const colorValues = colorString.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    [r, g, b] = colorValues.slice(1);
+  } else {
+    const hexToRgb = +(`0x${colorString.slice(1).replace(colorString.length < 5 ? /./g : '', '$&$&')}`);
+    // eslint-disable-next-line no-bitwise
+    r = (hexToRgb >> 16) & 255;
+    // eslint-disable-next-line no-bitwise
+    g = (hexToRgb >> 8) & 255;
+    // eslint-disable-next-line no-bitwise
+    b = hexToRgb & 255;
+  }
+
+  const hsp = Math.sqrt(
+    0.299 * (r * r)
+    + 0.587 * (g * g)
+    + 0.114 * (b * b),
+  );
+
+  if (hsp > 127.5) {
+    return '#242424';
+  } else {
+    return '#fff';
+  }
+}
+
 async function fetchAndRenderTemplates(props) {
   const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
   if (!response || !response.items || !Array.isArray(response.items)) {
@@ -130,9 +161,9 @@ function constructProps(block) {
     headingSlug: null,
     viewAllLink: null,
     holidayIcon: null,
-    backgroundColor: null,
+    backgroundColor: '#000B1D',
     backgroundAnimation: null,
-    textColor: null,
+    textColor: '#FFFFFF',
   };
 
   Array.from(block.children).forEach((row) => {
@@ -163,9 +194,15 @@ function constructProps(block) {
       }
     } else if (cols.length === 5) {
       if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        props['holidayIcon'] = cols[2].querySelector('picture') ? cols[2].querySelector('picture') : null
-        props['backgroundColor'] = cols[3].textContent.trim().toLowerCase() ? cols[3].textContent.trim().toLowerCase() : null
-        props['backgroundAnimation'] = cols[4].textContent.trim().toLowerCase() ? cols[4].textContent.trim().toLowerCase() : null
+        const backgroundColor = cols[3].textContent.trim().toLowerCase();
+        const holidayIcon = cols[2].querySelector('picture');
+        const backgroundAnimation = cols[4].textContent.trim().toLowerCase();
+
+        props.holidayBlock = true;
+        props.holidayIcon = holidayIcon || null;
+        props.backgroundColor = backgroundColor || null;
+        props.backgroundAnimation = backgroundAnimation || null;
+        props.textColor = getTextColorBasedOnBackground(backgroundColor);
       }
     }
   });
@@ -1132,6 +1169,18 @@ function loadBetterAssetsInBackground(block, props) {
   }
 }
 
+function decorateHoliday(block, props) {
+  block.style.backgroundColor = props.backgroundColor;
+  const heading = block.querySelector('h2');
+  const subheading = block.querySelector('p');
+  const blankTemplate = block.querySelector('svg');
+  heading.style.color = props.textColor;
+  subheading.style.color = props.textColor;
+  if (blankTemplate) {
+    blankTemplate.style.fill = props.textColor;
+  }
+}
+
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
   const innerWrapper = block.querySelector('.template-x-inner-wrapper');
@@ -1306,6 +1355,10 @@ async function buildTemplateList(block, props, type = []) {
     } else {
       block.remove();
     }
+  }
+
+  if (props.holidayBlock) {
+    decorateHoliday(block, props);
   }
 }
 
