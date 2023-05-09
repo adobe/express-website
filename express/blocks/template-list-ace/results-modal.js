@@ -354,13 +354,13 @@ function createModalSearch(modalContent) {
 
   return searchForm;
 }
-function createTitleRow() {
+function createTitleRow(block) {
   const { placeholders, createTemplateLink } = BlockMediator.get('ace-state');
   const titleRow = createTag('div', { class: 'modal-title-row' });
   const title = createTag('h1');
   titleRow.appendChild(title);
   title.textContent = placeholders['template-list-ace-modal-title'];
-  createDropdown(titleRow, placeholders);
+  createDropdown(titleRow, placeholders, block);
   const scratchWrapper = createTag('div', { class: 'scratch-wrapper' });
   const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
   noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
@@ -378,7 +378,7 @@ function createTitleRow() {
   return titleRow;
 }
 
-export function renderModalContent(modalContent) {
-  modalContent.append(createTitleRow());
+export function renderModalContent(modalContent, block) {
+  modalContent.append(createTitleRow(block));
   modalContent.append(createModalSearch(modalContent));
 }

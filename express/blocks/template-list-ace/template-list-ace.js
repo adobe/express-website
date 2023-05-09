@@ -377,6 +377,9 @@ export function createDropdown(titleRow, placeholders, block) {
     } else if (!dropText.classList.contains('selected')) {
       dropText.classList.add('selected');
     }
+    if (change.oldValue !== change.newValue && change.oldValue) {
+      loadTemplates(block, placeholders, change.newValue === dropdownTexts[0] ? '' : change.newValue);
+    }
   });
   const dropdownVal = BlockMediator.get('ace-dropdown');
   if (dropdownVal) {
@@ -388,7 +391,7 @@ export function createDropdown(titleRow, placeholders, block) {
   return unsubscribeDropdown;
 }
 const GENERATED_RESULTS_MODAL_ID = 'generated-results-modal';
-async function openModal() {
+async function openModal(block) {
   const modal = createTag('div');
   modal.style.height = '840px';
   modal.style.width = '1200px';
@@ -399,11 +402,11 @@ async function openModal() {
   mod.getModal(null, {
     class: 'generated-results-modal', id: GENERATED_RESULTS_MODAL_ID, content: modal, closeEvent: 'closeGeneratedResultsModal',
   });
-  renderModalContent(modalContent);
+  renderModalContent(modalContent, block);
   return modalContent;
 }
 
-function createSearchBar(searchRows, placeholders, titleRow) {
+function createSearchBar(searchRows, placeholders, titleRow, block) {
   const searchForm = createTag('form', { class: 'search-form' });
   const searchBar = createTag('input', {
     class: 'search-bar',
@@ -443,7 +446,7 @@ function createSearchBar(searchRows, placeholders, titleRow) {
       return;
     }
     aceState.query = searchBar.value;
-    const modalContent = await openModal();
+    const modalContent = await openModal(block);
     await fetchResults(modalContent, false);
     renderResults(modalContent);
   });
@@ -487,7 +490,7 @@ export default async function decorate(block) {
   titleRow.classList.add('title-search-container');
   createDropdown(titleRow, placeholders, block);
   const searchRows = rows.shift();
-  createSearchBar(searchRows.querySelectorAll('div'), placeholders, titleRow);
+  createSearchBar(searchRows.querySelectorAll('div'), placeholders, titleRow, block);
   const templatesTitleRow = rows.shift();
   if (templatesTitleRow) {
     templatesTitleRow.classList.add('template-title');
