@@ -216,7 +216,7 @@ main .template-x .template img,
 main .template-x .template video {
     width: 100%;
     height: 100%;
-    clip-path: inset(1px 1px);
+    pointer-events: none;
     object-fit: cover;
     display: block;
 }
@@ -224,6 +224,10 @@ main .template-x .template video {
 main .template-x .template .media-wrapper img,
 main .template-x .template .media-wrapper video {
     display: none;
+}
+
+main .template-x .template .media-wrapper video {
+    clip-path: inset(0 0 3px 0);
 }
 
 main .template-x.large .template {

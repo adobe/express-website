@@ -24,6 +24,10 @@ function isVideoFirst(template) {
   return containsVideo(template.pages[0]);
 }
 
+function isVideo(iterator) {
+  return iterator.current().rendition?.video?.thumbnail?.componentId;
+}
+
 function getTemplateTitle(template) {
   return template.title['i-default'];
 }
@@ -44,12 +48,8 @@ function extractImageThumbnail(page) {
   return page.rendition.image?.thumbnail;
 }
 
-function extractImagePreview(page) {
-  return page.rendition.image?.preview;
-}
-
 function getWidthHeightRatio(page) {
-  const preview = extractImagePreview(page);
+  const preview = page.rendition.image?.preview;
   return preview.width / preview.height;
 }
 
@@ -69,11 +69,10 @@ function getImageThumbnailSrc(renditionLinkHref, page) {
   );
 }
 
-function getImageCustomWidthSrc(renditionLinkHref, page, width) {
-  const thumbnail = extractImageThumbnail(page);
+function getImageCustomWidthSrc(renditionLinkHref, page, image) {
   return renditionLinkHref.replace(
     '{&page,size,type,fragment}',
-    `&size=${widthToSize(getWidthHeightRatio(page), width)}&type=image/jpg&fragment=id=${thumbnail.componentId}`,
+    `&size=${widthToSize(getWidthHeightRatio(page), image.width)}&type=image/jpg&fragment=id=${image.componentId}`,
   );
 }
 
@@ -138,21 +137,55 @@ function getPageIterator(pages) {
     },
   };
 }
-
-function renderRotatingVideos(pages, { renditionLinkHref, componentLinkHref, templateTitle }) {
+function renderRotatingMedias(wrapper,
+  pages,
+  { templateTitle, renditionLinkHref, componentLinkHref }) {
   const pageIterator = getPageIterator(pages);
-  const video = createTag('video', {
-    muted: true,
-    playsinline: '',
-    title: templateTitle,
-    poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
+
+  const constructVideo = () => {
+    let src = '';
+    if (isVideo(pageIterator)) {
+      src = getVideoSrc(componentLinkHref, pageIterator.current());
+    }
+
+    const video = createTag('video', {
+      muted: true,
+      playsinline: '',
+      title: templateTitle,
+      poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
+    });
+    const videoSource = createTag('source', {
+      src,
+      type: 'video/mp4',
+    });
+
+    video.append(videoSource);
+
+    return video;
+  };
+
+  const constructImg = () => createTag('img', {
+    src: '',
+    alt: templateTitle,
   });
-  const videoSource = createTag('source', {
-    src: getVideoSrc(componentLinkHref, pageIterator.current()),
-    type: 'video/mp4',
-  });
-  video.append(videoSource);
+
+  const img = constructImg();
+  const video = constructVideo();
+  const videoSource = video.querySelector('source');
+  wrapper.prepend(video);
+  wrapper.prepend(img);
+
+  const playImage = () => {
+    img.style.display = 'block';
+    img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
+
+    setTimeout(() => {
+      img.dispatchEvent(new CustomEvent('imgshownlongenough'));
+    }, 2000);
+  };
+
   const playVideo = () => {
+    video.style.display = 'block';
     video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
     videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
     video.load();
@@ -165,34 +198,34 @@ function renderRotatingVideos(pages, { renditionLinkHref, componentLinkHref, tem
       }
     });
   };
+
+  const playMedia = () => {
+    if (isVideo(pageIterator)) {
+      img.style.display = 'none';
+      playVideo();
+    } else {
+      video.style.display = 'none';
+      playImage();
+    }
+  };
+
   const cleanup = () => {
     video.pause();
     video.currentTime = 0;
     pageIterator.reset();
   };
+
   video.addEventListener('ended', () => {
     pageIterator.next();
-    playVideo();
+    playMedia();
   });
-  return { node: video, cleanup, hover: playVideo };
-}
 
-function renderRotatingImages(pages, { templateTitle, renditionLinkHref }) {
-  const pageIterator = getPageIterator(pages);
-  const img = createTag('img', { src: '', alt: templateTitle });
-  let playImageIntervalId;
-  const playImage = () => {
-    img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
-    playImageIntervalId = setInterval(() => {
-      pageIterator.next();
-      img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
-    }, 2000);
-  };
-  const cleanup = () => {
-    pageIterator.reset();
-    clearInterval(playImageIntervalId);
-  };
-  return { node: img, cleanup, hover: playImage };
+  img.addEventListener('imgshownlongenough', () => {
+    pageIterator.next();
+    playMedia();
+  });
+
+  return { cleanup, hover: playMedia };
 }
 
 function renderMediaWrapper(template) {
@@ -216,13 +249,7 @@ function renderMediaWrapper(template) {
     e.preventDefault();
     e.stopPropagation();
     if (!renderedMedia) {
-      // don't let image interrupt flow of videos
-      renderedMedia = isVideoFirst(template)
-        ? renderRotatingVideos(
-          template.pages.filter((page) => containsVideo(page)), templateInfo,
-        )
-        : renderRotatingImages(template.pages, templateInfo);
-      mediaWrapper.append(renderedMedia.node);
+      renderedMedia = renderRotatingMedias(mediaWrapper, template.pages, templateInfo);
       mediaWrapper.append(renderShareWrapper(branchUrl));
     }
     renderedMedia.hover();
@@ -234,10 +261,46 @@ function renderMediaWrapper(template) {
   return { mediaWrapper, enterHandler, leaveHandler };
 }
 
-function renderHoverWrapper(template, placeholders) {
+function updateURLParameter(url, param, paramVal) {
+  let newAdditionalURL = '';
+  let tempArray = url.split('?');
+  const baseURL = tempArray[0];
+  const additionalURL = tempArray[1];
+  let temp = '';
+  if (additionalURL) {
+    tempArray = additionalURL.split('&');
+    for (let i = 0; i < tempArray.length; i += 1) {
+      if (tempArray[i].split('=')[0] !== param) {
+        newAdditionalURL += temp + tempArray[i];
+        temp = '&';
+      }
+    }
+  }
+
+  const rowText = `${temp}${param}=${paramVal}`;
+  return `${baseURL}?${newAdditionalURL}${rowText}`;
+}
+
+function loadBetterAssetInBackground(img, page) {
+  const size = widthToSize(getWidthHeightRatio(page), 400);
+
+  const updateImgRes = () => {
+    const imgParams = new URLSearchParams(img.src);
+
+    if (imgParams.get('size') !== size.toString(10)) {
+      img.src = updateURLParameter(img.src, 'size', size);
+    } else {
+      img.removeEventListener('load', updateImgRes);
+    }
+  };
+
+  img.addEventListener('load', updateImgRes);
+}
+
+function renderHoverWrapper(template, placeholders, props) {
   const btnContainer = createTag('div', { class: 'button-container' });
 
-  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template);
+  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template, props);
 
   btnContainer.append(mediaWrapper);
   btnContainer.addEventListener('mouseenter', enterHandler);
@@ -249,14 +312,15 @@ function renderHoverWrapper(template, placeholders) {
   return btnContainer;
 }
 
-function renderStillWrapper(template, props) {
+function renderStillWrapper(template) {
   const stillWrapper = createTag('div', { class: 'still-wrapper' });
+  const firstPage = template.pages[0];
 
   const templateTitle = getTemplateTitle(template);
   const renditionLinkHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
 
   const thumbnailImageHref = getImageCustomWidthSrc(renditionLinkHref,
-    template.pages[0], props.renditionParams.size);
+    template.pages[0], firstPage.rendition.image?.thumbnail);
 
   const imgWrapper = createTag('div', { class: 'image-wrapper' });
 
@@ -264,7 +328,7 @@ function renderStillWrapper(template, props) {
     src: thumbnailImageHref,
     alt: templateTitle,
   });
-  imgWrapper.insertAdjacentElement('beforeend', img);
+  imgWrapper.append(img);
 
   const isFree = template.licensingCategory === 'free';
   const creator = template.attribution?.creators?.filter((c) => c.name && c.name !== 'Adobe Express')?.[0]?.name || null;
@@ -286,6 +350,9 @@ function renderStillWrapper(template, props) {
     imgWrapper.append(videoIcon);
   }
 
+
+  loadBetterAssetInBackground(img, firstPage);
+
   stillWrapper.append(imgWrapper);
   // TODO: API not ready for creator yet
   // stillWrapper.append(creatorDiv);
@@ -295,6 +362,7 @@ function renderStillWrapper(template, props) {
 export default function renderTemplate(template, placeholders, props) {
   const tmpltEl = createTag('div');
   tmpltEl.append(renderStillWrapper(template, props));
-  tmpltEl.append(renderHoverWrapper(template, placeholders));
+  tmpltEl.append(renderHoverWrapper(template, placeholders, props));
+
   return tmpltEl;
 }

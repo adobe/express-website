@@ -21,7 +21,6 @@ import {
   getLocale,
   getLottie,
   lazyLoadLottiePlayer,
-  linkImage,
   toClassName,
   getLanguage,
 } from '../../scripts/scripts.js';
@@ -30,7 +29,7 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import { fetchTemplates, isValidTemplate} from './template-search-api-v3.js';
+import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
 import renderTemplate from './template-rendering.js';
 
 function wordStartsWithVowels(word) {
@@ -64,7 +63,7 @@ async function fetchAndRenderTemplates(props) {
 }
 
 async function processContentRow(block, props) {
-  const placeholders = await fetchPlaceholders();
+  // const placeholders = await fetchPlaceholders();
 
   const templateTitle = createTag('div', { class: 'template-title' });
   templateTitle.innerHTML = props.contentRow.outerHTML;
@@ -976,7 +975,7 @@ function getPlaceholderWidth(block) {
   return width;
 }
 
-async function toggleMasonryView(block, props, button, toggleButtons) {
+function toggleMasonryView(block, props, button, toggleButtons) {
   const templatesToView = block.querySelectorAll('.template:not(.placeholder)');
   const blockWrapper = block.closest('.template-x-wrapper');
 
@@ -1082,48 +1081,6 @@ async function decorateToolbar(block, props) {
     initFilterSort(block, props, tBar);
     initViewToggle(block, props, tBar);
     initToolbarShadow(block, tBar);
-  }
-}
-
-function updateURLParameter(url, param, paramVal) {
-  let newAdditionalURL = '';
-  let tempArray = url.split('?');
-  const baseURL = tempArray[0];
-  const additionalURL = tempArray[1];
-  let temp = '';
-  if (additionalURL) {
-    tempArray = additionalURL.split('&');
-    for (let i = 0; i < tempArray.length; i += 1) {
-      if (tempArray[i].split('=')[0] !== param) {
-        newAdditionalURL += temp + tempArray[i];
-        temp = '&';
-      }
-    }
-  }
-
-  const rowText = `${temp}${param}=${paramVal}`;
-  return `${baseURL}?${newAdditionalURL}${rowText}`;
-}
-
-function loadBetterAssetsInBackground(block, props) {
-  props.renditionParams.size = 400;
-  const existingTemplates = block.querySelectorAll('.template:not(.placeholder)');
-  if (existingTemplates.length > 0) {
-    existingTemplates.forEach((tmplt) => {
-      const img = tmplt.querySelector('div:first-of-type > img');
-      if (img && img.src) {
-        const updateImgRes = () => {
-          const imgParams = new URLSearchParams(img.src);
-          if (imgParams.get('size') !== '400') {
-            img.src = updateURLParameter(img.src, 'size', 400);
-          } else {
-            img.removeEventListener('load', updateImgRes);
-          }
-        };
-
-        img.addEventListener('load', updateImgRes);
-      }
-    });
   }
 }
 
@@ -1250,7 +1207,7 @@ async function decorateTemplates(block, props) {
 
   await attachFreeInAppPills(block);
 
-  const templateLinks = block.querySelectorAll('a.template');
+  const templateLinks = block.querySelectorAll('.template .button-container > a');
   const linksPopulated = new CustomEvent('linkspopulated', { detail: templateLinks });
   document.dispatchEvent(linksPopulated);
 }
