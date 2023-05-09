@@ -16,12 +16,8 @@ function shortenTitle(title) {
   return title.length > 19 ? `${title.slice(0, 19)}...` : title;
 }
 
-function containsVideo(page) {
-  return !!page?.rendition?.video?.thumbnail?.componentId;
-}
-
-function isVideoFirst(template) {
-  return containsVideo(template.pages[0]);
+function containsVideo(pages) {
+  return pages.some((page) => !!page?.rendition?.video?.thumbnail?.componentId);
 }
 
 function isVideo(iterator) {
@@ -146,37 +142,41 @@ function renderRotatingMedias(wrapper,
     let src = '';
     if (isVideo(pageIterator)) {
       src = getVideoSrc(componentLinkHref, pageIterator.current());
+      const video = createTag('video', {
+        muted: true,
+        playsinline: '',
+        title: templateTitle,
+        poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
+        class: 'unloaded hidden',
+      });
+      const videoSource = createTag('source', {
+        src,
+        type: 'video/mp4',
+      });
+
+      video.append(videoSource);
+
+      return video;
     }
 
-    const video = createTag('video', {
-      muted: true,
-      playsinline: '',
-      title: templateTitle,
-      poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
-    });
-    const videoSource = createTag('source', {
-      src,
-      type: 'video/mp4',
-    });
-
-    video.append(videoSource);
-
-    return video;
+    return undefined;
   };
 
   const constructImg = () => createTag('img', {
     src: '',
     alt: templateTitle,
+    class: 'unloaded hidden',
   });
 
   const img = constructImg();
+  if (img) wrapper.prepend(img);
+
   const video = constructVideo();
-  const videoSource = video.querySelector('source');
-  wrapper.prepend(video);
-  wrapper.prepend(img);
+  if (video) wrapper.prepend(video);
 
   const playImage = () => {
-    img.style.display = 'block';
+    img.classList.remove('hidden');
+    img.classList.remove('unloaded');
     img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
 
     setTimeout(() => {
@@ -185,45 +185,64 @@ function renderRotatingMedias(wrapper,
   };
 
   const playVideo = () => {
-    video.style.display = 'block';
-    video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
-    videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
-    video.load();
-    video.muted = true;
-    video.play().catch((e) => {
-      if (e instanceof DOMException && e.name === 'AbortError') {
-        // ignore
-      } else {
-        throw e;
-      }
-    });
+    if (video) {
+      const videoSource = video.querySelector('source');
+      video.classList.remove('hidden');
+      video.classList.remove('unloaded');
+      video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
+      videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
+      video.load();
+      video.muted = true;
+      video.play().catch((e) => {
+        if (e instanceof DOMException && e.name === 'AbortError') {
+          // ignore
+        } else {
+          throw e;
+        }
+      });
+    }
   };
 
   const playMedia = () => {
     if (isVideo(pageIterator)) {
-      img.style.display = 'none';
+      if (img) img.classList.add('hidden');
       playVideo();
     } else {
-      video.style.display = 'none';
+      if (video) video.classList.add('hidden');
       playImage();
     }
   };
 
   const cleanup = () => {
-    video.pause();
-    video.currentTime = 0;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+
     pageIterator.reset();
   };
 
-  video.addEventListener('ended', () => {
-    pageIterator.next();
-    playMedia();
-  });
+  if (video) {
+    video.addEventListener('ended', () => {
+      pageIterator.next();
+      playMedia();
+    });
 
-  img.addEventListener('imgshownlongenough', () => {
-    pageIterator.next();
-    playMedia();
-  });
+    video.addEventListener('mouseenter', (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  if (img) {
+    img.addEventListener('imgshownlongenough', () => {
+      pageIterator.next();
+      playMedia();
+    });
+
+    img.addEventListener('mouseenter', (e) => {
+      e.stopPropagation();
+    });
+  }
 
   return { cleanup, hover: playMedia };
 }
@@ -345,11 +364,10 @@ function renderStillWrapper(template) {
     imgWrapper.append(premiumIcon);
   }
 
-  if (isVideoFirst(template)) {
+  if (containsVideo(template.pages)) {
     const videoIcon = getIconElement('tiktok');
     imgWrapper.append(videoIcon);
   }
-
 
   loadBetterAssetInBackground(img, firstPage);
 
