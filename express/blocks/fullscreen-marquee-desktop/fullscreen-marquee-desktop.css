@@ -6,6 +6,10 @@ main .fullscreen-marquee-desktop-container {
   height: 100%;
 }
 
+main .fullscreen-marquee-desktop-wrapper {
+  max-width: none!important;
+}
+
 main .fullscreen-marquee-desktop {
   position: relative;
   display: flex;
