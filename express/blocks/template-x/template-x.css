@@ -212,7 +212,7 @@ main .template-x .template img, main .template-x .template video {
     border-radius: 12px;
 }
 
-main .template-x .template img,
+main .template-x .template img:not(.icon),
 main .template-x .template video {
     width: 100%;
     height: 100%;
