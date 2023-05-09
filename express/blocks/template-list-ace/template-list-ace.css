@@ -1748,25 +1748,49 @@ main .template-list-ace .title-search-container .title-search,
 
 main .template-list-ace h1,
 #generated-results-modal .modal-content h1 {
-  font-size: 3.1875rem;
   flex-direction: row;
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
   display: flex;
   margin-bottom: 65px;
+}
+
+main .template-list-ace h1 {
+  margin-bottom: 65px;
+}
+
+#generated-results-modal .modal-content h1 {
+  margin-top: 11px;
+  margin-bottom: 0px;
+}
+
+main .template-list-ace h1 {
+  font-size: 3.1875rem;
   line-height: 4rem;
+}
+
+#generated-results-modal .modal-content h1 {
+  font-size: 1.75rem;
+  line-height: 2.1875rem;
 }
 
 main .template-list-ace .picker-open,
 #generated-results-modal .modal-content .picker-open {
   background: #F2F2F2 0% 0% no-repeat padding-box;
-  border-radius: 16px;
   opacity: 1;
   font-size: 27px;
   margin: 0 6px 18px;
   letter-spacing: 0px;
   color: #242424;
+}
+
+main .template-list-ace .picker-open {
+  border-radius: 16px;
+}
+
+#generated-results-modal .modal-content .picker-open {
+  border-radius: 7px;
 }
 
 main .template-list-ace .picker-open:hover,
@@ -1778,9 +1802,19 @@ main .template-list-ace .picker-open .icon,
 #generated-results-modal .modal-content .picker-open .icon {
   filter: invert(38%) sepia(90%) saturate(604%) hue-rotate(206deg) brightness(87%) contrast(103%);
   opacity: 1;
+  padding-left: 16px;
+}
+
+main .template-list-ace .picker-open .icon{
   width: .9375rem;
   height: .5625em;
-  padding-left: 16px;
+}
+
+#generated-results-modal .modal-content .picker-open .icon {
+  width: .5rem;
+  height: .3125em;
+  top: -5px;
+  position: relative;
 }
 
 main .template-list-ace .picker-open-text,
@@ -2206,10 +2240,27 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   margin-bottom: 20px;
 }
 
+#generated-results-modal .modal-content .modal-title-row .from-scratch-button {
+  padding: 13px 24px;
+  border-radius: 100px;
+  font-size: 1.25rem;
+  margin-left: 22px;
+}
+
+#generated-results-modal .modal-content .modal-title-row hr {
+  flex-basis: 100%;
+  width: 100%;
+  border: 1px solid #E8E8E8;
+}
+
+
+#generated-results-modal .modal-content .modal-title-row .no-guidance {
+  color: #242424;
+}
+
 #generated-results-modal .modal-content .modal-title-row .scratch-wrapper {
   display: flex;
   align-items: center;
-  color: grey;
 }
 
 #generated-results-modal .modal-content .modal-title-row .modal-dropdown {

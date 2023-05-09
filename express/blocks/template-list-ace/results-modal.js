@@ -367,7 +367,7 @@ function createTitleRow() {
   const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
   noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
   const fromScratchButton = createTag('a', {
-    class: 'from-scratch-button button accent',
+    class: 'from-scratch-button secondary button',
     href: createTemplateLink,
     title: placeholders['edit-this-template'] ?? 'Create from scratch', // FIXME: add a placeholder for title?
   });
@@ -375,6 +375,8 @@ function createTitleRow() {
   scratchWrapper.append(noGuidanceSpan);
   scratchWrapper.append(fromScratchButton);
   titleRow.append(scratchWrapper);
+  //const line = createTag('hr');
+  //titleRow.appendChild(line);
   return titleRow;
 }
 
