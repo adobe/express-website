@@ -2611,7 +2611,9 @@ export async function trackBranchParameters($links) {
 
       if (templateSearchTag
         && placeholders['search-branch-links']
-        && placeholders['search-branch-links'].split(',')
+        && placeholders['search-branch-links']
+          .replace(/\s/g, '')
+          .split(',')
           .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
         urlParams.set('search', templateSearchTag);
       }
