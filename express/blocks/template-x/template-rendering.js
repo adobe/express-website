@@ -140,7 +140,7 @@ function renderRotatingMedias(wrapper,
 
   const constructVideo = () => {
     let src = '';
-    if (isVideo(pageIterator)) {
+    if (containsVideo(pages)) {
       src = getVideoSrc(componentLinkHref, pageIterator.current());
       const video = createTag('video', {
         muted: true,
@@ -208,7 +208,9 @@ function renderRotatingMedias(wrapper,
       if (img) img.classList.add('hidden');
       playVideo();
     } else {
-      if (video) video.classList.add('hidden');
+      if (video) {
+        video.classList.add('hidden');
+      }
       playImage();
     }
   };
@@ -266,7 +268,7 @@ function renderMediaWrapper(template) {
     renderedMedia.hover();
   };
   const leaveHandler = () => {
-    renderedMedia.cleanup();
+    if (renderedMedia) renderedMedia.cleanup();
   };
 
   return { mediaWrapper, enterHandler, leaveHandler };

@@ -258,14 +258,18 @@ export class Masonry {
 
         return;
       }
-      const video = cell.querySelector('video');
-      if (video && video.readyState === 0) {
-        // continue when video is loaded
-        video.addEventListener('loadedmetadata', () => {
-          this.draw(workList);
-        });
-        return;
+
+      if (this.wrapper.classList.contains('template-list')) {
+        const video = cell.querySelector('video');
+        if (video && video.readyState === 0) {
+          video.addEventListener('loadedmetadata', () => {
+            this.draw(workList);
+          });
+
+          return;
+        }
       }
+
       this.addCell(cell);
       // remove already processed cell
       workList.shift();
