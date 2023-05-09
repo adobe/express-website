@@ -60,16 +60,15 @@ async function buildApp(block, content) {
   const cta = block.querySelector('.button-container a');
   let appImage;
   let editor;
+  let variant;
+
+  if (block.classList.contains('image')) {
+    variant = 'image';
+  } else {
+    variant = 'video';
+  }
 
   await fetchPlaceholders().then((placeholders) => {
-    let variant;
-
-    if (block.classList.contains('image')) {
-      variant = 'image';
-    } else {
-      variant = 'video';
-    }
-
     appImage = createOptimizedPicture(placeholders[`fullscreen-marquee-desktop-${variant}-app`]);
     editor = createOptimizedPicture(placeholders[`fullscreen-marquee-desktop-${variant}-editor`]);
 
