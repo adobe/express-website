@@ -82,7 +82,7 @@ sitemaps:
         alternate: /se/{path}
       india:
         source: /in/express/query-index.json
-        destination: /express/sitemap-in.xml
+        destination: /express/sitemap-other.xml
         hreflang: en-IN
         alternate: /in/{path}
 
