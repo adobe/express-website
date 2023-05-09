@@ -13,8 +13,9 @@
 /* eslint-disable import/named, import/extensions */
 
 import {
+  createOptimizedPicture,
   createTag,
-// eslint-disable-next-line import/no-unresolved
+  fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
 let rotationInterval;
@@ -50,12 +51,9 @@ function setPictureHeight(block, override) {
     const container = block.parentElement.parentElement;
     const picture = container.querySelector('picture');
     const img = picture.querySelector('img');
-    loadImage(img).then(() => {
-      const panelHeight = block.parentElement.offsetHeight;
-      const imgHeight = img.naturalHeight;
-
-      picture.style.height = `${panelHeight || imgHeight}px`;
-    });
+    const panelHeight = block.parentElement.offsetHeight;
+    const imgHeight = img.naturalHeight;
+    picture.style.height = `${panelHeight || imgHeight}px`;
     fixedImageSize = true;
   }
 }
@@ -226,9 +224,6 @@ function roundedImage(x, y, width, height, radius, ctx) {
 }
 
 function layerTemplateImage(canvas, ctx, templateImg) {
-  // start and end areas were directly measured and transferred from the spec image
-  templateImg.style.maxWidth = '986px';
-  templateImg.style.maxHeight = '652px';
   templateImg.style.objectFit = 'contain';
 
   return new Promise((outerResolve) => {
@@ -253,14 +248,13 @@ function layerTemplateImage(canvas, ctx, templateImg) {
         }
       });
       obs.observe(templateImg);
+      templateImg.style.maxWidth = `${maxWidth}px`;
+      templateImg.style.maxHeight = `${maxHeight}px`;
     });
 
+    // start and end areas were directly measured and transferred from the spec image
     drawImage(1123, 600, 986, 652)
-      .then(() => {
-        templateImg.style.maxWidth = '312px';
-        templateImg.style.maxHeight = '472px';
-        return drawImage(1816, 479, 312, 472);
-      })
+      .then(() => drawImage(1816, 479, 312, 472))
       .then(() => outerResolve());
   });
 }
@@ -277,26 +271,37 @@ export default async function decorate(block) {
   let picture;
 
   if (image) {
+    const canvasWidth = 2000;
+    const canvasHeight = 1072;
+
     const backgroundPictureDiv = rows.shift();
-    const backgroundPic = backgroundPictureDiv.querySelector('picture');
-    const backgroundPicImg = backgroundPic.querySelector('img');
+    const placeholderImgUrl = backgroundPictureDiv.querySelector('div');
+    const placeholders = await fetchPlaceholders();
+    const url = placeholderImgUrl.textContent.replaceAll('how-to-steps-carousel-background-img', placeholders['how-to-steps-carousel-background-img']);
+    const eagerLoad = document.querySelector('.block') === block;
+    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createOptimizedPicture(url, 'template in express', eagerLoad);
+    const backgroundPicImg = backgroundPic.querySelector('img', { alt: 'template in express' });
+
+    if (placeholderImgUrl) {
+      backgroundPic.appendChild(backgroundPicImg);
+      placeholderImgUrl.remove();
+    }
     const templateDiv = rows.shift();
+    const templateImg = templateDiv.querySelector(':scope picture > img');
+    templateImg.style.visibility = 'hidden';
+    templateImg.style.position = 'absolute';
+    backgroundPicImg.style.width = `${canvasWidth}px`;
+    if (window.screen.width < 600) backgroundPicImg.style.height = `${window.screen.width * 0.536}px`;
+    picture = backgroundPic;
+    section.prepend(picture);
 
     loadImage(backgroundPicImg).then(() => {
-      backgroundPicImg.width = 2000;
-      backgroundPicImg.height = 1072;
-      picture = backgroundPic;
-      section.prepend(picture);
-
-      const canvas = createTag('canvas', { width: backgroundPicImg.width, height: backgroundPicImg.height });
+      backgroundPicImg.width = canvasWidth;
+      const canvas = createTag('canvas', { width: canvasWidth, height: canvasHeight });
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(backgroundPicImg, 0, 0, backgroundPicImg.width, backgroundPicImg.height);
+      ctx.drawImage(backgroundPicImg, 0, 0, canvasWidth, canvasHeight);
       const sources = backgroundPic.querySelectorAll(':scope > source');
       sources.forEach((source) => source.remove());
-      const templateImages = templateDiv.querySelectorAll('picture');
-      const templateImg = templateImages[0].querySelector('img');
-      templateImg.style.visibility = 'hidden';
-      templateImg.style.position = 'absolute';
       return loadImage(templateImg).then(() => {
         layerTemplateImage(canvas, ctx, templateImg).then(() => {
           templateDiv.remove();
