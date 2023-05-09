@@ -2205,6 +2205,12 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   margin-bottom: 20px;
 }
 
+#generated-results-modal .modal-content .modal-title-row .scratch-wrapper {
+  display: flex;
+  align-items: center;
+  color: grey;
+}
+
 #generated-results-modal .modal-content .modal-title-row .modal-dropdown {
   display: flex;
   align-items: center;

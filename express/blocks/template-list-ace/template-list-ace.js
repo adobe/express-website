@@ -394,7 +394,8 @@ async function openModal() {
   mod.getModal(null, {
     class: 'generated-results-modal', id: 'generated-results-modal', content: modal, closeEvent: 'closeGeneratedResultsModal',
   });
-  renderModalContent();
+  renderModalContent(modalContent);
+  return modalContent;
 }
 
 function createSearchBar(searchRows, placeholders, titleRow) {
@@ -408,10 +409,18 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   const aceState = BlockMediator.get('ace-state');
 
   window.addEventListener('milo:modal:closed', () => {
+    console.log('closed big!');
     // IMPORTANT: clear ongoing search + sync search bar value
-    searchBar.value = aceState.query;
-    aceState.fetchingState.results = null;
-    clearInterval(aceState.fetchingState.intervalId);
+    const {
+      query,
+      fetchingState,
+      oldModalSet,
+      modalContent,
+    } = aceState;
+    searchBar.value = query;
+    fetchingState.results = null;
+    // oldModalSet.add(modalContent);
+    clearInterval(fetchingState.intervalId);
   });
   searchForm.append(searchBar);
   const button = searchRows[1];
@@ -430,9 +439,9 @@ function createSearchBar(searchRows, placeholders, titleRow) {
       return;
     }
     aceState.query = searchBar.value;
-    await openModal();
-    await fetchResults();
-    renderResults();
+    const modalContent = await openModal();
+    await fetchResults(modalContent, false);
+    renderResults(modalContent);
   });
 
   titleRowDiv.classList.add('title-search');
@@ -448,6 +457,11 @@ function initState({ placeholders }) {
     placeholders,
     fetchingState: { intervalId: null, progressManager: null, results: null },
     modalContent: null,
+    reportModalContent: null,
+    modalId: 0,
+    createTemplateLink: placeholders['template-list-ace-create-template-link'],
+    abortController: new AbortController(),
+    oldModalSet: new WeakSet(),
   });
 }
 
@@ -476,6 +490,7 @@ export default async function decorate(block) {
   }
   const templatesRow = rows.shift();
   createTemplateLink = templatesRow.querySelector(':scope a')?.src ?? placeholders['template-list-ace-create-template-link'];
+  BlockMediator.get('ace-state').createTemplateLink = createTemplateLink;
   createTemplateImgSrc = templatesRow.querySelector(':scope img').src;
 
   searchRows.remove();

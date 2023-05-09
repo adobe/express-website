@@ -19,6 +19,7 @@ import {
   FEEDBACK_CATEGORIES,
 } from './ace-api.js';
 import useProgressManager from './progress-manager.js';
+import { openReportModal } from './report-modal.js';
 import BlockMediator from '../../scripts/block-mediator.js';
 
 const NUM_PLACEHOLDERS = 4;
@@ -26,6 +27,7 @@ const MONITOR_INTERVAL = 2000;
 const AVG_GENERATION_TIME = 20000;
 const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
+const REQUEST_GENERATION_RETRIES = 3;
 
 function getVoteHandler(id, category) {
   return async (e) => {
@@ -45,7 +47,7 @@ function getVoteHandler(id, category) {
   };
 }
 
-export function renderRateResult(result) {
+export function createRateResultButton(result) {
   const wrapper = createTag('div', { class: 'feedback-rate' });
   wrapper.append('Rate this result');
   const downvoteLink = createTag('button', { class: 'feedback-rate-button' });
@@ -62,29 +64,26 @@ export function renderRateResult(result) {
   return wrapper;
 }
 
-// eslint-disable-next-line no-unused-vars
-export function renderReportButton(result) {
+export function createReportButton(result) {
   const wrapper = createTag('div', { class: 'feedback-report' });
   wrapper.append('Report');
   const reportButton = createTag('button', { class: 'feedback-report-button' });
   reportButton.append('🚩');
   wrapper.append(reportButton);
-  wrapper.addEventListener('click', (e) => {
+  wrapper.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // TODO:
-    console.log('report abuse form WIP');
+    await openReportModal(result);
   });
   return wrapper;
 }
 
-// FIXME: this is not really working yet
 function getTemplateBranchUrl(result) {
   const { thumbnail } = result;
   return `https://prod-search.creativecloud.adobe.com/express?express=true&protocol=https&imageHref=${thumbnail}`;
 }
 
-function renderTemplate(result) {
+function createTemplate(result) {
   const { thumbnail } = result;
   const templateBranchUrl = getTemplateBranchUrl(result);
   const templateWrapper = createTag('div', { class: 'generated-template-wrapper' });
@@ -94,8 +93,8 @@ function renderTemplate(result) {
   });
   const hoverContainer = createTag('div', { class: 'hover-container' });
   const feedbackRow = createTag('div', { class: 'feedback-row' });
-  feedbackRow.append(renderRateResult(result));
-  feedbackRow.append(renderReportButton(result));
+  feedbackRow.append(createRateResultButton(result));
+  feedbackRow.append(createReportButton(result));
   hoverContainer.append(feedbackRow);
 
   templateWrapper.append(createTag('img', { src: thumbnail, class: 'generated-template-image' }));
@@ -144,7 +143,10 @@ async function waitForGeneration(jobId) {
   });
 }
 
-export function renderLoader() {
+export function renderLoader(modalContent) {
+  if (modalContent !== BlockMediator.get('ace-state').modalContent) {
+    return;
+  }
   const wrapper = createTag('div', { class: 'loader-wrapper' });
   const textRow = createTag('div', { class: 'loader-text-row' });
   const text = createTag('span', { class: 'loader-text' });
@@ -165,23 +167,16 @@ export function renderLoader() {
   }
   wrapper.append(placeholderRow);
 
-  const { modalContent } = BlockMediator.get('ace-state');
   modalContent.append(wrapper);
 }
 
-function updateProgressBar(percentage) {
-  const { modalContent } = BlockMediator.get('ace-state');
-  const percentageEl = modalContent.querySelector('.loader-percentage');
-  const progressBar = modalContent.querySelector('.loader-progress-bar div');
-  if (!percentageEl || !progressBar) return;
-  percentageEl.textContent = `${percentage}%`;
-  progressBar.style.width = `${percentage}%`;
-}
-
-function setSearchable(searchable) {
-  const { modalContent } = BlockMediator.get('ace-state');
+function updateSearchable(modalContent, searchable) {
+  if (modalContent !== BlockMediator.get('ace-state').modalContent) {
+    return;
+  }
   const searchButton = modalContent.querySelector('.search-form .search-button');
   const searchBarInput = modalContent.querySelector('.search-form input.search-bar');
+  if (!searchButton || !searchBarInput) return;
   searchButton.disabled = !searchable;
   searchBarInput.disabled = !searchable;
 }
@@ -204,15 +199,21 @@ function retry(maxRetries, fn, delay = 2000) {
   });
 }
 
-export async function fetchResults({ repeating = false } = {}) {
+export async function fetchResults(modalContent, repeating = false) {
   const {
     query,
     dropdownValue,
     fetchingState,
     placeholders,
-    modalContent,
   } = BlockMediator.get('ace-state');
   if (!fetchingState.progressManager) {
+    const updateProgressBar = (percentage) => {
+      const percentageEl = modalContent.querySelector('.loader-percentage');
+      const progressBar = modalContent.querySelector('.loader-progress-bar div');
+      if (!percentageEl || !progressBar) return;
+      percentageEl.textContent = `${percentage}%`;
+      progressBar.style.width = `${percentage}%`;
+    };
     fetchingState.progressManager = useProgressManager(
       updateProgressBar,
       PROGRESS_ANIMATION_DURATION,
@@ -223,14 +224,14 @@ export async function fetchResults({ repeating = false } = {}) {
     );
   }
 
-  setSearchable(false);
+  updateSearchable(modalContent, false);
 
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
     fetchingState.progressManager.reset();
     oldLoader.style.display = 'block';
   } else {
-    renderLoader();
+    renderLoader(modalContent);
   }
   const oldResults = modalContent.querySelector('.generated-results-wrapper');
   if (oldResults) {
@@ -259,14 +260,17 @@ export async function fetchResults({ repeating = false } = {}) {
 
   try {
     let jobId;
-    await retry(3, async () => {
+    await retry(REQUEST_GENERATION_RETRIES, async () => {
       const generationRes = await requestGeneration(requestConfig);
-      const { status } = generationRes;
-      if (!['in-progress', 'completed'].includes(status)) {
-        throw new Error(`Error requesting generation: ${jobId} ${status}`);
+      const { status, jobId: generatedJobId } = generationRes;
+      if (![MONITOR_STATUS.COMPLETED, MONITOR_STATUS.IN_PROGRESS].includes(status)) {
+        throw new Error(`Error requesting generation: ${generatedJobId} ${status}`);
       }
-      jobId = generationRes.jobId;
+      jobId = generatedJobId;
     }, 2500);
+    if (modalContent !== BlockMediator.get('ace-state').modalContent) {
+      return;
+    }
     // first 6-12% as the time for triggering generation
     fetchingState.progressManager.update(Math.random() * 6 + 6);
     fetchingState.results = await waitForGeneration(jobId);
@@ -274,13 +278,19 @@ export async function fetchResults({ repeating = false } = {}) {
     console.error(e);
     fetchingState.results = 'error';
   } finally {
-    setSearchable(true);
+    updateSearchable(modalContent, true);
   }
 }
 
-export function renderResults() {
-  const { modalContent, fetchingState: { results } } = BlockMediator.get('ace-state');
-
+export function renderResults(modalContent) {
+  const { fetchingState: { results }, modalContent: currModal } = BlockMediator.get('ace-state');
+  if (modalContent !== currModal) {
+    return;
+  }
+  // if (oldModalSet.has(modalContent)) {
+  //   console.log('this is old, abort!');
+  //   return;
+  // }
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
     oldLoader.style.display = 'none';
@@ -300,25 +310,22 @@ export function renderResults() {
   const generatedRow = createTag('div', { class: 'generated-row' });
   results
     .filter((result) => result.generated)
-    .map((result) => renderTemplate(result))
+    .map((result) => createTemplate(result))
     .forEach((image) => {
       generatedRow.append(image);
     });
   generatedResultsWrapper.append(generatedTitle);
   generatedResultsWrapper.append(generatedRow);
   modalContent.append(generatedResultsWrapper);
-
-  setSearchable(true);
 }
 
-function createModalSearch() {
+function createModalSearch(modalContent) {
   const aceState = BlockMediator.get('ace-state');
   const { placeholders, query } = aceState;
   const searchForm = createTag('form', { class: 'search-form' });
   const searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
-    placeholder: placeholders['template-list-ace-search-hint'] ?? 'Describe what you want to generate...',
     enterKeyHint: placeholders.search ?? 'Search',
   });
   searchBar.value = query;
@@ -340,8 +347,8 @@ function createModalSearch() {
       repeating = false;
     }
     aceState.query = searchBar.value;
-    await fetchResults({ repeating });
-    renderResults();
+    await fetchResults(modalContent, repeating);
+    renderResults(modalContent);
   });
 
   return searchForm;
@@ -360,14 +367,18 @@ function createModalDropdown() {
   return dropdown;
 }
 
-function renderTitleRow() {
-  const { placeholders } = BlockMediator.get('ace-state');
+function createTitleRow() {
+  const { placeholders, createTemplateLink } = BlockMediator.get('ace-state');
   const titleRow = createTag('div', { class: 'modal-title-row' });
   const dropdown = createModalDropdown();
   const scratchWrapper = createTag('div', { class: 'scratch-wrapper' });
   const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
   noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
-  const fromScratchButton = createTag('button', { class: 'from-scratch-button' });
+  const fromScratchButton = createTag('a', {
+    class: 'from-scratch-button button accent',
+    href: createTemplateLink,
+    title: placeholders['edit-this-template'] ?? 'Create from scratch', // FIXME: add a placeholder for title?
+  });
   fromScratchButton.textContent = placeholders['template-list-ace-from-scratch'] ?? 'Create from scratch';
   scratchWrapper.append(noGuidanceSpan);
   scratchWrapper.append(fromScratchButton);
@@ -376,8 +387,7 @@ function renderTitleRow() {
   return titleRow;
 }
 
-export function renderModalContent() {
-  const { modalContent } = BlockMediator.get('ace-state');
-  modalContent.append(renderTitleRow());
-  modalContent.append(createModalSearch());
+export function renderModalContent(modalContent) {
+  modalContent.append(createTitleRow());
+  modalContent.append(createModalSearch(modalContent));
 }
