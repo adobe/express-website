@@ -261,7 +261,8 @@ export class Masonry {
       const video = cell.querySelector('video');
       if (video && video.readyState === 0) {
         // continue when video is loaded
-        video.addEventListener('loadedmetadata', () => {
+        video.addEventListener('loadedmetadata', (e) => {
+          console.log(e)
           this.draw(workList);
         });
         return;
