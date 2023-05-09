@@ -227,20 +227,12 @@ function renderRotatingMedias(wrapper,
       pageIterator.next();
       playMedia();
     });
-
-    video.addEventListener('mouseenter', (e) => {
-      e.stopPropagation();
-    });
   }
 
   if (img) {
     img.addEventListener('imgshownlongenough', () => {
       pageIterator.next();
       playMedia();
-    });
-
-    img.addEventListener('mouseenter', (e) => {
-      e.stopPropagation();
     });
   }
 
