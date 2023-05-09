@@ -129,6 +129,10 @@ function constructProps(block) {
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    holidayIcon: null,
+    backgroundColor: null,
+    backgroundAnimation: null,
+    textColor: null,
   };
 
   Array.from(block.children).forEach((row) => {
@@ -152,17 +156,16 @@ function constructProps(block) {
       if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
         props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
       }
-
-      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        const graphic = cols[2].querySelector('picture');
-        if (graphic) {
-          props[camelize(key)] = graphic;
-        }
-      }
     } else if (cols.length === 4) {
       if (key === 'blank template') {
         cols[0].remove();
         props.templates.push(row);
+      }
+    } else if (cols.length === 5) {
+      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        props['holidayIcon'] = cols[2].querySelector('picture') ? cols[2].querySelector('picture') : null
+        props['backgroundColor'] = cols[3].textContent.trim().toLowerCase() ? cols[3].textContent.trim().toLowerCase() : null
+        props['backgroundAnimation'] = cols[4].textContent.trim().toLowerCase() ? cols[4].textContent.trim().toLowerCase() : null
       }
     }
   });
