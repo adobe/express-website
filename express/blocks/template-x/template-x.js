@@ -171,7 +171,7 @@ function constructProps(block) {
 }
 
 function populateTemplates(block, props, templates) {
-  for (const tmplt of templates) {
+  for (let tmplt of templates) {
     const isPlaceholder = tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const linkContainer = tmplt.querySelector(':scope > div:nth-of-type(2)');
     const rowWithLinkInFirstCol = tmplt.querySelector(':scope > div:first-of-type > a');
@@ -180,17 +180,14 @@ function populateTemplates(block, props, templates) {
     if (innerWrapper && linkContainer) {
       const link = linkContainer.querySelector(':scope a');
       if (link) {
-        // const aTag = createTag('a', {
-        //   href: link.href ? addSearchQueryToHref(link.href) : '#',
-        // });
-
-        // aTag.append(...tmplt.children);
-        // tmplt.remove();
-        // tmplt = aTag;
-        // innerWrapper.append(aTag);
-        innerWrapper.append(tmplt);
-
         if (isPlaceholder) {
+          const aTag = createTag('a', {
+            href: link.href ? addSearchQueryToHref(link.href) : '#',
+          });
+
+          aTag.append(...tmplt.children);
+          tmplt.remove();
+          tmplt = aTag;
           // convert A to SPAN
           const newLink = createTag('span', { class: 'template-link' });
           newLink.append(link.textContent.trim());
@@ -198,6 +195,7 @@ function populateTemplates(block, props, templates) {
           linkContainer.innerHTML = '';
           linkContainer.append(newLink);
         }
+        innerWrapper.append(tmplt);
       }
     }
 
