@@ -30,8 +30,6 @@ const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
 const REQUEST_GENERATION_RETRIES = 3;
 
-let dropdownSubscription;
-
 function getVoteHandler(id, category) {
   return async (e) => {
     e.preventDefault();
@@ -362,7 +360,7 @@ function createTitleRow() {
   const title = createTag('h1');
   titleRow.appendChild(title);
   title.textContent = placeholders['template-list-ace-modal-title'];
-  dropdownSubscription = createDropdown(titleRow, placeholders);
+  createDropdown(titleRow, placeholders);
   const scratchWrapper = createTag('div', { class: 'scratch-wrapper' });
   const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
   noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
@@ -380,10 +378,7 @@ function createTitleRow() {
   return titleRow;
 }
 
-export function renderModalContent(modalContent, modalId) {
+export function renderModalContent(modalContent) {
   modalContent.append(createTitleRow());
   modalContent.append(createModalSearch(modalContent));
-  window.addEventListener(`milo:modal:closed:${modalId}`, () => {
-    if (dropdownSubscription) dropdownSubscription();
-  });
 }

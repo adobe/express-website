@@ -363,7 +363,7 @@ export function createDropdown(titleRow, placeholders, block) {
   dropText.addEventListener('click', (e) => {
     openPicker(drop, dropdownTexts, dropText, e, block, placeholders);
   });
-  const subscription = BlockMediator.subscribe('ace-dropdown', (change) => {
+  const unsubscribeDropdown = BlockMediator.subscribe('ace-dropdown', (change) => {
     const downArrow = createTag('img', {
       class: 'icon down-arrow',
       src: '../../express/icons/drop-down-arrow.svg',
@@ -384,9 +384,10 @@ export function createDropdown(titleRow, placeholders, block) {
   } else {
     BlockMediator.set('ace-dropdown', dropdownTexts[0]);
   }
-  return subscription;
+  BlockMediator.get('ace-state').unsubscribeDropdown = unsubscribeDropdown;
+  return unsubscribeDropdown;
 }
-
+const GENERATED_RESULTS_MODAL_ID = 'generated-results-modal';
 async function openModal() {
   const modal = createTag('div');
   modal.style.height = '840px';
@@ -395,11 +396,10 @@ async function openModal() {
   modal.append(modalContent);
   BlockMediator.get('ace-state').modalContent = modalContent;
   const mod = await import('../modal/modal.js');
-  const id = 'generated-results-modal';
   mod.getModal(null, {
-    class: 'generated-results-modal', id, content: modal, closeEvent: 'closeGeneratedResultsModal',
+    class: 'generated-results-modal', id: GENERATED_RESULTS_MODAL_ID, content: modal, closeEvent: 'closeGeneratedResultsModal',
   });
-  renderModalContent(modalContent, id);
+  renderModalContent(modalContent);
   return modalContent;
 }
 
@@ -413,18 +413,17 @@ function createSearchBar(searchRows, placeholders, titleRow) {
   });
   const aceState = BlockMediator.get('ace-state');
 
-  window.addEventListener('milo:modal:closed', () => {
+  window.addEventListener('milo:modal:closed:generated-results-modal', () => {
     console.log('closed big!');
     // IMPORTANT: clear ongoing search + sync search bar value
     const {
       query,
       fetchingState,
-      oldModalSet,
-      modalContent,
+      unsubscribeDropdown,
     } = aceState;
     searchBar.value = query;
     fetchingState.results = null;
-    // oldModalSet.add(modalContent);
+    if (unsubscribeDropdown) unsubscribeDropdown();
     clearInterval(fetchingState.intervalId);
   });
   searchForm.append(searchBar);
