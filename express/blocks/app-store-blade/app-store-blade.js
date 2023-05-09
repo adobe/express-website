@@ -12,7 +12,11 @@
 
 import {
   createOptimizedPicture,
-  createTag, fetchPlaceholders, getIcon, getIconElement, getMetadata,
+  createTag,
+  fetchPlaceholders,
+  getIcon,
+  getIconElement,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 /**
@@ -233,4 +237,9 @@ export default async function decorate($block) {
   $block.innerHTML = '';
 
   decorateBlade($block, payload);
+  const blockLinks = $block.querySelectorAll('a');
+  if (blockLinks && blockLinks.length > 0) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+    document.dispatchEvent(linksPopulated);
+  }
 }

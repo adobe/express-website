@@ -395,6 +395,8 @@ export async function createMultiFunctionButton($block, data, audience) {
     .then(((result) => result));
   $buttonWrapper.classList.add('multifunction');
   await buildBubblesToolBox($block, $buttonWrapper, data);
+
+  return $buttonWrapper;
 }
 
 export default async function decorate($block) {
@@ -405,6 +407,11 @@ export default async function decorate($block) {
     }
 
     const data = await collectFloatingButtonData();
-    await createMultiFunctionButton($block, data, audience);
+    const blockWrapper = await createMultiFunctionButton($block, data, audience);
+    const blockLinks = blockWrapper.querySelectorAll('a');
+    if (blockLinks && blockLinks.length > 0) {
+      const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+      document.dispatchEvent(linksPopulated);
+    }
   }
 }
