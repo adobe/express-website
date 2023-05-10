@@ -94,13 +94,21 @@ function renderShareWrapper(branchUrl) {
   shareIcon.addEventListener('click', async () => {
     await navigator.clipboard.writeText(branchUrl);
     tooltip.classList.add('display-tooltip');
+
+    const rect = tooltip.getBoundingClientRect();
+    const tooltipRightEdgePos = rect.left + rect.width;
+    if (tooltipRightEdgePos > window.innerWidth) {
+      tooltip.classList.add('flipped');
+    }
+
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       tooltip.classList.remove('display-tooltip');
+      tooltip.classList.remove('flipped');
     }, 2500);
   });
 
-  const checkmarkIcon = getIconElement('checkmark');
+  const checkmarkIcon = getIconElement('checkmark-green');
   tooltip.append(checkmarkIcon);
   tooltip.append(text);
   wrapper.append(shareIcon);

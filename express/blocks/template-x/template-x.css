@@ -2545,13 +2545,16 @@ main .template-x .template .button-container a {
 
 main .template-x .template .button-container .media-wrapper .icon-plus {
     cursor: pointer;
+    width: 28px;
+    height: 28px;
+    background-color: white;
+    border-radius: 30px;
+}
+
+main .template-x .template .button-container .media-wrapper .share-icon-wrapper {
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    border-radius: 30px;
 }
 
 main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip {
@@ -2566,21 +2569,26 @@ main .template-x .template .button-container .media-wrapper .share-icon-wrapper 
     text-align: center;
     border-radius: 6px;
     padding: 6px;
-    top: 8px;
-    left: calc(100%);
+    top: 0;
+    left: calc(100% + 12px);
     font-size: var(--body-font-size-s);
 }
 
-main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip .icon-checkmark {
+main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip .icon-checkmark-green {
     width: 10px;
     height: 10px;
     border-radius: 30px;
-    background-color: brown;
+    background-color: var(--color-white);
     padding: 2px;
 }
 
 main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip.display-tooltip {
     visibility: visible;
+}
+
+main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip.flipped {
+    left: unset;
+    right: calc(100% + 12px);
 }
 
 main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip::after {
@@ -2592,4 +2600,10 @@ main .template-x .template .button-container .media-wrapper .share-icon-wrapper 
     border-width: 5px;
     border-style: solid;
     border-color: transparent #33AB84 transparent transparent;
+}
+
+main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip.flipped::after {
+    right: unset;
+    left: 100%;
+    transform: rotate(180deg);
 }
