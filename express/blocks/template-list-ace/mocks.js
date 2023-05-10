@@ -12,40 +12,33 @@
 
 export const mockData = {
   results: [
-    // {
-    //   generated: true,
-    //   id: 'replace-0b436bb1-7f42-4dc2-b0a8-fb7dd37ca970-59dc9c69d578f69161ece3f7a7ce183916ac505d1bdd4b8903ec42e677410622',
-    //   score: 239,
-    //   thumbnail:
-    //     'https://express-search.xstudio.adobe.com/rendition/generated/0b436bb1-7f42-4dc2-b0a8-fb7dd37ca970/renditions/0b436bb1-7f42-4dc2-b0a8-fb7dd37ca970_modified_0-59dc9c69d578f69161ece3f7a7ce183916ac505d1bdd4b8903ec42e677410622.jpg',
-    // },
     {
       generated: true,
-      id: 'replace-b8098291-428a-4f6e-8b3d-f278dfe1e81c-431a15a08a16d44d62ec1e359f40a63d018fbd4e450f309a8ad32255e7bdaf33',
-      score: 238,
+      id: 'replace-70cc0de1-d79e-40d3-90a0-a134cac53ead-9c90c7cc2ee1930fddb2d7fcebe530ba2900b02aaf35b5dde599b59e6fba85bb',
+      score: 219,
       thumbnail:
-        'https://express-search.xstudio.adobe.com/rendition/generated/b8098291-428a-4f6e-8b3d-f278dfe1e81c/renditions/b8098291-428a-4f6e-8b3d-f278dfe1e81c_modified_0-431a15a08a16d44d62ec1e359f40a63d018fbd4e450f309a8ad32255e7bdaf33.jpg',
+        'https://api.xstudio.adobe.com/rendition/generated/70cc0de1-d79e-40d3-90a0-a134cac53ead/renditions/70cc0de1-d79e-40d3-90a0-a134cac53ead_modified_0-9c90c7cc2ee1930fddb2d7fcebe530ba2900b02aaf35b5dde599b59e6fba85bb.jpg',
     },
     {
       generated: true,
-      id: 'replace-495b595d-75e7-45e3-a2b8-4616b00422c1-86912b6fe5cffaa66e9a71efd291c80037e4aefef6d22c51935e9f42cd2f80c5',
-      score: 236,
+      id: 'replace-e3dc34f1-1418-498e-98a3-a228993c7c34-e05f4a1a952ace7d4e092f1ed390e21c9c81b81375900bb5f6b80fdcfc5bb081',
+      score: 214,
       thumbnail:
-        'https://express-search.xstudio.adobe.com/rendition/generated/495b595d-75e7-45e3-a2b8-4616b00422c1/renditions/495b595d-75e7-45e3-a2b8-4616b00422c1_modified_0-86912b6fe5cffaa66e9a71efd291c80037e4aefef6d22c51935e9f42cd2f80c5.jpg',
+        'https://api.xstudio.adobe.com/rendition/generated/e3dc34f1-1418-498e-98a3-a228993c7c34/renditions/e3dc34f1-1418-498e-98a3-a228993c7c34_modified_0-e05f4a1a952ace7d4e092f1ed390e21c9c81b81375900bb5f6b80fdcfc5bb081.jpg',
     },
     {
       generated: true,
-      id: 'replace-5f9d56a2-6d4b-49dd-83a8-7b139567d4e0-2564a0e962193f4b0ab74836f51a557c95c912fa782f2100b13ce5f747c0ce18',
-      score: 236,
+      id: 'replace-f57cd460-5a10-42c2-9b83-33b0ce39d8ae-8081be319414361f3b026db3c7f582f33e7dd7a697a473318a5a6e0a505dd091',
+      score: 209,
       thumbnail:
-        'https://express-search.xstudio.adobe.com/rendition/generated/5f9d56a2-6d4b-49dd-83a8-7b139567d4e0/renditions/5f9d56a2-6d4b-49dd-83a8-7b139567d4e0_modified_0-2564a0e962193f4b0ab74836f51a557c95c912fa782f2100b13ce5f747c0ce18.jpg',
+        'https://api.xstudio.adobe.com/rendition/generated/f57cd460-5a10-42c2-9b83-33b0ce39d8ae/renditions/f57cd460-5a10-42c2-9b83-33b0ce39d8ae_modified_0-8081be319414361f3b026db3c7f582f33e7dd7a697a473318a5a6e0a505dd091.jpg',
     },
     {
       generated: true,
-      id: 'replace-33007d71-5cb9-48af-af66-eef1101ed6c5-a4d83191c9f7629aec0207e784b795a95a6072e23bf6708a3d65a67539af7dc3',
-      score: 227,
+      id: 'replace-e3b6bd65-e987-4aed-949f-85015fea622f-0e2cb359cc0de45886f30242afb0e936028e627bdcea05f41069705e31061d48',
+      score: 202,
       thumbnail:
-        'https://express-search.xstudio.adobe.com/rendition/generated/33007d71-5cb9-48af-af66-eef1101ed6c5/renditions/33007d71-5cb9-48af-af66-eef1101ed6c5_modified_0-a4d83191c9f7629aec0207e784b795a95a6072e23bf6708a3d65a67539af7dc3.jpg',
+        'https://api.xstudio.adobe.com/rendition/generated/e3b6bd65-e987-4aed-949f-85015fea622f/renditions/e3b6bd65-e987-4aed-949f-85015fea622f_modified_0-0e2cb359cc0de45886f30242afb0e936028e627bdcea05f41069705e31061d48.jpg',
     },
   ],
   status: 'completed',

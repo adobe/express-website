@@ -2089,9 +2089,8 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+#generated-results-modal .modal-content {
+  padding: 30px;
 }
 
 #generated-results-modal .modal-content .loader-wrapper .loader-text-row {
@@ -2115,25 +2114,6 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   border-radius: 4px;
   width: 0%;
 }
-
-/* @keyframes shine {
-  to {
-    background-position-x: -200%;
-  }
-}
-
-#generated-results-modal .modal-content .loader-wrapper .loader-placeholder-row > div {
-  display: inline-block;
-  width: var(--generated-loader-placeholder-width);
-  height: var(--generated-template-max-height);
-  margin: var(--generated-template-margin);
-  border-radius: var(--generated-template-border-radius);
-  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-  background-size: 200% 100%;
-  animation: shine 1.5s linear infinite;
-  mix-blend-mode: multiply;
-  border: 1px solid #CECECE;
-} */
 
  @keyframes shine {
   to {
@@ -2161,10 +2141,6 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
 #generated-results-modal .modal-content .generated-title {
   font-size: var(--heading-font-size-s);
   font-weight: bold;
-}
-
-#generated-results-modal .modal-content {
-  padding: 30px;
 }
 
 #generated-results-modal .modal-content .generated-row {
@@ -2307,4 +2283,72 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
 #generated-results-modal .modal-content .error-display {
   text-align: center;
   line-height: 300%;
+}
+
+#report-modal .modal-content {
+  padding: 40px;
+  border-radius: 50px;
+}
+
+#report-modal .modal-content h3, p {
+  margin: 0;
+}
+
+#report-modal button.dialog-close {
+  display: none;
+}
+
+#report-modal .modal-content .report-modal-form {
+  line-height: 200%;
+}
+
+#report-modal .modal-content .report-modal-form .report-modal-reason-label {
+  cursor: pointer;
+}
+
+#report-modal .modal-content .report-modal-form .report-modal-reason-label input[type="checkbox"] {
+  margin-right: 10px;
+  margin-left: 0;
+}
+
+#report-modal .modal-content .report-modal-form input[type="text"] {
+  width: calc(100% - calc(40px - 12px));
+  font-style: italic;
+  padding: 8px 12px 8px 12px;
+  margin-top: 12px;
+}
+
+#report-modal .modal-content .report-modal-button-rows {
+  margin-top: 3em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#report-modal .modal-content .report-modal-button-rows > button {
+  padding: 8px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+#report-modal .modal-content .report-modal-button-rows > button.cancel-button {
+  background-color: white;
+  border-color: #c5c5c5;
+  border-style: solid;
+  border-width: 2px;
+}
+
+#report-modal .modal-content .report-modal-button-rows > button.submit-button {
+  margin-left: 10px;
+  background-color: var(--color-info-accent);
+  color: white;
+  border: none;
+}
+
+#report-modal .modal-content .report-modal-button-rows > button.submit-button:disabled {
+  background-color: #c5c5c5;
+  color: black;
+  border: none;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #c5c5c5;
 }

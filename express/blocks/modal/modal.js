@@ -142,8 +142,9 @@ export async function getModal(details, custom) {
 
   if (!dialog.classList.contains('curtain-off')) {
     const curtain = createTag('div', { class: 'modal-curtain is-open' });
-    curtain.style.zIndex = 100 + (openedModals.cnt || 0) * 2 + 1;
-    dialog.style.zIndex = 100 + (openedModals.cnt || 0) * 2 + 2;
+    curtain.style.zIndex = 100 + (openedModals.cnt) * 2 + 1;
+    dialog.style.zIndex = 100 + (openedModals.cnt) * 2 + 2;
+    dialog.style.borderRadius = `${20 * openedModals.cnt + 20}px`;
     openedModals.cnt += 1;
     curtain.addEventListener('click', (e) => {
       if (e.target === curtain) closeModal(dialog);

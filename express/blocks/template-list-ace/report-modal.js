@@ -24,49 +24,71 @@ const reasons = [
   'Nudity/sexual content',
   'Violence/gore',
 ];
+const REPORT_MODAL_ID = 'report-modal';
 
-export function renderReportModal(reportModalContent) {
-  const title = createTag('h2', { class: 'report-modal-title' });
+export function renderReportModal(reportModalContent, result) {
+  const title = createTag('h3', { class: 'report-modal-title' });
+  title.textContent = 'Report results';
+
   const form = createTag('form', { class: 'report-modal-form' });
-  const legend = createTag('h3', { class: 'report-modal-form-title' });
-  legend.textContent = 'Select all that apply (required)';
-  form.append(legend);
-  reasons.forEach((reason) => {
+  const formGuidance = createTag('p', { class: 'report-modal-form-guidance' });
+  formGuidance.textContent = 'Select all that apply (required)'; // TODO: use placeholder
+  form.append(formGuidance);
+  const reasonInputs = reasons.map((reason) => createTag('input', { class: 'report-modal-reason-input', type: 'checkbox', name: reason }));
+  reasons.forEach((reason, index) => {
     const reasonLabel = createTag('label', { class: 'report-modal-reason-label' });
-    const reasonInput = createTag('input', { class: 'report-modal-reason-input', type: 'radio', name: reason });
-    reasonLabel.append(reasonInput, reason);
+    reasonLabel.append(reasonInputs[index], reason);
     form.append(reasonLabel);
     form.append(createTag('br'));
   });
-  const note = createTag('input', { class: 'report-modal-note', placeholder: 'Add a note (optional)' });
+  const noteInput = createTag('input', { class: 'report-modal-note-input', type: 'text', placeholder: 'Add a note (optional)' });
+  form.append(noteInput);
+
   const buttonRows = createTag('div', { class: 'report-modal-button-rows' });
-  const cancelButton = createTag('button', { class: 'report-modal-cancel-button' });
+  const cancelButton = createTag('button', { class: 'cancel-button' });
   cancelButton.textContent = 'Cancel';
-  const submitButton = createTag('button', { class: 'report-modal-submit-button' });
+  cancelButton.addEventListener('click', () => {
+    reportModalContent.parentElement.parentElement.dispatchEvent(new CustomEvent(`close:${REPORT_MODAL_ID}`));
+  });
+  const submitButton = createTag('button', { class: 'submit-button' });
   submitButton.textContent = 'Submit feedback';
+  submitButton.addEventListener('click', () => {
+    const checked = [];
+    reasonInputs.forEach((reasonInput) => {
+      if (reasonInput.checked) {
+        checked.push(reasonInput.name);
+      }
+    });
+    const noteValue = noteInput.value;
+    const data = {
+      id: result.id,
+      category: '',
+      notes: `${checked.join(',')}::${noteValue}`,
+    };
+    reportModalContent.parentElement.parentElement.dispatchEvent(new CustomEvent(`close:${REPORT_MODAL_ID}`));
+  });
   buttonRows.append(cancelButton, submitButton);
 
   reportModalContent.append(title);
   reportModalContent.append(form);
-  reportModalContent.append(note);
   reportModalContent.append(buttonRows);
 }
 
-export async function openReportModal() {
+export async function openReportModal(result) {
   const modal = createTag('div');
-  modal.style.height = '840px';
-  modal.style.width = '600px';
-  const reportModalContent = createTag('div', { class: 'report-modal' });
+  modal.style.height = '530px';
+  modal.style.width = '500px';
+  const reportModalContent = createTag('div', { class: 'modal-content' });
   modal.append(reportModalContent);
   BlockMediator.get('ace-state').reportModalContent = reportModalContent;
   const mod = await import('../modal/modal.js');
-  const modalId = 'report-modal';
+
   mod.getModal(null, {
     class: 'report-modal',
-    id: modalId,
+    id: REPORT_MODAL_ID,
     content: modal,
-    closeEvent: 'closeReportModal',
+    closeEvent: `close:${REPORT_MODAL_ID}`,
   });
-  renderReportModal(reportModalContent);
+  renderReportModal(reportModalContent, result);
   return reportModalContent;
 }

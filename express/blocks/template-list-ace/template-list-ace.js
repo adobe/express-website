@@ -41,6 +41,7 @@ const props = {
   headingSlug: null,
   viewAllLink: null,
 };
+const GENERATED_RESULTS_MODAL_ID = 'generated-results-modal';
 
 let createTemplateLink;
 let createTemplateImgSrc;
@@ -390,7 +391,7 @@ export function createDropdown(titleRow, placeholders, block) {
   BlockMediator.get('ace-state').unsubscribeDropdown = unsubscribeDropdown;
   return unsubscribeDropdown;
 }
-const GENERATED_RESULTS_MODAL_ID = 'generated-results-modal';
+
 async function openModal(block) {
   const modal = createTag('div');
   modal.style.height = '840px';
@@ -400,7 +401,7 @@ async function openModal(block) {
   BlockMediator.get('ace-state').modalContent = modalContent;
   const mod = await import('../modal/modal.js');
   mod.getModal(null, {
-    class: 'generated-results-modal', id: GENERATED_RESULTS_MODAL_ID, content: modal, closeEvent: 'closeGeneratedResultsModal',
+    class: 'generated-results-modal', id: GENERATED_RESULTS_MODAL_ID, content: modal, closeEvent: `close:${GENERATED_RESULTS_MODAL_ID}`,
   });
   renderModalContent(modalContent, block);
   return modalContent;
