@@ -691,7 +691,6 @@ async function updateOptionsStatus(block, props, toolBar) {
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
         || waysOfSort[props[paramType]] === paramValue) {
-
         if (currentOption) {
           currentOption.textContent = option.textContent;
         }
