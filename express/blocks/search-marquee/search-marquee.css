@@ -1,0 +1,60 @@
+main .search-marquee .search-bar-wrapper {
+    position: relative;
+    max-width: 560px;
+    padding: 0 28px;
+    height: max-content;
+    margin: auto;
+    transition: max-width 0.5s;
+}
+
+main .search-marquee .search-bar-wrapper .search-bar {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: var(--body-font-family);
+    font-weight: 400;
+    font-size: 16px;
+    padding: 10px 40px;
+    border: var(--color-gray-200) 2px solid;
+    border-radius: 100px;
+    max-width: 560px;
+    width: 100%;
+    height: 41px;
+    transition: max-width 0.5s, padding-right 0.5s, padding-left 0.5s;
+}
+
+main .search-marquee .search-bar-wrapper .search-bar::placeholder {
+    transition: color 0.5s;
+}
+
+main .search-marquee .search-bar-wrapper .search-bar:focus-visible,
+main .search-marquee .search-bar-wrapper .search-bar:focus {
+    border: #444444 2px solid;
+    outline: none;
+}
+
+main .search-marquee .search-bar-wrapper .icon.icon-search {
+    position: absolute;
+    z-index: 1;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 0.5s;
+    left: 40px;
+}
+
+main .search-marquee .search-bar-wrapper .icon.icon-search-clear {
+    position: absolute;
+    z-index: 1;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 40px;
+}
+
+main .search-marquee .search-bar-wrapper .task-dropdown-list .icon {
+    margin-right: 4px;
+}
