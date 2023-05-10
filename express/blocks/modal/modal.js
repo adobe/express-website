@@ -9,17 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-import { loadCSS, createTag } from '../../scripts/scripts.js';
+/* eslint-disable max-len */
+import { loadCSS, createTag, getIconElement } from '../../scripts/scripts.js';
 
 const FOCUSABLES = 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"]';
-const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <g transform="translate(-10500 3403)">
-    <circle cx="10" cy="10" r="10" transform="translate(10500 -3403)" fill="#707070"/>
-    <line y1="8" x2="8" transform="translate(10506 -3397)" fill="none" stroke="#fff" stroke-width="2"/>
-    <line x1="8" y1="8" transform="translate(10506 -3397)" fill="none" stroke="#fff" stroke-width="2"/>
-  </g>
-</svg>`;
+// const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+//   <g transform="translate(-10500 3403)">
+//     <circle cx="20" cy="20" r="20" transform="translate(10500 -3403)" fill="#fff"/>
+//     <line y1="8" x2="8" transform="translate(10506 -3397)" fill="none" stroke="#000" stroke-width="1"/>
+//     <line x1="8" y1="8" transform="translate(10506 -3397)" fill="none" stroke="#000" stroke-width="1"/>
+//   </g>
+// </svg>`;
+
+const openedModals = { cnt: 0 };
 
 export function findDetails(hash, el) {
   const id = hash.replace('#', '');
@@ -32,6 +34,7 @@ function closeModal(modal) {
   const { id } = modal;
   const closeEvent = new Event(`milo:modal:closed:${id}`);
   window.dispatchEvent(closeEvent);
+  openedModals.cnt -= 1;
 
   document.querySelectorAll(`#${id}`).forEach((mod) => {
     if (mod.nextElementSibling?.classList.contains('modal-curtain')) {
@@ -88,7 +91,8 @@ export async function getModal(details, custom) {
   if (custom) getCustomModal(custom, dialog);
   if (details) await getPathModal(details.path, dialog);
 
-  const close = createTag('button', { class: 'dialog-close', 'aria-label': 'Close' }, CLOSE_ICON);
+  const close = createTag('button', { class: 'dialog-close', 'aria-label': 'Close' });
+  close.append(getIconElement('close-button-x'));
 
   const focusVisible = { focusVisible: true };
   const focusablesOnLoad = [...dialog.querySelectorAll(FOCUSABLES)];
@@ -138,6 +142,9 @@ export async function getModal(details, custom) {
 
   if (!dialog.classList.contains('curtain-off')) {
     const curtain = createTag('div', { class: 'modal-curtain is-open' });
+    curtain.style.zIndex = 100 + (openedModals.cnt || 0) * 2 + 1;
+    dialog.style.zIndex = 100 + (openedModals.cnt || 0) * 2 + 2;
+    openedModals.cnt += 1;
     curtain.addEventListener('click', (e) => {
       if (e.target === curtain) closeModal(dialog);
     });
