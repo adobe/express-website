@@ -64,7 +64,7 @@ const fetchSearchUrl = async ({
     'Rare & Original': '&orderBy=remixCount',
     'Newest to Oldest': '&orderBy=-createDate',
     'Oldest to Newest': '&orderBy=createDate',
-  }[sort] || '';
+  }[sort] || sort || '';
   const qParam = q ? `&q=${q}` : '';
   const url = encodeURI(
     `${base}?${collectionIdParam}${queryParam}${qParam}${limitParam}${startParam}${sortParam}${filterStr}`,

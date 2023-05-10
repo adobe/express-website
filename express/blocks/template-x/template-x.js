@@ -393,7 +393,7 @@ function makeTemplateFunctions(placeholders) {
       icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
     },
     sort: {
-      placeholders: JSON.parse(placeholders['template-sort']),
+      placeholders: JSON.parse(placeholders['template-x-sort']),
       elements: {},
       icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
     },
@@ -676,8 +676,10 @@ function closeDrawer(toolBar) {
   }, 500);
 }
 
-function updateOptionsStatus(block, props, toolBar) {
+async function updateOptionsStatus(block, props, toolBar) {
   const wrappers = toolBar.querySelectorAll('.function-wrapper');
+  const placeholders = await fetchPlaceholders();
+  const waysOfSort = JSON.parse(placeholders['template-x-sort']);
 
   wrappers.forEach((wrapper) => {
     const currentOption = wrapper.querySelector('.current-option');
@@ -685,20 +687,10 @@ function updateOptionsStatus(block, props, toolBar) {
 
     options.forEach((option) => {
       const paramType = wrapper.dataset.param;
-      const paramValue = paramType === 'sort' ? option.dataset.value : `(${option.dataset.value})`;
-
+      const paramValue = option.dataset.value;
       if (props[paramType] === paramValue
         || props.filters[paramType] === paramValue
-        || ((!props.filters[paramType] || props.filters[paramType] === '()') && paramValue === '(remove)')) {
-        const drawerCs = ['filter-drawer-mobile-inner-wrapper', 'functions-drawer'];
-        let toReorder = false;
-        if (drawerCs.every((className) => !wrapper.parentElement.classList.contains(className))) {
-          toReorder = true;
-        }
-
-        if (toReorder) {
-          option.parentElement.prepend(option);
-        }
+        || waysOfSort[props[paramType]] === paramValue) {
 
         if (currentOption) {
           currentOption.textContent = option.textContent;
@@ -750,7 +742,7 @@ function initDrawer(block, props, toolBar) {
   }, { passive: true });
 
   [drawerBackground, closeDrawerBtn].forEach((el) => {
-    el.addEventListener('click', () => {
+    el.addEventListener('click', async () => {
       props.filters = { ...currentFilters };
       closeDrawer(toolBar);
       updateOptionsStatus(block, props, toolBar);
@@ -785,7 +777,7 @@ function initDrawer(block, props, toolBar) {
   drawer.classList.add('hidden');
 }
 
-function updateQueryURL(functionWrapper, props, option) {
+function updateQuery(functionWrapper, props, option) {
   const paramType = functionWrapper.dataset.param;
   const paramValue = option.dataset.value;
 
@@ -798,10 +790,10 @@ function updateQueryURL(functionWrapper, props, option) {
       if (paramValue === 'remove') {
         delete filtersObj[paramType];
       } else {
-        filtersObj[paramType] = `(${paramValue})`;
+        filtersObj[paramType] = `${paramValue}`;
       }
     } else if (paramValue !== 'remove') {
-      filtersObj[paramType] = `(${paramValue})`;
+      filtersObj[paramType] = `${paramValue}`;
     }
 
     props.filters = filtersObj;
@@ -891,7 +883,7 @@ function initFilterSort(block, props, toolBar) {
           });
           option.classList.add('active');
 
-          updateQueryURL(wrapper, props, option);
+          updateQuery(wrapper, props, option);
           updateFilterIcon(block);
 
           if (!optionsList.classList.contains('in-drawer')) {
@@ -995,14 +987,6 @@ function toggleMasonryView(block, props, button, toggleButtons) {
     button.classList.add('active');
     block.classList.add(`${button.dataset.view}-view`);
     blockWrapper.classList.add(`${button.dataset.view}-view`);
-
-    props.masonry.draw();
-  } else {
-    button.classList.remove('active');
-    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-      block.classList.remove(className);
-      blockWrapper.classList.remove(className);
-    });
 
     props.masonry.draw();
   }

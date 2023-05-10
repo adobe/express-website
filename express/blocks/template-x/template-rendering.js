@@ -68,7 +68,7 @@ function getImageThumbnailSrc(renditionLinkHref, page) {
 function getImageCustomWidthSrc(renditionLinkHref, page, image) {
   return renditionLinkHref.replace(
     '{&page,size,type,fragment}',
-    `&size=${widthToSize(getWidthHeightRatio(page), image.width)}&type=image/jpg&fragment=id=${image.componentId}`,
+    `&size=${widthToSize(getWidthHeightRatio(page), 151)}&type=image/jpg&fragment=id=${image.componentId}`,
   );
 }
 
@@ -139,12 +139,16 @@ function getPageIterator(pages) {
     current() {
       return pages[this.i];
     },
+    all() {
+      return pages;
+    },
   };
 }
 function renderRotatingMedias(wrapper,
   pages,
   { templateTitle, renditionLinkHref, componentLinkHref }) {
   const pageIterator = getPageIterator(pages);
+  let imgTimeoutId;
 
   const constructVideo = () => {
     let src = '';
@@ -182,13 +186,15 @@ function renderRotatingMedias(wrapper,
   const video = constructVideo();
   if (video) wrapper.prepend(video);
 
+  const dispatchImgEndEvent = () => {
+    img.dispatchEvent(new CustomEvent('imgended', { detail: this }));
+  };
+
   const playImage = () => {
     img.classList.remove('hidden');
     img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
 
-    setTimeout(() => {
-      img.dispatchEvent(new CustomEvent('imgended'));
-    }, 2000);
+    imgTimeoutId = setTimeout(dispatchImgEndEvent, 2000);
   };
 
   const playVideo = () => {
@@ -214,9 +220,7 @@ function renderRotatingMedias(wrapper,
       if (img) img.classList.add('hidden');
       playVideo();
     } else {
-      if (video) {
-        video.classList.add('hidden');
-      }
+      if (video) video.classList.add('hidden');
       playImage();
     }
   };
@@ -227,20 +231,28 @@ function renderRotatingMedias(wrapper,
       video.currentTime = 0;
     }
 
+    if (imgTimeoutId) {
+      clearTimeout(imgTimeoutId);
+    }
+
     pageIterator.reset();
   };
 
   if (video) {
     video.addEventListener('ended', () => {
-      pageIterator.next();
-      playMedia();
+      if (pageIterator.all().length > 1) {
+        pageIterator.next();
+        playMedia();
+      }
     });
   }
 
   if (img) {
     img.addEventListener('imgended', () => {
-      pageIterator.next();
-      playMedia();
+      if (pageIterator.all().length > 1) {
+        pageIterator.next();
+        playMedia();
+      }
     });
   }
 
@@ -304,13 +316,8 @@ function loadBetterAssetInBackground(img, page) {
   const size = widthToSize(getWidthHeightRatio(page), 400);
 
   const updateImgRes = () => {
-    const imgParams = new URLSearchParams(img.src);
-
-    if (imgParams.get('size') !== size.toString(10)) {
-      img.src = updateURLParameter(img.src, 'size', size);
-    } else {
-      img.removeEventListener('load', updateImgRes);
-    }
+    img.src = updateURLParameter(img.src, 'size', size);
+    img.removeEventListener('load', updateImgRes);
   };
 
   img.addEventListener('load', updateImgRes);
@@ -365,7 +372,7 @@ function renderStillWrapper(template) {
   }
 
   if (containsVideo(template.pages)) {
-    const videoIcon = getIconElement('tiktok');
+    const videoIcon = getIconElement('play-button');
     imgWrapper.append(videoIcon);
   }
 
