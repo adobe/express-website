@@ -200,7 +200,9 @@ function constructProps(block) {
 
         props.holidayBlock = true;
         props.holidayIcon = holidayIcon || null;
-        props.backgroundColor = backgroundColor || null;
+        if (backgroundColor) {
+          props.backgroundColor = backgroundColor;
+        }
         props.backgroundAnimation = backgroundAnimation || null;
         props.textColor = getTextColorBasedOnBackground(backgroundColor);
       }
@@ -1169,16 +1171,93 @@ function loadBetterAssetsInBackground(block, props) {
   }
 }
 
+function setAttributes(element, attributes) {
+  Object.keys(attributes).forEach((key) => element.setAttribute(key, attributes[key]));
+}
+
+function addBackgroundAnimation(block, animationUrl) {
+  // Don't fully understand purpose of this, but leaving in for now
+  const parent = block.closest('.template-x-wrapper.fullwidth.holiday');
+
+  if (parent) {
+    parent.classList.add('with-animation');
+    const videoBackground = createTag('video', { class: 'animation-background' });
+    videoBackground.append(createTag('source', { src: animationUrl, type: 'video/mp4' }));
+    setAttributes(videoBackground, {
+      autoplay: '',
+      muted: '',
+      loop: '',
+      playsinline: '' ,
+    });
+    block.prepend(videoBackground);
+    videoBackground.muted = true;
+  }
+}
+
+function initToggleHoliday(block, titleWrapper) {
+  const toggleButton = block.querySelector('.toggle-button');
+  const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
+
+  titleWrapper.addEventListener('click', (e) => {
+    e.preventDefault();
+    block.classList.toggle('expanded');
+    titleWrapper.classList.toggle('expanded');
+    templatesWrapper.classList.toggle('expanded');
+    toggleButton.classList.toggle('expanded');
+  });
+
+  const aTag = toggleButton.querySelector('a');
+  const chev = toggleButton.querySelector('.toggle-button-chev');
+
+  aTag.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  chev.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    titleWrapper.classList.toggle('expanded');
+    toggleButton.classList.toggle('expanded');
+  });
+}
+
 function decorateHoliday(block, props) {
-  block.style.backgroundColor = props.backgroundColor;
-  const heading = block.querySelector('h2');
-  const subheading = block.querySelector('p');
-  const blankTemplate = block.querySelector('svg');
-  heading.style.color = props.textColor;
-  subheading.style.color = props.textColor;
+  const templateTitle = block.querySelector('.template-title');
+  const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
+  const templateTitleWrapper = templateTitle.querySelector('div');
+  const heading = templateTitle.querySelector('h4');
+  const subheading = templateTitle.querySelector('p');
+  const blankTemplate = templateTitle.querySelector('svg');
+  const link = templateTitle.querySelector('.template-title-link');
+
   if (blankTemplate) {
     blankTemplate.style.fill = props.textColor;
   }
+
+  if (props.holidayIcon) {
+    templateTitleWrapper.prepend(props.holidayIcon);
+  }
+
+  if (props.backgroundAnimation) {
+    addBackgroundAnimation(block, props.backgroundAnimation);
+  }
+
+  const toggle = createTag('div', { class: 'expanded toggle-button' });
+  block.classList.add('expanded');
+  templateTitleWrapper.classList.add('expanded');
+  templatesWrapper.classList.add('expanded');
+  templateTitleWrapper.append(toggle);
+  const toggleChev = createTag('div', { class: 'toggle-button-chev' });
+  toggle.append(link);
+  toggle.append(toggleChev);
+
+  block.style.backgroundColor = props.backgroundColor;
+  heading.style.color = props.textColor;
+  subheading.style.color = props.textColor;
+  link.style.color = props.textColor;
+  toggleChev.style.borderColor = props.textColor;
+
+  initToggleHoliday(block, templateTitleWrapper);
 }
 
 async function decorateTemplates(block, props) {

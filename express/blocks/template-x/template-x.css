@@ -66,6 +66,35 @@ main .template-x.fullwidth .template-x-inner-wrapper {
     justify-content: center;
 }
 
+main .template-x.fullwidth.holiday .template-x-inner-wrapper {
+    max-height: 0;
+    position: relative;
+    transition: max-height 0.5s, padding-top 0.5s;
+    overflow: hidden;
+}
+
+main .template-x.fullwidth.holiday .expanded.template-x-inner-wrapper {
+    max-height: 300px;
+}
+
+main .template-x.fullwidth.holiday .animation-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    height: 100%;
+    width: 100vw;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+main .template-x.fullwidth.holiday.expanded .animation-background {
+    opacity: 1;
+    transition: opacity 1s;
+}
+
 main .template-x.fullwidth.sm-view .template-x-inner-wrapper,
 main .template-x.fullwidth.md-view .template-x-inner-wrapper,
 main .template-x.fullwidth.lg-view .template-x-inner-wrapper {
@@ -138,6 +167,10 @@ main .template-x-wrapper .template-title.horizontal > div > * {
     margin: 0;
 }
 
+main .template-x-wrapper .template-title.horizontal.holiday .template-title,picture,a,h4,p {
+    z-index: 1;
+}
+
 main .template-x-wrapper .template-title.horizontal p {
     margin-top: 8px;
     width: fit-content;
@@ -152,8 +185,13 @@ main .template-x-wrapper .template-title-link {
     display: flex;
 }
 
-main .template-x-wrapper .template-link::after,
-main .template-x-wrapper .template-title-link::after {
+main .template-x-wrapper .toggle-button {
+    display: flex;
+}
+
+main .template-x-wrapper:not(.holiday) .template-link::after,
+main .template-x-wrapper:not(.holiday) .template-title-link::after,
+main .holiday.template-x-wrapper .toggle-button-chev {
     display: flex;
     width: 6px;
     height: 6px;
@@ -164,11 +202,16 @@ main .template-x-wrapper .template-title-link::after {
     border-style: solid;
     border-color: var(--color-info-accent);
     transform-origin: 75% 75%;
-    transform: rotate( -45deg );
+    transform: rotate( 45deg );
     content: "";
     margin-top: 5px;
     margin-left: 5px;
     margin-right: 2.25px;
+    transition: transform 0.2s;
+}
+
+main .holiday.template-x-wrapper .expanded.toggle-button .toggle-button-chev {
+    transform: rotate(225deg);
 }
 
 main .template-x-wrapper .template-title-link {
@@ -176,7 +219,7 @@ main .template-x-wrapper .template-title-link {
     white-space: nowrap;
 }
 
-main .template-x-wrapper .template-title-link::after {
+main .template-x-wrapper:not(.holiday) .template-title-link::after {
     margin-top: 7px;
 }
 
@@ -267,6 +310,10 @@ main .template-x.horizontal {
     margin-left: auto;
     margin-right: auto;
     min-height: 220px;
+}
+
+main .template-x.horizontal.holiday {
+    min-height: 0;
 }
 
 main .template-x.horizontal.fullwidth {
