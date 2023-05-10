@@ -12,6 +12,7 @@
 
 import { createTag } from '../../scripts/scripts.js';
 import BlockMediator from '../../scripts/block-mediator.js';
+import { postFeedback, FEEDBACK_CATEGORIES } from './ace-api.js';
 
 // TODO: use placeholders
 const reasons = [
@@ -47,12 +48,16 @@ export function renderReportModal(reportModalContent, result) {
   const buttonRows = createTag('div', { class: 'report-modal-button-rows' });
   const cancelButton = createTag('button', { class: 'cancel-button' });
   cancelButton.textContent = 'Cancel';
-  cancelButton.addEventListener('click', () => {
+  cancelButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     reportModalContent.parentElement.parentElement.dispatchEvent(new CustomEvent(`close:${REPORT_MODAL_ID}`));
   });
   const submitButton = createTag('button', { class: 'submit-button' });
   submitButton.textContent = 'Submit feedback';
-  submitButton.addEventListener('click', () => {
+  submitButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const checked = [];
     reasonInputs.forEach((reasonInput) => {
       if (reasonInput.checked) {
@@ -60,11 +65,17 @@ export function renderReportModal(reportModalContent, result) {
       }
     });
     const noteValue = noteInput.value;
-    const data = {
-      id: result.id,
-      category: '',
-      notes: `${checked.join(',')}::${noteValue}`,
-    };
+    try {
+      const { result: feedbackRes, error } = await postFeedback(
+        result.id,
+        FEEDBACK_CATEGORIES.REPORT_ABUSE,
+        `${checked.join(',')}::${noteValue}`,
+      );
+      if (error) throw new Error(error);
+      alert(feedbackRes);
+    } catch (err) {
+      console.error(err);
+    }
     reportModalContent.parentElement.parentElement.dispatchEvent(new CustomEvent(`close:${REPORT_MODAL_ID}`));
   });
   buttonRows.append(cancelButton, submitButton);
