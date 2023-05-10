@@ -1789,6 +1789,10 @@ main .template-list-ace .picker-open {
   border-radius: 16px;
 }
 
+#generated-results-modal .modal-content .picker-open.disabled {
+  pointer-events: none
+}
+
 #generated-results-modal .modal-content .picker-open {
   border-radius: 7px;
 }
@@ -1867,6 +1871,10 @@ main .template-list-ace .picker-open span.selected,
   color: #4f4fda;
 }
 
+#generated-results-modal .modal-content .picker-open.disabled span.selected {
+  color: #9f9ffa;
+}
+
 main .template-list-ace .picker li:first-of-type span,
 #generated-results-modal .modal-content .picker li:first-of-type span {
   margin-top: 14px;
@@ -1889,205 +1897,24 @@ main .template-list-ace li:not(:first-of-type) span:hover,
   text-decoration: none;
 }
 
+main .template-list-ace {
+  display: none;
+}
+
 @media (min-width: 900px) {
   main .template-list-ace.collaboration .carousel-container {
     margin-left: 0;
   }
-}
 
-main .template-list-horizontal-apipowered-holiday-container {
-  padding-bottom: 10px;
-  position: relative;
-  overflow-x: hidden;
-  background: var(--color-black);
-}
-
-main .template-list-horizontal-apipowered-holiday-container.with-animation {
-  color: var(--color-white);
-  padding-top: 0;
-}
-
-main .template-list-horizontal-apipowered-holiday-container p,
-main .template-list-horizontal-apipowered-holiday-container picture {
-  z-index: 1;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
-  display: flex;
-  padding: 0 30px;
-  justify-content: space-between;
-  gap: 20px;
-  max-width: none;
-  cursor: pointer;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar p {
-  margin: 14px 0;
-  font-size: 16px;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar img {
-  display: block;
-  max-height: 32px;
-  width: 84px;
-  min-width: 84px;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button {
-  display: flex;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button a {
-  color: var(--color-white);
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button a:hover {
-  text-decoration: underline;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only {
-  width: max-content;
-  padding: 0 30px;
-  margin-left: 0;
-  transform: translate(0, -6px);
-  font-weight: 400;
-  transition: margin 0.5s, transform 0.5s;
-}
-
-main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-button.mobile-only {
-  margin: auto auto auto 190px;
-  transform: translate(-50%, -6px);
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button.mobile-only.expanded {
-  transform: translate(-50%, -6px);
-  margin: auto auto auto 50%;
-}
-
-main .template-list-horizontal-apipowered-holiday-container.with-icon .toggle-button.mobile-only.expanded {
-  margin-left: 50%;
-  transform: translate(-50%, -6px);
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button .toggle-button-chev {
-  display: flex;
-  width: 6px;
-  height: 6px;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-bottom-width: 2px;
-  border-right-width: 2px;
-  border-style: solid;
-  border-color: var(--color-white);
-  transform-origin: 75% 75%;
-  transform: rotate(45deg);
-  margin-top: 5px;
-  margin-left: 5px;
-  margin-right: 2.25px;
-  transition: transform 0.2s;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-button.expanded .toggle-button-chev {
-  transform: rotate(-135deg);
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar-top,
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
-  text-align: left;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: center;
-  color: var(--color-white);
-}
-
-main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
-  display: none;
-  z-index: 1;
-  flex-grow: 1;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper p.mobile-only {
-  color: var(--color-white);
-  position: absolute;
-  top: 0;
-  font-size: 12px;
-  text-align: left;
-  margin: 0 0 16px;
-  padding: 0 30px;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper,
-main .template-list-ace.holiday,
-main .template-list-ace.holiday .carousel-container {
-  max-width: none;
-  z-index: 1;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper {
-  max-height: 0;
-  position: relative;
-  transition: max-height 0.5s, padding-top 0.5s;
-  overflow: hidden;
-}
-
-main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper.expanded {
-  max-height: 300px;
-  padding-top: 16px;
-}
-
-main .template-list-ace.holiday .carousel-container .carousel-platform {
-  scroll-padding: initial;
-}
-
-/* holiday animations */
-
-main .template-list-horizontal-apipowered-holiday-container .animation-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  object-fit: cover;
-  height: 100%;
-  width: 100vw;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-main .template-list-horizontal-apipowered-holiday-container.expanded .animation-background {
-  opacity: 1;
-  transition: opacity 1s;
-}
-
-@media (min-width: 600px) {
-  main .template-list-ace.horizontal.holiday .carousel-container .carousel-fader-left,
-  main .template-list-ace.horizontal.holiday .carousel-container .carousel-fader-right {
-    background: initial;
-  }
-}
-
-@media (min-width: 1200px) {
-  main .template-list-horizontal-apipowered-holiday-container {
-    padding-bottom: 0;
-  }
-
-  main .template-list-horizontal-apipowered-holiday-container .toggle-bar {
-    max-width: 1024px;
-  }
-
-  main .template-list-horizontal-apipowered-holiday-container .mobile-only {
+  main .template-list-ace-wrapper .mobile-content {
     display: none;
   }
 
-  main .template-list-horizontal-apipowered-holiday-container .toggle-bar-bottom {
-    display: flex;
-  }
-
-  main .template-list-horizontal-apipowered-holiday-container .template-list-wrapper.expanded {
-    padding-top: 0;
+  main .template-list-ace {
+    display: block;
   }
 }
+
 
 #generated-results-modal .modal-content {
   padding: 30px;

@@ -171,12 +171,21 @@ export function renderLoader(modalContent) {
   modalContent.append(wrapper);
 }
 
-function updateSearchable(modalContent, searchable) {
+function updateSearchableAndDropdown(modalContent, searchable) {
   if (modalContent !== BlockMediator.get('ace-state').modalContent) {
     return;
   }
+  const dropdown = modalContent.querySelector(':scope .picker-open');
+  if (dropdown) {
+    if (!searchable) {
+      dropdown.classList.add('disabled');
+    } else {
+      dropdown.classList.remove('disabled');
+    }
+  }
   const searchButton = modalContent.querySelector('.search-form .search-button');
   const searchBarInput = modalContent.querySelector('.search-form input.search-bar');
+
   if (!searchButton || !searchBarInput) return;
   searchButton.disabled = !searchable;
   searchBarInput.disabled = !searchable;
@@ -225,7 +234,7 @@ export async function fetchResults(modalContent, repeating = false) {
     );
   }
 
-  updateSearchable(modalContent, false);
+  updateSearchableAndDropdown(modalContent, false);
 
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
@@ -279,7 +288,7 @@ export async function fetchResults(modalContent, repeating = false) {
     console.error(e);
     fetchingState.results = 'error';
   } finally {
-    updateSearchable(modalContent, true);
+    updateSearchableAndDropdown(modalContent, true);
   }
 }
 

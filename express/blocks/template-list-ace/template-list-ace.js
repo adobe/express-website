@@ -337,7 +337,7 @@ function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block)
 }
 
 function openPicker(button, texts, dropText, event, block) {
-  if (document.querySelector('main .template-list-ace .picker')) {
+  if (document.querySelector('main .template-list-ace .picker, #generated-results-modal .modal-content .picker')) {
     return;
   }
   const list = createTag('ul', { class: 'picker' });
@@ -478,8 +478,12 @@ function initState() {
 
 export default async function decorate(block) {
   if (!window.location.host.includes('localhost:3000')) {
+    block.style.display = 'none';
     return;
   }
+  const mobileText = createTag('p', {class: 'mobile-content'});
+  mobileText.textContent = 'This content is only available on desktop. Mobile content is coming soon.';
+  block.parentElement.append(mobileText);
   placeholders = await fetchPlaceholders();
   initState();
   block.innerHTML = block.innerHTML.replaceAll('{{template-list-ace-title}}', placeholders['template-list-ace-title'])
