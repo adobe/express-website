@@ -1984,6 +1984,10 @@ main .template-list-ace {
   max-height: var(--generated-template-max-height);
 }
 
+#generated-results-modal .modal-content .generated-template-wrapper .generated-template-image {
+  max-height: var(--generated-template-max-height);
+}
+
 #generated-results-modal .modal-content .generated-template-wrapper > div:last-child {
   margin-right: 0;
 }
@@ -1991,6 +1995,7 @@ main .template-list-ace {
 #generated-results-modal .modal-content .generated-template-wrapper .hover-container {
   display: flex;
   align-items: flex-end;
+  justify-content: center;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -2006,29 +2011,25 @@ main .template-list-ace {
   opacity: 1;
 }
 
-#generated-results-modal .modal-content .generated-template-wrapper .generated-template-image {
-  max-height: var(--generated-template-max-height);
-}
-
-#generated-results-modal .modal-content .generated-template-wrapper .feedback-row {
+#generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row {
   display: flex;
-  width: 100%;
   justify-content: center;
   gap: 10px;
   margin-bottom: 14px;
   border-radius: 30px;
   color: black;
   font-size: var(--body-font-size-s);
+  cursor: auto;
 }
 
-#generated-results-modal .modal-content .generated-template-wrapper .feedback-row > div {
+#generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row > div {
   padding: 8px;
   border-radius: calc((var(--body-font-size-s) * var(--body-line-height) + 8px * 2) * 0.5);
   background-color: #f3f3f3;
   color: black;
 }
 
-#generated-results-modal .modal-content .generated-template-wrapper .feedback-row button {
+#generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row button {
   margin: 0;
   padding: 0;
   border: none;
@@ -2112,66 +2113,66 @@ main .template-list-ace {
   line-height: 300%;
 }
 
-#report-modal .modal-content {
+#feedback-modal .modal-content {
   padding: 40px;
   border-radius: 50px;
 }
 
-#report-modal .modal-content h3, p {
+#feedback-modal .modal-content h3, p {
   margin: 0;
 }
 
-#report-modal button.dialog-close {
+#feedback-modal button.dialog-close {
   display: none;
 }
 
-#report-modal .modal-content .report-modal-form {
+#feedback-modal .modal-content .feedback-modal-form {
   line-height: 200%;
 }
 
-#report-modal .modal-content .report-modal-form .report-modal-reason-label {
+#feedback-modal .modal-content .feedback-modal-form .feedback-modal-reason-label {
   cursor: pointer;
 }
 
-#report-modal .modal-content .report-modal-form .report-modal-reason-label input[type="checkbox"] {
+#feedback-modal .modal-content .feedback-modal-form .feedback-modal-reason-label input[type="checkbox"] {
   margin-right: 10px;
   margin-left: 0;
 }
 
-#report-modal .modal-content .report-modal-form input[type="text"] {
+#feedback-modal .modal-content .feedback-modal-form input[type="text"] {
   width: calc(100% - calc(40px - 12px));
   font-style: italic;
   padding: 8px 12px 8px 12px;
   margin-top: 12px;
 }
 
-#report-modal .modal-content .report-modal-button-rows {
+#feedback-modal .modal-content .feedback-modal-button-rows {
   margin-top: 3em;
   display: flex;
   justify-content: flex-end;
 }
 
-#report-modal .modal-content .report-modal-button-rows > button {
+#feedback-modal .modal-content .feedback-modal-button-rows > button {
   padding: 8px 18px;
   border-radius: 50px;
   cursor: pointer;
 }
 
-#report-modal .modal-content .report-modal-button-rows > button.cancel-button {
+#feedback-modal .modal-content .feedback-modal-button-rows > button.cancel-button {
   background-color: white;
   border-color: #c5c5c5;
   border-style: solid;
   border-width: 2px;
 }
 
-#report-modal .modal-content .report-modal-button-rows > button.submit-button {
+#feedback-modal .modal-content .feedback-modal-button-rows > button.submit-button {
   margin-left: 10px;
   background-color: var(--color-info-accent);
   color: white;
   border: none;
 }
 
-#report-modal .modal-content .report-modal-button-rows > button.submit-button:disabled {
+#feedback-modal .modal-content .feedback-modal-button-rows > button.submit-button:disabled {
   background-color: #c5c5c5;
   color: black;
   border: none;

@@ -19,7 +19,7 @@ import {
   FEEDBACK_CATEGORIES,
 } from './ace-api.js';
 import useProgressManager from './progress-manager.js';
-import { openReportModal } from './report-modal.js';
+import { openFeedbackModal } from './feedback-modal.js';
 import BlockMediator from '../../scripts/block-mediator.js';
 import { createDropdown } from './template-list-ace.js';
 
@@ -30,18 +30,18 @@ const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
 const REQUEST_GENERATION_RETRIES = 3;
 
-function getVoteHandler(id, category) {
+function getVoteHandler(result, category) {
   return async (e) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const { result: feedbackRes, error } = await postFeedback(
-        id,
+      const { error } = await postFeedback(
+        result.id,
         category,
         'Rate this result: thumbs_down',
       );
       if (error) throw new Error(error);
-      alert(feedbackRes);
+      openFeedbackModal(result, category);
     } catch (err) {
       console.error(err);
     }
@@ -57,9 +57,9 @@ export function createRateResultButton(result) {
   upvoteLink.append('👍');
   downvoteLink.addEventListener(
     'click',
-    getVoteHandler(result.id, FEEDBACK_CATEGORIES.THUMBS_DOWN),
+    getVoteHandler(result, FEEDBACK_CATEGORIES.THUMBS_DOWN),
   );
-  upvoteLink.addEventListener('click', getVoteHandler(result.id, FEEDBACK_CATEGORIES.THUMBS_UP));
+  upvoteLink.addEventListener('click', getVoteHandler(result, FEEDBACK_CATEGORIES.THUMBS_UP));
   wrapper.append(downvoteLink);
   wrapper.append(upvoteLink);
   return wrapper;
@@ -71,10 +71,10 @@ export function createReportButton(result) {
   const reportButton = createTag('button', { class: 'feedback-report-button' });
   reportButton.append('🚩');
   wrapper.append(reportButton);
-  wrapper.addEventListener('click', async (e) => {
+  reportButton.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    await openReportModal(result);
+    await openFeedbackModal(result, FEEDBACK_CATEGORIES.REPORT_ABUSE);
   });
   return wrapper;
 }
@@ -88,17 +88,20 @@ function createTemplate(result) {
   const { thumbnail } = result;
   const templateBranchUrl = getTemplateBranchUrl(result);
   const templateWrapper = createTag('div', { class: 'generated-template-wrapper' });
-  templateWrapper.addEventListener('click', () => {
-    window.open(templateBranchUrl, '_blank').focus();
-    // window.location.href = templateBranchUrl;
-  });
   const hoverContainer = createTag('div', { class: 'hover-container' });
   const feedbackRow = createTag('div', { class: 'feedback-row' });
   feedbackRow.append(createRateResultButton(result));
   feedbackRow.append(createReportButton(result));
+  feedbackRow.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
   hoverContainer.append(feedbackRow);
 
   templateWrapper.append(createTag('img', { src: thumbnail, class: 'generated-template-image' }));
+  hoverContainer.addEventListener('click', () => {
+    window.open(templateBranchUrl, '_blank').focus();
+  });
   templateWrapper.append(hoverContainer);
   return templateWrapper;
 }
@@ -341,8 +344,9 @@ function createModalSearch(modalContent) {
   searchBar.value = query;
   searchForm.append(searchBar);
 
-  const button = createTag('button', { class: 'search-button', title: placeholders['template-list-ace-button-refresh'] ?? 'Refresh results' });
-  button.textContent = placeholders['template-list-ace-button-refresh'] ?? 'Refresh results';
+  const refreshText = placeholders['template-list-ace-button-refresh'] ?? 'Refresh';
+  const button = createTag('button', { class: 'search-button', title: refreshText });
+  button.textContent = refreshText;
   searchForm.append(button);
   let repeating = false;
   button.addEventListener('click', async (e) => {

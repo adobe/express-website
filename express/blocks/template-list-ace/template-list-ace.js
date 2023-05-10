@@ -468,11 +468,7 @@ function initState() {
     placeholders,
     fetchingState: { intervalId: null, progressManager: null, results: null },
     modalContent: null,
-    reportModalContent: null,
-    modalId: 0,
     createTemplateLink: placeholders['template-list-ace-create-template-link'],
-    abortController: new AbortController(),
-    oldModalSet: new WeakSet(),
   });
 }
 
