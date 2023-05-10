@@ -77,14 +77,16 @@ const fetchSearchUrl = async ({
   }).then((response) => response.json());
 };
 
-export async function fetchTemplates(props) {
+export async function fetchTemplates(props, fallback = true) {
   const result = await fetchSearchUrl(props);
 
   if (result?.metadata?.totalHits > 0) {
     return result;
-  } else {
+  } else if (fallback) {
     // save fetch if search query returned 0 templates. "Bad result is better than no result"
     return fetchSearchUrl({ ...props, filters: {} });
+  } else {
+    return null;
   }
 }
 

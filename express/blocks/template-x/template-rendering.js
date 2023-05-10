@@ -173,7 +173,7 @@ function renderRotatingMedias(wrapper,
   const constructImg = () => createTag('img', {
     src: '',
     alt: templateTitle,
-    class: 'unloaded hidden',
+    class: 'hidden',
   });
 
   const img = constructImg();
@@ -184,11 +184,10 @@ function renderRotatingMedias(wrapper,
 
   const playImage = () => {
     img.classList.remove('hidden');
-    img.classList.remove('unloaded');
     img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
 
     setTimeout(() => {
-      img.dispatchEvent(new CustomEvent('imgshownlongenough'));
+      img.dispatchEvent(new CustomEvent('imgended'));
     }, 2000);
   };
 
@@ -196,7 +195,6 @@ function renderRotatingMedias(wrapper,
     if (video) {
       const videoSource = video.querySelector('source');
       video.classList.remove('hidden');
-      video.classList.remove('unloaded');
       video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
       videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
       video.load();
@@ -240,7 +238,7 @@ function renderRotatingMedias(wrapper,
   }
 
   if (img) {
-    img.addEventListener('imgshownlongenough', () => {
+    img.addEventListener('imgended', () => {
       pageIterator.next();
       playMedia();
     });

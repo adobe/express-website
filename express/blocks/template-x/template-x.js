@@ -1212,6 +1212,28 @@ async function decorateTemplates(block, props) {
   document.dispatchEvent(linksPopulated);
 }
 
+async function appendCategoryTemplatesCount(block, props) {
+  const categories = block.querySelectorAll('ul.category-list > li');
+  const tempProps = JSON.parse(JSON.stringify(props));
+  const lang = getLanguage(getLocale(window.location));
+
+  for (const li of categories) {
+    const anchor = li.querySelector('a');
+    if (anchor) {
+      const countSpan = createTag('span', { class: 'category-list-template-count' });
+      tempProps.filters.tasks = anchor.dataset.tasks;
+      // eslint-disable-next-line no-await-in-loop
+      const response = await fetchTemplates(tempProps, false);
+      if (!response || !response.items || !Array.isArray(response.items)) {
+        countSpan.textContent = '(0)';
+      } else {
+        countSpan.textContent = `(${response.metadata.totalHits.toLocaleString(lang)})`;
+      }
+      anchor.append(countSpan);
+    }
+  }
+}
+
 async function buildTemplateList(block, props, type = []) {
   if (type?.length > 0) {
     type.forEach((typeName) => {
@@ -1248,7 +1270,7 @@ async function buildTemplateList(block, props, type = []) {
   if (props.toolBar) {
     await decorateToolbar(block, props);
     await decorateCategoryList(block, props);
-    // TODO: add fx appendCategoryTemplatesCount(block)
+    appendCategoryTemplatesCount(block, props);
   }
 
   if (props.orientation && props.orientation.toLowerCase() === 'horizontal') {

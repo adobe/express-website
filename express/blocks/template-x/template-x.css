@@ -223,16 +223,13 @@ main .template-x .template video {
 
 main .template-x .template .media-wrapper img.hidden,
 main .template-x .template .media-wrapper video.hidden {
+    opacity: 0;
     position: absolute;
     height: 100%;
     width: 100%;
     top: 0;
     left: 0;
-}
-
-main .template-x .template .media-wrapper img.unloaded,
-main .template-x .template .media-wrapper video.unloaded {
-    display: none;
+    z-index: -1;
 }
 
 main .template-x .template .media-wrapper video {
