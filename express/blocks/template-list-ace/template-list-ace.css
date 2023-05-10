@@ -2351,4 +2351,5 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
   border-style: solid;
   border-width: 2px;
   border-color: #c5c5c5;
+  cursor: not-allowed;
 }

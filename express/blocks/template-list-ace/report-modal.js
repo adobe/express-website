@@ -35,14 +35,33 @@ export function renderReportModal(reportModalContent, result) {
   const formGuidance = createTag('p', { class: 'report-modal-form-guidance' });
   formGuidance.textContent = 'Select all that apply (required)'; // TODO: use placeholder
   form.append(formGuidance);
+
+  const submitButton = createTag('button', { class: 'submit-button', disabled: true });
+  const noteInput = createTag('input', { class: 'report-modal-note-input', type: 'text', placeholder: 'Add a note (optional)' });
   const reasonInputs = reasons.map((reason) => createTag('input', { class: 'report-modal-reason-input', type: 'checkbox', name: reason }));
+  noteInput.addEventListener('input', (e) => {
+    if (e.target.value) {
+      submitButton.disabled = false;
+    } else if (!reasonInputs.some(({ checked }) => checked)) {
+      submitButton.disabled = true;
+    }
+  });
+  reasonInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        submitButton.disabled = false;
+      } else if (!reasonInputs.some(({ checked }) => checked) && !noteInput.value) {
+        submitButton.disabled = true;
+      }
+    });
+  });
   reasons.forEach((reason, index) => {
     const reasonLabel = createTag('label', { class: 'report-modal-reason-label' });
     reasonLabel.append(reasonInputs[index], reason);
     form.append(reasonLabel);
     form.append(createTag('br'));
   });
-  const noteInput = createTag('input', { class: 'report-modal-note-input', type: 'text', placeholder: 'Add a note (optional)' });
+
   form.append(noteInput);
 
   const buttonRows = createTag('div', { class: 'report-modal-button-rows' });
@@ -53,7 +72,7 @@ export function renderReportModal(reportModalContent, result) {
     e.stopPropagation();
     reportModalContent.parentElement.parentElement.dispatchEvent(new CustomEvent(`close:${REPORT_MODAL_ID}`));
   });
-  const submitButton = createTag('button', { class: 'submit-button' });
+
   submitButton.textContent = 'Submit feedback';
   submitButton.addEventListener('click', async (e) => {
     e.preventDefault();
