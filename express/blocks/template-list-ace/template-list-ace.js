@@ -45,6 +45,8 @@ const GENERATED_RESULTS_MODAL_ID = 'generated-results-modal';
 
 let createTemplateLink;
 let createTemplateImgSrc;
+let dropdownTexts;
+let placeholders;
 
 function formatSearchQuery(limit, start, sort, filters) {
   const prunedFilter = Object.entries(filters).filter(([, value]) => value !== '()');
@@ -78,7 +80,7 @@ async function fetchTemplates() {
 }
 
 async function fetchAndRenderTemplates() {
-  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates()]);
+  const [response] = await Promise.all([fetchTemplates()]);
   let templateFetched;
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
@@ -220,7 +222,7 @@ function populateTemplates($block, templates) {
   }
 }
 
-export async function decorateTemplateList(block, placeholders, templatesContainer) {
+export async function decorateTemplateList(block, templatesContainer) {
   const templates = Array.from(templatesContainer.children);
 
   const rows = templates.length;
@@ -280,7 +282,7 @@ function createPlaceholder() {
   return existingCreateTemplate;
 }
 
-async function loadTemplates(block, placeholders, topic) {
+async function loadTemplates(block, topic) {
   if (topic) {
     props.filters.topics = topic;
   } else {
@@ -301,22 +303,40 @@ async function loadTemplates(block, placeholders, topic) {
   block.append(templatesContainer);
   await readRowsFromBlock(block, templatesContainer);
 
-  await decorateTemplateList(block, placeholders, templatesContainer);
+  await decorateTemplateList(block, templatesContainer);
   buildCarousel(':scope .template', block, false);
 }
 
-function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block, placeholders) {
+function setDropdownSelected(firstElem, dropdownText, selectedVal) {
+  const downArrow = createTag('img', {
+    class: 'icon down-arrow',
+    src: '../../express/icons/drop-down-arrow.svg',
+    width: 15,
+    height: 9,
+  });
+  BlockMediator.get('ace-state').dropdown = selectedVal;
+  dropdownText.textContent = selectedVal;
+  dropdownText.appendChild(downArrow);
+  if (firstElem) {
+    dropdownText.classList.remove('selected');
+  } else if (!dropdownText.classList.contains('selected')) {
+    dropdownText.classList.add('selected');
+  }
+}
+
+function decorateForOnPickerSelect(option, list, dropdownText, firstElem, block) {
   option.addEventListener('click', () => {
     list.remove();
-    BlockMediator.set('ace-dropdown', option.textContent);
-    if (block && placeholders) {
-      loadTemplates(block, placeholders, firstElem ? '' : option.textContent);
+    setDropdownSelected(firstElem, dropdownText, option.textContent);
+    const modal = document.querySelector('.dialog-modal');
+    if (!modal) {
+      loadTemplates(block, firstElem ? '' : option.textContent);
     }
     option.classList.add('selected');
   });
 }
 
-function openPicker(button, texts, dropText, event, block, placeholders) {
+function openPicker(button, texts, dropText, event, block) {
   if (document.querySelector('main .template-list-ace .picker')) {
     return;
   }
@@ -337,21 +357,22 @@ function openPicker(button, texts, dropText, event, block, placeholders) {
       span.appendChild(checkArrow);
     }
     list.appendChild(li);
-    decorateForOnPickerSelect(span, list, dropText, index === 0, block, placeholders);
+    decorateForOnPickerSelect(span, list, dropText, index === 0, block);
   });
   button.appendChild(list);
   button.setAttribute('aria-expanded', true);
   removeOnClickOutsideElement(list, event, button);
 }
 
-export function createDropdown(titleRow, placeholders, block) {
+export function createDropdown(titleRow, block, selectedOption) {
   const title = titleRow.querySelector(':scope h1');
-  const dropdownTexts = placeholders['template-list-ace-categories-dropdown'].split(',');
-
+  dropdownTexts = placeholders['template-list-ace-categories-dropdown'].split(',');
   const dropdown = createTag('div', {
     class: 'picker-open', role: 'button', 'aria-haspopup': true, 'aria-expanded': false,
   });
   const dropdownText = createTag('span', { class: 'picker-open-text' });
+  const firstElem = selectedOption ? selectedOption === dropdownTexts[0] : true;
+  setDropdownSelected(firstElem, dropdownText, selectedOption ?? dropdownTexts[0]);
   dropdown.append(dropdownText);
   const span = createTag('span');
   span.style.flexBasis = '100%';
@@ -360,36 +381,31 @@ export function createDropdown(titleRow, placeholders, block) {
 
   const drop = title.querySelector('.picker-open');
   const dropText = title.querySelector('.picker-open-text');
-
   dropText.addEventListener('click', (e) => {
-    openPicker(drop, dropdownTexts, dropText, e, block, placeholders);
+    openPicker(drop, dropdownTexts, dropText, e, block);
   });
-  const unsubscribeDropdown = BlockMediator.subscribe('ace-dropdown', (change) => {
-    const downArrow = createTag('img', {
-      class: 'icon down-arrow',
-      src: '../../express/icons/drop-down-arrow.svg',
-      width: 15,
-      height: 9,
-    });
-    dropText.textContent = change.newValue;
-    dropText.appendChild(downArrow);
-    if (change.newValue === dropdownTexts[0]) {
-      dropText.classList.remove('selected');
-    } else if (!dropText.classList.contains('selected')) {
-      dropText.classList.add('selected');
+}
+
+function addHandlerForModalClose(block) {
+  window.addEventListener(`milo:modal:closed:${GENERATED_RESULTS_MODAL_ID}`, () => {
+    const searchBar = block.querySelector(':scope .search-bar');
+    const dropdownText = block.querySelector(':scope .picker-open .picker-open-text');
+    console.log('closed big!');
+    // IMPORTANT: clear ongoing search + sync search bar value
+    const {
+      query,
+      fetchingState,
+      dropdown,
+    } = BlockMediator.get('ace-state');
+    searchBar.value = query;
+    fetchingState.results = null;
+    if (dropdownText.textContent !== dropdown) {
+      const firstElem = dropdown === dropdownTexts[0];
+      setDropdownSelected(firstElem, dropdownText, dropdown);
+      loadTemplates(block, firstElem ? '' : dropdown);
     }
-    if (change.oldValue !== change.newValue && change.oldValue) {
-      loadTemplates(block, placeholders, change.newValue === dropdownTexts[0] ? '' : change.newValue);
-    }
+    clearInterval(fetchingState.intervalId);
   });
-  const dropdownVal = BlockMediator.get('ace-dropdown');
-  if (dropdownVal) {
-    BlockMediator.set('ace-dropdown', dropdownVal);
-  } else {
-    BlockMediator.set('ace-dropdown', dropdownTexts[0]);
-  }
-  BlockMediator.get('ace-state').unsubscribeDropdown = unsubscribeDropdown;
-  return unsubscribeDropdown;
 }
 
 async function openModal(block) {
@@ -404,10 +420,11 @@ async function openModal(block) {
     class: 'generated-results-modal', id: GENERATED_RESULTS_MODAL_ID, content: modal, closeEvent: `close:${GENERATED_RESULTS_MODAL_ID}`,
   });
   renderModalContent(modalContent, block);
+  addHandlerForModalClose(block);
   return modalContent;
 }
 
-function createSearchBar(searchRows, placeholders, titleRow, block) {
+function createSearchBar(searchRows, titleRow, block) {
   const searchForm = createTag('form', { class: 'search-form' });
   const searchBar = createTag('input', {
     class: 'search-bar',
@@ -416,20 +433,6 @@ function createSearchBar(searchRows, placeholders, titleRow, block) {
     enterKeyHint: placeholders.search ?? 'Search',
   });
   const aceState = BlockMediator.get('ace-state');
-
-  window.addEventListener('milo:modal:closed:generated-results-modal', () => {
-    console.log('closed big!');
-    // IMPORTANT: clear ongoing search + sync search bar value
-    const {
-      query,
-      fetchingState,
-      unsubscribeDropdown,
-    } = aceState;
-    searchBar.value = query;
-    fetchingState.results = null;
-    if (unsubscribeDropdown) unsubscribeDropdown();
-    clearInterval(fetchingState.intervalId);
-  });
   searchForm.append(searchBar);
   const button = searchRows[1];
   searchForm.append(button);
@@ -458,7 +461,7 @@ function createSearchBar(searchRows, placeholders, titleRow, block) {
   const suggestions = searchRows[2].querySelectorAll(':scope > p');
   return searchBar;
 }
-function initState({ placeholders }) {
+function initState() {
   BlockMediator.set('ace-state', {
     dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0].trim(),
     query: null,
@@ -477,8 +480,8 @@ export default async function decorate(block) {
   if (!window.location.host.includes('localhost:3000')) {
     return;
   }
-  const placeholders = await fetchPlaceholders();
-  initState({ placeholders });
+  placeholders = await fetchPlaceholders();
+  initState();
   block.innerHTML = block.innerHTML.replaceAll('{{template-list-ace-title}}', placeholders['template-list-ace-title'])
     .replaceAll('{{template-list-ace-button}}', placeholders['template-list-ace-button'])
     .replaceAll('{{template-list-ace-suggestions-title}}', placeholders['template-list-ace-suggestions-title'])
@@ -489,9 +492,9 @@ export default async function decorate(block) {
   const rows = Array.from(block.children);
   const titleRow = rows.shift();
   titleRow.classList.add('title-search-container');
-  createDropdown(titleRow, placeholders, block);
+  createDropdown(titleRow, block);
   const searchRows = rows.shift();
-  createSearchBar(searchRows.querySelectorAll('div'), placeholders, titleRow, block);
+  createSearchBar(searchRows.querySelectorAll('div'), titleRow, block);
   const templatesTitleRow = rows.shift();
   if (templatesTitleRow) {
     templatesTitleRow.classList.add('template-title');
@@ -504,5 +507,5 @@ export default async function decorate(block) {
   searchRows.remove();
   templatesRow.remove();
 
-  await loadTemplates(block, placeholders, '');
+  await loadTemplates(block, '');
 }

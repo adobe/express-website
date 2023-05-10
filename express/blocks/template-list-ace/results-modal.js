@@ -360,7 +360,7 @@ function createTitleRow(block) {
   const title = createTag('h1');
   titleRow.appendChild(title);
   title.textContent = placeholders['template-list-ace-modal-title'];
-  createDropdown(titleRow, placeholders, block);
+  createDropdown(titleRow, block, BlockMediator.get('ace-state').dropdown);
   const scratchWrapper = createTag('div', { class: 'scratch-wrapper' });
   const noGuidanceSpan = createTag('span', { class: 'no-guidance' });
   noGuidanceSpan.textContent = placeholders['template-list-ace-no-guidance'] ?? 'Don\'t need guidance?';
