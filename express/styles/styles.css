@@ -21,6 +21,7 @@
   --color-black: #000;
   --color-brand-title: #000B1D;
   --color-info-accent: #5C5CE0;
+  --color-info-accent-disabled: #897DF2;
   --color-info-accent-hover: #4646C6;
   --color-info-accent-down: #3D3DB4;
   --color-info-accent-reverse: #eeeefc;
@@ -205,6 +206,15 @@ a.button.primaryCTA:any-link {
   color: var(--color-white);
   background-color: var(--color-info-accent);
   border-color: var(--color-info-accent);
+}
+
+a.button.disabled:any-link,
+a.button.accent.disabled:any-link,
+a.button.primaryCTA.disabled:any-link {
+  color: var(--color-white);
+  background-color: var(--color-info-accent-disabled);
+  border-color: var(--color-info-accent-disabled);
+  cursor: not-allowed;
 }
 
 a.button:any-link:hover,
