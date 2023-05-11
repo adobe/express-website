@@ -1225,31 +1225,40 @@ function decorateHoliday(block, props) {
   const templateTitle = block.querySelector('.template-title');
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
   const templateTitleWrapper = templateTitle.querySelector('div');
+  const holidayIcon = props.holidayIcon
   const heading = templateTitle.querySelector('h4');
   const subheading = templateTitle.querySelector('p');
   const blankTemplate = templateTitle.querySelector('svg');
   const link = templateTitle.querySelector('.template-title-link');
+  const linkWrapper = link.closest('p');
+  const toggle = createTag('div', { class: 'expanded toggle-button' });
+  const topElements = createTag('div', { class: 'toggle-bar-top' });
+  const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
+  const toggleChev = createTag('div', { class: 'toggle-button-chev' });
 
   if (blankTemplate) {
     blankTemplate.style.fill = props.textColor;
   }
 
   if (props.holidayIcon) {
-    templateTitleWrapper.prepend(props.holidayIcon);
+    topElements.append(holidayIcon);
   }
 
   if (props.backgroundAnimation) {
     addBackgroundAnimation(block, props.backgroundAnimation);
   }
 
-  const toggle = createTag('div', { class: 'expanded toggle-button' });
   block.classList.add('expanded');
-  templateTitleWrapper.classList.add('expanded');
+  templateTitleWrapper.classList.add('expanded', 'toggle-bar');
   templatesWrapper.classList.add('expanded');
   templateTitleWrapper.append(toggle);
-  const toggleChev = createTag('div', { class: 'toggle-button-chev' });
   toggle.append(link);
+  linkWrapper.remove();
   toggle.append(toggleChev);
+  topElements.append(heading);
+  templateTitleWrapper.append(topElements);
+  bottomElements.append(subheading, toggle);
+  templateTitleWrapper.append(bottomElements);
 
   block.style.backgroundColor = props.backgroundColor;
   heading.style.color = props.textColor;
