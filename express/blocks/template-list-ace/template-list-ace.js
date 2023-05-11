@@ -488,6 +488,10 @@ function initState() {
 }
 
 export default async function decorate(block) {
+  if (!window.location.host.includes('localhost:3000')) {
+    block.style.display = 'none';
+    return;
+  }
   const mobileText = createTag('p', { class: 'mobile-content' });
   mobileText.textContent = 'This content is only available on desktop. Mobile content is coming soon.';
   block.parentElement.append(mobileText);
