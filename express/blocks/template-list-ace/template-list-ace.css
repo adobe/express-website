@@ -3,7 +3,7 @@
   --generated-template-max-height: 400px;
   --generated-template-border-radius: 8px;
   --generated-template-margin: 16px 30px 16px 0;
-  --generated-loader-placeholder-width: 260px;
+  --generated-loader-placeholder-width: 270px;
 }
 
 main .template-list-ace {
@@ -784,6 +784,7 @@ main .template-list-ace {
   border-radius: var(--generated-template-border-radius);
   overflow: hidden;
   max-height: var(--generated-template-max-height);
+  min-width: var(--generated-loader-placeholder-width);
 }
 
 #generated-results-modal .modal-content .generated-template-wrapper:last-of-type {
@@ -792,6 +793,7 @@ main .template-list-ace {
 
 #generated-results-modal .modal-content .generated-template-wrapper .generated-template-image {
   max-height: var(--generated-template-max-height);
+  min-width: var(--generated-loader-placeholder-width);
 }
 
 #generated-results-modal .modal-content .generated-template-wrapper > div:last-child {
@@ -834,8 +836,8 @@ main .template-list-ace {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 14px 12px;
-  border-radius: calc((var(--body-font-size-s) * var(--body-line-height) + 14px * 2) * 0.5);
+  padding: 12px;
+  border-radius: calc((var(--body-font-size-s) * var(--body-line-height) + 12px * 2) * 0.5);
   background-color: #f3f3f3;
   color: black;
 }

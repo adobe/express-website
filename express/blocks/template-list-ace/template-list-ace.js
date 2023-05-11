@@ -411,7 +411,7 @@ function addHandlerForModalClose(block) {
 async function openModal(block) {
   const modal = createTag('div');
   modal.style.height = '740px';
-  modal.style.width = '1215px';
+  modal.style.width = '1240px';
   const modalContent = createTag('div', { class: 'modal-content' });
   modal.append(modalContent);
   BlockMediator.get('ace-state').modalContent = modalContent;
