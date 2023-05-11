@@ -350,7 +350,7 @@ function openPicker(button, texts, dropText, event, block) {
       span.classList.add('selected');
       const checkArrow = createTag('img', {
         class: 'icon check-arrow',
-        src: '../../express/icons/checkmark.svg',
+        src: '../../express/icons/checkmark-no-fill.svg',
         width: 15,
         height: 15,
       });
