@@ -94,7 +94,6 @@ function renderShareWrapper(branchUrl) {
   shareIcon.addEventListener('click', (e) => {
     e.preventDefault();
     navigator.clipboard.writeText(branchUrl);
-    console.log(navigator.clipboard)
     tooltip.classList.add('display-tooltip');
 
     const rect = tooltip.getBoundingClientRect();
