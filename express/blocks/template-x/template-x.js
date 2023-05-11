@@ -1190,7 +1190,7 @@ async function decorateTemplates(block, props) {
 
   await attachFreeInAppPills(block);
 
-  const templateLinks = block.querySelectorAll('.template .button-container > a');
+  const templateLinks = block.querySelectorAll('.template .button-container > a, a.template.placeholder');
   const linksPopulated = new CustomEvent('linkspopulated', { detail: templateLinks });
   document.dispatchEvent(linksPopulated);
 }

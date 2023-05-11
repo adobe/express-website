@@ -3,5 +3,5 @@ Please always provide the [JIRA issue(s)](https://jira.corp.adobe.com/secure/Rap
 Fix <jira-issue-id>
 
 Test URLs:
-- Before: https://main--express-website--adobe.hlx.page/express/
-- After: https://<branch>--express-website--adobe.hlx.page/express/
+- Before: https://main--express--adobecom.hlx.page/express/
+- After: https://<branch>--express--adobecom.hlx.page/express/
