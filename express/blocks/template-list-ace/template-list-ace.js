@@ -443,16 +443,31 @@ function createSearchBar(searchRows, titleRow, block) {
   title.append(searchForm);
   const buttonLink = title.querySelector(':scope a');
   buttonLink.href = '#';
+  if (!searchBar.value) buttonLink.classList.add('disabled');
   buttonLink.addEventListener('click', async (event) => {
     event.preventDefault();
     if (!searchBar.value) {
-      alert('search should not be empty!');
       return;
     }
     aceState.query = searchBar.value;
     const modalContent = await openModal(block);
     await fetchResults(modalContent, false);
     renderResults(modalContent);
+  });
+
+  searchBar.addEventListener('input', (evt) => {
+    if (!searchBar.value && !buttonLink.classList.contains('disabled')) {
+      buttonLink.classList.add('disabled');
+    } else {
+      buttonLink.classList.remove('disabled');
+    }
+  });
+
+  searchBar.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      buttonLink.click();
+    }
   });
 
   titleRowDiv.classList.add('title-search');
@@ -477,7 +492,7 @@ export default async function decorate(block) {
     block.style.display = 'none';
     return;
   }
-  const mobileText = createTag('p', {class: 'mobile-content'});
+  const mobileText = createTag('p', { class: 'mobile-content' });
   mobileText.textContent = 'This content is only available on desktop. Mobile content is coming soon.';
   block.parentElement.append(mobileText);
   placeholders = await fetchPlaceholders();
