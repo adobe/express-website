@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag } from '../../scripts/scripts.js';
+import { createTag, getIconElement } from '../../scripts/scripts.js';
 import {
   requestGeneration,
   postFeedback,
@@ -30,7 +30,7 @@ const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
 const REQUEST_GENERATION_RETRIES = 3;
 
-function getVoteHandler(result, category) {
+function getVoteHandler(result, category, feedbackState) {
   return async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -41,14 +41,15 @@ function getVoteHandler(result, category) {
         'Rate this result: thumbs_down',
       );
       if (error) throw new Error(error);
-      openFeedbackModal(result, category);
+      feedbackState.category = category;
+      feedbackState.showThankyou();
     } catch (err) {
       console.error(err);
     }
   };
 }
 
-export function createRateResultButton(result) {
+export function createRateResultWrapper(result, feedbackState) {
   const wrapper = createTag('div', { class: 'feedback-rate' });
   wrapper.append('Rate this result');
   const downvoteLink = createTag('button', { class: 'feedback-rate-button' });
@@ -57,15 +58,18 @@ export function createRateResultButton(result) {
   upvoteLink.append('👍');
   downvoteLink.addEventListener(
     'click',
-    getVoteHandler(result, FEEDBACK_CATEGORIES.THUMBS_DOWN),
+    getVoteHandler(result, FEEDBACK_CATEGORIES.THUMBS_DOWN, feedbackState),
   );
-  upvoteLink.addEventListener('click', getVoteHandler(result, FEEDBACK_CATEGORIES.THUMBS_UP));
+  upvoteLink.addEventListener(
+    'click',
+    getVoteHandler(result, FEEDBACK_CATEGORIES.THUMBS_UP, feedbackState),
+  );
   wrapper.append(downvoteLink);
   wrapper.append(upvoteLink);
   return wrapper;
 }
 
-export function createReportButton(result) {
+export function createReportWrapper(result, feedbackState) {
   const wrapper = createTag('div', { class: 'feedback-report' });
   wrapper.append('Report');
   const reportButton = createTag('button', { class: 'feedback-report-button' });
@@ -74,7 +78,8 @@ export function createReportButton(result) {
   reportButton.addEventListener('click', async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    await openFeedbackModal(result, FEEDBACK_CATEGORIES.REPORT_ABUSE);
+    feedbackState.category = FEEDBACK_CATEGORIES.REPORT_ABUSE;
+    await openFeedbackModal(result, feedbackState);
   });
   return wrapper;
 }
@@ -84,21 +89,60 @@ function getTemplateBranchUrl(result) {
   return `https://prod-search.creativecloud.adobe.com/express?express=true&protocol=https&imageHref=${thumbnail}`;
 }
 
+function createThankyouWrapper(result, feedbackState) {
+  const wrapper = createTag('div', { class: 'feedback-thankyou' });
+  wrapper.append('Thank you');
+  const tellMoreButton = createTag('button', { class: 'feedback-tell-more-button' });
+  tellMoreButton.textContent = 'Tell us more'; // TODO: use placeholders
+  tellMoreButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openFeedbackModal(result, feedbackState);
+  });
+
+  const closeButton = createTag('button', { class: 'feedback-close-button' });
+  closeButton.append(getIconElement('close-button-x'));
+  closeButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    feedbackState.hideThankyou();
+  });
+  wrapper.append(tellMoreButton);
+  wrapper.append(closeButton);
+  return wrapper;
+}
+
 function createTemplate(result) {
-  const { thumbnail } = result;
   const templateBranchUrl = getTemplateBranchUrl(result);
   const templateWrapper = createTag('div', { class: 'generated-template-wrapper' });
   const hoverContainer = createTag('div', { class: 'hover-container' });
+
   const feedbackRow = createTag('div', { class: 'feedback-row' });
-  feedbackRow.append(createRateResultButton(result));
-  feedbackRow.append(createReportButton(result));
+  const feedbackState = {};
+  const rateResultButton = createRateResultWrapper(result, feedbackState);
+  const reportButton = createReportWrapper(result, feedbackState);
+  const thankyouWrapper = createThankyouWrapper(result, feedbackState);
+  feedbackState.hideThankyou = () => {
+    reportButton.style.display = 'flex';
+    rateResultButton.style.display = 'flex';
+    thankyouWrapper.style.display = 'none';
+  };
+  feedbackState.showThankyou = () => {
+    reportButton.style.display = 'none';
+    rateResultButton.style.display = 'none';
+    thankyouWrapper.style.display = 'flex';
+  };
+  feedbackRow.append(rateResultButton);
+  feedbackRow.append(reportButton);
+  feedbackRow.append(thankyouWrapper);
   feedbackRow.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
   });
+  feedbackState.hideThankyou();
   hoverContainer.append(feedbackRow);
 
-  templateWrapper.append(createTag('img', { src: thumbnail, class: 'generated-template-image' }));
+  templateWrapper.append(createTag('img', { src: result.thumbnail, class: 'generated-template-image' }));
   hoverContainer.addEventListener('click', () => {
     window.open(templateBranchUrl, '_blank').focus();
   });

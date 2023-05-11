@@ -58,9 +58,9 @@ const feedBackModalConfig = {
 
 const FEEDBACK_MODAL_ID = 'feedback-modal';
 
-export function renderFeedbackModal(feedbackModalContent, result, category) {
+export function renderFeedbackModal(feedbackModalContent, result, feedbackState) {
   const title = createTag('h3', { class: 'feedback-modal-title' });
-  const { headline, p, reasons } = feedBackModalConfig[category];
+  const { headline, p, reasons } = feedBackModalConfig[feedbackState.category];
   title.textContent = headline;
 
   const form = createTag('form', { class: 'feedback-modal-form' });
@@ -123,13 +123,13 @@ export function renderFeedbackModal(feedbackModalContent, result, category) {
     });
     const noteValue = noteInput.value;
     try {
-      const { result: feedbackRes, error } = await postFeedback(
+      const { error } = await postFeedback(
         result.id,
-        category,
+        feedbackState.category,
         `${checked.join(',')}::${noteValue}`,
       );
       if (error) throw new Error(error);
-      alert(feedbackRes);
+      alert('Thank you for the feedback. We strive to improve future results.'); // TODO: use placeholders
     } catch (err) {
       console.error(err);
     }
@@ -144,7 +144,7 @@ export function renderFeedbackModal(feedbackModalContent, result, category) {
   feedbackModalContent.append(buttonRows);
 }
 
-export async function openFeedbackModal(result, category) {
+export async function openFeedbackModal(result, feedbackState) {
   const modal = createTag('div');
   modal.style.height = '530px';
   modal.style.width = '500px';
@@ -158,6 +158,6 @@ export async function openFeedbackModal(result, category) {
     content: modal,
     closeEvent: `close:${FEEDBACK_MODAL_ID}`,
   });
-  renderFeedbackModal(feedbackModalContent, result, category);
+  renderFeedbackModal(feedbackModalContent, result, feedbackState);
   return feedbackModalContent;
 }
