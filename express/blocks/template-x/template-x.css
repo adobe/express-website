@@ -2503,12 +2503,12 @@ main .template-x.horizontal.holiday .toggle-bar {
     max-width: 925px;
 }
 
-@media (min-width: 600px) {
+/* @media (min-width: 600px) {
     main .template-x.horizontal.holiday .carousel-container .carousel-fader-left,
     main .template-x.horizontal.holiday .carousel-container .carousel-fader-right {
         background: initial;
     }
-}
+} */
 
 @media (min-width: 1200px) {
     main .template-x.horizontal.holiday {

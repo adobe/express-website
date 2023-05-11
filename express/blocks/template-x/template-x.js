@@ -1215,6 +1215,10 @@ function decorateHoliday(block, props) {
   const topElements = createTag('div', { class: 'toggle-bar-top' });
   const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
   const toggleChev = createTag('div', { class: 'toggle-button-chev' });
+  const carouselFaderLeft = block.querySelector('.carousel-fader-left');
+  const carouselFaderRight = block.querySelector('.carousel-fader-right');
+  // const customColorElements = [block, carouselFaderLeft, carouselFaderRight];
+
 
   if (blankTemplate) {
     blankTemplate.style.fill = props.textColor;
@@ -1245,6 +1249,9 @@ function decorateHoliday(block, props) {
   subheading.style.color = props.textColor;
   link.style.color = props.textColor;
   toggleChev.style.borderColor = props.textColor;
+  carouselFaderRight.style.backgroundImage = 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))'
+
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 
   initToggleHoliday(block, templateTitleWrapper);
 }
