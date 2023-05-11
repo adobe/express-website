@@ -25,7 +25,7 @@ main .search-marquee .search-dropdown-container {
     background: #FFFFFF;
     top: calc(100% + 6px);
     border-radius: 12px;
-    box-shadow: 0px 0px 20px #00000029;
+    box-shadow: 0 0 20px #00000029;
     position: absolute;
     height: 360px;
     padding: 0 28px;
@@ -33,6 +33,10 @@ main .search-marquee .search-dropdown-container {
     box-sizing: border-box;
     left: 0;
     z-index: 2;
+}
+
+main .search-marquee .search-dropdown-container.hidden {
+    display: none;
 }
 
 main .search-marquee .search-dropdown-container .free-plans-container {

@@ -97,7 +97,7 @@ function decorateBackground(block) {
 async function buildSearchDropdown(block) {
   const searchBarWrapper = block.querySelector('.search-bar-wrapper');
   if (searchBarWrapper) {
-    const dropdownContainer = createTag('div', { class: 'search-dropdown-container' });
+    const dropdownContainer = createTag('div', { class: 'search-dropdown-container hidden' });
     const suggestContainer = createTag('div', { class: 'suggestions-container' });
     const predictContainer = createTag('div', { class: 'predictions-container' });
     const freePlanContainer = createTag('div', { class: 'free-plans-container' });
