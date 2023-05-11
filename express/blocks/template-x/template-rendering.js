@@ -91,9 +91,8 @@ function renderShareWrapper(branchUrl) {
     tabindex: '-1',
   });
   let timeoutId = null;
-  shareIcon.addEventListener('click', (e) => {
-    e.preventDefault();
-    navigator.clipboard.writeText(branchUrl);
+  shareIcon.addEventListener('click', async (e) => {
+    await navigator.clipboard.writeText(branchUrl);
     tooltip.classList.add('display-tooltip');
 
     const rect = tooltip.getBoundingClientRect();
