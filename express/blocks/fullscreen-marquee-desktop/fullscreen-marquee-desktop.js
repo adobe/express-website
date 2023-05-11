@@ -25,6 +25,12 @@ function buildContent(content) {
     const video = new URL(contentLink.href);
     const looping = ['true', 'yes', 'on'].includes(video.searchParams.get('looping')) ? 'yes' : null;
     formattedContent = transformLinkToAnimation(contentLink, looping);
+  } else {
+    const contentImage = content.querySelector('picture');
+
+    if (contentImage) {
+      formattedContent = contentImage;
+    }
   }
 
   return formattedContent;
@@ -66,6 +72,35 @@ async function buildApp(block, content) {
     variant = 'image';
   } else {
     variant = 'video';
+
+    if (content) {
+      const thumbnailContainer = createTag('div', { class: 'fullscreen-marquee-desktop-app-thumbnail-container' });
+      const thumbnail = content.cloneNode(true);
+
+      thumbnailContainer.append(thumbnail);
+      app.append(thumbnailContainer);
+
+      content.addEventListener('loadedmetadata', () => {
+        const framesContainer = createTag('div', { class: 'fullscreen-marquee-desktop-app-frames-container' });
+        function createFrame(current, total) {
+          console.log(`Creating frame ${current} out of ${total}`);
+          const frame = createTag('video', { src: `${content.currentSrc}#t=${current}` });
+          framesContainer.append(frame);
+
+          frame.addEventListener('loadedmetadata', () => {
+            frame.style.opacity = '1';
+
+            if (current < total) {
+              const newFrameCount = current + 1;
+              createFrame(newFrameCount, total);
+            }
+          });
+        }
+
+        createFrame( 1, 10);
+        app.append(framesContainer);
+      });
+    }
   }
 
   await fetchPlaceholders().then((placeholders) => {
@@ -114,7 +149,7 @@ async function buildApp(block, content) {
 export default async function decorate(block) {
   const rows = Array.from(block.children);
   const heading = rows[0] ? rows[0].querySelector('div') : null;
-  const background = rows[2] ?? null;
+  const background = rows[2] ? rows[2].querySelector('picture') : null;
   let content = rows[1] ?? null;
 
   block.innerHTML = '';
