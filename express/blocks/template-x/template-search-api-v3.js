@@ -35,11 +35,13 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  if (tasks) {
-    str += `&filters=pages.task.name==${tasks.replace(' ', '')}`;
+  let cleanedTasks = tasks?.replace(' ', '')?.toLowerCase();
+  if (cleanedTasks) {
+    str += `&filters=pages.task.name==${cleanedTasks}`;
   }
-  if (topics) {
-    str += `&filters=topics==${topics.replace(' ', '')}`;
+  let cleanedTopics = topics?.replace(' ', '')?.toLowerCase();
+  if (cleanedTopics) {
+    str += `&filters=topics==${cleanedTopics}`;
   }
   if (locales) {
     str += `&filters=language==${locales.split('OR').map((l) => getLanguage(l))}`;
