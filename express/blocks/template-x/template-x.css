@@ -66,12 +66,6 @@ main .template-x.fullwidth .template-x-inner-wrapper {
     justify-content: center;
 }
 
-main .template-x.fullwidth.sm-view .template-x-inner-wrapper,
-main .template-x.fullwidth.md-view .template-x-inner-wrapper,
-main .template-x.fullwidth.lg-view .template-x-inner-wrapper {
-    padding: 0 28px;
-}
-
 main .template-x.with-categories-list .template-x.fullwidth {
     width: 100%;
 }
@@ -663,6 +657,14 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
 }
 
 @media (min-width: 600px) {
+    main .template-x-wrapper.fullwidth,
+    main .template-x > .default-content-wrapper,
+    main .template-x-wrapper.fullwidth,
+    main .template-x > .default-content-wrapper {
+        max-width: none;
+        padding: 0 28px;
+    }
+
     main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
         max-width: 328px;
         text-align: center;
@@ -698,14 +700,6 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
 
     main .template-x-wrapper.sixcols {
         max-width: 748px;
-    }
-
-    main .template-x-wrapper.fullwidth,
-    main .template-x > .default-content-wrapper,
-    main .template-x-wrapper.fullwidth,
-    main .template-x > .default-content-wrapper {
-        max-width: none;
-        padding: 0 28px;
     }
 
     main .template-x.sixcols > .template-x-inner-wrapper > .masonry-col,
@@ -1736,7 +1730,7 @@ main .template-x.with-categories-list .category-list-wrapper::-webkit-scrollbar 
 
 main .template-x.with-categories-list .category-list-wrapper.desktop-only {
     display: none;
-    padding: 32px 0 0 40px;
+    padding-top: 32px;
 }
 
 main .template-x.with-categories-list .category-list-toggle-wrapper {
@@ -1836,12 +1830,8 @@ main .template-x.with-categories-list .category-list-resize:after {
 
 @media (min-width: 600px) {
     main .template-x .toolbar-wrapper {
-        margin: 40px;
+        margin: 40px 0;
         border-radius: 12px;
-    }
-
-    main .template-x.fullwidth.with-categories-list .template-x-inner-wrapper {
-        padding-left: 80px;
     }
 
     main .template-x.with-categories-list .category-list-wrapper.desktop-only::before {
@@ -1853,31 +1843,6 @@ main .template-x.with-categories-list .category-list-resize:after {
         width: 100%;
         transition: opacity 0.2s;
         background: linear-gradient(90deg, #ffffff 50%, #ffffff50 88%, #ffffff00 100%);
-    }
-
-    main .template-x.with-categories-list .category-list-wrapper.desktop-only {
-        display: unset;
-        background: transparent;
-        position: absolute;
-        left: 0;
-        top: 88px;
-        height: calc(100% - 88px);
-        max-height: unset;
-        overflow: hidden;
-        min-width: unset;
-        max-width: 32px;
-        z-index: 1;
-    }
-
-    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover {
-        min-width: max-content;
-        padding-right: 160px;
-        overflow: visible;
-    }
-
-    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover::before {
-        content: '';
-        opacity: 1;
     }
 
     main .template-x.with-categories-list .category-list-wrapper.desktop-only .category-list-toggle-wrapper {
@@ -1897,14 +1862,37 @@ main .template-x.with-categories-list .category-list-resize:after {
     main .template-x.with-categories-list .category-list-wrapper {
         text-align: left;
         padding-top: 32px;
-        padding-left: 40px;
     }
 }
 
 @media (min-width: 1200px) {
+    main .template-x.fullwidth.with-categories-list .template-x-inner-wrapper {
+        padding-left: 40px;
+    }
+
     main .template-x.with-categories-list .category-list-wrapper.desktop-only {
+        display: unset;
+        background: transparent;
+        position: absolute;
+        left: 0;
         top: 64px;
         height: calc(100% - 64px);
+        max-height: unset;
+        overflow: hidden;
+        min-width: unset;
+        max-width: 32px;
+        z-index: 1;
+    }
+
+    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover {
+        min-width: max-content;
+        padding-right: 160px;
+        overflow: visible;
+    }
+
+    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover::before {
+        content: '';
+        opacity: 1;
     }
 }
 
