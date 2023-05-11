@@ -1174,20 +1174,27 @@ function addBackgroundAnimation(block, animationUrl) {
   }
 }
 
-function initToggleHoliday(block, titleWrapper) {
+function initExpandCollapseBlock(block) {
   const toggleButton = block.querySelector('.toggle-button');
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
+  const toggleBar = block.querySelector('.toggle-bar');
 
-  titleWrapper.addEventListener('click', (e) => {
+  block.classList.toggle('expanded');
+  toggleBar.classList.toggle('expanded');
+  templatesWrapper.classList.toggle('expanded');
+  toggleButton.classList.toggle('expanded');
+}
+
+// event listeners for expanding/collapsing templates
+function initToggleHoliday(block) {
+  const toggleBar = block.querySelector('.toggle-bar');
+  const aTag = toggleBar.querySelector('a');
+  const chev = toggleBar.querySelector('.toggle-button-chev');
+
+  toggleBar.addEventListener('click', (e) => {
     e.preventDefault();
-    block.classList.toggle('expanded');
-    titleWrapper.classList.toggle('expanded');
-    templatesWrapper.classList.toggle('expanded');
-    toggleButton.classList.toggle('expanded');
+    initExpandCollapseBlock(block);
   });
-
-  const aTag = toggleButton.querySelector('a');
-  const chev = toggleButton.querySelector('.toggle-button-chev');
 
   aTag.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -1196,15 +1203,14 @@ function initToggleHoliday(block, titleWrapper) {
   chev.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    titleWrapper.classList.toggle('expanded');
-    toggleButton.classList.toggle('expanded');
+    initExpandCollapseBlock(block);
   });
 }
 
 function decorateHoliday(block, props) {
   const templateTitle = block.querySelector('.template-title');
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
-  const templateTitleWrapper = templateTitle.querySelector('div');
+  const toggleBar = templateTitle.querySelector('div');
   const holidayIcon = props.holidayIcon
   const heading = templateTitle.querySelector('h4');
   const subheading = templateTitle.querySelector('p');
@@ -1219,7 +1225,6 @@ function decorateHoliday(block, props) {
   const carouselFaderRight = block.querySelector('.carousel-fader-right');
   // const customColorElements = [block, carouselFaderLeft, carouselFaderRight];
 
-
   if (blankTemplate) {
     blankTemplate.style.fill = props.textColor;
   }
@@ -1232,28 +1237,35 @@ function decorateHoliday(block, props) {
     addBackgroundAnimation(block, props.backgroundAnimation);
   }
 
+  if (props.backgroundColor) {
+    carouselFaderRight.style.backgroundImage = `linear-gradient(to right, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+    carouselFaderLeft.style.backgroundImage = `linear-gradient(to left, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+  }
+
   block.classList.add('expanded');
-  templateTitleWrapper.classList.add('expanded', 'toggle-bar');
+  toggleBar.classList.add('expanded', 'toggle-bar');
   templatesWrapper.classList.add('expanded');
-  templateTitleWrapper.append(toggle);
+  toggleBar.append(toggle);
   toggle.append(link);
   linkWrapper.remove();
   toggle.append(toggleChev);
   topElements.append(heading);
-  templateTitleWrapper.append(topElements);
+  toggleBar.append(topElements);
   bottomElements.append(subheading, toggle);
-  templateTitleWrapper.append(bottomElements);
+  toggleBar.append(bottomElements);
 
   block.style.backgroundColor = props.backgroundColor;
   heading.style.color = props.textColor;
   subheading.style.color = props.textColor;
   link.style.color = props.textColor;
   toggleChev.style.borderColor = props.textColor;
-  carouselFaderRight.style.backgroundImage = 'linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))'
+  initToggleHoliday(block);
 
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-
-  initToggleHoliday(block, templateTitleWrapper);
+  if (block.classList.contains('expanded')) {
+    setTimeout(() => {
+      initExpandCollapseBlock(block);
+    }, 3000);
+  }
 }
 
 async function decorateTemplates(block, props) {
