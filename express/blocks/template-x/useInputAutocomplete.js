@@ -11,48 +11,7 @@
  */
 
 import { memoize, throttle, debounce } from '../../scripts/utils.js';
-
-const url = 'https://adobesearch-atc.adobe.io/uss/v3/autocomplete';
-const experienceId = 'default-templates-autocomplete-v1';
-const scopeEntities = [
-  'HzTemplate',
-  // 'HzTextLockup', 'Icon', 'Photo', 'DesignAsset', 'Background'
-];
-const emptyRes = { queryResults: [{ items: [] }] };
-async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' }) {
-  if (!textQuery) {
-    return [];
-  }
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'x-api-key': 'projectx_webapp',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      experienceId,
-      textQuery,
-      locale,
-      queries: [
-        {
-          limit,
-          id: experienceId,
-          scope: {
-            entities: scopeEntities,
-          },
-        },
-      ],
-    }),
-  })
-    .then((response) => response.json())
-    .then((response) => (response?.queryResults?.[0]?.items ? response : emptyRes))
-    .catch((err) => {
-      console.error('Autocomplete API Error: ', err);
-      return emptyRes;
-    });
-  return res.queryResults[0].items;
-}
+import fetchAPI from './fetchAPI.js';
 
 const memoizedFetchAPI = memoize(fetchAPI, {
   key: (options) => options.textQuery,
