@@ -455,7 +455,7 @@ function createSearchBar(searchRows, titleRow, block) {
     renderResults(modalContent);
   });
 
-  searchBar.addEventListener('input', (evt) => {
+  searchBar.addEventListener('input', () => {
     if (!searchBar.value && !buttonLink.classList.contains('disabled')) {
       buttonLink.classList.add('disabled');
     } else {
