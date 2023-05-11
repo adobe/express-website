@@ -16,12 +16,12 @@ function shortenTitle(title) {
   return title.length > 19 ? `${title.slice(0, 19)}...` : title;
 }
 
-function containsVideo(page) {
-  return !!page?.rendition?.video?.thumbnail?.componentId;
+function containsVideo(pages) {
+  return pages.some((page) => !!page?.rendition?.video?.thumbnail?.componentId);
 }
 
-function isVideoFirst(template) {
-  return containsVideo(template.pages[0]);
+function isVideo(iterator) {
+  return iterator.current().rendition?.video?.thumbnail?.componentId;
 }
 
 function getTemplateTitle(template) {
@@ -44,12 +44,8 @@ function extractImageThumbnail(page) {
   return page.rendition.image?.thumbnail;
 }
 
-function extractImagePreview(page) {
-  return page.rendition.image?.preview;
-}
-
 function getWidthHeightRatio(page) {
-  const preview = extractImagePreview(page);
+  const preview = page.rendition.image?.preview;
   return preview.width / preview.height;
 }
 
@@ -69,11 +65,10 @@ function getImageThumbnailSrc(renditionLinkHref, page) {
   );
 }
 
-function getImageCustomWidthSrc(renditionLinkHref, page, width) {
-  const thumbnail = extractImageThumbnail(page);
+function getImageCustomWidthSrc(renditionLinkHref, page, image) {
   return renditionLinkHref.replace(
     '{&page,size,type,fragment}',
-    `&size=${widthToSize(getWidthHeightRatio(page), width)}&type=image/jpg&fragment=id=${thumbnail.componentId}`,
+    `&size=${widthToSize(getWidthHeightRatio(page), 151)}&type=image/jpg&fragment=id=${image.componentId}`,
   );
 }
 
@@ -99,13 +94,21 @@ function renderShareWrapper(branchUrl) {
   shareIcon.addEventListener('click', async () => {
     await navigator.clipboard.writeText(branchUrl);
     tooltip.classList.add('display-tooltip');
+
+    const rect = tooltip.getBoundingClientRect();
+    const tooltipRightEdgePos = rect.left + rect.width;
+    if (tooltipRightEdgePos > window.innerWidth) {
+      tooltip.classList.add('flipped');
+    }
+
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       tooltip.classList.remove('display-tooltip');
+      tooltip.classList.remove('flipped');
     }, 2500);
   });
 
-  const checkmarkIcon = getIconElement('checkmark');
+  const checkmarkIcon = getIconElement('checkmark-green');
   tooltip.append(checkmarkIcon);
   tooltip.append(text);
   wrapper.append(shareIcon);
@@ -136,63 +139,124 @@ function getPageIterator(pages) {
     current() {
       return pages[this.i];
     },
+    all() {
+      return pages;
+    },
   };
 }
-
-function renderRotatingVideos(pages, { renditionLinkHref, componentLinkHref, templateTitle }) {
+function renderRotatingMedias(wrapper,
+  pages,
+  { templateTitle, renditionLinkHref, componentLinkHref }) {
   const pageIterator = getPageIterator(pages);
-  const video = createTag('video', {
-    muted: true,
-    playsinline: '',
-    title: templateTitle,
-    poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
+  let imgTimeoutId;
+
+  const constructVideo = () => {
+    let src = '';
+    if (containsVideo(pages)) {
+      src = getVideoSrc(componentLinkHref, pageIterator.current());
+      const video = createTag('video', {
+        muted: true,
+        playsinline: '',
+        title: templateTitle,
+        poster: getImageThumbnailSrc(renditionLinkHref, pageIterator.current()),
+        class: 'unloaded hidden',
+      });
+      const videoSource = createTag('source', {
+        src,
+        type: 'video/mp4',
+      });
+
+      video.append(videoSource);
+
+      return video;
+    }
+
+    return undefined;
+  };
+
+  const constructImg = () => createTag('img', {
+    src: '',
+    alt: templateTitle,
+    class: 'hidden',
   });
-  const videoSource = createTag('source', {
-    src: getVideoSrc(componentLinkHref, pageIterator.current()),
-    type: 'video/mp4',
-  });
-  video.append(videoSource);
+
+  const img = constructImg();
+  if (img) wrapper.prepend(img);
+
+  const video = constructVideo();
+  if (video) wrapper.prepend(video);
+
+  const dispatchImgEndEvent = () => {
+    img.dispatchEvent(new CustomEvent('imgended', { detail: this }));
+  };
+
+  const playImage = () => {
+    img.classList.remove('hidden');
+    img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
+
+    imgTimeoutId = setTimeout(dispatchImgEndEvent, 2000);
+  };
+
   const playVideo = () => {
-    video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
-    videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
-    video.load();
-    video.muted = true;
-    video.play().catch((e) => {
-      if (e instanceof DOMException && e.name === 'AbortError') {
-        // ignore
-      } else {
-        throw e;
+    if (video) {
+      const videoSource = video.querySelector('source');
+      video.classList.remove('hidden');
+      video.poster = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
+      videoSource.src = getVideoSrc(componentLinkHref, pageIterator.current());
+      video.load();
+      video.muted = true;
+      video.play().catch((e) => {
+        if (e instanceof DOMException && e.name === 'AbortError') {
+          // ignore
+        } else {
+          throw e;
+        }
+      });
+    }
+  };
+
+  const playMedia = () => {
+    if (isVideo(pageIterator)) {
+      if (img) img.classList.add('hidden');
+      playVideo();
+    } else {
+      if (video) video.classList.add('hidden');
+      playImage();
+    }
+  };
+
+  const cleanup = () => {
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+
+    if (imgTimeoutId) {
+      clearTimeout(imgTimeoutId);
+    }
+
+    pageIterator.reset();
+  };
+
+  if (video) {
+    video.addEventListener('ended', () => {
+      if (pageIterator.all().length > 1) {
+        pageIterator.next();
+        playMedia();
       }
     });
-  };
-  const cleanup = () => {
-    video.pause();
-    video.currentTime = 0;
-    pageIterator.reset();
-  };
-  video.addEventListener('ended', () => {
-    pageIterator.next();
-    playVideo();
-  });
-  return { node: video, cleanup, hover: playVideo };
-}
+  }
 
-function renderRotatingImages(pages, { templateTitle, renditionLinkHref }) {
-  const pageIterator = getPageIterator(pages);
-  const img = createTag('img', { src: '', alt: templateTitle });
-  let playImageIntervalId;
-  const playImage = () => {
-    img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
-    playImageIntervalId = setInterval(() => {
-      pageIterator.next();
-      img.src = getImageThumbnailSrc(renditionLinkHref, pageIterator.current());
-    }, 2000);
-  };
-  const cleanup = () => {
-    pageIterator.reset();
-    clearInterval(playImageIntervalId);
-  };
-  return { node: img, cleanup, hover: playImage };
+  if (img) {
+    img.addEventListener('imgended', () => {
+      if (pageIterator.all().length > 1) {
+        pageIterator.next();
+        playMedia();
+      }
+    });
+  }
+
+  return { cleanup, hover: playMedia };
 }
 
 function renderMediaWrapper(template) {
@@ -216,28 +280,53 @@ function renderMediaWrapper(template) {
     e.preventDefault();
     e.stopPropagation();
     if (!renderedMedia) {
-      // don't let image interrupt flow of videos
-      renderedMedia = isVideoFirst(template)
-        ? renderRotatingVideos(
-          template.pages.filter((page) => containsVideo(page)), templateInfo,
-        )
-        : renderRotatingImages(template.pages, templateInfo);
-      mediaWrapper.append(renderedMedia.node);
+      renderedMedia = renderRotatingMedias(mediaWrapper, template.pages, templateInfo);
       mediaWrapper.append(renderShareWrapper(branchUrl));
     }
     renderedMedia.hover();
   };
   const leaveHandler = () => {
-    renderedMedia.cleanup();
+    if (renderedMedia) renderedMedia.cleanup();
   };
 
   return { mediaWrapper, enterHandler, leaveHandler };
 }
 
-function renderHoverWrapper(template, placeholders) {
+function updateURLParameter(url, param, paramVal) {
+  let newAdditionalURL = '';
+  let tempArray = url.split('?');
+  const baseURL = tempArray[0];
+  const additionalURL = tempArray[1];
+  let temp = '';
+  if (additionalURL) {
+    tempArray = additionalURL.split('&');
+    for (let i = 0; i < tempArray.length; i += 1) {
+      if (tempArray[i].split('=')[0] !== param) {
+        newAdditionalURL += temp + tempArray[i];
+        temp = '&';
+      }
+    }
+  }
+
+  const rowText = `${temp}${param}=${paramVal}`;
+  return `${baseURL}?${newAdditionalURL}${rowText}`;
+}
+
+function loadBetterAssetInBackground(img, page) {
+  const size = widthToSize(getWidthHeightRatio(page), 400);
+
+  const updateImgRes = () => {
+    img.src = updateURLParameter(img.src, 'size', size);
+    img.removeEventListener('load', updateImgRes);
+  };
+
+  img.addEventListener('load', updateImgRes);
+}
+
+function renderHoverWrapper(template, placeholders, props) {
   const btnContainer = createTag('div', { class: 'button-container' });
 
-  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template);
+  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template, props);
 
   btnContainer.append(mediaWrapper);
   btnContainer.addEventListener('mouseenter', enterHandler);
@@ -249,14 +338,15 @@ function renderHoverWrapper(template, placeholders) {
   return btnContainer;
 }
 
-function renderStillWrapper(template, props) {
+function renderStillWrapper(template) {
   const stillWrapper = createTag('div', { class: 'still-wrapper' });
+  const firstPage = template.pages[0];
 
   const templateTitle = getTemplateTitle(template);
   const renditionLinkHref = template._links['http://ns.adobe.com/adobecloud/rel/rendition'].href;
 
   const thumbnailImageHref = getImageCustomWidthSrc(renditionLinkHref,
-    template.pages[0], props.renditionParams.size);
+    template.pages[0], firstPage.rendition.image?.thumbnail);
 
   const imgWrapper = createTag('div', { class: 'image-wrapper' });
 
@@ -264,7 +354,7 @@ function renderStillWrapper(template, props) {
     src: thumbnailImageHref,
     alt: templateTitle,
   });
-  imgWrapper.insertAdjacentElement('beforeend', img);
+  imgWrapper.append(img);
 
   const isFree = template.licensingCategory === 'free';
   const creator = template.attribution?.creators?.filter((c) => c.name && c.name !== 'Adobe Express')?.[0]?.name || null;
@@ -281,10 +371,12 @@ function renderStillWrapper(template, props) {
     imgWrapper.append(premiumIcon);
   }
 
-  if (isVideoFirst(template)) {
-    const videoIcon = getIconElement('tiktok');
+  if (containsVideo(template.pages)) {
+    const videoIcon = getIconElement('play-button');
     imgWrapper.append(videoIcon);
   }
+
+  loadBetterAssetInBackground(img, firstPage);
 
   stillWrapper.append(imgWrapper);
   // TODO: API not ready for creator yet
@@ -295,6 +387,7 @@ function renderStillWrapper(template, props) {
 export default function renderTemplate(template, placeholders, props) {
   const tmpltEl = createTag('div');
   tmpltEl.append(renderStillWrapper(template, props));
-  tmpltEl.append(renderHoverWrapper(template, placeholders));
+  tmpltEl.append(renderHoverWrapper(template, placeholders, props));
+
   return tmpltEl;
 }
