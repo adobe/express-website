@@ -146,7 +146,10 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
 
 export async function openFeedbackModal(result, feedbackState) {
   const modal = createTag('div');
-  modal.style.height = '530px';
+  modal.style.height = `${530 - 30
+    * (feedBackModalConfig[FEEDBACK_CATEGORIES.REPORT_ABUSE].reasons.length
+      - feedBackModalConfig[feedbackState.category].reasons.length)
+  }px`;
   modal.style.width = '500px';
   const feedbackModalContent = createTag('div', { class: 'modal-content' });
   modal.append(feedbackModalContent);

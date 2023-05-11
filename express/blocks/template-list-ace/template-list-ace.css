@@ -931,6 +931,7 @@ main .template-list-ace {
   height: 0;
   border-width: 0;
   cursor: pointer;
+  font-family: var(--body-font-family);
 }
 
 #generated-results-modal .modal-content .search-form .search-button:disabled {
