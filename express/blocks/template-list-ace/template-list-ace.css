@@ -516,7 +516,8 @@ main .template-list-ace .search-form a {
   border-radius: 100px;
 }
 
-main .template-list-ace .search-bar::placeholder {
+main .template-list-ace .search-bar::placeholder,
+#generated-results-modal .modal-content .search-bar::placeholder {
   font-style: italic;
   font-size: 18px;
   line-height: 20px;
@@ -722,6 +723,12 @@ main .template-list-ace {
   padding: 30px;
 }
 
+#generated-results-modal .modal-content .loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #generated-results-modal .modal-content .loader-wrapper .loader-text-row {
   width: var(--generated-loader-placeholder-width);
   font-size: var(--body-font-size-l);
@@ -801,9 +808,6 @@ main .template-list-ace {
 }
 
 #generated-results-modal .modal-content .generated-template-wrapper .hover-container {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -819,12 +823,22 @@ main .template-list-ace {
   opacity: 1;
 }
 
+#generated-results-modal .modal-content .generated-template-wrapper .hover-container a.cta-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translate(-50%, 0);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 6px;
-  margin-bottom: 14px;
   border-radius: 30px;
   color: black;
   font-size: var(--body-font-size-s);
@@ -849,14 +863,10 @@ main .template-list-ace {
   cursor: pointer;
 }
 
-#generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row .feedback-thankyou button.feedback-tell-more-button {
-  border-radius: 50px;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #c8c8c8;
-  background-color: #f3f3f3;
-  padding: 2px 8px;
-  font-weight: 600;
+#generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row .feedback-thankyou a.feedback-tell-more {
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 #generated-results-modal .modal-content .generated-template-wrapper .hover-container .feedback-row .feedback-thankyou button.feedback-close-button {
@@ -909,8 +919,8 @@ main .template-list-ace {
 }
 
 #generated-results-modal .modal-content .search-form {
-  display:flex;
-  flex-direction:row;
+  display: flex;
+  align-items: center;
   border: 2px solid #e8e8e8;
   border-radius: 50px;
   padding-left:20px;
@@ -919,23 +929,13 @@ main .template-list-ace {
   padding: 10px 10px 10px 30px;
 }
 
-#generated-results-modal .modal-content .search-form .search-button {
-  padding:25px 25px;
-  border-radius: 30px;
+#generated-results-modal .modal-content .search-form a.search-button {
   background-color: #242424;
   color: white;
-  font-size: 18px;
-  text-align: center;
-  letter-spacing: 0;
-  line-height: 0;
-  height: 0;
   border-width: 0;
-  cursor: pointer;
-  font-family: var(--body-font-family);
 }
 
-#generated-results-modal .modal-content .search-form .search-button:disabled {
-  cursor: not-allowed;
+#generated-results-modal .modal-content .search-form a.search-button.disabled {
   opacity: 0.5;
 }
 
@@ -981,36 +981,6 @@ main .template-list-ace {
   margin-top: 3em;
   display: flex;
   justify-content: flex-end;
-}
-
-#feedback-modal .modal-content .feedback-modal-button-rows > button {
-  padding: 8px 18px;
-  border-radius: 50px;
-  cursor: pointer;
-}
-
-#feedback-modal .modal-content .feedback-modal-button-rows > button.cancel-button {
-  background-color: white;
-  border-color: #c5c5c5;
-  border-style: solid;
-  border-width: 2px;
-}
-
-#feedback-modal .modal-content .feedback-modal-button-rows > button.submit-button {
-  margin-left: 10px;
-  background-color: var(--color-info-accent);
-  color: white;
-  border: none;
-}
-
-#feedback-modal .modal-content .feedback-modal-button-rows > button.submit-button:disabled {
-  background-color: #c5c5c5;
-  color: black;
-  border: none;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #c5c5c5;
-  cursor: not-allowed;
 }
 
 @media (min-width: 900px) {

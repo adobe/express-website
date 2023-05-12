@@ -86,7 +86,7 @@ export async function requestGeneration({
     headers: {
       'x-request-id': requestId,
     },
-    signal: AbortSignal.timeout(5000),
+    signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) {
     throw new Error(`Error requesting generation: ${res.status} ${res.statusText}`);

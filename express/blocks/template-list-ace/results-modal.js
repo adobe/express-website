@@ -25,7 +25,7 @@ import { createDropdown } from './template-list-ace.js';
 
 const NUM_PLACEHOLDERS = 4;
 const MONITOR_INTERVAL = 2000;
-const AVG_GENERATION_TIME = 20000;
+const AVG_GENERATION_TIME = 30000;
 const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
 const REQUEST_GENERATION_RETRIES = 3;
@@ -92,7 +92,7 @@ function getTemplateBranchUrl(result) {
 function createThankyouWrapper(result, feedbackState) {
   const wrapper = createTag('div', { class: 'feedback-thankyou' });
   wrapper.append('Thank you');
-  const tellMoreButton = createTag('button', { class: 'feedback-tell-more-button' });
+  const tellMoreButton = createTag('a', { class: 'feedback-tell-more secondary button', href: '#', target: '_blank' });
   tellMoreButton.textContent = 'Tell us more'; // TODO: use placeholders
   tellMoreButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -116,6 +116,14 @@ function createTemplate(result) {
   const templateBranchUrl = getTemplateBranchUrl(result);
   const templateWrapper = createTag('div', { class: 'generated-template-wrapper' });
   const hoverContainer = createTag('div', { class: 'hover-container' });
+
+  const CTAButton = createTag('a', {
+    class: 'cta-button button accent',
+    target: '_blank',
+    href: templateBranchUrl,
+  });
+  CTAButton.textContent = 'Edit this template';
+  hoverContainer.append(CTAButton);
 
   const feedbackRow = createTag('div', { class: 'feedback-row' });
   const feedbackState = {};
@@ -195,27 +203,27 @@ export function renderLoader(modalContent) {
   if (modalContent !== BlockMediator.get('ace-state').modalContent) {
     return;
   }
-  const wrapper = createTag('div', { class: 'loader-wrapper' });
+  const loaderWrapper = createTag('div', { class: 'loader-wrapper' });
   const textRow = createTag('div', { class: 'loader-text-row' });
   const text = createTag('span', { class: 'loader-text' });
-  text.textContent = 'Loading results…';
+  text.textContent = 'Loading results…'; // TODO: use placeholders
   const percentage = createTag('span', { class: 'loader-percentage' });
   percentage.textContent = '0%';
   textRow.append(text);
   textRow.append(percentage);
-  wrapper.append(textRow);
+  loaderWrapper.append(textRow);
 
   const progressBar = createTag('div', { class: 'loader-progress-bar' });
   progressBar.append(createTag('div'));
-  wrapper.append(progressBar);
+  loaderWrapper.append(progressBar);
 
   const placeholderRow = createTag('div', { class: 'loader-placeholder-row' });
   for (let i = 0; i < NUM_PLACEHOLDERS; i += 1) {
     placeholderRow.append(createTag('div', { class: 'loader-placeholder' }));
   }
-  wrapper.append(placeholderRow);
+  loaderWrapper.append(placeholderRow);
 
-  modalContent.append(wrapper);
+  modalContent.append(loaderWrapper);
 }
 
 function updateSearchableAndDropdown(modalContent, searchable) {
@@ -236,6 +244,11 @@ function updateSearchableAndDropdown(modalContent, searchable) {
   if (!searchButton || !searchBarInput) return;
   searchButton.disabled = !searchable;
   searchBarInput.disabled = !searchable;
+  if (searchable) {
+    searchButton.classList.remove('disabled');
+  } else {
+    searchButton.classList.add('disabled');
+  }
 }
 
 function createErrorDisplay() {
@@ -286,7 +299,7 @@ export async function fetchResults(modalContent, repeating = false) {
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
     fetchingState.progressManager.reset();
-    oldLoader.style.display = 'block';
+    oldLoader.style.display = 'flex';
   } else {
     renderLoader(modalContent);
   }
@@ -383,20 +396,25 @@ function createModalSearch(modalContent) {
   const searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
+    placeholder: placeholders['template-list-ace-search-hint'],
     enterKeyHint: placeholders.search ?? 'Search',
   });
   searchBar.value = query;
   searchForm.append(searchBar);
 
-  const refreshText = placeholders['template-list-ace-button-refresh'] ?? 'Refresh';
-  const button = createTag('button', { class: 'search-button', title: refreshText });
+  const refreshText = placeholders['template-list-ace-button-refresh'] ?? 'Refresh results';
+  const button = createTag('a', {
+    href: '#',
+    title: refreshText,
+    class: 'search-button button secondary xlarge disabled',
+    target: '_blank',
+  });
   button.textContent = refreshText;
   searchForm.append(button);
   let repeating = false;
   button.addEventListener('click', async (e) => {
     e.preventDefault();
-    if (!searchBar.value) {
-      alert('search should not be empty!');
+    if (!searchBar.value || button.classList.contains('disabled')) {
       return;
     }
     if (searchBar.value === aceState.query) {
@@ -407,6 +425,21 @@ function createModalSearch(modalContent) {
     aceState.query = searchBar.value;
     await fetchResults(modalContent, repeating);
     renderResults(modalContent);
+  });
+
+  searchBar.addEventListener('input', () => {
+    if (!searchBar.value) {
+      button.classList.add('disabled');
+    } else {
+      button.classList.remove('disabled');
+    }
+  });
+
+  searchBar.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      button.click();
+    }
   });
 
   return searchForm;
