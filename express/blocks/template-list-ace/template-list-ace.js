@@ -390,6 +390,7 @@ function addHandlerForModalClose(block) {
   window.addEventListener(`milo:modal:closed:${GENERATED_RESULTS_MODAL_ID}`, () => {
     const searchBar = block.querySelector(':scope .search-bar');
     const dropdownText = block.querySelector(':scope .picker-open .picker-open-text');
+
     // IMPORTANT: clear ongoing search + sync search bar value
     const {
       query,
@@ -398,6 +399,7 @@ function addHandlerForModalClose(block) {
     } = BlockMediator.get('ace-state');
     searchBar.value = query;
     fetchingState.results = null;
+    fetchingState.progressManager = null;
     if (dropdownText.textContent !== dropdown) {
       const firstElem = dropdown === dropdownTexts[0];
       setDropdownSelected(firstElem, dropdownText, dropdown);
@@ -410,7 +412,7 @@ function addHandlerForModalClose(block) {
 async function openModal(block) {
   const modal = createTag('div');
   modal.style.height = '740px';
-  modal.style.width = '1215px';
+  modal.style.width = '1240px';
   const modalContent = createTag('div', { class: 'modal-content' });
   modal.append(modalContent);
   BlockMediator.get('ace-state').modalContent = modalContent;
@@ -450,7 +452,7 @@ function createSearchBar(searchRows, titleRow, block) {
     }
     aceState.query = searchBar.value;
     const modalContent = await openModal(block);
-    await fetchResults(modalContent, false);
+    await fetchResults(modalContent);
     renderResults(modalContent);
   });
 
@@ -480,7 +482,12 @@ function initState() {
     dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0].trim(),
     query: null,
     placeholders,
-    fetchingState: { intervalId: null, progressManager: null, results: null },
+    fetchingState: {
+      intervalId: null,
+      progressManager: null,
+      results: null,
+      searchPositionMap: new Map(),
+    },
     modalContent: null,
     createTemplateLink: placeholders['template-list-ace-create-template-link'],
   });

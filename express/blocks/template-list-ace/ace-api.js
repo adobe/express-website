@@ -18,9 +18,6 @@ const useMock = false;
 const base = 'https://api.xstudio.adobe.com/templates';
 
 function uuidv4() {
-  // return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-  //   (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  // );
   return crypto.randomUUID();
 }
 
@@ -36,6 +33,7 @@ function buildOptionalParams({
   sync,
   force,
   fetchExisting,
+  start_index,
 }) {
   const optionalParams = [];
   if (category) {
@@ -53,6 +51,9 @@ function buildOptionalParams({
   if (fetchExisting) {
     optionalParams.push(`fetchExisting=${fetchExisting}`);
   }
+  if (start_index) {
+    optionalParams.push(`start_index=${start_index}`);
+  }
   return optionalParams.join('&');
 }
 
@@ -65,8 +66,8 @@ export async function requestGeneration({
   sync = false,
   force = false,
   fetchExisting = false,
+  start_index = 0,
 }) {
-  console.log('requested');
   if (useMock) return { jobId: mockId, status: 'in-progress' };
   const queryParam = `query=${query}`;
   const numParam = `num_results=${num_results}`;
@@ -77,6 +78,7 @@ export async function requestGeneration({
     sync,
     force,
     fetchExisting,
+    start_index,
   })}`;
   const requestId = uuidv4();
 
@@ -86,7 +88,7 @@ export async function requestGeneration({
     headers: {
       'x-request-id': requestId,
     },
-    signal: AbortSignal.timeout(5000),
+    signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) {
     throw new Error(`Error requesting generation: ${res.status} ${res.statusText}`);
@@ -96,13 +98,11 @@ export async function requestGeneration({
 }
 
 export async function monitorGeneration(jobId) {
-  console.log('monitoring');
   if (useMock) return mockData;
   const url = `${base}/monitor?jobId=${jobId}`;
   const res = await fetch(url, {
     signal: AbortSignal.timeout(5000),
   });
-  console.log({ monitorRes: res });
   if (!res.ok) {
     throw new Error(`Error monitoring progress: ${res.status} ${res.statusText}`);
   }

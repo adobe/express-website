@@ -23,9 +23,10 @@ import { openFeedbackModal } from './feedback-modal.js';
 import BlockMediator from '../../scripts/block-mediator.js';
 import { createDropdown } from './template-list-ace.js';
 
-const NUM_PLACEHOLDERS = 4;
+const NUM_RESULTS = 4;
+const RESULTS_ROTATION = 3;
 const MONITOR_INTERVAL = 2000;
-const AVG_GENERATION_TIME = 20000;
+const AVG_GENERATION_TIME = 30000;
 const PROGRESS_ANIMATION_DURATION = 1000;
 const PROGRESS_BAR_LINGER_DURATION = 500;
 const REQUEST_GENERATION_RETRIES = 3;
@@ -92,7 +93,7 @@ function getTemplateBranchUrl(result) {
 function createThankyouWrapper(result, feedbackState) {
   const wrapper = createTag('div', { class: 'feedback-thankyou' });
   wrapper.append('Thank you');
-  const tellMoreButton = createTag('button', { class: 'feedback-tell-more-button' });
+  const tellMoreButton = createTag('a', { class: 'feedback-tell-more secondary button', href: '#', target: '_blank' });
   tellMoreButton.textContent = 'Tell us more'; // TODO: use placeholders
   tellMoreButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -116,6 +117,17 @@ function createTemplate(result) {
   const templateBranchUrl = getTemplateBranchUrl(result);
   const templateWrapper = createTag('div', { class: 'generated-template-wrapper' });
   const hoverContainer = createTag('div', { class: 'hover-container' });
+
+  const CTAButton = createTag('a', {
+    class: 'cta-button button accent',
+    target: '_blank',
+    href: '#',
+  });
+  CTAButton.textContent = 'Edit this template';
+  CTAButton.addEventListener('click', (e) => {
+    e.preventDefault();
+  });
+  hoverContainer.append(CTAButton);
 
   const feedbackRow = createTag('div', { class: 'feedback-row' });
   const feedbackState = {};
@@ -173,7 +185,7 @@ async function waitForGeneration(jobId) {
       if (!status) {
         progressManager.update(0);
       } else if (!status || status === MONITOR_STATUS.IN_PROGRESS) {
-        progressManager.update(Math.floor(results.length / NUM_PLACEHOLDERS) * 100);
+        progressManager.update(Math.floor(results.length / NUM_RESULTS) * 100);
       } else if (status === MONITOR_STATUS.COMPLETED) {
         progressManager.update(100);
         clearInterval(fetchingState.intervalId);
@@ -195,27 +207,27 @@ export function renderLoader(modalContent) {
   if (modalContent !== BlockMediator.get('ace-state').modalContent) {
     return;
   }
-  const wrapper = createTag('div', { class: 'loader-wrapper' });
+  const loaderWrapper = createTag('div', { class: 'loader-wrapper' });
   const textRow = createTag('div', { class: 'loader-text-row' });
   const text = createTag('span', { class: 'loader-text' });
-  text.textContent = 'Loading results…';
+  text.textContent = 'Loading results…'; // TODO: use placeholders
   const percentage = createTag('span', { class: 'loader-percentage' });
   percentage.textContent = '0%';
   textRow.append(text);
   textRow.append(percentage);
-  wrapper.append(textRow);
+  loaderWrapper.append(textRow);
 
   const progressBar = createTag('div', { class: 'loader-progress-bar' });
   progressBar.append(createTag('div'));
-  wrapper.append(progressBar);
+  loaderWrapper.append(progressBar);
 
   const placeholderRow = createTag('div', { class: 'loader-placeholder-row' });
-  for (let i = 0; i < NUM_PLACEHOLDERS; i += 1) {
+  for (let i = 0; i < NUM_RESULTS; i += 1) {
     placeholderRow.append(createTag('div', { class: 'loader-placeholder' }));
   }
-  wrapper.append(placeholderRow);
+  loaderWrapper.append(placeholderRow);
 
-  modalContent.append(wrapper);
+  modalContent.append(loaderWrapper);
 }
 
 function updateSearchableAndDropdown(modalContent, searchable) {
@@ -234,8 +246,15 @@ function updateSearchableAndDropdown(modalContent, searchable) {
   const searchBarInput = modalContent.querySelector('.search-form input.search-bar');
 
   if (!searchButton || !searchBarInput) return;
-  searchButton.disabled = !searchable;
-  searchBarInput.disabled = !searchable;
+  if (searchable) {
+    searchBarInput.disabled = false;
+    searchBarInput.style.cursor = 'pointer';
+    searchButton.classList.remove('disabled');
+  } else {
+    searchBarInput.disabled = true;
+    searchBarInput.style.cursor = 'not-allowed';
+    searchButton.classList.add('disabled');
+  }
 }
 
 function createErrorDisplay() {
@@ -256,13 +275,14 @@ function retry(maxRetries, fn, delay = 2000) {
   });
 }
 
-export async function fetchResults(modalContent, repeating = false) {
+export async function fetchResults(modalContent) {
   const {
     query,
     dropdownValue,
     fetchingState,
     placeholders,
   } = BlockMediator.get('ace-state');
+  const { searchPositionMap } = fetchingState;
   if (!fetchingState.progressManager) {
     const updateProgressBar = (percentage) => {
       const percentageEl = modalContent.querySelector('.loader-percentage');
@@ -276,7 +296,7 @@ export async function fetchResults(modalContent, repeating = false) {
       PROGRESS_ANIMATION_DURATION,
       {
         avgCallingTimes: AVG_GENERATION_TIME / MONITOR_INTERVAL,
-        sample: 3,
+        sample: 2,
       },
     );
   }
@@ -286,7 +306,7 @@ export async function fetchResults(modalContent, repeating = false) {
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
     fetchingState.progressManager.reset();
-    oldLoader.style.display = 'block';
+    oldLoader.style.display = 'flex';
   } else {
     renderLoader(modalContent);
   }
@@ -299,21 +319,19 @@ export async function fetchResults(modalContent, repeating = false) {
     errorDisplay.remove();
   }
 
+  // TODO: placeholders for locale and category
   const requestConfig = {
     query,
-    num_results: NUM_PLACEHOLDERS,
+    num_results: NUM_RESULTS,
     locale: 'en-us',
     category: 'poster',
     subcategory: (dropdownValue
         && dropdownValue.trim() !== placeholders['template-list-ace-categories-dropdown']?.split(',')?.[0].trim())
       ? dropdownValue.trim()
       : null,
-    force: false,
-    fetchExisting: false,
+    force: searchPositionMap.has(query),
+    start_index: searchPositionMap.get(query) || 0,
   };
-  if (repeating) {
-    requestConfig.force = true;
-  }
 
   try {
     let jobId;
@@ -329,8 +347,15 @@ export async function fetchResults(modalContent, repeating = false) {
       return;
     }
     // first 6-12% as the time for triggering generation
-    fetchingState.progressManager.update(Math.random() * 6 + 6);
+    fetchingState.progressManager.update(Math.floor(Math.random() * 6 + 6));
     fetchingState.results = await waitForGeneration(jobId);
+
+    if (!searchPositionMap.has(query)) {
+      searchPositionMap.set(query, NUM_RESULTS);
+    } else {
+      searchPositionMap.set(query,
+        (searchPositionMap.get(query) + NUM_RESULTS) % (RESULTS_ROTATION * NUM_RESULTS));
+    }
   } catch (e) {
     console.error(e);
     fetchingState.results = 'error';
@@ -344,10 +369,6 @@ export function renderResults(modalContent) {
   if (modalContent !== currModal) {
     return;
   }
-  // if (oldModalSet.has(modalContent)) {
-  //   console.log('this is old, abort!');
-  //   return;
-  // }
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
     oldLoader.style.display = 'none';
@@ -383,30 +404,44 @@ function createModalSearch(modalContent) {
   const searchBar = createTag('input', {
     class: 'search-bar',
     type: 'text',
+    placeholder: placeholders['template-list-ace-search-hint'],
     enterKeyHint: placeholders.search ?? 'Search',
   });
   searchBar.value = query;
   searchForm.append(searchBar);
 
-  const refreshText = placeholders['template-list-ace-button-refresh'] ?? 'Refresh';
-  const button = createTag('button', { class: 'search-button', title: refreshText });
+  const refreshText = placeholders['template-list-ace-button-refresh'] ?? 'Refresh results';
+  const button = createTag('a', {
+    href: '#',
+    title: refreshText,
+    class: 'search-button button secondary xlarge disabled',
+    target: '_blank',
+  });
   button.textContent = refreshText;
   searchForm.append(button);
-  let repeating = false;
   button.addEventListener('click', async (e) => {
     e.preventDefault();
-    if (!searchBar.value) {
-      alert('search should not be empty!');
+    if (!searchBar.value || button.classList.contains('disabled')) {
       return;
     }
-    if (searchBar.value === aceState.query) {
-      repeating = true;
-    } else {
-      repeating = false;
-    }
     aceState.query = searchBar.value;
-    await fetchResults(modalContent, repeating);
+    await fetchResults(modalContent);
     renderResults(modalContent);
+  });
+
+  searchBar.addEventListener('input', () => {
+    if (!searchBar.value) {
+      button.classList.add('disabled');
+    } else {
+      button.classList.remove('disabled');
+    }
+  });
+
+  searchBar.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      button.click();
+    }
   });
 
   return searchForm;
@@ -430,8 +465,6 @@ function createTitleRow(block) {
   scratchWrapper.append(noGuidanceSpan);
   scratchWrapper.append(fromScratchButton);
   titleRow.append(scratchWrapper);
-  //const line = createTag('hr');
-  //titleRow.appendChild(line);
   return titleRow;
 }
 

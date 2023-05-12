@@ -13,13 +13,6 @@
 import { loadCSS, createTag, getIconElement } from '../../scripts/scripts.js';
 
 const FOCUSABLES = 'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"]';
-// const CLOSE_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-//   <g transform="translate(-10500 3403)">
-//     <circle cx="20" cy="20" r="20" transform="translate(10500 -3403)" fill="#fff"/>
-//     <line y1="8" x2="8" transform="translate(10506 -3397)" fill="none" stroke="#000" stroke-width="1"/>
-//     <line x1="8" y1="8" transform="translate(10506 -3397)" fill="none" stroke="#000" stroke-width="1"/>
-//   </g>
-// </svg>`;
 
 const openedModals = { cnt: 0 };
 

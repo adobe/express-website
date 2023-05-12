@@ -68,7 +68,12 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
   formGuidance.textContent = p; // TODO: use placeholder
   form.append(formGuidance);
 
-  const submitButton = createTag('button', { class: 'submit-button', disabled: true });
+  const submitButton = createTag('a', {
+    class: 'submit-button accent button disabled',
+    disabled: true,
+    href: '#',
+    target: '_blank',
+  });
   const noteInput = createTag('input', {
     class: 'feedback-modal-note-input',
     type: 'text',
@@ -77,17 +82,17 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
   const reasonInputs = reasons.map((r) => createTag('input', { class: 'feedback-modal-reason-check', type: 'checkbox', name: r }));
   noteInput.addEventListener('input', (e) => {
     if (e.target.value) {
-      submitButton.disabled = false;
+      submitButton.classList.remove('disabled');
     } else if (!reasonInputs.some(({ checked }) => checked)) {
-      submitButton.disabled = true;
+      submitButton.classList.add('disabled');
     }
   });
   reasonInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
       if (e.target.checked) {
-        submitButton.disabled = false;
+        submitButton.classList.remove('disabled');
       } else if (!reasonInputs.some(({ checked }) => checked) && !noteInput.value) {
-        submitButton.disabled = true;
+        submitButton.classList.add('disabled');
       }
     });
   });
@@ -101,7 +106,7 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
   form.append(noteInput);
 
   const buttonRows = createTag('div', { class: 'feedback-modal-button-rows' });
-  const cancelButton = createTag('button', { class: 'cancel-button' });
+  const cancelButton = createTag('a', { class: 'cancel-button reverse secondary button', href: '#', target: '_blank' });
   cancelButton.textContent = 'Cancel';
   cancelButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -122,6 +127,9 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
       }
     });
     const noteValue = noteInput.value;
+    if (checked.length === 0 && !noteValue) {
+      return;
+    }
     try {
       const { error } = await postFeedback(
         result.id,
@@ -146,7 +154,10 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
 
 export async function openFeedbackModal(result, feedbackState) {
   const modal = createTag('div');
-  modal.style.height = '530px';
+  modal.style.height = `${550 - 30
+    * (feedBackModalConfig[FEEDBACK_CATEGORIES.REPORT_ABUSE].reasons.length
+      - feedBackModalConfig[feedbackState.category].reasons.length)
+  }px`;
   modal.style.width = '500px';
   const feedbackModalContent = createTag('div', { class: 'modal-content' });
   modal.append(feedbackModalContent);
