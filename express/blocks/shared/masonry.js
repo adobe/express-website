@@ -9,10 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  createTag,
-} from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
 
+// todo: remove this.needBackwardCompatibility() when template-list is deprecated
 function nodeIsBefore(node, otherNode) {
   // eslint-disable-next-line no-bitwise
   const forward = node.compareDocumentPosition(otherNode)
@@ -33,9 +32,13 @@ export class Masonry {
     this.fillToHeight = 0;
   }
 
+  needBackwardCompatibility() {
+    return this.wrapper.classList.contains('template-list');
+  }
+
   // set up fresh grid if necessary
   setupColumns() {
-    const block = this.wrapper.classList.contains('template-list') ? this.wrapper : this.wrapper.parentElement;
+    const block = this.needBackwardCompatibility() ? this.wrapper : this.wrapper.parentElement;
     let result = 1;
     let colWidth = 264;
     if (block.classList.contains('sixcols')) {
@@ -182,46 +185,48 @@ export class Masonry {
     const $btnC = cell.querySelector(':scope > div:nth-of-type(2)');
     if ($btnC) $btnC.classList.add('button-container');
 
-    /* set tab index and event listeners */
-    if (this.cells[0] === cell) {
-      /* first cell focus handler */
-      cell.addEventListener('focus', (event) => {
-        if (event.relatedTarget) {
-          const backward = nodeIsBefore(event.target, event.relatedTarget);
-          if (backward) this.cells[this.cells.length - 1].focus();
-        }
-      });
-      /* first cell blur handler */
-      cell.addEventListener('blur', (event) => {
-        if (!event.relatedTarget.classList.contains('template')) {
-          const forward = nodeIsBefore(event.target, event.relatedTarget);
-          if (forward) {
-            if (this.cells.length > 1) {
-              this.cells[1].focus();
+    if (this.needBackwardCompatibility()) {
+      /* set tab index and event listeners */
+      if (this.cells[0] === cell) {
+        /* first cell focus handler */
+        cell.addEventListener('focus', (event) => {
+          if (event.relatedTarget) {
+            const backward = nodeIsBefore(event.target, event.relatedTarget);
+            if (backward) this.cells[this.cells.length - 1].focus();
+          }
+        });
+        /* first cell blur handler */
+        cell.addEventListener('blur', (event) => {
+          if (!event.relatedTarget.classList.contains('template')) {
+            const forward = nodeIsBefore(event.target, event.relatedTarget);
+            if (forward) {
+              if (this.cells.length > 1) {
+                this.cells[1].focus();
+              }
             }
           }
-        }
-      });
-    } else {
-      /* all other cells get custom blur handler and no tabindex */
-      cell.setAttribute('tabindex', '-1');
-      cell.addEventListener('blur', (event) => {
-        if (event.relatedTarget) {
-          const forward = nodeIsBefore(event.target, event.relatedTarget);
-          const backward = !forward;
-          const index = this.cells.indexOf(cell);
-          if (forward) {
-            if (index < this.cells.length - 1) {
-              this.cells[index + 1].focus();
+        });
+      } else {
+        /* all other cells get custom blur handler and no tabindex */
+        cell.setAttribute('tabindex', '-1');
+        cell.addEventListener('blur', (event) => {
+          if (event.relatedTarget) {
+            const forward = nodeIsBefore(event.target, event.relatedTarget);
+            const backward = !forward;
+            const index = this.cells.indexOf(cell);
+            if (forward) {
+              if (index < this.cells.length - 1) {
+                this.cells[index + 1].focus();
+              }
+            }
+            if (backward) {
+              if (index > 0) {
+                this.cells[index - 1].focus();
+              }
             }
           }
-          if (backward) {
-            if (index > 0) {
-              this.cells[index - 1].focus();
-            }
-          }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -259,7 +264,7 @@ export class Masonry {
         return;
       }
 
-      if (this.wrapper.classList.contains('template-list')) {
+      if (this.needBackwardCompatibility()) {
         const video = cell.querySelector('video');
         if (video && video.readyState === 0) {
           video.addEventListener('loadedmetadata', () => {
@@ -277,7 +282,7 @@ export class Masonry {
     if (workList.length > 0) {
       // draw rest
       this.draw(workList);
-    } else if (this.wrapper.classList.contains('template-list')) {
+    } else if (this.needBackwardCompatibility()) {
       this.wrapper.classList.add('template-list-complete');
     } else {
       this.wrapper.parentElement.classList.add('template-x-complete');

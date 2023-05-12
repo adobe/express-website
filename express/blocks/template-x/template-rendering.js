@@ -83,7 +83,7 @@ function getVideoSrc(componentLinkHref, page) {
 function renderShareWrapper(branchUrl) {
   const text = 'Copied to clipboard';
   const wrapper = createTag('div', { class: 'share-icon-wrapper' });
-  const shareIcon = getIconElement('plus');
+  const shareIcon = getIconElement('share-arrow');
   const tooltip = createTag('div', {
     class: 'shared-tooltip',
     'aria-label': text,
@@ -91,7 +91,7 @@ function renderShareWrapper(branchUrl) {
     tabindex: '-1',
   });
   let timeoutId = null;
-  shareIcon.addEventListener('click', async () => {
+  shareIcon.addEventListener('click', async (e) => {
     await navigator.clipboard.writeText(branchUrl);
     tooltip.classList.add('display-tooltip');
 
@@ -371,8 +371,21 @@ function renderStillWrapper(template) {
     imgWrapper.append(premiumIcon);
   }
 
-  if (containsVideo(template.pages)) {
-    const videoIcon = getIconElement('play-button');
+  let videoIcon = '';
+  if (containsVideo(template.pages) && template.pages.length === 1) {
+    videoIcon = getIconElement('video-badge');
+  }
+
+  if (!containsVideo(template.pages) && template.pages.length > 1) {
+    videoIcon = getIconElement('multipage-static-badge');
+  }
+
+  if (containsVideo(template.pages) && template.pages.length > 1) {
+    videoIcon = getIconElement('multipage-video-badge');
+  }
+
+  if (videoIcon) {
+    videoIcon.classList.add('media-type-icon');
     imgWrapper.append(videoIcon);
   }
 
