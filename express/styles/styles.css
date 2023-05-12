@@ -998,22 +998,6 @@ main .block .free-plan-widget .icon.icon-checkmark {
   }
 }
 
-main .make-a-project .make-a-project-projectlist div.make-a-project-item:nth-child(2) img {
-  max-height: 171px;
-}
-
-main .make-a-project .make-a-project-projectlist div.make-a-project-item:nth-child(3) img {
-  max-height: 120px;
-}
-
-main .make-a-project .make-a-project-projectlist div.make-a-project-item:nth-child(5) img {
-  max-height: 111px;
-}
-
-main .make-a-project div.make-a-project-marquee h2 {
-  margin-bottom: 35px;
-}
-
 @media (min-width: 1200px) {
   main .block .button-container.free-plan-container {
     flex-direction: row;

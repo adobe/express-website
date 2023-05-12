@@ -146,6 +146,22 @@ main .make-a-project .make-a-project-projectlist .make-a-project-item:first-chil
   margin-left: 0;
 }
 
+main .make-a-project .make-a-project-projectlist div.make-a-project-item:nth-child(2) img {
+  max-height: 171px;
+}
+
+main .make-a-project .make-a-project-projectlist div.make-a-project-item:nth-child(3) img {
+  max-height: 120px;
+}
+
+main .make-a-project .make-a-project-projectlist div.make-a-project-item:nth-child(5) img {
+  max-height: 111px;
+}
+
+main .make-a-project div.make-a-project-marquee h2 {
+  margin-bottom: 35px;
+}
+
 main .make-a-project .make-a-project-projectlist .make-a-project-item > div,
 main .make-a-project .make-a-project-projectlist .make-a-project-item > div a {
   height: 100%;
