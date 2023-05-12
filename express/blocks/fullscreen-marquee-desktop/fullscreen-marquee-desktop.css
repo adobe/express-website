@@ -18,6 +18,7 @@ main .fullscreen-marquee-desktop {
   justify-content: center;
   overflow: hidden;
   padding-bottom: 160px;
+  padding-top: 80px;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading {
@@ -60,17 +61,18 @@ main .fullscreen-marquee-desktop-heading h1 em {
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
   position: absolute;
-  width: 100%;
   height: 100%;
   top: 0;
-  left: 0;
+  left: 50%;
   z-index: -5;
   opacity: 0;
   transition: .5s opacity ease;
+  transform: translateX(-50%);
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background img {
   max-width: none;
+  height: 100%;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame {
@@ -104,10 +106,10 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-image img {
 
 main .fullscreen-marquee-desktop-app-frame-highlight {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,11 +134,26 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content-contain
   top: 76px;
   left: 274px;
   width: 675px;
+  height: 480px;
+}
+
+main .fullscreen-marquee-desktop.video .fullscreen-marquee-desktop-app-content-container {
   height: 368px;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
   height: 90%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content img {
+  height: 100%;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app {
@@ -162,4 +179,33 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor img {
   main .fullscreen-marquee-desktop {
     display: none;
   }
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-thumbnail-container {
+  position: absolute;
+  top: 66px;
+  left: 80px;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frames-container {
+  display: flex;
+  position: absolute;
+  width: 274px;
+  top: 470px;
+  left: 342px;
+  height: 41px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frames-container video {
+  width: 10%;
+  height: 100%;
+  opacity: 0;
+  transition: .5s opacity ease-in;
 }
