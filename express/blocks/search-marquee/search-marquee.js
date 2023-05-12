@@ -73,6 +73,8 @@ async function decorateSearchFunctions(block) {
 }
 
 function decorateBackground(block) {
+  const supportedImgFormat = ['jpeg', 'jpg', 'webp', 'png', 'svg'];
+  const supportedVideoFormat = ['mp4'];
   const mediaRow = block.querySelector('div:nth-child(2)');
 
   if (mediaRow) {
@@ -81,11 +83,11 @@ function decorateBackground(block) {
       const media = mediaEl.href || mediaEl.textContent;
       const splitArr = media.split('.');
 
-      if (['jpeg', 'jpg', 'webp', 'png'].includes(splitArr[splitArr.length - 1])) {
+      if (supportedImgFormat.includes(splitArr[splitArr.length - 1])) {
         block.style.backgroundImage = `url(${media})`;
       }
 
-      if (['mp4'].includes(splitArr[splitArr.length - 1])) {
+      if (supportedVideoFormat.includes(splitArr[splitArr.length - 1])) {
         // todo: support video background too
       }
     }
