@@ -545,10 +545,6 @@ main .section:last-of-type>.default-content-wrapper {
     font-size: var(--body-font-size-l);
   }
 
-  main .section:first-of-type {
-    margin-bottom: 0;
-  }
-
   main .section div.promotion {
       margin-bottom: 0;
   }
