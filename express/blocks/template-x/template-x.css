@@ -414,7 +414,7 @@ main .template-x.horizontal.mini .template .icon-free-badge {
 }
 
 main .template-x.sixcols .template,
-main .template-x.fullwidth .template {
+main .template-x.fullwidth:not(.horizontal) .template {
     position: relative;
     display: inline-flex;
     width: 165px;
