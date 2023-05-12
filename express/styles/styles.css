@@ -521,8 +521,9 @@ main .section:first-of-type {
 }
 
 main div.section.promotion-container {
-  margin-top: -120px;
+  margin-top: -75px;
 }
+
 @media (min-width:600px) {
 
   main h2 {
@@ -551,10 +552,16 @@ main div.section.promotion-container {
   main p {
     font-size: var(--body-font-size-l);
   }
+
+  main .section:first-of-type {
+    margin-bottom: 0;
+  }
+
   main div.section.promotion-container {
     margin-top: 0;
     margin-bottom: 0; 
   }
+
   main .section div.promotion {
       margin-bottom: 0;
   }
