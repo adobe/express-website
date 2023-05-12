@@ -16,8 +16,7 @@ import {
   fetchPlaceholders,
   getIconElement,
 } from '../../scripts/scripts.js';
-
-import BlockMediator from '../../scripts/block-mediator.js';
+import useInputAutocomplete from './useInputAutocomplete.js';
 
 function initSearchFunction(block) {
   const searchBarWrapper = block.querySelector('.search-bar-wrapper');
@@ -26,6 +25,9 @@ function initSearchFunction(block) {
   const searchForm = searchBarWrapper.querySelector('.search-form');
   const searchBar = searchBarWrapper.querySelector('input.search-bar');
   const clearBtn = searchBarWrapper.querySelector('.icon-search-clear');
+  const trendsContainer = searchBarWrapper.querySelector('.trends-container');
+  const suggestionsContainer = searchBarWrapper.querySelector('.suggestions-container');
+  const suggestionsList = searchBarWrapper.querySelector('.suggestions-list');
 
   clearBtn.style.display = 'none';
 
@@ -37,8 +39,12 @@ function initSearchFunction(block) {
   searchBar.addEventListener('keyup', () => {
     if (searchBar.value !== '') {
       clearBtn.style.display = 'inline-block';
+      trendsContainer.classList.add('hidden');
+      suggestionsContainer.classList.remove('hidden');
     } else {
       clearBtn.style.display = 'none';
+      trendsContainer.classList.remove('hidden');
+      suggestionsContainer.classList.add('hidden');
     }
   }, { passive: true });
 
@@ -55,8 +61,31 @@ function initSearchFunction(block) {
 
   clearBtn.addEventListener('click', () => {
     searchBar.value = '';
+    suggestionsList.innerHTML = '';
+    trendsContainer.classList.remove('hidden');
+    suggestionsContainer.classList.add('hidden');
     clearBtn.style.display = 'none';
   }, { passive: true });
+
+  const suggestionsListUIUpdateCB = (suggestions) => {
+    suggestionsList.innerHTML = '';
+    suggestions.forEach((item) => {
+      const li = createTag('li', { tabindex: 0 });
+      const valRegEx = new RegExp(searchBar.value, 'i');
+      li.innerHTML = item.query.replace(valRegEx, `<b>${searchBar.value.toLowerCase()}</b>`);
+      li.addEventListener('click', () => {
+        if (item.query === searchBar.value) return;
+        searchBar.value = item.query;
+        searchBar.dispatchEvent(new Event('input'));
+      });
+
+      suggestionsList.append(li);
+    });
+  };
+  const { inputHandler } = useInputAutocomplete(
+    suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 5 },
+  );
+  searchBar.addEventListener('input', inputHandler);
 }
 
 async function decorateSearchFunctions(block) {
@@ -110,7 +139,9 @@ async function buildSearchDropdown(block) {
   if (searchBarWrapper) {
     const dropdownContainer = createTag('div', { class: 'search-dropdown-container hidden' });
     const trendsContainer = createTag('div', { class: 'trends-container' });
-    const suggestionsContainer = createTag('div', { class: 'suggestion-container hidden' });
+    const suggestionsContainer = createTag('div', { class: 'suggestions-container hidden' });
+    const suggestionsTitle = createTag('p', { class: 'dropdown-title' });
+    const suggestionsList = createTag('ul', { class: 'suggestions-list' });
     const freePlanContainer = createTag('div', { class: 'free-plans-container' });
 
     const fromScratchLink = block.querySelector('a');
@@ -126,7 +157,7 @@ async function buildSearchDropdown(block) {
     }
 
     if (trendsTitle) {
-      const trendsTitleEl = createTag('p', { class: 'trends-title' });
+      const trendsTitleEl = createTag('p', { class: 'dropdown-title' });
       trendsTitleEl.textContent = trendsTitle;
       trendsContainer.append(trendsTitleEl);
     }
@@ -142,6 +173,9 @@ async function buildSearchDropdown(block) {
       }
       trendsContainer.append(trendsWrapper);
     }
+
+    suggestionsTitle.textContent = placeholders['search-suggestions-title'];
+    suggestionsContainer.append(suggestionsTitle, suggestionsList);
 
     const freePlanTags = await buildStaticFreePlanWidget();
 

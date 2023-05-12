@@ -11,7 +11,7 @@
  */
 
 import { memoize, throttle, debounce } from '../../scripts/utils.js';
-import fetchAPI from './fetchAPI.js';
+import fetchAPI from './autocomplete-api-v3.js';
 
 const memoizedFetchAPI = memoize(fetchAPI, {
   key: (options) => options.textQuery,
