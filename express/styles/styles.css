@@ -516,10 +516,6 @@ main .section:last-of-type>.default-content-wrapper {
   padding-bottom: 40px;
 }
 
-main div.section.promotion-container {
-  margin-top: -75px;
-}
-
 @media (min-width:600px) {
 
   main h2 {
@@ -551,11 +547,6 @@ main div.section.promotion-container {
 
   main .section:first-of-type {
     margin-bottom: 0;
-  }
-
-  main div.section.promotion-container {
-    margin-top: 0;
-    margin-bottom: 0; 
   }
 
   main .section div.promotion {
@@ -983,8 +974,7 @@ main .block .free-plan-widget>div>div:first-child {
   border-radius: 50%;
 }
 
-main .block .free-plan-widget .icon.icon-checkmark,
-main .block .free-plan-bullet .icon.icon-checkmark {
+main .block .free-plan-widget .icon.icon-checkmark {
   position: absolute;
   top: 3px;
   left: 3px;
@@ -993,105 +983,7 @@ main .block .free-plan-bullet .icon.icon-checkmark {
   max-height: 8px;
 }
 
-main .block .free-plan-bullet {
-  position: absolute;
-  border-radius: 100px;
-  height: 100%;
-  width: 100%;
-  display: none;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-main .block .free-plan-bullet .free-plan-bullet-container {
-  background-color: var(--color-gray-150);
-  max-width: 400px;
-  width: 100vw;
-  height: 100%;
-  border-radius: 100px;
-  transform: translate(0px, 0px);
-  transition: transform 0.1s ease-in, max-width 0.1s ease-in, border-radius 0.1s ease-in;
-  overflow: hidden;
-}
-
-main .block .button-container.free-plan-container.highlight-optout .free-plan-bullet-container,
-main .block .button-container.free-plan-container.highlight-optout .free-plan-bullet-tray {
-  transition: none;
-}
-
-main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray {
-  width: max-content;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  transition: transform 0.2s linear;
-  animation-name: freePlanHighlight;
-  animation-timing-function: linear;
-  animation-duration: 80s;
-  animation-iteration-count: infinite;
-}
-
-main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray > div > div:first-child {
-  position: relative;
-  margin-top: 5px;
-  margin-right: 6px;
-  width: 14px;
-  height: 14px;
-  background: #33AB84;
-  border-radius: 50%;
-}
-
-main .block .button-container.free-plan-container .free-plan-bullet .free-plan-bullet-tray .free-plan-tag {
-  display: flex;
-  font-size: 16px;
-}
-
-main .block .free-plan-optout {
-  appearance: none;
-  display: none;
-  border: none;
-  border-radius: 100px;
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  transform: translateY(-50%);
-  height: 45px;
-  width: 45px;
-  align-items: center;
-  justify-content: center;
-  transition: left 0.1s ease-in, transform 0.1s ease-in;
-  cursor: pointer;
-  background: var(--color-gray-200);
-  z-index: 1;
-}
-
-main .block .button-container.free-plan-container .free-plan-optout .icon {
-  margin: 0;
-}
-
-main .block .button-container.free-plan-container::before {
-  content: '';
-  height: 100%;
-  max-height: 0;
-  left: 0;
-  width: 80px;
-  position: absolute;
-  transition: max-height 0.2s ease-in, left 0.2s ease-in;
-  z-index: 2;
-}
-
-main .block .button-container.free-plan-container .free-plan-optout img {
-  height: 16px;
-  width: 16px;
-  padding: 12px;
-}
-
 @media (min-width: 900px) {
-  main .block .button-container.free-plan-container .free-plan-bullet {
-    display: inline-block;
-  }
 
   main .block .button-container.free-plan-container {
     width: max-content;
@@ -1100,15 +992,6 @@ main .block .button-container.free-plan-container .free-plan-optout img {
   main .block.fullscreen-marquee .button-container.free-plan-container {
     width: 400px;
     align-items: flex-start;
-  }
-
-  main .block .button-container.free-plan-container .free-plan-optout {
-    display: flex;
-  }
-
-  main .block .free-plan-bullet .free-plan-bullet-container,
-  main .block .free-plan-widget-placeholder {
-    max-width: 375px;
   }
 
   main .block .button-container.free-plan-container a.button {
@@ -1183,12 +1066,8 @@ main .make-a-project div.make-a-project-marquee h2 {
   main .template-list-sixcols-container>div {
     max-width: 1122px;
   }
-
-  main .block .free-plan-bullet .free-plan-bullet-container,
-  main .block .free-plan-widget-placeholder {
-    max-width: 400px;
-  }
 }
+
 @media (min-width: 900px) {
   main .block.fullscreen-marquee .button-container.free-plan-container {
     justify-content: center;
