@@ -121,9 +121,12 @@ function createTemplate(result) {
   const CTAButton = createTag('a', {
     class: 'cta-button button accent',
     target: '_blank',
-    href: templateBranchUrl,
+    href: '#',
   });
   CTAButton.textContent = 'Edit this template';
+  CTAButton.addEventListener('click', (e) => {
+    e.preventDefault();
+  });
   hoverContainer.append(CTAButton);
 
   const feedbackRow = createTag('div', { class: 'feedback-row' });
