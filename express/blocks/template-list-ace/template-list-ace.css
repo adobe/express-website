@@ -686,6 +686,10 @@ main .template-list-ace .picker li span .check-arrow,
 main .template-list-ace .picker-open span.selected,
 #generated-results-modal .modal-content .picker-open span.selected {
   color: #4f4fda;
+  background: -webkit-linear-gradient(73deg, #897DF2 0%, #7185F3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 #generated-results-modal .modal-content .picker-open.disabled span.selected {
@@ -890,13 +894,6 @@ main .template-list-ace {
   margin-left: 22px;
   margin-right: 0;
 }
-
-#generated-results-modal .modal-content .modal-title-row hr {
-  flex-basis: 100%;
-  width: 100%;
-  border: 1px solid #E8E8E8;
-}
-
 
 #generated-results-modal .modal-content .modal-title-row .no-guidance {
   color: #242424;

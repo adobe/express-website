@@ -246,11 +246,13 @@ function updateSearchableAndDropdown(modalContent, searchable) {
   const searchBarInput = modalContent.querySelector('.search-form input.search-bar');
 
   if (!searchButton || !searchBarInput) return;
-  searchButton.disabled = !searchable;
-  searchBarInput.disabled = !searchable;
   if (searchable) {
+    searchBarInput.disabled = false;
+    searchBarInput.style.cursor = 'pointer';
     searchButton.classList.remove('disabled');
   } else {
+    searchBarInput.disabled = true;
+    searchBarInput.style.cursor = 'not-allowed';
     searchButton.classList.add('disabled');
   }
 }
@@ -294,7 +296,7 @@ export async function fetchResults(modalContent) {
       PROGRESS_ANIMATION_DURATION,
       {
         avgCallingTimes: AVG_GENERATION_TIME / MONITOR_INTERVAL,
-        sample: 3,
+        sample: 2,
       },
     );
   }
@@ -345,7 +347,7 @@ export async function fetchResults(modalContent) {
       return;
     }
     // first 6-12% as the time for triggering generation
-    fetchingState.progressManager.update(Math.random() * 6 + 6);
+    fetchingState.progressManager.update(Math.floor(Math.random() * 6 + 6));
     fetchingState.results = await waitForGeneration(jobId);
 
     if (!searchPositionMap.has(query)) {
@@ -463,8 +465,6 @@ function createTitleRow(block) {
   scratchWrapper.append(noGuidanceSpan);
   scratchWrapper.append(fromScratchButton);
   titleRow.append(scratchWrapper);
-  //const line = createTag('hr');
-  //titleRow.appendChild(line);
   return titleRow;
 }
 

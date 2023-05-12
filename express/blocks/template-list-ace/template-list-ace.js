@@ -390,7 +390,7 @@ function addHandlerForModalClose(block) {
   window.addEventListener(`milo:modal:closed:${GENERATED_RESULTS_MODAL_ID}`, () => {
     const searchBar = block.querySelector(':scope .search-bar');
     const dropdownText = block.querySelector(':scope .picker-open .picker-open-text');
-    console.log('closed big!');
+
     // IMPORTANT: clear ongoing search + sync search bar value
     const {
       query,
@@ -399,6 +399,7 @@ function addHandlerForModalClose(block) {
     } = BlockMediator.get('ace-state');
     searchBar.value = query;
     fetchingState.results = null;
+    fetchingState.progressManager = null;
     if (dropdownText.textContent !== dropdown) {
       const firstElem = dropdown === dropdownTexts[0];
       setDropdownSelected(firstElem, dropdownText, dropdown);
