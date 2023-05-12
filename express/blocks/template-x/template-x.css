@@ -414,7 +414,7 @@ main .template-x.horizontal.mini .template .icon-free-badge {
 }
 
 main .template-x.sixcols .template,
-main .template-x.fullwidth:not(.horizontal) .template {
+main .template-x.fullwidth .template {
     position: relative;
     display: inline-flex;
     width: 165px;
@@ -468,8 +468,8 @@ main .template-x.horizontal .template:not(.placeholder) .button-container {
     border-radius: 12px;
     min-height: unset;
     box-sizing: border-box;
-    height: 110%;
-    width: 110%;
+    height: 101%;
+    width: 101%;
 }
 
 main .template-x.horizontal .template:not(.placeholder) .template-link,
