@@ -806,8 +806,8 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
         margin-right: 20px;
     }
 
-    main .template-x.sixcols .template:not(.placeholder),
-    main .template-x.fullwidth .template:not(.placeholder) {
+    main .template-x:not(.horizontal).sixcols .template:not(.placeholder),
+    main .template-x:not(.horizontal).fullwidth .template:not(.placeholder) {
         margin: 11px 11px 9px 11px; /* make up for 4px height overlap in first child div */
     }
 
