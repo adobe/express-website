@@ -23,7 +23,8 @@ import { openFeedbackModal } from './feedback-modal.js';
 import BlockMediator from '../../scripts/block-mediator.js';
 import { createDropdown } from './template-list-ace.js';
 
-const NUM_PLACEHOLDERS = 4;
+const NUM_RESULTS = 4;
+const RESULTS_ROTATION = 3;
 const MONITOR_INTERVAL = 2000;
 const AVG_GENERATION_TIME = 30000;
 const PROGRESS_ANIMATION_DURATION = 1000;
@@ -181,7 +182,7 @@ async function waitForGeneration(jobId) {
       if (!status) {
         progressManager.update(0);
       } else if (!status || status === MONITOR_STATUS.IN_PROGRESS) {
-        progressManager.update(Math.floor(results.length / NUM_PLACEHOLDERS) * 100);
+        progressManager.update(Math.floor(results.length / NUM_RESULTS) * 100);
       } else if (status === MONITOR_STATUS.COMPLETED) {
         progressManager.update(100);
         clearInterval(fetchingState.intervalId);
@@ -218,7 +219,7 @@ export function renderLoader(modalContent) {
   loaderWrapper.append(progressBar);
 
   const placeholderRow = createTag('div', { class: 'loader-placeholder-row' });
-  for (let i = 0; i < NUM_PLACEHOLDERS; i += 1) {
+  for (let i = 0; i < NUM_RESULTS; i += 1) {
     placeholderRow.append(createTag('div', { class: 'loader-placeholder' }));
   }
   loaderWrapper.append(placeholderRow);
@@ -269,13 +270,14 @@ function retry(maxRetries, fn, delay = 2000) {
   });
 }
 
-export async function fetchResults(modalContent, repeating = false) {
+export async function fetchResults(modalContent) {
   const {
     query,
     dropdownValue,
     fetchingState,
     placeholders,
   } = BlockMediator.get('ace-state');
+  const { searchPositionMap } = fetchingState;
   if (!fetchingState.progressManager) {
     const updateProgressBar = (percentage) => {
       const percentageEl = modalContent.querySelector('.loader-percentage');
@@ -312,21 +314,19 @@ export async function fetchResults(modalContent, repeating = false) {
     errorDisplay.remove();
   }
 
+  // TODO: placeholders for locale and category
   const requestConfig = {
     query,
-    num_results: NUM_PLACEHOLDERS,
+    num_results: NUM_RESULTS,
     locale: 'en-us',
     category: 'poster',
     subcategory: (dropdownValue
         && dropdownValue.trim() !== placeholders['template-list-ace-categories-dropdown']?.split(',')?.[0].trim())
       ? dropdownValue.trim()
       : null,
-    force: false,
-    fetchExisting: false,
+    force: searchPositionMap.has(query),
+    start_index: searchPositionMap.get(query) || 0,
   };
-  if (repeating) {
-    requestConfig.force = true;
-  }
 
   try {
     let jobId;
@@ -344,6 +344,13 @@ export async function fetchResults(modalContent, repeating = false) {
     // first 6-12% as the time for triggering generation
     fetchingState.progressManager.update(Math.random() * 6 + 6);
     fetchingState.results = await waitForGeneration(jobId);
+
+    if (!searchPositionMap.has(query)) {
+      searchPositionMap.set(query, NUM_RESULTS);
+    } else {
+      searchPositionMap.set(query,
+        (searchPositionMap.get(query) + NUM_RESULTS) % (RESULTS_ROTATION * NUM_RESULTS));
+    }
   } catch (e) {
     console.error(e);
     fetchingState.results = 'error';
@@ -357,10 +364,6 @@ export function renderResults(modalContent) {
   if (modalContent !== currModal) {
     return;
   }
-  // if (oldModalSet.has(modalContent)) {
-  //   console.log('this is old, abort!');
-  //   return;
-  // }
   const oldLoader = modalContent.querySelector('.loader-wrapper');
   if (oldLoader) {
     oldLoader.style.display = 'none';
@@ -411,19 +414,13 @@ function createModalSearch(modalContent) {
   });
   button.textContent = refreshText;
   searchForm.append(button);
-  let repeating = false;
   button.addEventListener('click', async (e) => {
     e.preventDefault();
     if (!searchBar.value || button.classList.contains('disabled')) {
       return;
     }
-    if (searchBar.value === aceState.query) {
-      repeating = true;
-    } else {
-      repeating = false;
-    }
     aceState.query = searchBar.value;
-    await fetchResults(modalContent, repeating);
+    await fetchResults(modalContent);
     renderResults(modalContent);
   });
 

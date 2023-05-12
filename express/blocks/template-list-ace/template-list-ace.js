@@ -451,7 +451,7 @@ function createSearchBar(searchRows, titleRow, block) {
     }
     aceState.query = searchBar.value;
     const modalContent = await openModal(block);
-    await fetchResults(modalContent, false);
+    await fetchResults(modalContent);
     renderResults(modalContent);
   });
 
@@ -481,7 +481,12 @@ function initState() {
     dropdownValue: placeholders['template-list-ace-categories-dropdown'].split(',')[0].trim(),
     query: null,
     placeholders,
-    fetchingState: { intervalId: null, progressManager: null, results: null },
+    fetchingState: {
+      intervalId: null,
+      progressManager: null,
+      results: null,
+      searchPositionMap: new Map(),
+    },
     modalContent: null,
     createTemplateLink: placeholders['template-list-ace-create-template-link'],
   });
