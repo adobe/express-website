@@ -1,7 +1,7 @@
 main .section.promotion-container {
-  margin-top: 0px;
+  margin-top: 0;
   padding-top: 0;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 main .promotion[data-block-status="loaded"] {
