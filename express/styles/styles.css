@@ -515,12 +515,13 @@ main .section:last-of-type {
 main .section:last-of-type>.default-content-wrapper {
   padding-bottom: 40px;
 }
-main div.section.promotion-container {
-  margin-top: 0;
-  margin-bottom: 0; 
+
+main .section:first-of-type {
+  margin-bottom: -75px;
 }
-main .section div.promotion {
-    margin-bottom: 0;
+
+main div.section.promotion-container {
+  margin-top: -120px;
 }
 @media (min-width:600px) {
 
@@ -550,12 +551,12 @@ main .section div.promotion {
   main p {
     font-size: var(--body-font-size-l);
   }
-  main .section:first-of-type {
-    margin-bottom: -75px;
-  }
-
   main div.section.promotion-container {
-    margin-top: -120px;
+    margin-top: 0;
+    margin-bottom: 0; 
+  }
+  main .section div.promotion {
+      margin-bottom: 0;
   }
 }
 
