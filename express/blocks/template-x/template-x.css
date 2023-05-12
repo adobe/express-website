@@ -459,6 +459,15 @@ main .template-x.fullwidth .template:not(.placeholder) .button-container {
     will-change: opacity;
 }
 
+main .template-x.horizontal.holiday .template:not(.placeholder) .button-container {
+    display: flex;
+    width: 100%;
+    border-radius: 12px;
+    min-height: unset;
+    box-sizing: border-box;
+    height: 100%;
+}
+
 main .template-x.horizontal .template:not(.placeholder) .template-link,
 main .template-x.sixcols .template:not(.placeholder) .template-link,
 main .template-x.fullwidth .template:not(.placeholder) .template-link {
@@ -2597,12 +2606,24 @@ main .template-x .template .button-container:hover {
 
 main .template-x .template .button-container .media-wrapper {
     position: relative;
-    height: 100%;
+    height: calc(100% - 34px);
     width: 100%;
+}
+
+main .template-x.horizontal.holiday .template .button-container .media-wrapper {
+    flex-basis: 100%;
 }
 
 main .template-x .template .button-container a {
     margin: 6px 6px 0;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+main .template-x.horizontal.holiday .template .button-container a {
+    min-height: 16px;
 }
 
 main .template-x .template .button-container .media-wrapper .icon-plus {
