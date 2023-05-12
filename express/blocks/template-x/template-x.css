@@ -352,8 +352,8 @@ main .template-x.horizontal .template {
     margin-bottom: 0;
 }
 
-main .template-x.horizontal .template img,
-main .template-x.horizontal .template video {
+main .template-x.horizontal .template .still-wrapper img,
+main .template-x.horizontal .template .still-wrapper video {
     height: 200px;
     width: auto;
 }
