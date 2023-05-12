@@ -1197,6 +1197,13 @@ main .make-a-project div.make-a-project-marquee h2 {
     max-width: 400px;
   }
 }
+@media (min-width: 900px) {
+  main .block.fullscreen-marquee .button-container.free-plan-container {
+    justify-content: center;
+    width: auto;
+    align-items: center;
+  }
+}
 
 main .template-list-sixcols-container>div {
   padding: 0;
