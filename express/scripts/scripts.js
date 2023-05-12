@@ -2381,7 +2381,7 @@ function removeMetadata() {
 
 export async function buildStaticFreePlanWidget() {
   const placeholders = await fetchPlaceholders();
-  const widget = createTag('div', { class: 'free-plan-widget', style: `display: block !important` });
+  const widget = createTag('div', { class: 'free-plan-widget' });
   for (let i = 1; i < 3; i += 1) {
     const checkMarkColor = i % 2 !== 0 ? '#c457f0' : '#f06dad';
     const tagText = placeholders[`free-plan-check-${i}`];

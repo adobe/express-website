@@ -516,10 +516,6 @@ main .section:last-of-type>.default-content-wrapper {
   padding-bottom: 40px;
 }
 
-main .section:first-of-type {
-  margin-bottom: -75px;
-}
-
 main div.section.promotion-container {
   margin-top: -75px;
 }
@@ -1093,10 +1089,6 @@ main .block .button-container.free-plan-container .free-plan-optout img {
 }
 
 @media (min-width: 900px) {
-  main .block .button-container.free-plan-container .free-plan-widget {
-    display: none;
-  }
-
   main .block .button-container.free-plan-container .free-plan-bullet {
     display: inline-block;
   }
