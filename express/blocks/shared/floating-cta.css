@@ -349,7 +349,7 @@ main .floating-button-wrapper.multifunction .toolbox .tool a {
 main .floating-button-wrapper.multifunction .toolbox-background {
     position: fixed;
     pointer-events: none;
-    bottom: 0;
+    bottom: -50vh;
     left: unset;
     transform: unset;
     height: 200vh;

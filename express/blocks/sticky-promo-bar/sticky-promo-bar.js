@@ -15,13 +15,25 @@ import {
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
+import BlockMediator from '../../scripts/block-mediator.js';
+
 export default function decorate($block) {
   const $close = createTag('button', {
     class: 'close',
     'aria-label': 'close',
   });
   $block.appendChild($close);
+
+  BlockMediator.set('promobar', {
+    block: $block,
+    rendered: true,
+  });
+
   $close.addEventListener('click', () => {
     $block.remove();
+    BlockMediator.set('promobar', {
+      block: $block,
+      rendered: false,
+    });
   });
 }

@@ -38,6 +38,7 @@ function transformToVideoColumn($cell, $a) {
       $button.closest('.button-container').remove();
     }
   });
+  $a.setAttribute('rel', 'nofollow');
 
   $cell.classList.add('column-video');
   $parent.classList.add('columns-video');

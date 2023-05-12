@@ -621,6 +621,13 @@ loadScript(martechURL, () => {
     } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?express-apps\/animate-from-audio/g))) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
+      // Frictionless Quick Actions clicks
+    } else if ($a.closest('ccl-quick-action') && ($a.getAttribute('data-action') === 'Download')) {
+      adobeEventName = 'quickAction:downloadPressed';
+      sparkEventName = 'quickAction:downloadPressed';
+    } else if ($a.closest('ccl-quick-action') && ($a.getAttribute('data-action') === 'Editor')) {
+      adobeEventName = 'quickAction:openInEditorPressed';
+      sparkEventName = 'quickAction:openInEditorPressed';
     // ToC clicks
     } else if ($a.closest('.toc-container')) {
       if ($a.classList.contains('toc-toggle')) {
@@ -737,6 +744,68 @@ loadScript(martechURL, () => {
       digitalData._delete('spark.eventData.eventName');
     }
   }
+
+  // Frictionless Quick Actions tracking events
+
+  function sendEventToAdobeAnaltics(eventName) {
+    if (useAlloy) {
+      _satellite.track('event', {
+        xdm: {},
+        data: {
+          eventType: 'web.webinteraction.linkClicks',
+          web: {
+            webInteraction: {
+              name: eventName,
+              linkClicks: {
+                value: 1,
+              },
+              type: 'other',
+            },
+          },
+          _adobe_corpnew: {
+            digitalData: {
+              primaryEvent: {
+                eventInfo: {
+                  eventName,
+                },
+              },
+              spark: {
+                eventData: {
+                  eventName,
+                  sendTimestamp: new Date().getTime(),
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
+  const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
+  if (cclQuickAction.length) {
+    let frictionLessQuctionActionsTrackingEnabled = false;
+    sendEventToAdobeAnaltics('quickAction:uploadPageViewed');
+    cclQuickAction[0].addEventListener('ccl-quick-action-complete', () => {
+      if (frictionLessQuctionActionsTrackingEnabled) {
+        return;
+      }
+      sendEventToAdobeAnaltics('quickAction:assetUploaded');
+      sendEventToAdobeAnaltics('project:editorDisplayed');
+      const $links = d.querySelectorAll('ccl-quick-action a');
+      // for tracking all of the links
+      $links.forEach(($a) => {
+        $a.addEventListener('click', () => {
+          trackButtonClick($a);
+        });
+      });
+      frictionLessQuctionActionsTrackingEnabled = true;
+    });
+  }
+  d.addEventListener('click', (e) => {
+    if (e.target.id === 'mock-file-input') {
+      sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto');
+    }
+  });
 
   function trackVideoAnalytics($video, parameters) {
     const {
