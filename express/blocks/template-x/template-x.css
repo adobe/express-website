@@ -1852,7 +1852,7 @@ main .template-x.with-categories-list .category-list-resize:after {
         height: 100%;
         width: 100%;
         transition: opacity 0.2s;
-        background: linear-gradient(90deg, #ffffff 50%, #ffffff50 88%, #ffffff00 100%);
+        background: linear-gradient(90deg, #ffffff 50%, #ffffff9B 88%, #ffffff00 100%);
     }
 
     main .template-x.with-categories-list .category-list-wrapper.desktop-only {
