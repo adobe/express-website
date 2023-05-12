@@ -3,7 +3,7 @@ main .section.search-marquee-container .search-marquee-wrapper {
 }
 
 main .search-marquee {
-    padding: 32px 0;
+    padding: 32px 28px;
     background-position: center;
     background-size: cover;
     display: flex;
@@ -27,25 +27,43 @@ main .search-marquee .search-dropdown-container {
     border-radius: 12px;
     box-shadow: 0 0 20px #00000029;
     position: absolute;
-    height: 360px;
-    padding: 0 28px;
     width: 100%;
     box-sizing: border-box;
     left: 0;
     z-index: 2;
 }
 
-main .search-marquee .search-dropdown-container.hidden {
-    display: none;
+main .search-marquee .search-dropdown-container .trends-container {
+    padding: 20px 28px 0;
+    text-align: left;
 }
 
-main .search-marquee .search-dropdown-container .free-plans-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+main .search-marquee .search-dropdown-container .trends-container .from-scratch-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+main .search-marquee .search-dropdown-container .trends-container .trends-title {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-gray-500);
+}
+
+main .search-marquee .search-dropdown-container .trends-container .trends-wrapper {
+    padding-left: 0;
+    list-style: none;
+    max-height: 216px;
+    overflow: auto;
+}
+
+main .search-marquee .search-dropdown-container .trends-container .trends-wrapper li {
+    margin-bottom: 16px;
+}
+
+main .search-marquee .search-dropdown-container .trends-container .trends-wrapper li a {
+    color: var(--color-black);
 }
 
 main .search-marquee .search-dropdown-container .free-plans-container .free-plan-widget {
@@ -113,6 +131,6 @@ main .search-marquee .search-bar-wrapper .icon.icon-search-clear {
     right: 40px;
 }
 
-main .search-marquee .search-bar-wrapper .task-dropdown-list .icon {
-    margin-right: 4px;
+main .search-marquee .hidden {
+    display: none;
 }

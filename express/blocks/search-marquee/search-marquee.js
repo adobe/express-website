@@ -42,6 +42,13 @@ function initSearchFunction(block) {
     }
   }, { passive: true });
 
+  document.addEventListener('click', (e) => {
+    const { target } = e;
+    if (target !== searchBarWrapper && !searchBarWrapper.contains(target)) {
+      searchDropdown.classList.add('hidden');
+    }
+  }, { passive: true });
+
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
   });
@@ -97,17 +104,49 @@ function decorateBackground(block) {
 }
 
 async function buildSearchDropdown(block) {
+  const placeholders = await fetchPlaceholders();
+
   const searchBarWrapper = block.querySelector('.search-bar-wrapper');
   if (searchBarWrapper) {
     const dropdownContainer = createTag('div', { class: 'search-dropdown-container hidden' });
-    const suggestContainer = createTag('div', { class: 'suggestions-container' });
-    const predictContainer = createTag('div', { class: 'predictions-container' });
+    const trendsContainer = createTag('div', { class: 'trends-container' });
+    const suggestionsContainer = createTag('div', { class: 'suggestion-container hidden' });
     const freePlanContainer = createTag('div', { class: 'free-plans-container' });
+
+    const fromScratchLink = block.querySelector('a');
+    const trendsTitle = placeholders['search-trends-title'];
+    const trends = JSON.parse(placeholders['search-trends']);
+
+    if (fromScratchLink) {
+      fromScratchLink.prepend(getIconElement('template-free-accent'));
+      fromScratchLink.append(getIconElement('arrow-right'));
+      fromScratchLink.classList.remove('button');
+      fromScratchLink.classList.add('from-scratch-link');
+      trendsContainer.append(fromScratchLink);
+    }
+
+    if (trendsTitle) {
+      const trendsTitleEl = createTag('p', { class: 'trends-title' });
+      trendsTitleEl.textContent = trendsTitle;
+      trendsContainer.append(trendsTitleEl);
+    }
+
+    if (trends) {
+      const trendsWrapper = createTag('ul', { class: 'trends-wrapper' });
+      for (const [key, value] of Object.entries(trends)) {
+        const trendLinkWrapper = createTag('li');
+        const trendLink = createTag('a', { class: 'trend-link', href: value });
+        trendLink.textContent = key;
+        trendLinkWrapper.append(trendLink);
+        trendsWrapper.append(trendLinkWrapper);
+      }
+      trendsContainer.append(trendsWrapper);
+    }
 
     const freePlanTags = await buildStaticFreePlanWidget();
 
     freePlanContainer.append(freePlanTags);
-    dropdownContainer.append(suggestContainer, predictContainer, freePlanContainer);
+    dropdownContainer.append(trendsContainer, suggestionsContainer, freePlanContainer);
     searchBarWrapper.append(dropdownContainer);
   }
 }
