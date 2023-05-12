@@ -1130,7 +1130,7 @@ main .block .button-container.free-plan-container .free-plan-optout img {
 @media (min-width: 1200px) {
   main .block .button-container.free-plan-container {
     flex-direction: row;
-    width: 400px;
+    width: auto;
     justify-content: left;
   }
 

@@ -2381,7 +2381,7 @@ function removeMetadata() {
 
 export async function buildStaticFreePlanWidget() {
   const placeholders = await fetchPlaceholders();
-  const widget = createTag('div', { class: 'free-plan-widget' });
+  const widget = createTag('div', { class: 'free-plan-widget', style: `display: block !important` });
   for (let i = 1; i < 3; i += 1) {
     const checkMarkColor = i % 2 !== 0 ? '#c457f0' : '#f06dad';
     const tagText = placeholders[`free-plan-check-${i}`];
@@ -2393,7 +2393,6 @@ export async function buildStaticFreePlanWidget() {
     tagWrapper.append(checkMarkDiv, textDiv);
     widget.append(tagWrapper);
   }
-
   return widget;
 }
 
@@ -2459,9 +2458,9 @@ export async function addFreePlanWidget(elem) {
     elem.append(widget);
 
     // add the free plan bullet if there's a CTA to attach to
-    if (elem.classList.contains('button-container')) {
-      await buildFreePlanHighlight(elem);
-    }
+    // if (elem.classList.contains('button-container')) {
+    //   await buildFreePlanHighlight(elem);
+    // }
 
     elem.classList.add('free-plan-container');
   }
