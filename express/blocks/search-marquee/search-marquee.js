@@ -15,8 +15,19 @@ import {
   createTag,
   fetchPlaceholders,
   getIconElement,
+  getLocale,
+  getMetadata,
 } from '../../scripts/scripts.js';
 import useInputAutocomplete from './useInputAutocomplete.js';
+
+function handlelize(str) {
+  return str.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/(\W+|\s+)/g, '-') // Replace space and other characters by hyphen
+    .replace(/--+/g, '-') // Replaces multiple hyphens by one hyphen
+    .replace(/(^-+|-+$)/g, '') // Remove extra hyphens from beginning or end of the string
+    .toLowerCase(); // To lowercase
+}
 
 function initSearchFunction(block) {
   const searchBarWrapper = block.querySelector('.search-bar-wrapper');
@@ -55,8 +66,46 @@ function initSearchFunction(block) {
     }
   }, { passive: true });
 
+  const redirectSearch = async () => {
+    const placeholders = await fetchPlaceholders().then((result) => result);
+    const taskMap = JSON.parse(placeholders['task-name-mapping']);
+
+    const format = getMetadata('placeholder-format');
+    let currentTasks = getMetadata('tasks');
+    let searchInput = searchBar.value.toLowerCase() || getMetadata('topics');
+
+    const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
+      const searchValue = searchBar.value.toLowerCase();
+      return searchValue.indexOf(word.toLowerCase()) >= 0;
+    })).sort((a, b) => b[0].length - a[0].length);
+
+    if (tasksFoundInInput.length > 0) {
+      tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
+        searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
+      });
+
+      searchInput = searchInput.trim();
+      [[currentTasks]] = tasksFoundInInput;
+    }
+
+    const locale = getLocale(window.location);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    const topicUrl = searchInput ? `/${searchInput}` : '';
+    const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
+    const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
+    const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+    const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
+    const pathMatch = (e) => e.path === targetPath;
+    if (window.templates && window.templates.data.some(pathMatch)) {
+      window.location = `${window.location.origin}${targetPath}`;
+    } else {
+      window.location = searchUrl;
+    }
+  };
+
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    await redirectSearch();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -82,6 +131,7 @@ function initSearchFunction(block) {
       suggestionsList.append(li);
     });
   };
+
   const { inputHandler } = useInputAutocomplete(
     suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 5 },
   );
