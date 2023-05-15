@@ -52,7 +52,7 @@ export async function getPillWordsMapping() {
 
 export default async function getData(env = '', data = {}) {
   const endpoint = endpoints[env];
-  const response = await fetch(endpoint.url, {
+  const response = await fetch(endpoint.cdn, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/vnd.adobe.search-request+json',
