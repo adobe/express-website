@@ -118,22 +118,25 @@ function initSearchFunction(block) {
 
   const suggestionsListUIUpdateCB = (suggestions) => {
     suggestionsList.innerHTML = '';
-    suggestions.forEach((item) => {
-      const li = createTag('li', { tabindex: 0 });
-      const valRegEx = new RegExp(searchBar.value, 'i');
-      li.innerHTML = item.query.replace(valRegEx, `<b>${searchBar.value.toLowerCase()}</b>`);
-      li.addEventListener('click', () => {
-        if (item.query === searchBar.value) return;
-        searchBar.value = item.query;
-        searchBar.dispatchEvent(new Event('input'));
-      });
+    const searchBarVal = searchBar.value.toLowerCase();
+    if (suggestions && !(suggestions.length <= 1 && suggestions[0]?.query === searchBarVal)) {
+      suggestions.forEach((item) => {
+        const li = createTag('li', { tabindex: 0 });
+        const valRegEx = new RegExp(searchBar.value, 'i');
+        li.innerHTML = item.query.replace(valRegEx, `<b>${searchBarVal}</b>`);
+        li.addEventListener('click', () => {
+          if (item.query === searchBar.value) return;
+          searchBar.value = item.query;
+          searchBar.dispatchEvent(new Event('input'));
+        });
 
-      suggestionsList.append(li);
-    });
+        suggestionsList.append(li);
+      });
+    }
   };
 
   const { inputHandler } = useInputAutocomplete(
-    suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 5 },
+    suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
   );
   searchBar.addEventListener('input', inputHandler);
 }
