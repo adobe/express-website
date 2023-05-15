@@ -12,6 +12,7 @@
 
 import { createTag } from '../../scripts/scripts.js';
 import { postFeedback, FEEDBACK_CATEGORIES } from './ace-api.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 // TODO: use placeholders
 const feedBackModalConfig = {
@@ -137,7 +138,8 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
         `${checked.join(',')}::${noteValue}`,
       );
       if (error) throw new Error(error);
-      alert('Thank you for the feedback. We strive to improve future results.'); // TODO: use placeholders
+      const { feedbackState: { showSubmittedTooltip } = {} } = BlockMediator.get('ace-state');
+      if (showSubmittedTooltip) showSubmittedTooltip();
     } catch (err) {
       console.error(err);
     }

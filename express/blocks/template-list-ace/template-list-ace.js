@@ -490,6 +490,9 @@ function initState() {
       results: null,
       searchPositionMap: new Map(),
     },
+    feedbackState: {
+      showSubmittedTooltip: null,
+    },
     modalContent: null,
     createTemplateLink: placeholders['template-list-ace-create-template-link'],
   });

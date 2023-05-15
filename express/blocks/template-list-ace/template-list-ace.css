@@ -941,6 +941,39 @@ main .template-list-ace {
   line-height: 300%;
 }
 
+#generated-results-modal .modal-content .tooltip-wrapper {
+  display: none;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 20px;
+}
+
+#generated-results-modal .modal-content .tooltip-wrapper.show {
+  display: flex;
+}
+
+#generated-results-modal .modal-content .tooltip-wrapper .submitted-tooltip {
+  color: #e8e8e8;
+  padding: 10px;
+  background-color: #007A4E;
+  border-radius: 5px;
+  text-align: center;
+  width: 450px;
+  align-items: center;
+  justify-content: center;
+}
+
+#generated-results-modal .modal-content .tooltip-wrapper .submitted-tooltip .icon-checkmark-darkgreen {
+  padding: 3px;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border-radius: 50px;
+  margin-right: 10px;
+}
+
 #feedback-modal .modal-content {
   padding: 40px;
   border-radius: 50px;

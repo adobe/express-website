@@ -76,11 +76,11 @@ export function createReportWrapper(result, feedbackState) {
   const reportButton = createTag('button', { class: 'feedback-report-button' });
   reportButton.append('🚩');
   wrapper.append(reportButton);
-  reportButton.addEventListener('click', async (e) => {
+  reportButton.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     feedbackState.category = FEEDBACK_CATEGORIES.REPORT_ABUSE;
-    await openFeedbackModal(result, feedbackState);
+    openFeedbackModal(result, feedbackState);
   });
   return wrapper;
 }
@@ -477,7 +477,31 @@ function createTitleRow(block) {
   return titleRow;
 }
 
+function createSubmittedTooltip() {
+  const submittedTooltip = createTag('div', { class: 'submitted-tooltip' });
+  const text = 'Thank you for the feedback. We strive to improve future results.'; // TODO: placeholders
+  const checkmarkIcon = getIconElement('checkmark-darkgreen');
+  const tooltipWrapper = createTag('div', { class: 'tooltip-wrapper' });
+  submittedTooltip.append(checkmarkIcon);
+  submittedTooltip.append(text);
+  tooltipWrapper.append(submittedTooltip);
+  const { feedbackState } = BlockMediator.get('ace-state');
+  let tooltipTimeoutId = null;
+  feedbackState.showSubmittedTooltip = () => {
+    tooltipWrapper.style.display = 'flex';
+    if (tooltipTimeoutId) {
+      clearTimeout(tooltipTimeoutId);
+    }
+    tooltipTimeoutId = setTimeout(() => {
+      tooltipWrapper.style.display = 'none';
+      tooltipTimeoutId = null;
+    }, 3000);
+  };
+  return tooltipWrapper;
+}
+
 export function renderModalContent(modalContent, block) {
   modalContent.append(createTitleRow(block));
   modalContent.append(createModalSearch(modalContent));
+  modalContent.append(createSubmittedTooltip());
 }
