@@ -488,12 +488,12 @@ function createSubmittedTooltip() {
   const { feedbackState } = BlockMediator.get('ace-state');
   let tooltipTimeoutId = null;
   feedbackState.showSubmittedTooltip = () => {
-    tooltipWrapper.style.display = 'flex';
+    tooltipWrapper.classList.add('show');
     if (tooltipTimeoutId) {
       clearTimeout(tooltipTimeoutId);
     }
     tooltipTimeoutId = setTimeout(() => {
-      tooltipWrapper.style.display = 'none';
+      tooltipWrapper.classList.remove('show');
       tooltipTimeoutId = null;
     }, 3000);
   };
