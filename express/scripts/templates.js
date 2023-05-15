@@ -61,37 +61,40 @@ async function formatSearchQuery(data) {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 
-  const locale = getLocale(window.location);
-  const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
-  const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
-
-  if (findMatchExistingSEOPage(pathToMatch)) {
-    window.location.replace(`${window.location.origin}${pathToMatch}`);
-  }
-
-  const dataArray = Object.entries(data);
-
-  if (params.tasks && params.phformat) {
-    const placeholders = await fetchPlaceholders();
-    const categories = JSON.parse(placeholders['task-categories']);
-    if (categories) {
-      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
-        col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
-        col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
-        col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
-        col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
-      });
+  if (params.topics) {
+    const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
+    const locale = getLocale(window.location);
+    const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
+    if (findMatchExistingSEOPage(pathToMatch)) {
+      window.location.replace(`${window.location.origin}${pathToMatch}`);
     }
+
+    const dataArray = Object.entries(data);
+
+    if (params.tasks && params.phformat) {
+      const placeholders = await fetchPlaceholders();
+      const categories = JSON.parse(placeholders['task-categories']);
+      if (categories) {
+        const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+        const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+        dataArray.forEach((col) => {
+          col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
+          col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
+          col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
+          col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
+          col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
+          col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
+          col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
+        });
+      }
+    } else {
+      return false;
+    }
+
+    return arrayToObject(dataArray);
   } else {
     return false;
   }
-
-  return arrayToObject(dataArray);
 }
 
 async function fetchLinkList(data) {

@@ -92,14 +92,13 @@ function initSearchFunction(block) {
     const urlPrefix = locale === 'us' ? '' : `/${locale}`;
     const topicUrl = searchInput ? `/${searchInput}` : '';
     const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-    const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
-    const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
     const pathMatch = (e) => e.path === targetPath;
     if (window.templates && window.templates.data.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
-      window.location = searchUrl;
+      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&q=${searchInput || "''"}`;
+      window.location = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
     }
   };
 
