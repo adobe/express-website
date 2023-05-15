@@ -207,7 +207,13 @@ export function renderLoader(modalContent) {
   if (modalContent !== BlockMediator.get('ace-state').modalContent) {
     return;
   }
-  const loaderWrapper = createTag('div', { class: 'loader-wrapper' });
+  const loaderWrapper = createTag('div', {
+    class: 'loader-wrapper',
+    role: 'progressbar',
+    'aria-valuemin': 0,
+    'aria-valuemax': 100,
+    'aria-valuenow': 0,
+  });
   const textRow = createTag('div', { class: 'loader-text-row' });
   const text = createTag('span', { class: 'loader-text' });
   text.textContent = 'Loading results…'; // TODO: use placeholders
@@ -285,11 +291,13 @@ export async function fetchResults(modalContent) {
   const { searchPositionMap } = fetchingState;
   if (!fetchingState.progressManager) {
     const updateProgressBar = (percentage) => {
+      const loaderWrapper = modalContent.querySelector('.loader-wrapper');
       const percentageEl = modalContent.querySelector('.loader-percentage');
       const progressBar = modalContent.querySelector('.loader-progress-bar div');
-      if (!percentageEl || !progressBar) return;
+      if (!percentageEl || !progressBar || !loaderWrapper) return;
       percentageEl.textContent = `${percentage}%`;
       progressBar.style.width = `${percentage}%`;
+      loaderWrapper.setAttribute('aria-valuenow', percentage);
     };
     fetchingState.progressManager = useProgressManager(
       updateProgressBar,
@@ -460,6 +468,7 @@ function createTitleRow(block) {
     class: 'from-scratch-button secondary button',
     href: createTemplateLink,
     title: placeholders['edit-this-template'] ?? 'Create from scratch', // FIXME: add a placeholder for title?
+    target: '_blank',
   });
   fromScratchButton.textContent = placeholders['template-list-ace-from-scratch'] ?? 'Create from scratch';
   scratchWrapper.append(noGuidanceSpan);
