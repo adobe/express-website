@@ -113,6 +113,7 @@ async function fetchAndRenderTemplates() {
         href: template.branchURL,
         title: placeholders['edit-this-template'] ?? 'Edit this template',
         class: 'button accent',
+        target: '_blank',
       });
 
       $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
@@ -150,6 +151,7 @@ function populateTemplates($block, templates) {
       if ($link) {
         const $a = createTag('a', {
           href: $link.href ? addSearchQueryToHref($link.href) : '#',
+          target: '_blank',
         });
 
         $a.append(...$tmplt.children);
@@ -275,7 +277,7 @@ function createPlaceholder() {
   });
   div1.appendChild(svg);
   const div2 = createTag('div');
-  const a = createTag('a', { href: createTemplateLink });
+  const a = createTag('a', { href: createTemplateLink, target: '_blank' });
   div2.appendChild(a);
   existingCreateTemplate.appendChild(div1);
   existingCreateTemplate.appendChild(div2);
