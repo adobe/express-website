@@ -274,20 +274,21 @@ export default async function decorate(block) {
     const canvasWidth = 2000;
     const canvasHeight = 1072;
 
-    const backgroundPictureDiv = rows.shift();
-    const placeholderImgUrl = backgroundPictureDiv.querySelector('div');
+    const placeholderImgUrl = createTag('div');
     const placeholders = await fetchPlaceholders();
-    const url = placeholderImgUrl.textContent.replaceAll('how-to-steps-carousel-background-img', placeholders['how-to-steps-carousel-background-img']);
+    const url = placeholders['how-to-steps-carousel-image-app'];
     const eagerLoad = document.querySelector('.block') === block;
-    const backgroundPic = backgroundPictureDiv.querySelector('picture') ?? createOptimizedPicture(url, 'template in express', eagerLoad);
+    const backgroundPic = createOptimizedPicture(url, 'template in express', eagerLoad);
     const backgroundPicImg = backgroundPic.querySelector('img', { alt: 'template in express' });
 
     if (placeholderImgUrl) {
       backgroundPic.appendChild(backgroundPicImg);
       placeholderImgUrl.remove();
     }
+
     const templateDiv = rows.shift();
     const templateImg = templateDiv.querySelector(':scope picture > img');
+
     templateImg.style.visibility = 'hidden';
     templateImg.style.position = 'absolute';
     backgroundPicImg.style.width = `${canvasWidth}px`;
