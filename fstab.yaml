@@ -20,19 +20,4 @@ folders:
   /no/express/templates/: /express/templates/default
   /se/express/templates/: /express/templates/default
   /tw/express/templates/: /express/templates/default
-  /express/templates/search: /express/templates/search
-  /br/express/templates/search: /express/templates/search
-  /cn/express/templates/search: /express/templates/search
-  /de/express/templates/search: /express/templates/search
-  /dk/express/templates/search: /express/templates/search
-  /es/express/templates/search: /express/templates/search
-  /fi/express/templates/search: /express/templates/search
-  /fr/express/templates/search: /express/templates/search
-  /it/express/templates/search: /express/templates/search
-  /jp/express/templates/search: /express/templates/search
-  /kr/express/templates/search: /express/templates/search
-  /nl/express/templates/search: /express/templates/search
-  /no/express/templates/search: /express/templates/search
-  /se/express/templates/search: /express/templates/search
-  /tw/express/templates/search: /express/templates/search
 
