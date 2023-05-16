@@ -66,6 +66,10 @@ main .template-x.fullwidth .template-x-inner-wrapper {
     justify-content: center;
 }
 
+main .template-x.horizontal .template-x-inner-wrapper {
+    margin-top: 0;
+}
+
 main .template-x.fullwidth.holiday .template-x-inner-wrapper {
     max-height: 0;
     position: relative;
@@ -147,6 +151,9 @@ main .template-x-wrapper .template-title {
     margin: 0 12px 20px 12px;
 }
 
+main .template-x.horizontal .template-title {
+    margin-bottom: 0;
+}
 
 main .template-x-container .template-x-wrapper:not(:has(.toolbar-wrapper)) {
     padding-top: 60px;
@@ -468,8 +475,8 @@ main .template-x.horizontal .template:not(.placeholder) .button-container {
     border-radius: 12px;
     min-height: unset;
     box-sizing: border-box;
-    height: 101%;
-    width: 101%;
+    height: 120%;
+    width: 120%;
 }
 
 main .template-x.horizontal .template:not(.placeholder) .template-link,
@@ -2018,6 +2025,7 @@ main .template-x.horizontal .carousel-container {
 
 main .template-x.horizontal .carousel-platform {
     scroll-padding: 12px;
+    padding: 20px 0;
 }
 
 @media (min-width: 1200px) {
