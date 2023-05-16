@@ -210,7 +210,7 @@ main .holiday.template-x-wrapper .toggle-button-chev {
     border-style: solid;
     border-color: var(--color-info-accent);
     transform-origin: 75% 75%;
-    transform: rotate( 45deg );
+    transform: rotate( -45deg );
     content: "";
     margin-top: 5px;
     margin-left: 5px;
@@ -2078,6 +2078,7 @@ main .template-x.horizontal .carousel-platform {
 
     main .template-x.horizontal .carousel-container .carousel-fader-right {
         background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+        width: 170px;
     }
 
     main .template-x.horizontal.fullwidth .carousel-container .carousel-fader-left {
@@ -2614,6 +2615,10 @@ main .template-x .template:not(.placeholder) .button-container {
 
 main .template-x .template .button-container:hover {
     z-index: 99;
+}
+
+main .template-x.horizontal .template:first-of-type .button-container {
+    margin-left: 16px;
 }
 
 main .template-x .template .button-container .media-wrapper {
