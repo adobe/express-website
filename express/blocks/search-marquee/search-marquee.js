@@ -97,7 +97,7 @@ function initSearchFunction(block) {
     if (window.templates && window.templates.data.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
-      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&q=${searchInput || "''"}`;
+      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
       window.location = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
     }
   };
