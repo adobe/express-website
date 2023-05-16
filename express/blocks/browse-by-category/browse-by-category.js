@@ -41,6 +41,7 @@ export function decorateCategories($block, payload) {
   payload.categories.forEach((category) => {
     const $category = createTag('div', { class: 'browse-by-category-category' });
     const $categoryImageWrapper = createTag('div', { class: 'browse-by-category-category-image-wrapper' });
+    const $categoryImageShadowWrapper = createTag('div', { class: 'browse-by-category-category-image-shadow-wrapper' });
     const $categoryImageShadow = createTag('div', { class: 'browse-by-category-category-image-shadow' });
     const $categoryImage = category.$image;
     const $categoryTitle = createTag('h4', { class: 'browse-by-category-category-title' });
@@ -48,7 +49,8 @@ export function decorateCategories($block, payload) {
 
     $categoryTitle.textContent = category.text;
     $categoryAnchor.href = category.link;
-    $categoryImageWrapper.append($categoryImageShadow, $categoryImage);
+    $categoryImageShadowWrapper.append($categoryImageShadow, $categoryImage);
+    $categoryImageWrapper.append($categoryImageShadowWrapper);
     $category.append($categoryAnchor, $categoryImageWrapper, $categoryTitle);
     $categoriesWrapper.append($category);
   });
