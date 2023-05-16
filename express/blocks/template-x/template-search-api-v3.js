@@ -35,11 +35,11 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  let cleanedTasks = tasks?.replace(' ', '')?.toLowerCase();
+  const cleanedTasks = tasks?.replace(' ', '')?.toLowerCase();
   if (cleanedTasks) {
     str += `&filters=pages.task.name==${cleanedTasks}`;
   }
-  let cleanedTopics = topics?.replace(' ', '')?.toLowerCase();
+  const cleanedTopics = topics?.replace(' ', '')?.toLowerCase();
   if (cleanedTopics) {
     str += `&filters=topics==${cleanedTopics}`;
   }
