@@ -823,23 +823,6 @@ async function redrawTemplates(block, props, toolBar) {
   }
 }
 
-async function toggleAnimatedText(block, props, toolBar) {
-  const toolbarWrapper = toolBar.parentElement;
-
-  const placeholders = await fetchPlaceholders();
-  const existingText = block.querySelector('.animated-template-text');
-  const animatedTemplateText = createTag('h5', { class: 'animated-template-text' });
-  animatedTemplateText.textContent = placeholders['open-to-see-animation'];
-
-  if (existingText) {
-    existingText.remove();
-  }
-
-  if (props.filters.animated === '(true)') {
-    toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
-  }
-}
-
 function initFilterSort(block, props, toolBar) {
   const buttons = toolBar.querySelectorAll('.button-wrapper');
   const applyFilterButton = toolBar.querySelector('.apply-filter-button');
@@ -885,10 +868,6 @@ function initFilterSort(block, props, toolBar) {
           updateQuery(wrapper, props, option);
           updateFilterIcon(block);
 
-          if (!optionsList.classList.contains('in-drawer')) {
-            await toggleAnimatedText(block, props, toolBar);
-          }
-
           if (!button.classList.contains('in-drawer')) {
             await redrawTemplates(block, props, toolBar);
           }
@@ -913,7 +892,6 @@ function initFilterSort(block, props, toolBar) {
         e.preventDefault();
         await redrawTemplates(block, props, toolBar);
         closeDrawer(toolBar);
-        await toggleAnimatedText(block, props, toolBar);
       });
     }
 
