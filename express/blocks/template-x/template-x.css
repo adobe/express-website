@@ -336,8 +336,7 @@ main .template-x.horizontal {
 }
 
 main .template-x.horizontal.holiday {
-    min-height: 0;
-    max-height: 295px;
+    min-height: 54px;
 }
 
 main .template-x.horizontal.fullwidth {
@@ -369,7 +368,9 @@ main .template-x-wrapper .template-title.horizontal h4 {
 }
 
 main .template-x-wrapper.holiday .template-title.horizontal h4 {
-    margin-top: 0;
+    /* margin-top: 0px; */
+    margin-top: 14px;
+    margin-bottom: 14px;
     font-size: 16px;
 }
 
@@ -2381,8 +2382,8 @@ main .template-x.horizontal.holiday picture {
 }
 
 main .template-x.horizontal.holiday .toggle-bar {
-    margin:auto;
-    margin-top: 11px;
+    margin: auto;
+    /* margin-top: 11px; */
     align-items: center;
     padding: 0 30px
 }
@@ -2524,6 +2525,8 @@ main .template-x.horizontal.holiday.expanded .animation-background {
 
 main .template-x.horizontal.holiday .toggle-bar {
     max-width: 925px;
+    /* height: 54px; */
+    cursor: pointer;
 }
 
 @media (min-width: 1200px) {

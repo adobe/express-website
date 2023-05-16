@@ -1211,7 +1211,7 @@ function decorateHoliday(block, props) {
   const templateTitle = block.querySelector('.template-title');
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
   const toggleBar = templateTitle.querySelector('div');
-  const holidayIcon = props.holidayIcon
+  const { holidayIcon } = props;
   const heading = templateTitle.querySelector('h4');
   const subheading = templateTitle.querySelector('p');
   const blankTemplate = templateTitle.querySelector('svg');
@@ -1261,11 +1261,17 @@ function decorateHoliday(block, props) {
   toggleChev.style.borderColor = props.textColor;
   initToggleHoliday(block);
 
-  if (block.classList.contains('expanded')) {
-    setTimeout(() => {
+  setTimeout(() => {
+    if (block.classList.contains('expanded')) {
       initExpandCollapseBlock(block);
-    }, 3000);
-  }
+    }
+  }, 3000);
+
+  // if (block.classList.contains('expanded')) {
+  //   setTimeout(() => {
+  //     initExpandCollapseBlock(block);
+  //   }, 3000);
+  // }
 }
 
 async function decorateTemplates(block, props) {
