@@ -3,7 +3,7 @@ main .browse-by-category {
 }
 
 main .browse-by-category .carousel-container .carousel-platform {
-  align-items: flex-start;
+  align-items: start;
 }
 
 main .browse-by-category.card .carousel-container .carousel-platform {
@@ -25,7 +25,7 @@ main .browse-by-category .browse-by-category-heading-section {
   margin-right: auto;
   margin-bottom: 10px;
 }
-
+/* 
 main .browse-by-category.card .browse-by-category-category {
   position: relative;
   display: flex;
@@ -34,7 +34,7 @@ main .browse-by-category.card .browse-by-category-category {
   align-items: start;
   min-width: 123px;
   margin: 0;
-}
+} */
 
 main
   .browse-by-category
@@ -193,12 +193,20 @@ main
   transition: transform 0.2s ease-in-out;
 }
 
-main .browse-by-category .browse-by-category-category-title {
+main .browse-by-category:not(.card) .browse-by-category-category-title {
   margin: 0;
   font-size: 18px;
   line-height: 24px;
   font-weight: 700;
   max-width: 148px;
+}
+
+main .browse-by-category.card .browse-by-category-category-title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  align-self: start;
 }
 
 @media (min-width: 900px) {
