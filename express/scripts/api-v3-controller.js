@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getHelixEnv, getLocale } from './scripts.js';
+import { getHelixEnv, getLocale, getMetadata } from './scripts.js';
 
 const endpoints = {
   dev: {
@@ -69,8 +69,8 @@ export default async function getData(env = '', data = {}) {
   }
 }
 
-export async function fetchLinkListFromCKGApi(pageData) {
-  if (pageData.ckgID) {
+export async function fetchLinkListFromCKGApi() {
+  if (getMetadata('ckgid')) {
     const dataRaw = {
       experienceId: 'templates-browse-v1',
       locale: 'en_US',
@@ -87,7 +87,7 @@ export async function fetchLinkListFromCKGApi(pageData) {
           filters: [
             {
               categories: [
-                pageData.ckgID,
+                getMetadata('ckgid'),
               ],
             },
           ],

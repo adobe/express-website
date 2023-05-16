@@ -11,9 +11,7 @@
  */
 import {
   getHelixEnv,
-  arrayToObject,
   titleCase,
-  createTag,
   fetchPlaceholders,
   getLocale,
   getMetadata,
@@ -29,7 +27,7 @@ export function findMatchExistingSEOPage(path) {
   return (window.templates && window.templates.data.some(pathMatch));
 }
 
-export async function fetchPageContent(path) {
+export async function fetchSheetData() {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
@@ -45,17 +43,9 @@ export async function fetchPageContent(path) {
     const resp = await fetch(sheet);
     window.templates.data = resp.ok ? (await resp.json()).data : [];
   }
-
-  const page = window.templates.data.find((p) => p.url === path);
-
-  if (env && env.name === 'stage') {
-    return page || null;
-  }
-
-  return page && page.live !== 'N' ? page : null;
 }
 
-async function formatSearchQuery(data) {
+async function redirectToExistingPage() {
   // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -68,39 +58,14 @@ async function formatSearchQuery(data) {
     if (findMatchExistingSEOPage(pathToMatch)) {
       window.location.replace(`${window.location.origin}${pathToMatch}`);
     }
-
-    if (params.tasks && params.phformat) {
-      const dataArray = Object.entries(data);
-      const placeholders = await fetchPlaceholders();
-      const categories = JSON.parse(placeholders['task-categories']);
-      if (categories) {
-        const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-        const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-        dataArray.forEach((col) => {
-          col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
-          col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
-          col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
-          col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
-          col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
-          col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
-          col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
-        });
-      }
-
-      return arrayToObject(dataArray);
-    } else {
-      return false;
-    }
-  } else {
-    return false;
   }
 }
 
-async function fetchLinkList(data) {
+async function fetchLinkList() {
   if (!window.linkLists) {
     window.linkLists = {};
     if (!window.linkLists.ckgData) {
-      const response = await fetchLinkListFromCKGApi(data);
+      const response = await fetchLinkListFromCKGApi();
       // catch data from CKG API, if empty, use top priority categories sheet
       if (response && response.queryResults[0].facets) {
         window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
@@ -111,7 +76,7 @@ async function fetchLinkList(data) {
             });
             formattedTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
           } else {
-            formattedTasks = titleCase(data.tasks).replace(/[$@%"]/g, '');
+            formattedTasks = titleCase(getMetadata('tasks')).replace(/[$@%"]/g, '');
           }
 
           return {
@@ -313,9 +278,10 @@ async function replaceDefaultPlaceholders(template) {
   }
 }
 
-async function autoUpdatePageFromMetadata() {
+async function autoUpdatePage() {
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     await updateMetadata();
+    await redirectToExistingPage();
   }
 
   const main = document.querySelector('main');
@@ -327,6 +293,13 @@ async function autoUpdatePageFromMetadata() {
         main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
       });
     }
+  }
+}
+
+function validatePage() {
+  const env = getHelixEnv();
+  if (!(env && env.name === 'stage') || getMetadata('live') === 'N') {
+    window.location.replace('/express/templates/');
   }
 }
 
@@ -357,6 +330,7 @@ async function updateEagerBlocks() {
 }
 
 async function lazyLoadLinklist() {
+  await fetchLinkList();
   const linkList = document.querySelector('.link-list.fullwidth');
   const linkListContainer = linkList.querySelector('p').parentElement;
 
@@ -384,41 +358,28 @@ async function lazyLoadLinklist() {
 }
 
 async function updateLazyBlocks() {
-  const page = await fetchPageContent(window.location.pathname);
+  await fetchSheetData();
+  await lazyLoadLinklist();
 
-  if (page) {
-    // render linklist
-    await fetchLinkList(page);
-    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-      const data = await formatSearchQuery(page);
-      if (!data) {
-        window.location.replace('/express/templates/');
-      } else {
-        await lazyLoadLinklist();
-      }
+  // render SEO linklist
+  const seoNav = document.querySelector('.seo-nav');
+  if (seoNav) {
+    const topTemplatesContainer = seoNav.querySelector('p').parentElement;
+    const topTemplates = getMetadata('top-templates');
+    if (topTemplates) {
+      const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
+      const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
+
+      updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      seoNav.style.visibility = 'visible';
     } else {
-      await lazyLoadLinklist();
-    }
-
-    // render SEO linklist
-    const seoNav = document.querySelector('.seo-nav');
-    if (seoNav) {
-      const topTemplatesContainer = seoNav.querySelector('p').parentElement;
-      const topTemplates = getMetadata('top-templates');
-      if (topTemplates) {
-        const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
-        const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
-
-        updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
-        seoNav.style.visibility = 'visible';
-      } else {
-        topTemplatesContainer.innerHTML = '';
-      }
+      topTemplatesContainer.innerHTML = '';
     }
   }
 }
 
-await autoUpdatePageFromMetadata();
+await autoUpdatePage();
+validatePage()
 await updateEagerBlocks();
 updateLazyBlocks();
 
