@@ -19,13 +19,12 @@ main .browse-by-category .carousel-container .button.carousel-arrow {
 main .browse-by-category .browse-by-category-heading-section {
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
+  flex-direction: column;
   padding-left: 28px;
   padding-right: 28px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;
-  padding: 0;
 }
 
 main .browse-by-category .browse-by-category-heading-section .browse-by-category-heading {
@@ -192,5 +191,10 @@ main .browse-by-category.card .browse-by-category-card-title {
 main .browse-by-category-wrapper .browse-by-category {
   padding: 0 28px;
   max-width: none;
+  }
+  
+main .browse-by-category-container .browse-by-category-heading-section {
+  flex-direction: row;
+  padding: 0;
   }
 }
