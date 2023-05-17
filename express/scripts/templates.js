@@ -291,8 +291,13 @@ async function autoUpdatePage() {
 
 function validatePage() {
   const env = getHelixEnv();
-  if (!(env && env.name === 'stage') || getMetadata('live') === 'N') {
+  const title = document.querySelector('title');
+  if ((env && env.name !== 'stage') || getMetadata('live') === 'N') {
     window.location.replace('/express/templates/');
+  }
+
+  if ((env && env.name !== 'stage') || (title && title.innerText.match(/{{(.*?)}}/))) {
+    window.location.replace('/404');
   }
 }
 
