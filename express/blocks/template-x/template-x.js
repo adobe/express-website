@@ -22,7 +22,7 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   toClassName,
-  getLanguage,
+  getLanguage, getMetadata,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -107,6 +107,43 @@ async function processContentRow(block, props) {
   //   anchorLink.append(clipboardTag);
   //   titleHeading.append(anchorLink);
   // }
+}
+
+async function formatHeadingPlaceholder(props) {
+  const heading = getMetadata('short-title');
+  // special treatment for express/ root url
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
+  const placeholders = await fetchPlaceholders();
+  const locale = getLocale(window.location);
+  const lang = getLanguage(locale);
+  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
+  let grammarTemplate;
+
+  if (getMetadata('template-search-page') === 'Y') {
+    grammarTemplate = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
+  } else {
+    grammarTemplate = props.templateStats || placeholders['template-placeholder'];
+  }
+
+  if (grammarTemplate) {
+    grammarTemplate = grammarTemplate
+      .replace('{{quantity}}', templateCount)
+      .replace('{{Type}}', heading)
+      .replace('{{type}}', camelHeading);
+
+    if (locale === 'fr') {
+      grammarTemplate.split(' ').forEach((word, index, words) => {
+        if (index + 1 < words.length) {
+          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            grammarTemplate = words.join(' ');
+          }
+        }
+      });
+    }
+  }
+
+  return grammarTemplate;
 }
 
 function constructProps(block) {
@@ -317,9 +354,7 @@ async function insertTemplateStats(props) {
   const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   if (!heading) return null;
 
-  const placeholders = await fetchPlaceholders();
-
-  let grammarTemplate = props.templateStats || placeholders['template-placeholder'];
+  let grammarTemplate = await formatHeadingPlaceholder(props) || '';
 
   if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
     grammarTemplate = grammarTemplate.replace('{{quantity}}', templateCount);
@@ -689,8 +724,11 @@ async function updateOptionsStatus(block, props, toolBar) {
     options.forEach((option) => {
       const paramType = wrapper.dataset.param;
       const paramValue = option.dataset.value;
-      if (props[paramType] === paramValue
-        || props.filters[paramType] === paramValue
+      const propValue = props[paramType] ? props[paramType] : 'remove';
+      const filtervalue = props.filters[paramType] ? props[paramType] : 'remove';
+
+      if (propValue === paramValue
+        || filtervalue === paramValue
         || waysOfSort[props[paramType]] === paramValue) {
         if (currentOption) {
           currentOption.textContent = option.textContent;
@@ -1216,26 +1254,29 @@ async function buildTemplateList(block, props, type = []) {
     props.templates.forEach((template) => {
       blockInnerWrapper.append(template);
     });
+
+    await decorateTemplates(block, props);
+  } else {
+    // fixme: better error message.
+    block.innerHTML = 'Oops. Our templates delivery got stolen. Please try refresh the page.';
   }
 
-  await decorateTemplates(block, props);
+  // templates are either finished rendering or API has crashed at this point.
 
-  // templates are finished rendering at this point.
-
-  if (props.loadMoreTemplates) {
+  if (templates && props.loadMoreTemplates) {
     const loadMore = await decorateLoadMoreButton(block, props);
     if (loadMore) {
       updateLoadMoreButton(block, props, loadMore);
     }
   }
 
-  if (props.toolBar) {
+  if (templates && props.toolBar) {
     await decorateToolbar(block, props);
     await decorateCategoryList(block, props);
     appendCategoryTemplatesCount(block, props);
   }
 
-  if (props.orientation && props.orientation.toLowerCase() === 'horizontal') {
+  if (templates && props.orientation && props.orientation.toLowerCase() === 'horizontal') {
     const innerWrapper = block.querySelector('.template-x-inner-wrapper');
     if (innerWrapper) {
       buildCarousel(':scope > .template', innerWrapper, false);

@@ -75,8 +75,7 @@ const fetchSearchUrl = async ({
 
   return fetch(url, {
     headers: {
-      // fixme: Need to issue our own api key
-      'x-api-key': 'projectx_webapp',
+      'x-api-key': 'projectx_marketing_web',
     },
   }).then((response) => response.json());
 };

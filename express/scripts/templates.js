@@ -14,7 +14,7 @@ import {
   titleCase,
   fetchPlaceholders,
   getLocale,
-  getMetadata,
+  getMetadata, getLanguage,
 } from './scripts.js';
 
 import {
@@ -237,7 +237,7 @@ async function updateMetadata() {
     get: (searchParams, prop) => searchParams.get(prop),
   });
 
-  if (head && params.tasks && params.phformat) {
+  if (head) {
     const placeholders = await fetchPlaceholders();
     const categories = JSON.parse(placeholders['task-categories']);
     if (categories) {
@@ -268,6 +268,8 @@ async function replaceDefaultPlaceholders(template) {
 }
 
 async function autoUpdatePage() {
+  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
+
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     await updateMetadata();
     await redirectToExistingPage();
@@ -279,7 +281,9 @@ async function autoUpdatePage() {
 
     if (allReplaceableBlades.length > 0) {
       allReplaceableBlades.forEach((regex) => {
-        main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
+        if (!wl.includes(regex[0].toLowerCase())) {
+          main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
+        }
       });
     }
   }
@@ -306,7 +310,7 @@ async function updateEagerBlocks() {
   }
 
   if (browseByCat) {
-    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
       const placeholders = await fetchPlaceholders().then((result) => result);
       browseByCat.innerHTML = browseByCat.innerHTML
         .replaceAll('https://www.adobe.com/express/templates/default', getMetadata('categories-view-all-link') || '/')
@@ -411,6 +415,9 @@ async function updateLazyBlocks() {
   // FIXME: integrate memoization
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
     await lazyLoadSearchMarqueeLinklist();
+  } else {
+    const linkListContainer = document.querySelector('.search-marquee')?.querySelector('.carousel-container > .carousel-platform');
+    if (linkListContainer) linkListContainer.remove();
   }
 
   await lazyLoadLinklist();
