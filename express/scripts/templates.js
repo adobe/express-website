@@ -306,10 +306,14 @@ async function updateEagerBlocks() {
   }
 
   if (browseByCat) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
-    browseByCat.innerHTML = browseByCat.innerHTML
-      .replaceAll('https://www.adobe.com/express/templates/default', getMetadata('categories-view-all-link') || '/')
-      .replaceAll('default-view-all-text', placeholders['view-all'] || '');
+    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+      const placeholders = await fetchPlaceholders().then((result) => result);
+      browseByCat.innerHTML = browseByCat.innerHTML
+        .replaceAll('https://www.adobe.com/express/templates/default', getMetadata('categories-view-all-link') || '/')
+        .replaceAll('default-view-all-text', placeholders['view-all'] || '');
+    } else {
+      browseByCat.remove();
+    }
   }
 }
 
@@ -405,7 +409,10 @@ async function updateLazyBlocks() {
   hideAsyncBlocks();
   await fetchSheetData();
   // FIXME: integrate memoization
-  await lazyLoadSearchMarqueeLinklist();
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+    await lazyLoadSearchMarqueeLinklist();
+  }
+
   await lazyLoadLinklist();
   await lazyLoadSEOLinkList();
 }

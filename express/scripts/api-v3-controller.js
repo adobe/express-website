@@ -14,7 +14,7 @@ import { getHelixEnv, getLocale, getMetadata } from './scripts.js';
 
 const endpoints = {
   dev: {
-    cdn: '',
+    cdn: 'https://uss-templates-dev.adobe.io/uss/v3/query',
     url: 'https://uss-templates-dev.adobe.io/uss/v3/query',
     token: 'cd1823ed-0104-492f-ba91-25f4195d5f6c',
   },
@@ -52,7 +52,7 @@ export async function getPillWordsMapping() {
 
 export default async function getData(env = '', data = {}) {
   const endpoint = endpoints[env];
-  const response = await fetch(endpoint.url, {
+  const response = await fetch(endpoint.cdn, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/vnd.adobe.search-request+json',
