@@ -8,6 +8,7 @@ main .browse-by-category .carousel-container .carousel-platform {
 
 main .browse-by-category.card .carousel-container .carousel-platform {
   gap: 14px;
+  margin: 6px 0 0 0;
 }
 
 main .browse-by-category .carousel-container .button.carousel-arrow {
@@ -79,7 +80,6 @@ main .browse-by-category.card .browse-by-category-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 0;
 }
 
 main .browse-by-category .browse-by-category-card-link {
@@ -181,7 +181,7 @@ main .browse-by-category:not(.card) .browse-by-category-card-title {
 }
 
 main .browse-by-category.card .browse-by-category-card-title {
-  margin: 8px 0;
+  margin: 6px 0;
   font-size: 16px;
   line-height: 24px;
   font-weight: 700;
