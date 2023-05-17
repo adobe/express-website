@@ -1852,7 +1852,7 @@ main .template-x.with-categories-list .category-list-resize:after {
         height: 100%;
         width: 100%;
         transition: opacity 0.2s;
-        background: linear-gradient(90deg, #ffffff 50%, #ffffff50 88%, #ffffff00 100%);
+        background: linear-gradient(90deg, #ffffff 50%, #ffffff9B 88%, #ffffff00 100%);
     }
 
     main .template-x.with-categories-list .category-list-wrapper.desktop-only {
@@ -2494,10 +2494,10 @@ main .template-x .template .still-wrapper .image-wrapper .icon-premium {
     right: 8px;
 }
 
-main .template-x .template .still-wrapper .image-wrapper .icon-play-button {
+main .template-x .template .still-wrapper .image-wrapper .media-type-icon {
     position: absolute;
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     background-color: white;
     bottom: 8px;
     left: 8px;
@@ -2548,18 +2548,20 @@ main .template-x .template .button-container a {
     margin: 6px 6px 0;
 }
 
-main .template-x .template .button-container .media-wrapper .icon-plus {
+main .template-x .template .button-container .media-wrapper .icon-share-arrow {
     cursor: pointer;
-    width: 28px;
-    height: 28px;
+    width: 12px;
+    height: 12px;
+    padding: 4px;
     background-color: white;
-    border-radius: 30px;
 }
 
 main .template-x .template .button-container .media-wrapper .share-icon-wrapper {
     position: absolute;
     top: 8px;
     right: 8px;
+    border-radius: 50%;
+    height: 20px;
 }
 
 main .template-x .template .button-container .media-wrapper .share-icon-wrapper .shared-tooltip {
@@ -2574,7 +2576,8 @@ main .template-x .template .button-container .media-wrapper .share-icon-wrapper 
     text-align: center;
     border-radius: 6px;
     padding: 6px;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
     left: calc(100% + 12px);
     font-size: var(--body-font-size-s);
 }
