@@ -189,15 +189,8 @@ main .browse-by-category.card .browse-by-category-card-title {
 }
 
 @media (min-width: 900px) {
-main .browse-by-category .browse-by-category-wrapper {
+main .browse-by-category-wrapper .browse-by-category {
   padding: 0 28px;
   max-width: none;
-}
-}
-
-@media (min-width: 1200px) {
-  main .browse-by-category {
-    padding: 0 28px;
-    max-width: none;
   }
 }
