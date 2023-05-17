@@ -2187,6 +2187,14 @@ main .template-x.horizontal.holiday .template-x-inner-wrapper .carousel-containe
     max-width: 1090px;
 }
 
+main .template-x.horizontal.holiday .animation-background ~ .template-x-inner-wrapper {
+    padding: 0;
+}
+
+main .template-x.horizontal.holiday .animation-background ~ .template-x-inner-wrapper .carousel-container {
+    max-width: none;
+}
+
 @media (min-width: 1200px) {
     main .template-x-wrapper.horizontal {
         max-width: 1024px;
@@ -2588,6 +2596,7 @@ main .template-x.horizontal.holiday .animation-background {
 main .template-x.horizontal.holiday.expanded .animation-background {
     opacity: 1;
     transition: opacity 1s;
+    padding: 0;
 }
 
 main .template-x.horizontal.holiday .toggle-bar {
@@ -2679,7 +2688,7 @@ main .template-x .template .button-container:hover {
     z-index: 99;
 }
 
-main .template-x.horizontal .template:first-of-type .button-container {
+main .template-x.horizontal .template:not(.placeholder):first-of-type .button-container {
     margin-left: 16px;
 }
 

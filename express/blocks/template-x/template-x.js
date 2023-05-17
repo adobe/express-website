@@ -1178,7 +1178,7 @@ function initExpandCollapseBlock(block) {
   const toggleElements = Array.from(block.querySelectorAll('.toggle-button'));
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
   const toggleBar = block.querySelector('.toggle-bar');
-  toggleElements.push(templatesWrapper, toggleBar);
+  toggleElements.push(templatesWrapper, toggleBar, block);
   toggleElements.forEach((element) => {
     element.classList.toggle('expanded');
   });
@@ -1213,40 +1213,41 @@ function initToggleHoliday(block) {
   });
 }
 
+function decorateBlankTemplate(props, templatesWrapper) {
+  const blankTemplateSvg = templatesWrapper.querySelector('.placeholder svg');
+  const blankTemplateText = templatesWrapper.querySelector('.template-link');
+
+  console.log(blankTemplateSvg);
+  if (blankTemplateSvg) {
+    blankTemplateSvg.style.fill = props.textColor;
+    blankTemplateText.style.color = props.textColor;
+  }
+}
+
 function decorateHoliday(block, props) {
-  const templateTitle = block.querySelector('.template-title');
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
+  const templateTitle = block.querySelector('.template-title');
   const toggleBar = templateTitle.querySelector('div');
-  const { holidayIcon } = props;
   const heading = templateTitle.querySelector('h4');
   const subheading = templateTitle.querySelector('p');
-  const blankTemplate = templateTitle.querySelector('svg');
   const link = templateTitle.querySelector('.template-title-link');
   const linkWrapper = link.closest('p');
   const toggle = createTag('div', { class: 'expanded toggle-button' });
+  const mobileToggle = toggle.cloneNode(true);
   const topElements = createTag('div', { class: 'toggle-bar-top' });
   const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
   const toggleChev = createTag('div', { class: 'toggle-button-chev' });
   const carouselFaderLeft = block.querySelector('.carousel-fader-left');
   const carouselFaderRight = block.querySelector('.carousel-fader-right');
   let mouseInBlock;
-  // const customColorElements = [block, carouselFaderLeft, carouselFaderRight];
 
-  console.log(block)
-  block.addEventListener('mouseenter', () => {
-    mouseInBlock = true;
-  });
-
-  block.addEventListener('mouseleave', () => {
-    mouseInBlock = false;
-  });
-
-  if (blankTemplate) {
-    blankTemplate.style.fill = props.textColor;
-  }
+  block.classList.add('expanded');
+  toggleBar.classList.add('expanded', 'toggle-bar');
+  templatesWrapper.classList.add('expanded');
+  mobileToggle.classList.add('mobile');
 
   if (props.holidayIcon) {
-    topElements.append(holidayIcon);
+    topElements.append(props.holidayIcon);
   }
 
   if (props.backgroundAnimation) {
@@ -1254,31 +1255,38 @@ function decorateHoliday(block, props) {
   }
 
   if (props.backgroundColor) {
-    carouselFaderRight.style.backgroundImage = `linear-gradient(to right, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
-    carouselFaderLeft.style.backgroundImage = `linear-gradient(to left, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+    if (props.backgroundAnimation) {
+      carouselFaderRight.style.backgroundImage = 'none';
+      carouselFaderLeft.style.backgroundImage = 'none';
+    } else {
+      carouselFaderRight.style.backgroundImage = `linear-gradient(to right, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+      carouselFaderLeft.style.backgroundImage = `linear-gradient(to left, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+    }
   }
 
-  block.classList.add('expanded');
-  toggleBar.classList.add('expanded', 'toggle-bar');
-  templatesWrapper.classList.add('expanded');
-  toggleBar.append(toggle);
-  toggle.append(link);
-  linkWrapper.remove();
-  toggle.append(toggleChev);
-  const mobileToggle = toggle.cloneNode(true);
-  mobileToggle.classList.add('mobile');
   topElements.append(heading);
-  toggleBar.append(topElements);
+  toggle.append(link, toggleChev);
+  linkWrapper.remove();
   bottomElements.append(subheading, toggle);
-  toggleBar.append(bottomElements);
+  toggleBar.append(topElements, bottomElements, toggle);
+  block.append(mobileToggle);
 
-  block.style.backgroundColor = props.backgroundColor;
   heading.style.color = props.textColor;
   subheading.style.color = props.textColor;
   link.style.color = props.textColor;
   toggleChev.style.borderColor = props.textColor;
-  block.append(mobileToggle);
+  block.style.backgroundColor = props.backgroundColor;
+
+  decorateBlankTemplate(props, templatesWrapper);
   initToggleHoliday(block);
+
+  block.addEventListener('mouseenter', () => {
+    mouseInBlock = true;
+  });
+
+  block.addEventListener('mouseleave', () => {
+    mouseInBlock = false;
+  });
 
   setTimeout(() => {
     if (block.classList.contains('expanded') && !mouseInBlock) {
