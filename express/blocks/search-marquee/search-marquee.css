@@ -1,4 +1,4 @@
-main .section.search-marquee-container .search-marquee-wrapper {
+main .section .search-marquee-wrapper {
     max-width: none;
 }
 
@@ -146,6 +146,48 @@ main .search-marquee .search-bar-wrapper .icon.icon-search-clear {
     right: 40px;
 }
 
+main .search-marquee .carousel-container {
+    margin-top: 32px;
+    margin-bottom: 0;
+}
+
+main .search-marquee.spreadsheet-powered .carousel-container {
+    visibility: hidden;
+}
+
+main .search-marquee.spreadsheet-powered .carousel-container.appear {
+    visibility: unset;
+}
+
+main .search-marquee .carousel-container .carousel-platform p.button-container {
+    margin: 0;
+    border: none;
+}
+
+main .search-marquee .carousel-container .carousel-platform a {
+    display: block;
+    box-sizing: border-box;
+    min-width: 160px;
+    min-height: 48px;
+    padding: 14px 27px;
+    color: var(--color-black);
+    font-size: 16px;
+    line-height: 20px;
+    background: var(--color-white);
+    border-radius: 50px;
+    margin: 0 4px;
+    border: none;
+}
+
+main .search-marquee .carousel-container .carousel-platform a:hover {
+    background-color: var(--color-gray-200);
+}
+
 main .search-marquee .hidden {
     display: none;
+}
+
+main .search-marquee .carousel-container .carousel-fader-right,
+main .search-marquee .carousel-container .carousel-fader-left {
+    background: unset;
 }

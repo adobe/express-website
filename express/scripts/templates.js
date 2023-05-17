@@ -250,21 +250,10 @@ async function updateMetadata() {
         .replaceAll('{{TranslatedTasks}}', titleCase(translatedTasks || ''))
         .replaceAll('{{placeholderRatio}}', params.phformat || '')
         .replaceAll('{{QueryTopics}}', titleCase(params.topics || ''))
-        .replaceAll('{{queryTopics}}', params.topics || '');
+        .replaceAll('{{queryTopics}}', params.topics || '')
+        .replaceAll('{{query}}', params.q || '');
     }
   }
-}
-
-function formatAllTaskText(data) {
-  const formattedData = data;
-
-  if (formattedData.templateTasks === "''" || formattedData.templateTopics === "''") {
-    Object.entries(formattedData).forEach((entry) => {
-      formattedData[entry[0]] = entry[1].replace("''", '');
-    });
-  }
-
-  return formattedData;
 }
 
 async function replaceDefaultPlaceholders(template) {
@@ -305,13 +294,8 @@ function validatePage() {
 
 async function updateEagerBlocks() {
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
-  const linkList = document.querySelector('.link-list.fullwidth');
-  const seoNav = document.querySelector('.seo-nav');
   const templateX = document.querySelector('.template-x');
   const browseByCat = document.querySelector('.browse-by-category');
-
-  linkList.style.visibility = 'hidden';
-  seoNav.style.visibility = 'hidden';
 
   if (templateList) {
     await replaceDefaultPlaceholders(templateList);
@@ -332,9 +316,9 @@ async function updateEagerBlocks() {
 async function lazyLoadLinklist() {
   await fetchLinkList();
   const linkList = document.querySelector('.link-list.fullwidth');
-  const linkListContainer = linkList.querySelector('p').parentElement;
 
   if (linkList && window.templates.data) {
+    const linkListContainer = linkList.querySelector('p').parentElement;
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
 
@@ -353,16 +337,14 @@ async function lazyLoadLinklist() {
     await updateLinkList(linkListContainer, linkListTemplate, linkListData);
     linkList.style.visibility = 'visible';
   } else {
-    linkListContainer.remove();
+    linkList.remove();
   }
 }
 
-async function updateLazyBlocks() {
-  await fetchSheetData();
-  await lazyLoadLinklist();
-
-  // render SEO linklist
+async function lazyLoadSEOLinkList() {
+  await fetchLinkList();
   const seoNav = document.querySelector('.seo-nav');
+
   if (seoNav) {
     const topTemplatesContainer = seoNav.querySelector('p').parentElement;
     const topTemplates = getMetadata('top-templates');
@@ -371,40 +353,88 @@ async function updateLazyBlocks() {
       const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
       updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
-      seoNav.style.visibility = 'visible';
+      topTemplatesContainer.style.visibility = 'visible';
     } else {
       topTemplatesContainer.innerHTML = '';
     }
   }
 }
 
+async function lazyLoadSearchMarqueeLinklist() {
+  await fetchLinkList();
+  const searchMarquee = document.querySelector('.search-marquee');
+
+  if (searchMarquee) {
+    const linkListContainer = searchMarquee.querySelector('.carousel-container > .carousel-platform');
+    const linkListTemplate = linkListContainer.querySelector('p').cloneNode(true);
+
+    const linkListData = [];
+
+    if (window.linkLists && window.linkLists.ckgData && getMetadata('short-title')) {
+      window.linkLists.ckgData.forEach((row) => {
+        linkListData.push({
+          childSibling: row['child-siblings'],
+          ckgID: row.ckgID,
+          shortTitle: getMetadata('short-title'),
+          tasks: row.parent,
+          displayValue: row.displayValue,
+        });
+      });
+    }
+
+    await updateLinkList(linkListContainer, linkListTemplate, linkListData);
+    linkListContainer.parentElement.classList.add('appear');
+  }
+}
+
+function hideAsyncBlocks() {
+  const linkList = document.querySelector('.link-list.fullwidth');
+  const seoNav = document.querySelector('.seo-nav');
+
+  if (linkList) {
+    linkList.style.visibility = 'hidden';
+  }
+
+  if (seoNav) {
+    const topTemplatesContainer = seoNav.querySelector('p').parentElement;
+    topTemplatesContainer.style.visibility = 'hidden';
+  }
+}
+
+async function updateLazyBlocks() {
+  hideAsyncBlocks();
+  await fetchSheetData();
+  // FIXME: integrate memoization
+  await lazyLoadSearchMarqueeLinklist();
+  await lazyLoadLinklist();
+  await lazyLoadSEOLinkList();
+}
+
 await autoUpdatePage();
-validatePage()
+validatePage();
 await updateEagerBlocks();
 updateLazyBlocks();
 
-export default async function renderTemplatesPage() {
-  // const page = await fetchPageContent(window.location.pathname);
-  //
-  // if (page) {
-  //   await fetchLinkList(page);
-  //   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-  //     const data = await formatSearchQuery(page);
-  //     if (!data) {
-  //       window.location.replace('/express/templates/');
-  //     } else {
-  //       const purgedData = formatAllTaskText(data);
-  //       updateMetadata(purgedData);
-  //       await updateBlocks(purgedData);
-  //     }
-  //   } else {
-  //     await updateBlocks(page);
-  //   }
-  // } else {
-  //   const env = getHelixEnv();
-  //
-  //   if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
-  //     window.location.replace('/404');
-  //   }
-  // }
-}
+// const page = await fetchPageContent(window.location.pathname);
+//
+// if (page) {
+//   await fetchLinkList(page);
+//   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
+//     const data = await formatSearchQuery(page);
+//     if (!data) {
+//       window.location.replace('/express/templates/');
+//     } else {
+//       const purgedData = formatAllTaskText(data);
+//       updateMetadata(purgedData);
+//       await updateBlocks(purgedData);
+//     }
+//   } else {
+//     await updateBlocks(page);
+//   }
+// } else {
+//   const env = getHelixEnv();
+//
+//   if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
+//     window.location.replace('/404');
+//   }
+// }

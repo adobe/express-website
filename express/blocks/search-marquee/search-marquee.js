@@ -18,7 +18,9 @@ import {
   getLocale,
   getMetadata,
 } from '../../scripts/scripts.js';
+
 import useInputAutocomplete from './useInputAutocomplete.js';
+import { buildCarousel } from '../shared/carousel.js';
 
 function handlelize(str) {
   return str.normalize('NFD')
@@ -97,13 +99,14 @@ function initSearchFunction(block) {
     if (window.templates && window.templates.data.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
-      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
+      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
       window.location = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
     }
   };
 
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    searchBar.disabled = true;
     await redirectSearch();
   });
 
@@ -201,11 +204,14 @@ async function buildSearchDropdown(block) {
     const trends = JSON.parse(placeholders['search-trends']);
 
     if (fromScratchLink) {
+      const linkDiv = fromScratchLink.parentElement.parentElement;
       fromScratchLink.prepend(getIconElement('template-free-accent'));
       fromScratchLink.append(getIconElement('arrow-right'));
       fromScratchLink.classList.remove('button');
       fromScratchLink.classList.add('from-scratch-link');
+
       trendsContainer.append(fromScratchLink);
+      linkDiv.remove();
     }
 
     if (trendsTitle) {
@@ -237,9 +243,19 @@ async function buildSearchDropdown(block) {
   }
 }
 
+function decorateLinkList(block) {
+  const pWrapper = block.querySelector(':scope > div:nth-of-type(2)');
+  if (pWrapper) {
+    buildCarousel(':scope > div > p', pWrapper);
+    const carousel = pWrapper.querySelector('.carousel-container');
+    block.append(carousel);
+  }
+}
+
 export default async function decorate(block) {
   await decorateSearchFunctions(block);
   decorateBackground(block);
   await buildSearchDropdown(block);
   initSearchFunction(block);
+  decorateLinkList(block);
 }

@@ -114,6 +114,7 @@ function constructProps(block) {
     templates: [],
     filters: {
       locales: 'en',
+      topics: '',
     },
     renditionParams: {
       format: 'jpg',

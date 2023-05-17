@@ -56,11 +56,12 @@ const fetchSearchUrl = async ({
   const base = 'https://spark-search.adobe.io/v3/content';
   const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
   const collectionIdParam = `collectionId=${collectionId}`;
-  const queryType = 'search';
+  const queryType = 'assets';
   const queryParam = `&queryType=${queryType}`;
   const filterStr = formatFilterString(filters);
   const limitParam = limit ? `&limit=${limit}` : '';
   const startParam = start ? `&start=${start}` : '';
+  // fixme: Can't use orderBy param. Need to work with API team on this.
   const sortParam = {
     'Most Viewed': '&orderBy=-remixCount',
     'Rare & Original': '&orderBy=remixCount',
@@ -74,6 +75,7 @@ const fetchSearchUrl = async ({
 
   return fetch(url, {
     headers: {
+      // fixme: Need to issue our own api key
       'x-api-key': 'projectx_webapp',
     },
   }).then((response) => response.json());
