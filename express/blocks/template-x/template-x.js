@@ -1191,7 +1191,6 @@ function initToggleHoliday(block) {
   const chev = toggleBar.querySelector('.toggle-button-chev');
   const mobileChev = block.querySelector('.toggle-button.mobile');
 
-
   aTag.addEventListener('click', (e) => {
     e.stopPropagation();
   });
@@ -1230,7 +1229,17 @@ function decorateHoliday(block, props) {
   const toggleChev = createTag('div', { class: 'toggle-button-chev' });
   const carouselFaderLeft = block.querySelector('.carousel-fader-left');
   const carouselFaderRight = block.querySelector('.carousel-fader-right');
+  let mouseInBlock;
   // const customColorElements = [block, carouselFaderLeft, carouselFaderRight];
+
+  console.log(block)
+  block.addEventListener('mouseenter', () => {
+    mouseInBlock = true;
+  });
+
+  block.addEventListener('mouseleave', () => {
+    mouseInBlock = false;
+  });
 
   if (blankTemplate) {
     blankTemplate.style.fill = props.textColor;
@@ -1272,7 +1281,7 @@ function decorateHoliday(block, props) {
   initToggleHoliday(block);
 
   setTimeout(() => {
-    if (block.classList.contains('expanded')) {
+    if (block.classList.contains('expanded') && !mouseInBlock) {
       initExpandCollapseBlock(block);
     }
   }, 3000);
