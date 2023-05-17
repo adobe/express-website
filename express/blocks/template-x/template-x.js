@@ -1175,14 +1175,13 @@ function addBackgroundAnimation(block, animationUrl) {
 }
 
 function initExpandCollapseBlock(block) {
-  const toggleButton = block.querySelector('.toggle-button');
+  const toggleElements = Array.from(block.querySelectorAll('.toggle-button'));
   const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
   const toggleBar = block.querySelector('.toggle-bar');
-
-  block.classList.toggle('expanded');
-  toggleBar.classList.toggle('expanded');
-  templatesWrapper.classList.toggle('expanded');
-  toggleButton.classList.toggle('expanded');
+  toggleElements.push(templatesWrapper, toggleBar);
+  toggleElements.forEach((element) => {
+    element.classList.toggle('expanded');
+  });
 }
 
 // event listeners for expanding/collapsing templates
@@ -1190,17 +1189,25 @@ function initToggleHoliday(block) {
   const toggleBar = block.querySelector('.toggle-bar');
   const aTag = toggleBar.querySelector('a');
   const chev = toggleBar.querySelector('.toggle-button-chev');
+  const mobileChev = block.querySelector('.toggle-button.mobile');
+
+
+  aTag.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
 
   toggleBar.addEventListener('click', (e) => {
     e.preventDefault();
     initExpandCollapseBlock(block);
   });
 
-  aTag.addEventListener('click', (e) => {
+  chev.addEventListener('click', (e) => {
+    e.preventDefault();
     e.stopPropagation();
+    initExpandCollapseBlock(block);
   });
 
-  chev.addEventListener('click', (e) => {
+  mobileChev.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     initExpandCollapseBlock(block);
@@ -1249,6 +1256,8 @@ function decorateHoliday(block, props) {
   toggle.append(link);
   linkWrapper.remove();
   toggle.append(toggleChev);
+  const mobileToggle = toggle.cloneNode(true);
+  mobileToggle.classList.add('mobile');
   topElements.append(heading);
   toggleBar.append(topElements);
   bottomElements.append(subheading, toggle);
@@ -1259,6 +1268,7 @@ function decorateHoliday(block, props) {
   subheading.style.color = props.textColor;
   link.style.color = props.textColor;
   toggleChev.style.borderColor = props.textColor;
+  block.append(mobileToggle);
   initToggleHoliday(block);
 
   setTimeout(() => {
@@ -1266,12 +1276,6 @@ function decorateHoliday(block, props) {
       initExpandCollapseBlock(block);
     }
   }, 3000);
-
-  // if (block.classList.contains('expanded')) {
-  //   setTimeout(() => {
-  //     initExpandCollapseBlock(block);
-  //   }, 3000);
-  // }
 }
 
 async function decorateTemplates(block, props) {

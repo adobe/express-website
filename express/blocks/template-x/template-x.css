@@ -339,7 +339,7 @@ main .template-x.horizontal.holiday {
     min-height: 54px;
 }
 
-main .template-x.horizontal.fullwidth {
+main .template-x.horizontal.fullwidth:not(.holiday) {
     max-width: none;
     padding-right: 16px;
     display: block;
@@ -368,10 +368,17 @@ main .template-x-wrapper .template-title.horizontal h4 {
 }
 
 main .template-x-wrapper.holiday .template-title.horizontal h4 {
-    /* margin-top: 0px; */
+    text-align: left;
     margin-top: 14px;
     margin-bottom: 14px;
     font-size: 16px;
+}
+
+@media (max-width: 900px) {
+    main .template-x-wrapper.holiday .template-title.horizontal h4 {
+        margin: 0;
+        font-size: 14px;
+    }
 }
 
 main .template-x-wrapper .template-title.horizontal .template:not(.placeholder) .template-link {
@@ -789,7 +796,6 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
     }
 
     main .template-x-wrapper .template-title.with-link > div {
-        flex-direction: row;
         justify-content: space-between;
         gap: 14px;
     }
@@ -2012,7 +2018,7 @@ main .template-x-wrapper.horizontal {
 /* re-add max-width on elements that are not carousel */
 main .template-x-wrapper.horizontal > *:not(.template-x.horizontal),
 main .template-x-wrapper.horizontal > .template-x.horizontal > *:not(.carousel-container) {
-    max-width: 350px;
+    max-width: 800px;
     padding-left: 15px;
     padding-right: 15px;
     margin-left: auto;
@@ -2027,6 +2033,16 @@ main .template-x.horizontal .carousel-container {
 main .template-x.horizontal .carousel-platform {
     scroll-padding: 12px;
     padding: 20px 0;
+}
+
+main .template-x.horizontal.fullwidth.holiday .carousel-container .carousel-fader-right {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    width: 170px;
+}
+
+main .template-x.horizontal.fullwidth.holiday .carousel-container .carousel-fader-left {
+    background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    width: 150px;
 }
 
 @media (min-width: 1200px) {
@@ -2115,6 +2131,7 @@ main .template-x.horizontal .carousel-platform {
 
 @media (min-width: 900px) {
     main .template-x.horizontal .carousel-container {
+        max-width: 1090px;
         margin-left: 12px;
         margin-right: 12px;
         max-width: none;
@@ -2126,7 +2143,7 @@ main .template-x.horizontal .carousel-platform {
         padding-right: 32px;
     }
 
-    main .template-x-wrapper.horizontal {
+    main .template-x-wrapper.horizontal:not(.fullwidth) {
         max-width: 836px;
     }
 
@@ -2166,6 +2183,10 @@ main .template-x.horizontal .carousel-platform {
     }
 }
 
+main .template-x.horizontal.holiday .template-x-inner-wrapper .carousel-container {
+    max-width: 1090px;
+}
+
 @media (min-width: 1200px) {
     main .template-x-wrapper.horizontal {
         max-width: 1024px;
@@ -2174,10 +2195,6 @@ main .template-x.horizontal .carousel-platform {
     main .template-x.horizontal.fullwidth .template-x-inner-wrapper > div,
     main .template-x-wrapper.horizontal.fullwidth {
         max-width: none;
-    }
-
-    main .template-x.horizontal.holiday .template-x-inner-wrapper .carousel-container {
-        max-width: 1090px;
     }
 
     main .template-x.horizontal {
@@ -2359,13 +2376,11 @@ main .template-x.collaboration .carousel-container {
 
     main .template-x.holiday .template-title .toggle-bar-bottom {
         display: flex;
-        gap: 32px;
         flex-grow: 1;
     }
 }
 
 main .template-x.horizontal.holiday {
-    padding-bottom: 10px;
     position: relative;
     overflow-x: hidden;
     background: var(--color-black);
@@ -2382,15 +2397,24 @@ main .template-x.horizontal.holiday picture {
 }
 
 main .template-x.horizontal.holiday .toggle-bar {
+    flex-direction: row;
     margin: auto;
-    /* margin-top: 11px; */
     align-items: center;
-    padding: 0 30px
 }
 
 main .template-x.horizontal.holiday .toggle-bar p {
     font-size: 16px;
     margin: 0;
+}
+
+@media (max-width: 900px) {
+    main .template-x.horizontal.holiday .toggle-bar p {
+        font-size: 12px;
+    }
+
+    main .template-x.horizontal.holiday .toggle-button a {
+        font-size: 12px;
+    }
 }
 
 main .template-x.horizontal.holiday .toggle-bar img {
@@ -2401,8 +2425,36 @@ main .template-x.horizontal.holiday .toggle-bar img {
 }
 
 main .template-x.horizontal.holiday .toggle-button {
-    display: flex;
     align-self: center;
+    transition: transform 0.4s;
+}
+
+main .template-x.horizontal.holiday .toggle-button.mobile {
+    display: flex;
+    margin-bottom: 16px;
+    transform: translateX(107px);
+}
+
+@media (min-width: 901px) {
+    main .template-x.horizontal.holiday .toggle-button:not(.mobile) {
+        display: flex;
+    }
+
+    main .template-x.horizontal.holiday .toggle-button.mobile {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    main .template-x.horizontal.holiday .toggle-button:not(.mobile) {
+        display: none;
+    }
+
+    main .template-x.horizontal.holiday .toggle-button.mobile.expanded {
+        transform: translateX(50%);
+        /* margin-left: 0;
+        padding-left: 0; */
+    }
 }
 
 main .template-x.horizontal.holiday .toggle-button a {
@@ -2453,6 +2505,7 @@ main .template-x.horizontal.holiday .toggle-button .toggle-button-chev {
     margin-left: 5px;
     margin-right: 2.25px;
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 main .template-x.horizontal.holiday .toggle-button.expanded .toggle-button-chev {
@@ -2467,7 +2520,15 @@ main .template-x.horizontal.holiday .toggle-bar-top {
 }
 
 main .template-x.horizontal.holiday .toggle-bar-bottom {
+    display: flex;
+    gap: 32px;
     z-index: 1;
+}
+
+@media (max-width: 900px) {
+    main .template-x.horizontal.holiday .toggle-bar-bottom {
+        margin-left: 16px;
+    }
 }
 
 main .template-x.horizontal.holiday .template-x-wrapper p.mobile-only {
@@ -2485,6 +2546,12 @@ main .template-x.holiday,
 main .template-x.holiday .carousel-container {
     max-width: none;
     z-index: 1;
+}
+
+@media (max-width: 900px) {
+    main .template-x.holiday .carousel-container {
+        margin-bottom: 0;
+    }
 }
 
 main .template-x.horizontal.holiday .template-x-wrapper {
@@ -2530,16 +2597,8 @@ main .template-x.horizontal.holiday .toggle-bar {
 }
 
 @media (min-width: 1200px) {
-    main .template-x.horizontal.holiday {
-        padding-bottom: 0;
-    }
-
     main .template-x.horizontal.holiday .mobile-only {
         display: none;
-    }
-
-    main .template-x.horizontal.holiday .toggle-bar-bottom {
-        display: flex;
     }
 
     main .template-x.horizontal.holiday .template-x-wrapper.expanded {
