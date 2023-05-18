@@ -21,7 +21,7 @@ function formatFilterString(filters) {
     topics,
   } = filters;
   let str = '';
-  if (premium && animated !== 'all') {
+  if (premium && premium !== 'all') {
     if (premium.toLowerCase() === 'false') {
       str += '&filters=licensingCategory==free';
     } else {

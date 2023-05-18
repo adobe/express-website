@@ -178,6 +178,7 @@ function constructProps(block) {
       const value = cols[1].textContent.trim();
 
       if (key && value) {
+        // FIXME: facebook-post
         if (['tasks', 'topics', 'locales'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
           props.filters[camelize(key)] = value;
         } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
