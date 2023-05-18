@@ -80,6 +80,11 @@ sitemaps:
         destination: /express/sitemap-other.xml
         hreflang: sv
         alternate: /se/{path}
+      india:
+        source: /in/express/query-index.json
+        destination: /express/sitemap-other.xml
+        hreflang: en-IN
+        alternate: /in/{path}
 
   blogs:
     origin: https://www.adobe.com
