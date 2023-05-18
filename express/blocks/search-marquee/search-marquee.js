@@ -263,4 +263,10 @@ export default async function decorate(block) {
   await buildSearchDropdown(block);
   initSearchFunction(block);
   decorateLinkList(block);
+
+  const blockLinks = block.querySelectorAll('a');
+  if (blockLinks && blockLinks.length > 0) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+    document.dispatchEvent(linksPopulated);
+  }
 }
