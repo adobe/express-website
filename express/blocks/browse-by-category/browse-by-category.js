@@ -39,16 +39,18 @@ export function decorateCategories($block, payload) {
   const $categoriesWrapper = createTag('div', { class: 'browse-by-category-categories-wrapper' });
 
   payload.categories.forEach((category) => {
-    const $category = createTag('div', { class: 'browse-by-category-category' });
-    const $categoryImageWrapper = createTag('div', { class: 'browse-by-category-category-image-wrapper' });
-    const $categoryImageShadow = createTag('div', { class: 'browse-by-category-category-image-shadow' });
+    const $category = createTag('div', { class: 'browse-by-category-card' });
+    const $categoryImageWrapper = createTag('div', { class: 'browse-by-category-image-wrapper' });
+    const $categoryImageShadowWrapper = createTag('div', { class: 'browse-by-category-image-shadow-wrapper' });
+    const $categoryImageShadow = createTag('div', { class: 'browse-by-category-image-shadow' });
     const $categoryImage = category.$image;
-    const $categoryTitle = createTag('h4', { class: 'browse-by-category-category-title' });
-    const $categoryAnchor = createTag('a', { class: 'browse-by-category-category-anchor' });
+    const $categoryTitle = createTag('h4', { class: 'browse-by-category-card-title' });
+    const $categoryAnchor = createTag('a', { class: 'browse-by-category-card-link' });
 
     $categoryTitle.textContent = category.text;
     $categoryAnchor.href = category.link;
-    $categoryImageWrapper.append($categoryImageShadow, $categoryImage);
+    $categoryImageShadowWrapper.append($categoryImageShadow, $categoryImage);
+    $categoryImageWrapper.append($categoryImageShadowWrapper);
     $category.append($categoryAnchor, $categoryImageWrapper, $categoryTitle);
     $categoriesWrapper.append($category);
   });
@@ -81,5 +83,5 @@ export default async function decorate($block) {
 
   decorateHeading($block, payload);
   decorateCategories($block, payload);
-  buildCarousel('.browse-by-category-category', $block, false);
+  buildCarousel('.browse-by-category-card', $block, false);
 }
