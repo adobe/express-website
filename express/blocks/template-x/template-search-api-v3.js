@@ -35,16 +35,17 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  const cleanedTasks = tasks?.replace(' ', '')?.toLowerCase();
+  const cleanedTasks = tasks?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTasks) {
     str += `&filters=pages.task.name==${cleanedTasks}`;
   }
-  const cleanedTopics = topics?.replace(' ', '')?.toLowerCase();
+  const cleanedTopics = topics?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTopics) {
     str += `&filters=topics==${cleanedTopics}`;
   }
-  if (locales) {
-    str += `&filters=language==${locales.split('OR').map((l) => getLanguage(l))}`;
+  const cleanedLocales = locales?.replaceAll(' ', '')?.toLowerCase();
+  if (cleanedLocales) {
+    str += `&filters=language==${cleanedLocales.split('or').map((l) => getLanguage(l))}`;
   }
 
   return str;

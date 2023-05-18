@@ -420,11 +420,7 @@ async function updateLazyBlocks() {
   // FIXME: integrate memoization
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
     await lazyLoadSearchMarqueeLinklist();
-  } else {
-    const linkListContainer = document.querySelector('.search-marquee')?.querySelector('.carousel-container > .carousel-platform');
-    if (linkListContainer) linkListContainer.remove();
   }
-
   await lazyLoadLinklist();
   await lazyLoadSEOLinkList();
 }
@@ -433,27 +429,3 @@ await autoUpdatePage();
 validatePage();
 await updateEagerBlocks();
 updateLazyBlocks();
-
-// const page = await fetchPageContent(window.location.pathname);
-//
-// if (page) {
-//   await fetchLinkList(page);
-//   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-//     const data = await formatSearchQuery(page);
-//     if (!data) {
-//       window.location.replace('/express/templates/');
-//     } else {
-//       const purgedData = formatAllTaskText(data);
-//       updateMetadata(purgedData);
-//       await updateBlocks(purgedData);
-//     }
-//   } else {
-//     await updateBlocks(page);
-//   }
-// } else {
-//   const env = getHelixEnv();
-//
-//   if ((env && env.name !== 'stage') || window.location.pathname !== '/express/templates/default') {
-//     window.location.replace('/404');
-//   }
-// }

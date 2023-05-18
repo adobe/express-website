@@ -201,7 +201,8 @@ async function buildSearchDropdown(block) {
 
     const fromScratchLink = block.querySelector('a');
     const trendsTitle = placeholders['search-trends-title'];
-    const trends = JSON.parse(placeholders['search-trends']);
+    let trends;
+    if (placeholders['search-trends']) trends = JSON.parse(placeholders['search-trends']);
 
     if (fromScratchLink) {
       const linkDiv = fromScratchLink.parentElement.parentElement;
@@ -209,7 +210,7 @@ async function buildSearchDropdown(block) {
       fromScratchLink.append(getIconElement('arrow-right'));
       fromScratchLink.classList.remove('button');
       fromScratchLink.classList.add('from-scratch-link');
-
+      fromScratchLink.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-marquee-from-scratch-link', getMetadata('search-marquee-from-scratch-link') || '/');
       trendsContainer.append(fromScratchLink);
       linkDiv.remove();
     }
@@ -244,11 +245,15 @@ async function buildSearchDropdown(block) {
 }
 
 function decorateLinkList(block) {
-  const pWrapper = block.querySelector(':scope > div:nth-of-type(2)');
-  if (pWrapper) {
-    buildCarousel(':scope > div > p', pWrapper);
-    const carousel = pWrapper.querySelector('.carousel-container');
-    block.append(carousel);
+  const carouselItemsWrapper = block.querySelector(':scope > div:nth-of-type(2)');
+  if (carouselItemsWrapper) {
+    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+      buildCarousel(':scope > div > p', carouselItemsWrapper);
+      const carousel = carouselItemsWrapper.querySelector('.carousel-container');
+      block.append(carousel);
+    } else {
+      carouselItemsWrapper.remove();
+    }
   }
 }
 
