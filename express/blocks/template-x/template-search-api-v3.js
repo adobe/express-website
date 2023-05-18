@@ -37,15 +37,17 @@ function formatFilterString(filters) {
   }
   const cleanedTasks = tasks?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTasks) {
-    str += `&filters=pages.task.name==${cleanedTasks}`;
+    str += `&filters=pages.task.name==${encodeURIComponent(cleanedTasks)}`;
   }
   const cleanedTopics = topics?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTopics) {
-    str += `&filters=topics==${cleanedTopics}`;
+    str += `&filters=topics==${encodeURIComponent(cleanedTopics)}`;
   }
   const cleanedLocales = locales?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedLocales) {
-    str += `&filters=language==${cleanedLocales.split('or').map((l) => getLanguage(l))}`;
+    str += `&filters=language==${encodeURIComponent(
+      cleanedLocales.split('or').map((l) => getLanguage(l)).toString()
+    )}`;
   }
 
   return str;
@@ -60,16 +62,16 @@ const fetchSearchUrl = async ({
   const queryType = 'assets';
   const queryParam = `&queryType=${queryType}`;
   const filterStr = formatFilterString(filters);
-  const limitParam = limit ? `&limit=${limit}` : '';
+  const limitParam = limit || limit === 0 ? `&limit=${limit}` : '';
   const startParam = start ? `&start=${start}` : '';
-  // fixme: Can't use orderBy param. Need to work with API team on this.
+  // FIXME: Can't use orderBy param. Need to work with API team on this.
   const sortParam = {
     'Most Viewed': '&orderBy=-remixCount',
     'Rare & Original': '&orderBy=remixCount',
-    'Newest to Oldest': '&orderBy=-createDate',
-    'Oldest to Newest': '&orderBy=createDate',
+    'Newest to Oldest': '&orderBy=-availabilityDate',
+    'Oldest to Newest': '&orderBy=availabilityDate',
   }[sort] || sort || '';
-  const qParam = q ? `&q=${q}` : '';
+  const qParam = q && q !== '{{q}}' ? `&q=${q}` : '';
   const url = encodeURI(
     `${base}?${collectionIdParam}${queryParam}${qParam}${limitParam}${startParam}${sortParam}${filterStr}`,
   );
