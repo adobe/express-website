@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLocale, getLanguage } from '../../scripts/scripts.js';
 import { memoize, throttle, debounce } from '../../scripts/utils.js';
 import fetchAPI from './autocomplete-api-v3.js';
 
@@ -27,7 +28,7 @@ export default function useInputAutocomplete(
   const fetchAndUpdateUI = async () => {
     const currentSearch = state.query;
     state.waitingFor = currentSearch;
-    const suggestions = await memoizedFetchAPI({ textQuery: currentSearch, limit });
+    const suggestions = await memoizedFetchAPI({ textQuery: currentSearch, limit, locale: getLanguage(getLocale(window.location)) });
     if (state.waitingFor === currentSearch) {
       updateUIWithSuggestions(suggestions);
     }
