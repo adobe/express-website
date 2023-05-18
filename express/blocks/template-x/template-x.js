@@ -22,7 +22,8 @@ import {
   getLottie,
   lazyLoadLottiePlayer,
   toClassName,
-  getLanguage, getMetadata,
+  getLanguage,
+  getMetadata,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
