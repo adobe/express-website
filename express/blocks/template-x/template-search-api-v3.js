@@ -37,17 +37,17 @@ function formatFilterString(filters) {
   }
   const cleanedTasks = tasks?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTasks) {
-    str += `&filters=pages.task.name==${encodeURIComponent(cleanedTasks)}`;
+    str += `&filters=pages.task.name==${cleanedTasks}`;
   }
   const cleanedTopics = topics?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTopics) {
-    str += `&filters=topics==${encodeURIComponent(cleanedTopics)}`;
+    str += `&filters=topics==${cleanedTopics}`;
   }
   const cleanedLocales = locales?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedLocales) {
-    str += `&filters=language==${encodeURIComponent(
+    str += `&filters=language==${
       cleanedLocales.split('or').map((l) => getLanguage(l)).toString()
-    )}`;
+    }`;
   }
 
   return str;
