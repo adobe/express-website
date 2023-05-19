@@ -673,6 +673,7 @@ export function getLanguage(locale) {
   const langs = {
     us: 'en-US',
     fr: 'fr-FR',
+    in: 'en-IN',
     de: 'de-DE',
     it: 'it-IT',
     dk: 'da-DK',
