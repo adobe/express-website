@@ -503,7 +503,12 @@ export function decorateSections($main) {
       sectionMeta.parentNode.remove();
     }
 
-    if (section.dataset.audience && !noAudienceFound) {
+    if (section.dataset.audience
+        && document.body.dataset.device
+        && section.dataset.audience !== document.body.dataset.device) {
+      // remove section if audience does not match and will not be displayed
+      section.remove();
+    } else if (section.dataset.audience && !noAudienceFound) {
       section.style.paddingTop = '0';
     } else {
       noAudienceFound = true;
@@ -665,6 +670,7 @@ export function getCurrency(locale) {
     tt: 'USD',
     uy: 'USD',
     vn: 'USD',
+    in: 'INR',
   };
   return currencies[loc];
 }
@@ -672,6 +678,7 @@ export function getCurrency(locale) {
 export function getLanguage(locale) {
   const langs = {
     us: 'en-US',
+    in: 'en-IN',
     fr: 'fr-FR',
     de: 'de-DE',
     it: 'it-IT',
