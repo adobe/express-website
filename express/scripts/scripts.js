@@ -2395,38 +2395,7 @@ export async function buildStaticFreePlanWidget() {
     tagWrapper.append(checkMarkDiv, textDiv);
     widget.append(tagWrapper);
   }
-
   return widget;
-}
-
-export async function buildFreePlanHighlight(elem) {
-  const placeholders = await fetchPlaceholders();
-  const bullet = createTag('div', { class: 'free-plan-bullet' });
-
-  if (sessionStorage.getItem('highlight-optout')) {
-    elem.classList.add('highlight-optout');
-  }
-  const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
-  const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
-  const optoutButton = createTag('button', { class: 'free-plan-optout' });
-
-  optoutButton.append(getIconElement('close-black'));
-
-  for (let i = 0; i < 40; i += 1) {
-    const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
-    const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
-    const tag = createTag('div', { class: 'free-plan-tag' });
-    const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
-    tag.innerText = placeholder;
-    innerDiv.append(getIconElement('checkmark'));
-
-    tag.prepend(innerDiv);
-    freePlanBulletTray.append(tag);
-  }
-
-  freePlanBulletContainer.append(freePlanBulletTray);
-  bullet.append(freePlanBulletContainer);
-  elem.append(bullet, optoutButton);
 }
 
 export async function addFreePlanWidget(elem) {
@@ -2459,12 +2428,6 @@ export async function addFreePlanWidget(elem) {
     });
 
     elem.append(widget);
-
-    // add the free plan bullet if there's a CTA to attach to
-    if (elem.classList.contains('button-container')) {
-      await buildFreePlanHighlight(elem);
-    }
-
     elem.classList.add('free-plan-container');
   }
 }
