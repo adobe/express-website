@@ -377,7 +377,6 @@ main .template-x-wrapper.holiday .template-title.horizontal h4 {
 @media (max-width: 900px) {
     main .template-x-wrapper.holiday .template-title.horizontal h4 {
         margin: 0;
-        font-size: 14px;
     }
 }
 
@@ -793,11 +792,6 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
     main .template-x.sixcols > .template-x-inner-wrapper > .masonry-col,
     main .template-x.fullwidth > .template-x-inner-wrapper > .masonry-col {
         max-width: 187px;
-    }
-
-    main .template-x-wrapper .template-title.with-link > div {
-        justify-content: space-between;
-        gap: 14px;
     }
 
     main .template-x-wrapper .template-title.horizontal > div > * {
@@ -2406,6 +2400,8 @@ main .template-x.horizontal.holiday picture {
 
 main .template-x.horizontal.holiday .toggle-bar {
     flex-direction: row;
+    justify-content: space-between;
+    gap: 14px;
     margin: auto;
     align-items: center;
 }
@@ -2415,15 +2411,11 @@ main .template-x.horizontal.holiday .toggle-bar p {
     margin: 0;
 }
 
-@media (max-width: 900px) {
+/* @media (max-width: 900px) {
     main .template-x.horizontal.holiday .toggle-bar p {
         font-size: 12px;
     }
-
-    main .template-x.horizontal.holiday .toggle-button a {
-        font-size: 12px;
-    }
-}
+} */
 
 main .template-x.horizontal.holiday .toggle-bar img {
     display: block;
@@ -2434,13 +2426,7 @@ main .template-x.horizontal.holiday .toggle-bar img {
 
 main .template-x.horizontal.holiday .toggle-button {
     align-self: center;
-    transition: transform 0.4s;
-}
-
-main .template-x.horizontal.holiday .toggle-button.mobile {
-    display: flex;
-    margin-bottom: 16px;
-    transform: translateX(107px);
+    transition: margin 0.4s;
 }
 
 @media (min-width: 901px) {
@@ -2458,10 +2444,17 @@ main .template-x.horizontal.holiday .toggle-button.mobile {
         display: none;
     }
 
+    main .template-x.horizontal.holiday .toggle-button.mobile {
+        display: flex;
+        transform: translate(-50%);
+        margin-left: 210px;
+        padding: 0 0 16px 0;
+        width: 110px;
+    }    
+
     main .template-x.horizontal.holiday .toggle-button.mobile.expanded {
-        transform: translateX(50%);
-        /* margin-left: 0;
-        padding-left: 0; */
+        margin-left: 50%;
+        transform: translate(-50%);
     }
 }
 
@@ -2601,8 +2594,13 @@ main .template-x.horizontal.holiday.expanded .animation-background {
 
 main .template-x.horizontal.holiday .toggle-bar {
     max-width: 925px;
-    /* height: 54px; */
     cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    main .template-x.horizontal.holiday .toggle-bar {
+        margin-top: 16px;
+    }
 }
 
 @media (min-width: 1200px) {

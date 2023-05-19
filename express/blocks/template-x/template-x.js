@@ -1233,7 +1233,6 @@ function decorateHoliday(block, props) {
   const link = templateTitle.querySelector('.template-title-link');
   const linkWrapper = link.closest('p');
   const toggle = createTag('div', { class: 'expanded toggle-button' });
-  const mobileToggle = toggle.cloneNode(true);
   const topElements = createTag('div', { class: 'toggle-bar-top' });
   const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
   const toggleChev = createTag('div', { class: 'toggle-button-chev' });
@@ -1244,7 +1243,6 @@ function decorateHoliday(block, props) {
   block.classList.add('expanded');
   toggleBar.classList.add('expanded', 'toggle-bar');
   templatesWrapper.classList.add('expanded');
-  mobileToggle.classList.add('mobile');
 
   if (props.holidayIcon) {
     topElements.append(props.holidayIcon);
@@ -1266,6 +1264,8 @@ function decorateHoliday(block, props) {
 
   topElements.append(heading);
   toggle.append(link, toggleChev);
+  const mobileToggle = toggle.cloneNode(true);
+  mobileToggle.classList.add('mobile');
   linkWrapper.remove();
   bottomElements.append(subheading, toggle);
   toggleBar.append(topElements, bottomElements, toggle);
