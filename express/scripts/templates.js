@@ -292,7 +292,7 @@ async function autoUpdatePage() {
 function validatePage() {
   const env = getHelixEnv();
   const title = document.querySelector('title');
-  if ((env && env.name !== 'stage') || getMetadata('live') === 'N') {
+  if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
     window.location.replace('/express/templates/');
   }
 
