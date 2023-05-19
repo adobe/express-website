@@ -1,3 +1,8 @@
+main .browse-by-category-wrapper.fullwidth {
+  margin: 0;
+  max-width: fit-content;
+}
+
 main .browse-by-category {
   max-width: max-content;
 }
