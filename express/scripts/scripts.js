@@ -654,7 +654,6 @@ export function getCurrency(locale) {
     bo: 'USD',
     do: 'USD',
     hr: 'EUR',
-    in: 'INR',
     ke: 'USD',
     lk: 'USD',
     mo: 'HKD',
