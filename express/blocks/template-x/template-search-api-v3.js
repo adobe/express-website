@@ -103,11 +103,11 @@ function isValidBehaviors(behaviors) {
 }
 
 export function isValidTemplate(template) {
-  return template.status === 'approved'
+  return !!(template.status === 'approved'
     && template.customLinks?.branchUrl
-    && template.title?.['i-default']
+    && template['dc:title']?.['i-default']
     && template.pages?.[0]?.rendition?.image?.thumbnail?.componentId
     && template._links?.['http://ns.adobe.com/adobecloud/rel/rendition']?.href?.replace
     && template._links?.['http://ns.adobe.com/adobecloud/rel/component']?.href?.replace
-    && isValidBehaviors(template.behaviors);
+    && isValidBehaviors(template.behaviors));
 }

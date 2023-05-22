@@ -25,7 +25,7 @@ function isVideo(iterator) {
 }
 
 function getTemplateTitle(template) {
-  return template.title['i-default'];
+  return template['dc:title']['i-default'];
 }
 
 function extractRenditionLinkHref(template) {
