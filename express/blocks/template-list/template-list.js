@@ -34,6 +34,8 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
+import { memoize } from '../../scripts/utils.js';
+
 const props = {
   templates: [],
   filters: { locales: '(en)' },
@@ -117,22 +119,23 @@ function formatSearchQuery(limit, start, sort, filters) {
   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
+const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
+  key: (q) => q,
+  ttl: 1000 * 60 * 60 * 24,
+});
+
 async function fetchTemplates() {
   if (!props.authoringError && Object.keys(props.filters).length !== 0) {
     props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
 
-    const result = await fetch(props.queryString)
-      .then((response) => response.json())
-      .then((response) => response);
+    const result = await memoizedFetchUrl(props.queryString);
 
     // eslint-disable-next-line no-underscore-dangle
     if (result._embedded.total > 0) {
       return result;
     } else {
       // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
-        .then((response) => response.json())
-        .then((response) => response);
+      return memoizedFetchUrl(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`);
     }
   }
   return null;
@@ -146,11 +149,9 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const tempQ = formatSearchQuery(props.limit, '', props.sort, tempFilters);
+    const tempQ = formatSearchQuery(0, '', props.sort, tempFilters);
 
-    return fetch(tempQ)
-      .then((response) => response.json())
-      .then((response) => response);
+    return memoizedFetchUrl(tempQ);
   }
 
   return null;
@@ -177,8 +178,7 @@ async function appendCategoryTemplatesCount($section) {
 }
 
 async function processResponse() {
-  const placeholders = await fetchPlaceholders();
-  const response = await fetchTemplates();
+  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates()]);
   let templateFetched;
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
@@ -472,7 +472,7 @@ async function readRowsFromBlock($block) {
 }
 
 async function redirectSearch($searchBar) {
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if ($searchBar) {
     const wrapper = $searchBar.closest('.search-bar-wrapper');
@@ -535,25 +535,25 @@ function makeTemplateFunctions(placeholders) {
 
   Object.entries(functions).forEach((entry) => {
     entry[1].elements.wrapper = createTag('div', {
-      class: `function-wrapper function-${Object.values(entry)[0]}`,
-      'data-param': Object.values(entry)[0],
+      class: `function-wrapper function-${entry[0]}`,
+      'data-param': entry[0],
     });
 
     entry[1].elements.wrapper.subElements = {
       button: {
-        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${Object.values(entry)[0]}` }),
+        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
         subElements: {
           iconHolder: createTag('span', { class: 'icon-holder' }),
-          textSpan: createTag('span', { class: `current-option current-option-${Object.values(entry)[0]}` }),
+          textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
           chevIcon: getIconElement('drop-down-arrow'),
         },
       },
       options: {
-        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${Object.values(entry)[0]}` }),
+        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
         subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
           const icon = getIconElement(entry[1].icons[subIndex]);
-          const optionButton = createTag('div', { class: 'option-button', 'data-value': Object.values(option)[1] });
-          [optionButton.textContent] = Object.values(option);
+          const optionButton = createTag('div', { class: 'option-button', 'data-value': option[1] });
+          [optionButton.textContent] = option;
           optionButton.prepend(icon);
           return optionButton;
         }),
@@ -588,22 +588,22 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $functionsContainer = createTag('div', { class: 'functions-container' });
   const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
-  Object.entries(functions).forEach((filter) => {
-    const $filterWrapper = filter[1].elements.wrapper;
+  Object.values(functions).forEach((filter) => {
+    const filterWrapper = filter.elements.wrapper;
 
-    Object.entries($filterWrapper.subElements).forEach((part) => {
-      const $innerWrapper = part[1].wrapper;
+    Object.values(filterWrapper.subElements).forEach((part) => {
+      const innerWrapper = part.wrapper;
 
-      Object.entries(part[1].subElements).forEach((innerElement) => {
-        if (Object.values(innerElement)[1]) {
-          $innerWrapper.append(Object.values(innerElement)[1]);
+      Object.values(part.subElements).forEach((innerElement) => {
+        if (innerElement) {
+          innerWrapper.append(innerElement);
         }
       });
 
-      $filterWrapper.append($innerWrapper);
+      filterWrapper.append(innerWrapper);
     });
-    $functionContainerMobile.append($filterWrapper.cloneNode({ deep: true }));
-    $functionsContainer.append($filterWrapper);
+    $functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
+    $functionsContainer.append(filterWrapper);
   });
 
   // restructure drawer for mobile design
@@ -833,113 +833,113 @@ function updateLottieStatus($section) {
   }
 }
 
-function decorateCategoryList($block, $section, placeholders) {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
+async function decorateCategoryList(block, section, placeholders) {
+  const locale = getLocale(window.location);
+  const $blockWrapper = block.closest('.template-list-wrapper');
+  const $mobileDrawerWrapper = section.querySelector('.filter-drawer-mobile');
+  const $inWrapper = section.querySelector('.filter-drawer-mobile-inner-wrapper');
+  const categories = JSON.parse(placeholders['task-categories']);
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
+  const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
+  const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
+  const $categoriesToggle = getIconElement('drop-down-arrow');
+  // const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
+  const $categories = createTag('ul', { class: 'category-list' });
 
-  if (params.tasks) {
-    const locale = getLocale(window.location);
-    const $blockWrapper = $block.closest('.template-list-wrapper');
-    const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
-    const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
-    const categories = JSON.parse(placeholders['task-categories']);
-    const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
-    const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
-    const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
-    const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
-    const $categories = createTag('ul', { class: 'category-list' });
+  // $categoriesToggle.textContent = placeholders['jump-to-category'];
 
-    $categoriesToggle.textContent = placeholders['jump-to-category'];
+  $categoriesToggleWrapper.append($categoriesToggle);
+  $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
 
-    $categoriesToggleWrapper.append($categoriesToggle);
-    $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
+  Object.entries(categories).forEach((category, index) => {
+    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+    const targetTasks = category[1];
+    const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
+    const currentTopic = trimFormattedFilterText(props.filters.topics);
 
-    Object.entries(categories).forEach((category, index) => {
-      const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-      const targetTasks = category[1];
-      const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
-      const currentTopic = trimFormattedFilterText(props.filters.topics);
-
-      const $listItem = createTag('li');
-      if (category[1] === currentTasks) {
-        $listItem.classList.add('active');
-      }
-
-      let icon;
-      if (categoryIcons[index] && categoryIcons[index] !== '') {
-        icon = categoryIcons[index];
-      } else {
-        icon = 'template-static';
-      }
-
-      const iconElement = getIconElement(icon);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const $a = createTag('a', {
-        'data-tasks': targetTasks,
-        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
-      });
-      [$a.textContent] = category;
-
-      $a.prepend(iconElement);
-      $listItem.append($a);
-      $categories.append($listItem);
-    });
-
-    const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
-
-    const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
-    $mobileDrawerWrapper.append($lottieArrows);
-    $inWrapper.append($categoriesMobileWrapper);
-    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
-    lazyLoadLottiePlayer();
-
-    $categoriesDesktopWrapper.classList.add('desktop-only');
-
-    if ($blockWrapper) {
-      $blockWrapper.prepend($categoriesDesktopWrapper);
-      $blockWrapper.classList.add('with-categories-list');
+    const $listItem = createTag('li');
+    if (category[1] === currentTasks) {
+      $listItem.classList.add('active');
     }
 
-    const $toggleButton = $categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
-    $toggleButton.append(getIconElement('drop-down-arrow'));
-    $toggleButton.addEventListener('click', () => {
-      const $listWrapper = $toggleButton.parentElement;
-      $toggleButton.classList.toggle('collapsed');
-      if ($toggleButton.classList.contains('collapsed')) {
-        if ($listWrapper.classList.contains('desktop-only')) {
-          $listWrapper.classList.add('collapsed');
-          $listWrapper.style.maxHeight = '40px';
-        } else {
-          $listWrapper.classList.add('collapsed');
-          $listWrapper.style.maxHeight = '24px';
-        }
-      } else {
-        $listWrapper.classList.remove('collapsed');
-        $listWrapper.style.maxHeight = '1000px';
-      }
+    let icon;
+    if (categoryIcons[index] && categoryIcons[index] !== '') {
+      icon = categoryIcons[index];
+    } else {
+      icon = 'template-static';
+    }
 
-      setTimeout(() => {
-        if (!$listWrapper.classList.contains('desktop-only')) {
-          updateLottieStatus($section);
-        }
-      }, 510);
-    }, { passive: true });
+    const iconElement = getIconElement(icon);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    const $a = createTag('a', {
+      'data-tasks': targetTasks,
+      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+    });
+    [$a.textContent] = category;
 
-    $lottieArrows.addEventListener('click', () => {
-      $inWrapper.scrollBy({
-        top: 300,
-        behavior: 'smooth',
-      });
-    }, { passive: true });
+    $a.prepend(iconElement);
+    $listItem.append($a);
+    $categories.append($listItem);
+  });
 
-    $inWrapper.addEventListener('scroll', () => {
-      updateLottieStatus($section);
-    }, { passive: true });
+  const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
+  const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
+  $mobileDrawerWrapper.append($lottieArrows);
+  $inWrapper.append($categoriesMobileWrapper);
+  $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
+  lazyLoadLottiePlayer();
+
+  $categoriesDesktopWrapper.classList.add('desktop-only');
+
+  if ($blockWrapper) {
+    $blockWrapper.prepend($categoriesDesktopWrapper);
+    $blockWrapper.classList.add('with-categories-list');
   }
+
+  const $toggleButton = $categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
+  $toggleButton.append(getIconElement('drop-down-arrow'));
+  $toggleButton.addEventListener('click', () => {
+    const $listWrapper = $toggleButton.parentElement;
+    $toggleButton.classList.toggle('collapsed');
+    if ($toggleButton.classList.contains('collapsed')) {
+      if ($listWrapper.classList.contains('desktop-only')) {
+        $listWrapper.classList.add('collapsed');
+        $listWrapper.style.maxHeight = '40px';
+      } else {
+        $listWrapper.classList.add('collapsed');
+        $listWrapper.style.maxHeight = '24px';
+      }
+    } else {
+      $listWrapper.classList.remove('collapsed');
+      $listWrapper.style.maxHeight = '1000px';
+    }
+
+    setTimeout(() => {
+      if (!$listWrapper.classList.contains('desktop-only')) {
+        updateLottieStatus(section);
+      }
+    }, 510);
+  }, { passive: true });
+
+  $lottieArrows.addEventListener('click', () => {
+    $inWrapper.scrollBy({
+      top: 300,
+      behavior: 'smooth',
+    });
+  }, { passive: true });
+
+  $inWrapper.addEventListener('scroll', () => {
+    updateLottieStatus(section);
+  }, { passive: true });
 }
 
 async function decorateSearchFunctions($toolBar, $section, placeholders) {
+  if ($section.classList.contains('template-list-fullwidth-apipowered-container')
+    && $section.classList.contains('search-marquee-spreadsheet-powered-container')) {
+    console.log('searchbar is already handled by search-marquee');
+    return;
+  }
+  console.log('searchbar still goes on, guess im mobile!');
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
   const $inSectionLocation = $section.querySelector('.link-list-wrapper');
   const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
@@ -1458,7 +1458,7 @@ function decorateToolbar($block, $section, placeholders) {
 
 export async function decorateTemplateList($block) {
   const locale = getLocale(window.location);
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   if ($block.classList.contains('apipowered')) {
     await readRowsFromBlock($block);
 
@@ -1555,12 +1555,14 @@ export async function decorateTemplateList($block) {
         }
       }
 
-      const $linkList = $parent.querySelector('.link-list-wrapper');
-      if ($linkList
-        && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')
-        && placeholders['template-filter-premium']) {
+      if (placeholders['template-filter-premium'] && (
+        $parent.querySelector('.search-marquee-wrapper')
+          || $parent.querySelector('.link-list-wrapper')?.previousElementSibling?.classList?.contains('hero-animation-wrapper')
+      )) {
         document.addEventListener('linkspopulated', (e) => {
-          if (e.detail.length > 0 && e.detail[0].parentElement.classList.contains('template-list')) {
+          // desktop/mobile fires the same event
+          if (e.detail.length > 0 && e.detail[0].parentElement.classList.contains('template-list')
+            && e.detail[0].parentElement?.parentElement?.parentElement === $parent) {
             decorateToolbar($block, $parent, placeholders);
             decorateCategoryList($block, $parent, placeholders);
             appendCategoryTemplatesCount($parent);
@@ -1754,8 +1756,7 @@ export async function decorateTemplateList($block) {
 }
 
 async function decorateLoadMoreButton($block) {
-  const placeholders = await fetchPlaceholders()
-    .then((result) => result);
+  const placeholders = await fetchPlaceholders();
   const $loadMoreDiv = createTag('div', { class: 'load-more' });
   const $loadMoreButton = createTag('button', { class: 'load-more-button' });
   const $loadMoreText = createTag('p', { class: 'load-more-text' });
@@ -1780,10 +1781,17 @@ async function decorateLoadMoreButton($block) {
 }
 
 async function decorateTailButton($block) {
+  const section = $block.closest('.section');
+  if (section.classList.contains('template-list-fullwidth-apipowered-container')
+  && section.classList.contains('search-marquee-spreadsheet-powered-container')) {
+    console.log('ckg linkedlist is already handled by search-marquee');
+    return;
+  }
+  console.log('ckg still goes on, guess im mobile!');
   const $carouselPlatform = $block.querySelector('.carousel-platform');
 
   if ($block.classList.contains('spreadsheet-powered')) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
+    const placeholders = await fetchPlaceholders();
 
     if (placeholders['relevant-rows-view-all'] && (props.viewAllLink || placeholders['relevant-rows-view-all-link'])) {
       props.tailButton = createTag('a', { class: 'button accent tail-cta' });
