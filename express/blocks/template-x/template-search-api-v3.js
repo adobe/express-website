@@ -35,7 +35,7 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  const cleanedTasks = tasks?.replaceAll(' ', '')?.toLowerCase();
+  const cleanedTasks = tasks?.trim().replaceAll(' ', '-')?.toLowerCase();
   if (cleanedTasks) {
     str += `&filters=pages.task.name==${cleanedTasks}`;
   }
