@@ -21,7 +21,7 @@ function formatFilterString(filters) {
     topics,
   } = filters;
   let str = '';
-  if (premium && animated !== 'all') {
+  if (premium && premium !== 'all') {
     if (premium.toLowerCase() === 'false') {
       str += '&filters=licensingCategory==free';
     } else {
@@ -35,16 +35,19 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  let cleanedTasks = tasks?.replace(' ', '')?.toLowerCase();
+  const cleanedTasks = tasks?.trim().replaceAll(' ', '-')?.toLowerCase();
   if (cleanedTasks) {
     str += `&filters=pages.task.name==${cleanedTasks}`;
   }
-  let cleanedTopics = topics?.replace(' ', '')?.toLowerCase();
+  const cleanedTopics = topics?.replaceAll(' ', '')?.toLowerCase();
   if (cleanedTopics) {
     str += `&filters=topics==${cleanedTopics}`;
   }
-  if (locales) {
-    str += `&filters=language==${locales.split('OR').map((l) => getLanguage(l))}`;
+  const cleanedLocales = locales?.replaceAll(' ', '')?.toLowerCase();
+  if (cleanedLocales) {
+    str += `&filters=language==${
+      cleanedLocales.split('or').map((l) => getLanguage(l)).toString()
+    }`;
   }
 
   return str;
@@ -56,25 +59,26 @@ const fetchSearchUrl = async ({
   const base = 'https://spark-search.adobe.io/v3/content';
   const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
   const collectionIdParam = `collectionId=${collectionId}`;
-  const queryType = 'search';
+  const queryType = 'assets';
   const queryParam = `&queryType=${queryType}`;
   const filterStr = formatFilterString(filters);
-  const limitParam = limit ? `&limit=${limit}` : '';
+  const limitParam = limit || limit === 0 ? `&limit=${limit}` : '';
   const startParam = start ? `&start=${start}` : '';
+  // FIXME: Can't use orderBy param. Need to work with API team on this.
   const sortParam = {
     'Most Viewed': '&orderBy=-remixCount',
     'Rare & Original': '&orderBy=remixCount',
-    'Newest to Oldest': '&orderBy=-createDate',
-    'Oldest to Newest': '&orderBy=createDate',
+    'Newest to Oldest': '&orderBy=-availabilityDate',
+    'Oldest to Newest': '&orderBy=availabilityDate',
   }[sort] || sort || '';
-  const qParam = q ? `&q=${q}` : '';
+  const qParam = q && q !== '{{q}}' ? `&q=${q}` : '';
   const url = encodeURI(
     `${base}?${collectionIdParam}${queryParam}${qParam}${limitParam}${startParam}${sortParam}${filterStr}`,
   );
 
   return fetch(url, {
     headers: {
-      'x-api-key': 'projectx_webapp',
+      'x-api-key': 'projectx_marketing_web',
     },
   }).then((response) => response.json());
 };
@@ -99,11 +103,11 @@ function isValidBehaviors(behaviors) {
 }
 
 export function isValidTemplate(template) {
-  return template.status === 'approved'
+  return !!(template.status === 'approved'
     && template.customLinks?.branchUrl
-    && template.title?.['i-default']
+    && template['dc:title']?.['i-default']
     && template.pages?.[0]?.rendition?.image?.thumbnail?.componentId
     && template._links?.['http://ns.adobe.com/adobecloud/rel/rendition']?.href?.replace
     && template._links?.['http://ns.adobe.com/adobecloud/rel/component']?.href?.replace
-    && isValidBehaviors(template.behaviors);
+    && isValidBehaviors(template.behaviors));
 }
