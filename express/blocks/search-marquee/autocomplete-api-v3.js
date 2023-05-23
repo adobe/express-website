@@ -25,7 +25,7 @@ export default async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' 
   const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'x-api-key': 'projectx_webapp',
+      'x-api-key': 'projectx_marketing_web',
       'content-type': 'application/json',
     },
     body: JSON.stringify({
