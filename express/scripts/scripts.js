@@ -2604,6 +2604,7 @@ export async function trackBranchParameters($links) {
   const rootUrlParameters = rootUrl.searchParams;
 
   const { experiment } = window.hlx;
+  const { referrer } = window.document;
   const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
   const templateSearchTag = getMetadata('short-title');
   const pageUrl = window.location.pathname;
@@ -2628,6 +2629,10 @@ export async function trackBranchParameters($links) {
           .split(',')
           .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
         urlParams.set('search', templateSearchTag);
+      }
+
+      if (referrer) {
+        urlParams.set('referrer', referrer);
       }
 
       if (pageUrl) {
