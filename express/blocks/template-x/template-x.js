@@ -42,9 +42,9 @@ function camelize(str) {
 }
 
 async function fetchAndRenderTemplates(props) {
-  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
+  const [placeholders, { response, fallbackMsg }] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
   if (!response || !response.items || !Array.isArray(response.items)) {
-    return null;
+    return { templates: null };
   }
 
   if ('_links' in response) {
@@ -58,9 +58,12 @@ async function fetchAndRenderTemplates(props) {
 
   props.total = response.metadata.totalHits;
 
-  return response.items
-    .filter((item) => isValidTemplate(item))
-    .map((template) => renderTemplate(template, placeholders, props));
+  return {
+    fallbackMsg,
+    templates: response.items
+      .filter((item) => isValidTemplate(item))
+      .map((template) => renderTemplate(template, placeholders, props)),
+  };
 }
 
 async function processContentRow(block, props) {
@@ -303,7 +306,7 @@ function updateLoadMoreButton(block, props, loadMore) {
 }
 
 async function decorateNewTemplates(block, props, options = { reDrawMasonry: false }) {
-  const newTemplates = await fetchAndRenderTemplates(props);
+  const { templates: newTemplates } = await fetchAndRenderTemplates(props);
   const loadMore = block.parentElement.querySelector('.load-more');
 
   props.templates = props.templates.concat(newTemplates);
@@ -1227,8 +1230,8 @@ async function appendCategoryTemplatesCount(block, props) {
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       tempProps.filters.tasks = anchor.dataset.tasks;
       // eslint-disable-next-line no-await-in-loop
-      const response = await fetchTemplates(tempProps, false);
-      if (!response || !response.items || !Array.isArray(response.items)) {
+      const { response } = await fetchTemplates(tempProps, false);
+      if (!response?.metadata?.totalHits) {
         countSpan.textContent = '(0)';
       } else {
         countSpan.textContent = `(${response.metadata.totalHits.toLocaleString(lang)})`;
@@ -1250,8 +1253,13 @@ async function buildTemplateList(block, props, type = []) {
     await processContentRow(block, props);
   }
 
-  const templates = await fetchAndRenderTemplates(props);
+  const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
   if (templates) {
+    if (fallbackMsg) {
+      const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
+      fallbackMsgWrapper.textContent = fallbackMsg;
+      block.append(fallbackMsgWrapper);
+    }
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
     block.append(blockInnerWrapper);
     props.templates = props.templates.concat(templates);
