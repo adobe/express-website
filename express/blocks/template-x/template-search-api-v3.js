@@ -35,7 +35,11 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  const cleanedTasks = tasks?.trim().replaceAll(' ', '-')?.toLowerCase();
+  const cleanedTasks = tasks
+    ?.split(',')
+    ?.map((t) => t.trim().replaceAll(' ', '-'))
+    ?.join(',')
+    ?.toLowerCase();
   if (cleanedTasks) {
     str += `&filters=pages.task.name==${cleanedTasks}`;
   }
@@ -83,17 +87,30 @@ const fetchSearchUrl = async ({
   }).then((response) => response.json());
 };
 
-export async function fetchTemplates(props, fallback = true) {
-  const result = await fetchSearchUrl(props);
+// FIXME: use placeholders/localize
+function getFallbackMsg (tasks) {
+  return `Sorry we couldn't find any results for what you searched for, try some of these popular `
+    + (tasks ? `${tasks.toString()} ` : '') + 'templates instead.';
+}
 
-  if (result?.metadata?.totalHits > 0) {
-    return result;
-  } else if (fallback) {
-    // save fetch if search query returned 0 templates. "Bad result is better than no result"
-    return fetchSearchUrl({ ...props, filters: {} });
-  } else {
-    return null;
+export async function fetchTemplates(props, fallback = true) {
+  let response = await fetchSearchUrl(props);
+
+  if (response?.metadata?.totalHits > 0) {
+    return { response };
   }
+  if (!fallback) {
+    return { response: null };
+  }
+  const { filters: { tasks } } = props;
+  if (tasks) {
+    response = await fetchSearchUrl({ ...props, filters: { tasks } });
+    if (response?.metadata?.totalHits > 0) {
+      return { response, fallbackMsg: getFallbackMsg(tasks) }; 
+    }
+  }
+  response = await fetchSearchUrl({ ...props, filters: {} });
+  return { response, fallbackMsg: getFallbackMsg() };
 }
 
 function isValidBehaviors(behaviors) {

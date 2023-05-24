@@ -2603,3 +2603,8 @@ main .template-x .template .button-container .media-wrapper .share-icon-wrapper 
     left: 100%;
     transform: rotate(180deg);
 }
+
+main .template-x .template-x-fallback-msg-wrapper {
+    font-size: 22px;
+    text-align: center;
+}
