@@ -186,4 +186,7 @@ export default async function decorate(block) {
   }
   addLottieIcons(document.querySelectorAll('a.button.upload-your-photo'), 'arrow-up');
   addListenersOnMockElements(mockQuickActionEle);
+  // trigger the quick-action-rendered event
+  const quickActionRenderedEvent = new Event('ccl-quick-action-rendered');
+  document.querySelector(ELEMENT_NAME).dispatchEvent(quickActionRenderedEvent);
 }
