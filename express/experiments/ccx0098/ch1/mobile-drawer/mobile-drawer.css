@@ -183,6 +183,9 @@ main .mobile-drawer-wrapper .mobile-drawer-items-container {
   height: 100%;
   overflow-y: scroll;
 }
+main .mobile-drawer-wrapper .drawer-item-icon-container a * {
+pointer-events: none;
+}
 main .mobile-drawer-wrapper .drawer-item-icon-container,
 main .mobile-drawer-wrapper .drawer-item-default-view-container,
 main .mobile-drawer-wrapper .drawer-item-animations-view-container,
@@ -315,6 +318,3 @@ body[data-device="mobile"].mobile-drawer-opened main .floating-button-wrapper[da
   display: none;
 }
 
-.mobile-drawer-wrapper a > * {
-  pointer-events: none;
-}

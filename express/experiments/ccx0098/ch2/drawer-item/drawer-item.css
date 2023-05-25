@@ -96,6 +96,9 @@ main .drawer-item {
 main .drawer-item > * {
   pointer-events: auto;
 }
+main .drawer-item a > * {
+  pointer-events: none;
+}
 
 main .drawer-item>* {
   display: inline-block;
@@ -697,6 +700,7 @@ main .mobile-drawer-wrapper .cta-hidden {
   main .mobile-drawer-wrapper .drawer-item-default-view-container .drawer-item img {
     max-width: calc(100% - 30px);
     max-height: 40vh;
+    pointer-events: none;
   }
 
   main .mobile-drawer-wrapper .drawer-item-animations-view-container video {

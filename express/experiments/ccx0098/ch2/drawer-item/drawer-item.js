@@ -283,9 +283,12 @@ function decorateMedia(payload) {
 }
 function decorateAnimationsViewMedia(payload) {
   if (payload.drawerItemContainer.classList.contains('drawer-item-animations-view-container')) {
-    payload.drawerItemContainer.querySelectorAll('a').forEach((link) => {
+    const animationLinks = payload.drawerItemContainer.querySelectorAll('a');
+    animationLinks.forEach((link, index) => {
       if (link?.href?.includes('.mp4')) {
         transformLinkToAnimation(link);
+        if (index === 0) link.classList.add('drawer-swipeable-right');
+        if (index === animationLinks.length - 1) link.classList.add('drawer-swipeable-left');
       }
     });
   }
@@ -307,8 +310,11 @@ function decorateBubblesView(payload) {
   if (payload.$mobileDrawer && payload.drawerItemContainer?.classList.contains('drawer-item-bubbles-view-container')) {
     const bubbleContainer = createTag(
       'div',
-      { class: 'drawer-item-bubbles-container drawer-swipeable-left drawer-swipeable-right' },
+      { class: 'drawer-item-bubbles-container' },
     );
+    [...payload.drawerItemContainer.children].forEach((bubbleItem) => {
+      bubbleItem.querySelector('a')?.classList.add('drawer-swipeable-left', 'drawer-swipeable-right');
+    });
     convertLastDrawerItemToGradientWithIcon(
       payload.drawerItemContainer.children[payload.drawerItemContainer.children.length - 1],
     );
@@ -331,7 +337,7 @@ function decorateCarouselViews(payload) {
   if (payload.isDefaultView) {
     decorateCarouselSwipeableItems(payload.drawerItemContainer.querySelectorAll('.drawer-item a'));
   } else if (payload.isAnimationsView) {
-    decorateCarouselSwipeableItems(payload.drawerItemContainer.querySelectorAll('.drawer-item .hero-animation-overlay'));
+    decorateCarouselSwipeableItems(payload.drawerItemContainer.querySelectorAll('.drawer-item a:nth-child(1)'));
   }
 
   if (!payload.isBubbleView) {
