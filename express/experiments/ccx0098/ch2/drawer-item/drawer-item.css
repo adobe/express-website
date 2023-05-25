@@ -175,6 +175,16 @@ main .mobile-drawer .drawer-item-default-view-container .drawer-item h5 {
   margin-top: 0.5rem;
 }
 
+main .mobile-drawer-wrapper .carousel-container .carousel-platform::-webkit-scrollbar {
+  display: none;
+}
+
+main .mobile-drawer-wrapper .carousel-container .carousel-platform {
+  scrollbar-width: none;
+}
+main .mobile-drawer-wrapper .carousel-container .carousel-platform > * {
+  width: 100VW;
+}
 main .mobile-drawer .drawer-item-default-view-container .carousel-container {
   align-items: flex-start;
 }

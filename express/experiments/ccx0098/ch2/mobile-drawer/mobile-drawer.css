@@ -175,9 +175,9 @@ main .mobile-drawer-wrapper.list-view .mobile-drawer.initial-load .mobile-drawer
     opacity: 0;
     display: flex;
 }
-main .mobile-drawer-wrapper.list-view .toggle-carousel-platform {
+/* main .mobile-drawer-wrapper.list-view .toggle-carousel-platform {
     display: none;
-}
+} */
 main .mobile-drawer-wrapper .mobile-drawer-items-container {
     background-color: var(--color-white);
     height: 100%;
@@ -209,9 +209,6 @@ main .mobile-drawer-wrapper.has-list.mobile-drawer--dragged .mobile-drawer-view-
     display: flex;
 }
 
-main .mobile-drawer-wrapper .carousel-container .carousel-platform > * {
-    width: 100VW;
-}
 main .mobile-drawer-wrapper.list-view .drawer-item-container-1,
 main .mobile-drawer-wrapper.list-view .drawer-item-container-2,
 main .mobile-drawer-wrapper.list-view .drawer-item-container-0 {
