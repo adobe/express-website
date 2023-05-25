@@ -513,9 +513,10 @@ function initSwipeAction($mobileDrawer) {
       touchStart = e.changedTouches[0].clientX;
     }, { passive: true });
     swipeable.addEventListener('touchend', (e) => {
-      if (e.target.classList.contains('drawer-swipeable-right') && e.changedTouches[0].clientX - touchStart > 10) {
+      const swipeThreshold = e.target?.parentElement.parentElement.classList.contains('drawer-item-bubles-container') ? 20 : 10;
+      if (e.target.classList.contains('drawer-swipeable-right') && e.changedTouches[0].clientX - touchStart > swipeThreshold) {
         handleSwipeAction('right', $mobileDrawer);
-      } else if (e.target.classList.contains('drawer-swipeable-left') && e.changedTouches[0].clientX - touchStart < -10) {
+      } else if (e.target.classList.contains('drawer-swipeable-left') && e.changedTouches[0].clientX - touchStart < (-swipeThreshold)) {
         handleSwipeAction('left', $mobileDrawer);
       }
     }, { passive: true });
