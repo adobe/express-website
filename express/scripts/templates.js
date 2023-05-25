@@ -315,12 +315,7 @@ async function updateEagerBlocks() {
   }
 
   if (browseByCat) {
-    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
-      const placeholders = await fetchPlaceholders().then((result) => result);
-      browseByCat.innerHTML = browseByCat.innerHTML
-        .replaceAll('https://www.adobe.com/express/templates/default', getMetadata('categories-view-all-link') || '/')
-        .replaceAll('default-view-all-text', placeholders['view-all'] || '');
-    } else {
+    if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('browse-by-category'))) {
       browseByCat.remove();
     }
   }
