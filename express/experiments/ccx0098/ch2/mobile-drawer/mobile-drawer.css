@@ -175,9 +175,6 @@ main .mobile-drawer-wrapper.list-view .mobile-drawer.initial-load .mobile-drawer
     opacity: 0;
     display: flex;
 }
-/* main .mobile-drawer-wrapper.list-view .toggle-carousel-platform {
-    display: none;
-} */
 main .mobile-drawer-wrapper .mobile-drawer-items-container {
     background-color: var(--color-white);
     height: 100%;
