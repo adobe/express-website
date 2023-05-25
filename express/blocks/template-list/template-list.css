@@ -1731,7 +1731,7 @@ main .template-list-fullwidth-apipowered-container .api-templates-toolbar .lotti
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list {
-  /* display: flex; */
+  display: flex;
 }
 
 main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper {

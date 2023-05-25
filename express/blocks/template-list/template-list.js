@@ -1561,8 +1561,7 @@ export async function decorateTemplateList($block) {
       )) {
         document.addEventListener('linkspopulated', (e) => {
           // desktop/mobile fires the same event
-          if (e.detail.length > 0 && e.detail[0].parentElement.classList.contains('template-list')
-            && e.detail[0].parentElement?.parentElement?.parentElement === $parent) {
+          if ($parent.contains(e.detail[0])) {
             decorateToolbar($block, $parent, placeholders);
             decorateCategoryList($block, $parent, placeholders);
             appendCategoryTemplatesCount($parent);
@@ -1887,7 +1886,7 @@ async function replaceRRTemplateList($block) {
   }
 }
 
-export default async function decorate($block) {
+async function decorateBlock($block) {
   if ($block.classList.contains('spreadsheet-powered')) {
     await replaceRRTemplateList($block);
   }
@@ -1920,4 +1919,24 @@ export default async function decorate($block) {
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
     addBackgroundAnimation($block, props.backgroundAnimation);
   }
+}
+
+export default async function decorate($block) {
+  // non blocking
+  const section = $block.closest('.section');
+  if (section.classList.contains('search-marquee-spreadsheet-powered-container') && document.body.dataset.device === 'mobile') {
+    // delay desktop-version on mobile
+    setTimeout(async () => {
+      await decorateBlock($block);
+    }, 2000);
+    return;
+  }
+  if (section.classList.contains('hero-animation-wide-container') && document.body.dataset.device === 'desktop') {
+    // vice versa
+    setTimeout(async () => {
+      await decorateBlock($block);
+    }, 2000);
+    return;
+  }
+  decorateBlock($block);
 }
