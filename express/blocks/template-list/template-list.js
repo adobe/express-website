@@ -125,20 +125,24 @@ const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
 });
 
 async function fetchTemplates() {
-  if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
-
-    const result = await memoizedFetchUrl(props.queryString);
-
-    // eslint-disable-next-line no-underscore-dangle
-    if (result._embedded.total > 0) {
-      return result;
-    } else {
-      // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return memoizedFetchUrl(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`);
-    }
+  props.fallbackMsg = null;
+  if (props.authoringError || Object.keys(props.filters).length === 0) {
+    props.authoringError = true;
+    props.heading = 'Authoring error: first row must specify the template “type”';
+    return null;
   }
-  return null;
+  props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
+
+  const result = await memoizedFetchUrl(props.queryString);
+
+  // eslint-disable-next-line no-underscore-dangle
+  if (result._embedded.total > 0) {
+    return result;
+  }
+  // save fetch if search query returned 0 templates. "Bad result is better than no result"
+  // FIXME: use placeholders/localize
+  props.fallbackMsg = 'Sorry we couldn\'t find any results for what you searched for, try some of these popular templates instead.';
+  return memoizedFetchUrl(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`);
 }
 
 function fetchTemplatesByTasks(tasks) {
@@ -169,7 +173,7 @@ async function appendCategoryTemplatesCount($section) {
       const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
-      countSpan.textContent = `(${json._embedded.total.toLocaleString(lang)})`;
+      countSpan.textContent = `(${json?._embedded?.total?.toLocaleString(lang) ?? 0})`;
       anchor.append(countSpan);
     }
   }
@@ -1546,6 +1550,11 @@ export async function decorateTemplateList($block) {
         $toolBar.classList.remove('default-content-wrapper');
 
         $templateListWrapper.before($toolBarWrapper);
+        if (props.fallbackMsg) {
+          const fallbackMsgWrapper = createTag('div', { class: 'template-list-fallback-msg-wrapper' });
+          fallbackMsgWrapper.textContent = props.fallbackMsg;
+          $templateListWrapper.before(fallbackMsgWrapper);
+        }
         $toolBarWrapper.append($toolBar);
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
