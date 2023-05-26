@@ -2504,3 +2504,8 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
     padding-top: 0;
   }
 }
+
+main .template-list-fullwidth-apipowered-container .template-list-fallback-msg-wrapper {
+  font-size: 22px;
+  text-align: center;
+}
