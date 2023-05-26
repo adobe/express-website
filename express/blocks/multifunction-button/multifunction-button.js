@@ -79,7 +79,8 @@ function buildMultifunctionToolBox($wrapper, data) {
 
     if (index < data.toolsToStash) {
       $boxTop.append($tool);
-    } else {
+      // Check to make sure this doesn't cause regressions elsewhere
+    } else if (tool.anchor.textContent && tool.anchor.title) {
       $boxBottom.append($tool);
     }
   });
