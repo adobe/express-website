@@ -185,14 +185,16 @@ export async function createFloatingButton($block, audience, data) {
 
   const promoBar = BlockMediator.get('promobar');
   const currentBottom = parseInt($floatButtonWrapper.style.bottom, 10);
+  const promoBarMargin = parseInt(window.getComputedStyle(promoBar.block).marginBottom || 0, 10);
+  const promoBarHeight = promoBarMargin + promoBar.block.offsetHeight;
 
   if (promoBar && promoBar.rendered && !($floatButtonWrapper.classList.contains('floating-button--hidden') || $floatButtonWrapper.classList.contains('floating-button--intersecting'))) {
-    $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+    $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
   }
 
   BlockMediator.subscribe('promobar', (e) => {
     if (!e.newValue.rendered && !($floatButtonWrapper.classList.contains('floating-button--hidden') || $floatButtonWrapper.classList.contains('floating-button--intersecting'))) {
-      $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom - promoBar.block.offsetHeight}px` : '';
+      $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom - promoBarHeight}px` : '';
     }
   });
 
@@ -207,7 +209,7 @@ export async function createFloatingButton($block, audience, data) {
       } else {
         $floatButtonWrapper.classList.remove('floating-button--hidden');
         if (promoBar && promoBar.block) {
-          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
         } else if (currentBottom) {
           $floatButtonWrapper.style.bottom = currentBottom;
         }
@@ -244,7 +246,7 @@ export async function createFloatingButton($block, audience, data) {
       } else {
         $floatButtonWrapper.classList.remove('floating-button--intersecting');
         if (promoBar && promoBar.block) {
-          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBar.block.offsetHeight}px` : `${promoBar.block.offsetHeight}px`;
+          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
         } else if (currentBottom) {
           $floatButtonWrapper.style.bottom = currentBottom;
         }
