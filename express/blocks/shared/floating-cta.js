@@ -185,8 +185,11 @@ export async function createFloatingButton($block, audience, data) {
 
   const promoBar = BlockMediator.get('promobar');
   const currentBottom = parseInt($floatButtonWrapper.style.bottom, 10);
-  const promoBarMargin = parseInt(window.getComputedStyle(promoBar.block).marginBottom || 0, 10);
-  const promoBarHeight = promoBarMargin + promoBar.block.offsetHeight;
+  let promoBarHeight;
+  if (promoBar) {
+    const promoBarMargin = parseInt(window.getComputedStyle(promoBar.block).marginBottom, 10);
+    promoBarHeight = promoBarMargin + promoBar.block.offsetHeight;
+  }
 
   if (promoBar && promoBar.rendered && !($floatButtonWrapper.classList.contains('floating-button--hidden') || $floatButtonWrapper.classList.contains('floating-button--intersecting'))) {
     $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
