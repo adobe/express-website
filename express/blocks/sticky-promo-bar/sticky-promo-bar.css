@@ -13,7 +13,7 @@ main .sticky-promo-bar {
 
 body[data-device="mobile"] main .sticky-promo-bar.rounded {
     border-radius: 10px;
-    margin: 11px 24px 12px 24px;
+    margin: 11px 24px 16px 24px;
     font-weight: 300;
     padding-right: 22px;
     padding: 12px 22px 17px 14px;
