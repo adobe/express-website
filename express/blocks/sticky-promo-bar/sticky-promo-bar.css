@@ -11,7 +11,7 @@ main .sticky-promo-bar {
     z-index: 10;
 }
 
-main .sticky-promo-bar.rounded {
+body[data-device="mobile"] main .sticky-promo-bar.rounded {
     border-radius: 10px;
     margin: 11px 24px 16px 24px;
     font-weight: 300;
