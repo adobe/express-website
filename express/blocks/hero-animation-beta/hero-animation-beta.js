@@ -58,7 +58,7 @@ function getAnimation(animations, breakpoint) {
 
 function createAnimation(animations) {
   const attribs = {
-    class: 'hero-animation-background',
+    class: 'hero-animation-beta-background',
   };
   ['playsinline', 'autoplay', 'muted'].forEach((p) => {
     attribs[p] = '';
@@ -150,12 +150,12 @@ export default async function decorate($block) {
   const possibleBreakpoints = animationBreakPointSettings.map((bp) => bp.typeHint);
   const possibleOptions = ['shadow', 'background'];
   const $section = $block.closest('.section');
-  const $sectionWrapper = $block.closest('.hero-animation-wrapper');
+  const $sectionWrapper = $block.closest('.hero-animation-beta-wrapper');
   const animations = {};
   if ($block.classList.contains('wide')) {
-    $section.classList.add('hero-animation-wide-container');
+    $section.classList.add('hero-animation-beta-wide-container');
   } else {
-    $section.classList.add('hero-animation-container');
+    $section.classList.add('hero-animation-beta-container');
   }
   const $rows = [...$block.children];
   $rows.forEach(($div, index) => {
@@ -220,9 +220,9 @@ export default async function decorate($block) {
       } else {
         $bg = createTag('div');
       }
-      $bg.classList.add('hero-animation-background');
+      $bg.classList.add('hero-animation-beta-background');
       $div.prepend($bg);
-      $bg.nextElementSibling.classList.add('hero-animation-foreground');
+      $bg.nextElementSibling.classList.add('hero-animation-beta-foreground');
       $div.querySelectorAll(':scope p:empty').forEach(($p) => {
         if ($p.innerHTML.trim() === '') {
           $p.remove();
@@ -256,7 +256,7 @@ export default async function decorate($block) {
 
     if (rowType === 'option') {
       if (typeHint === 'shadow') {
-        const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+        const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation-beta/shadow.png' });
         $div.innerHTML = '';
         $div.appendChild(shadow);
         $div.classList.add('hero-shadow');
@@ -276,7 +276,7 @@ export default async function decorate($block) {
 
   if ($block.classList.contains('shadow') && !$block.querySelector('.hero-shadow')) {
     const shadowDiv = createTag('div', { class: 'hero-shadow' });
-    const shadow = createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+    const shadow = createTag('img', { src: '/express/blocks/hero-animation-beta/shadow.png' });
     shadowDiv.appendChild(shadow);
     $block.appendChild(shadowDiv);
   }
