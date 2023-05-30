@@ -1,0 +1,345 @@
+body.no-desktop-brand-header header {
+  background-image: url(/express/icons/cc-express-logo.svg);
+  height: auto;
+}
+
+main .hero-animation-container,
+main .hero-animation-wide-container {
+  padding-top: 0;
+}
+
+main .hero-animation-wrapper {
+  position: relative;
+}
+
+main .hero-animation-container > div,
+main .hero-animation-wide-container > div {
+  max-width: unset;
+  padding: 0;
+}
+
+main .hero-animation.appear {
+  opacity: 1;
+  height: unset;
+}
+
+main .hero-animation p:first-child { /* p with icon above heading */
+  margin-bottom: 8px;
+}
+main .hero-animation .hero-animation-foreground > p:first-child img {
+  height: 32px;
+  width: unset;
+}
+
+main .hero-animation h1 {
+  font-size: var(--heading-font-size-l);
+  margin: 0 0 8px 0;
+}
+
+main .hero-animation p {
+  font-size: var(--body-font-size-m);
+  margin: 16px 0;
+}
+
+main .hero-animation p.button-container {
+  text-align: left;
+  margin: 16px 0;
+}
+
+main .hero-animation p.button-container a.button:any-link {
+  margin: 0;
+}
+
+main .hero-animation .hero-animation-foreground > :first-child {
+  margin-top: 0;
+}
+
+main .hero-animation .hero-animation-foreground > :last-child {
+  margin-bottom: 0;
+}
+
+main .hero-animation {
+  text-align: left;
+  padding: 0;
+  margin: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+main .hero-animation .hero-animation-background {
+  box-sizing: border-box;
+}
+
+main .hero-animation video.hero-animation-background {
+  object-fit: cover;
+  width: 100%;
+  min-height: 200px;
+  max-height: 500px;
+  object-position: 100% 100%;
+}
+
+main .hero-animation .hero-animation-foreground {
+  padding: 32px 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+main .hero-animation.white-text,
+main .hero-animation.white-text a:any-link {
+  color: var(--color-white);
+}
+
+@media (min-width: 600px) {
+  main .hero-animation .hero-animation-foreground {
+    margin: 0 auto;
+    width: 500px;
+  }
+
+  main .hero-animation h1 {
+    max-width: calc(100% - 84px);
+  }
+}
+
+@media (min-width: 950px) {
+  main .hero-animation .hero-animation-background,
+  main .hero-animation video.hero-animation-background {
+    min-height: 500px;
+    max-height: unset;
+  }
+
+  main .hero-animation.dark,
+  main .hero-animation.dark a:any-link {
+    color: var(--color-white);
+  }
+
+  main .hero-animation .hero-animation-foreground {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 56px;
+    width: 500px;
+  }
+
+  body.no-desktop-brand-header header, body.no-brand-header header {
+    height: auto;
+    background-image: unset;
+  }
+}
+
+@media (min-width: 1400px) {
+  main .hero-animation .hero-animation-foreground {
+    left: 50%;
+    transform: translate(-113%, -50%);
+  }
+
+  main .hero-animation .hero-animation-foreground > p:first-child img.icon.icon-adobe-express {
+    height: 65px;
+  }
+
+  main .hero-animation h1 {
+    font-size: var(--heading-font-size-xxl);
+    max-width: unset;
+  }
+
+  main .hero-animation p {
+    font-size: var(--body-font-size-l);
+  }
+}
+
+@media (min-width: 1800px) {
+  main .hero-animation .hero-animation-foreground {
+    max-width: 30%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (max-width: 399px) {
+  main .hero-animation.has-desktop-animation:not(.has-mobile-animation) .hero-animation-background {
+    display: none;
+  }
+}
+
+/* Wide option */
+
+@media (min-width: 600px) {
+  main .hero-animation.wide {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  main .hero-animation.wide.fullwidth {
+    max-width: unset;
+  }
+
+  main .hero-animation.wide h1 {
+    font-size: var(--heading-font-size-l);
+  }
+
+  main .hero-animation.wide p {
+    font-size: var(--body-font-size-m);
+    position: relative;
+    margin: 12px 0;
+  }
+
+  main .hero-animation.wide .hero-animation-foreground > p:first-child img.icon {
+    height: 30px;
+  }
+
+  main .hero-animation .hero-animation-foreground > :first-child {
+    margin-top: 0;
+  }
+
+  main .hero-animation .hero-animation-foreground > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+main .hero-animation.wide .hero-animation-background {
+  min-height: unset;
+  max-height: unset;
+}
+
+main .hero-animation.wide video.hero-animation-background {
+  max-height: 200px;
+  min-height: 200px;
+  object-position: 75% 100%;
+}
+
+@media (min-width: 950px) {
+  main .hero-animation.wide .hero-animation-foreground {
+    position: relative;
+    top: unset;
+    left: unset;
+    transform: unset;
+    width: unset;
+    max-width: 550px;
+    box-sizing: border-box;
+    padding: 32px;
+    margin: 0;
+    min-height: 250px;
+  }
+
+  main .hero-animation.wide video.hero-animation-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    height: 100%;
+    width: 100%;
+    z-index: unset;
+    object-fit: cover;
+    max-height: unset;
+    min-height: 250px;
+    object-position: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .hero-animation.wide.fullwidth .hero-animation-foreground {
+    margin-left: calc(50vw - 600px);
+  }
+}
+
+/* shadow */
+
+main .hero-animation .hero-shadow {
+  display: none;
+}
+
+main .hero-animation .hero-shadow picture {
+  display: flex;
+}
+
+@media (min-width: 950px) {
+  main .hero-animation .hero-shadow {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-15%);
+    z-index: 2;
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1250px) {
+  main .hero-animation .hero-shadow {
+    transform: translateX(-5%);
+  }
+}
+
+@media (min-width: 1450px) {
+  main .hero-animation .hero-shadow {
+    transform: translate(-15%, -2px);
+  }
+}
+
+/* free plan widget */
+
+
+main .hero-animation .button-container.free-plan-container {
+  justify-content: left;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+main .hero-animation .free-plan-widget {
+  margin-top: 40px;
+  color: var(--body-color);
+}
+
+main .hero-animation.wide .free-plan-widget {
+  margin: 0;
+  background-color: transparent;
+}
+
+main .hero-animation.wide .free-plan-widget {
+  padding-left: 0;
+}
+
+@media (min-width: 900px) {
+  main .hero-animation.wide .button-container.free-plan-container {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container a.button {
+    margin-right: 24px;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container.stacked {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container .free-plan-widget {
+    margin-top: 0;
+    padding: 16px 24px;
+  }
+
+  main .hero-animation.wide .button-container.free-plan-container.stacked .free-plan-widget {
+    padding-left: 0;
+  }
+}
+
+/* Japanese font sizing styles */
+
+:lang(ja) main .hero-animation h1 {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation h1.heading-very-long {
+  font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) main .hero-animation h1.heading-x-long {
+  font-size: var(--heading-font-size-m);
+}
