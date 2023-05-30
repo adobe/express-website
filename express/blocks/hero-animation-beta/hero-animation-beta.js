@@ -111,6 +111,7 @@ function transformToVideoLink($cell, $a) {
   });
   $a.setAttribute('rel', 'nofollow');
   const title = $a.textContent.trim();
+
   // gather video urls from all links in cell
   const vidUrls = [];
   [...$cell.querySelectorAll(':scope a')]
@@ -188,7 +189,7 @@ export default async function decorate($block) {
         const srcURL = new URL($poster.src);
         const srcUSP = new URLSearchParams(srcURL.search);
         srcUSP.set('format', 'webply');
-        srcUSP.set('width', typeHint === 'mobile' ? 750 : 4080);
+        srcUSP.set('width', typeHint === 'mobile' ? 750 : 2000);
         optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
       }
 
@@ -233,7 +234,24 @@ export default async function decorate($block) {
       if (videoLink) {
         transformToVideoLink($div, videoLink);
       }
-      addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
+      
+      const contentButtons = [...$div.querySelectorAll('a.button.accent')];
+      $bg.nextElementSibling.classList.add('display-style');
+      const buttonAsLink = contentButtons[2];
+      const secondaryButton = contentButtons[1];
+      buttonAsLink?.classList.remove('button');
+      secondaryButton?.classList.add('secondary-button');
+      secondaryButton?.classList.add('xlarge');
+      const buttonContainer = [...$div.querySelectorAll('p.button-container')];
+      buttonContainer.forEach(($button) => {
+        const childNodeName = $button.firstChild.nodeName;
+        if(childNodeName === '#text') {
+          $button.classList.add('button-as-link');
+        }
+        else {
+          $button.classList.add('button-inline');
+        }
+      });
     }
 
     if (rowType === 'option') {

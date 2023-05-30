@@ -301,6 +301,25 @@ main .hero-animation.wide .free-plan-widget {
   padding-left: 0;
 }
 
+/** button inline styles */
+main .hero-animation .hero-animation-foreground.display-style {
+  display: block;
+}
+
+main .hero-animation p.button-container.button-inline {
+  display: inline-block;
+}
+
+main .hero-animation p.button-container a.secondary-button {
+  margin-left: 20px !important;
+  background-color: transparent !important;
+  border-color: #fff !important;
+}
+
+main .hero-animation p.button-container.button-as-link a {
+  text-decoration: underline;
+}
+
 @media (min-width: 900px) {
   main .hero-animation.wide .button-container.free-plan-container {
     flex-direction: row;
