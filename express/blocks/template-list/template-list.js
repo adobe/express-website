@@ -36,11 +36,16 @@ import { buildCarousel } from '../shared/carousel.js';
 
 import { memoize } from '../../scripts/utils.js';
 
+const smScreen = window.matchMedia('(max-width: 900px)');
+const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
+const bgScreen = window.matchMedia('(max-width: 1440px)');
+
 const props = {
   templates: [],
   filters: { locales: '(en)' },
   tailButton: '',
-  limit: 70,
+  // eslint-disable-next-line no-nested-ternary
+  limit: smScreen.matches ? 20 : mdScreen.matches ? 30 : bgScreen.matches ? 40 : 70,
   total: 0,
   start: '',
   sort: '-_score,-remixCount',
