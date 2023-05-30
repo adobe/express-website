@@ -216,7 +216,8 @@ async function processResponse(props) {
       });
 
       $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
-      imgWrapper.append(img, $button);
+      imgWrapper.append(img);
+      $buttonWrapper.append($button);
       $template.append(imgWrapper, $buttonWrapper);
       loadBetterAssetInBackground(img);
       return $template;
@@ -1706,7 +1707,7 @@ export async function decorateTemplateList($block, props) {
   //
   // make copy of children to avoid modifying list while looping
 
-  populateTemplates($block, templates, props);
+  populateTemplates($block, props.templates, props);
 
   if ($block.classList.contains('spreadsheet-powered')
     && !$block.classList.contains('apipowered')
