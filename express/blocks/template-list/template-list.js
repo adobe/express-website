@@ -36,26 +36,6 @@ import { buildCarousel } from '../shared/carousel.js';
 
 import { memoize } from '../../scripts/utils.js';
 
-const smScreen = window.matchMedia('(max-width: 900px)');
-const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
-const bgScreen = window.matchMedia('(max-width: 1440px)');
-
-const props = {
-  templates: [],
-  filters: { locales: '(en)' },
-  tailButton: '',
-  // eslint-disable-next-line no-nested-ternary
-  limit: smScreen.matches ? 20 : mdScreen.matches ? 30 : bgScreen.matches ? 40 : 70,
-  total: 0,
-  start: '',
-  sort: '-_score,-remixCount',
-  masonry: undefined,
-  authoringError: false,
-  headingTitle: null,
-  headingSlug: null,
-  viewAllLink: null,
-};
-
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
 }
@@ -75,7 +55,7 @@ function trimFormattedFilterText(attr, capitalize) {
   return capitalize ? resultString.charAt(0).toUpperCase() + resultString.slice(1) : resultString;
 }
 
-async function populateHeadingPlaceholder(locale) {
+async function populateHeadingPlaceholder(locale, props) {
   const heading = props.heading.replace("''", '');
   // special treatment for express/ root url
   const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
@@ -129,7 +109,7 @@ const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
   ttl: 1000 * 60 * 60 * 24,
 });
 
-async function fetchTemplates() {
+async function fetchTemplates(props) {
   props.fallbackMsg = null;
   if (props.authoringError || Object.keys(props.filters).length === 0) {
     props.authoringError = true;
@@ -150,7 +130,7 @@ async function fetchTemplates() {
   return memoizedFetchUrl(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`);
 }
 
-function fetchTemplatesByTasks(tasks) {
+function fetchTemplatesByTasks(tasks, props) {
   const tempFilters = { ...props.filters };
 
   if (tasks) {
@@ -166,7 +146,7 @@ function fetchTemplatesByTasks(tasks) {
   return null;
 }
 
-async function appendCategoryTemplatesCount($section) {
+async function appendCategoryTemplatesCount($section, props) {
   const categories = $section.querySelectorAll('ul.category-list > li');
   const currentTask = props.filters.tasks;
   const lang = getLanguage(getLocale(window.location));
@@ -175,7 +155,7 @@ async function appendCategoryTemplatesCount($section) {
     const anchor = li.querySelector('a');
     if (anchor) {
       // eslint-disable-next-line no-await-in-loop
-      const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
+      const json = await fetchTemplatesByTasks(anchor.dataset.tasks, props);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
       // eslint-disable-next-line no-underscore-dangle
       countSpan.textContent = `(${json?._embedded?.total?.toLocaleString(lang) ?? 0})`;
@@ -186,8 +166,8 @@ async function appendCategoryTemplatesCount($section) {
   props.filters.tasks = currentTask;
 }
 
-async function processResponse() {
-  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates()]);
+async function processResponse(props) {
+  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
   let templateFetched;
   if (response) {
     // eslint-disable-next-line no-underscore-dangle
@@ -261,7 +241,7 @@ async function fetchBlueprint(pathname) {
   return ($main);
 }
 
-function populateTemplates($block, templates) {
+function populateTemplates($block, templates, props) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
@@ -432,7 +412,7 @@ async function attachFreeInAppPills($block) {
   }
 }
 
-async function readRowsFromBlock($block) {
+async function readRowsFromBlock($block, props) {
   if ($block.children.length > 0) {
     Array.from($block.children).forEach((row, index, array) => {
       const cells = row.querySelectorAll('div');
@@ -465,7 +445,7 @@ async function readRowsFromBlock($block) {
       }
     });
 
-    const fetchedTemplates = await processResponse();
+    const fetchedTemplates = await processResponse(props);
 
     if (fetchedTemplates) {
       props.templates = props.templates.concat(fetchedTemplates);
@@ -480,7 +460,7 @@ async function readRowsFromBlock($block) {
   }
 }
 
-async function redirectSearch($searchBar) {
+async function redirectSearch($searchBar, props) {
   const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if ($searchBar) {
@@ -705,7 +685,7 @@ function closeTaskDropdown($toolBar) {
   });
 }
 
-function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
+function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
   const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
@@ -746,7 +726,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     $searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      await redirectSearch($searchBar);
+      await redirectSearch($searchBar, props);
     });
 
     $clear.addEventListener('click', () => {
@@ -842,7 +822,7 @@ function updateLottieStatus($section) {
   }
 }
 
-async function decorateCategoryList(block, section, placeholders) {
+async function decorateCategoryList(block, section, placeholders, props) {
   const locale = getLocale(window.location);
   const $blockWrapper = block.closest('.template-list-wrapper');
   const $mobileDrawerWrapper = section.querySelector('.filter-drawer-mobile');
@@ -852,10 +832,9 @@ async function decorateCategoryList(block, section, placeholders) {
   const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const $categoriesToggle = getIconElement('drop-down-arrow');
-  // const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
   const $categories = createTag('ul', { class: 'category-list' });
 
-  // $categoriesToggle.textContent = placeholders['jump-to-category'];
+  $categoriesToggle.textContent = placeholders['jump-to-category'];
 
   $categoriesToggleWrapper.append($categoriesToggle);
   $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
@@ -942,7 +921,7 @@ async function decorateCategoryList(block, section, placeholders) {
   }, { passive: true });
 }
 
-async function decorateSearchFunctions($toolBar, $section, placeholders) {
+async function decorateSearchFunctions($toolBar, $section, placeholders, props) {
   if ($section.classList.contains('template-list-fullwidth-apipowered-container')
     && $section.classList.contains('search-marquee-spreadsheet-powered-container')) {
     console.log('searchbar is already handled by search-marquee');
@@ -1005,7 +984,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $inBlockLocation.append($stickySearchBarWrapper);
   $inSectionLocation.insertAdjacentElement('beforebegin', $searchBarWrapper);
 
-  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
+  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props);
 }
 
 function closeDrawer($toolBar) {
@@ -1024,7 +1003,7 @@ function closeDrawer($toolBar) {
   }, 500);
 }
 
-function updateOptionsStatus($block, $toolBar) {
+function updateOptionsStatus($block, $toolBar, props) {
   const $wrappers = $toolBar.querySelectorAll('.function-wrapper');
 
   $wrappers.forEach(($wrapper) => {
@@ -1063,7 +1042,7 @@ function updateOptionsStatus($block, $toolBar) {
   });
 }
 
-function initDrawer($block, $section, $toolBar) {
+function initDrawer($block, $section, $toolBar, props) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
   const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
@@ -1099,7 +1078,7 @@ function initDrawer($block, $section, $toolBar) {
     $element.addEventListener('click', () => {
       props.filters = { ...currentFilters };
       closeDrawer($toolBar);
-      updateOptionsStatus($block, $toolBar);
+      updateOptionsStatus($block, $toolBar, props);
     }, { passive: true });
   });
 
@@ -1131,7 +1110,7 @@ function initDrawer($block, $section, $toolBar) {
   $drawer.classList.add('hidden');
 }
 
-function updateQueryURL(functionWrapper, option) {
+function updateQueryURL(functionWrapper, option, props) {
   const paramType = functionWrapper.dataset.param;
   const paramValue = option.dataset.value;
 
@@ -1154,7 +1133,7 @@ function updateQueryURL(functionWrapper, option) {
   }
 }
 
-function updateLoadMoreButton($block, $loadMore) {
+function updateLoadMoreButton($block, $loadMore, props) {
   if (props.start === '') {
     $loadMore.style.display = 'none';
   } else {
@@ -1162,12 +1141,12 @@ function updateLoadMoreButton($block, $loadMore) {
   }
 }
 
-async function decorateNewTemplates($block, options = { reDrawMasonry: false }) {
-  const newTemplates = await processResponse();
+async function decorateNewTemplates($block, props, options = { reDrawMasonry: false }) {
+  const newTemplates = await processResponse(props);
   const $loadMore = $block.parentElement.querySelector('.load-more');
 
   props.templates = props.templates.concat(newTemplates);
-  populateTemplates($block, newTemplates);
+  populateTemplates($block, newTemplates, props);
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
 
@@ -1179,11 +1158,11 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
   props.masonry.draw(newCells);
 
   if ($loadMore) {
-    updateLoadMoreButton($block, $loadMore);
+    updateLoadMoreButton($block, $loadMore, props);
   }
 }
 
-async function redrawTemplates($block, $toolBar) {
+async function redrawTemplates($block, $toolBar, props) {
   const $heading = $toolBar.querySelector('h2');
   const lang = getLanguage(getLocale(window.location));
   const currentTotal = props.total.toLocaleString(lang);
@@ -1193,9 +1172,9 @@ async function redrawTemplates($block, $toolBar) {
     $card.remove();
   });
 
-  await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
+  await decorateNewTemplates($block, props, { reDrawMasonry: true }).then(() => {
     $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString(lang));
-    updateOptionsStatus($block, $toolBar);
+    updateOptionsStatus($block, $toolBar, props);
     if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
       $viewButtons.forEach(($button) => {
@@ -1208,7 +1187,7 @@ async function redrawTemplates($block, $toolBar) {
   });
 }
 
-async function toggleAnimatedText($block, $toolBar) {
+async function toggleAnimatedText($block, $toolBar, props) {
   const section = $block.closest('.section.template-list-fullwidth-apipowered-container');
   const $toolbarWrapper = $toolBar.parentElement;
 
@@ -1228,7 +1207,7 @@ async function toggleAnimatedText($block, $toolBar) {
   }
 }
 
-function initFilterSort($block, $toolBar) {
+function initFilterSort($block, $toolBar, props) {
   const $buttons = $toolBar.querySelectorAll('.button-wrapper');
   const $applyFilterButton = $toolBar.querySelector('.apply-filter-button');
 
@@ -1270,15 +1249,15 @@ function initFilterSort($block, $toolBar) {
           });
           $option.classList.add('active');
 
-          updateQueryURL($wrapper, $option);
+          updateQueryURL($wrapper, $option, props);
           updateFilterIcon($block);
 
           if (!$optionsList.classList.contains('in-drawer')) {
-            await toggleAnimatedText($block, $toolBar);
+            await toggleAnimatedText($block, $toolBar, props);
           }
 
           if (!$button.classList.contains('in-drawer')) {
-            await redrawTemplates($block, $toolBar);
+            await redrawTemplates($block, $toolBar, props);
           }
         };
 
@@ -1309,14 +1288,14 @@ function initFilterSort($block, $toolBar) {
     if ($applyFilterButton) {
       $applyFilterButton.addEventListener('click', async (e) => {
         e.preventDefault();
-        await redrawTemplates($block, $toolBar);
+        await redrawTemplates($block, $toolBar, props);
         closeDrawer($toolBar);
-        await toggleAnimatedText($block, $toolBar);
+        await toggleAnimatedText($block, $toolBar, props);
       });
     }
 
     // sync current filter & sorting method with toolbar current options
-    updateOptionsStatus($block, $toolBar);
+    updateOptionsStatus($block, $toolBar, props);
     updateFilterIcon($block);
   }
 }
@@ -1364,7 +1343,7 @@ function getPlaceholderWidth($block) {
   return width;
 }
 
-function toggleMasonryView($block, $button, $toggleButtons) {
+function toggleMasonryView($block, $button, $toggleButtons, props) {
   const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
   const $blockWrapper = $block.closest('.template-list-wrapper');
   if (!$button.classList.contains('active') && $templatesToView.length > 0) {
@@ -1408,16 +1387,16 @@ function toggleMasonryView($block, $button, $toggleButtons) {
   }
 }
 
-function initViewToggle($block, $toolBar) {
+function initViewToggle($block, $toolBar, props) {
   const $toggleButtons = $toolBar.querySelectorAll('.view-toggle-button ');
 
   $toggleButtons.forEach(($button, index) => {
     if (index === 0) {
-      toggleMasonryView($block, $button, $toggleButtons);
+      toggleMasonryView($block, $button, $toggleButtons, props);
     }
 
     $button.addEventListener('click', () => {
-      toggleMasonryView($block, $button, $toggleButtons);
+      toggleMasonryView($block, $button, $toggleButtons, props);
     }, { passive: true });
   });
 }
@@ -1433,7 +1412,7 @@ function initToolbarShadow($block, $toolbar) {
   });
 }
 
-function decorateToolbar($block, $section, placeholders) {
+function decorateToolbar($block, $section, placeholders, props) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
 
   if ($toolBar) {
@@ -1457,19 +1436,19 @@ function decorateToolbar($block, $section, placeholders) {
 
     $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
 
-    decorateSearchFunctions($toolBar, $section, placeholders);
-    initDrawer($block, $section, $toolBar);
-    initFilterSort($block, $toolBar);
-    initViewToggle($block, $toolBar);
+    decorateSearchFunctions($toolBar, $section, placeholders, props);
+    initDrawer($block, $section, $toolBar, props);
+    initFilterSort($block, $toolBar, props);
+    initViewToggle($block, $toolBar, props);
     initToolbarShadow($block, $toolBar);
   }
 }
 
-export async function decorateTemplateList($block) {
+export async function decorateTemplateList($block, props) {
   const locale = getLocale(window.location);
   const placeholders = await fetchPlaceholders();
   if ($block.classList.contains('apipowered')) {
-    await readRowsFromBlock($block);
+    await readRowsFromBlock($block, props);
 
     const $parent = $block.closest('.section');
     if ($parent) {
@@ -1547,7 +1526,7 @@ export async function decorateTemplateList($block) {
           } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = await populateHeadingPlaceholder(locale) || '';
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale, props) || '';
           }
         }
 
@@ -1576,9 +1555,9 @@ export async function decorateTemplateList($block) {
         document.addEventListener('linkspopulated', (e) => {
           // desktop/mobile fires the same event
           if ($parent.contains(e.detail[0])) {
-            decorateToolbar($block, $parent, placeholders);
-            decorateCategoryList($block, $parent, placeholders);
-            appendCategoryTemplatesCount($parent);
+            decorateToolbar($block, $parent, placeholders, props);
+            decorateCategoryList($block, $parent, placeholders, props);
+            appendCategoryTemplatesCount($parent, props);
           }
         });
       }
@@ -1726,7 +1705,7 @@ export async function decorateTemplateList($block) {
   //
   // make copy of children to avoid modifying list while looping
 
-  populateTemplates($block, templates);
+  populateTemplates($block, templates, props);
 
   if ($block.classList.contains('spreadsheet-powered')
     && !$block.classList.contains('apipowered')
@@ -1768,7 +1747,7 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
-async function decorateLoadMoreButton($block) {
+async function decorateLoadMoreButton($block, props) {
   const placeholders = await fetchPlaceholders();
   const $loadMoreDiv = createTag('div', { class: 'load-more' });
   const $loadMoreButton = createTag('button', { class: 'load-more-button' });
@@ -1781,7 +1760,7 @@ async function decorateLoadMoreButton($block) {
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
     const scrollPosition = window.scrollY;
-    await decorateNewTemplates($block);
+    await decorateNewTemplates($block, props);
     window.scrollTo({
       top: scrollPosition,
       left: 0,
@@ -1793,7 +1772,7 @@ async function decorateLoadMoreButton($block) {
   return $loadMoreDiv;
 }
 
-async function decorateTailButton($block) {
+async function decorateTailButton($block, props) {
   const section = $block.closest('.section');
   if (section.classList.contains('template-list-fullwidth-apipowered-container')
   && section.classList.contains('search-marquee-spreadsheet-powered-container')) {
@@ -1819,7 +1798,7 @@ async function decorateTailButton($block) {
   }
 }
 
-function cacheCreatedTemplate($block) {
+function cacheCreatedTemplate($block, props) {
   const lastRow = $block.children[$block.children.length - 1];
   if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
     props.templates.push(lastRow.cloneNode(true));
@@ -1845,7 +1824,7 @@ function addBackgroundAnimation($block, animationUrl) {
   }
 }
 
-async function replaceRRTemplateList($block) {
+async function replaceRRTemplateList($block, props) {
   const placeholders = await fetchPlaceholders();
   const relevantRowsData = await fetchRelevantRows(window.location.pathname);
   props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
@@ -1900,16 +1879,41 @@ async function replaceRRTemplateList($block) {
   }
 }
 
+function constructProps() {
+  const smScreen = window.matchMedia('(max-width: 900px)');
+  const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
+  const bgScreen = window.matchMedia('(max-width: 1440px)');
+
+  const props = {
+    templates: [],
+    filters: { locales: '(en)' },
+    tailButton: '',
+    // eslint-disable-next-line no-nested-ternary
+    limit: smScreen.matches ? 20 : mdScreen.matches ? 30 : bgScreen.matches ? 40 : 70,
+    total: 0,
+    start: '',
+    sort: '-_score,-remixCount',
+    masonry: undefined,
+    authoringError: false,
+    headingTitle: null,
+    headingSlug: null,
+    viewAllLink: null,
+  };
+
+  return props;
+}
+
 async function decorateBlock($block) {
+  const props = constructProps();
   if ($block.classList.contains('spreadsheet-powered')) {
-    await replaceRRTemplateList($block);
+    await replaceRRTemplateList($block, props);
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
-    cacheCreatedTemplate($block);
+    cacheCreatedTemplate($block, props);
   }
 
-  await decorateTemplateList($block);
+  await decorateTemplateList($block, props);
 
   if ($block.classList.contains('horizontal')) {
     const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
@@ -1919,15 +1923,15 @@ async function decorateBlock($block) {
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday') && !$block.classList.contains('mini')) {
-    const $loadMore = await decorateLoadMoreButton($block);
+    const $loadMore = await decorateLoadMoreButton($block, props);
 
     if ($loadMore) {
-      updateLoadMoreButton($block, $loadMore);
+      updateLoadMoreButton($block, $loadMore, props);
     }
   }
 
   if ($block.classList.contains('mini') || $block.classList.contains('apipowered')) {
-    await decorateTailButton($block);
+    await decorateTailButton($block, props);
   }
 
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
