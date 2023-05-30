@@ -1804,6 +1804,7 @@ function cacheCreatedTemplate($block, props) {
   const lastRow = $block.children[$block.children.length - 1];
   if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
     props.templates.push(lastRow.cloneNode(true));
+    lastRow.remove();
   }
 }
 
