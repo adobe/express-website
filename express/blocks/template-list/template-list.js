@@ -55,6 +55,15 @@ function trimFormattedFilterText(attr, capitalize) {
   return capitalize ? resultString.charAt(0).toUpperCase() + resultString.slice(1) : resultString;
 }
 
+function loadBetterAssetInBackground(img) {
+  const updateImgRes = () => {
+    img.src = img.src.replace('width/size/151', 'width/size/400');
+    img.removeEventListener('load', updateImgRes);
+  };
+
+  img.addEventListener('load', updateImgRes);
+}
+
 async function populateHeadingPlaceholder(locale, props) {
   const heading = props.heading.replace("''", '');
   // special treatment for express/ root url
@@ -187,21 +196,15 @@ async function processResponse(props) {
     props.total = response._embedded.total;
   }
 
-  const renditionParams = {
-    format: 'jpg',
-    dimension: 'width',
-    size: 400,
-  };
-
   if (templateFetched) {
     return templateFetched.map((template) => {
       const $template = createTag('div');
-      const $pictureWrapper = createTag('div');
+      const imgWrapper = createTag('div');
 
       ['format', 'dimension', 'size'].forEach((param) => {
-        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, props.renditionParams[param]);
       });
-      const $picture = createTag('img', {
+      const img = createTag('img', {
         src: template.rendition.href,
         alt: template.title,
       });
@@ -213,10 +216,9 @@ async function processResponse(props) {
       });
 
       $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
-      $pictureWrapper.insertAdjacentElement('beforeend', $picture);
-      $buttonWrapper.insertAdjacentElement('beforeend', $button);
-      $template.insertAdjacentElement('beforeend', $pictureWrapper);
-      $template.insertAdjacentElement('beforeend', $buttonWrapper);
+      imgWrapper.append(img, $button);
+      $template.append(imgWrapper, $buttonWrapper);
+      loadBetterAssetInBackground(img);
       return $template;
     });
   } else {
@@ -450,8 +452,7 @@ async function readRowsFromBlock($block, props) {
     if (fetchedTemplates) {
       props.templates = props.templates.concat(fetchedTemplates);
       props.templates.forEach((template) => {
-        const clone = template.cloneNode(true);
-        $block.append(clone);
+        $block.append(template);
       });
     }
   } else {
@@ -1802,7 +1803,6 @@ function cacheCreatedTemplate($block, props) {
   const lastRow = $block.children[$block.children.length - 1];
   if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
     props.templates.push(lastRow.cloneNode(true));
-    lastRow.remove();
   }
 }
 
@@ -1884,7 +1884,7 @@ function constructProps() {
   const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
   const bgScreen = window.matchMedia('(max-width: 1440px)');
 
-  const props = {
+  return {
     templates: [],
     filters: { locales: '(en)' },
     tailButton: '',
@@ -1898,9 +1898,12 @@ function constructProps() {
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    renditionParams: {
+      format: 'jpg',
+      dimension: 'width',
+      size: 151,
+    },
   };
-
-  return props;
 }
 
 async function decorateBlock($block) {
