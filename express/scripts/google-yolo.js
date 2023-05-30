@@ -83,7 +83,7 @@ export default function loadGoogleYolo() {
   const ctaUrl = getRedirectUri();
   const thresholdBreakpoint = ['yes', 'true', 'on', 'Y'].includes(getMetadata('mweb-google-yolo')) ? 0 : 900;
 
-  if (window.innerWidth >= thresholdBreakpoint) {
+  if (window.matchMedia(`(max-width: ${thresholdBreakpoint}px)`)) {
     if (relayLogin && ctaUrl) {
       window.location.assign(ctaUrl);
     }
