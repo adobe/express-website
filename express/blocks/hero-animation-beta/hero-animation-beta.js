@@ -243,14 +243,11 @@ export default async function decorate($block) {
       secondaryButton?.classList.add('secondary-button');
       secondaryButton?.classList.add('xlarge');
       const buttonContainer = [...$div.querySelectorAll('p.button-container')];
+      const linkContainer = [...$div.querySelectorAll('p')];
+      const linkElementToUnderline = linkContainer[linkContainer.length - 1];
+      linkElementToUnderline.classList.add('underline');
       buttonContainer.forEach(($button) => {
-        const childNodeName = $button.firstChild.nodeName;
-        if(childNodeName === '#text') {
-          $button.classList.add('button-as-link');
-        }
-        else {
-          $button.classList.add('button-inline');
-        }
+        $button.classList.add('button-inline');
       });
     }
 

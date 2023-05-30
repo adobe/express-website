@@ -315,8 +315,21 @@ main .hero-animation-beta p.button-container a.secondary-button {
   background-color: transparent !important;
   border-color: #fff !important;
 }
+main .hero-animation-beta p.button-container a.secondary-button::before {
+  background-image: url(/express/icons/play.svg);
+  content: '';
+  display: inline-flex;
+  background-size: 18px 15px;
+  background-repeat: no-repeat;
+  width: 20px;
+  height: 15px;
+  margin-right: 10px;
+  flex-wrap: nowrap;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+}
 
-main .hero-animation-beta p.button-container.button-as-link a {
+main .hero-animation-beta p.underline a {
   text-decoration: underline;
 }
 
