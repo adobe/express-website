@@ -12,6 +12,16 @@
 /* eslint-disable no-underscore-dangle */
 import { getLanguage } from '../../scripts/scripts.js';
 
+function extractFilterTerms(input) {
+  if (!input || typeof input !== 'string') {
+    return [];
+  }
+  return input
+    .split(' AND ')
+    .map((t) => t
+      .replaceAll(' ', '')
+      .toLowerCase());
+}
 function formatFilterString(filters) {
   const {
     animated,
@@ -35,22 +45,17 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
-  const cleanedTasks = tasks
-    ?.split(',')
-    ?.map((t) => t.trim().replaceAll(' ', '-'))
-    ?.join(',')
-    ?.toLowerCase();
-  if (cleanedTasks) {
-    str += `&filters=pages.task.name==${cleanedTasks}`;
-  }
-  const cleanedTopics = topics?.replaceAll(' ', '')?.toLowerCase();
-  if (cleanedTopics) {
-    str += `&filters=topics==${cleanedTopics}`;
-  }
-  const cleanedLocales = locales?.replaceAll(' ', '')?.toLowerCase();
+  extractFilterTerms(tasks).forEach((t) => {
+    str += `&filters=pages.task.name==${t}`
+  })
+  extractFilterTerms(topics).forEach((t) => {
+    str += `&filters=topics==${t}`
+  })
+  // locale needs backward compatibility with old api
+  const cleanedLocales = locales?.toLowerCase();
   if (cleanedLocales) {
     str += `&filters=language==${
-      cleanedLocales.split('or').map((l) => getLanguage(l)).toString()
+      cleanedLocales.split(' or ').map((l) => getLanguage(l.trim())).toString()
     }`;
   }
 
