@@ -45,6 +45,7 @@ function formatFilterString(filters) {
       str += '&filters=behaviors==animated';
     }
   }
+
   extractFilterTerms(tasks).forEach((t) => {
     str += `&filters=pages.task.name==${t}`
   })
