@@ -146,7 +146,7 @@ async function loadFEDS() {
   const isMegaNav = window.location.pathname.startsWith('/express')
     || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
-    ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
+    ? `adobe-express/ax-gnav${isHomepage ? '-homepage-beta' : 'adobe-express/ax-gnav-beta'}`
     : 'cc-express/cc-express-gnav';
 
   async function buildBreadCrumbArray() {
