@@ -312,15 +312,15 @@ main .hero-animation-beta p.button-container.button-inline {
 
 main .hero-animation-beta p.button-container a.secondary-button {
   margin-left: 20px !important;
-  background-color: transparent !important;
-  opacity: 0.8;
-  border-color: #fff !important;
+  background-color: transparent;
+  opacity: 0.9;
+  border-color: #fff;
 }
 
 main .hero-animation-beta p.button-container a.secondary-button::before {
   content: url(/express/icons/play.svg);
   display: inline-block;
-  width: 20px;
+  width: 18px;
   height: 20px;
   margin-right: 10px;
   vertical-align: sub;
