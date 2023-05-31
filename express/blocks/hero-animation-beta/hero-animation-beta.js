@@ -12,7 +12,6 @@
 
 import {
   addAnimationToggle,
-  addFreePlanWidget,
   createTag,
   toClassName,
   getLocale,
@@ -234,7 +233,7 @@ export default async function decorate($block) {
       if (videoLink) {
         transformToVideoLink($div, videoLink);
       }
-      
+
       const contentButtons = [...$div.querySelectorAll('a.button.accent')];
       $bg.nextElementSibling.classList.add('display-style');
       const buttonAsLink = contentButtons[2];
