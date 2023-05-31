@@ -807,7 +807,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .search-b
   font-family: var(--body-font-family);
   font-weight: 400;
   font-size: 16px;
-  padding: 10px 40px 10px 160px;
+  padding: 10px 40px;
   border: var(--color-gray-200) 2px solid;
   border-radius: 100px;
   max-width: 560px;
@@ -835,7 +835,7 @@ main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.ico
   top: 50%;
   transform: translateY(-50%);
   transition: left 0.5s;
-  left: 160px;
+  left: 40px;
 }
 
 main .template-list-fullwidth-apipowered-container .search-bar-wrapper .icon.icon-search-clear {
