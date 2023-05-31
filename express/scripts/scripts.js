@@ -2343,8 +2343,10 @@ async function loadEager() {
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card', 'search-marquee'];
     const block = document.querySelector('.block');
+    const desktopLCP = block.closest('.section').dataset.audience === 'desktop';
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(block, true);
+    // FIXME: temporary hack to reduce LCP impact on mobile
+    if (hasLCPBlock && !(desktopLCP && document.body.dataset.device === 'mobile')) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
 
