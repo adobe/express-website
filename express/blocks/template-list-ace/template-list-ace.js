@@ -476,7 +476,6 @@ function createSearchBar(searchRows, titleRow, block) {
   titleRowDiv.classList.add('title-search');
   // titleRowDiv.append(searchForm);
 
-  const suggestions = searchRows[2].querySelectorAll(':scope > p');
   return searchBar;
 }
 function initState() {

@@ -150,7 +150,6 @@ export async function getModal(details, custom) {
 
 // Deep link-based
 export default function init(el) {
-  debugger;
   const { modalHash } = el.dataset;
   if (window.location.hash === modalHash) {
     const details = findDetails(window.location.hash, el);
