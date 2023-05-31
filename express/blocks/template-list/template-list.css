@@ -78,24 +78,6 @@ main .template-list-wrapper.with-categories-list .template-list.fullwidth {
   width: 100%;
 }
 
-@media (min-width: 600px) {
-  main .template-list-wrapper.with-categories-list .template-list.fullwidth {
-    width: calc(100% - 172px);
-  }
-
-  main .template-list-wrapper.with-categories-list .template-list.fullwidth.sm-view {
-    max-width: calc(100% - 172px);
-  }
-
-  main .template-list-wrapper.with-categories-list .template-list.fullwidth.md-view {
-    max-width: calc(100% - 260px);
-  }
-
-  main .template-list-wrapper.with-categories-list .template-list.fullwidth.lg-view {
-    max-width: calc(100% - 337px);
-  }
-}
-
 main .template-list.sixcols > .masonry-col,
 main .template-list.fullwidth > .masonry-col {
   max-width: 175px;
@@ -659,17 +641,17 @@ main .template-list.fullwidth.sm-view > .masonry-col {
 
 @media (min-width: 600px) {
   main .template-list.fullwidth.lg-view > .masonry-col {
-    max-width: 352px;
+    max-width: 328px;
     text-align: center;
   }
 
   main .template-list.fullwidth.md-view > .masonry-col {
-    max-width: 227.33px;
+    max-width: 200px;
     text-align: center;
   }
 
   main .template-list.fullwidth.sm-view > .masonry-col {
-    max-width: 165px;
+    max-width: 156px;
     text-align: center;
   }
 
