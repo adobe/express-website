@@ -313,23 +313,25 @@ main .hero-animation-beta p.button-container.button-inline {
 main .hero-animation-beta p.button-container a.secondary-button {
   margin-left: 20px !important;
   background-color: transparent !important;
+  opacity: 0.8;
   border-color: #fff !important;
 }
+
 main .hero-animation-beta p.button-container a.secondary-button::before {
-  background-image: url(/express/icons/play.svg);
-  content: '';
-  display: inline-flex;
-  background-size: 18px 15px;
-  background-repeat: no-repeat;
+  content: url(/express/icons/play.svg);
+  display: inline-block;
   width: 20px;
-  height: 15px;
+  height: 20px;
   margin-right: 10px;
-  flex-wrap: nowrap;
-  flex-direction: column-reverse;
-  justify-content: flex-start;
+  vertical-align: sub;
+}
+
+main .hero-animation-beta p.button-container a.secondary-button:hover {
+  opacity: 1;
 }
 
 main .hero-animation-beta p.underline a {
+  font-weight: normal;
   text-decoration: underline;
 }
 
