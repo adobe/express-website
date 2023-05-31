@@ -311,10 +311,12 @@ main .hero-animation-beta p.button-container.button-inline {
 }
 
 main .hero-animation-beta p.button-container a.secondary-button {
-  margin-left: 20px !important;
-  background-color: transparent;
-  opacity: 0.9;
+  background: rgba(255, 255, 255, 0);
   border-color: #fff;
+}
+
+main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .button-container) {
+  margin-left: 20px;
 }
 
 main .hero-animation-beta p.button-container a.secondary-button::before {
@@ -327,7 +329,8 @@ main .hero-animation-beta p.button-container a.secondary-button::before {
 }
 
 main .hero-animation-beta p.button-container a.secondary-button:hover {
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
 }
 
 main .hero-animation-beta p.underline a {
