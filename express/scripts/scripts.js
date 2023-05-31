@@ -2323,8 +2323,12 @@ async function loadEager() {
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
-  if (window.location.href.includes('/express/templates/')) {
-    await import('./templates.js');
+  if (getMetadata('sheet-powered') === 'Y') {
+    import('./content-replace.js');
+  }
+
+  if (getMetadata('template-search-page') === 'Y') {
+    await import('./template-redirect.js');
   }
 
   if (main) {
@@ -2337,10 +2341,12 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card', 'search-marquee'];
     const block = document.querySelector('.block');
+    const desktopLCP = block.closest('.section').dataset.audience === 'desktop';
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(block, true);
+    // FIXME: temporary hack to reduce LCP impact on mobile
+    if (hasLCPBlock && !(desktopLCP && document.body.dataset.device === 'mobile')) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
 
@@ -2436,6 +2442,9 @@ export async function addFreePlanWidget(elem) {
 async function loadLazy() {
   const main = document.querySelector('main');
 
+  if (window.location.href.includes('/express/templates/')) {
+    await import('./templates.js');
+  }
   // post LCP actions go here
   sampleRUM('lcp');
 
