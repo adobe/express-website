@@ -207,6 +207,8 @@ async function processResponse(props) {
       const img = createTag('img', {
         src: template.rendition.href,
         alt: template.title,
+        width: 165,
+        height: '100%',
       });
       const $buttonWrapper = createTag('div', { class: 'button-container' });
       const $button = createTag('a', {
