@@ -2370,7 +2370,9 @@ async function loadEager() {
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
         lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', () => resolve());
+        lcpCandidate.addEventListener('load', () => {
+          resolve();
+        });
         lcpCandidate.addEventListener('error', () => resolve());
       } else {
         resolve();
@@ -2463,6 +2465,7 @@ async function loadLazy() {
     const { default: loadFonts } = await import('./fonts.js');
     loadFonts(tkID, loadCSS);
   }
+
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
