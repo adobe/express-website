@@ -142,7 +142,7 @@ async function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
-  const isHomepage = window.location.pathname.endsWith('/express/');
+  const isHomepage = window.location.pathname.endsWith('/express/') || window.location.pathname.endsWith('/express/beta');
   const isMegaNav = window.location.pathname.startsWith('/express')
     || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
