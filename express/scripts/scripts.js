@@ -2346,11 +2346,13 @@ async function loadEager() {
     wordBreakJapanese();
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card', 'search-marquee'];
-    const block = document.querySelector('.block');
-    const desktopLCP = block.closest('.section').dataset.audience === 'desktop';
-    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    // FIXME: temporary hack to reduce LCP impact on mobile
-    if (hasLCPBlock && !(desktopLCP && document.body.dataset.device === 'mobile')) await loadBlock(block, true);
+    const blocks = document.querySelectorAll('.block');
+    const firstVisualBlock = Array.from(blocks).find((b) => {
+      const { audience } = b.closest('.section').dataset;
+      return audience === document.body.dataset.device;
+    });
+    const hasLCPBlock = (firstVisualBlock && lcpBlocks.includes(firstVisualBlock.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(firstVisualBlock, true);
 
     document.querySelector('body').classList.add('appear');
 
