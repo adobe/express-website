@@ -19,7 +19,6 @@ import {
   getMetadata,
 } from '../../scripts/scripts.js';
 
-import useInputAutocomplete from './useInputAutocomplete.js';
 import { buildCarousel } from '../shared/carousel.js';
 
 function handlelize(str) {
@@ -137,10 +136,12 @@ function initSearchFunction(block) {
     }
   };
 
-  const { inputHandler } = useInputAutocomplete(
-    suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
-  );
-  searchBar.addEventListener('input', inputHandler);
+  import('./useInputAutocomplete.js').then(({ default: useInputAutocomplete }) => {
+    const { inputHandler } = useInputAutocomplete(
+      suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
+    );
+    searchBar.addEventListener('input', inputHandler);
+  });
 }
 
 async function decorateSearchFunctions(block) {
