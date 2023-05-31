@@ -319,11 +319,6 @@ main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .
   margin-left: 20px;
 }
 
-main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .button-container) a.button {
-
-}
-
-
 main .hero-animation-beta p.button-container a.secondary-button::before {
   content: url(/express/icons/play.svg);
   display: inline-block;
