@@ -22,12 +22,7 @@ import {
   getPillWordsMapping,
 } from './api-v3-controller.js';
 
-export function findMatchExistingSEOPage(path) {
-  const pathMatch = (e) => e.path === path;
-  return (window.templates && window.templates.data.some(pathMatch));
-}
-
-export async function fetchSheetData() {
+async function fetchSheetData() {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
@@ -39,25 +34,10 @@ export async function fetchSheetData() {
   }
 
   if (!(window.templates && window.templates.data)) {
+    // FIXME: stop using window obj to store data
     window.templates = {};
     const resp = await fetch(sheet);
     window.templates.data = resp.ok ? (await resp.json()).data : [];
-  }
-}
-
-async function redirectToExistingPage() {
-  // todo check if the search query points to an existing page. If so, redirect.
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (params.topics) {
-    const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
-    const locale = getLocale(window.location);
-    const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
-    if (findMatchExistingSEOPage(pathToMatch)) {
-      window.location.replace(`${window.location.origin}${pathToMatch}`);
-    }
   }
 }
 
@@ -258,76 +238,6 @@ async function updateMetadata() {
   }
 }
 
-async function replaceDefaultPlaceholders(template) {
-  template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
-
-  if (getMetadata('tasks') === '') {
-    const placeholders = await fetchPlaceholders();
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-  } else {
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
-  }
-}
-
-async function autoUpdatePage() {
-  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
-
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-    await updateMetadata();
-    await redirectToExistingPage();
-  }
-
-  const main = document.querySelector('main');
-  if (main) {
-    const allReplaceableBlades = [...main.innerText.matchAll(/{{(.*?)}}/g)];
-
-    if (allReplaceableBlades.length > 0) {
-      allReplaceableBlades.forEach((regex) => {
-        if (!wl.includes(regex[0].toLowerCase())) {
-          main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
-        }
-      });
-    }
-  }
-}
-
-function validatePage() {
-  const env = getHelixEnv();
-  const title = document.querySelector('title');
-  if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
-    window.location.replace('/express/templates/');
-  }
-
-  if ((env && env.name !== 'stage') || (title && title.innerText.match(/{{(.*?)}}/))) {
-    window.location.replace('/404');
-  }
-}
-
-async function updateEagerBlocks() {
-  const templateList = document.querySelector('.template-list.fullwidth.apipowered');
-  const templateX = document.querySelector('.template-x');
-  const browseByCat = document.querySelector('.browse-by-category');
-
-  if (templateList) {
-    await replaceDefaultPlaceholders(templateList);
-  }
-
-  if (templateX) {
-    await replaceDefaultPlaceholders(templateX);
-  }
-
-  if (browseByCat) {
-    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
-      const placeholders = await fetchPlaceholders();
-      browseByCat.innerHTML = browseByCat.innerHTML
-        .replaceAll('https://www.adobe.com/express/templates/default', getMetadata('categories-view-all-link') || '/')
-        .replaceAll('default-view-all-text', placeholders['view-all'] || '');
-    } else {
-      browseByCat.remove();
-    }
-  }
-}
-
 async function lazyLoadLinklist() {
   await fetchLinkList();
   const linkList = document.querySelector('.link-list.fullwidth');
@@ -416,9 +326,9 @@ function hideAsyncBlocks() {
   }
 }
 
-async function updateLazyBlocks() {
-  hideAsyncBlocks();
+async function updateAsyncBlocks() {
   await fetchSheetData();
+  hideAsyncBlocks();
   // FIXME: integrate memoization
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
     await lazyLoadSearchMarqueeLinklist();
@@ -427,7 +337,8 @@ async function updateLazyBlocks() {
   await lazyLoadSEOLinkList();
 }
 
-await autoUpdatePage();
-validatePage();
-await updateEagerBlocks();
-updateLazyBlocks();
+if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
+  await updateMetadata();
+}
+
+updateAsyncBlocks();

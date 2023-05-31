@@ -700,7 +700,6 @@ main .template-list.fullwidth.sm-view > .masonry-col {
   main .template-list-fullwidth-apipowered-container > div,
   main .template-list-fullwidth-apipowered-container > .default-content-wrapper {
     max-width: none;
-    padding: 0 28px;
   }
 
   main .template-list.sixcols > .masonry-col,
@@ -1886,9 +1885,9 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   }
 
   main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only::before {
-    /* display: unset; */
     content: '';
     opacity: 0;
+    top: 0;
     z-index: -1;
     position: absolute;
     height: 100%;

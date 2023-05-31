@@ -162,6 +162,10 @@ main .search-marquee.spreadsheet-powered .carousel-container.appear {
     visibility: unset;
 }
 
+main .search-marquee .carousel-container .carousel-platform {
+    margin: auto;
+}
+
 main .search-marquee .carousel-container .carousel-platform p.button-container {
     margin: 0;
     border: none;
