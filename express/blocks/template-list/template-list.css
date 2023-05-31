@@ -1886,9 +1886,9 @@ main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-c
   }
 
   main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only::before {
-    /* display: unset; */
     content: '';
     opacity: 0;
+    top: 0;
     z-index: -1;
     position: absolute;
     height: 100%;

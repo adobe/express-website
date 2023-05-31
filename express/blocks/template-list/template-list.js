@@ -1707,7 +1707,7 @@ export async function decorateTemplateList($block, props) {
   //
   // make copy of children to avoid modifying list while looping
 
-  populateTemplates($block, props.templates, props);
+  populateTemplates($block, templates, props);
 
   if ($block.classList.contains('spreadsheet-powered')
     && !$block.classList.contains('apipowered')
