@@ -182,6 +182,10 @@ function decorateBackground(block) {
       const splitArr = media.split('.');
 
       if (supportedImgFormat.includes(splitArr[splitArr.length - 1])) {
+        const dummyImg = createTag('img');
+        dummyImg.src = media;
+        dummyImg.style.display = 'none';
+        block.append(dummyImg);
         block.style.backgroundImage = `url(${media})`;
       }
 
