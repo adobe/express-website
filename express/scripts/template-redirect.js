@@ -24,7 +24,7 @@ function validatePage() {
   }
 }
 
-export async function fetchSheetData() {
+async function fetchSheetData() {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
   let sheet;
@@ -48,7 +48,7 @@ function findMatchExistingSEOPage(path) {
   return (window.templates && window.templates.data.some(pathMatch));
 }
 
-export default async function redirectToExistingPage() {
+async function redirectToExistingPage() {
   // FIXME: deprecate fetchSheetData
   await fetchSheetData();
   // todo check if the search query points to an existing page. If so, redirect.

@@ -22,6 +22,8 @@ import {
   getPillWordsMapping,
 } from './api-v3-controller.js';
 
+import { memoize } from './utils.js';
+
 async function fetchSheetData() {
   const env = getHelixEnv();
   const dev = new URLSearchParams(window.location.search).get('dev');
@@ -139,9 +141,11 @@ function formatLinkPillText(linkPillData) {
   return displayText;
 }
 
+const memoizedGetPillWordsMapping = memoize(getPillWordsMapping, { ttl: 1000 * 60 * 60 * 24 });
+
 async function updateLinkList(container, linkPill, list) {
   const templatePages = window.templates.data ?? [];
-  const pillsMapping = await getPillWordsMapping();
+  const pillsMapping = await memoizedGetPillWordsMapping();
   const pageLinks = [];
   const searchLinks = [];
   container.innerHTML = '';

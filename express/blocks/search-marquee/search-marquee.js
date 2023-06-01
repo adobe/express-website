@@ -68,7 +68,7 @@ function initSearchFunction(block) {
   }, { passive: true });
 
   const redirectSearch = async () => {
-    const placeholders = await fetchPlaceholders().then((result) => result);
+    const placeholders = await fetchPlaceholders();
     const taskMap = JSON.parse(placeholders['task-name-mapping']);
 
     const format = getMetadata('placeholder-format');
@@ -158,11 +158,17 @@ async function decorateSearchFunctions(block) {
   // Tasks Dropdown
 
   searchForm.append(searchBar);
-  searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
+  const searchIcon = getIconElement('search');
+  searchIcon.loading = 'lazy';
+  const searchClearIcon = getIconElement('search-clear');
+  searchClearIcon.loading = 'lazy';
+  searchBarWrapper.append(searchIcon, searchClearIcon);
   searchBarWrapper.append(searchForm);
 
   block.append(searchBarWrapper);
 }
+
+// function downloadBackgroundImg(block) {}
 
 function decorateBackground(block) {
   const supportedImgFormat = ['jpeg', 'jpg', 'webp', 'png', 'svg'];
@@ -176,6 +182,10 @@ function decorateBackground(block) {
       const splitArr = media.split('.');
 
       if (supportedImgFormat.includes(splitArr[splitArr.length - 1])) {
+        const dummyImg = createTag('img');
+        dummyImg.src = media;
+        dummyImg.style.display = 'none';
+        block.append(dummyImg);
         block.style.backgroundImage = `url(${media})`;
       }
 
@@ -207,8 +217,12 @@ async function buildSearchDropdown(block) {
 
     if (fromScratchLink) {
       const linkDiv = fromScratchLink.parentElement.parentElement;
-      fromScratchLink.prepend(getIconElement('template-free-accent'));
-      fromScratchLink.append(getIconElement('arrow-right'));
+      const templateFreeAccentIcon = getIconElement('template-free-accent');
+      templateFreeAccentIcon.loading = 'lazy';
+      const arrowRightIcon = getIconElement('arrow-right');
+      arrowRightIcon.loading = 'lazy';
+      fromScratchLink.prepend(templateFreeAccentIcon);
+      fromScratchLink.append(arrowRightIcon);
       fromScratchLink.classList.remove('button');
       fromScratchLink.classList.add('from-scratch-link');
       fromScratchLink.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-marquee-from-scratch-link', getMetadata('search-marquee-from-scratch-link') || '/');
@@ -259,8 +273,8 @@ function decorateLinkList(block) {
 }
 
 export default async function decorate(block) {
-  await decorateSearchFunctions(block);
   decorateBackground(block);
+  await decorateSearchFunctions(block);
   await buildSearchDropdown(block);
   initSearchFunction(block);
   decorateLinkList(block);

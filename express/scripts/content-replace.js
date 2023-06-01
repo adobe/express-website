@@ -12,7 +12,7 @@
 
 import { fetchPlaceholders, getMetadata } from './scripts.js';
 
-export default function autoUpdatePage() {
+function autoUpdatePage() {
   const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
   // FIXME: deprecate wl
   const main = document.querySelector('main');
