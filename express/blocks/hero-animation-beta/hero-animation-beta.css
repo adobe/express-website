@@ -129,9 +129,13 @@ main .hero-animation-beta.white-text a:any-link {
 }
 
 @media (min-width: 1400px) {
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 30%;
+  }
+
   main .hero-animation-beta .hero-animation-beta-foreground {
-    left: 50%;
-    transform: translate(-113%, -50%);
+    width: 500px;
   }
 
   main .hero-animation-beta .hero-animation-beta-foreground > p:first-child img.icon.icon-adobe-express {
