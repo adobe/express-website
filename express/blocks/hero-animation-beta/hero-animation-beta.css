@@ -119,7 +119,7 @@ main .hero-animation-beta.white-text a:any-link {
     top: 50%;
     transform: translateY(-50%);
     left: 56px;
-    width: 500px;
+    width: 350px;
   }
 
   body.no-desktop-brand-header header, body.no-brand-header header {
@@ -304,6 +304,7 @@ main .hero-animation-beta.wide .free-plan-widget {
 /** button inline styles */
 main .hero-animation-beta .hero-animation-beta-foreground.display-style {
   display: block;
+  left: auto;
 }
 
 main .hero-animation-beta p.button-container.button-inline {
