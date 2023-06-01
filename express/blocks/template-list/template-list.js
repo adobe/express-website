@@ -1947,18 +1947,12 @@ async function decorateBlock($block) {
 export default async function decorate($block) {
   // non blocking
   const section = $block.closest('.section');
-  if (section.classList.contains('search-marquee-spreadsheet-powered-container') && document.body.dataset.device === 'mobile') {
+  if ((section.classList.contains('search-marquee-spreadsheet-powered-container') && document.body.dataset.device === 'mobile')
+    || (section.classList.contains('hero-animation-wide-container') && document.body.dataset.device === 'desktop')) {
     // delay desktop-version on mobile
     setTimeout(async () => {
       await decorateBlock($block);
-    }, 2000);
-    return;
-  }
-  if (section.classList.contains('hero-animation-wide-container') && document.body.dataset.device === 'desktop') {
-    // vice versa
-    setTimeout(async () => {
-      await decorateBlock($block);
-    }, 2000);
+    }, 3000);
     return;
   }
   decorateBlock($block);
