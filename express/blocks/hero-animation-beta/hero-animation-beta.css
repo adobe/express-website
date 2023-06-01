@@ -132,7 +132,7 @@ main .hero-animation-beta.white-text a:any-link {
 
   main .hero-animation-beta .hero-animation-beta-foreground.display-style {
     left: 30%;
-  }
+  }  
 
   main .hero-animation-beta .hero-animation-beta-foreground {
     width: 500px;
@@ -268,6 +268,11 @@ main .hero-animation-beta .hero-shadow picture {
     transform: translateX(-15%);
     z-index: 2;
   }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 1%;
+  }
+
 }
 
 @media (min-width: 950px) and (max-width: 1250px) {
@@ -308,7 +313,6 @@ main .hero-animation-beta.wide .free-plan-widget {
 /** button inline styles */
 main .hero-animation-beta .hero-animation-beta-foreground.display-style {
   display: block;
-  left: auto;
 }
 
 main .hero-animation-beta p.button-container.button-inline {
