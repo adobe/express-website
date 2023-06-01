@@ -926,6 +926,7 @@ async function decorateCategoryList(block, section, placeholders, props) {
 async function decorateSearchFunctions($toolBar, $section, placeholders, props) {
   if ($section.classList.contains('template-list-fullwidth-apipowered-container')
     && $section.classList.contains('search-marquee-spreadsheet-powered-container')) {
+    // FIXME: we only have one template-list now!
     console.log('searchbar is already handled by search-marquee');
     return;
   }
@@ -1554,6 +1555,7 @@ export async function decorateTemplateList($block, props) {
         $parent.querySelector('.search-marquee-wrapper')
           || $parent.querySelector('.link-list-wrapper')?.previousElementSibling?.classList?.contains('hero-animation-wrapper')
       )) {
+        // FIXME: we only have one template-list now!
         document.addEventListener('linkspopulated', (e) => {
           // desktop/mobile fires the same event
           if ($parent.contains(e.detail[0])) {
@@ -1778,6 +1780,7 @@ async function decorateTailButton($block, props) {
   const section = $block.closest('.section');
   if (section.classList.contains('template-list-fullwidth-apipowered-container')
   && section.classList.contains('search-marquee-spreadsheet-powered-container')) {
+    // FIXME: we only have one template-list now!
     console.log('ckg linkedlist is already handled by search-marquee');
     return;
   }
@@ -1949,6 +1952,7 @@ export default async function decorate($block) {
   const section = $block.closest('.section');
   if ((section.classList.contains('search-marquee-spreadsheet-powered-container') && document.body.dataset.device === 'mobile')
     || (section.classList.contains('hero-animation-wide-container') && document.body.dataset.device === 'desktop')) {
+    // FIXME: we only have one template-list now!
     // delay desktop-version on mobile
     setTimeout(async () => {
       await decorateBlock($block);
