@@ -130,10 +130,6 @@ main .hero-animation-beta.white-text a:any-link {
 
 @media (min-width: 1400px) {
 
-  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
-    left: 30%;
-  }  
-
   main .hero-animation-beta .hero-animation-beta-foreground {
     width: 500px;
   }
@@ -155,8 +151,6 @@ main .hero-animation-beta.white-text a:any-link {
 @media (min-width: 1800px) {
   main .hero-animation-beta .hero-animation-beta-foreground {
     max-width: 30%;
-    left: 30%;
-    transform: translate(-50%, -50%);
   }
 }
 
