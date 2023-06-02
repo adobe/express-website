@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-/* global expect */
 /* eslint-disable no-unused-expressions */
 /* eslint-env mocha */
+import { expect } from '@esm-bundle/chai';
 import { loadCSS } from '../../../express/scripts/scripts.js';
 
 describe('Fonts', () => {
