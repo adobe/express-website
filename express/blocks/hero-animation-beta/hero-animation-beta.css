@@ -119,7 +119,7 @@ main .hero-animation-beta.white-text a:any-link {
     top: 50%;
     transform: translateY(-50%);
     left: 56px;
-    width: 350px;
+    width: 375px;
   }
 
   body.no-desktop-brand-header header, body.no-brand-header header {
@@ -319,7 +319,7 @@ main .hero-animation-beta p.button-container a.secondary-button {
 }
 
 main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .button-container) {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 main .hero-animation-beta p.button-container a.secondary-button::before {
