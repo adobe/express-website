@@ -690,7 +690,7 @@ function closeTaskDropdown($toolBar) {
 function initSearchFunction($toolBar, $stickySearchBarWrapper, generatedSearchBar, props) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
-  const searchMarqueeSearchBar = document.querySelector('.search-marquee .search-bar-wrapper')
+  const searchMarqueeSearchBar = document.querySelector('.search-marquee .search-bar-wrapper');
   const $searchBarWrappers = document.querySelectorAll('.template-list-search-bar-wrapper');
   const $toolbarWrapper = $toolBar.parentElement;
 
@@ -984,7 +984,7 @@ async function decorateSearchFunctions($toolBar, $section, placeholders, props) 
     $linkListLocation.prepend($searchBarWrapper);
   }
 
-  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper ,props);
+  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props);
 }
 
 function closeDrawer($toolBar) {
