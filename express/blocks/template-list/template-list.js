@@ -466,7 +466,7 @@ async function redirectSearch($searchBar, props) {
   const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if ($searchBar) {
-    const wrapper = $searchBar.closest('.search-bar-wrapper');
+    const wrapper = $searchBar.closest('.template-list-search-bar-wrapper');
     const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
     props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
   }
@@ -678,7 +678,7 @@ function resetTaskDropdowns($section) {
 
 function closeTaskDropdown($toolBar) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
-  const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  const $searchBarWrappers = $section.querySelectorAll('.template-list-search-bar-wrapper');
   $searchBarWrappers.forEach(($wrapper) => {
     const $taskDropdown = $wrapper.querySelector('.task-dropdown');
     const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
@@ -687,10 +687,11 @@ function closeTaskDropdown($toolBar) {
   });
 }
 
-function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props) {
+function initSearchFunction($toolBar, $stickySearchBarWrapper, generatedSearchBar, props) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
-  const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  const searchMarqueeSearchBar = document.querySelector('.search-marquee .search-bar-wrapper')
+  const $searchBarWrappers = document.querySelectorAll('.template-list-search-bar-wrapper');
   const $toolbarWrapper = $toolBar.parentElement;
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
@@ -702,7 +703,8 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     }
   }, { rootMargin: '0px', threshold: 1 });
 
-  searchBarWatcher.observe($searchBarWrapper);
+  const searchBarToWatch = document.body.dataset.device === 'mobile' ? generatedSearchBar : searchMarqueeSearchBar;
+  searchBarWatcher.observe(searchBarToWatch);
 
   $searchBarWrappers.forEach(($wrapper) => {
     const $searchForm = $wrapper.querySelector('.search-form');
@@ -924,16 +926,9 @@ async function decorateCategoryList(block, section, placeholders, props) {
 }
 
 async function decorateSearchFunctions($toolBar, $section, placeholders, props) {
-  if ($section.classList.contains('template-list-fullwidth-apipowered-container')
-    && $section.classList.contains('search-marquee-spreadsheet-powered-container')) {
-    // FIXME: we only have one template-list now!
-    console.log('searchbar is already handled by search-marquee');
-    return;
-  }
-  console.log('searchbar still goes on, guess im mobile!');
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
-  const $inSectionLocation = $section.querySelector('.link-list-wrapper');
-  const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+  const $linkListLocation = document.querySelector('.link-list-fullwidth-container');
+  const $searchBarWrapper = createTag('div', { class: 'template-list-search-bar-wrapper' });
   const $searchForm = createTag('form', { class: 'search-form' });
   const $searchBar = createTag('input', {
     class: 'search-bar',
@@ -985,9 +980,11 @@ async function decorateSearchFunctions($toolBar, $section, placeholders, props) 
   $stickySearchBarWrapper.classList.add('sticky-search-bar');
   $stickySearchBarWrapper.classList.add('collapsed');
   $inBlockLocation.append($stickySearchBarWrapper);
-  $inSectionLocation.insertAdjacentElement('beforebegin', $searchBarWrapper);
+  if ($linkListLocation) {
+    $linkListLocation.prepend($searchBarWrapper);
+  }
 
-  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props);
+  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper ,props);
 }
 
 function closeDrawer($toolBar) {
@@ -1551,11 +1548,7 @@ export async function decorateTemplateList($block, props) {
         }
       }
 
-      if (placeholders['template-filter-premium'] && (
-        $parent.querySelector('.search-marquee-wrapper')
-          || $parent.querySelector('.link-list-wrapper')?.previousElementSibling?.classList?.contains('hero-animation-wrapper')
-      )) {
-        // FIXME: we only have one template-list now!
+      if (placeholders['template-filter-premium']) {
         document.addEventListener('linkspopulated', (e) => {
           // desktop/mobile fires the same event
           if ($parent.contains(e.detail[0])) {
@@ -1777,14 +1770,6 @@ async function decorateLoadMoreButton($block, props) {
 }
 
 async function decorateTailButton($block, props) {
-  const section = $block.closest('.section');
-  if (section.classList.contains('template-list-fullwidth-apipowered-container')
-  && section.classList.contains('search-marquee-spreadsheet-powered-container')) {
-    // FIXME: we only have one template-list now!
-    console.log('ckg linkedlist is already handled by search-marquee');
-    return;
-  }
-  console.log('ckg still goes on, guess im mobile!');
   const $carouselPlatform = $block.querySelector('.carousel-platform');
 
   if ($block.classList.contains('spreadsheet-powered')) {
@@ -1948,16 +1933,5 @@ async function decorateBlock($block) {
 }
 
 export default async function decorate($block) {
-  // non blocking
-  const section = $block.closest('.section');
-  if ((section.classList.contains('search-marquee-spreadsheet-powered-container') && document.body.dataset.device === 'mobile')
-    || (section.classList.contains('hero-animation-wide-container') && document.body.dataset.device === 'desktop')) {
-    // FIXME: we only have one template-list now!
-    // delay desktop-version on mobile
-    setTimeout(async () => {
-      await decorateBlock($block);
-    }, 3000);
-    return;
-  }
   decorateBlock($block);
 }
