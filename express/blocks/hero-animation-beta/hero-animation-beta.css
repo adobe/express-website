@@ -119,7 +119,7 @@ main .hero-animation-beta.white-text a:any-link {
     top: 50%;
     transform: translateY(-50%);
     left: 56px;
-    width: 500px;
+    width: 350px;
   }
 
   body.no-desktop-brand-header header, body.no-brand-header header {
@@ -129,9 +129,9 @@ main .hero-animation-beta.white-text a:any-link {
 }
 
 @media (min-width: 1400px) {
+
   main .hero-animation-beta .hero-animation-beta-foreground {
-    left: 50%;
-    transform: translate(-113%, -50%);
+    width: 500px;
   }
 
   main .hero-animation-beta .hero-animation-beta-foreground > p:first-child img.icon.icon-adobe-express {
@@ -151,8 +151,6 @@ main .hero-animation-beta.white-text a:any-link {
 @media (min-width: 1800px) {
   main .hero-animation-beta .hero-animation-beta-foreground {
     max-width: 30%;
-    left: 30%;
-    transform: translate(-50%, -50%);
   }
 }
 
@@ -264,6 +262,11 @@ main .hero-animation-beta .hero-shadow picture {
     transform: translateX(-15%);
     z-index: 2;
   }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 1%;
+  }
+
 }
 
 @media (min-width: 950px) and (max-width: 1250px) {
