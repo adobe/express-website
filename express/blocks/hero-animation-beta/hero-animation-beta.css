@@ -318,6 +318,14 @@ main .hero-animation-beta p.button-container a.secondary-button {
   border-color: #fff;
 }
 
+@media (min-width: 800px) and (max-width: 949px) {
+  main .hero-animation-beta p.button-container a.secondary-button {
+    color: var(--color-white);
+    background-color: var(--color-info-accent);
+    border-color: var(--color-info-accent);
+  }
+}
+
 main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .button-container) {
   margin-left: 10px;
 }
