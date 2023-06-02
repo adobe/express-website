@@ -191,13 +191,17 @@ export async function createFloatingButton($block, audience, data) {
     promoBarHeight = promoBarMargin + promoBar.block.offsetHeight;
   }
 
-  if (promoBar && promoBar.rendered && !($floatButtonWrapper.classList.contains('floating-button--hidden') || $floatButtonWrapper.classList.contains('floating-button--intersecting'))) {
-    $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
+  if (promoBar && promoBar.rendered && $floatButtonWrapper.dataset.audience !== 'desktop') {
+    $floatButton.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
+  } else {
+    $floatButton.style.removeProperty('bottom');
   }
 
   BlockMediator.subscribe('promobar', (e) => {
-    if (!e.newValue.rendered && !($floatButtonWrapper.classList.contains('floating-button--hidden') || $floatButtonWrapper.classList.contains('floating-button--intersecting'))) {
-      $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom - promoBarHeight}px` : '';
+    if (!e.newValue.rendered && $floatButtonWrapper.dataset.audience !== 'desktop') {
+      $floatButton.style.bottom = currentBottom ? `${currentBottom - promoBarHeight}px` : '';
+    } else {
+      $floatButton.style.removeProperty('bottom');
     }
   });
 
@@ -208,13 +212,13 @@ export async function createFloatingButton($block, audience, data) {
       const entry = entries[0];
       if (entry.intersectionRatio > 0 || entry.isIntersecting) {
         $floatButtonWrapper.classList.add('floating-button--hidden');
-        $floatButtonWrapper.style.bottom = '';
+        $floatButton.style.bottom = '0px';
       } else {
         $floatButtonWrapper.classList.remove('floating-button--hidden');
         if (promoBar && promoBar.block) {
-          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
+          $floatButton.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
         } else if (currentBottom) {
-          $floatButtonWrapper.style.bottom = currentBottom;
+          $floatButton.style.bottom = currentBottom;
         }
       }
     }, {
@@ -245,13 +249,13 @@ export async function createFloatingButton($block, audience, data) {
       }
       if ($e.intersectionRatio > 0 || $e.isIntersecting) {
         $floatButtonWrapper.classList.add('floating-button--intersecting');
-        $floatButtonWrapper.style.bottom = '';
+        $floatButton.style.bottom = '0px';
       } else {
         $floatButtonWrapper.classList.remove('floating-button--intersecting');
         if (promoBar && promoBar.block) {
-          $floatButtonWrapper.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
+          $floatButton.style.bottom = currentBottom ? `${currentBottom + promoBarHeight}px` : `${promoBarHeight}px`;
         } else if (currentBottom) {
-          $floatButtonWrapper.style.bottom = currentBottom;
+          $floatButton.style.bottom = currentBottom;
         }
       }
     }, {
