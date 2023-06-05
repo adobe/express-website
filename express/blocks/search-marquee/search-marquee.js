@@ -96,7 +96,7 @@ function initSearchFunction(block) {
     const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
     const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-    const pathMatch = (e) => e.path === targetPath;
+    const pathMatch = (e) => e.url === targetPath;
     if (allTemplatesMetadata.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
