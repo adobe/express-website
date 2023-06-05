@@ -27,7 +27,7 @@ function validatePage() {
 
 async function existsTemplatePage(path) {
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  return allTemplatesMetadata.some((e) => e.path === path);
+  return allTemplatesMetadata.some((e) => e.url === path);
 }
 
 async function redirectToExistingPage() {

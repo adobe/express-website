@@ -197,32 +197,6 @@ async function updateLinkList(container, linkPill, list) {
   }
 }
 
-async function updateMetadata() {
-  // TODO: update metadata with Search Param
-  const head = document.querySelector('head');
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (head) {
-    const placeholders = await fetchPlaceholders();
-    const categories = JSON.parse(placeholders['task-categories']);
-    if (categories) {
-      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-      head.innerHTML = head.innerHTML
-        .replaceAll('{{queryTasks}}', params.tasks || '')
-        .replaceAll('{{QueryTasks}}', titleCase(params.tasks || ''))
-        .replaceAll('{{translatedTasks}}', translatedTasks || '')
-        .replaceAll('{{TranslatedTasks}}', titleCase(translatedTasks || ''))
-        .replaceAll('{{placeholderRatio}}', params.phformat || '')
-        .replaceAll('{{QueryTopics}}', titleCase(params.topics || ''))
-        .replaceAll('{{queryTopics}}', params.topics || '')
-        .replaceAll('{{query}}', params.q || '');
-    }
-  }
-}
-
 async function lazyLoadLinklist() {
   await fetchLinkList();
   const linkList = document.querySelector('.link-list.fullwidth');
@@ -319,10 +293,6 @@ async function updateAsyncBlocks() {
   }
   await lazyLoadLinklist();
   await lazyLoadSEOLinkList();
-}
-
-if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-  await updateMetadata();
 }
 
 updateAsyncBlocks();

@@ -2328,7 +2328,7 @@ async function loadEager() {
   if (!window.hlx.lighthouse) await decorateTesting();
 
   if (getMetadata('sheet-powered') === 'Y') {
-    import('./content-replace.js');
+    await import('./content-replace.js');
   }
 
   if (getMetadata('template-search-page') === 'Y') {
