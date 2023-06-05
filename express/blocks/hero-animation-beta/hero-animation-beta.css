@@ -344,7 +344,7 @@ main .hero-animation-beta p.button-container a.secondary-button {
   }
 
   main .hero-animation-beta p.button-container a.secondary-button:hover {
-    background: rgba(232, 232, 232, 0.9);
+    background: rgba(232, 232, 232, 0.1);
     border-color: var(--color-info-secondary);
   }
 
