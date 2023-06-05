@@ -271,19 +271,25 @@ main .hero-animation-beta .hero-shadow picture {
     z-index: 2;
   }
 
-  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
-    left: 1%;
-  }
-
   main .hero-animation-beta p.button-container a.secondary-button:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: #fff;
+  }
+
+  main .hero-animation-beta p.button-container a.secondary-button::before {
+    content: url(/express/icons/play.svg);
   }
 }
 
 @media (min-width: 950px) and (max-width: 1250px) {
   main .hero-animation-beta .hero-shadow {
     transform: translateX(-5%);
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1399px) {
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 1%;
   }
 }
 
@@ -330,25 +336,32 @@ main .hero-animation-beta p.button-container a.secondary-button {
   border-color: #fff;
 }
 
-@media (min-width: 480px) and (max-width: 949px) {
+@media (max-width: 949px) {
   main .hero-animation-beta p.button-container a.secondary-button {
-    color: var(--color-white);
-    background-color: var(--color-info-accent);
-    border-color: var(--color-info-accent);
+    color: var(--color-black);
+    background-color: var(--color-info-secondary);
+    border-color: var(--color-info-secondary);
   }
 
   main .hero-animation-beta p.button-container a.secondary-button:hover {
-    background: rgba(92, 92, 224, 0.9);
-    border-color: var(--color-info-accent);
+    background: rgba(232, 232, 232, 0.9);
+    border-color: var(--color-info-secondary);
+  }
+  
+  main .hero-animation-beta p.button-container a.secondary-button::before {
+    content: url(/express/icons/play_b.svg);
+  }
+
+  main .hero-animation-beta p.button-container a.secondary-button:any-link {
+    margin-left: 0;
   }
 }
 
-main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .button-container) {
+main .hero-animation-beta p.button-container a.secondary-button:any-link {
   margin-left: 10px;
 }
 
 main .hero-animation-beta p.button-container a.secondary-button::before {
-  content: url(/express/icons/play.svg);
   display: inline-block;
   width: 18px;
   height: 20px;
