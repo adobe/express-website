@@ -2410,3 +2410,21 @@ main .template-list-fullwidth-apipowered-container .template-list-fallback-msg-w
   font-size: 22px;
   text-align: center;
 }
+
+main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-left: 40px;
+  display: flex;
+}
+
+main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs li {
+  display: flex;
+  padding: 5px 10px 5px 0;
+}
+
+main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs li:not(:first-child):before {
+  content: '/';
+  padding: 0 10px 0 0;
+}

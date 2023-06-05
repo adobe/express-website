@@ -28,6 +28,7 @@ import {
   lazyLoadLottiePlayer,
   linkImage,
   toClassName,
+  titleCase,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -1401,6 +1402,73 @@ function initViewToggle($block, $toolBar, props) {
   });
 }
 
+// returns null if no breadcrumbs
+// returns breadcrumbs as an li element
+async function getBreadcrumbs() {
+  const { origin, pathname } = window.location;
+  const regex = /(.*?\/express\/)templates(.*)/;
+  // FIXME: gnav breadcrumbs gone for non-us locales!
+  const matches = pathname.match(regex);
+  if (!matches) {
+    return null;
+  }
+  const [, rootPath, children] = matches;
+  const breadcrumbs = createTag('ul', { class: 'templates-breadcrumbs' });
+  const rootCrumb = createTag('li');
+  const rootLink = createTag('a', { href: `${origin}${rootPath}` });
+  // FIXME: localize & placeholders??
+  rootLink.textContent = 'Home';
+  rootCrumb.append(rootLink);
+  breadcrumbs.append(rootCrumb);
+
+  const templatesCrumb = createTag('li');
+  const templatesUrl = `${rootPath}templates`;
+  const templatesLink = createTag('a', { href: templatesUrl });
+  templatesLink.textContent = 'Templates';
+  templatesCrumb.append(templatesLink);
+  breadcrumbs.append(templatesCrumb);
+
+  if (!children || children === '/') {
+    return breadcrumbs;
+  }
+  if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
+    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
+    const lastCrumb = createTag('li');
+    lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
+    breadcrumbs.append(lastCrumb);
+    return breadcrumbs;
+  }
+
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+  const segments = children.split('/');
+  segments.reduce((acc, cur, index) => {
+    if (!cur) return acc;
+    const appended = `${acc}/${cur}`;
+    const segmentCrumb = createTag('li');
+    if (allTemplatesMetadata.some((t) => t.url === appended) && index !== segments.length - 1) {
+      const segmentLink = createTag('a', { href: `${origin}${appended}` });
+      segmentLink.textContent = titleCase(cur);
+      segmentCrumb.append(segmentLink);
+    } else {
+      segmentCrumb.textContent = titleCase(cur);
+    }
+    breadcrumbs.append(segmentCrumb);
+    return appended;
+  }, templatesUrl);
+
+  return breadcrumbs;
+}
+
+async function decorateBreadcrumbs(block) {
+  const parent = block.closest('.section');
+  const breadcrumbs = await getBreadcrumbs();
+  parent.prepend(breadcrumbs);
+}
+
 function initToolbarShadow($block, $toolbar) {
   const $toolbarWrapper = $toolbar.parentElement;
   document.addEventListener('scroll', () => {
@@ -1869,42 +1937,6 @@ async function replaceRRTemplateList($block, props) {
   }
 }
 
-// TODO: wip 
-// returns null if no breadcrumbs
-// returns breadcrumbs as an li element
-async function getBreadcrumbs(block) {
-  const parent = block.closest('.section');
-  const regex = /(.*?\/express\/)templates(.*)/;
-  // FIXME: gnav breadcrumbs gone for non-us locales!
-  const matches = window.location.href.match(regex);
-  if (!matches) {
-    return null;
-  }
-  const [, root, children] = matches;
-  const templatesRoot = `${root}templates`;
-  const breadcrumbs = createTag('ul', { class: 'templates-breadcrumbs' });
-  const rootCrumb = createTag('li');
-  const rootLink = createTag('a', { href: root });
-  // FIXME: localize & placeholders??
-  rootLink.textContent = 'Home';
-  rootCrumb.append(rootLink);
-  breadcrumbs.append(rootCrumb);
-
-  const templatesCrumb = createTag('li');
-  const templatesLink = createTag('a', { href: templatesRoot });
-  templatesLink.textContent = 'Templates';
-  templatesCrumb.append(templatesLink);
-  breadcrumbs.append(templatesCrumb);
-  if (!children || children === '/' || children.startsWith('/search?')) {
-    return breadcrumbs;
-  }
-
-  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-
-  // parent.append(breadcrumbs);
-  // parent.append(`${root} / ${templatesRoot} / ${children}`);
-}
-
 function constructProps() {
   const smScreen = window.matchMedia('(max-width: 900px)');
   const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
@@ -1941,6 +1973,8 @@ export default async function decorate($block) {
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
     cacheCreatedTemplate($block, props);
   }
+
+  await decorateBreadcrumbs($block);
 
   await decorateTemplateList($block, props);
 
