@@ -11,7 +11,6 @@
  */
 import {
   titleCase,
-  fetchPlaceholders,
   getLocale,
   getMetadata,
 } from './scripts.js';
