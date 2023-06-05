@@ -29,7 +29,7 @@ function autoUpdatePage() {
   }
 }
 
-async function updateMetadata() {
+async function updateMetadataForTemplates() {
   // TODO: update metadata with Search Param
   const head = document.querySelector('head');
   const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -85,7 +85,7 @@ async function updateNonBladeContent() {
 }
 
 if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-  await updateMetadata();
+  await updateMetadataForTemplates();
 }
 
 autoUpdatePage();
