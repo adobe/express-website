@@ -11,6 +11,7 @@
  */
 
 import { getHelixEnv, getLocale, getMetadata } from './scripts.js';
+import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
 function validatePage() {
   const env = getHelixEnv();
@@ -24,43 +25,21 @@ function validatePage() {
   }
 }
 
-async function fetchSheetData() {
-  const env = getHelixEnv();
-  const dev = new URLSearchParams(window.location.search).get('dev');
-  let sheet;
-
-  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
-  } else {
-    sheet = '/express/templates/default/metadata.json?limit=10000';
-  }
-
-  if (!(window.templates && window.templates.data)) {
-    // FIXME: stop using window obj to store data
-    window.templates = {};
-    const resp = await fetch(sheet);
-    window.templates.data = resp.ok ? (await resp.json()).data : [];
-  }
-}
-
-function findMatchExistingSEOPage(path) {
-  const pathMatch = (e) => e.path === path;
-  return (window.templates && window.templates.data.some(pathMatch));
+async function existsTemplatePage(path) {
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+  return allTemplatesMetadata.some((e) => e.path === path);
 }
 
 async function redirectToExistingPage() {
-  // FIXME: deprecate fetchSheetData
-  await fetchSheetData();
   // todo check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-
   if (params.topics) {
     const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
     const locale = getLocale(window.location);
     const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
-    if (findMatchExistingSEOPage(pathToMatch)) {
+    if (await existsTemplatePage(pathToMatch)) {
       window.location.replace(`${window.location.origin}${pathToMatch}`);
     }
   }

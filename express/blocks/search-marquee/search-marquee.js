@@ -20,6 +20,7 @@ import {
 } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
+import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 
 function handlelize(str) {
   return str.normalize('NFD')
@@ -94,8 +95,9 @@ function initSearchFunction(block) {
     const topicUrl = searchInput ? `/${searchInput}` : '';
     const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+    const allTemplatesMetadata = await fetchAllTemplatesMetadata();
     const pathMatch = (e) => e.path === targetPath;
-    if (window.templates && window.templates.data.some(pathMatch)) {
+    if (allTemplatesMetadata.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
       const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
