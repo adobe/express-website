@@ -146,11 +146,19 @@ main .hero-animation-beta.white-text a:any-link {
   main .hero-animation-beta p {
     font-size: var(--body-font-size-l);
   }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 10%;
+  }
 }
 
 @media (min-width: 1800px) {
   main .hero-animation-beta .hero-animation-beta-foreground {
     max-width: 30%;
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 15%;
   }
 }
 
