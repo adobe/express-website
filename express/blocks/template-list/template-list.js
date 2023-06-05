@@ -33,7 +33,7 @@ import {
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
-
+import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 import { memoize } from '../../scripts/utils.js';
 
 function wordStartsWithVowels(word) {
@@ -498,7 +498,7 @@ async function redirectSearch($searchBar, props) {
   const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
-  if (window.templates && window.templates.data.some(pathMatch)) {
+  if (await fetchAllTemplatesMetadata().some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
   } else {
     window.location = searchUrl;
@@ -1869,6 +1869,42 @@ async function replaceRRTemplateList($block, props) {
   }
 }
 
+// TODO: wip 
+// returns null if no breadcrumbs
+// returns breadcrumbs as an li element
+async function getBreadcrumbs(block) {
+  const parent = block.closest('.section');
+  const regex = /(.*?\/express\/)templates(.*)/;
+  // FIXME: gnav breadcrumbs gone for non-us locales!
+  const matches = window.location.href.match(regex);
+  if (!matches) {
+    return null;
+  }
+  const [, root, children] = matches;
+  const templatesRoot = `${root}templates`;
+  const breadcrumbs = createTag('ul', { class: 'templates-breadcrumbs' });
+  const rootCrumb = createTag('li');
+  const rootLink = createTag('a', { href: root });
+  // FIXME: localize & placeholders??
+  rootLink.textContent = 'Home';
+  rootCrumb.append(rootLink);
+  breadcrumbs.append(rootCrumb);
+
+  const templatesCrumb = createTag('li');
+  const templatesLink = createTag('a', { href: templatesRoot });
+  templatesLink.textContent = 'Templates';
+  templatesCrumb.append(templatesLink);
+  breadcrumbs.append(templatesCrumb);
+  if (!children || children === '/' || children.startsWith('/search?')) {
+    return breadcrumbs;
+  }
+
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+
+  // parent.append(breadcrumbs);
+  // parent.append(`${root} / ${templatesRoot} / ${children}`);
+}
+
 function constructProps() {
   const smScreen = window.matchMedia('(max-width: 900px)');
   const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
@@ -1896,7 +1932,7 @@ function constructProps() {
   };
 }
 
-async function decorateBlock($block) {
+export default async function decorate($block) {
   const props = constructProps();
   if ($block.classList.contains('spreadsheet-powered')) {
     await replaceRRTemplateList($block, props);
@@ -1930,8 +1966,4 @@ async function decorateBlock($block) {
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {
     addBackgroundAnimation($block, props.backgroundAnimation);
   }
-}
-
-export default async function decorate($block) {
-  decorateBlock($block);
 }

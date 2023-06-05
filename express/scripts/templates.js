@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 import {
-  getHelixEnv,
   titleCase,
   fetchPlaceholders,
   getLocale,
@@ -23,25 +22,7 @@ import {
 } from './api-v3-controller.js';
 
 import { memoize } from './utils.js';
-
-async function fetchSheetData() {
-  const env = getHelixEnv();
-  const dev = new URLSearchParams(window.location.search).get('dev');
-  let sheet;
-
-  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
-  } else {
-    sheet = '/express/templates/default/metadata.json?limit=10000';
-  }
-
-  if (!(window.templates && window.templates.data)) {
-    // FIXME: stop using window obj to store data
-    window.templates = {};
-    const resp = await fetch(sheet);
-    window.templates.data = resp.ok ? (await resp.json()).data : [];
-  }
-}
+import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
 async function fetchLinkList() {
   if (!window.linkLists) {
@@ -97,8 +78,8 @@ function replaceLinkPill(linkPill, data) {
   return clone;
 }
 
-function updateSEOLinkList(container, linkPill, list) {
-  const templatePages = window.templates.data ?? [];
+async function updateSEOLinkList(container, linkPill, list) {
+  const templatePages = fetchAllTemplatesMetadata();
   container.innerHTML = '';
 
   if (list && templatePages) {
@@ -144,7 +125,7 @@ function formatLinkPillText(linkPillData) {
 const memoizedGetPillWordsMapping = memoize(getPillWordsMapping, { ttl: 1000 * 60 * 60 * 24 });
 
 async function updateLinkList(container, linkPill, list) {
-  const templatePages = window.templates.data ?? [];
+  const templatePages = await fetchAllTemplatesMetadata();
   const pillsMapping = await memoizedGetPillWordsMapping();
   const pageLinks = [];
   const searchLinks = [];
@@ -218,7 +199,7 @@ async function lazyLoadLinklist() {
   await fetchLinkList();
   const linkList = document.querySelector('.link-list.fullwidth');
 
-  if (linkList && window.templates.data) {
+  if (linkList) {
     const linkListContainer = linkList.querySelector('p').parentElement;
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
@@ -253,7 +234,7 @@ async function lazyLoadSEOLinkList() {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
-      updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      await updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
       topTemplatesContainer.style.visibility = 'visible';
     } else {
       topTemplatesContainer.innerHTML = '';
@@ -303,7 +284,6 @@ function hideAsyncBlocks() {
 }
 
 async function updateAsyncBlocks() {
-  await fetchSheetData();
   hideAsyncBlocks();
   // FIXME: integrate memoization
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
