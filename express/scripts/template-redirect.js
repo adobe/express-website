@@ -25,9 +25,9 @@ function validatePage() {
   }
 }
 
-async function existsTemplatePage(path) {
+async function existsTemplatePage(url) {
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  return allTemplatesMetadata.some((e) => e.url === path);
+  return allTemplatesMetadata.some((e) => e.url === url);
 }
 
 async function redirectToExistingPage() {
