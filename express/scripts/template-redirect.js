@@ -66,5 +66,5 @@ async function redirectToExistingPage() {
   }
 }
 
-validatePage();
+// validatePage();
 await redirectToExistingPage();

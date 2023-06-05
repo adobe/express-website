@@ -67,7 +67,7 @@ function loadBetterAssetInBackground(img) {
 async function populateHeadingPlaceholder(locale, props) {
   const heading = props.heading.replace("''", '');
   // special treatment for express/ root url
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
+  const lowerCaseHeading = heading === 'Adobe Express' ? heading : heading.toLowerCase();
   const placeholders = await fetchPlaceholders();
   const lang = getLanguage(getLocale(window.location));
   const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
@@ -83,7 +83,7 @@ async function populateHeadingPlaceholder(locale, props) {
     grammarTemplate = grammarTemplate
       .replace('{{quantity}}', templateCount)
       .replace('{{Type}}', heading)
-      .replace('{{type}}', camelHeading);
+      .replace('{{type}}', lowerCaseHeading);
 
     if (locale === 'fr') {
       grammarTemplate.split(' ').forEach((word, index, words) => {

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { fetchPlaceholders, getMetadata } from './scripts.js';
+import { fetchPlaceholders, getMetadata, titleCase } from './scripts.js';
 
 function autoUpdatePage() {
   const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
@@ -25,6 +25,32 @@ function autoUpdatePage() {
           main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
         }
       });
+    }
+  }
+}
+
+async function updateMetadata() {
+  // TODO: update metadata with Search Param
+  const head = document.querySelector('head');
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  if (head) {
+    const placeholders = await fetchPlaceholders();
+    const categories = JSON.parse(placeholders['task-categories']);
+    if (categories) {
+      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+      head.innerHTML = head.innerHTML
+        .replaceAll('{{queryTasks}}', params.tasks || '')
+        .replaceAll('{{QueryTasks}}', titleCase(params.tasks || ''))
+        .replaceAll('{{translatedTasks}}', translatedTasks || '')
+        .replaceAll('{{TranslatedTasks}}', titleCase(translatedTasks || ''))
+        .replaceAll('{{placeholderRatio}}', params.phformat || '')
+        .replaceAll('{{QueryTopics}}', titleCase(params.topics || ''))
+        .replaceAll('{{queryTopics}}', params.topics || '')
+        .replaceAll('{{query}}', params.q || '');
     }
   }
 }
@@ -56,6 +82,10 @@ async function updateNonBladeContent() {
   if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
     browseByCat.remove();
   }
+}
+
+if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
+  await updateMetadata();
 }
 
 autoUpdatePage();
