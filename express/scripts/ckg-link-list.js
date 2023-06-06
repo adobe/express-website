@@ -287,7 +287,7 @@ function hideAsyncBlocks() {
   }
 }
 
-async function updateAsyncBlocks() {
+(async function updateAsyncBlocks() {
   hideAsyncBlocks();
   // TODO: integrate memoization
   if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list')) && document.body.dataset.device === 'desktop') {
@@ -295,6 +295,4 @@ async function updateAsyncBlocks() {
   }
   await lazyLoadLinklist();
   await lazyLoadSEOLinkList();
-}
-
-updateAsyncBlocks();
+}());

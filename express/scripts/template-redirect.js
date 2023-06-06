@@ -13,7 +13,12 @@
 import { getHelixEnv, getLocale, getMetadata } from './scripts.js';
 import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
-function validatePage() {
+async function existsTemplatePage(url) {
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+  return allTemplatesMetadata.some((e) => e.url === url);
+}
+
+(function validatePage() {
   const env = getHelixEnv();
   const title = document.querySelector('title');
   if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
@@ -23,15 +28,10 @@ function validatePage() {
   if ((env && env.name !== 'stage') || (title && title.innerText.match(/{{(.*?)}}/))) {
     window.location.replace('/404');
   }
-}
+}());
 
-async function existsTemplatePage(url) {
-  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  return allTemplatesMetadata.some((e) => e.url === url);
-}
-
-async function redirectToExistingPage() {
-  // todo check if the search query points to an existing page. If so, redirect.
+(async function redirectToExistingPage() {
+  // TODO: check if the search query points to an existing page. If so, redirect.
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
@@ -43,7 +43,4 @@ async function redirectToExistingPage() {
       window.location.replace(`${window.location.origin}${pathToMatch}`);
     }
   }
-}
-
-validatePage();
-await redirectToExistingPage();
+}());

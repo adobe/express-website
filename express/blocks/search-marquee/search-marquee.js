@@ -291,4 +291,7 @@ export default async function decorate(block) {
     const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
     document.dispatchEvent(linksPopulated);
   }
+  if (window.location.href.includes('/express/templates/')) {
+    import('../../scripts/ckg-link-list.js');
+  }
 }

@@ -2453,11 +2453,7 @@ async function loadLazy() {
   // post LCP actions go here
   sampleRUM('lcp');
 
-  loadBlocks(main).then(() => {
-    if (window.location.href.includes('/express/templates/')) {
-      import('./templates.js');
-    }
-  });
+  loadBlocks(main);
   loadCSS('/express/styles/lazy-styles.css');
   scrollToHash();
   resolveFragments();

@@ -12,24 +12,21 @@
 
 import { fetchPlaceholders, getMetadata, titleCase } from './scripts.js';
 
-function autoUpdatePage() {
-  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
-  // FIXME: deprecate wl
-  const main = document.querySelector('main');
-  if (main) {
-    const allReplaceableBlades = [...main.innerText.matchAll(/{{(.*?)}}/g)];
+async function replaceDefaultPlaceholders(template) {
+  template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
 
-    if (allReplaceableBlades.length > 0) {
-      allReplaceableBlades.forEach((regex) => {
-        if (!wl.includes(regex[0].toLowerCase())) {
-          main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
-        }
-      });
-    }
+  if (getMetadata('tasks') === '') {
+    const placeholders = await fetchPlaceholders();
+    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+  } else {
+    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
   }
 }
 
-async function updateMetadataForTemplates() {
+(async function updateMetadataForTemplates() {
+  if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
+    return;
+  }
   // TODO: update metadata with Search Param
   const head = document.querySelector('head');
   const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -53,20 +50,26 @@ async function updateMetadataForTemplates() {
         .replaceAll('{{query}}', params.q || '');
     }
   }
-}
+}());
 
-async function replaceDefaultPlaceholders(template) {
-  template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
+(function autoUpdatePage() {
+  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
+  // FIXME: deprecate wl
+  const main = document.querySelector('main');
+  if (main) {
+    const allReplaceableBlades = [...main.innerText.matchAll(/{{(.*?)}}/g)];
 
-  if (getMetadata('tasks') === '') {
-    const placeholders = await fetchPlaceholders();
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-  } else {
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
+    if (allReplaceableBlades.length > 0) {
+      allReplaceableBlades.forEach((regex) => {
+        if (!wl.includes(regex[0].toLowerCase())) {
+          main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
+        }
+      });
+    }
   }
-}
+}());
 
-async function updateNonBladeContent() {
+(async function updateNonBladeContent() {
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const templateX = document.querySelector('.template-x');
   const browseByCat = document.querySelector('.browse-by-category');
@@ -82,11 +85,4 @@ async function updateNonBladeContent() {
   if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
     browseByCat.remove();
   }
-}
-
-if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-  await updateMetadataForTemplates();
-}
-
-autoUpdatePage();
-await updateNonBladeContent();
+}());
