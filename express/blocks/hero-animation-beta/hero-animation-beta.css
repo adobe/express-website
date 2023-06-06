@@ -353,7 +353,7 @@ main .hero-animation-beta p.button-container a.secondary-button {
   }
 
   main .hero-animation-beta p.button-container a.secondary-button:any-link {
-    margin-left: 0;
+    margin-left: -5px;
   }
 }
 
