@@ -2450,13 +2450,14 @@ export async function addFreePlanWidget(elem) {
 async function loadLazy() {
   const main = document.querySelector('main');
 
-  if (window.location.href.includes('/express/templates/')) {
-    await import('./templates.js');
-  }
   // post LCP actions go here
   sampleRUM('lcp');
 
-  loadBlocks(main);
+  loadBlocks(main).then(() => {
+    if (window.location.href.includes('/express/templates/')) {
+      import('./templates.js');
+    }
+  });
   loadCSS('/express/styles/lazy-styles.css');
   scrollToHash();
   resolveFragments();

@@ -289,8 +289,8 @@ function hideAsyncBlocks() {
 
 async function updateAsyncBlocks() {
   hideAsyncBlocks();
-  // FIXME: integrate memoization
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+  // TODO: integrate memoization
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list')) && document.body.dataset.device === 'desktop') {
     await lazyLoadSearchMarqueeLinklist();
   }
   await lazyLoadLinklist();
