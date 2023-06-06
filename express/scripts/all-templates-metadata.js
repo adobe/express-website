@@ -10,11 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { getHelixEnv } from './scripts.js';
+import { getHelixEnv, getLocale } from './scripts.js';
 
 let allTemplatesMetadata;
 
 export default async function fetchAllTemplatesMetadata() {
+  const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+
   if (!allTemplatesMetadata) {
     try {
       const env = getHelixEnv();
@@ -24,7 +27,7 @@ export default async function fetchAllTemplatesMetadata() {
       if (['yes', 'true', 'on'].includes(dev) && env?.name === 'stage') {
         sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
       } else {
-        sheet = '/express/templates/default/metadata.json?limit=10000';
+        sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=10000`;
       }
 
       const resp = await fetch(sheet);
