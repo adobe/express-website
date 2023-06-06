@@ -261,7 +261,6 @@ main .hero-animation-beta .hero-shadow picture {
   display: flex;
 }
 
-
 @media (min-width: 950px) {
   main .hero-animation-beta .hero-shadow {
     display: flex;
@@ -344,10 +343,10 @@ main .hero-animation-beta p.button-container.button-inline {
     background: rgba(232, 232, 232, 0.1);
     color: var(--color-black);
   }
+}
 
-  main .hero-animation-beta p:nth-child(1 of .button-container) {
-    display: none;
-  }
+main .hero-animation-beta p:nth-child(1 of .button-container) {
+  display: none;
 }
 
 main .hero-animation-beta p.button-container a.secondary::before {
@@ -388,6 +387,10 @@ main .hero-animation-beta p.underline a {
 
   main .hero-animation-beta.wide .button-container.free-plan-container.stacked .free-plan-widget {
     padding-left: 0;
+  }
+
+  main .hero-animation-beta p:nth-child(1 of .button-container) {
+    display: inline-block;
   }
 
   main .hero-animation-beta p.button-container a.secondary:any-link {
