@@ -23,7 +23,7 @@ import {
 } from './api-v3-controller.js';
 
 export function findMatchExistingSEOPage(path) {
-  const pathMatch = (e) => e.path === path;
+  const pathMatch = (e) => e.url === path;
   return (window.templates && window.templates.data.some(pathMatch));
 }
 

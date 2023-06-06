@@ -95,8 +95,8 @@ function initSearchFunction(block) {
     const topicUrl = searchInput ? `/${searchInput}` : '';
     const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
-    const pathMatch = (e) => e.path === targetPath;
-    if (window.templates && window.templates.data.some(pathMatch)) {
+    const pathMatch = (e) => e.url === targetPath;
+    if (window.templates?.data?.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
       const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
