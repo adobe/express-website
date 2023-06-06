@@ -119,7 +119,7 @@ main .hero-animation-beta.white-text a:any-link {
     top: 50%;
     transform: translateY(-50%);
     left: 56px;
-    width: 375px;
+    width: 380px;
   }
 
   body.no-desktop-brand-header header, body.no-brand-header header {
@@ -146,11 +146,19 @@ main .hero-animation-beta.white-text a:any-link {
   main .hero-animation-beta p {
     font-size: var(--body-font-size-l);
   }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 10%;
+  }
 }
 
 @media (min-width: 1800px) {
   main .hero-animation-beta .hero-animation-beta-foreground {
     max-width: 30%;
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 15%;
   }
 }
 
@@ -263,15 +271,30 @@ main .hero-animation-beta .hero-shadow picture {
     z-index: 2;
   }
 
-  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
-    left: 1%;
+  main .hero-animation-beta p.button-container a.secondary {
+    background: rgba(255, 255, 255, 0);
+    border-color: var(--color-white);
   }
 
+  main .hero-animation-beta p.button-container a.secondary:hover, main .hero-animation-beta p.button-container a.secondary:active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-white);
+  }
+
+  main .hero-animation-beta p.button-container a.secondary::before {
+    filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(172deg) brightness(110%) contrast(101%);
+  }
 }
 
 @media (min-width: 950px) and (max-width: 1250px) {
   main .hero-animation-beta .hero-shadow {
     transform: translateX(-5%);
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1399px) {
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 1%;
   }
 }
 
@@ -313,17 +336,20 @@ main .hero-animation-beta p.button-container.button-inline {
   display: inline-block;
 }
 
-main .hero-animation-beta p.button-container a.secondary-button {
-  background: rgba(255, 255, 255, 0);
-  border-color: #fff;
+@media (max-width: 949px) {
+  main .hero-animation-beta p.button-container a.secondary:hover,
+  main .hero-animation-beta p.button-container a.secondary:active,
+  main .hero-animation-beta p.button-container a.secondary:focus {
+    background: rgba(232, 232, 232, 0.1);
+    color: var(--color-black);
+  }
 }
 
-main .hero-animation-beta p.button-container.button-inline:nth-last-child(1 of .button-container) {
-  margin-left: 10px;
+main .hero-animation-beta p:nth-child(1 of .button-container) {
+  display: none;
 }
 
-main .hero-animation-beta p.button-container a.secondary-button::before {
-  content: url(/express/icons/play.svg);
+main .hero-animation-beta p.button-container a.secondary::before {
   display: inline-block;
   width: 18px;
   height: 20px;
@@ -331,11 +357,7 @@ main .hero-animation-beta p.button-container a.secondary-button::before {
   vertical-align: sub;
   top: 1px;
   position: relative;
-}
-
-main .hero-animation-beta p.button-container a.secondary-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
+  content: url(/express/icons/play.svg);
 }
 
 main .hero-animation-beta p.underline a {
@@ -365,6 +387,14 @@ main .hero-animation-beta p.underline a {
 
   main .hero-animation-beta.wide .button-container.free-plan-container.stacked .free-plan-widget {
     padding-left: 0;
+  }
+
+  main .hero-animation-beta p:nth-child(1 of .button-container) {
+    display: inline-block;
+  }
+
+  main .hero-animation-beta p.button-container a.secondary:any-link {
+    margin-left: 15px;
   }
 }
 
