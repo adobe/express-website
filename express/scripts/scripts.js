@@ -2689,7 +2689,7 @@ export async function trackBranchParameters($links) {
       }
 
       btnUrl.search = urlParams.toString();
-      $a.href = btnUrl.toString();
+      $a.href = decodeURIComponent(btnUrl.toString());
     }
   });
 }
