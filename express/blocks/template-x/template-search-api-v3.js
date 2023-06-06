@@ -64,10 +64,9 @@ function formatFilterString(filters) {
 }
 
 const fetchSearchUrl = async ({
-  limit, start, filters, sort, q,
+  limit, start, filters, sort, q, collectionId,
 }) => {
   const base = 'https://spark-search.adobe.io/v3/content';
-  const collectionId = 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418';
   const collectionIdParam = `collectionId=${collectionId}`;
   const queryType = 'assets';
   const queryParam = `&queryType=${queryType}`;
@@ -93,7 +92,6 @@ const fetchSearchUrl = async ({
   }).then((response) => response.json());
 };
 
-// FIXME: use placeholders/localize
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
   const fallBacktextTemplate = tasks ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
