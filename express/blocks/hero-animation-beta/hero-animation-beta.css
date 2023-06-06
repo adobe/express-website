@@ -337,10 +337,15 @@ main .hero-animation-beta p.button-container.button-inline {
 }
 
 @media (max-width: 949px) {
+  main .hero-animation-beta p.button-container a.secondary {
+    background: rgba(232, 232, 232, 0.1);
+  }
+
   main .hero-animation-beta p.button-container a.secondary:hover,
   main .hero-animation-beta p.button-container a.secondary:active,
   main .hero-animation-beta p.button-container a.secondary:focus {
-    background: rgba(232, 232, 232, 0.1);
+    background: var(--color-info-secondary);
+    border-color: var(--color-info-secondary);
     color: var(--color-black);
   }
 }
