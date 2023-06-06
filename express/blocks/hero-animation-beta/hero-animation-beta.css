@@ -357,10 +357,6 @@ main .hero-animation-beta p.button-container a.secondary-button {
   }
 }
 
-main .hero-animation-beta p.button-container a.secondary-button:any-link {
-  margin-left: 15px;
-}
-
 main .hero-animation-beta p.button-container a.secondary-button::before {
   display: inline-block;
   width: 18px;
@@ -398,6 +394,10 @@ main .hero-animation-beta p.underline a {
 
   main .hero-animation-beta.wide .button-container.free-plan-container.stacked .free-plan-widget {
     padding-left: 0;
+  }
+
+  main .hero-animation-beta p.button-container a.secondary-button:any-link {
+    margin-left: 15px;
   }
 }
 
