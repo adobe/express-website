@@ -76,6 +76,7 @@ main .template-list.fullwidth.lg-view {
 
 main .template-list-wrapper.with-categories-list .template-list.fullwidth {
   width: 100%;
+  min-height: 600px;
 }
 
 main .template-list.sixcols > .masonry-col,

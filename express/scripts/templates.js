@@ -78,7 +78,7 @@ function replaceLinkPill(linkPill, data) {
 }
 
 async function updateSEOLinkList(container, linkPill, list) {
-  const templatePages = fetchAllTemplatesMetadata();
+  const templatePages = await fetchAllTemplatesMetadata();
   container.innerHTML = '';
 
   if (list && templatePages) {
@@ -92,8 +92,11 @@ async function updateSEOLinkList(container, linkPill, list) {
 
         return isLive && titleMatch && localeMatch;
       });
-      const clone = replaceLinkPill(linkPill, templatePageData);
-      container.append(clone);
+
+      if (templatePageData) {
+        const clone = replaceLinkPill(linkPill, templatePageData);
+        container.append(clone);
+      }
     });
   }
 }
@@ -190,7 +193,7 @@ async function updateLinkList(container, linkPill, list) {
 
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
-        replaceLinkPill(linkPill, templatePageData, container);
+        replaceLinkPill(linkPill, templatePageData);
       });
     }
   }
