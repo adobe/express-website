@@ -1465,6 +1465,8 @@ async function getBreadcrumbs() {
 
 async function decorateBreadcrumbs(block) {
   const parent = block.closest('.section');
+  // breadcrumbs are desktop-only
+  if (document.body.dataset.device !== 'desktop') return;
   const breadcrumbs = await getBreadcrumbs();
   parent.prepend(breadcrumbs);
 }
