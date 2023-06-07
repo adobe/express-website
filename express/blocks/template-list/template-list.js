@@ -82,7 +82,7 @@ async function populateHeadingPlaceholder(locale, props) {
 
   if (grammarTemplate) {
     grammarTemplate = grammarTemplate
-      .replace('{{quantity}}', templateCount)
+      .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
       .replace('{{Type}}', heading)
       .replace('{{type}}', lowerCaseHeading);
 
@@ -1622,6 +1622,7 @@ export async function decorateTemplateList($block, props) {
 
         $templateListWrapper.before($toolBarWrapper);
         if (props.fallbackMsg) {
+          $templateListWrapper.classList.add('with-fallback-msg');
           const fallbackMsgWrapper = createTag('div', { class: 'template-list-fallback-msg-wrapper' });
           fallbackMsgWrapper.textContent = props.fallbackMsg;
           $templateListWrapper.before(fallbackMsgWrapper);
