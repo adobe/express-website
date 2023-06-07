@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable import/named, import/extensions */
+/* eslint-disable import/named, import/extensions, no-underscore-dangle */
 
 import {
   addAnimationToggle,
@@ -119,6 +119,18 @@ const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
   ttl: 1000 * 60 * 60 * 24,
 });
 
+async function getFallbackMsg(tasks = '') {
+  const placeholders = await fetchPlaceholders();
+  const fallBacktextTemplate = tasks ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
+
+  if (fallBacktextTemplate) {
+    return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
+  }
+
+  return `Sorry we couldn't find any results for what you searched for, try some of these popular ${
+    tasks ? ` ${tasks.toString()} ` : ''}templates instead.`;
+}
+
 async function fetchTemplates(props) {
   props.fallbackMsg = null;
   if (props.authoringError || Object.keys(props.filters).length === 0) {
@@ -126,18 +138,27 @@ async function fetchTemplates(props) {
     props.heading = 'Authoring error: first row must specify the template “type”';
     return null;
   }
-  props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
+  const { limit, start, sort } = props;
+  props.queryString = formatSearchQuery(limit, start, sort, props.filters);
 
-  const result = await memoizedFetchUrl(props.queryString);
+  let result = await memoizedFetchUrl(props.queryString);
 
-  // eslint-disable-next-line no-underscore-dangle
   if (result._embedded.total > 0) {
     return result;
   }
-  // save fetch if search query returned 0 templates. "Bad result is better than no result"
-  // FIXME: use placeholders/localize
-  props.fallbackMsg = 'Sorry we couldn\'t find any results for what you searched for, try some of these popular templates instead.';
-  return memoizedFetchUrl(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`);
+  const { filters: { tasks } } = props;
+  const tasksMatch = /\((.+)\)/.exec(tasks);
+  if (tasksMatch) {
+    props.queryString = formatSearchQuery(limit, start, sort, { ...props.filters, tasks: '()' });
+    result = await memoizedFetchUrl(props.queryString);
+    if (result._embedded.total > 0) {
+      props.fallbackMsg = await getFallbackMsg(tasksMatch[1]);
+      return result;
+    }
+  }
+  props.queryString = formatSearchQuery(limit, start, sort, { locales: props.filters.locales });
+  props.fallbackMsg = await getFallbackMsg();
+  return memoizedFetchUrl(props.queryString);
 }
 
 function fetchTemplatesByTasks(tasks, props) {
@@ -167,7 +188,6 @@ async function appendCategoryTemplatesCount($section, props) {
       // eslint-disable-next-line no-await-in-loop
       const json = await fetchTemplatesByTasks(anchor.dataset.tasks, props);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
-      // eslint-disable-next-line no-underscore-dangle
       countSpan.textContent = `(${json?._embedded?.total?.toLocaleString(lang) ?? 0})`;
       anchor.append(countSpan);
     }
@@ -180,11 +200,9 @@ async function processResponse(props) {
   const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
   let templateFetched;
   if (response) {
-    // eslint-disable-next-line no-underscore-dangle
     templateFetched = response._embedded.results;
 
     if ('_links' in response) {
-      // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
       const starts = new URLSearchParams(nextQuery).get('start').split(',');
       starts.pop();
@@ -193,7 +211,6 @@ async function processResponse(props) {
       props.start = '';
     }
 
-    // eslint-disable-next-line no-underscore-dangle
     props.total = response._embedded.total;
   }
 
