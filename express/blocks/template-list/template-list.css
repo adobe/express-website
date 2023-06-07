@@ -2221,6 +2221,7 @@ main .template-list-horizontal-apipowered-holiday-container.expanded .animation-
 main .template-list-fullwidth-apipowered-container .template-list-fallback-msg-wrapper {
   font-size: 22px;
   text-align: center;
+  padding: 0 28px;
 }
 
 main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs {
