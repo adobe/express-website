@@ -146,17 +146,17 @@ async function fetchTemplates(props) {
   if (result._embedded.total > 0) {
     return result;
   }
-  const { filters: { tasks } } = props;
+  const { filters: { tasks, locales } } = props;
   const tasksMatch = /\((.+)\)/.exec(tasks);
   if (tasksMatch) {
-    props.queryString = formatSearchQuery(limit, start, sort, { ...props.filters, tasks: '()' });
+    props.queryString = formatSearchQuery(limit, start, sort, { locales, tasks });
     result = await memoizedFetchUrl(props.queryString);
     if (result._embedded.total > 0) {
       props.fallbackMsg = await getFallbackMsg(tasksMatch[1]);
       return result;
     }
   }
-  props.queryString = formatSearchQuery(limit, start, sort, { locales: props.filters.locales });
+  props.queryString = formatSearchQuery(limit, start, sort, { locales });
   props.fallbackMsg = await getFallbackMsg();
   return memoizedFetchUrl(props.queryString);
 }
