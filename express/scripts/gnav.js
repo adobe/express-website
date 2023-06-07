@@ -25,6 +25,8 @@ import {
 
 import loadGoogleYOLO from './google-yolo.js';
 
+const isHomepage = window.location.pathname.endsWith('/express/');
+
 async function checkRedirect(location, geoLookup) {
   const splits = location.pathname.split('/express/');
   splits[0] = '';
@@ -142,7 +144,6 @@ async function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
-  const isHomepage = window.location.pathname.endsWith('/express/');
   const isMegaNav = window.location.pathname.startsWith('/express')
     || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
@@ -211,6 +212,9 @@ async function loadFEDS() {
         const env = getHelixEnv();
         if (env && env.spark) {
           sparkLoginUrl = sparkLoginUrl.replace('express.adobe.com', env.spark);
+        }
+        if (isHomepage) {
+          sparkLoginUrl = 'https://new.express.adobe.com/?showCsatOnExportOnce=True&promoid=GHMVYBFM&mv=other';
         }
         window.location.href = sparkLoginUrl;
       },
