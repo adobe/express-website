@@ -23,7 +23,7 @@ async function replaceDefaultPlaceholders(template) {
   }
 }
 
-(async function updateMetadataForTemplates() {
+await (async function updateMetadataForTemplates() {
   if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     return;
   }
