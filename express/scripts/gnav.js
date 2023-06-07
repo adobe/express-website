@@ -248,7 +248,7 @@ async function loadFEDS() {
       }
     }
 
-    /* switch all links if lower envs */
+    /* switch all links if lower env */
     const env = getHelixEnv();
     if (env && env.spark) {
       // eslint-disable-next-line no-console
