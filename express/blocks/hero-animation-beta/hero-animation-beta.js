@@ -129,7 +129,7 @@ function transformToVideoLink($cell, $a) {
     });
   $a.addEventListener('click', (e) => {
     e.preventDefault();
-    displayVideoModal(vidUrls, title, true);
+    displayVideoModal(vidUrls, title);
   });
 
   $a.addEventListener('keyup', (e) => {
