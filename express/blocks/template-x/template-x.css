@@ -676,7 +676,7 @@ main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
     }
 
     main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 156px;
+        max-width: 170px;
         text-align: center;
     }
 
@@ -1756,6 +1756,7 @@ main .template-x.with-categories-list .category-list-toggle {
 }
 
 main .template-x.with-categories-list ul {
+    position: relative;
     list-style: none;
     max-height: 800px;
     overflow: hidden;
@@ -1834,9 +1835,26 @@ main .template-x.with-categories-list .category-list-resize:after {
         border-radius: 12px;
     }
 
-    main .template-x.with-categories-list .category-list-wrapper.desktop-only::before {
+    main .template-x.with-categories-list .category-list::before {
         content: '';
-        opacity: 0;
+        z-index: 0;
+        position: absolute;
+        height: 100%;
+        transition: opacity 0.2s;
+        background: linear-gradient(180deg, #FFFFFF00 0%, #FFFFFF 59%);
+    }
+
+    main .template-x.with-categories-list .category-list-wrapper.desktop-only:not(:hover) .category-list::before {
+        width: 100%;
+    }
+
+    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover .category-list::before {
+        width: 0;
+    }
+
+    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover::before {
+        content: '';
+        opacity: 1;
         z-index: -1;
         position: absolute;
         height: 100%;
@@ -1888,11 +1906,6 @@ main .template-x.with-categories-list .category-list-resize:after {
         min-width: max-content;
         padding-right: 160px;
         overflow: visible;
-    }
-
-    main .template-x.with-categories-list .category-list-wrapper.desktop-only:hover::before {
-        content: '';
-        opacity: 1;
     }
 }
 
