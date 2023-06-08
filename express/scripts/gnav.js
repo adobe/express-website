@@ -25,8 +25,6 @@ import {
 
 import loadGoogleYOLO from './google-yolo.js';
 
-const isHomepage = window.location.pathname.endsWith('/express/');
-
 async function checkRedirect(location, geoLookup) {
   const splits = location.pathname.split('/express/');
   splits[0] = '';
@@ -144,11 +142,11 @@ async function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyReject', handleConsentSettings);
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
+  const isHomepage = window.location.pathname.endsWith('/express/');
   const isMegaNav = window.location.pathname.startsWith('/express')
-    || window.location.pathname.startsWith('/education')
-    || window.location.pathname.startsWith('/drafts');
+    || window.location.pathname.startsWith('/education');
   const fedsExp = isMegaNav
-    ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}-beta`
+    ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}`
     : 'cc-express/cc-express-gnav';
 
   async function buildBreadCrumbArray() {
@@ -214,9 +212,6 @@ async function loadFEDS() {
         if (env && env.spark) {
           sparkLoginUrl = sparkLoginUrl.replace('express.adobe.com', env.spark);
         }
-        if (isHomepage) {
-          sparkLoginUrl = 'https://new.express.adobe.com/?showCsatOnExportOnce=True&promoid=GHMVYBFM&mv=other';
-        }
         window.location.href = sparkLoginUrl;
       },
     },
@@ -249,7 +244,7 @@ async function loadFEDS() {
       }
     }
 
-    /* switch all links if lower env */
+    /* switch all links if lower envs */
     const env = getHelixEnv();
     if (env && env.spark) {
       // eslint-disable-next-line no-console

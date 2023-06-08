@@ -1060,8 +1060,7 @@ loadScript(martechURL, () => {
     }
 
     // Tracking any link or links that is added after page loaded.
-    document.addEventListener('linkspopulated', async (e) => {
-      await trackBranchParameters(e.detail);
+    document.addEventListener('linkspopulated', (e) => {
       e.detail.forEach(($link) => {
         $link.addEventListener('click', () => {
           trackButtonClick($link);

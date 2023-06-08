@@ -19,6 +19,7 @@ import {
   toClassName,
   createOptimizedPicture,
   trackBranchParameters,
+// eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
 
 const PROMOTION_FOLDER = 'express/promotions';
@@ -94,5 +95,6 @@ export default async function decorate($block) {
   if ($links) {
     const linksPopulated = new CustomEvent('linkspopulated', { detail: $links });
     document.dispatchEvent(linksPopulated);
+    trackBranchParameters($links);
   }
 }
