@@ -1,0 +1,211 @@
+main .fullscreen-marquee-desktop-container {
+  min-height: 460px;
+  box-sizing: border-box;
+  padding: 0 0 160px 0;
+  position: relative;
+  height: 100%;
+}
+
+main .fullscreen-marquee-desktop-wrapper {
+  max-width: none!important;
+}
+
+main .fullscreen-marquee-desktop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-bottom: 160px;
+  padding-top: 80px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1160px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading h1 {
+  font-size: 80px;
+  line-height: 90px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading p {
+  justify-content: center;
+  max-width: 680px;
+  margin: 10px 0;
+  font-size: 18px;
+  line-height: 30px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading .button-container {
+  display: flex;
+  align-items: center;
+}
+
+main .fullscreen-marquee-desktop-heading h1 em {
+  font-style: normal;
+  background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
+  background-size: 400% 400%;
+  -webkit-animation: buttonGradient 45s ease infinite;
+  -moz-animation: buttonGradient 45s ease infinite;
+  animation: buttonGradient 45s ease infinite;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 50%;
+  z-index: -5;
+  opacity: 0;
+  transition: .5s opacity ease;
+  transform: translateX(-50%);
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background img {
+  max-width: none;
+  height: 100%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame {
+  margin-top: 40px;
+  position: relative;
+  width: 950px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-background {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  width: calc(100% + 30px);
+  height: calc(100% + 30px);
+  z-index: -5;
+  background-color: #f3f3f3;
+  border-radius: 42px;
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.22, 0.78, 0.24, 0.98);
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app {
+  transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(0.22, 0.78, 0.24, 0.98);
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-image img {
+  width: 950px;
+  border-radius: 24px;
+}
+
+main .fullscreen-marquee-desktop-app-frame-highlight {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 24px;
+  transition: opacity .1s ease-in-out;
+}
+
+main .fullscreen-marquee-desktop-app-frame-highlight:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  opacity: 1;
+  pointer-events: initial;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 76px;
+  left: 274px;
+  width: 675px;
+  height: 480px;
+}
+
+main .fullscreen-marquee-desktop.video .fullscreen-marquee-desktop-app-content-container {
+  height: 368px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
+  height: 90%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content img {
+  height: 100%;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app {
+  display: block;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app img {
+  vertical-align: middle;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor {
+  position: absolute;
+  top: 58px;
+  left: 66px;
+  width: 196px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor img {
+  border-radius: initial;
+}
+
+@media (max-width: 1200px) {
+  main .fullscreen-marquee-desktop {
+    display: none;
+  }
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-thumbnail-container {
+  position: absolute;
+  top: 66px;
+  left: 80px;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 5px;
+  z-index: 10;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frames-container {
+  display: flex;
+  position: absolute;
+  width: 274px;
+  top: 470px;
+  left: 342px;
+  height: 41px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frames-container video {
+  width: 10%;
+  height: 100%;
+  opacity: 0;
+  transition: .5s opacity ease-in;
+}

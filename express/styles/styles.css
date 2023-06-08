@@ -891,7 +891,8 @@ main .block.template-list[data-block-status='initialized']>div {
   display: none;
 }
 
-main .template-list.sixcols {
+main .template-list.sixcols,
+main .template-x.sixcols .template-x-inner-wrapper {
   min-height: 700px;
 }
 
@@ -958,11 +959,11 @@ main .block.center .free-plan-widget {
 main .block .free-plan-widget>div {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 main .block .free-plan-widget>div>div:first-child {
   position: relative;
-  margin-top: 5px;
   margin-right: 6px;
   width: 14px;
   height: 14px;
