@@ -121,7 +121,7 @@ const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
 
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
-  const fallBacktextTemplate = tasks ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
+  const fallBacktextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
   if (fallBacktextTemplate) {
     return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
