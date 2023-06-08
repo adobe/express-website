@@ -72,7 +72,7 @@ function loadIMS() {
   if (!['www.stage.adobe.com'].includes(window.location.hostname)) {
     loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
   } else {
-    loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
+    loadScript('https://auth-stg1.services.adobe.com/imslib/imslib.min.js');
     window.adobeid.environment = 'stg1';
   }
 }
