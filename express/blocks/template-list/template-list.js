@@ -854,12 +854,13 @@ async function decorateCategoryList(block, section, placeholders, props) {
   const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const $categoriesToggle = getIconElement('drop-down-arrow');
+  const categoriesListHeading = createTag('div', { class: 'category-list-heading' });
   const $categories = createTag('ul', { class: 'category-list' });
 
-  $categoriesToggle.textContent = placeholders['jump-to-category'];
+  categoriesListHeading.append(getIconElement('template-search'), placeholders['jump-to-category']);
 
   $categoriesToggleWrapper.append($categoriesToggle);
-  $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
+  $categoriesDesktopWrapper.append($categoriesToggleWrapper, categoriesListHeading, $categories);
 
   Object.entries(categories).forEach((category, index) => {
     const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
