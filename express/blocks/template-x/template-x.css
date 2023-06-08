@@ -1633,6 +1633,26 @@ main .template-x .api-templates-toolbar .functions-drawer .filter-drawer-mobile.
     transform: translateX(100%);
 }
 
+main .template-x .category-list-wrapper .category-list-heading {
+    margin-bottom: 4px;
+    height: 24px;
+    padding: 4px 7px;
+    border-radius: 8px;
+    transition: background-color .2s, color .2s;
+    overflow: hidden;
+    display: flex;
+    font-weight: 700;
+    font-size: 14px;
+    align-items: center;
+    width: max-content;
+}
+
+main .template-x .category-list-wrapper .category-list-heading .icon {
+    height: 18px;
+    width: 18px;
+    padding-right: 8px;
+}
+
 main .template-x.with-categories-list .api-templates-toolbar .category-list-wrapper {
     padding: 12px 0;
     border-top: var(--color-gray-200) 1px solid;
@@ -1761,6 +1781,7 @@ main .template-x.with-categories-list ul {
     max-height: 800px;
     overflow: hidden;
     transition: max-height 0.2s;
+    margin: 0;
     padding-left: 0;
 }
 
@@ -1954,6 +1975,10 @@ main .template-x.horizontal .carousel-platform {
 }
 
 @media (min-width: 1200px) {
+    main .template-x.fullwidth.with-categories-list .template-x-inner-wrapper {
+        padding-left: 56px;
+    }
+
     main .template-x.horizontal .carousel-container.controls-hidden .carousel-fader-left,
     main .template-x.horizontal .carousel-container.controls-hidden .carousel-fader-right {
         opacity: unset;
@@ -2445,6 +2470,10 @@ main .template-x-horizontal-holiday-container.expanded .animation-background {
 }
 
 @media (min-width: 1200px) {
+    main .template-list.fullwidth.apipowered {
+        padding-left: 80px;
+    }
+
     main .template-x-horizontal-holiday-container {
         padding-bottom: 0;
     }
