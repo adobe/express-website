@@ -1871,6 +1871,7 @@ main .template-x.with-categories-list .category-list-resize:after {
         max-height: 800px;
         overflow: hidden;
         transition: max-height 0.2s;
+        margin: 0;
         padding-left: 0;
     }
 
