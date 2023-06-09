@@ -131,7 +131,7 @@ async function formatHeadingPlaceholder(props) {
 
   if (grammarTemplate) {
     grammarTemplate = grammarTemplate
-      .replace('{{quantity}}', templateCount)
+      .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
       .replace('{{Type}}', heading)
       .replace('{{type}}', camelHeading);
 
@@ -1261,6 +1261,7 @@ async function buildTemplateList(block, props, type = []) {
     if (fallbackMsg) {
       const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
       fallbackMsgWrapper.textContent = fallbackMsg;
+      props.fallbackMsg = fallbackMsg;
       block.append(fallbackMsgWrapper);
     }
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
