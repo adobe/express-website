@@ -853,14 +853,14 @@ async function decorateCategoryList(block, section, placeholders, props) {
   const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
   const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
-  const $categoriesToggle = getIconElement('drop-down-arrow');
+  const $desktopCategoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
+  const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
+  const desktopCategoriesToggle = getIconElement('drop-down-arrow');
   const categoriesListHeading = createTag('div', { class: 'category-list-heading' });
   const $categories = createTag('ul', { class: 'category-list' });
 
   categoriesListHeading.append(getIconElement('template-search'), placeholders['jump-to-category']);
-
-  $categoriesToggleWrapper.append($categoriesToggle);
-  $categoriesDesktopWrapper.append($categoriesToggleWrapper, categoriesListHeading, $categories);
+  $categoriesToggle.textContent = placeholders['jump-to-category'];
 
   Object.entries(categories).forEach((category, index) => {
     const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
@@ -893,7 +893,14 @@ async function decorateCategoryList(block, section, placeholders, props) {
     $categories.append($listItem);
   });
 
+  $categoriesToggleWrapper.append($categoriesToggle);
+  $categoriesDesktopWrapper.append($categories);
   const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
+  $categoriesMobileWrapper.prepend($categoriesToggleWrapper);
+
+  $desktopCategoriesToggleWrapper.append(desktopCategoriesToggle);
+  $categoriesDesktopWrapper.prepend($desktopCategoriesToggleWrapper, categoriesListHeading);
+
   const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
   $mobileDrawerWrapper.append($lottieArrows);
   $inWrapper.append($categoriesMobileWrapper);

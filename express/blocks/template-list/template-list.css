@@ -2291,10 +2291,6 @@ main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs li:n
     font-weight: 400;
   }
 
-  main .template-list-wrapper.with-categories-list .toolbar-wrapper .category-list-wrapper .category-list-heading {
-    display: none;
-  }
-
   main .template-list-fullwidth-apipowered-container .template-list-wrapper.with-categories-list .category-list-wrapper.desktop-only {
     display: unset;
     background: transparent;
