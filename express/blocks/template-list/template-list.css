@@ -1989,25 +1989,25 @@ main .template-list-fullwidth-apipowered-container .template-list-fallback-msg-w
   padding: 0 28px;
 }
 
-main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs {
+main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs {
   list-style: none;
   margin: 0;
   padding: 0 0 0 40px;
   display: flex;
 }
 
-main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs li {
+main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs li {
   display: flex;
   padding: 5px 10px 5px 0;
   color: var(--color-gray-500);
 }
 
-main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs li a {
+main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs li a {
   color: var(--color-black);
   font-weight: 400;
 }
 
-main .template-list-fullwidth-apipowered-container ul.templates-breadcrumbs li:not(:first-child):before {
+main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs li:not(:first-child):before {
   content: '/';
   color: var(--color-black);
   padding: 0 10px 0 0;

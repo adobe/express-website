@@ -1438,7 +1438,9 @@ async function getBreadcrumbs() {
     return null;
   }
   const [, rootPath, children] = matches;
-  const breadcrumbs = createTag('ul', { class: 'templates-breadcrumbs' });
+  const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
+  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
+  nav.append(breadcrumbs);
   const rootCrumb = createTag('li');
   const rootLink = createTag('a', { href: `${origin}${rootPath}` });
   // FIXME: localize & placeholders??
@@ -1454,7 +1456,7 @@ async function getBreadcrumbs() {
   breadcrumbs.append(templatesCrumb);
 
   if (!children || children === '/') {
-    return breadcrumbs;
+    return nav;
   }
   if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
     const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -1465,7 +1467,7 @@ async function getBreadcrumbs() {
     const lastCrumb = createTag('li');
     lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
     breadcrumbs.append(lastCrumb);
-    return breadcrumbs;
+    return nav;
   }
 
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
@@ -1485,7 +1487,7 @@ async function getBreadcrumbs() {
     return appended;
   }, templatesUrl);
 
-  return breadcrumbs;
+  return nav;
 }
 
 async function decorateBreadcrumbs(block) {
