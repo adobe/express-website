@@ -1252,7 +1252,7 @@ async function getBreadcrumbs() {
   }
   const [, rootPath, children] = matches;
   const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
-  const breadcrumbs = createTag('ul', { class: 'templates-breadcrumbs' });
+  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
   nav.append(breadcrumbs);
   const rootCrumb = createTag('li');
   const rootLink = createTag('a', { href: `${origin}${rootPath}` });
