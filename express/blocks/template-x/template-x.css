@@ -1974,6 +1974,7 @@ main .template-x.horizontal .carousel-platform {
 
 @media (min-width: 1200px) {
     main .template-x.fullwidth.with-categories-list .template-x-inner-wrapper {
+        min-height: 600px;
         padding-left: 56px;
     }
 
@@ -2460,39 +2461,6 @@ main .template-x-horizontal-holiday-container.expanded .animation-background {
     transition: opacity 1s;
 }
 
-@media (min-width: 600px) {
-    main .template-x.horizontal.holiday .carousel-container .carousel-fader-left,
-    main .template-x.horizontal.holiday .carousel-container .carousel-fader-right {
-        background: initial;
-    }
-}
-
-@media (min-width: 1200px) {
-    main .template-list.fullwidth.apipowered {
-        padding-left: 80px;
-    }
-
-    main .template-x-horizontal-holiday-container {
-        padding-bottom: 0;
-    }
-
-    main .template-x-horizontal-holiday-container .toggle-bar {
-        max-width: 1024px;
-    }
-
-    main .template-x-horizontal-holiday-container .mobile-only {
-        display: none;
-    }
-
-    main .template-x-horizontal-holiday-container .toggle-bar-bottom {
-        display: flex;
-    }
-
-    main .template-x-horizontal-holiday-container .template-x-wrapper.expanded {
-        padding-top: 0;
-    }
-}
-
 main .template-x .template .still-wrapper .image-wrapper {
     position: relative;
 }
@@ -2647,6 +2615,45 @@ main .template-x .template .button-container .media-wrapper .share-icon-wrapper 
 main .template-x .template-x-fallback-msg-wrapper {
     font-size: 22px;
     text-align: center;
+    padding: 0 28px;
+}
+
+@media (min-width: 600px) {
+    main .template-x.horizontal.holiday .carousel-container .carousel-fader-left,
+    main .template-x.horizontal.holiday .carousel-container .carousel-fader-right {
+        background: initial;
+    }
+}
+
+@media (min-width: 1200px) {
+    main .template-list.fullwidth.apipowered {
+        padding-left: 80px;
+    }
+
+    main .template-x-horizontal-holiday-container {
+        padding-bottom: 0;
+    }
+
+    main .template-x-horizontal-holiday-container .toggle-bar {
+        max-width: 1024px;
+    }
+
+    main .template-x-horizontal-holiday-container .mobile-only {
+        display: none;
+    }
+
+    main .template-x-horizontal-holiday-container .toggle-bar-bottom {
+        display: flex;
+    }
+
+    main .template-x-horizontal-holiday-container .template-x-wrapper.expanded {
+        padding-top: 0;
+    }
+
+    main .template-x .template-x-fallback-msg-wrapper {
+        padding-left: 60px;
+        text-align: left;
+    }
 }
 
 main ul.templates-breadcrumbs {
