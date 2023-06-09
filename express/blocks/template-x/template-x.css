@@ -1749,6 +1749,10 @@ main .template-x.with-categories-list .toolbar-wrapper .category-list-wrapper  {
     display: block;
 }
 
+main .template-x.with-categories-list .toolbar-wrapper .category-list-wrapper .category-list-heading {
+    display: none;
+}
+
 main .template-x.with-categories-list .category-list-wrapper::-webkit-scrollbar {
     display: none;
 }
