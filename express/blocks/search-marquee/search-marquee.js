@@ -73,7 +73,7 @@ function initSearchFunction(block) {
     const taskMap = JSON.parse(placeholders['task-name-mapping']);
 
     const format = getMetadata('placeholder-format');
-    let currentTasks = getMetadata('tasks');
+    let currentTasks = '';
     let searchInput = searchBar.value.toLowerCase() || getMetadata('topics');
 
     const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
