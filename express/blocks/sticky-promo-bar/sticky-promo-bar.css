@@ -35,6 +35,7 @@ main .sticky-promo-bar:not(.rounded) a:any-link {
 main .sticky-promo-bar.rounded a:any-link {
     color: white;
     text-decoration: underline;
+    white-space: nowrap;
 }
 
 main .sticky-promo-bar.rounded p {
