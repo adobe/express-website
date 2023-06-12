@@ -615,6 +615,9 @@ loadScript(martechURL, () => {
         sparkEventName = 'landing:ctaPressed';
       }
     // quick actions clicks
+    } else if ($a.closest('ccl-quick-action') && $a.classList.contains('upload-your-photo')) {
+      // this event is handled at mock-file-input level
+      return;
     } else if ($a.href && ($a.href.match(/spark\.adobe\.com\/[a-zA-Z-]*\/?tools/g) || $a.href.match(/express\.adobe\.com\/[a-zA-Z-]*\/?tools/g))) {
       adobeEventName = appendLinkText(adobeEventName, $a);
       sparkEventName = 'quickAction:ctaPressed';
@@ -781,11 +784,11 @@ loadScript(martechURL, () => {
       });
     }
   }
-  const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
-  if (cclQuickAction.length) {
+
+  function handleQuickActionEvents(el) {
     let frictionLessQuctionActionsTrackingEnabled = false;
     sendEventToAdobeAnaltics('quickAction:uploadPageViewed');
-    cclQuickAction[0].addEventListener('ccl-quick-action-complete', () => {
+    el[0].addEventListener('ccl-quick-action-complete', () => {
       if (frictionLessQuctionActionsTrackingEnabled) {
         return;
       }
@@ -801,6 +804,18 @@ loadScript(martechURL, () => {
       frictionLessQuctionActionsTrackingEnabled = true;
     });
   }
+
+  const cclQuickAction = d.getElementsByTagName('ccl-quick-action');
+  if (cclQuickAction.length) {
+    handleQuickActionEvents(cclQuickAction);
+  } else {
+    d.addEventListener('ccl-quick-action-rendered', (e) => {
+      if (e.target.tagName === 'CCL-QUICK-ACTION') {
+        handleQuickActionEvents(d.getElementsByTagName('ccl-quick-action'));
+      }
+    });
+  }
+
   d.addEventListener('click', (e) => {
     if (e.target.id === 'mock-file-input') {
       sendEventToAdobeAnaltics('adobe.com:express:cta:uploadYourPhoto');
@@ -1045,8 +1060,7 @@ loadScript(martechURL, () => {
     }
 
     // Tracking any link or links that is added after page loaded.
-    document.addEventListener('linkspopulated', async (e) => {
-      await trackBranchParameters(e.detail);
+    document.addEventListener('linkspopulated', (e) => {
       e.detail.forEach(($link) => {
         $link.addEventListener('click', () => {
           trackButtonClick($link);

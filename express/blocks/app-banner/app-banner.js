@@ -202,11 +202,5 @@ export default async function decorate($block) {
         watchFloatingButtonState($block);
       }, 1000);
     }
-
-    const blockLinks = $block.querySelectorAll('a');
-    if (blockLinks && blockLinks.length > 0) {
-      const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
-      document.dispatchEvent(linksPopulated);
-    }
   }
 }

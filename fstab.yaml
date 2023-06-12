@@ -1,8 +1,9 @@
 mountpoints:
   /:
-    url: https://adobe.sharepoint.com/:f:/r/sites/adobecom/Express/website
+    url: https://adobe.sharepoint.com/sites/CC-Express/Shared%20Documents/website
 
 folders:
+  /express/templates/content.json: /metadata.json
   /express/templates/: /express/templates/default
   /br/express/templates/: /express/templates/default
   /cn/express/templates/: /express/templates/default
@@ -18,4 +19,19 @@ folders:
   /no/express/templates/: /express/templates/default
   /se/express/templates/: /express/templates/default
   /tw/express/templates/: /express/templates/default
+  /express/templates/search: /express/templates/search
+  /br/express/templates/search: /express/templates/search
+  /cn/express/templates/search: /express/templates/search
+  /de/express/templates/search: /express/templates/search
+  /dk/express/templates/search: /express/templates/search
+  /es/express/templates/search: /express/templates/search
+  /fi/express/templates/search: /express/templates/search
+  /fr/express/templates/search: /express/templates/search
+  /it/express/templates/search: /express/templates/search
+  /jp/express/templates/search: /express/templates/search
+  /kr/express/templates/search: /express/templates/search
+  /nl/express/templates/search: /express/templates/search
+  /no/express/templates/search: /express/templates/search
+  /se/express/templates/search: /express/templates/search
+  /tw/express/templates/search: /express/templates/search
 

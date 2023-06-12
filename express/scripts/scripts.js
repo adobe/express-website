@@ -376,14 +376,13 @@ export function getIconElement(icons, size, alt, additionalClassName) {
   return ($div.firstElementChild);
 }
 
-export function transformLinkToAnimation($a, $videoLooping = 'yes') {
+export function transformLinkToAnimation($a) {
   if (!$a || !$a.href.endsWith('.mp4')) {
     return null;
   }
   const params = new URL($a.href).searchParams;
   const attribs = {};
-  let dataAttr = ($videoLooping && $videoLooping === 'yes') ? ['playsinline', 'autoplay', 'loop', 'muted'] : ['playsinline', 'autoplay', 'muted'];
-  dataAttr.forEach((p) => {
+  ['playsinline', 'autoplay', 'loop', 'muted'].forEach((p) => {
     if (params.get(p) !== 'false') attribs[p] = '';
   });
   // use closest picture as poster
@@ -674,6 +673,7 @@ export function getLanguage(locale) {
   const langs = {
     us: 'en-US',
     fr: 'fr-FR',
+    in: 'en-IN',
     de: 'de-DE',
     it: 'it-IT',
     dk: 'da-DK',
@@ -1843,6 +1843,7 @@ async function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     if (!window.floatingCtasLoaded) {
       const floatingCTAData = await fetchFloatingCta(window.location.pathname);
+      const validButtonVersion = ['floating-button', 'multifunction-button', 'bubble-ui-button', 'floating-panel'];
       let desktopButton;
       let mobileButton;
 
@@ -1852,13 +1853,15 @@ async function buildAutoBlocks($main) {
           mobile: floatingCTAData.mobile,
         };
 
-        desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
-        mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
+        desktopButton = validButtonVersion.includes(buttonTypes.desktop) ? buildBlock(buttonTypes.desktop, 'desktop') : null;
+        mobileButton = validButtonVersion.includes(buttonTypes.mobile) ? buildBlock(buttonTypes.mobile, 'mobile') : null;
 
         [desktopButton, mobileButton].forEach((button) => {
-          button.classList.add('spreadsheet-powered');
-          if ($lastDiv) {
-            $lastDiv.append(button);
+          if (button) {
+            button.classList.add('spreadsheet-powered');
+            if ($lastDiv) {
+              $lastDiv.append(button);
+            }
           }
         });
       }
@@ -1904,8 +1907,7 @@ function splitSections($main) {
 function setTheme() {
   let theme = getMeta('theme');
   if (!theme && (window.location.pathname.startsWith('/express')
-    || window.location.pathname.startsWith('/education')
-    || window.location.pathname.startsWith('/drafts'))) {
+  || window.location.pathname.startsWith('/education'))) {
     // mega nav, suppress brand header
     theme = 'no-brand-header';
   }
@@ -2118,7 +2120,7 @@ export function createOptimizedPicture(src, alt = '', eager = false, breakpoints
  * @param {Element} main The main element
  */
 function decoratePictures(main) {
-  main.querySelectorAll('img[src*="/media_"]').forEach((img, i) => {
+  main.querySelectorAll('img[src*="/media_"').forEach((img, i) => {
     const newPicture = createOptimizedPicture(img.src, img.alt, !i);
     const picture = img.closest('picture');
     if (picture) picture.parentElement.replaceChild(newPicture, picture);
@@ -2339,7 +2341,7 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
@@ -2395,38 +2397,7 @@ export async function buildStaticFreePlanWidget() {
     tagWrapper.append(checkMarkDiv, textDiv);
     widget.append(tagWrapper);
   }
-
   return widget;
-}
-
-export async function buildFreePlanHighlight(elem) {
-  const placeholders = await fetchPlaceholders();
-  const bullet = createTag('div', { class: 'free-plan-bullet' });
-
-  if (sessionStorage.getItem('highlight-optout')) {
-    elem.classList.add('highlight-optout');
-  }
-  const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
-  const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
-  const optoutButton = createTag('button', { class: 'free-plan-optout' });
-
-  optoutButton.append(getIconElement('close-black'));
-
-  for (let i = 0; i < 40; i += 1) {
-    const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
-    const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
-    const tag = createTag('div', { class: 'free-plan-tag' });
-    const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
-    tag.innerText = placeholder;
-    innerDiv.append(getIconElement('checkmark'));
-
-    tag.prepend(innerDiv);
-    freePlanBulletTray.append(tag);
-  }
-
-  freePlanBulletContainer.append(freePlanBulletTray);
-  bullet.append(freePlanBulletContainer);
-  elem.append(bullet, optoutButton);
 }
 
 export async function addFreePlanWidget(elem) {
@@ -2459,12 +2430,6 @@ export async function addFreePlanWidget(elem) {
     });
 
     elem.append(widget);
-
-    // add the free plan bullet if there's a CTA to attach to
-    if (elem.classList.contains('button-container')) {
-      await buildFreePlanHighlight(elem);
-    }
-
     elem.classList.add('free-plan-container');
   }
 }
@@ -2572,42 +2537,10 @@ function registerPerformanceLogger() {
   }
 }
 
-function getPlacement(btn) {
-  const parentBlock = btn.closest('.block');
-  let placement = 'outside-blocks';
-
-  if (parentBlock) {
-    const blockName = parentBlock.dataset.blockName || parentBlock.classList[0];
-    const sameBlocks = btn.closest('main')?.querySelectorAll(`.${blockName}`);
-
-    if (sameBlocks && sameBlocks.length > 1) {
-      sameBlocks.forEach((b, i) => {
-        if (b === parentBlock) {
-          placement = `${blockName}-${i + 1}`;
-        }
-      });
-    } else {
-      placement = blockName;
-    }
-
-    if (['template-list', 'template-x'].includes(blockName) && btn.classList.contains('placeholder')) {
-      placement = 'blank-template-cta';
-    }
-  }
-
-  return placement;
-}
-
-export async function trackBranchParameters($links) {
-  const placeholders = await fetchPlaceholders();
+export function trackBranchParameters($links) {
   const rootUrl = new URL(window.location.href);
   const rootUrlParameters = rootUrl.searchParams;
 
-  const { experiment } = window.hlx;
-  const { referrer } = window.document;
-  const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
-  const templateSearchTag = getMetadata('short-title');
-  const pageUrl = window.location.pathname;
   const sdid = rootUrlParameters.get('sdid');
   const mv = rootUrlParameters.get('mv');
   const sKwcId = rootUrlParameters.get('s_kwcid');
@@ -2616,77 +2549,51 @@ export async function trackBranchParameters($links) {
   const trackingId = rootUrlParameters.get('trackingid');
   const cgen = rootUrlParameters.get('cgen');
 
-  $links.forEach(($a) => {
-    if ($a.href && $a.href.match('adobesparkpost.app.link')) {
-      const btnUrl = new URL($a.href);
-      const urlParams = btnUrl.searchParams;
-      const placement = getPlacement($a);
+  if (sdid || mv || sKwcId || efId || promoId || trackingId || cgen) {
+    $links.forEach(($a) => {
+      if ($a.href && $a.href.match('adobesparkpost.app.link')) {
+        const buttonUrl = new URL($a.href);
+        const urlParams = buttonUrl.searchParams;
 
-      if (templateSearchTag
-        && placeholders['search-branch-links']
-        && placeholders['search-branch-links']
-          .replace(/\s/g, '')
-          .split(',')
-          .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
-        urlParams.set('search', templateSearchTag);
-      }
-
-      if (referrer) {
-        urlParams.set('referrer', referrer);
-      }
-
-      if (pageUrl) {
-        urlParams.set('url', pageUrl);
-      }
-
-      if (sdid) {
-        urlParams.set('sdid', sdid);
-      }
-
-      if (mv) {
-        urlParams.set('mv', mv);
-      }
-
-      if (efId) {
-        urlParams.set('efid', efId);
-      }
-
-      if (sKwcId) {
-        const sKwcIdParameters = sKwcId.split('!');
-
-        if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
-          urlParams.set('customer_placement', 'Google%20AdWords');
+        if (sdid) {
+          urlParams.set('~campaign_id', sdid);
         }
 
-        if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
-          urlParams.set('keyword', sKwcIdParameters[8]);
+        if (mv) {
+          urlParams.set('~customer_campaign', mv);
         }
-      }
 
-      if (promoId) {
-        urlParams.set('promoid', promoId);
-      }
+        if (sKwcId) {
+          const sKwcIdParameters = sKwcId.split('!');
 
-      if (trackingId) {
-        urlParams.set('keywordid', trackingId);
-      }
+          if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
+            urlParams.set('~customer_placement', 'Google%20AdWords');
+          }
 
-      if (cgen) {
-        urlParams.set('cgen', cgen);
-      }
+          if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+            urlParams.set('~keyword', sKwcIdParameters[8]);
+          }
+        }
 
-      if (experimentStatus === 'active') {
-        urlParams.set('expid', `${experiment.id}-${experiment.selectedVariant}`);
-      }
+        if (promoId) {
+          urlParams.set('~ad_id', promoId);
+        }
 
-      if (placement) {
-        urlParams.set('ctaid', placement);
-      }
+        if (trackingId) {
+          urlParams.set('~keyword_id', trackingId);
+        }
 
-      btnUrl.search = urlParams.toString();
-      $a.href = btnUrl.toString();
-    }
-  });
+        if (cgen) {
+          urlParams.set('~customer_keyword', cgen);
+        }
+
+        urlParams.set('~feature', 'paid%20advertising');
+
+        buttonUrl.search = urlParams.toString();
+        $a.href = buttonUrl.toString();
+      }
+    });
+  }
 }
 
 if (window.name.includes('performance')) registerPerformanceLogger();
@@ -2716,4 +2623,17 @@ export function titleCase(str) {
     splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
   return splitStr.join(' ');
+}
+
+export function arrayToObject(arr) {
+  return arr.reduce(
+    (acc, curr) => {
+      const key = curr[0];
+      [, acc[key]] = curr;
+
+      return acc;
+    },
+
+    {},
+  );
 }
