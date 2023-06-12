@@ -37,7 +37,6 @@ main .sticky-promo-bar.rounded a:any-link {
     text-decoration: underline;
     white-space: nowrap;
     font-style: initial;
-    font-weight: 300;
 }
 
 main .sticky-promo-bar.rounded p {
