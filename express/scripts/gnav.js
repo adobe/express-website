@@ -151,7 +151,7 @@ async function loadFEDS() {
 
   async function buildBreadCrumbArray() {
     if (isHomepage || getMetadata('hide-breadcrumbs') === 'true') {
-      return undefined;
+      return null;
     }
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
     const buildBreadCrumb = (path, name, parentPath = '') => (
@@ -174,7 +174,7 @@ async function loadFEDS() {
       || !replacedCategory
       || !validSecondPathSegments.includes(replacedCategory)
       || locale !== 'us') { // Remove this line once locale translations are complete
-      return undefined;
+      return null;
     }
 
     const secondBreadCrumb = buildBreadCrumb(secondPathSegment, capitalize(replacedCategory), `${localePath}/express`);
