@@ -159,7 +159,7 @@ async function loadFEDS() {
     );
 
     const placeholders = await fetchPlaceholders();
-    const validCategories = ['create', 'feature', 'templates'];
+    const validCategories = ['create', 'feature'];
     const pathSegments = window.location.pathname.split('/')
       .filter((element) => element !== '')
       .filter((element) => element !== locale);
