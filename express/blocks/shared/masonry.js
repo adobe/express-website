@@ -9,10 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  createTag,
-} from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
 
+// todo: remove this.needBackwardCompatibility() when template-list is deprecated
 function nodeIsBefore(node, otherNode) {
   // eslint-disable-next-line no-bitwise
   const forward = node.compareDocumentPosition(otherNode)
@@ -22,8 +21,8 @@ function nodeIsBefore(node, otherNode) {
 
 // eslint-disable-next-line import/prefer-default-export
 export class Masonry {
-  constructor($block, cells) {
-    this.$block = $block;
+  constructor(wrapper, cells) {
+    this.wrapper = wrapper;
     this.cells = cells;
     this.columns = [];
     this.nextColumn = null;
@@ -33,53 +32,58 @@ export class Masonry {
     this.fillToHeight = 0;
   }
 
+  needBackwardCompatibility() {
+    return this.wrapper.classList.contains('template-list');
+  }
+
   // set up fresh grid if necessary
   setupColumns() {
+    const block = this.needBackwardCompatibility() ? this.wrapper : this.wrapper.parentElement;
     let result = 1;
     let colWidth = 264;
-    if (this.$block.classList.contains('sixcols')) {
+    if (block.classList.contains('sixcols')) {
       colWidth = 175;
     }
-    if (this.$block.classList.contains('fullwidth')) {
+    if (block.classList.contains('fullwidth')) {
       colWidth = 185;
     }
-    const width = this.$block.offsetWidth;
+    const width = this.wrapper.offsetWidth;
     if (!width) {
       return 0;
     } else if (window.innerWidth >= 900) {
-      if (this.$block.classList.contains('sm-view')) {
+      if (block.classList.contains('sm-view')) {
         colWidth = 172;
       }
 
-      if (this.$block.classList.contains('md-view')) {
+      if (block.classList.contains('md-view')) {
         colWidth = 270;
       }
 
-      if (this.$block.classList.contains('lg-view')) {
+      if (block.classList.contains('lg-view')) {
         colWidth = 364;
       }
     } else if (window.innerWidth >= 600) {
-      if (this.$block.classList.contains('sm-view')) {
+      if (block.classList.contains('sm-view')) {
         colWidth = 172;
       }
 
-      if (this.$block.classList.contains('md-view')) {
+      if (block.classList.contains('md-view')) {
         colWidth = 240;
       }
 
-      if (this.$block.classList.contains('lg-view')) {
+      if (block.classList.contains('lg-view')) {
         colWidth = 364;
       }
     } else {
-      if (this.$block.classList.contains('sm-view')) {
+      if (block.classList.contains('sm-view')) {
         colWidth = 120;
       }
 
-      if (this.$block.classList.contains('md-view')) {
+      if (block.classList.contains('md-view')) {
         colWidth = 172;
       }
 
-      if (this.$block.classList.contains('lg-view')) {
+      if (block.classList.contains('lg-view')) {
         colWidth = 340;
       }
     }
@@ -96,18 +100,18 @@ export class Masonry {
     }
     let numCols = Math.floor(width / colWidth);
     if (numCols < 1) numCols = 1;
-    if (numCols !== this.$block.querySelectorAll('.masonry-col').length) {
-      this.$block.querySelectorAll('.masonry-col').forEach((col) => {
+    if (numCols !== this.wrapper.querySelectorAll('.masonry-col').length) {
+      this.wrapper.querySelectorAll('.masonry-col').forEach((col) => {
         col.remove();
       });
       this.columns = [];
       for (let i = 0; i < numCols; i += 1) {
-        const $column = createTag('div', { class: 'masonry-col' });
+        const colEl = createTag('div', { class: 'masonry-col' });
         this.columns.push({
           outerHeight: 0,
-          $column,
+          colEl,
         });
-        this.$block.appendChild($column);
+        this.wrapper.appendChild(colEl);
       }
       result = 2;
     }
@@ -133,10 +137,10 @@ export class Masonry {
 
     if (this.fillToHeight) {
       if (this.fillToHeight - minOuterHeight >= height - 50) {
-        // console.log(this.fillToHeight, minOuterHeight, height, $cell);
+        // console.log(this.fillToHeight, minOuterHeight, height, cell);
         this.nextColumn = this.columns.find((col) => col.outerHeight === minOuterHeight);
       } else {
-        // console.log(this.fillToHeight, minOuterHeight, height, $cell);
+        // console.log(this.fillToHeight, minOuterHeight, height, cell);
         this.fillToHeight = 0;
         [this.nextColumn] = this.columns;
         // console.log('no more fill mode');
@@ -146,18 +150,18 @@ export class Masonry {
   }
 
   // add cell to next column
-  addCell($cell) {
+  addCell(cell) {
     let mediaHeight = 0;
     let mediaWidth = 0;
     let calculatedHeight = 0;
 
-    const img = $cell.querySelector('img');
+    const img = cell.querySelector('img');
     if (img) {
       mediaHeight = img.naturalHeight;
       mediaWidth = img.naturalWidth;
       calculatedHeight = ((this.columnWidth) / mediaWidth) * mediaHeight;
     }
-    const video = $cell.querySelector('video');
+    const video = cell.querySelector('video');
     if (video) {
       mediaHeight = video.videoHeight;
       mediaWidth = video.videoWidth;
@@ -165,62 +169,64 @@ export class Masonry {
     }
     if (this.debug) {
       // eslint-disable-next-line no-console
-      console.log($cell.offsetHeight, calculatedHeight, $cell);
+      console.log(cell.offsetHeight, calculatedHeight, cell);
     }
 
     const column = this.getNextColumn(calculatedHeight);
-    column.$column.append($cell);
-    $cell.classList.add('appear');
+    column.colEl.append(cell);
+    cell.classList.add('appear');
 
     column.outerHeight += calculatedHeight;
 
-    if (!calculatedHeight && $cell.classList.contains('placeholder') && $cell.style.height) {
-      column.outerHeight += +$cell.style.height.split('px')[0] + 20;
+    if (!calculatedHeight && cell.classList.contains('placeholder') && cell.style.height) {
+      column.outerHeight += +cell.style.height.split('px')[0] + 20;
     }
 
-    const $btnC = $cell.querySelector(':scope > div:nth-of-type(2)');
+    const $btnC = cell.querySelector(':scope > div:nth-of-type(2)');
     if ($btnC) $btnC.classList.add('button-container');
 
-    /* set tab index and event listeners */
-    if (this.cells[0] === $cell) {
-      /* first cell focus handler */
-      $cell.addEventListener('focus', (event) => {
-        if (event.relatedTarget) {
-          const backward = nodeIsBefore(event.target, event.relatedTarget);
-          if (backward) this.cells[this.cells.length - 1].focus();
-        }
-      });
-      /* first cell blur handler */
-      $cell.addEventListener('blur', (event) => {
-        if (!event.relatedTarget.classList.contains('template')) {
-          const forward = nodeIsBefore(event.target, event.relatedTarget);
-          if (forward) {
-            if (this.cells.length > 1) {
-              this.cells[1].focus();
+    if (this.needBackwardCompatibility()) {
+      /* set tab index and event listeners */
+      if (this.cells[0] === cell) {
+        /* first cell focus handler */
+        cell.addEventListener('focus', (event) => {
+          if (event.relatedTarget) {
+            const backward = nodeIsBefore(event.target, event.relatedTarget);
+            if (backward) this.cells[this.cells.length - 1].focus();
+          }
+        });
+        /* first cell blur handler */
+        cell.addEventListener('blur', (event) => {
+          if (!event.relatedTarget.classList.contains('template')) {
+            const forward = nodeIsBefore(event.target, event.relatedTarget);
+            if (forward) {
+              if (this.cells.length > 1) {
+                this.cells[1].focus();
+              }
             }
           }
-        }
-      });
-    } else {
-      /* all other cells get custom blur handler and no tabindex */
-      $cell.setAttribute('tabindex', '-1');
-      $cell.addEventListener('blur', (event) => {
-        if (event.relatedTarget) {
-          const forward = nodeIsBefore(event.target, event.relatedTarget);
-          const backward = !forward;
-          const index = this.cells.indexOf($cell);
-          if (forward) {
-            if (index < this.cells.length - 1) {
-              this.cells[index + 1].focus();
+        });
+      } else {
+        /* all other cells get custom blur handler and no tabindex */
+        cell.setAttribute('tabindex', '-1');
+        cell.addEventListener('blur', (event) => {
+          if (event.relatedTarget) {
+            const forward = nodeIsBefore(event.target, event.relatedTarget);
+            const backward = !forward;
+            const index = this.cells.indexOf(cell);
+            if (forward) {
+              if (index < this.cells.length - 1) {
+                this.cells[index + 1].focus();
+              }
+            }
+            if (backward) {
+              if (index > 0) {
+                this.cells[index - 1].focus();
+              }
             }
           }
-          if (backward) {
-            if (index > 0) {
-              this.cells[index - 1].focus();
-            }
-          }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -243,37 +249,43 @@ export class Masonry {
 
     while (workList.length > 0) {
       for (let i = 0; i < 5 && i < workList.length; i += 1) {
-        const $cell = workList[i];
-        const $image = $cell.querySelector(':scope picture > img');
-        if ($image) $image.setAttribute('loading', 'eager');
+        const cell = workList[i];
+        const image = cell.querySelector(':scope picture > img');
+        if (image) image.setAttribute('loading', 'eager');
       }
-      const $cell = workList[0];
-      const $image = $cell.querySelector(':scope picture > img');
-      if ($image && !$image.complete) {
+      const cell = workList[0];
+      const image = cell.querySelector(':scope picture > img');
+      if (image && !image.complete) {
         // continue when image is loaded
-        $image.addEventListener('load', () => {
+        image.addEventListener('load', () => {
           this.draw(workList);
         });
 
         return;
       }
-      const $video = $cell.querySelector('video');
-      if ($video && $video.readyState === 0) {
-        // continue when video is loaded
-        $video.addEventListener('loadedmetadata', () => {
-          this.draw(workList);
-        });
-        return;
+
+      if (this.needBackwardCompatibility()) {
+        const video = cell.querySelector('video');
+        if (video && video.readyState === 0) {
+          video.addEventListener('loadedmetadata', () => {
+            this.draw(workList);
+          });
+
+          return;
+        }
       }
-      this.addCell($cell);
+
+      this.addCell(cell);
       // remove already processed cell
       workList.shift();
     }
     if (workList.length > 0) {
       // draw rest
       this.draw(workList);
+    } else if (this.needBackwardCompatibility()) {
+      this.wrapper.classList.add('template-list-complete');
     } else {
-      this.$block.classList.add('template-list-complete');
+      this.wrapper.parentElement.classList.add('template-x-complete');
     }
   }
 }

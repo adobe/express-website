@@ -273,4 +273,10 @@ export default async function decorate($block) {
   decorateGallery($block, payload);
   decorateAppStoreIcon($block, payload);
   initScrollAnimation($block);
+
+  const blockLinks = $block.querySelectorAll('a');
+  if (blockLinks && blockLinks.length > 0) {
+    const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
+    document.dispatchEvent(linksPopulated);
+  }
 }

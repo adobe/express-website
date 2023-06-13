@@ -145,7 +145,8 @@ async function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
   const isMegaNav = window.location.pathname.startsWith('/express')
-    || window.location.pathname.startsWith('/education');
+    || window.location.pathname.startsWith('/education')
+    || window.location.pathname.startsWith('/drafts');
   const fedsExp = isMegaNav
     ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}-beta`
     : 'cc-express/cc-express-gnav';
@@ -248,7 +249,7 @@ async function loadFEDS() {
       }
     }
 
-    /* switch all links if lower envs */
+    /* switch all links if lower env */
     const env = getHelixEnv();
     if (env && env.spark) {
       // eslint-disable-next-line no-console
