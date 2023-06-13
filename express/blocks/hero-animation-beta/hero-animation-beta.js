@@ -151,6 +151,7 @@ export default async function decorate($block) {
   const $section = $block.closest('.section');
   const $sectionWrapper = $block.closest('.hero-animation-beta-wrapper');
   const animations = {};
+  const mobileBlock = $block.closest('.hero-animation-beta-dark-container[data-audience="mobile"');
   if ($block.classList.contains('wide')) {
     $section.classList.add('hero-animation-beta-wide-container');
   } else {
@@ -234,7 +235,6 @@ export default async function decorate($block) {
         transformToVideoLink($div, videoLink);
       }
 
-      const mobileBlock = $block.closest('.hero-animation-beta-dark-container[data-audience="mobile"');
       const contentButtons = [...$div.querySelectorAll('a.button.accent')];
       $bg.nextElementSibling.classList.add('display-style');
       const buttonAsLink = contentButtons[2];
@@ -244,8 +244,8 @@ export default async function decorate($block) {
       secondaryButton?.classList.add('xlarge');
       const buttonContainer = [...$div.querySelectorAll('p.button-container')];
       const linkContainer = [...$div.querySelectorAll('p')];
-      const linkElementToUnderline = linkContainer[linkContainer.length - 1];
-      linkElementToUnderline.classList.add('underline');
+      const linkElementToUnderline = mobileBlock ? null : linkContainer[linkContainer.length - 1];
+      linkElementToUnderline?.classList.add('underline');
       buttonContainer.forEach(($button) => {
         $button.classList.add('button-inline');
       });
