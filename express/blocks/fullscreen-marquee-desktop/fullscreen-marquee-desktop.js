@@ -22,8 +22,8 @@ function buildContent(content) {
   let formattedContent = content;
 
   if (contentLink && contentLink.href.endsWith('.mp4')) {
-    const video = new URL(contentLink.href);
-    const looping = ['true', 'yes', 'on'].includes(video.searchParams.get('looping')) ? 'yes' : null;
+    const video = new URL(contentLink.textContent.trim());
+    const looping = ['true', 'yes', 'on'].includes(video.searchParams.get('loop'));
     formattedContent = transformLinkToAnimation(contentLink, looping);
   } else {
     const contentImage = content.querySelector('picture');
@@ -68,9 +68,7 @@ async function buildApp(block, content) {
   let editor;
   let variant;
 
-  if (block.classList.contains('image')) {
-    variant = 'image';
-  } else {
+  if (block.classList.contains('video')) {
     variant = 'video';
 
     if (content) {
@@ -83,7 +81,6 @@ async function buildApp(block, content) {
       content.addEventListener('loadedmetadata', () => {
         const framesContainer = createTag('div', { class: 'fullscreen-marquee-desktop-app-frames-container' });
         function createFrame(current, total) {
-          console.log(`Creating frame ${current} out of ${total}`);
           const frame = createTag('video', { src: `${content.currentSrc}#t=${current}` });
           framesContainer.append(frame);
 
@@ -97,10 +94,12 @@ async function buildApp(block, content) {
           });
         }
 
-        createFrame( 1, 10);
+        createFrame(1, 10);
         app.append(framesContainer);
       });
     }
+  } else {
+    variant = 'image';
   }
 
   await fetchPlaceholders().then((placeholders) => {
@@ -159,6 +158,7 @@ export default async function decorate(block) {
   }
 
   if (background) {
+    block.classList.add('has-background');
     block.append(buildBackground(block, background));
   }
 

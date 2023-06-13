@@ -17,8 +17,12 @@ main .fullscreen-marquee-desktop {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding-bottom: 160px;
+  padding-bottom: 40px;
   padding-top: 80px;
+}
+
+main .fullscreen-marquee-desktop.has-background {
+  padding-bottom: 160px;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading {
@@ -62,6 +66,7 @@ main .fullscreen-marquee-desktop-heading h1 em {
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
   position: absolute;
   height: 100%;
+  width: 100%;
   top: 0;
   left: 50%;
   z-index: -5;
@@ -73,6 +78,8 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background {
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-background img {
   max-width: none;
   height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame {
@@ -149,11 +156,13 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
-  height: 90%;
+  max-width: 90%;
+  max-height: 90%;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content img {
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app {
@@ -169,6 +178,8 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor {
   top: 58px;
   left: 66px;
   width: 196px;
+  transition: transform 0.5s ease-out;
+  transform: translate3d(0px, 0px, 15px);
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor img {
@@ -189,6 +200,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-thumbnail-conta
   height: 40px;
   overflow: hidden;
   border-radius: 5px;
+  transform: translate3d(0px, 0px, 15px);
   z-index: 10;
 }
 
