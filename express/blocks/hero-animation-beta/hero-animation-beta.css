@@ -86,6 +86,14 @@ main .hero-animation-beta .hero-animation-beta-foreground {
   justify-content: center;
 }
 
+main .hero-animation-beta-dark-container[data-audience="mobile"] .hero-animation-beta-foreground {
+  padding-bottom: 0;
+}
+
+main .hero-animation-beta-dark-container[data-audience="mobile"] .columns  {
+  padding-bottom: 0;
+}
+
 main .hero-animation-beta.white-text,
 main .hero-animation-beta.white-text a:any-link {
   color: var(--color-white);
