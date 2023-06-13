@@ -15,11 +15,10 @@ body[data-device="mobile"] main .sticky-promo-bar.rounded {
     border-radius: 10px;
     margin: 11px 24px 16px 24px;
     font-weight: 300;
-    padding-right: 22px;
-    padding: 12px 22px 17px 14px;
+    padding: 12px 24px 17px 24px;
 }
 
-main .sticky-promo-bar a:any-link {
+main .sticky-promo-bar:not(.rounded) a:any-link {
     color: white;
     border: 2px solid white;
     border-radius: 20px;
@@ -31,6 +30,20 @@ main .sticky-promo-bar a:any-link {
     white-space: nowrap;
     display: inline-block;
     margin-top: 5px;
+}
+
+main .sticky-promo-bar.rounded a:any-link {
+    color: white;
+    text-decoration: underline;
+    white-space: nowrap;
+    font-style: initial;
+}
+
+main .sticky-promo-bar.rounded p {
+    display: inline;
+    font-size: var(--body-font-size-m);
+    margin: 0;
+    line-height: normal;
 }
 
 main .sticky-promo-bar .close {
