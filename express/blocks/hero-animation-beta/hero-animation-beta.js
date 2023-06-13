@@ -129,7 +129,7 @@ function transformToVideoLink($cell, $a) {
     });
   $a.addEventListener('click', (e) => {
     e.preventDefault();
-    displayVideoModal(vidUrls, title, true);
+    displayVideoModal(vidUrls, title);
   });
 
   $a.addEventListener('keyup', (e) => {
@@ -239,7 +239,7 @@ export default async function decorate($block) {
       const buttonAsLink = contentButtons[2];
       const secondaryButton = contentButtons[1];
       buttonAsLink?.classList.remove('button');
-      secondaryButton?.classList.add('secondary-button');
+      secondaryButton?.classList.add('secondary');
       secondaryButton?.classList.add('xlarge');
       const buttonContainer = [...$div.querySelectorAll('p.button-container')];
       const linkContainer = [...$div.querySelectorAll('p')];
