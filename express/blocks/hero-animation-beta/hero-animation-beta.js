@@ -234,10 +234,11 @@ export default async function decorate($block) {
         transformToVideoLink($div, videoLink);
       }
 
+      const mobileBlock = $block.closest('.hero-animation-beta-dark-container[data-audience="mobile"');
       const contentButtons = [...$div.querySelectorAll('a.button.accent')];
       $bg.nextElementSibling.classList.add('display-style');
       const buttonAsLink = contentButtons[2];
-      const secondaryButton = contentButtons[1];
+      const secondaryButton = mobileBlock ? contentButtons[0] : contentButtons[1];
       buttonAsLink?.classList.remove('button');
       secondaryButton?.classList.add('secondary');
       secondaryButton?.classList.add('xlarge');

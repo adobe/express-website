@@ -350,10 +350,6 @@ main .hero-animation-beta p.button-container.button-inline {
   }
 }
 
-main .hero-animation-beta p:nth-child(1 of .button-container) {
-  display: none;
-}
-
 main .hero-animation-beta p.button-container a.secondary::before {
   display: inline-block;
   width: 18px;
