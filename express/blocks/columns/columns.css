@@ -532,10 +532,8 @@ main .columns.offer .column .columns-iconlist .columns-iconlist-description p {
     margin: 0;
   }
 
-  main .columns.width-2-columns .column-picture {
-    order: 0;
-  }
-
+  main .columns.width-2-columns .column-picture, 
+  main .columns.width-2-columns .hero-animation-overlay,
   main .columns.highlight.width-2-columns .column-picture {
     order: 0;
   }
