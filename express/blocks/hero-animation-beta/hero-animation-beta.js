@@ -235,7 +235,6 @@ export default async function decorate($block) {
       }
 
       const contentButtons = [...$div.querySelectorAll('a.button.accent')];
-      console.log(contentButtons);
       $bg.nextElementSibling.classList.add('display-style');
       const buttonAsLink = contentButtons[2];
       const secondaryButton = contentButtons[1];
