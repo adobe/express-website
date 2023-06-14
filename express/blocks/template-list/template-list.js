@@ -516,7 +516,8 @@ async function redirectSearch($searchBar, props) {
   const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
   const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
   const pathMatch = (e) => e.path === targetPath;
-  if (await fetchAllTemplatesMetadata().some(pathMatch)) {
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+  if (allTemplatesMetadata.some(pathMatch)) {
     window.location = `${window.location.origin}${targetPath}`;
   } else {
     window.location = searchUrl;
