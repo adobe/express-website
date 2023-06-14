@@ -1843,6 +1843,7 @@ async function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     if (!window.floatingCtasLoaded) {
       const floatingCTAData = await fetchFloatingCta(window.location.pathname);
+      const validButtonVersion = ['floating-button', 'multifunction-button', 'bubble-ui-button', 'floating-panel'];
       let desktopButton;
       let mobileButton;
 
@@ -1852,13 +1853,15 @@ async function buildAutoBlocks($main) {
           mobile: floatingCTAData.mobile,
         };
 
-        desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
-        mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
+        desktopButton = validButtonVersion.includes(buttonTypes.desktop) ? buildBlock(buttonTypes.desktop, 'desktop') : null;
+        mobileButton = validButtonVersion.includes(buttonTypes.mobile) ? buildBlock(buttonTypes.mobile, 'mobile') : null;
 
         [desktopButton, mobileButton].forEach((button) => {
-          button.classList.add('spreadsheet-powered');
-          if ($lastDiv) {
-            $lastDiv.append(button);
+          if (button) {
+            button.classList.add('spreadsheet-powered');
+            if ($lastDiv) {
+              $lastDiv.append(button);
+            }
           }
         });
       }

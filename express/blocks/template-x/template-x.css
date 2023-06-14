@@ -116,10 +116,6 @@ main .template-x-container .template-x-wrapper:not(:has(.toolbar-wrapper)) {
     padding-top: 60px;
 }
 
-main .template-x-container:not(.horizontal) .template-title h2 {
-    padding-top: 80px;
-}
-
 main .template-x-wrapper .template-title.with-link > div {
     display: flex;
     flex-direction: column;
