@@ -1432,19 +1432,18 @@ function initViewToggle($block, $toolBar, props) {
 async function getBreadcrumbs() {
   const { origin, pathname } = window.location;
   const regex = /(.*?\/express\/)templates(.*)/;
-  // FIXME: gnav breadcrumbs gone for non-us locales!
   const matches = pathname.match(regex);
   if (!matches) {
     return null;
   }
+  const placeholders = await fetchPlaceholders();
   const [, rootPath, children] = matches;
   const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
   const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
   nav.append(breadcrumbs);
   const rootCrumb = createTag('li');
   const rootLink = createTag('a', { href: `${origin}${rootPath}` });
-  // FIXME: localize & placeholders??
-  rootLink.textContent = 'Home';
+  rootLink.textContent = placeholders?.express ?? 'Home';
   rootCrumb.append(rootLink);
   breadcrumbs.append(rootCrumb);
 
@@ -1495,7 +1494,7 @@ async function decorateBreadcrumbs(block) {
   // breadcrumbs are desktop-only
   if (document.body.dataset.device !== 'desktop') return;
   const breadcrumbs = await getBreadcrumbs();
-  parent.prepend(breadcrumbs);
+  if (breadcrumbs) parent.prepend(breadcrumbs);
 }
 
 function initToolbarShadow($block, $toolbar) {
