@@ -820,14 +820,6 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, generatedSearchBa
       }
     }, 500);
   }, { passive: true });
-
-  $stickySearchBarWrapper.addEventListener('mouseleave', () => {
-    if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
-      $stickySearchBarWrapper.classList.remove('ready');
-      $stickySearchBarWrapper.classList.add('collapsed');
-      resetTaskDropdowns($section);
-    }
-  }, { passive: true });
 }
 
 function updateLottieStatus($section) {
