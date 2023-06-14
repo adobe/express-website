@@ -1457,12 +1457,13 @@ async function getBreadcrumbs() {
   if (!children || children === '/') {
     return nav;
   }
+  const sanitize = (str) => str.replaceAll(/[$@%'"]/g, '');
   if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
     const params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop) => searchParams.get(prop),
     });
-    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
-    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
+    const searchingTasks = titleCase(sanitize(params.tasks));
+    const searchingTopics = titleCase(sanitize(params.topics));
     const lastCrumb = createTag('li');
     lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
     breadcrumbs.append(lastCrumb);
@@ -1470,21 +1471,21 @@ async function getBreadcrumbs() {
   }
 
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  const segments = children.split('/');
-  segments.reduce((acc, cur, index) => {
-    if (!cur) return acc;
-    const appended = `${acc}/${cur}`;
+  let acc = templatesUrl;
+  children.split('/').forEach((currSeg, i, arr) => {
+    const seg = sanitize(currSeg);
+    if (!seg) return;
+    acc = `${acc}/${seg}`;
     const segmentCrumb = createTag('li');
-    if (allTemplatesMetadata.some((t) => t.url === appended) && index !== segments.length - 1) {
-      const segmentLink = createTag('a', { href: `${origin}${appended}` });
-      segmentLink.textContent = titleCase(cur);
+    if (allTemplatesMetadata.some((t) => t.url === acc) && i !== arr.length - 1) {
+      const segmentLink = createTag('a', { href: `${origin}${acc}` });
+      segmentLink.textContent = titleCase(seg);
       segmentCrumb.append(segmentLink);
     } else {
-      segmentCrumb.textContent = titleCase(cur);
+      segmentCrumb.textContent = titleCase(seg);
     }
     breadcrumbs.append(segmentCrumb);
-    return appended;
-  }, templatesUrl);
+  });
 
   return nav;
 }
