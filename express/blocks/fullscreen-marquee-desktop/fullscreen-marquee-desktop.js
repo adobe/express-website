@@ -96,7 +96,7 @@ async function buildApp(block, content) {
 
         createFrame(1, 10);
         app.append(framesContainer);
-        thumbnail.currentTime = Math.floor(thumbnail.duration) / 2;
+        thumbnail.currentTime = Math.floor(Math.floor(thumbnail.duration) / 2);
         thumbnail.pause();
       });
     }
