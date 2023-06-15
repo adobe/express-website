@@ -25,14 +25,14 @@ export default function decorate(block) {
   block.appendChild(close);
 
   BlockMediator.set('promobar', {
-    block: block,
+    block,
     rendered: true,
   });
 
   close.addEventListener('click', () => {
     block.remove();
     BlockMediator.set('promobar', {
-      block: block,
+      block,
       rendered: false,
     });
   });

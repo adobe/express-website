@@ -151,7 +151,7 @@ export default async function decorate($block) {
   const $section = $block.closest('.section');
   const $sectionWrapper = $block.closest('.hero-animation-beta-wrapper');
   const animations = {};
-  const mobileBlock = $block.closest('.hero-animation-beta-dark-container[data-audience="mobile"');
+  const mobileBlock = $block.closest('.hero-animation-beta-dark-container[data-audience="mobile"]');
   if ($block.classList.contains('wide')) {
     $section.classList.add('hero-animation-beta-wide-container');
   } else {
