@@ -153,6 +153,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content img {
