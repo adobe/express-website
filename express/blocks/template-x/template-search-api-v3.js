@@ -68,7 +68,8 @@ const fetchSearchUrl = async ({
 }) => {
   const base = 'https://spark-search.adobe.io/v3/content';
   const collectionIdParam = `collectionId=${collectionId}`;
-  const queryType = 'assets';
+  // const queryType = 'assets';
+  const queryType = 'search'; // TODO: this has been back and forth. Needs finalization
   const queryParam = `&queryType=${queryType}`;
   const filterStr = formatFilterString(filters);
   const limitParam = limit || limit === 0 ? `&limit=${limit}` : '';
