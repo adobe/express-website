@@ -1002,9 +1002,13 @@ async function decorateSearchFunctions($toolBar, $section, placeholders, props) 
   $stickySearchBarWrapper.classList.add('collapsed');
   $inBlockLocation.append($stickySearchBarWrapper);
   if ($linkListLocation) {
-    $linkListLocation.prepend($searchBarWrapper);
+    const linkListWrapper = $linkListLocation.querySelector('.link-list-wrapper');
+    if (linkListWrapper) {
+      linkListWrapper.before($searchBarWrapper);
+    } else {
+      $linkListLocation.prepend($searchBarWrapper);
+    }
   }
-
   initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props);
 }
 
@@ -1425,6 +1429,11 @@ function initViewToggle($block, $toolBar, props) {
 // returns null if no breadcrumbs
 // returns breadcrumbs as an li element
 async function getBreadcrumbs() {
+  // for backward compatibility
+  // TODO: remove this check after all content are updated
+  if (getMetadata('sheet-powered') !== 'Y') {
+    return null;
+  }
   const { origin, pathname } = window.location;
   // TODO: hiding non-us breadcrumbs for now. need to translate
   if (getLocale(window.location) !== 'us') {
