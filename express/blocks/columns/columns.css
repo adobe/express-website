@@ -135,7 +135,8 @@ main .columns h6 + h6 {
   margin-top: 0;
 }
 
-main .columns.width-2-columns .column-picture {
+main .columns.width-2-columns .column-picture,
+main .columns.width-2-columns .hero-animation-overlay {
   order: 2;
 }
 
@@ -527,14 +528,12 @@ main .columns.offer .column .columns-iconlist .columns-iconlist-description p {
     display: block;
   }
 
-main .columns .column {
-  margin: 0;
-}
-
-  main .columns.width-2-columns .column-picture {
-    order: 0;
+  main .columns .column {
+    margin: 0;
   }
 
+  main .columns.width-2-columns .column-picture, 
+  main .columns.width-2-columns .hero-animation-overlay,
   main .columns.highlight.width-2-columns .column-picture {
     order: 0;
   }
