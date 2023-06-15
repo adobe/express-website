@@ -155,11 +155,6 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
   height: 100%;
 }
 
-main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
-  max-width: 90%;
-  max-height: 90%;
-}
-
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content img {
   max-width: 100%;
   max-height: 100%;
