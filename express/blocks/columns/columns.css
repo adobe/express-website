@@ -490,7 +490,7 @@ main .columns.offer .column .columns-iconlist .columns-iconlist-description p {
 
   main .columns.top > div,
   main .columns.offer > div {
-      align-items: flex-start;
+    align-items: flex-start;
   }
 
   main .columns-container > div,
@@ -532,7 +532,7 @@ main .columns.offer .column .columns-iconlist .columns-iconlist-description p {
     margin: 0;
   }
 
-  main .columns.width-2-columns .column-picture, 
+  main .columns.width-2-columns .column-picture,
   main .columns.width-2-columns .hero-animation-overlay,
   main .columns.highlight.width-2-columns .column-picture {
     order: 0;
