@@ -11,6 +11,12 @@
  */
 
 import { getHelixEnv, getLocale } from './scripts.js';
+import { memoize } from './utils.js';
+
+const memoizedFetchUrl = memoize((url) => fetch(url), {
+  key: (q) => q,
+  ttl: 1000 * 60 * 60 * 24,
+});
 
 let allTemplatesMetadata;
 
@@ -30,7 +36,7 @@ export default async function fetchAllTemplatesMetadata() {
         sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=10000`;
       }
 
-      const resp = await fetch(sheet);
+      const resp = await memoizedFetchUrl(sheet);
       allTemplatesMetadata = resp.ok ? (await resp.json()).data : [];
     } catch (err) {
       allTemplatesMetadata = [];

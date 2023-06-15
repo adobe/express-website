@@ -37,7 +37,8 @@ await (async function updateLegacyContent() {
     return;
   }
   const legacyAllTemplatesMetadata = await fetchLegacyAllTemplatesMetadata();
-  const data = legacyAllTemplatesMetadata[window.location.pathname];
+  const data = legacyAllTemplatesMetadata.find((p) => p.path === window.location.pathname);
+  if (!data) return;
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
 
