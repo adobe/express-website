@@ -722,7 +722,9 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, generatedSearchBa
     }
   }, { rootMargin: '0px', threshold: 1 });
 
-  const searchBarToWatch = document.body.dataset.device === 'mobile' ? generatedSearchBar : searchMarqueeSearchBar;
+  // for backward compatibility
+  // TODO: consider removing !searchMarqueeSearchBar as it should always be there for desktop pages
+  const searchBarToWatch = (document.body.dataset.device === 'mobile' || !searchMarqueeSearchBar) ? generatedSearchBar : searchMarqueeSearchBar;
   searchBarWatcher.observe(searchBarToWatch);
 
   $searchBarWrappers.forEach(($wrapper) => {
