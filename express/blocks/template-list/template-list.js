@@ -1424,6 +1424,10 @@ function initViewToggle($block, $toolBar, props) {
 // returns breadcrumbs as an li element
 async function getBreadcrumbs() {
   const { origin, pathname } = window.location;
+  // TODO: hiding non-us breadcrumbs for now. need to translate
+  if (getLocale(window.location) !== 'us') {
+    return null;
+  }
   const regex = /(.*?\/express\/)templates(.*)/;
   const matches = pathname.match(regex);
   if (!matches) {
