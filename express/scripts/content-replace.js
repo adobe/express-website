@@ -42,10 +42,14 @@ await (async function updateLegacyContent() {
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
 
+  const head = document.querySelector('head');
   if (data.shortTitle) {
-    const head = document.querySelector('head');
     const shortTitle = head.querySelector('meta[name="short-title"]');
     if (!shortTitle) head.append(createTag('meta', { name: 'short-title', content: data.shortTitle }));
+  }
+  if (data.ckgID) {
+    const ckgid = head.querySelector('meta[name="ckgid"]');
+    if (!ckgid) head.append(createTag('meta', { name: 'ckgid', content: data.ckgID }));
   }
 
   if (heroAnimation) {
