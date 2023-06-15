@@ -96,7 +96,6 @@ async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
   const fallBacktextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
-  console.log(tasks, tasks !== "''")
   if (fallBacktextTemplate) {
     return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
   }
