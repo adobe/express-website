@@ -96,7 +96,9 @@ async function buildApp(block, content) {
 
         createFrame(1, 10);
         app.append(framesContainer);
-        console.log(Math.floor(thumbnail.duration) / 2);
+      });
+
+      thumbnail.addEventListener('loadedmetadata', () => {
         thumbnail.currentTime = Math.floor(thumbnail.duration) / 2;
         thumbnail.pause();
       });
