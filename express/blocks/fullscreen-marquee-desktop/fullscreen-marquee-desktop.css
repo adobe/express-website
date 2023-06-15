@@ -146,6 +146,8 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content-contain
 
 main .fullscreen-marquee-desktop.video .fullscreen-marquee-desktop-app-content-container {
   height: 334px;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-content {
@@ -191,6 +193,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-thumbnail-conta
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-thumbnail-container video {
   height: 100%;
+  width: 100%;
   object-fit: cover;
 }
 
