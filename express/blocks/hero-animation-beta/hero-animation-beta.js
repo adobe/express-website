@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,7 +12,6 @@
 
 import {
   addAnimationToggle,
-  addFreePlanWidget,
   createTag,
   toClassName,
   getLocale,
@@ -58,7 +57,7 @@ function getAnimation(animations, breakpoint) {
 
 function createAnimation(animations) {
   const attribs = {
-    class: 'hero-animation-background',
+    class: 'hero-animation-beta-background',
   };
   ['playsinline', 'autoplay', 'muted'].forEach((p) => {
     attribs[p] = '';
@@ -111,6 +110,7 @@ function transformToVideoLink($cell, $a) {
   });
   $a.setAttribute('rel', 'nofollow');
   const title = $a.textContent.trim();
+
   // gather video urls from all links in cell
   const vidUrls = [];
   [...$cell.querySelectorAll(':scope a')]
@@ -129,7 +129,7 @@ function transformToVideoLink($cell, $a) {
     });
   $a.addEventListener('click', (e) => {
     e.preventDefault();
-    displayVideoModal(vidUrls, title, true);
+    displayVideoModal(vidUrls, title);
   });
 
   $a.addEventListener('keyup', (e) => {
@@ -149,12 +149,12 @@ export default async function decorate($block) {
   const possibleBreakpoints = animationBreakPointSettings.map((bp) => bp.typeHint);
   const possibleOptions = ['shadow', 'background'];
   const $section = $block.closest('.section');
-  const $sectionWrapper = $block.closest('.hero-animation-wrapper');
+  const $sectionWrapper = $block.closest('.hero-animation-beta-wrapper');
   const animations = {};
   if ($block.classList.contains('wide')) {
-    $section.classList.add('hero-animation-wide-container');
+    $section.classList.add('hero-animation-beta-wide-container');
   } else {
-    $section.classList.add('hero-animation-container');
+    $section.classList.add('hero-animation-beta-container');
   }
   const $rows = [...$block.children];
   $rows.forEach(($div, index) => {
@@ -219,9 +219,9 @@ export default async function decorate($block) {
       } else {
         $bg = createTag('div');
       }
-      $bg.classList.add('hero-animation-background');
+      $bg.classList.add('hero-animation-beta-background');
       $div.prepend($bg);
-      $bg.nextElementSibling.classList.add('hero-animation-foreground');
+      $bg.nextElementSibling.classList.add('hero-animation-beta-foreground');
       $div.querySelectorAll(':scope p:empty').forEach(($p) => {
         if ($p.innerHTML.trim() === '') {
           $p.remove();
@@ -233,12 +233,26 @@ export default async function decorate($block) {
       if (videoLink) {
         transformToVideoLink($div, videoLink);
       }
-      addFreePlanWidget($div.querySelector('.button-container') || $div.children[0]);
+
+      const contentButtons = [...$div.querySelectorAll('a.button.accent')];
+      $bg.nextElementSibling.classList.add('display-style');
+      const buttonAsLink = contentButtons[2];
+      const secondaryButton = contentButtons[1];
+      buttonAsLink?.classList.remove('button');
+      secondaryButton?.classList.add('secondary');
+      secondaryButton?.classList.add('xlarge');
+      const buttonContainer = [...$div.querySelectorAll('p.button-container')];
+      const linkContainer = [...$div.querySelectorAll('p')];
+      const linkElementToUnderline = linkContainer[linkContainer.length - 1];
+      linkElementToUnderline.classList.add('underline');
+      buttonContainer.forEach(($button) => {
+        $button.classList.add('button-inline');
+      });
     }
 
     if (rowType === 'option') {
       if (typeHint === 'shadow') {
-        const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+        const shadow = ($div.querySelector('picture')) ? $div.querySelector('picture') : createTag('img', { src: '/express/blocks/hero-animation-beta/shadow.png' });
         $div.innerHTML = '';
         $div.appendChild(shadow);
         $div.classList.add('hero-shadow');
@@ -258,7 +272,7 @@ export default async function decorate($block) {
 
   if ($block.classList.contains('shadow') && !$block.querySelector('.hero-shadow')) {
     const shadowDiv = createTag('div', { class: 'hero-shadow' });
-    const shadow = createTag('img', { src: '/express/blocks/hero-animation/shadow.png' });
+    const shadow = createTag('img', { src: '/express/blocks/hero-animation-beta/shadow.png' });
     shadowDiv.appendChild(shadow);
     $block.appendChild(shadowDiv);
   }
