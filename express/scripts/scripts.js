@@ -2327,7 +2327,9 @@ async function loadEager() {
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
-  if (getMetadata('sheet-powered') === 'Y') {
+  // for backward compatibility
+  // TODO: remove the href check after we tag content with sheet-powered
+  if (getMetadata('sheet-powered') === 'Y' || window.location.href.includes('/express/templates/')) {
     await import('./content-replace.js');
   }
 

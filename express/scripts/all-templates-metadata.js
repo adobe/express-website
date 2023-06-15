@@ -11,6 +11,12 @@
  */
 
 import { getHelixEnv, getLocale } from './scripts.js';
+import { memoize } from './utils.js';
+
+const memoizedFetchUrl = memoize((url) => fetch(url), {
+  key: (q) => q,
+  ttl: 1000 * 60 * 60 * 24,
+});
 
 let allTemplatesMetadata;
 
@@ -30,11 +36,36 @@ export default async function fetchAllTemplatesMetadata() {
         sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=10000`;
       }
 
-      const resp = await fetch(sheet);
+      const resp = await memoizedFetchUrl(sheet);
       allTemplatesMetadata = resp.ok ? (await resp.json()).data : [];
     } catch (err) {
       allTemplatesMetadata = [];
     }
   }
   return allTemplatesMetadata;
+}
+
+// for backward compatibility
+// TODO: remove this func after all content is updated
+let legacyAllTemplatesMetadata;
+export async function fetchLegacyAllTemplatesMetadata() {
+  if (!legacyAllTemplatesMetadata) {
+    try {
+      const env = getHelixEnv();
+      const dev = new URLSearchParams(window.location.search).get('dev');
+      let sheet;
+
+      if (['yes', 'true', 'on'].includes(dev) && env?.name === 'stage') {
+        sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
+      } else {
+        sheet = '/express/templates/content.json?sheet=seo-templates&limit=10000';
+      }
+
+      const resp = await fetch(sheet);
+      legacyAllTemplatesMetadata = resp.ok ? (await resp.json()).data : [];
+    } catch (err) {
+      legacyAllTemplatesMetadata = [];
+    }
+  }
+  return legacyAllTemplatesMetadata;
 }

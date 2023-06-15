@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { fetchPlaceholders, getMetadata, titleCase } from './scripts.js';
+import {
+  fetchPlaceholders,
+  getMetadata,
+  titleCase,
+  createTag,
+} from './scripts.js';
+import { fetchLegacyAllTemplatesMetadata } from './all-templates-metadata.js';
 
 async function replaceDefaultPlaceholders(template) {
   template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
@@ -22,6 +28,58 @@ async function replaceDefaultPlaceholders(template) {
     template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
   }
 }
+
+// for backwards compatibility
+// TODO: remove this func after all content is updated
+await (async function updateLegacyContent() {
+  if (getMetadata('sheet-powered') === 'Y') {
+    // not legacy
+    return;
+  }
+  const legacyAllTemplatesMetadata = await fetchLegacyAllTemplatesMetadata();
+  const data = legacyAllTemplatesMetadata.find((p) => p.path === window.location.pathname);
+  if (!data) return;
+  const heroAnimation = document.querySelector('.hero-animation.wide');
+  const templateList = document.querySelector('.template-list.fullwidth.apipowered');
+
+  const head = document.querySelector('head');
+  if (data.shortTitle) {
+    const shortTitle = head.querySelector('meta[name="short-title"]');
+    if (!shortTitle) head.append(createTag('meta', { name: 'short-title', content: data.shortTitle }));
+  }
+  if (data.ckgID) {
+    const ckgid = head.querySelector('meta[name="ckgid"]');
+    if (!ckgid) head.append(createTag('meta', { name: 'ckgid', content: data.ckgID }));
+  }
+
+  if (heroAnimation) {
+    if (data.heroAnimationTitle) {
+      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template title', data.heroAnimationTitle);
+    }
+
+    if (data.heroAnimationText) {
+      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template text', data.heroAnimationText);
+    }
+  }
+
+  if (templateList) {
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale || 'en');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated || '');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
+    templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat || '');
+
+    if (data.templateTasks === '') {
+      const placeholders = await fetchPlaceholders();
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+    } else {
+      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
+    }
+  }
+}());
 
 await (async function updateMetadataForTemplates() {
   if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
