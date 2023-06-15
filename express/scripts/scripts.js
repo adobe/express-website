@@ -376,13 +376,13 @@ export function getIconElement(icons, size, alt, additionalClassName) {
   return ($div.firstElementChild);
 }
 
-export function transformLinkToAnimation($a, $videoLooping = 'yes') {
+export function transformLinkToAnimation($a, $videoLooping = true) {
   if (!$a || !$a.href.endsWith('.mp4')) {
     return null;
   }
   const params = new URL($a.href).searchParams;
   const attribs = {};
-  let dataAttr = ($videoLooping && $videoLooping === 'yes') ? ['playsinline', 'autoplay', 'loop', 'muted'] : ['playsinline', 'autoplay', 'muted'];
+  const dataAttr = $videoLooping ? ['playsinline', 'autoplay', 'loop', 'muted'] : ['playsinline', 'autoplay', 'muted'];
   dataAttr.forEach((p) => {
     if (params.get(p) !== 'false') attribs[p] = '';
   });
