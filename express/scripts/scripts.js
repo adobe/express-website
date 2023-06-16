@@ -1546,8 +1546,8 @@ async function decorateTesting() {
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
-        window.hlx.experiment = config;
         if (config.run) {
+          window.hlx.experiment = config;
           if (forcedVariant && config.variantNames.includes(forcedVariant)) {
             config.selectedVariant = forcedVariant;
           } else {
