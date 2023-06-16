@@ -60,7 +60,8 @@ async function fetchLinkList() {
 
 function matchCKGResult(ckgData, pageData) {
   const ckgMatch = pageData.ckgID === ckgData.ckgID;
-  const taskMatch = ckgData.tasks.toLowerCase() === pageData.tasks.toLowerCase();
+  const pageDataTasks = pageData.tasks ?? pageData.templateTasks;
+  const taskMatch = ckgData.tasks?.toLowerCase() === pageDataTasks?.toLowerCase();
   const currentLocale = getLocale(window.location);
   const pageLocale = pageData.url.split('/')[1] === 'express' ? 'us' : pageData.url.split('/')[1];
   const sameLocale = currentLocale === pageLocale;
