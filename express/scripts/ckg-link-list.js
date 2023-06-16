@@ -295,5 +295,5 @@ function hideAsyncBlocks() {
     await lazyLoadSearchMarqueeLinklist();
   }
   await lazyLoadLinklist();
-  // await lazyLoadSEOLinkList();
+  await lazyLoadSEOLinkList();
 }());

@@ -40,7 +40,7 @@ export default async function fetchAllTemplatesMetadata() {
       allTemplatesMetadata = resp.data || [];
     } catch (err) {
       const resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=10000');
-      allTemplatesMetadata = resp.data || [];
+      allTemplatesMetadata = resp.data.map((p) => ({ ...p, url: p.path })) || [];
     }
   }
   return allTemplatesMetadata;
