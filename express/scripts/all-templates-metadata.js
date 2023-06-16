@@ -13,7 +13,7 @@
 import { getHelixEnv, getLocale } from './scripts.js';
 import { memoize } from './utils.js';
 
-const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
+const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => (r.ok ? r.json() : null)), {
   key: (q) => q,
   ttl: 1000 * 60 * 60 * 24,
 });
@@ -36,11 +36,15 @@ export default async function fetchAllTemplatesMetadata() {
         sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=10000`;
       }
 
-      const resp = await memoizedFetchUrl(sheet);
-      allTemplatesMetadata = resp.data || [];
+      let resp = await memoizedFetchUrl(sheet);
+      allTemplatesMetadata = resp?.data;
+
+      if (!allTemplatesMetadata) {
+        resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=10000');
+        allTemplatesMetadata = resp?.data?.map((p) => ({ ...p, url: p.path })) || [];
+      }
     } catch (err) {
-      const resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=10000');
-      allTemplatesMetadata = resp.data.map((p) => ({ ...p, url: p.path })) || [];
+      allTemplatesMetadata = [];
     }
   }
   return allTemplatesMetadata;
