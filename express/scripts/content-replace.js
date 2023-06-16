@@ -16,7 +16,7 @@ import {
   titleCase,
   createTag,
 } from './scripts.js';
-import { fetchLegacyAllTemplatesMetadata } from './all-templates-metadata.js';
+import { fetchAllTemplatesMetadata } from './all-templates-metadata.js';
 
 async function replaceDefaultPlaceholders(template) {
   template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
@@ -36,8 +36,8 @@ await (async function updateLegacyContent() {
     // not legacy
     return;
   }
-  const legacyAllTemplatesMetadata = await fetchLegacyAllTemplatesMetadata();
-  const data = legacyAllTemplatesMetadata.find((p) => p.path === window.location.pathname);
+  const legacyAllTemplatesMetadata = await fetchAllTemplatesMetadata();
+  const data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
   if (!data) return;
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');

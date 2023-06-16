@@ -45,28 +45,3 @@ export default async function fetchAllTemplatesMetadata() {
   }
   return allTemplatesMetadata;
 }
-
-// for backward compatibility
-// TODO: remove this func after all content is updated
-let legacyAllTemplatesMetadata;
-export async function fetchLegacyAllTemplatesMetadata() {
-  if (!legacyAllTemplatesMetadata) {
-    try {
-      const env = getHelixEnv();
-      const dev = new URLSearchParams(window.location.search).get('dev');
-      let sheet;
-
-      if (['yes', 'true', 'on'].includes(dev) && env?.name === 'stage') {
-        sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
-      } else {
-        sheet = '/express/templates/content.json?sheet=seo-templates&limit=10000';
-      }
-
-      const resp = await fetch(sheet);
-      legacyAllTemplatesMetadata = resp.ok ? (await resp.json()).data : [];
-    } catch (err) {
-      legacyAllTemplatesMetadata = [];
-    }
-  }
-  return legacyAllTemplatesMetadata;
-}
