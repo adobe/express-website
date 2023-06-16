@@ -115,7 +115,7 @@ await (async function updateMetadataForTemplates() {
   // FIXME: deprecate wl
   const main = document.querySelector('main');
   if (main) {
-    const allReplaceableBlades = [...main.innerText.matchAll(/{{(.*?)}}/g)];
+    const allReplaceableBlades = [...main.innerHTML.matchAll(/{{(.*?)}}/g)];
 
     if (allReplaceableBlades.length > 0) {
       allReplaceableBlades.forEach((regex) => {
