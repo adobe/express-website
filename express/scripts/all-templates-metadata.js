@@ -39,7 +39,7 @@ export default async function fetchAllTemplatesMetadata() {
       let resp = await memoizedFetchUrl(sheet);
       allTemplatesMetadata = resp?.data;
 
-      if (!allTemplatesMetadata) {
+      if (!(allTemplatesMetadata && allTemplatesMetadata.length > 1)) {
         resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=10000');
         allTemplatesMetadata = resp?.data?.map((p) => ({ ...p, url: p.path })) || [];
       }
