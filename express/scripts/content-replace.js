@@ -16,7 +16,7 @@ import {
   titleCase,
   createTag,
 } from './scripts.js';
-import { fetchAllTemplatesMetadata } from './all-templates-metadata.js';
+import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
 async function replaceDefaultPlaceholders(template) {
   template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
