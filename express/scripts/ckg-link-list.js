@@ -172,10 +172,10 @@ async function updateLinkList(container, linkPill, list) {
         clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
         searchLinks.push(clone);
       }
+    });
 
-      pageLinks.concat(searchLinks).forEach((clone) => {
-        container.append(clone);
-      });
+    pageLinks.concat(searchLinks).forEach((clone) => {
+      container.append(clone);
     });
 
     if (container.children.length === 0) {
@@ -193,7 +193,8 @@ async function updateLinkList(container, linkPill, list) {
 
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
-        replaceLinkPill(linkPill, templatePageData);
+        const clone = replaceLinkPill(linkPill, templatePageData);
+        container.append(clone);
       });
     }
   }
@@ -262,7 +263,7 @@ async function lazyLoadSearchMarqueeLinklist() {
           childSibling: row['child-siblings'],
           ckgID: row.ckgID,
           shortTitle: getMetadata('short-title'),
-          tasks: row.parent,
+          tasks: row.parent, // task on the page
           displayValue: row.displayValue,
         });
       });
