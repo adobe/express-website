@@ -114,14 +114,14 @@ export default async function getBreadcrumbs() {
   const homeCrumb = createTag('li');
   const homeUrl = `${origin}${homePath}`;
   const homeAnchor = createTag('a', { href: homeUrl });
-  homeAnchor.textContent = placeholders.express ?? 'Home';
+  homeAnchor.textContent = titleCase(placeholders.express) ?? 'Home';
   homeCrumb.append(homeAnchor);
   breadcrumbs.append(homeCrumb);
 
   const templatesCrumb = createTag('li');
   const templatesUrl = `${homeUrl}templates`;
   const templatesAnchor = createTag('a', { href: templatesUrl });
-  templatesAnchor.textContent = placeholders.templates ?? 'Templates';
+  templatesAnchor.textContent = titleCase(placeholders.templates) ?? 'Templates';
   templatesCrumb.append(templatesAnchor);
   breadcrumbs.append(templatesCrumb);
 
