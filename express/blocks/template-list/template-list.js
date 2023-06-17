@@ -28,7 +28,6 @@ import {
   lazyLoadLottiePlayer,
   linkImage,
   toClassName,
-  titleCase,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -36,6 +35,7 @@ import { Masonry } from '../shared/masonry.js';
 import { buildCarousel } from '../shared/carousel.js';
 import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 import { memoize } from '../../scripts/utils.js';
+import getBreadcrumbs from './breadcrumbs.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -1424,131 +1424,6 @@ function initViewToggle($block, $toolBar, props) {
       toggleMasonryView($block, $button, $toggleButtons, props);
     }, { passive: true });
   });
-}
-
-function sanitize(str) {
-  return str.replaceAll(/[$@%'"]/g, '');
-}
-
-// mutating
-async function appendSearchCrumbs(breadcrumbs, templatesUrl, allTemplatesMetadata) {
-  const { tasks, topics } = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-  if (!tasks && !topics) {
-    return;
-  }
-  const lastCrumb = createTag('li');
-  if (!tasks || !topics) {
-    lastCrumb.textContent = getMetadata('short-title');
-    breadcrumbs.append(lastCrumb);
-    return;
-  }
-  const placeholders = await fetchPlaceholders();
-  const categories = JSON.parse(placeholders['task-categories']) || {};
-  const translatedTasks = Object.entries(categories)
-    .find(([_, t]) => t === tasks)
-    ?.[0]?.toLowerCase() ?? tasks;
-
-  // if (!topics) {
-  //   lastCrumb.textContent = cleanedTasks;
-  //   breadcrumbs.append(lastCrumb);
-  //   return;
-  // }
-
-  // if (categories) {
-  //   allTemplatesMetadata.some((t) => t.url === acc.replace(origin, ''));
-  //   const tasksPair = Object.entries(categories).find((cat) => cat[1] === tasks);
-  //   const translatedTasks = tasksPair?.[0]?.toLowerCase() ?? tasks;
-  //   const taskCrumb = createTag('li');
-  //   const taskLink = createTag('a', { href: `${templatesUrl}` });
-  // }
-
-  const searchingTasks = titleCase(sanitize(tasks));
-  const searchingTopics = titleCase(sanitize(topics));
-  lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
-
-  breadcrumbs.append(lastCrumb);
-}
-
-function buildCrumbsForSEOPage() {}
-
-// seo: last crumb should be shortTitle of the page
-// search pages: translate task, remaining should be in the language already
-// const placeholders = await fetchPlaceholders();
-// const categories = JSON.parse(placeholders['task-categories']);
-// if (categories) {
-//   const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-//   const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-// }
-
-// returns null if no breadcrumbs
-// returns breadcrumbs as an li element
-async function getBreadcrumbs() {
-  // for backward compatibility
-  // TODO: remove this check after all content are updated
-  if (getMetadata('sheet-powered') !== 'Y') {
-    return null;
-  }
-  const { origin, pathname } = window.location;
-  // TODO: hiding non-us breadcrumbs for now. need to translate
-  if (getLocale(window.location) !== 'us') {
-    return null;
-  }
-  const regex = /(.*?\/express\/)templates(.*)/;
-  const matches = pathname.match(regex);
-  if (!matches) {
-    return null;
-  }
-  const placeholders = await fetchPlaceholders();
-  const [, homePath, children] = matches;
-  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
-  const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
-  nav.append(breadcrumbs);
-
-  const homeCrumb = createTag('li');
-  const homeUrl = `${origin}${homePath}`;
-  const homeAnchor = createTag('a', { href: homeUrl });
-  homeAnchor.textContent = placeholders.express ?? 'Home';
-  homeCrumb.append(homeAnchor);
-  breadcrumbs.append(homeCrumb);
-
-  const templatesCrumb = createTag('li');
-  const templatesUrl = `${homeUrl}templates`;
-  const templatesAnchor = createTag('a', { href: templatesUrl });
-  templatesAnchor.textContent = placeholders.templates ?? 'Templates';
-  templatesCrumb.append(templatesAnchor);
-  breadcrumbs.append(templatesCrumb);
-
-  if (!children || children === '/') {
-    return nav;
-  }
-  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
-    appendSearchCrumbs(breadcrumbs, templatesUrl, allTemplatesMetadata);
-    return nav;
-  }
-
-  let acc = templatesUrl;
-  children.split('/').forEach((currSeg, i, arr) => {
-    const seg = sanitize(currSeg);
-    if (!seg) return;
-    acc = `${acc}/${seg}`;
-    const segmentCrumb = createTag('li');
-    if (i === arr.length - 1) {
-      // FIXME: SEO pages
-    }
-    if (allTemplatesMetadata.some((t) => t.url === acc.replace(origin, ''))) {
-      const segmentLink = createTag('a', { href: acc });
-      segmentLink.textContent = titleCase(seg);
-      segmentCrumb.append(segmentLink);
-    } else {
-      segmentCrumb.textContent = titleCase(seg);
-    }
-    breadcrumbs.append(segmentCrumb);
-  });
-
-  return nav;
 }
 
 async function decorateBreadcrumbs(block) {
