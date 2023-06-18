@@ -52,7 +52,7 @@ await (async function updateLegacyContent() {
     } else {
       head.append(createTag('meta', { name: `${metadataKey}`, content: data[metadataKey] }));
     }
-  })
+  });
 
   if (heroAnimation) {
     if (data.heroAnimationTitle) {
