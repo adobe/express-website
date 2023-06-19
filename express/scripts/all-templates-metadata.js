@@ -42,7 +42,27 @@ export default async function fetchAllTemplatesMetadata() {
       // TODO: remove the > 1 logic after publishing of the split metadata sheet
       if (!(allTemplatesMetadata && allTemplatesMetadata.length > 1)) {
         resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=10000');
-        allTemplatesMetadata = resp?.data?.map((p) => ({ ...p, url: p.path })) || [];
+        allTemplatesMetadata = resp?.data?.map((p) => ({
+          ...p,
+          // TODO: backward compatibility. Remove when we move away from helix-seo-templates
+          url: p.path,
+          title: p.metadataTitle,
+          description: p.metadataDescription,
+          'short-title': p.shortTitle,
+          ckgid: p.ckgID,
+          'hero-title': p.heroAnimationTitle,
+          'hero-text': p.heroAnimationText,
+          locales: p.templateLocale,
+          premium: p.templatePremium,
+          animated: p.templateAnimated,
+          tasks: p.templateTasks,
+          topics: p.templateTopics,
+          'placeholder-format': p.placeholderFormat,
+          'create-link': p.createLink,
+          'create-text': p.createText,
+          'top-templates': p.topTemplates,
+          'top-templates-text': p.topTemplatesText,
+        })) || [];
       }
     } catch (err) {
       allTemplatesMetadata = [];

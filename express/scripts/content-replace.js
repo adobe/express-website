@@ -32,7 +32,9 @@ async function replaceDefaultPlaceholders(template) {
 // for backwards compatibility
 // TODO: remove this func after all content is updated
 await (async function updateLegacyContent() {
-  if (getMetadata('sheet-powered') === 'Y') {
+  // TODO: backward compatibility only. Remove after template v2 release on all locales.
+  const searchMarquee = document.querySelector('.search-marquee');
+  if (!searchMarquee) {
     // not legacy
     return;
   }
@@ -43,14 +45,14 @@ await (async function updateLegacyContent() {
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
 
   const head = document.querySelector('head');
-  if (data.shortTitle) {
-    const shortTitle = head.querySelector('meta[name="short-title"]');
-    if (!shortTitle) head.append(createTag('meta', { name: 'short-title', content: data.shortTitle }));
-  }
-  if (data.ckgID) {
-    const ckgid = head.querySelector('meta[name="ckgid"]');
-    if (!ckgid) head.append(createTag('meta', { name: 'ckgid', content: data.ckgID }));
-  }
+  Object.keys(data).forEach((metadataKey) => {
+    const existingMetadataTag = head.querySelector(`meta[name=${metadataKey}]`);
+    if (existingMetadataTag) {
+      existingMetadataTag.setAttribute('content', data[metadataKey]);
+    } else {
+      head.append(createTag('meta', { name: `${metadataKey}`, content: data[metadataKey] }));
+    }
+  });
 
   if (heroAnimation) {
     if (data.heroAnimationTitle) {

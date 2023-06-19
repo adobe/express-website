@@ -28,7 +28,11 @@ export default function useInputAutocomplete(
   const fetchAndUpdateUI = async () => {
     const currentSearch = state.query;
     state.waitingFor = currentSearch;
-    const suggestions = await memoizedFetchAPI({ textQuery: currentSearch, limit, locale: getLanguage(getLocale(window.location)) });
+    const suggestions = await memoizedFetchAPI({
+      textQuery: currentSearch,
+      limit,
+      locale: getLanguage(getLocale(window.location)),
+    });
     if (state.waitingFor === currentSearch) {
       updateUIWithSuggestions(suggestions);
     }
