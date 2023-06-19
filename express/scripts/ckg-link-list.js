@@ -73,7 +73,7 @@ function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
-    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short title']);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
   }
   return clone;
 }
@@ -88,7 +88,7 @@ async function updateSEOLinkList(container, linkPill, list) {
       const templatePageData = templatePages.find((p) => {
         const targetLocale = /^[a-z]{2}$/.test(p.url.split('/')[1]) ? p.url.split('/')[1] : 'us';
         const isLive = p.live === 'Y';
-        const titleMatch = p['short title'].toLowerCase() === d.childSibling.toLowerCase();
+        const titleMatch = p['short-title'].toLowerCase() === d.childSibling.toLowerCase();
         const localeMatch = currentLocale === targetLocale;
 
         return isLive && titleMatch && localeMatch;
