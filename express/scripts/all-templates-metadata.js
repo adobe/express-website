@@ -49,7 +49,7 @@ export default async function fetchAllTemplatesMetadata() {
           title: p.metadataTitle,
           description: p.metadataDescription,
           'short-title': p.shortTitle,
-          'ckgid': p.ckgID,
+          ckgid: p.ckgID,
           'hero-title': p.heroAnimationTitle,
           'hero-text': p.heroAnimationText,
           locales: p.templateLocale,
