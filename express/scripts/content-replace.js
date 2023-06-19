@@ -34,7 +34,7 @@ async function replaceDefaultPlaceholders(template) {
 await (async function updateLegacyContent() {
   // TODO: backward compatibility only. Remove after template v2 release on all locales.
   const searchMarquee = document.querySelector('.search-marquee');
-  if (!searchMarquee) {
+  if (searchMarquee) {
     // not legacy
     return;
   }
