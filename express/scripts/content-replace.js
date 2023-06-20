@@ -75,7 +75,7 @@ await (async function updateLegacyContent() {
   const legacyAllTemplatesMetadata = await fetchAllTemplatesMetadata();
   let data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
   if (!data) return;
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) data = updateBladesInMetadata(data);
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) data = await updateBladesInMetadata(data);
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
 
