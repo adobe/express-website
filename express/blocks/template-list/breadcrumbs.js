@@ -39,7 +39,7 @@ function getCrumbsForSearch(templatesUrl, allTemplatesMetadata, taskCategories) 
     return crumbs;
   }
 
-  const taskUrl = `${templatesUrl}/${tasks}`;
+  const taskUrl = `${templatesUrl}${tasks}`;
   const foundTaskPage = allTemplatesMetadata
     .some((t) => t.url === taskUrl.replace(origin, ''));
 
@@ -67,7 +67,8 @@ function getCrumbsForSEOPage(templatesUrl, allTemplatesMetadata, taskCategories,
   const translatedTasks = Object.entries(taskCategories)
     .find(([_, t]) => t === tasks || t === tasks.replace(/-/g, ' '))
     ?.[0]?.toLowerCase() ?? tasks;
-  let builtUrl = templatesUrl;
+  // we might have an inconsistent trailing slash problem
+  let builtUrl = templatesUrl.replace('templates/', 'templates');
   const crumbs = [];
   segments
     .slice(0, segments.length - 1)
@@ -119,7 +120,7 @@ export default async function getBreadcrumbs() {
   breadcrumbs.append(homeCrumb);
 
   const templatesCrumb = createTag('li');
-  const templatesUrl = `${homeUrl}templates`;
+  const templatesUrl = `${homeUrl}templates/`;
   const templatesAnchor = createTag('a', { href: templatesUrl });
   templatesAnchor.textContent = titleCase(placeholders.templates || '') || 'Templates';
   templatesCrumb.append(templatesAnchor);
