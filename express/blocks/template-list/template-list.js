@@ -1400,10 +1400,10 @@ function toggleMasonryView($block, $button, $toggleButtons, props) {
   }
 
   const placeholder = $block.querySelector('.template.placeholder');
-  const ratios = props.placeholderFormat;
+  const ratios = props.placeholderFormat ? props.placeholderFormat : getMetadata('placeholder-format');
   const width = getPlaceholderWidth($block);
 
-  if (ratios[1]) {
+  if (ratios && ratios[1]) {
     const height = (ratios[1] / ratios[0]) * width;
     placeholder.style = `height: ${height - 21}px`;
     if (width / height > 1.3) {
