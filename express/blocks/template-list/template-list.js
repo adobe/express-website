@@ -1914,7 +1914,13 @@ function constructProps() {
 
   return {
     templates: [],
-    filters: { locales: '(en)' },
+    filters: {
+      locales: getMetadata('locales') || '(en)',
+      tasks: getMetadata('tasks') || '',
+      topics: getMetadata('topics') || '',
+      premium: getMetadata('premium') || '',
+      animated: getMetadata('animated') || '',
+    },
     tailButton: '',
     // eslint-disable-next-line no-nested-ternary
     limit: smScreen.matches ? 20 : mdScreen.matches ? 30 : bgScreen.matches ? 40 : 70,
