@@ -38,6 +38,7 @@ function addBroadcastEventField(videoObj, blockKey, blockValue) {
       videoObj.publication[i][camelize(key)] = blockValue;
       break;
     default:
+      // eslint-disable-next-line no-console
       console.log(`VideoMetadata -- Unknown BroadcastEvent property: ${blockKey}`);
       break;
   }
@@ -58,6 +59,7 @@ function addClipField(videoObj, blockKey, blockValue) {
       videoObj.hasPart[i][camelize(key)] = blockValue;
       break;
     default:
+      // eslint-disable-next-line no-console
       console.log(`VideoMetadata -- Unhandled Clip property: ${blockKey}`);
       break;
   }
@@ -74,6 +76,7 @@ function addSeekToActionField(videoObj, blockKey, blockValue) {
       videoObj.potentialAction['startOffset-input'] = blockValue;
       break;
     default:
+      // eslint-disable-next-line no-console
       console.log(`VideoMetadata -- Unhandled SeekToAction property: ${blockKey}`);
       break;
   }
@@ -110,6 +113,7 @@ export function createVideoObject(blockMap) {
         addSeekToActionField(video, blockKey, blockVal);
         break;
       default:
+        // eslint-disable-next-line no-console
         console.log(`VideoMetadata -- Unhandled VideoObject property: ${blockKey}`);
         break;
     }
