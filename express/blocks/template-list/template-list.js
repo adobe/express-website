@@ -302,11 +302,11 @@ function populateTemplates($block, templates, props) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep).map((e) => +e);
+          const ratios = option.split(sep).map((str) => parseInt(str, 10));
           props.placeholderFormat = ratios;
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
-            if (ratios[1]) {
+            if (ratios?.length === 2) {
               const width = (ratios[0] / ratios[1]) * height;
               $tmplt.style = `width: ${width}px`;
               if (width / height > 1.3) {
@@ -489,7 +489,7 @@ async function redirectSearch($searchBar, props) {
     props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
   }
 
-  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}` || getMetadata('placeholder-format');
   let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
   let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
@@ -858,7 +858,7 @@ async function decorateCategoryList(block, section, placeholders, props) {
   $categoriesToggle.textContent = placeholders['jump-to-category'];
 
   Object.entries(categories).forEach((category, index) => {
-    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}` || getMetadata('placeholder-format');
     const targetTasks = category[1];
     const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
     const currentTopic = trimFormattedFilterText(props.filters.topics);
@@ -1400,10 +1400,14 @@ function toggleMasonryView($block, $button, $toggleButtons, props) {
   }
 
   const placeholder = $block.querySelector('.template.placeholder');
-  const ratios = props.placeholderFormat ? props.placeholderFormat : getMetadata('placeholder-format');
+  const ratioSeparator = getMetadata('placeholder-format').includes(':') ? ':' : 'x';
+  const ratioFromMetadata = getMetadata('placeholder-format')
+    .split(ratioSeparator)
+    .map((str) => parseInt(str, 10));
+  const ratios = props.placeholderFormat ? props.placeholderFormat : ratioFromMetadata;
   const width = getPlaceholderWidth($block);
 
-  if (ratios && ratios[1]) {
+  if (ratios?.length === 2) {
     const height = (ratios[1] / ratios[0]) * width;
     placeholder.style = `height: ${height - 21}px`;
     if (width / height > 1.3) {
