@@ -10,13 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  arrayToObject,
-  fetchPlaceholders,
-  getHelixEnv,
-  getLocale,
-  getMetadata
-} from './scripts.js';
+import { getHelixEnv, getLocale } from './scripts.js';
 import { memoize } from './utils.js';
 
 const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => (r.ok ? r.json() : null)), {
@@ -25,39 +19,6 @@ const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => (r.ok ? r.json(
 });
 
 let allTemplatesMetadata;
-
-async function updateBladesInMetadata(data) {
-  if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-    return data;
-  }
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  const dataArray = Object.entries(data);
-
-  if (!params.tasks && !params.phformat) {
-    return data;
-  } else {
-    const placeholders = await fetchPlaceholders();
-    const categories = JSON.parse(placeholders['task-categories']);
-    if (categories) {
-      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
-        col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
-        col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
-        col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
-        col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
-      });
-    }
-  }
-
-  return arrayToObject(dataArray);
-}
 
 export default async function fetchAllTemplatesMetadata() {
   const locale = getLocale(window.location);
@@ -107,6 +68,5 @@ export default async function fetchAllTemplatesMetadata() {
       allTemplatesMetadata = [];
     }
   }
-
-  return updateBladesInMetadata(allTemplatesMetadata);
+  return allTemplatesMetadata;
 }

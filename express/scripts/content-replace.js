@@ -15,6 +15,7 @@ import {
   getMetadata,
   titleCase,
   createTag,
+  arrayToObject,
 } from './scripts.js';
 import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
@@ -29,6 +30,39 @@ async function replaceDefaultPlaceholders(template) {
   }
 }
 
+async function updateBladesInMetadata(data) {
+  if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
+    return data;
+  }
+  const params = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+  });
+
+  const dataArray = Object.entries(data);
+
+  if (!params.tasks && !params.phformat) {
+    return data;
+  } else {
+    const placeholders = await fetchPlaceholders();
+    const categories = JSON.parse(placeholders['task-categories']);
+    if (categories) {
+      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+      dataArray.forEach((col) => {
+        col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
+        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
+        col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
+        col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
+        col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
+        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
+        col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
+      });
+    }
+  }
+
+  return arrayToObject(dataArray);
+}
+
 // for backwards compatibility
 // TODO: remove this func after all content is updated
 await (async function updateLegacyContent() {
@@ -39,8 +73,9 @@ await (async function updateLegacyContent() {
     return;
   }
   const legacyAllTemplatesMetadata = await fetchAllTemplatesMetadata();
-  const data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
+  let data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
   if (!data) return;
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) data = updateBladesInMetadata(data);
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
 
