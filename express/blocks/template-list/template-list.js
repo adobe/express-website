@@ -1911,6 +1911,10 @@ function constructProps() {
   const smScreen = window.matchMedia('(max-width: 900px)');
   const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
   const bgScreen = window.matchMedia('(max-width: 1440px)');
+  const ratioSeparator = getMetadata('placeholder-format').includes(':') ? ':' : 'x';
+  const ratioFromMetadata = getMetadata('placeholder-format')
+    .split(ratioSeparator)
+    .map((str) => parseInt(str, 10));
 
   return {
     templates: [],
@@ -1926,6 +1930,7 @@ function constructProps() {
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    placeholderFormat: ratioFromMetadata,
     renditionParams: {
       format: 'jpg',
       dimension: 'width',
