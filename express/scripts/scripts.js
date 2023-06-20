@@ -800,6 +800,7 @@ export async function getOffer(offerId, countryOverride) {
     currency = 'USD';
   }
   const resp = await fetch('/express/system/offers-new.json');
+  if (!resp.ok) return {};
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
   let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
@@ -1117,23 +1118,23 @@ export function getMetadata(name) {
  */
 
 export async function fetchPlaceholders() {
+  const requestPlaceholders = async (url) => {
+    const resp = await fetch(url);
+    if (resp.ok) {
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    }
+  };
   if (!window.placeholders) {
     try {
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/placeholders.json`);
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
+      await requestPlaceholders(`${urlPrefix}/express/placeholders.json`);
     } catch {
-      const resp = await fetch('/express/placeholders.json');
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
+      await requestPlaceholders('/express/placeholders.json');
     }
   }
   return window.placeholders;
@@ -1545,8 +1546,8 @@ async function decorateTesting() {
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
-        window.hlx.experiment = config;
         if (config.run) {
+          window.hlx.experiment = config;
           if (forcedVariant && config.variantNames.includes(forcedVariant)) {
             config.selectedVariant = forcedVariant;
           } else {
