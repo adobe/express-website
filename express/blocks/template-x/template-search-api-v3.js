@@ -119,14 +119,14 @@ export async function fetchTemplates(props, fallback = true) {
   if (!fallback) {
     return { response: null };
   }
-  const { filters: { tasks } } = props;
+  const { filters: { tasks, locales } } = props;
   if (tasks) {
-    response = await fetchSearchUrl({ ...props, filters: { tasks, premium: 'false' } });
+    response = await fetchSearchUrl({ ...props, filters: { tasks, locales, premium: 'false' } });
     if (response?.metadata?.totalHits > 0) {
       return { response, fallbackMsg: await getFallbackMsg(tasks) };
     }
   }
-  response = await fetchSearchUrl({ ...props, filters: { premium: 'false' } });
+  response = await fetchSearchUrl({ ...props, filters: { locales, premium: 'false' } });
   return { response, fallbackMsg: await getFallbackMsg() };
 }
 
