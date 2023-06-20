@@ -47,10 +47,11 @@ async function updateBladesInMetadata(data) {
     const categories = JSON.parse(placeholders['task-categories']);
     if (categories) {
       const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+      const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
+      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : sanitizedTasks;
       dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{queryTasks}}', params.tasks || '');
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(params.tasks || ''));
+        col[1] = col[1].replace('{{queryTasks}}', sanitizedTasks || '');
+        col[1] = col[1].replace('{{QueryTasks}}', titleCase(sanitizedTasks || ''));
         col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
         col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
         col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
