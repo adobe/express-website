@@ -26,6 +26,7 @@ function formatFilterString(filters) {
   const {
     animated,
     locales,
+    behaviors,
     premium,
     tasks,
     topics,
@@ -38,14 +39,18 @@ function formatFilterString(filters) {
       str += '&filters=licensingCategory==premium';
     }
   }
-  if (animated && animated !== 'all') {
+  if (animated && animated !== 'all' && !behaviors) {
     if (animated.toLowerCase() === 'false') {
       str += '&filters=behaviors==still';
     } else {
       str += '&filters=behaviors==animated';
     }
   }
-
+  if (behaviors) {
+    extractFilterTerms(behaviors).forEach((b) => {
+      str += `&filters=behaviors==${b}`;
+    });
+  }
   extractFilterTerms(tasks).forEach((t) => {
     str += `&filters=pages.task.name==${t}`;
   });
@@ -116,12 +121,12 @@ export async function fetchTemplates(props, fallback = true) {
   }
   const { filters: { tasks } } = props;
   if (tasks) {
-    response = await fetchSearchUrl({ ...props, filters: { tasks } });
+    response = await fetchSearchUrl({ ...props, filters: { tasks, premium: 'false' } });
     if (response?.metadata?.totalHits > 0) {
       return { response, fallbackMsg: await getFallbackMsg(tasks) };
     }
   }
-  response = await fetchSearchUrl({ ...props, filters: {} });
+  response = await fetchSearchUrl({ ...props, filters: { premium: 'false' } });
   return { response, fallbackMsg: await getFallbackMsg() };
 }
 
