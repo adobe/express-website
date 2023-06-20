@@ -179,7 +179,6 @@ function fetchTemplatesByTasks(tasks, props) {
 
 async function appendCategoryTemplatesCount($section, props) {
   const categories = $section.querySelectorAll('ul.category-list > li');
-  const currentTask = props.filters.tasks;
   const lang = getLanguage(getLocale(window.location));
 
   for (const li of categories) {
@@ -192,8 +191,6 @@ async function appendCategoryTemplatesCount($section, props) {
       anchor.append(countSpan);
     }
   }
-
-  props.filters.tasks = currentTask;
 }
 
 async function processResponse(props) {
@@ -480,6 +477,22 @@ async function readRowsFromBlock($block, props) {
   }
 }
 
+function getRedirectUrl(tasks, topics, format, allTemplatesMetadata) {
+  const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+  const topicUrl = topics ? `/${topics}` : '';
+  const taskUrl = `/${handlelize(tasks.toLowerCase())}`;
+  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+  const pathMatch = (e) => e.path === targetPath;
+  if (allTemplatesMetadata.some(pathMatch)) {
+    return `${window.location.origin}${targetPath}`;
+  } else {
+    const searchUrlTemplate = `/express/templates/search?tasks=${tasks}&phformat=${format}&topics=${topics || "''"}`;
+    const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
+    return searchUrl;
+  }
+}
+
 async function redirectSearch($searchBar, props) {
   const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
@@ -507,21 +520,9 @@ async function redirectSearch($searchBar, props) {
     searchInput = searchInput.trim();
     [[currentTasks]] = tasksFoundInInput;
   }
-
-  const locale = getLocale(window.location);
-  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const topicUrl = searchInput ? `/${searchInput}` : '';
-  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
-  const pathMatch = (e) => e.path === targetPath;
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  if (allTemplatesMetadata.some(pathMatch)) {
-    window.location = `${window.location.origin}${targetPath}`;
-  } else {
-    window.location = searchUrl;
-  }
+  const redirectUrl = getRedirectUrl(currentTasks, searchInput, format, allTemplatesMetadata);
+  window.location = redirectUrl;
 }
 
 function makeTemplateFunctions(placeholders) {
@@ -856,6 +857,7 @@ async function decorateCategoryList(block, section, placeholders, props) {
 
   categoriesListHeading.append(getIconElement('template-search'), placeholders['jump-to-category']);
   $categoriesToggle.textContent = placeholders['jump-to-category'];
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
 
   Object.entries(categories).forEach((category, index) => {
     const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
@@ -876,10 +878,10 @@ async function decorateCategoryList(block, section, placeholders, props) {
     }
 
     const iconElement = getIconElement(icon);
-    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    const redirectUrl = getRedirectUrl(targetTasks, currentTopic, format, allTemplatesMetadata);
     const $a = createTag('a', {
       'data-tasks': targetTasks,
-      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+      href: redirectUrl,
     });
     [$a.textContent] = category;
 
