@@ -489,7 +489,7 @@ async function redirectSearch($searchBar, props) {
     props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
   }
 
-  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}` || getMetadata('placeholder-format');
+  const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
   let currentTasks = trimFormattedFilterText(props.filters.tasks);
   const currentTopic = trimFormattedFilterText(props.filters.topics);
   let searchInput = $searchBar ? $searchBar.value.toLowerCase() : currentTopic;
@@ -858,7 +858,7 @@ async function decorateCategoryList(block, section, placeholders, props) {
   $categoriesToggle.textContent = placeholders['jump-to-category'];
 
   Object.entries(categories).forEach((category, index) => {
-    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}` || getMetadata('placeholder-format');
+    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
     const targetTasks = category[1];
     const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
     const currentTopic = trimFormattedFilterText(props.filters.topics);
@@ -1400,11 +1400,7 @@ function toggleMasonryView($block, $button, $toggleButtons, props) {
   }
 
   const placeholder = $block.querySelector('.template.placeholder');
-  const ratioSeparator = getMetadata('placeholder-format').includes(':') ? ':' : 'x';
-  const ratioFromMetadata = getMetadata('placeholder-format')
-    .split(ratioSeparator)
-    .map((str) => parseInt(str, 10));
-  const ratios = props.placeholderFormat ? props.placeholderFormat : ratioFromMetadata;
+  const ratios = props.placeholderFormat;
   const width = getPlaceholderWidth($block);
 
   if (ratios?.length === 2) {
@@ -1911,6 +1907,10 @@ function constructProps() {
   const smScreen = window.matchMedia('(max-width: 900px)');
   const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
   const bgScreen = window.matchMedia('(max-width: 1440px)');
+  const ratioSeparator = getMetadata('placeholder-format').includes(':') ? ':' : 'x';
+  const ratioFromMetadata = getMetadata('placeholder-format')
+    .split(ratioSeparator)
+    .map((str) => parseInt(str, 10));
 
   return {
     templates: [],
@@ -1926,6 +1926,7 @@ function constructProps() {
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    placeholderFormat: ratioFromMetadata,
     renditionParams: {
       format: 'jpg',
       dimension: 'width',
