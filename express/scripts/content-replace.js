@@ -75,6 +75,25 @@ function replaceBladesInStr(str, replacements) {
   });
 }
 
+(function deleteIrrelevantSections() {
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const dataDevice = document.body.getAttribute('data-device');
+  if (!dataDevice) return;
+  const sections = main.children;
+  for (const section of sections) {
+    const sectionMetadata = section.querySelector('.section-metadata');
+    if (sectionMetadata) {
+      const audienceMetadata = [...sectionMetadata.querySelectorAll('div')].filter((el) => el.textContent === 'audience')?.[0];
+      if (audienceMetadata) {
+        const sectionAudience = audienceMetadata.nextElementSibling.textContent;
+        if (sectionAudience && dataDevice !== sectionAudience) section.remove();
+      }
+    }
+  }
+}());
+
 // for backwards compatibility
 // TODO: remove this func after all content is updated
 // legacy json -> metadata
