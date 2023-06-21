@@ -48,6 +48,7 @@ async function updateBladesInMetadata(data) {
     if (categories) {
       const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
       const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
+      const sanitizedTopics = params.topics === "''" ? '' : params.topics;
       const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : sanitizedTasks;
       dataArray.forEach((col) => {
         col[1] = col[1].replace('{{queryTasks}}', sanitizedTasks || '');
@@ -55,8 +56,8 @@ async function updateBladesInMetadata(data) {
         col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
         col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
         col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(params.topics || ''));
-        col[1] = col[1].replace('{{queryTopics}}', params.topics || '');
+        col[1] = col[1].replace('{{QueryTopics}}', titleCase(sanitizedTopics || ''));
+        col[1] = col[1].replace('{{queryTopics}}', sanitizedTopics || '');
       });
     }
   }
@@ -134,16 +135,19 @@ await (async function updateMetadataForTemplates() {
     const categories = JSON.parse(placeholders['task-categories']);
     if (categories) {
       const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+      const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
+      const sanitizedTopics = params.topics === "''" ? '' : params.topics;
+      const sanitizedQuery = params.q === "''" ? '' : params.q;
       const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
       head.innerHTML = head.innerHTML
-        .replaceAll('{{queryTasks}}', params.tasks || '')
-        .replaceAll('{{QueryTasks}}', titleCase(params.tasks || ''))
+        .replaceAll('{{queryTasks}}', sanitizedTasks || '')
+        .replaceAll('{{QueryTasks}}', titleCase(sanitizedTasks || ''))
         .replaceAll('{{translatedTasks}}', translatedTasks || '')
         .replaceAll('{{TranslatedTasks}}', titleCase(translatedTasks || ''))
         .replaceAll('{{placeholderRatio}}', params.phformat || '')
-        .replaceAll('{{QueryTopics}}', titleCase(params.topics || ''))
-        .replaceAll('{{queryTopics}}', params.topics || '')
-        .replaceAll('{{query}}', params.q || '');
+        .replaceAll('{{QueryTopics}}', titleCase(sanitizedTopics || ''))
+        .replaceAll('{{queryTopics}}', sanitizedTopics || '')
+        .replaceAll('{{query}}', sanitizedQuery || '');
     }
   }
 }());
