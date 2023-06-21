@@ -1585,11 +1585,11 @@ export async function decorateTemplateList($block, props) {
       }
 
       if (placeholders['template-filter-premium']) {
-        document.addEventListener('linkspopulated', (e) => {
+        document.addEventListener('linkspopulated', async (e) => {
           // desktop/mobile fires the same event
           if ($parent.contains(e.detail[0])) {
             decorateToolbar($block, $parent, placeholders, props);
-            decorateCategoryList($block, $parent, placeholders, props);
+            await decorateCategoryList($block, $parent, placeholders, props);
             appendCategoryTemplatesCount($parent, props);
           }
         });
