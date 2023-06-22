@@ -33,7 +33,13 @@ async function getReplacementsFromSearch() {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-  if (!params.tasks && !params.phformat) {
+  const {
+    tasks,
+    phformat,
+    topics,
+    q,
+  } = params;
+  if (!tasks && !phformat) {
     return null;
   }
   const placeholders = await fetchPlaceholders();
@@ -41,17 +47,17 @@ async function getReplacementsFromSearch() {
   if (!categories) {
     return null;
   }
-  const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-  const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
-  const sanitizedTopics = params.topics === "''" ? '' : params.topics;
-  const sanitizedQuery = params.q === "''" ? '' : params.q;
-  const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+  const tasksPair = Object.entries(categories).find((cat) => cat[1] === tasks);
+  const sanitizedTasks = tasks === "''" ? '' : tasks;
+  const sanitizedTopics = topics === "''" ? '' : topics;
+  const sanitizedQuery = q === "''" ? '' : q;
+  const translatedTasks = tasksPair ? tasksPair[0].toLowerCase() : tasks;
   return {
     '{{queryTasks}}': sanitizedTasks || '',
     '{{QueryTasks}}': titleCase(sanitizedTasks || ''),
     '{{translatedTasks}}': translatedTasks || '',
     '{{TranslatedTasks}}': titleCase(translatedTasks || ''),
-    '{{placeholderRatio}}': params.phformat || '',
+    '{{placeholderRatio}}': phformat || '',
     '{{QueryTopics}}': titleCase(sanitizedTopics || ''),
     '{{queryTopics}}': sanitizedTopics || '',
     '{{query}}': sanitizedQuery || '',
