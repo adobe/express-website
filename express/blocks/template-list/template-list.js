@@ -114,7 +114,7 @@ function formatSearchQuery(limit, start, sort, filters) {
   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
-const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => r.json()), {
+const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => (r.ok ? r.json() : null)), {
   key: (q) => q,
   ttl: 1000 * 60 * 60 * 24,
 });
@@ -143,7 +143,7 @@ async function fetchTemplates(props) {
 
   let result = await memoizedFetchUrl(props.queryString);
 
-  if (result._embedded.total > 0) {
+  if (result?._embedded?.total) {
     return result;
   }
   const { filters: { tasks, locales } } = props;
@@ -151,7 +151,7 @@ async function fetchTemplates(props) {
   if (tasksMatch) {
     props.queryString = formatSearchQuery(limit, start, sort, { locales, tasks });
     result = await memoizedFetchUrl(props.queryString);
-    if (result._embedded.total > 0) {
+    if (result?._embedded?.total) {
       props.fallbackMsg = await getFallbackMsg(tasksMatch[1]);
       return result;
     }
@@ -195,9 +195,11 @@ async function appendCategoryTemplatesCount($section, props) {
 
 async function processResponse(props) {
   const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
-  let templateFetched;
-  if (response) {
-    templateFetched = response._embedded.results;
+  const { _embedded } = response || {};
+  let templateFetched = [];
+  if (_embedded) {
+    const { results, total } = _embedded;
+    templateFetched = results;
 
     if ('_links' in response) {
       const nextQuery = response._links.next.href;
@@ -208,7 +210,7 @@ async function processResponse(props) {
       props.start = '';
     }
 
-    props.total = response._embedded.total;
+    props.total = total;
   }
 
   if (templateFetched) {
