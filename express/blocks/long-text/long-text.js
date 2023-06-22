@@ -12,6 +12,10 @@
 
 export default function decorate(block) {
   if (block.textContent.trim() === '') {
-    block.parentElement.remove();
+    if (block.parentElement.classList.contains('long-text-wrapper')) {
+      block.parentElement.remove();
+    } else {
+      block.remove();
+    }
   }
 }

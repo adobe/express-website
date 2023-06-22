@@ -1,3 +1,4 @@
+/* to remove after wrapper deprecation */
 main .section div.long-text-wrapper {
     max-width: none;
     padding: 0;
