@@ -282,7 +282,8 @@ async function buildSearchDropdown(block) {
 function decorateLinkList(block) {
   const carouselItemsWrapper = block.querySelector(':scope > div:nth-of-type(2)');
   if (carouselItemsWrapper) {
-    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+    const showLinkList = getMetadata('show-search-marquee-link-list');
+    if (showLinkList && !['yes', 'true', 'on', 'Y'].includes(showLinkList)) {
       buildCarousel(':scope > div > p', carouselItemsWrapper);
       const carousel = carouselItemsWrapper.querySelector('.carousel-container');
       block.append(carousel);
