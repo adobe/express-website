@@ -1,0 +1,7 @@
+main .long-text-wrapper {
+    max-width: none;
+}
+
+main .long-text {
+    max-width: 760px;
+}
