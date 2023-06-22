@@ -284,11 +284,11 @@ function decorateLinkList(block) {
   if (carouselItemsWrapper) {
     const showLinkList = getMetadata('show-search-marquee-link-list');
     if (showLinkList && !['yes', 'true', 'on', 'Y'].includes(showLinkList)) {
+      carouselItemsWrapper.remove();
+    } else {
       buildCarousel(':scope > div > p', carouselItemsWrapper);
       const carousel = carouselItemsWrapper.querySelector('.carousel-container');
       block.append(carousel);
-    } else {
-      carouselItemsWrapper.remove();
     }
   }
 }
