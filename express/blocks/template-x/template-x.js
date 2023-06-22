@@ -168,7 +168,7 @@ function constructProps(block) {
     total: 0,
     start: '',
     collectionId: 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418',
-    sort: 'Most Viewed',
+    sort: '',
     masonry: undefined,
     headingTitle: null,
     headingSlug: null,
