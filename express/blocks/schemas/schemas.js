@@ -9,23 +9,38 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import {
+  getLocale,
+} from '../../scripts/scripts.js';
+
 function decorateSchemasBlocks($block) {
   const rows = Array.from($block.children);
+  const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+  const homePageLocaleUrl = ''.concat('https://www.adobe.com', urlPrefix, '/');
+  const webPageSchemaScript = document.createElement('script');
+  let webApplicationUrl = '';
+  webPageSchemaScript.setAttribute('type', 'application/ld+json');
   rows.forEach(($row) => {
     const cells = Array.from($row.children);
-    const webApplicationUrl = cells[0];
-    const webPageSchemaScript = document.createElement('script');
-    webPageSchemaScript.setAttribute('type', 'application/ld+json');
-    const webSchemaJson = {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      url: window.location.href,
-      '@id': ''.concat(window.location.href, '/#webpage'),
-      isPartOf: {
+    if (cells[0] !== undefined) {
+      webApplicationUrl = cells[0].innerText;
+    }
+  });
+  const webSchemaJson = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url: window.location.href,
+    '@id': ''.concat(window.location.href, '/#webpage'),
+    isPartOf: {
+      '@type': 'Website',
+      url: homePageLocaleUrl,
+      '@id': ''.contact(homePageLocaleUrl, '#website'),
+      publisher: {
         '@type': 'Corporation',
         name: 'Adobe',
         legalName: 'Adobe Inc.',
-        alternateName: 'Adobe Inc',
+        alternateName: 'Adobe Systems Incorporated',
         '@id': 'https://www.adobe.com#organization',
         tickerSymbol: 'ADBE',
         sameAs: [
@@ -34,35 +49,32 @@ function decorateSchemasBlocks($block) {
           'https://twitter.com/Adobe',
           'https://en.wikipedia.org/wiki/Adobe_Inc.'],
       },
-      about: {
-        '@type': 'WebApplication',
-        name: 'Adobe Express',
-        url: webApplicationUrl.innerText,
-        '@id': ''.concat(webApplicationUrl.innerText, '#webapplication'),
-        browserRequirements: ['requires HTML5 support', 'requires JavaScript'],
-        sameAs: 'https://www.adobe.com/in/express/',
-        applicationCategory: 'DesignApplication',
-        applicationSuite: 'Adobe Creative Cloud',
-        permissions: 'may run only with an active internet connection',
-        operatingSystem: ['Windows 8.1 or later', 'macOS 10.13 or later', 'Chromebook'],
-        memoryRequirements: '4-GB',
-        copyrightHolder: { '@id': 'https://www.adobe.com#organization' },
-        creator: { '@id': 'https://www.adobe.com#organization' },
-        publisher: { '@id': 'https://www.adobe.com#organization' },
-        maintainer: { '@id': 'https://www.adobe.com#organization' },
-        offer: {
-          '@type': 'offer',
-          priceSpecification: {
-            '@type': 'UnitPriceSpecification',
-            price: '0.00',
-            priceCurrency: 'INR',
-          },
-        },
+    },
+    about: {
+      '@type': 'WebApplication',
+      name: 'Adobe Express',
+      url: webApplicationUrl.innerText,
+      '@id': ''.concat(webApplicationUrl.innerText, '#webapplication'),
+      browserRequirements: ['requires HTML5 support', 'requires JavaScript'],
+      sameAs: 'https://www.adobe.com/in/express/',
+      applicationCategory: 'DesignApplication',
+      applicationSuite: 'Adobe Creative Cloud',
+      permissions: 'may run only with an active internet connection',
+      operatingSystem: ['Windows 8.1 or later', 'macOS 10.13 or later', 'Chromebook'],
+      memoryRequirements: '4-GB',
+      copyrightHolder: { '@id': 'https://www.adobe.com#organization' },
+      creator: { '@id': 'https://www.adobe.com#organization' },
+      publisher: { '@id': 'https://www.adobe.com#organization' },
+      maintainer: { '@id': 'https://www.adobe.com#organization' },
+      offers: {
+        '@type': 'offer',
+        price: '0.00',
+        priceCurrency: 'INR',
       },
-    };
-    webPageSchemaScript.textContent = JSON.stringify(webSchemaJson);
-    document.head.appendChild(webPageSchemaScript);
-  });
+    },
+  };
+  webPageSchemaScript.textContent = JSON.stringify(webSchemaJson);
+  document.head.appendChild(webPageSchemaScript);
 }
 
 export default function decorate($block) {
