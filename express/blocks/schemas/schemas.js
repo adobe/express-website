@@ -17,16 +17,19 @@ function decorateSchemasBlocks($block) {
   const rows = Array.from($block.children);
   const locale = getLocale(window.location);
   const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const homePageLocaleUrl = ''.concat('https://www.adobe.com', urlPrefix, '/');
-  const webPageSchemaScript = document.createElement('script');
-  let webApplicationUrl = '';
-  webPageSchemaScript.setAttribute('type', 'application/ld+json');
+  const homePageLocaleUrl = ''.concat('https://www.adobe.com/', urlPrefix, '/');
+  let webApplicationUrl;
   rows.forEach(($row) => {
     const cells = Array.from($row.children);
-    if (cells[0] !== undefined) {
-      webApplicationUrl = cells[0].innerText;
+    const cellValue = cells[0].innerText;
+    if (cellValue === '') {
+      webApplicationUrl = document.querySelectorAll('p.button-container')[0].getElementsByTagName('a')[0].href;
+    } else {
+      webApplicationUrl = cellValue;
     }
   });
+  const webPageSchemaScript = document.createElement('script');
+  webPageSchemaScript.setAttribute('type', 'application/ld+json');
   const webSchemaJson = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -35,7 +38,7 @@ function decorateSchemasBlocks($block) {
     isPartOf: {
       '@type': 'Website',
       url: homePageLocaleUrl,
-      '@id': ''.contact(homePageLocaleUrl, '#website'),
+      '@id': ''.concat(homePageLocaleUrl, '#website'),
       publisher: {
         '@type': 'Corporation',
         name: 'Adobe',
@@ -53,8 +56,8 @@ function decorateSchemasBlocks($block) {
     about: {
       '@type': 'WebApplication',
       name: 'Adobe Express',
-      url: webApplicationUrl.innerText,
-      '@id': ''.concat(webApplicationUrl.innerText, '#webapplication'),
+      url: webApplicationUrl,
+      '@id': ''.concat(webApplicationUrl, '#webapplication'),
       browserRequirements: ['requires HTML5 support', 'requires JavaScript'],
       sameAs: 'https://www.adobe.com/in/express/',
       applicationCategory: 'DesignApplication',
