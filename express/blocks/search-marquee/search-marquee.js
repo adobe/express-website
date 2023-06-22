@@ -41,7 +41,7 @@ function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/ex
         data: {
           keyword: input.value,
           locale: getLocale(window.location),
-          timestamp: new Date(Date.now()).toString(),
+          timestamp: Date.now(),
         },
       }),
     });
