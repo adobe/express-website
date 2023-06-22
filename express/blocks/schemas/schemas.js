@@ -13,11 +13,11 @@ import {
   getLocale,
 } from '../../scripts/scripts.js';
 
-function decorateSchemasBlocks($block) {
-  const rows = Array.from($block.children);
+function decorateSchemasBlocks(block) {
+  const rows = Array.from(block.children);
   const locale = getLocale(window.location);
   const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const homePageLocaleUrl = ''.concat('https://www.adobe.com/', urlPrefix, '/');
+  const homePageLocaleUrl = `https://www.adobe.com${urlPrefix}/`;
   let webApplicationUrl;
   rows.forEach(($row) => {
     const cells = Array.from($row.children);
@@ -34,11 +34,11 @@ function decorateSchemasBlocks($block) {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     url: window.location.href,
-    '@id': ''.concat(window.location.href, '/#webpage'),
+    '@id': `${window.location.href}/#webpage`,
     isPartOf: {
       '@type': 'Website',
       url: homePageLocaleUrl,
-      '@id': ''.concat(homePageLocaleUrl, '#website'),
+      '@id': `${homePageLocaleUrl}#website`,
       publisher: {
         '@type': 'Corporation',
         name: 'Adobe',
@@ -57,7 +57,7 @@ function decorateSchemasBlocks($block) {
       '@type': 'WebApplication',
       name: 'Adobe Express',
       url: webApplicationUrl,
-      '@id': ''.concat(webApplicationUrl, '#webapplication'),
+      '@id': `${webApplicationUrl}#webapplication`,
       browserRequirements: ['requires HTML5 support', 'requires JavaScript'],
       sameAs: 'https://www.adobe.com/in/express/',
       applicationCategory: 'DesignApplication',
@@ -80,6 +80,6 @@ function decorateSchemasBlocks($block) {
   document.head.appendChild(webPageSchemaScript);
 }
 
-export default function decorate($block) {
-  decorateSchemasBlocks($block);
+export default function decorate(block) {
+  decorateSchemasBlocks(block);
 }
