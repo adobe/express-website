@@ -31,6 +31,23 @@ function handlelize(str) {
     .toLowerCase(); // To lowercase
 }
 
+function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/express/search-terms-log') {
+  if (form) {
+    const input = form.querySelector('input');
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        data: {
+          keyword: input.value,
+          locale: getLocale(window.location),
+          timestamp: Date.now(),
+        },
+      }),
+    });
+  }
+}
+
 function initSearchFunction(block) {
   const searchBarWrapper = block.querySelector('.search-bar-wrapper');
 
@@ -108,6 +125,7 @@ function initSearchFunction(block) {
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     searchBar.disabled = true;
+    logSearch(e.currentTarget);
     await redirectSearch();
   });
 
