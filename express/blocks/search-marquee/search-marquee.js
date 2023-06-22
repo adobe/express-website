@@ -38,9 +38,11 @@ function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/ex
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        keyword: input.value,
-        locale: getLocale(window.location),
-        timestamp: new Date(Date.now()).toString(),
+        data: {
+          keyword: input.value,
+          locale: getLocale(window.location),
+          timestamp: new Date(Date.now()).toString(),
+        },
       }),
     });
   }
