@@ -15,7 +15,6 @@ import {
   getMetadata,
   titleCase,
   createTag,
-  arrayToObject,
 } from './scripts.js';
 import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
@@ -30,54 +29,66 @@ async function replaceDefaultPlaceholders(template) {
   }
 }
 
-async function updateBladesInMetadata(data) {
-  if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-    return data;
-  }
+async function getReplacementsFromSearch() {
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-
-  const dataArray = Object.entries(data);
-
   if (!params.tasks && !params.phformat) {
-    return data;
-  } else {
-    const placeholders = await fetchPlaceholders();
-    const categories = JSON.parse(placeholders['task-categories']);
-    if (categories) {
-      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
-      const sanitizedTopics = params.topics === "''" ? '' : params.topics;
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : sanitizedTasks;
-      dataArray.forEach((col) => {
-        col[1] = col[1].replace('{{queryTasks}}', sanitizedTasks || '');
-        col[1] = col[1].replace('{{QueryTasks}}', titleCase(sanitizedTasks || ''));
-        col[1] = col[1].replace('{{translatedTasks}}', translatedTasks || '');
-        col[1] = col[1].replace('{{TranslatedTasks}}', titleCase(translatedTasks || ''));
-        col[1] = col[1].replace('{{placeholderRatio}}', params.phformat || '');
-        col[1] = col[1].replace('{{QueryTopics}}', titleCase(sanitizedTopics || ''));
-        col[1] = col[1].replace('{{queryTopics}}', sanitizedTopics || '');
-      });
-    }
+    return null;
   }
+  const placeholders = await fetchPlaceholders();
+  const categories = JSON.parse(placeholders['task-categories']);
+  if (!categories) {
+    return null;
+  }
+  const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
+  const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
+  const sanitizedTopics = params.topics === "''" ? '' : params.topics;
+  const sanitizedQuery = params.q === "''" ? '' : params.q;
+  const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
+  return {
+    '{{queryTasks}}': sanitizedTasks || '',
+    '{{QueryTasks}}': titleCase(sanitizedTasks || ''),
+    '{{translatedTasks}}': translatedTasks || '',
+    '{{TranslatedTasks}}': titleCase(translatedTasks || ''),
+    '{{placeholderRatio}}': params.phformat || '',
+    '{{QueryTopics}}': titleCase(sanitizedTopics || ''),
+    '{{queryTopics}}': sanitizedTopics || '',
+    '{{query}}': sanitizedQuery || '',
+  };
+}
 
-  return arrayToObject(dataArray);
+const bladeRegex = new RegExp('{{.+}}', 'g');
+async function replaceBladesInStr(str, replacements) {
+  if (!replacements) return str;
+  return str.replaceAll(bladeRegex, (match) => {
+    if (match in replacements) {
+      return replacements[match];
+    }
+    return match;
+  });
 }
 
 // for backwards compatibility
 // TODO: remove this func after all content is updated
+// legacy json -> metadata
 await (async function updateLegacyContent() {
-  // TODO: backward compatibility only. Remove after template v2 release on all locales.
   const searchMarquee = document.querySelector('.search-marquee');
   if (searchMarquee) {
     // not legacy
     return;
   }
   const legacyAllTemplatesMetadata = await fetchAllTemplatesMetadata();
-  let data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
+  const data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
   if (!data) return;
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) data = await updateBladesInMetadata(data);
+  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
+    const replacements = await getReplacementsFromSearch();
+    if (!replacements) return;
+    for (const key of Object.keys(data)) {
+      data[key] = replaceBladesInStr(data[key], replacements);
+    }
+  }
+
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
 
@@ -102,14 +113,22 @@ await (async function updateLegacyContent() {
   }
 
   if (templateList) {
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-title', data.shortTitle || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-tasks', data.templateTasks || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-topics', data.templateTopics || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-locale', data.templateLocale || 'en');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-premium', data.templatePremium || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-animated', data.templateAnimated || '');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
-    templateList.innerHTML = templateList.innerHTML.replaceAll('default-format', data.placeholderFormat || '');
+    const regex = /default-\w+/g;
+    const replacements = {
+      'default-title': data.shortTitle || '',
+      'default-tasks': data.templateTasks || '',
+      'default-topics': data.templateTopics || '',
+      'default-locale': data.templateLocale || 'en',
+      'default-premium': data.templatePremium || '',
+      'default-animated': data.templateAnimated || '',
+      'default-format': data.placeholderFormat || '',
+    };
+    templateList.innerHTML = templateList.innerHTML.replaceAll(regex, (match) => {
+      if (match in replacements) {
+        return replacements[match];
+      }
+      return match;
+    }).replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
 
     if (data.templateTasks === '') {
       const placeholders = await fetchPlaceholders();
@@ -120,55 +139,35 @@ await (async function updateLegacyContent() {
   }
 }());
 
+// searchbar -> metadata blades
 await (async function updateMetadataForTemplates() {
   if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     return;
   }
-  // TODO: update metadata with Search Param
   const head = document.querySelector('head');
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
   if (head) {
-    const placeholders = await fetchPlaceholders();
-    const categories = JSON.parse(placeholders['task-categories']);
-    if (categories) {
-      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const sanitizedTasks = params.tasks === "''" ? '' : params.tasks;
-      const sanitizedTopics = params.topics === "''" ? '' : params.topics;
-      const sanitizedQuery = params.q === "''" ? '' : params.q;
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-      head.innerHTML = head.innerHTML
-        .replaceAll('{{queryTasks}}', sanitizedTasks || '')
-        .replaceAll('{{QueryTasks}}', titleCase(sanitizedTasks || ''))
-        .replaceAll('{{translatedTasks}}', translatedTasks || '')
-        .replaceAll('{{TranslatedTasks}}', titleCase(translatedTasks || ''))
-        .replaceAll('{{placeholderRatio}}', params.phformat || '')
-        .replaceAll('{{QueryTopics}}', titleCase(sanitizedTopics || ''))
-        .replaceAll('{{queryTopics}}', sanitizedTopics || '')
-        .replaceAll('{{query}}', sanitizedQuery || '');
-    }
+    const replacements = await getReplacementsFromSearch();
+    if (!replacements) return;
+    head.innerHTML = replaceBladesInStr(head.innerHTML, replacements);
   }
 }());
 
+// metadata -> dom blades
 (function autoUpdatePage() {
   const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
   // FIXME: deprecate wl
   const main = document.querySelector('main');
-  if (main) {
-    const allReplaceableBlades = [...main.innerHTML.matchAll(/{{(.*?)}}/g)];
-
-    if (allReplaceableBlades.length > 0) {
-      allReplaceableBlades.forEach((regex) => {
-        if (!wl.includes(regex[0].toLowerCase())) {
-          main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
-        }
-      });
+  if (!main) return;
+  const regex = new RegExp('{{(.+)}}', 'g');
+  main.innerHTML = main.innerHTML.replaceAll(regex, (match, p1) => {
+    if (!wl.includes(match.toLowerCase())) {
+      return getMetadata(p1);
     }
-  }
+    return match;
+  });
 }());
 
+// cleanup remaining dom blades
 (async function updateNonBladeContent() {
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const templateX = document.querySelector('.template-x');
