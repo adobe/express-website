@@ -2339,7 +2339,7 @@ main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs 
   main .template-list.horizontal .carousel-container {
     margin-left: auto;
     margin-right: auto;
-    max-width: 470px;
+    max-width: none;
     display: block;
   }
 
