@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "url": "https://mwpw-130556--express-website--adobe.hlx.page/in/express/feature/image/test-schema-qr-code-generator",
+  "@id": "https://mwpw-130556--express-website--adobe.hlx.page/in/express/feature/image/test-schema-qr-code-generator/#webpage",
+  "isPartOf": {
+    "@type": "Website",
+    "url": "https://www.adobe.com/in/",
+    "@id": "https://www.adobe.com/in/#website",
+    "publisher": {
+      "@type": "Corporation",
+      "name": "Adobe",
+      "legalName": "Adobe Inc.",
+      "alternateName": "Adobe Systems Incorporated",
+      "@id": "https://www.adobe.com#organization",
+      "tickerSymbol": "ADBE",
+      "sameAs": [
+        "https://www.linkedin.com/company/adobe/",
+        "https://www.instagram.com/adobe/",
+        "https://twitter.com/Adobe",
+        "https://en.wikipedia.org/wiki/Adobe_Inc."
+      ]
+    }
+  },
+  "about": {
+    "@type": "WebApplication",
+    "name": "Adobe Express",
+    "url": "https://express-stage.adobeprojectm.com/tools/qr-code-generator",
+    "@id": "https://express-stage.adobeprojectm.com/tools/qr-code-generator#webapplication",
+    "browserRequirements": [
+      "requires HTML5 support",
+      "requires JavaScript"
+    ],
+    "sameAs": "https://www.adobe.com/in/express/",
+    "applicationCategory": "DesignApplication",
+    "applicationSuite": "Adobe Creative Cloud",
+    "permissions": "may run only with an active internet connection",
+    "operatingSystem": [
+      "Windows 8.1 or later",
+      "macOS 10.13 or later",
+      "Chromebook"
+    ],
+    "memoryRequirements": "4-GB",
+    "copyrightHolder": {
+      "@id": "https://www.adobe.com#organization"
+    },
+    "creator": {
+      "@id": "https://www.adobe.com#organization"
+    },
+    "publisher": {
+      "@id": "https://www.adobe.com#organization"
+    },
+    "maintainer": {
+      "@id": "https://www.adobe.com#organization"
+    },
+    "offers": {
+      "@type": "offer",
+      "price": "0.00",
+      "priceCurrency": "INR"
+    }
+  }
+}
