@@ -64,8 +64,8 @@ async function getReplacementsFromSearch() {
   };
 }
 
-const bladeRegex = new RegExp('{{.+}}', 'g');
-async function replaceBladesInStr(str, replacements) {
+const bladeRegex = /\{\{[a-zA-Z_-]+?\}\}/g;
+function replaceBladesInStr(str, replacements) {
   if (!replacements) return str;
   return str.replaceAll(bladeRegex, (match) => {
     if (match in replacements) {
@@ -119,7 +119,7 @@ await (async function updateLegacyContent() {
   }
 
   if (templateList) {
-    const regex = /default-\w+/g;
+    const regex = /default-[a-zA-Z_-]+?/g;
     const replacements = {
       'default-title': data.shortTitle || '',
       'default-tasks': data.templateTasks || '',
@@ -164,7 +164,7 @@ await (async function updateMetadataForTemplates() {
   // FIXME: deprecate wl
   const main = document.querySelector('main');
   if (!main) return;
-  const regex = new RegExp('{{(.+)}}', 'g');
+  const regex = /\{\{([a-zA-Z_-]+?)\}\}/g;
   main.innerHTML = main.innerHTML.replaceAll(regex, (match, p1) => {
     if (!wl.includes(match.toLowerCase())) {
       return getMetadata(p1);
