@@ -292,7 +292,8 @@ function hideAsyncBlocks() {
 (async function updateAsyncBlocks() {
   hideAsyncBlocks();
   // TODO: integrate memoization
-  if (document.body.dataset.device === 'desktop' && ['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+  const showSearchMarqueeLinkList = getMetadata('show-search-marquee-link-list');
+  if (document.body.dataset.device === 'desktop' && (!showSearchMarqueeLinkList || ['yes', 'true', 'on', 'Y'].includes(showSearchMarqueeLinkList))) {
     await lazyLoadSearchMarqueeLinklist();
   }
   await lazyLoadLinklist();
