@@ -18,13 +18,11 @@ function decorateSchemasBlocks(block) {
   const locale = getLocale(window.location);
   const urlPrefix = locale === 'us' ? '' : `/${locale}`;
   const homePageLocaleUrl = `https://www.adobe.com${urlPrefix}/`;
-  let webApplicationUrl;
+  let webApplicationUrl = document.querySelector('p.button-container')?.querySelector('a')?.href;
   rows.forEach(($row) => {
     const cells = Array.from($row.children);
     const cellValue = cells[0].innerText;
-    if (cellValue === '') {
-      webApplicationUrl = document.querySelectorAll('p.button-container')[0].getElementsByTagName('a')[0].href;
-    } else {
+    if (cellValue !== '') {
       webApplicationUrl = cellValue;
     }
   });
