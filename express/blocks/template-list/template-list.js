@@ -1413,7 +1413,7 @@ function toggleMasonryView($block, $button, $toggleButtons, props) {
     $block.classList.add(`${$button.dataset.view}-view`);
     $blockWrapper.classList.add(`${$button.dataset.view}-view`);
 
-    props.masonry.draw();
+    props.masonry?.draw();
   } else {
     $button.classList.remove('active');
     ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
@@ -1421,7 +1421,7 @@ function toggleMasonryView($block, $button, $toggleButtons, props) {
       $blockWrapper.classList.remove(className);
     });
 
-    props.masonry.draw();
+    props.masonry?.draw();
   }
 
   const placeholder = $block.querySelector('.template.placeholder');
