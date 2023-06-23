@@ -195,11 +195,14 @@ main .browse-by-category-wrapper.fullwidth {
   @media (min-width: 900px) {
   main .section .browse-by-category-wrapper {
     padding: 0 28px;
+  }
+
+  main .section .browse-by-category-wrapper {
     max-width: none;
   }
     
   main .browse-by-category .browse-by-category-heading-section {
-    flex-direction: row;
-    padding: 0;
+      flex-direction: row;
+      padding: 0;
     }
   }
