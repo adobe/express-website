@@ -91,11 +91,16 @@ const fetchSearchUrl = async ({
     `${base}?${collectionIdParam}${queryParam}${qParam}${limitParam}${startParam}${sortParam}${filterStr}`,
   );
 
-  return fetch(url, {
-    headers: {
-      'x-api-key': 'projectx_marketing_web',
-    },
-  }).then((response) => response.json());
+  const headers = {
+    'x-api-key': 'projectx_marketing_web',
+  };
+
+  const cleanedLocales = filters?.locales?.toLowerCase();
+  if (cleanedLocales) {
+    const prefLang = getLanguage(cleanedLocales.split(' or ')?.[0]?.trim() || '');
+    if (prefLang) headers['x-express-pref-lang'] = prefLang;
+  }
+  return fetch(url, { headers }).then((response) => response.json());
 };
 
 async function getFallbackMsg(tasks = '') {
