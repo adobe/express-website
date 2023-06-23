@@ -864,7 +864,6 @@ function updateLottieStatus($section) {
 }
 
 async function decorateCategoryList(block, section, placeholders, props) {
-  const locale = getLocale(window.location);
   const $blockWrapper = block.closest('.template-list-wrapper');
   const $mobileDrawerWrapper = section.querySelector('.filter-drawer-mobile');
   const $inWrapper = section.querySelector('.filter-drawer-mobile-inner-wrapper');
