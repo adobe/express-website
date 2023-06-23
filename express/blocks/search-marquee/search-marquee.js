@@ -284,7 +284,10 @@ function decorateLinkList(block) {
   const carouselItemsWrapper = block.querySelector(':scope > div:nth-of-type(2)');
   if (carouselItemsWrapper) {
     const showLinkList = getMetadata('show-search-marquee-link-list');
-    if (showLinkList && !['yes', 'true', 'on', 'Y'].includes(showLinkList)) {
+    if ((showLinkList && !['yes', 'true', 'on', 'Y'].includes(showLinkList))
+      // no link list for templates root page
+      || window.location.pathname.endsWith('/express/templates/')
+      || window.location.pathname.endsWith('/express/templates')) {
       carouselItemsWrapper.remove();
     } else {
       buildCarousel(':scope > div > p', carouselItemsWrapper);
