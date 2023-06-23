@@ -64,7 +64,7 @@ async function getReplacementsFromSearch() {
   };
 }
 
-const bladeRegex = /\{\{[a-zA-Z_-]+?\}\}/g;
+const bladeRegex = /\{\{[a-zA-Z_-]+\}\}/g;
 function replaceBladesInStr(str, replacements) {
   if (!replacements) return str;
   return str.replaceAll(bladeRegex, (match) => {
@@ -77,7 +77,7 @@ function replaceBladesInStr(str, replacements) {
 
 // for backwards compatibility
 // TODO: remove this func after all content is updated
-// legacy json -> metadata
+// legacy json -> metadata & dom blades
 await (async function updateLegacyContent() {
   const searchMarquee = document.querySelector('.search-marquee');
   if (searchMarquee) {
@@ -119,7 +119,7 @@ await (async function updateLegacyContent() {
   }
 
   if (templateList) {
-    const regex = /default-[a-zA-Z_-]+?/g;
+    const regex = /default-[a-zA-Z_-]+/g;
     const replacements = {
       'default-title': data.shortTitle || '',
       'default-tasks': data.templateTasks || '',
@@ -164,7 +164,7 @@ await (async function updateMetadataForTemplates() {
   // FIXME: deprecate wl
   const main = document.querySelector('main');
   if (!main) return;
-  const regex = /\{\{([a-zA-Z_-]+?)\}\}/g;
+  const regex = /\{\{([a-zA-Z_-]+)\}\}/g;
   main.innerHTML = main.innerHTML.replaceAll(regex, (match, p1) => {
     if (!wl.includes(match.toLowerCase())) {
       return getMetadata(p1);
