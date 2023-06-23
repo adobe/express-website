@@ -495,6 +495,24 @@ function getRedirectUrl(tasks, topics, format, allTemplatesMetadata) {
   }
 }
 
+function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/express/search-terms-log') {
+  if (form) {
+    const input = form.querySelector('input');
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        data: {
+          keyword: input.value,
+          locale: getLocale(window.location),
+          timestamp: Date.now(),
+          audience: document.body.dataset.device,
+        },
+      }),
+    });
+  }
+}
+
 async function redirectSearch($searchBar, props) {
   const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
@@ -754,6 +772,7 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, generatedSearchBa
 
     $searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      logSearch(e.currentTarget);
       await redirectSearch($searchBar, props);
     });
 
