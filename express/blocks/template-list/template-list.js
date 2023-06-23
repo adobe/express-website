@@ -600,6 +600,7 @@ function makeTemplateFunctions(placeholders) {
 
 function updateFilterIcon(block) {
   const section = block.closest('.section.template-list-fullwidth-apipowered-container');
+  if (!section) return;
   const functionWrapper = section.querySelectorAll('.function-wrapper');
   const optionsWrapper = section.querySelectorAll('.options-wrapper');
 
@@ -704,6 +705,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
 }
 
 function resetTaskDropdowns($section) {
+  if (!$section) return;
   const $taskDropdowns = $section.querySelectorAll('.task-dropdown');
   const $taskDropdownLists = $section.querySelectorAll('.task-dropdown-list');
 

@@ -2350,7 +2350,7 @@ async function loadEager() {
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card', 'search-marquee'];
     const blocks = document.querySelectorAll('.block');
     const firstVisualBlock = Array.from(blocks).find((b) => {
-      const { audience } = b.closest('.section').dataset;
+      const { audience } = b.closest('.section')?.dataset || {};
       return audience === document.body.dataset.device;
     });
     const hasLCPBlock = (firstVisualBlock && lcpBlocks.includes(firstVisualBlock.getAttribute('data-block-name')));
@@ -2468,7 +2468,6 @@ async function loadLazy() {
     const { default: loadFonts } = await import('./fonts.js');
     loadFonts(tkID, loadCSS);
   }
-
   sampleRUM('lazy');
   sampleRUM.observe(document.querySelectorAll('main picture > img'));
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
