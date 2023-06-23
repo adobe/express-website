@@ -32,8 +32,13 @@ function getCrumbsForSearch(templatesUrl, allTemplatesMetadata, taskCategories) 
   if (!tasks && !topics) {
     return crumbs;
   }
+  const shortTitle = getMetadata('short-title');
+  if (!shortTitle) {
+    return crumbs;
+  }
+
   const lastCrumb = createTag('li');
-  lastCrumb.textContent = getMetadata('short-title');
+  lastCrumb.textContent = shortTitle;
   crumbs.push(lastCrumb);
   if (!tasks || !topics) {
     return crumbs;
