@@ -5,11 +5,11 @@ mountpoints:
 folders:
   /express/templates/content.json: /metadata.json
   /express/templates/: /express/templates/default
-  /br/express/templates/: /express/templates/default
+  /br/express/templates/: /br/express/templates/default
   /cn/express/templates/: /express/templates/default
   /de/express/templates/: /express/templates/default
   /dk/express/templates/: /express/templates/default
-  /es/express/templates/: /express/templates/default
+  /es/express/templates/: /es/express/templates/default
   /fi/express/templates/: /express/templates/default
   /fr/express/templates/: /express/templates/default
   /it/express/templates/: /express/templates/default
@@ -20,11 +20,9 @@ folders:
   /se/express/templates/: /express/templates/default
   /tw/express/templates/: /express/templates/default
   /express/templates/search: /express/templates/search
-  /br/express/templates/search: /express/templates/search
   /cn/express/templates/search: /express/templates/search
   /de/express/templates/search: /express/templates/search
   /dk/express/templates/search: /express/templates/search
-  /es/express/templates/search: /express/templates/search
   /fi/express/templates/search: /express/templates/search
   /fr/express/templates/search: /express/templates/search
   /it/express/templates/search: /express/templates/search
