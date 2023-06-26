@@ -15,6 +15,7 @@ import {
   getMetadata,
   titleCase,
   createTag,
+  getHelixEnv,
 } from './scripts.js';
 import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
@@ -213,5 +214,21 @@ await (async function updateMetadataForTemplates() {
 
   if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
     browseByCat.remove();
+  }
+}());
+
+(function validatePage() {
+  const env = getHelixEnv();
+  const title = document.querySelector('title');
+  if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
+    window.location.replace('/express/templates/');
+  }
+
+  if (title && title.innerText.match(/{{(.*?)}}/)) {
+    window.location.replace('/404');
+  }
+
+  if (env && env.name !== 'stage' && window.location.pathname.endsWith('/express/templates/default')) {
+    window.location.replace('/404');
   }
 }());

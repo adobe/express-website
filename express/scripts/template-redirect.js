@@ -10,29 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { getHelixEnv, getLocale, getMetadata } from './scripts.js';
+import { getLocale } from './scripts.js';
 import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
 async function existsTemplatePage(url) {
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
   return allTemplatesMetadata.some((e) => e.url === url);
 }
-
-(function validatePage() {
-  const env = getHelixEnv();
-  const title = document.querySelector('title');
-  if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
-    window.location.replace('/express/templates/');
-  }
-
-  if (title && title.innerText.match(/{{(.*?)}}/)) {
-    window.location.replace('/404');
-  }
-
-  if (env && env.name !== 'stage' && window.location.pathname.endsWith('/express/templates/default')) {
-    window.location.replace('/404');
-  }
-}());
 
 (async function redirectToExistingPage() {
   // TODO: check if the search query points to an existing page. If so, redirect.
