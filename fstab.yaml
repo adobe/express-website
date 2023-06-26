@@ -11,9 +11,9 @@ folders:
   /dk/express/templates/: /express/templates/default
   /es/express/templates/: /express/templates/default
   /fi/express/templates/: /express/templates/default
-  /fr/express/templates/: /express/templates/default
+  /fr/express/templates/: /fr/express/templates/default
   /it/express/templates/: /express/templates/default
-  /jp/express/templates/: /express/templates/default
+  /jp/express/templates/: /jp/express/templates/default
   /kr/express/templates/: /kr/express/templates/default
   /nl/express/templates/: /nl/express/templates/default
   /no/express/templates/: /express/templates/default
@@ -26,9 +26,7 @@ folders:
   /dk/express/templates/search: /express/templates/search
   /es/express/templates/search: /express/templates/search
   /fi/express/templates/search: /express/templates/search
-  /fr/express/templates/search: /express/templates/search
   /it/express/templates/search: /express/templates/search
-  /jp/express/templates/search: /express/templates/search
   /no/express/templates/search: /express/templates/search
   /se/express/templates/search: /express/templates/search
   /tw/express/templates/search: /express/templates/search
