@@ -1,4 +1,5 @@
-main .template-list-horizontal-fullwidth-container {
+main .template-list-horizontal-fullwidth-container,
+main .template-list-fullwidth-apipowered-container {
   padding-top: 0;
 }
 
