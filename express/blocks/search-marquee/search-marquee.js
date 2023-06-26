@@ -246,7 +246,7 @@ async function buildSearchDropdown(block) {
       fromScratchLink.append(arrowRightIcon);
       fromScratchLink.classList.remove('button');
       fromScratchLink.classList.add('from-scratch-link');
-      fromScratchLink.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-marquee-from-scratch-link', getMetadata('search-marquee-from-scratch-link') || '/');
+      fromScratchLink.href = getMetadata('search-marquee-from-scratch-link') || '/';
       trendsContainer.append(fromScratchLink);
       linkDiv.remove();
     }
