@@ -60,6 +60,7 @@ export default async function fetchAllTemplatesMetadata() {
           'placeholder-format': p.placeholderFormat,
           'create-link': p.createLink,
           'create-text': p.createText,
+          'top-templates-title': p.topTemplatesTitle,
           'top-templates': p.topTemplates,
           'top-templates-text': p.topTemplatesText,
         })) || [];
