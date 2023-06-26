@@ -1773,13 +1773,13 @@ export async function fetchFloatingCta(path) {
   }
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    spreadsheet = '/express/floating-cta-dev.json?limit=10000';
+    spreadsheet = '/express/floating-cta-dev.json?limit=100000';
   } else {
-    spreadsheet = '/express/floating-cta.json?limit=10000';
+    spreadsheet = '/express/floating-cta.json?limit=100000';
   }
 
   if (experimentStatus === 'active') {
-    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
+    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=100000';
     floatingBtnData = await fetchFloatingBtnData(expSheet);
   }
 
