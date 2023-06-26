@@ -254,24 +254,26 @@ async function lazyLoadSearchMarqueeLinklist() {
 
   if (searchMarquee) {
     const linkListContainer = searchMarquee.querySelector('.carousel-container > .carousel-platform');
-    const linkListTemplate = linkListContainer.querySelector('p').cloneNode(true);
+    if (linkListContainer) {
+      const linkListTemplate = linkListContainer.querySelector('p').cloneNode(true);
 
-    const linkListData = [];
+      const linkListData = [];
 
-    if (window.linkLists && window.linkLists.ckgData && getMetadata('short-title')) {
-      window.linkLists.ckgData.forEach((row) => {
-        linkListData.push({
-          childSibling: row['child-siblings'],
-          ckgID: row.ckgID,
-          shortTitle: getMetadata('short-title'),
-          tasks: row.parent, // task on the page
-          displayValue: row.displayValue,
+      if (window.linkLists && window.linkLists.ckgData && getMetadata('short-title')) {
+        window.linkLists.ckgData.forEach((row) => {
+          linkListData.push({
+            childSibling: row['child-siblings'],
+            ckgID: row.ckgID,
+            shortTitle: getMetadata('short-title'),
+            tasks: row.parent, // task on the page
+            displayValue: row.displayValue,
+          });
         });
-      });
-    }
+      }
 
-    await updateLinkList(linkListContainer, linkListTemplate, linkListData);
-    linkListContainer.parentElement.classList.add('appear');
+      await updateLinkList(linkListContainer, linkListTemplate, linkListData);
+      linkListContainer.parentElement.classList.add('appear');
+    }
   }
 }
 
