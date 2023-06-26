@@ -178,6 +178,7 @@ await (async function updateMetadataForTemplates() {
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const templateX = document.querySelector('.template-x');
   const browseByCat = document.querySelector('.browse-by-category');
+  const seoNav = document.querySelector('.seo-nav');
 
   if (templateList) {
     await replaceDefaultPlaceholders(templateList);
@@ -185,6 +186,18 @@ await (async function updateMetadataForTemplates() {
 
   if (templateX) {
     await replaceDefaultPlaceholders(templateX);
+  }
+
+  if (seoNav) {
+    if (getMetadata('top-templates-title')) {
+      seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates title', getMetadata('top-templates-title'));
+    }
+
+    if (getMetadata('top-templates-text')) {
+      seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', getMetadata('top-templates-text'));
+    } else {
+      seoNav.innerHTML = seoNav.innerHTML.replace('Default top templates text', '');
+    }
   }
 
   if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
