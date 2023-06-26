@@ -71,8 +71,4 @@ export default async function decorate($block) {
     buildCarousel('p.button-container', div, false);
     div.append(platformEl);
   }
-
-  if (window.location.href.includes('/express/templates/')) {
-    import('../../scripts/ckg-link-list.js');
-  }
 }

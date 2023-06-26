@@ -2328,14 +2328,8 @@ async function loadEager() {
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
-  // for backward compatibility
-  // TODO: remove the href check after we tag content with sheet-powered
-  if (getMetadata('sheet-powered') === 'Y' || window.location.href.includes('/express/templates/')) {
-    await import('./content-replace.js');
-  }
-
-  if (getMetadata('template-search-page') === 'Y') {
-    await import('./template-redirect.js');
+  if (window.location.href.includes('/express/templates/')) {
+    await import('./templates.js');
   }
 
   if (main) {
@@ -2348,14 +2342,10 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card', 'search-marquee'];
-    const blocks = document.querySelectorAll('.block');
-    const firstVisualBlock = Array.from(blocks).find((b) => {
-      const { audience } = b.closest('.section')?.dataset || {};
-      return audience === document.body.dataset.device;
-    });
-    const hasLCPBlock = (firstVisualBlock && lcpBlocks.includes(firstVisualBlock.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(firstVisualBlock, true);
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
+    const block = document.querySelector('.block');
+    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
 
@@ -2377,9 +2367,7 @@ async function loadEager() {
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
         lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', () => {
-          resolve();
-        });
+        lcpCandidate.addEventListener('load', () => resolve());
         lcpCandidate.addEventListener('error', () => resolve());
       } else {
         resolve();
