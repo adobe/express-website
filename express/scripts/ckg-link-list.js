@@ -149,7 +149,7 @@ async function updateLinkList(container, linkPill, list) {
       let hideUntranslatedPill = false;
 
       if (pillsMapping) {
-        const alternateText = pillsMapping.find((row) => getMetadata('url') === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
+        const alternateText = pillsMapping.find((row) => window.location.pathname === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
 
         if (alternateText && alternateText[`${localeColumnString}`]) {
           displayText = alternateText[`${localeColumnString}`];
@@ -158,7 +158,7 @@ async function updateLinkList(container, linkPill, list) {
           }
         }
 
-        hideUntranslatedPill = displayText && locale !== 'us';
+        hideUntranslatedPill = !displayText && locale !== 'us';
       }
 
       if (templatePageData) {
