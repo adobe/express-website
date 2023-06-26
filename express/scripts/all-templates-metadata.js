@@ -31,9 +31,9 @@ export default async function fetchAllTemplatesMetadata() {
       let sheet;
 
       if (['yes', 'true', 'on'].includes(dev) && env?.name === 'stage') {
-        sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
+        sheet = '/templates-dev.json?sheet=seo-templates&limit=100000';
       } else {
-        sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=10000`;
+        sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=100000`;
       }
 
       let resp = await memoizedFetchUrl(sheet);
@@ -41,7 +41,7 @@ export default async function fetchAllTemplatesMetadata() {
 
       // TODO: remove the > 1 logic after publishing of the split metadata sheet
       if (!(allTemplatesMetadata && allTemplatesMetadata.length > 1)) {
-        resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=10000');
+        resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=100000');
         allTemplatesMetadata = resp?.data?.map((p) => ({
           ...p,
           // TODO: backward compatibility. Remove when we move away from helix-seo-templates
