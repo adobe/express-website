@@ -141,7 +141,6 @@ export function renderFeedbackModal(feedbackModalContent, result, feedbackState)
       const { feedbackState: { showSubmittedTooltip } = {} } = BlockMediator.get('ace-state');
       if (showSubmittedTooltip) showSubmittedTooltip();
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error(err);
     }
     feedbackModalContent.parentElement.parentElement.dispatchEvent(

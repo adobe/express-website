@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { getHelixEnv, getLocale, getMetadata } from './scripts.js';
+import { getHelixEnv, getLocale } from './scripts.js';
 
 const endpoints = {
   dev: {
-    cdn: 'https://uss-templates-dev.adobe.io/uss/v3/query',
+    cdn: '',
     url: 'https://uss-templates-dev.adobe.io/uss/v3/query',
     token: 'cd1823ed-0104-492f-ba91-25f4195d5f6c',
   },
@@ -69,8 +69,8 @@ export default async function getData(env = '', data = {}) {
   }
 }
 
-export async function fetchLinkListFromCKGApi() {
-  if (getMetadata('ckgid')) {
+export async function fetchLinkListFromCKGApi(pageData) {
+  if (pageData.ckgID) {
     const dataRaw = {
       experienceId: 'templates-browse-v1',
       locale: 'en_US',
@@ -87,7 +87,7 @@ export async function fetchLinkListFromCKGApi() {
           filters: [
             {
               categories: [
-                getMetadata('ckgid'),
+                pageData.ckgID,
               ],
             },
           ],
@@ -102,7 +102,7 @@ export async function fetchLinkListFromCKGApi() {
     };
 
     const env = getHelixEnv();
-    const result = await getData(env.name, dataRaw);
+    const result = await getData(env.name, dataRaw).then((data) => data);
     if (result.status.httpCode === 200) {
       return result;
     }

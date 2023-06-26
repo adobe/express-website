@@ -92,7 +92,6 @@ export function memoize(cb, { key = (...args) => args.join(','), ttl } = {}) {
       }
       return result;
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error('Memoized Callback Error: ', e);
       throw e;
     }
