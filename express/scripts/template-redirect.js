@@ -25,7 +25,8 @@ async function existsTemplatePage(url) {
     window.location.replace('/express/templates/');
   }
 
-  if ((env && env.name !== 'stage') && (title && title.innerText.match(/{{(.*?)}}/))) {
+  if (((env && env.name !== 'stage') && window.location.pathname === '/express/templates/default')
+    || (title && title.innerText.match(/{{(.*?)}}/))) {
     window.location.replace('/404');
   }
 }());
