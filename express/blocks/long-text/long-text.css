@@ -1,0 +1,32 @@
+/* to remove after wrapper deprecation */
+main .section div.long-text-wrapper {
+    max-width: none;
+    padding: 0;
+}
+
+main .long-text {
+    margin: 0 28px;
+    padding: 28px;
+    background-color: var(--color-gray-100);
+    border-radius: 20px;
+}
+
+main .long-text h2,
+main .long-text p {
+    text-align: left;
+}
+
+main .long-text h2 {
+    font-size: var(--heading-font-size-m);
+}
+
+main .long-text p {
+    font-size: var(--body-font-size-s);
+}
+
+@media (min-width: 900px) {
+    main .long-text {
+        margin: 0 60px;
+        padding: 28px;
+    }
+}
