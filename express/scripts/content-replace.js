@@ -175,10 +175,21 @@ await (async function updateMetadataForTemplates() {
 
 // cleanup remaining dom blades
 (async function updateNonBladeContent() {
+  const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const templateX = document.querySelector('.template-x');
   const browseByCat = document.querySelector('.browse-by-category');
   const seoNav = document.querySelector('.seo-nav');
+
+  if (heroAnimation) {
+    if (getMetadata('hero-title')) {
+      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template title', getMetadata('hero-title'));
+    }
+
+    if (getMetadata('hero-text')) {
+      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template text', getMetadata('hero-text'));
+    }
+  }
 
   if (templateList) {
     await replaceDefaultPlaceholders(templateList);
