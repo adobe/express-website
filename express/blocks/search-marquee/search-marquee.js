@@ -157,7 +157,7 @@ function initSearchFunction(block) {
     }
   };
 
-  import('./useInputAutocomplete.js').then(({ default: useInputAutocomplete }) => {
+  import('./use-input-autocomplete.js').then(({ default: useInputAutocomplete }) => {
     const { inputHandler } = useInputAutocomplete(
       suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
     );
