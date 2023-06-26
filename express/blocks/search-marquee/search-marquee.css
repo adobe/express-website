@@ -31,7 +31,7 @@ main .search-marquee .search-dropdown-container {
     width: 100%;
     box-sizing: border-box;
     left: 0;
-    z-index: 2;
+    z-index: 3;
 }
 
 main .search-marquee .search-dropdown-container .dropdown-title {
