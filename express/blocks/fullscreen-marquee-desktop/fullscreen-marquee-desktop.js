@@ -97,6 +97,11 @@ async function buildApp(block, content) {
         createFrame(1, 10);
         app.append(framesContainer);
       });
+
+      thumbnail.addEventListener('loadedmetadata', () => {
+        thumbnail.currentTime = Math.floor(thumbnail.duration) / 2;
+        thumbnail.pause();
+      });
     }
   } else {
     variant = 'image';
