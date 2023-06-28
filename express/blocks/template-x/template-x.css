@@ -116,10 +116,6 @@ main .template-x-container .template-x-wrapper:not(:has(.toolbar-wrapper)) {
     padding-top: 60px;
 }
 
-main .template-x-container:not(.horizontal) .template-title h2 {
-    padding-top: 80px;
-}
-
 main .template-x-wrapper .template-title.with-link > div {
     display: flex;
     flex-direction: column;
@@ -2661,25 +2657,25 @@ main .template-x .template-x-fallback-msg-wrapper {
     }
 }
 
-main ul.templates-breadcrumbs {
+main nav ol.templates-breadcrumbs {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
   }
 
-main ul.templates-breadcrumbs li {
+main nav ol.templates-breadcrumbs li {
     display: flex;
     padding: 5px 10px 5px 0;
     color: var(--color-gray-500);
 }
 
-main ul.templates-breadcrumbs li a {
+main nav ol.templates-breadcrumbs li a {
     color: var(--color-black);
     font-weight: 400;
 }
 
-main ul.templates-breadcrumbs li:not(:first-child):before {
+main nav ol.templates-breadcrumbs li:not(:first-child):before {
     content: '/';
     color: var(--color-black);
     padding: 0 10px 0 0;

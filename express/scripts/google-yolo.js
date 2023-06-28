@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { getMetadata } from './scripts.js';
+
 function getRedirectUri() {
   const primaryCta = document.querySelector('a.button.xlarge.same-as-floating-button-CTA, a.primaryCTA');
   if (primaryCta) {
@@ -79,17 +81,21 @@ export default function loadGoogleYolo() {
   const urlParams = new URLSearchParams(window.location.search);
   const relayLogin = urlParams.get('layover');
   const ctaUrl = getRedirectUri();
-  if (relayLogin && ctaUrl) {
-    window.location.assign(ctaUrl);
-  }
+  const thresholdBreakpoint = ['yes', 'true', 'on', 'Y'].includes(getMetadata('mweb-google-yolo')) ? 0 : 900;
 
-  setTimeout(() => {
-    if (typeof window.feds === 'object' && window.feds?.events?.experience === true) {
-      setupOneTap();
-    } else {
-      window.addEventListener('window.feds.events.experience.loaded', () => {
-        setupOneTap();
-      });
+  if (window.matchMedia(`(min-width: ${thresholdBreakpoint}px)`).matches) {
+    if (relayLogin && ctaUrl) {
+      window.location.assign(ctaUrl);
     }
-  }, 3000);
+
+    setTimeout(() => {
+      if (typeof window.feds === 'object' && window.feds?.events?.experience === true) {
+        setupOneTap();
+      } else {
+        window.addEventListener('window.feds.events.experience.loaded', () => {
+          setupOneTap();
+        });
+      }
+    }, 3000);
+  }
 }

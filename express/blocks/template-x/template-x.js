@@ -168,7 +168,7 @@ function constructProps(block) {
     total: 0,
     start: '',
     collectionId: 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418',
-    sort: 'Most Viewed',
+    sort: '',
     masonry: undefined,
     headingTitle: null,
     headingSlug: null,
@@ -185,7 +185,7 @@ function constructProps(block) {
 
       if (key && value) {
         // FIXME: facebook-post
-        if (['tasks', 'topics', 'locales'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
+        if (['tasks', 'topics', 'locales', 'behaviors'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
           props.filters[camelize(key)] = value;
         } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
           props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
@@ -1253,7 +1253,9 @@ async function getBreadcrumbs() {
     return null;
   }
   const [, rootPath, children] = matches;
-  const breadcrumbs = createTag('ul', { class: 'templates-breadcrumbs' });
+  const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
+  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
+  nav.append(breadcrumbs);
   const rootCrumb = createTag('li');
   const rootLink = createTag('a', { href: `${origin}${rootPath}` });
   // FIXME: localize & placeholders??
@@ -1269,7 +1271,7 @@ async function getBreadcrumbs() {
   breadcrumbs.append(templatesCrumb);
 
   if (!children || children === '/') {
-    return breadcrumbs;
+    return nav;
   }
   if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
     const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -1280,7 +1282,7 @@ async function getBreadcrumbs() {
     const lastCrumb = createTag('li');
     lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
     breadcrumbs.append(lastCrumb);
-    return breadcrumbs;
+    return nav;
   }
 
   const allTemplatesMetadata = await fetchAllTemplatesMetadata();
@@ -1300,14 +1302,14 @@ async function getBreadcrumbs() {
     return appended;
   }, templatesUrl);
 
-  return breadcrumbs;
+  return nav;
 }
 
 async function decorateBreadcrumbs(block) {
   // breadcrumbs are desktop-only
   if (document.body.dataset.device !== 'desktop') return;
   const breadcrumbs = await getBreadcrumbs();
-  block.prepend(breadcrumbs);
+  if (breadcrumbs) block.prepend(breadcrumbs);
 }
 
 async function buildTemplateList(block, props, type = []) {
