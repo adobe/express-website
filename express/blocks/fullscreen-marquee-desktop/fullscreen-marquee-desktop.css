@@ -164,6 +164,7 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscre
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-frame .fullscreen-marquee-desktop-app img {
   vertical-align: middle;
+  max-height: 100%;
 }
 
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor {
