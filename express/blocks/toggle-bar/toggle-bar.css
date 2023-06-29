@@ -69,7 +69,8 @@ main .toggle-bar .toggle-bar-button:after {
     transition: max-height .2s, opacity .2s;
 }
 
-main .toggle-bar .toggle-bar-button.active:after {
+main .toggle-bar .toggle-bar-button.active:after,
+main .toggle-bar .toggle-bar-button:hover:after {
     max-height: 4px;
     opacity: 1;
 }
