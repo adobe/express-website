@@ -45,7 +45,6 @@ main .toggle-bar .toggle-bar-button {
     display: inline-block;
     list-style-type: none;
     background-color: transparent;
-    border-radius: 100px;
     font-size: var(--body-font-size-s);
     margin: 0 28px;
     cursor: pointer;
@@ -59,7 +58,7 @@ main .toggle-bar .toggle-bar-button:after {
     content: '';
     position: absolute;
     left: 50%;
-    bottom: -16px;
+    bottom: -13px;
     transform: translate(-50%);
     height: 4px;
     width: 100%;
@@ -79,6 +78,7 @@ main .toggle-bar .toggle-bar-button .text-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
     transition: color .3s, font-weight .3s;
 }
 

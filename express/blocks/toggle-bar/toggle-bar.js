@@ -86,8 +86,6 @@ export default function decorate(block) {
     const sections = enclosingMain.querySelectorAll('[data-toggle]');
     const toggles = block.querySelectorAll('li');
 
-    // block.innerHTML = '';
-
     toggles.forEach((toggle, index) => {
       decorateButton(block, toggle);
       initButton(block, sections, index);
