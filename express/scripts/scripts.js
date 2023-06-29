@@ -801,6 +801,7 @@ export async function getOffer(offerId, countryOverride) {
     currency = 'USD';
   }
   const resp = await fetch('/express/system/offers-new.json');
+  if (!resp.ok) return {};
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
   let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
@@ -1118,23 +1119,23 @@ export function getMetadata(name) {
  */
 
 export async function fetchPlaceholders() {
+  const requestPlaceholders = async (url) => {
+    const resp = await fetch(url);
+    if (resp.ok) {
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    }
+  };
   if (!window.placeholders) {
     try {
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/placeholders.json`);
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
+      await requestPlaceholders(`${urlPrefix}/express/placeholders.json`);
     } catch {
-      const resp = await fetch('/express/placeholders.json');
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
+      await requestPlaceholders('/express/placeholders.json');
     }
   }
   return window.placeholders;
@@ -1546,8 +1547,8 @@ async function decorateTesting() {
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
-        window.hlx.experiment = config;
         if (config.run) {
+          window.hlx.experiment = config;
           if (forcedVariant && config.variantNames.includes(forcedVariant)) {
             config.selectedVariant = forcedVariant;
           } else {
@@ -1773,13 +1774,13 @@ export async function fetchFloatingCta(path) {
   }
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    spreadsheet = '/express/floating-cta-dev.json?limit=10000';
+    spreadsheet = '/express/floating-cta-dev.json?limit=100000';
   } else {
-    spreadsheet = '/express/floating-cta.json?limit=10000';
+    spreadsheet = '/express/floating-cta.json?limit=100000';
   }
 
   if (experimentStatus === 'active') {
-    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
+    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=100000';
     floatingBtnData = await fetchFloatingBtnData(expSheet);
   }
 
@@ -2329,8 +2330,14 @@ async function loadEager() {
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
-  if (window.location.href.includes('/express/templates/')) {
-    await import('./templates.js');
+  // for backward compatibility
+  // TODO: remove the href check after we tag content with sheet-powered
+  if (getMetadata('sheet-powered') === 'Y' || window.location.href.includes('/express/templates/')) {
+    await import('./content-replace.js');
+  }
+
+  if (getMetadata('template-search-page') === 'Y') {
+    await import('./template-redirect.js');
   }
 
   if (main) {
@@ -2343,10 +2350,14 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
-    const block = document.querySelector('.block');
-    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(block, true);
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'fullscreen-marquee-desktop', 'collapsible-card', 'search-marquee'];
+    const blocks = document.querySelectorAll('.block');
+    const firstVisualBlock = Array.from(blocks).find((b) => {
+      const { audience } = b.closest('.section')?.dataset || {};
+      return audience === document.body.dataset.device;
+    });
+    const hasLCPBlock = (firstVisualBlock && lcpBlocks.includes(firstVisualBlock.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(firstVisualBlock, true);
 
     document.querySelector('body').classList.add('appear');
 
@@ -2368,7 +2379,9 @@ async function loadEager() {
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
         lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', () => resolve());
+        lcpCandidate.addEventListener('load', () => {
+          resolve();
+        });
         lcpCandidate.addEventListener('error', () => resolve());
       } else {
         resolve();

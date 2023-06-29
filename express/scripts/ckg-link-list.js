@@ -10,9 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import {
-  getHelixEnv,
   titleCase,
-  fetchPlaceholders,
   getLocale,
   getMetadata,
 } from './scripts.js';
@@ -22,44 +20,8 @@ import {
   getPillWordsMapping,
 } from './api-v3-controller.js';
 
-export function findMatchExistingSEOPage(path) {
-  const pathMatch = (e) => e.url === path;
-  return (window.templates && window.templates.data.some(pathMatch));
-}
-
-export async function fetchSheetData() {
-  const env = getHelixEnv();
-  const dev = new URLSearchParams(window.location.search).get('dev');
-  let sheet;
-
-  if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
-  } else {
-    sheet = '/express/templates/default/metadata.json?limit=10000';
-  }
-
-  if (!(window.templates && window.templates.data)) {
-    window.templates = {};
-    const resp = await fetch(sheet);
-    window.templates.data = resp.ok ? (await resp.json()).data : [];
-  }
-}
-
-async function redirectToExistingPage() {
-  // todo check if the search query points to an existing page. If so, redirect.
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (params.topics) {
-    const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
-    const locale = getLocale(window.location);
-    const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
-    if (findMatchExistingSEOPage(pathToMatch)) {
-      window.location.replace(`${window.location.origin}${pathToMatch}`);
-    }
-  }
-}
+import { memoize } from './utils.js';
+import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
 async function fetchLinkList() {
   if (!window.linkLists) {
@@ -98,7 +60,8 @@ async function fetchLinkList() {
 
 function matchCKGResult(ckgData, pageData) {
   const ckgMatch = pageData.ckgID === ckgData.ckgID;
-  const taskMatch = ckgData.tasks.toLowerCase() === pageData.tasks.toLowerCase();
+  const pageDataTasks = pageData.tasks ?? pageData.templateTasks;
+  const taskMatch = ckgData.tasks?.toLowerCase() === pageDataTasks?.toLowerCase();
   const currentLocale = getLocale(window.location);
   const pageLocale = pageData.url.split('/')[1] === 'express' ? 'us' : pageData.url.split('/')[1];
   const sameLocale = currentLocale === pageLocale;
@@ -110,13 +73,13 @@ function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
-    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short title']);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
   }
   return clone;
 }
 
-function updateSEOLinkList(container, linkPill, list) {
-  const templatePages = window.templates.data ?? [];
+async function updateSEOLinkList(container, linkPill, list) {
+  const templatePages = await fetchAllTemplatesMetadata();
   container.innerHTML = '';
 
   if (list && templatePages) {
@@ -125,13 +88,16 @@ function updateSEOLinkList(container, linkPill, list) {
       const templatePageData = templatePages.find((p) => {
         const targetLocale = /^[a-z]{2}$/.test(p.url.split('/')[1]) ? p.url.split('/')[1] : 'us';
         const isLive = p.live === 'Y';
-        const titleMatch = p['short title'].toLowerCase() === d.childSibling.toLowerCase();
+        const titleMatch = p['short-title'].toLowerCase() === d.childSibling.toLowerCase();
         const localeMatch = currentLocale === targetLocale;
 
         return isLive && titleMatch && localeMatch;
       });
-      const clone = replaceLinkPill(linkPill, templatePageData);
-      container.append(clone);
+
+      if (templatePageData) {
+        const clone = replaceLinkPill(linkPill, templatePageData);
+        container.append(clone);
+      }
     });
   }
 }
@@ -159,9 +125,11 @@ function formatLinkPillText(linkPillData) {
   return displayText;
 }
 
+const memoizedGetPillWordsMapping = memoize(getPillWordsMapping, { ttl: 1000 * 60 * 60 * 24 });
+
 async function updateLinkList(container, linkPill, list) {
-  const templatePages = window.templates.data ?? [];
-  const pillsMapping = await getPillWordsMapping();
+  const templatePages = await fetchAllTemplatesMetadata();
+  const pillsMapping = await memoizedGetPillWordsMapping();
   const pageLinks = [];
   const searchLinks = [];
   container.innerHTML = '';
@@ -181,7 +149,7 @@ async function updateLinkList(container, linkPill, list) {
       let hideUntranslatedPill = false;
 
       if (pillsMapping) {
-        const alternateText = pillsMapping.find((row) => getMetadata('url') === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
+        const alternateText = pillsMapping.find((row) => window.location.pathname === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
 
         if (alternateText && alternateText[`${localeColumnString}`]) {
           displayText = alternateText[`${localeColumnString}`];
@@ -190,13 +158,13 @@ async function updateLinkList(container, linkPill, list) {
           }
         }
 
-        hideUntranslatedPill = displayText && locale !== 'us';
+        hideUntranslatedPill = !displayText && locale !== 'us';
       }
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID) {
+      } else if (d.ckgID && !hideUntranslatedPill) {
         const currentTasks = getMetadata('tasks') ? getMetadata('tasks').replace(/[$@%"]/g, '') : ' ';
         const searchParams = `tasks=${currentTasks}&phformat=${getMetadata('placeholder-format')}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
@@ -205,10 +173,10 @@ async function updateLinkList(container, linkPill, list) {
         clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
         searchLinks.push(clone);
       }
+    });
 
-      pageLinks.concat(searchLinks).forEach((clone) => {
-        container.append(clone);
-      });
+    pageLinks.concat(searchLinks).forEach((clone) => {
+      container.append(clone);
     });
 
     if (container.children.length === 0) {
@@ -226,98 +194,10 @@ async function updateLinkList(container, linkPill, list) {
 
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
-        replaceLinkPill(linkPill, templatePageData, container);
+        const clone = replaceLinkPill(linkPill, templatePageData);
+        container.append(clone);
       });
     }
-  }
-}
-
-async function updateMetadata() {
-  // TODO: update metadata with Search Param
-  const head = document.querySelector('head');
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
-
-  if (head) {
-    const placeholders = await fetchPlaceholders();
-    const categories = JSON.parse(placeholders['task-categories']);
-    if (categories) {
-      const TasksPair = Object.entries(categories).find((cat) => cat[1] === params.tasks);
-      const translatedTasks = TasksPair ? TasksPair[0].toLowerCase() : params.tasks;
-      head.innerHTML = head.innerHTML
-        .replaceAll('{{queryTasks}}', params.tasks || '')
-        .replaceAll('{{QueryTasks}}', titleCase(params.tasks || ''))
-        .replaceAll('{{translatedTasks}}', translatedTasks || '')
-        .replaceAll('{{TranslatedTasks}}', titleCase(translatedTasks || ''))
-        .replaceAll('{{placeholderRatio}}', params.phformat || '')
-        .replaceAll('{{QueryTopics}}', titleCase(params.topics || ''))
-        .replaceAll('{{queryTopics}}', params.topics || '')
-        .replaceAll('{{query}}', params.q || '');
-    }
-  }
-}
-
-async function replaceDefaultPlaceholders(template) {
-  template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
-
-  if (getMetadata('tasks') === '') {
-    const placeholders = await fetchPlaceholders().then((result) => result);
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-  } else {
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
-  }
-}
-
-async function autoUpdatePage() {
-  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
-
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-    await updateMetadata();
-    await redirectToExistingPage();
-  }
-
-  const main = document.querySelector('main');
-  if (main) {
-    const allReplaceableBlades = [...main.innerText.matchAll(/{{(.*?)}}/g)];
-
-    if (allReplaceableBlades.length > 0) {
-      allReplaceableBlades.forEach((regex) => {
-        if (!wl.includes(regex[0].toLowerCase())) {
-          main.innerHTML = main.innerHTML.replaceAll(regex[0], getMetadata(regex[1]) || '');
-        }
-      });
-    }
-  }
-}
-
-function validatePage() {
-  const env = getHelixEnv();
-  const title = document.querySelector('title');
-  if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
-    window.location.replace('/express/templates/');
-  }
-
-  if ((env && env.name !== 'stage') || (title && title.innerText.match(/{{(.*?)}}/))) {
-    window.location.replace('/404');
-  }
-}
-
-async function updateEagerBlocks() {
-  const templateList = document.querySelector('.template-list.fullwidth.apipowered');
-  const templateX = document.querySelector('.template-x');
-  const browseByCat = document.querySelector('.browse-by-category');
-
-  if (templateList) {
-    await replaceDefaultPlaceholders(templateList);
-  }
-
-  if (templateX) {
-    await replaceDefaultPlaceholders(templateX);
-  }
-
-  if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('browse-by-category'))) {
-    browseByCat.remove();
   }
 }
 
@@ -325,7 +205,7 @@ async function lazyLoadLinklist() {
   await fetchLinkList();
   const linkList = document.querySelector('.link-list.fullwidth');
 
-  if (linkList && window.templates.data) {
+  if (linkList) {
     const linkListContainer = linkList.querySelector('p').parentElement;
     const linkListTemplate = linkList.querySelector('p').cloneNode(true);
     const linkListData = [];
@@ -345,7 +225,7 @@ async function lazyLoadLinklist() {
     await updateLinkList(linkListContainer, linkListTemplate, linkListData);
     linkList.style.visibility = 'visible';
   } else {
-    linkList.remove();
+    linkList?.remove();
   }
 }
 
@@ -360,7 +240,7 @@ async function lazyLoadSEOLinkList() {
       const topTemplatesTemplate = seoNav.querySelector('p').cloneNode(true);
       const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
-      updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
+      await updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
       topTemplatesContainer.style.visibility = 'visible';
     } else {
       topTemplatesContainer.innerHTML = '';
@@ -374,24 +254,26 @@ async function lazyLoadSearchMarqueeLinklist() {
 
   if (searchMarquee) {
     const linkListContainer = searchMarquee.querySelector('.carousel-container > .carousel-platform');
-    const linkListTemplate = linkListContainer.querySelector('p').cloneNode(true);
+    if (linkListContainer) {
+      const linkListTemplate = linkListContainer.querySelector('p').cloneNode(true);
 
-    const linkListData = [];
+      const linkListData = [];
 
-    if (window.linkLists && window.linkLists.ckgData && getMetadata('short-title')) {
-      window.linkLists.ckgData.forEach((row) => {
-        linkListData.push({
-          childSibling: row['child-siblings'],
-          ckgID: row.ckgID,
-          shortTitle: getMetadata('short-title'),
-          tasks: row.parent,
-          displayValue: row.displayValue,
+      if (window.linkLists && window.linkLists.ckgData && getMetadata('short-title')) {
+        window.linkLists.ckgData.forEach((row) => {
+          linkListData.push({
+            childSibling: row['child-siblings'],
+            ckgID: row.ckgID,
+            shortTitle: getMetadata('short-title'),
+            tasks: row.parent, // task on the page
+            displayValue: row.displayValue,
+          });
         });
-      });
-    }
+      }
 
-    await updateLinkList(linkListContainer, linkListTemplate, linkListData);
-    linkListContainer.parentElement.classList.add('appear');
+      await updateLinkList(linkListContainer, linkListTemplate, linkListData);
+      linkListContainer.parentElement.classList.add('appear');
+    }
   }
 }
 
@@ -409,18 +291,13 @@ function hideAsyncBlocks() {
   }
 }
 
-async function updateLazyBlocks() {
+(async function updateAsyncBlocks() {
   hideAsyncBlocks();
-  await fetchSheetData();
-  // FIXME: integrate memoization
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+  // TODO: integrate memoization
+  const showSearchMarqueeLinkList = getMetadata('show-search-marquee-link-list');
+  if (document.body.dataset.device === 'desktop' && (!showSearchMarqueeLinkList || ['yes', 'true', 'on', 'Y'].includes(showSearchMarqueeLinkList))) {
     await lazyLoadSearchMarqueeLinklist();
   }
   await lazyLoadLinklist();
   await lazyLoadSEOLinkList();
-}
-
-await autoUpdatePage();
-validatePage();
-await updateEagerBlocks();
-updateLazyBlocks();
+}());

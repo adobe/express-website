@@ -46,6 +46,7 @@ export default async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' 
     .then((response) => response.json())
     .then((response) => (response.queryResults?.[0]?.items ? response : emptyRes))
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.error('Autocomplete API Error: ', err);
       return emptyRes;
     });
