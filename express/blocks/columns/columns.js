@@ -260,4 +260,20 @@ export default function decorate($block) {
       $button.classList.add('dark');
     });
   }
+
+  // variant for the colors pages
+  if ($block.classList.contains('custom-color')) {
+    const [primaryColor, accentColor] = $rows[1].querySelector('div').textContent.trim().split(',');
+    const [textCol, svgCol] = Array.from(($rows[0].querySelectorAll('div')))
+    const svgId = svgCol.textContent.trim();
+    const svg = createTag('div', { class: 'img-wrapper' });
+
+    svgCol.remove();
+    $rows[1].remove();
+    textCol.classList.add('text');
+    svg.innerHTML = `<svg class='color-svg-img'> <use href='/express/icons/color-sprite.svg#${svgId}'></use></svg>'`;
+    svg.style.backgroundColor = primaryColor;
+    svg.style.fill = accentColor;
+    $rows[0].append(svg);
+  }
 }
