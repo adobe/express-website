@@ -76,6 +76,7 @@ main .marquee p.button-container {
 
 main .marquee p.button-container a.button:any-link {
   margin: 0;
+  white-space: nowrap;
 }
 
 main .marquee .marquee-background {
@@ -118,10 +119,14 @@ main .marquee .hero-shadow picture {
   display: flex;
 }
 
+main .marquee .button-container.button-inline {
+  display: inline-block;
+}
+
 main .marquee .button-container.free-plan-container {
+  display: flex;
   justify-content: left;
-  align-items: flex-start;
-  flex-direction: column;
+  align-items: center;
 }
 
 main .marquee .free-plan-widget {
@@ -142,14 +147,6 @@ main .marquee.wide .free-plan-widget {
 
 main .marquee.wide .free-plan-widget {
   padding-left: 0;
-}
-
-main .marquee p.button-container.button-inline {
-  display: inline-block;
-}
-
-main .marquee p:nth-child(1 of .button-container) {
-  display: none;
 }
 
 main .marquee p.button-container a.secondary::before {
@@ -268,9 +265,10 @@ main .marquee .reduce-motion-icon-wrapper .icon:nth-of-type(1) {
   }
 
   main .marquee .marquee-foreground {
-    height: 40vw;
-    max-height: 720px;
     min-height: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   main .marquee.wide .marquee-foreground {
@@ -283,10 +281,6 @@ main .marquee .reduce-motion-icon-wrapper .icon:nth-of-type(1) {
   main .marquee .marquee-foreground .content-wrapper {
     width: 600px;
     max-width: 42%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 
   main .marquee .hero-shadow {
@@ -335,13 +329,14 @@ main .marquee .reduce-motion-icon-wrapper .icon:nth-of-type(1) {
     padding-left: 0;
   }
 
-  main .marquee p:nth-child(1 of .button-container) {
-    display: flex;
-    align-items: center;
-  }
-
   main .marquee p.button-container a.secondary:any-link {
     margin-left: 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .marquee:not(.wide) .marquee-foreground {
+    height: 40vw;
   }
 }
 

@@ -2398,7 +2398,7 @@ export async function buildStaticFreePlanWidget() {
 }
 
 export async function addFreePlanWidget(elem) {
-  if (elem && ['yes', 'true', 'Y', 'on'].includes(getMetadata('show-free-plan').toLowerCase())) {
+  if (elem && ['yes', 'true', 'y', 'on'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
     const widget = await buildStaticFreePlanWidget();
 

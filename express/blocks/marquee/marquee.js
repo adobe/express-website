@@ -17,7 +17,7 @@ import {
   getLocale,
   addHeaderSizing,
   getIconElement,
-  buildStaticFreePlanWidget,
+  addFreePlanWidget,
 } from '../../scripts/scripts.js';
 
 import {
@@ -311,8 +311,7 @@ export default async function decorate(block) {
   const button = block.querySelector('.button');
   if (button) {
     button.classList.add('xlarge');
-    const freePlanWidget = await buildStaticFreePlanWidget();
-    button.parentElement.append(freePlanWidget);
+    await addFreePlanWidget(button.parentElement);
   }
 
   if (block.classList.contains('wide')) {
