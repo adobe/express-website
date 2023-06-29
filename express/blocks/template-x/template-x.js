@@ -24,6 +24,7 @@ import {
   toClassName,
   getLanguage,
   getMetadata,
+  transformLinkToAnimation,
   titleCase,
 } from '../../scripts/scripts.js';
 
@@ -41,6 +42,29 @@ function wordStartsWithVowels(word) {
 
 function camelize(str) {
   return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
+}
+
+function isDarkOverlayReadable(colorString) {
+  let r;
+  let g;
+  let b;
+
+  if (colorString.match(/^rgb/)) {
+    const colorValues = colorString.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    [r, g, b] = colorValues.slice(1);
+  } else {
+    const hexToRgb = +(`0x${colorString.slice(1).replace(colorString.length < 5 ? /./g : '', '$&$&')}`);
+    // eslint-disable-next-line no-bitwise
+    r = (hexToRgb >> 16) & 255;
+    // eslint-disable-next-line no-bitwise
+    g = (hexToRgb >> 8) & 255;
+    // eslint-disable-next-line no-bitwise
+    b = hexToRgb & 255;
+  }
+
+  const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+
+  return hsp > 127.5;
 }
 
 async function fetchAndRenderTemplates(props) {
@@ -90,29 +114,6 @@ async function processContentRow(block, props) {
   block.prepend(templateTitle);
 
   if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
-
-  // todo: build collaboration and holiday variants
-  // if (block.classList.contains('collaboration')) {
-  //   const titleHeading = props.contentRow.querySelector('h3');
-  //   const anchorLink = createTag('a', {
-  //     class: 'collaboration-anchor',
-  //     href: `${document.URL.replace(/#.*$/, '')}#${titleHeading.id}`,
-  //   });
-  //   const clipboardTag = createTag('span', { class: 'clipboard-tag' });
-  //   clipboardTag.textContent = placeholders['tag-copied'];
-  //
-  //   anchorLink.addEventListener('click', (e) => {
-  //     e.preventDefault();
-  //     navigator.clipboard.writeText(anchorLink.href);
-  //     anchorLink.classList.add('copied');
-  //     setTimeout(() => {
-  //       anchorLink.classList.remove('copied');
-  //     }, 2000);
-  //   });
-  //
-  //   anchorLink.append(clipboardTag);
-  //   titleHeading.append(anchorLink);
-  // }
 }
 
 async function formatHeadingPlaceholder(props) {
@@ -173,6 +174,10 @@ function constructProps(block) {
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    holidayIcon: null,
+    backgroundColor: '#000B1D',
+    backgroundAnimation: null,
+    textColor: '#FFFFFF',
   };
 
   Array.from(block.children).forEach((row) => {
@@ -197,17 +202,25 @@ function constructProps(block) {
       if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
         props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
       }
-
-      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        const graphic = cols[2].querySelector('picture');
-        if (graphic) {
-          props[camelize(key)] = graphic;
-        }
-      }
     } else if (cols.length === 4) {
       if (key === 'blank template') {
         cols[0].remove();
         props.templates.push(row);
+      }
+    } else if (cols.length === 5) {
+      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        const backgroundColor = cols[3].textContent.trim().toLowerCase();
+        const holidayIcon = cols[2].querySelector('picture');
+        const backgroundAnimation = cols[4].querySelector('a');
+
+        props.holidayBlock = true;
+        props.holidayIcon = holidayIcon || null;
+        if (backgroundColor) {
+          props.backgroundColor = backgroundColor;
+        }
+        props.backgroundAnimation = backgroundAnimation || null;
+        const contrastingTextColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
+        props.textColor = contrastingTextColor;
       }
     }
   });
@@ -1092,6 +1105,75 @@ async function decorateToolbar(block, props) {
   }
 }
 
+function initExpandCollapseToolbar(block, templateTitle, toggle, link) {
+  const chev = block.querySelector('.toggle-button-chev');
+  templateTitle.addEventListener('click', () => block.classList.toggle('expanded'));
+  chev.addEventListener('click', (e) => {
+    e.stopPropagation();
+    block.classList.toggle('expanded');
+  });
+
+  toggle.addEventListener('click', () => block.classList.toggle('expanded'));
+  link.addEventListener('click', (e) => e.stopPropagation());
+
+  setTimeout(() => {
+    if (!block.matches(':hover')) {
+      block.classList.toggle('expanded');
+    }
+  }, 3000);
+}
+
+function decorateHoliday(block, props) {
+  const mobileViewport = window.innerWidth < 901;
+  const templateTitle = block.querySelector('.template-title');
+  const toggleBar = templateTitle.querySelector('div');
+  const heading = templateTitle.querySelector('h4');
+  const subheading = templateTitle.querySelector('p');
+  const link = templateTitle.querySelector('.template-title-link');
+  const linkWrapper = link.closest('p');
+  const toggle = createTag('div', { class: 'expanded toggle-button' });
+  const topElements = createTag('div', { class: 'toggle-bar-top' });
+  const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
+  const toggleChev = createTag('div', { class: 'toggle-button-chev' });
+  const carouselFaderLeft = block.querySelector('.carousel-fader-left');
+  const carouselFaderRight = block.querySelector('.carousel-fader-right');
+
+  if (props.holidayIcon) topElements.append(props.holidayIcon);
+  if (props.backgroundAnimation) {
+    const animation = transformLinkToAnimation(props.backgroundAnimation);
+    block.classList.add('animated');
+    block.prepend(animation);
+  }
+
+  if (props.backgroundColor) {
+    if (props.backgroundAnimation) {
+      carouselFaderRight.style.backgroundImage = 'none';
+      carouselFaderLeft.style.backgroundImage = 'none';
+    } else {
+      carouselFaderRight.style.backgroundImage = `linear-gradient(to right, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+      carouselFaderLeft.style.backgroundImage = `linear-gradient(to left, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+    }
+  }
+
+  block.classList.add('expanded', props.textColor);
+  toggleBar.classList.add('toggle-bar');
+  topElements.append(heading);
+  toggle.append(link, toggleChev);
+  linkWrapper.remove();
+  bottomElements.append(subheading);
+  toggleBar.append(topElements, bottomElements);
+  block.style.backgroundColor = props.backgroundColor;
+
+  if (mobileViewport) {
+    block.classList.add('mobile');
+    block.append(toggle);
+  } else {
+    toggleBar.append(toggle);
+  }
+
+  initExpandCollapseToolbar(block, templateTitle, toggle, link);
+}
+
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
   const innerWrapper = block.querySelector('.template-x-inner-wrapper');
@@ -1370,6 +1452,10 @@ async function buildTemplateList(block, props, type = []) {
       block.remove();
     }
   }
+
+  if (props.holidayBlock) {
+    decorateHoliday(block, props);
+  }
 }
 
 function determineTemplateXType(props) {
@@ -1387,7 +1473,6 @@ function determineTemplateXType(props) {
 
   // use case aspect
   if (props.holidayBlock) type.push('holiday');
-  if (props.collaborationBlock) type.push('collaboration');
 
   return type;
 }
