@@ -97,7 +97,7 @@ async function fetchLinkList() {
 }
 
 function matchCKGResult(ckgData, pageData) {
-  const ckgMatch = pageData.ckgID === ckgData.ckgID;
+  const ckgMatch = pageData.ckgid === ckgData.ckgID;
   const taskMatch = ckgData.tasks.toLowerCase() === pageData.tasks.toLowerCase();
   const currentLocale = getLocale(window.location);
   const pageLocale = pageData.url.split('/')[1] === 'express' ? 'us' : pageData.url.split('/')[1];
@@ -182,21 +182,21 @@ async function updateLinkList(container, linkPill, list) {
 
       if (pillsMapping) {
         const alternateText = pillsMapping.find((row) => getMetadata('url') === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
-
-        if (alternateText && alternateText[`${localeColumnString}`]) {
+        const hasAlternateTextForLocale = alternateText && alternateText[`${localeColumnString}`];
+        if (hasAlternateTextForLocale) {
           displayText = alternateText[`${localeColumnString}`];
           if (templatePageData) {
             templatePageData.altShortTitle = displayText;
           }
         }
 
-        hideUntranslatedPill = displayText && locale !== 'us';
+        hideUntranslatedPill = !hasAlternateTextForLocale && locale !== 'us';
       }
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID) {
+      } else if (d.ckgID && !hideUntranslatedPill) {
         const currentTasks = getMetadata('tasks') ? getMetadata('tasks').replace(/[$@%"]/g, '') : ' ';
         const searchParams = `tasks=${currentTasks}&phformat=${getMetadata('placeholder-format')}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
