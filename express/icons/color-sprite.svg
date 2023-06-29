@@ -20,7 +20,7 @@
       <rect id="Rectangle_361903" width="83.915" height="167.625" transform="translate(-19284.885 -23836.379)" opacity="0.1"/>
     </g>
   </symbol>
-  <symbol xmlns="http://www.w3.org/2000/svg" id="color-marquee-localisation-desktop">
+  <symbol xmlns="http://www.w3.org/2000/svg" id="color-marquee-localisation-desktop"  viewBox="0 0 838.42 336.36">
     <g id="CCX-JDI037-color-marquee-localisation-desktop" transform="translate(17613.721 24005.098)">
       <rect id="Rectangle_361901" width="83.92" height="167.625" transform="translate(-17194.574 -23837.375)" opacity="0.1"/>
       <path id="Path_973391" d="M167.619,335.251V167.62A167.627,167.627,0,0,0,0,335.251Z" transform="translate(-17446 -24171.619)" opacity="0.2"/>
