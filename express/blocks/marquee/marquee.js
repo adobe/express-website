@@ -153,7 +153,7 @@ function transformToVideoLink(cell, a) {
   });
 
   // autoplay if hash matches title
-  if (toClassName(title) === window.location.hash.substringing(1)) {
+  if (toClassName(title) === window.location.hash.substring(1)) {
     displayVideoModal(vidUrls, title);
   }
 }
