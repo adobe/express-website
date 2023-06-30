@@ -86,6 +86,14 @@ main .hero-animation-beta .hero-animation-beta-foreground {
   justify-content: center;
 }
 
+main .hero-animation-beta-dark-container[data-audience="mobile"] .hero-animation-beta-foreground {
+  padding-bottom: 0;
+}
+
+main .hero-animation-beta-dark-container[data-audience="mobile"] .columns  {
+  padding-bottom: 0;
+}
+
 main .hero-animation-beta.white-text,
 main .hero-animation-beta.white-text a:any-link {
   color: var(--color-white);
@@ -348,10 +356,6 @@ main .hero-animation-beta p.button-container.button-inline {
     border-color: var(--color-info-secondary);
     color: var(--color-black);
   }
-}
-
-main .hero-animation-beta p:nth-child(1 of .button-container) {
-  display: none;
 }
 
 main .hero-animation-beta p.button-container a.secondary::before {

@@ -11,6 +11,12 @@
  */
 
 import { getHelixEnv, getLocale } from './scripts.js';
+import { memoize } from './utils.js';
+
+const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => (r.ok ? r.json() : null)), {
+  key: (q) => q,
+  ttl: 1000 * 60 * 60 * 24,
+});
 
 let allTemplatesMetadata;
 
@@ -25,13 +31,40 @@ export default async function fetchAllTemplatesMetadata() {
       let sheet;
 
       if (['yes', 'true', 'on'].includes(dev) && env?.name === 'stage') {
-        sheet = '/templates-dev.json?sheet=seo-templates&limit=10000';
+        sheet = '/templates-dev.json?sheet=seo-templates&limit=100000';
       } else {
-        sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=10000`;
+        sheet = `${urlPrefix}/express/templates/default/metadata.json?limit=100000`;
       }
 
-      const resp = await fetch(sheet);
-      allTemplatesMetadata = resp.ok ? (await resp.json()).data : [];
+      let resp = await memoizedFetchUrl(sheet);
+      allTemplatesMetadata = resp?.data;
+
+      // TODO: remove the > 1 logic after publishing of the split metadata sheet
+      if (!(allTemplatesMetadata && allTemplatesMetadata.length > 1)) {
+        resp = await memoizedFetchUrl('/express/templates/content.json?sheet=seo-templates&limit=100000');
+        allTemplatesMetadata = resp?.data?.map((p) => ({
+          ...p,
+          // TODO: backward compatibility. Remove when we move away from helix-seo-templates
+          url: p.path,
+          title: p.metadataTitle,
+          description: p.metadataDescription,
+          'short-title': p.shortTitle,
+          ckgid: p.ckgID,
+          'hero-title': p.heroAnimationTitle,
+          'hero-text': p.heroAnimationText,
+          locales: p.templateLocale,
+          premium: p.templatePremium,
+          animated: p.templateAnimated,
+          tasks: p.templateTasks,
+          topics: p.templateTopics,
+          'placeholder-format': p.placeholderFormat,
+          'create-link': p.createLink,
+          'create-text': p.createText,
+          'top-templates-title': p.topTemplatesTitle,
+          'top-templates': p.topTemplates,
+          'top-templates-text': p.topTemplatesText,
+        })) || [];
+      }
     } catch (err) {
       allTemplatesMetadata = [];
     }
