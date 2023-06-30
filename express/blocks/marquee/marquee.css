@@ -165,28 +165,45 @@ main .marquee p.underline a {
   text-decoration: underline;
 }
 
-main .marquee .reduce-motion-icon-wrapper {
+main .marquee .reduce-motion-wrapper {
+  z-index: 10;
   position: absolute;
+  white-space: nowrap;
   right: 16px;
   bottom: 16px;
   height: 24px;
-  width: 24px;
   cursor: pointer;
 }
 
-main .marquee .reduce-motion-icon-wrapper .icon {
+main .marquee .reduce-motion-wrapper span {
+  position: absolute;
+  margin-right: 8px;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+main .marquee .reduce-motion-wrapper .icon {
   height: 100%;
   width: 100%;
 }
 
-main .marquee.reduce-motion .reduce-motion-icon-wrapper .icon:nth-of-type(1),
-main .marquee .reduce-motion-icon-wrapper .icon:nth-of-type(2) {
+main .marquee.reduce-motion .reduce-motion-wrapper .icon:nth-of-type(1),
+main .marquee .reduce-motion-wrapper .icon:nth-of-type(2) {
+  display: inline-block;
+}
+
+main .marquee.reduce-motion .reduce-motion-wrapper .icon:nth-of-type(2),
+main .marquee .reduce-motion-wrapper .icon:nth-of-type(1) {
   display: none;
 }
 
-main .marquee.reduce-motion .reduce-motion-icon-wrapper .icon:nth-of-type(2),
-main .marquee .reduce-motion-icon-wrapper .icon:nth-of-type(1) {
-  display: block;
+main .marquee.reduce-motion .reduce-motion-wrapper:hover span.play-animation-text,
+main .marquee:not(.reduce-motion) .reduce-motion-wrapper:hover span.pause-animation-text {
+  opacity: 1;
 }
 
 @media (min-width: 600px) {

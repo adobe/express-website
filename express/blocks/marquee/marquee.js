@@ -17,7 +17,7 @@ import {
   getLocale,
   addHeaderSizing,
   getIconElement,
-  addFreePlanWidget,
+  addFreePlanWidget, fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
 import {
@@ -40,7 +40,7 @@ function getAnimation(animations, breakpoint) {
 }
 
 function buildReduceMotionSwitch(block) {
-  const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-icon-wrapper' });
+  const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
   const videoWrapper = block.querySelector('.video-background-wrapper');
   reduceMotionIconWrapper.append(getIconElement('play-circle'), getIconElement('pause-circle'));
 
@@ -65,7 +65,21 @@ function buildReduceMotionSwitch(block) {
 
   reduceMotionIconWrapper.addEventListener('click', () => {
     preferenceStore.toggle(preferenceNames.reduceMotion.name);
-  });
+  }, { passive: true });
+
+  reduceMotionIconWrapper.addEventListener('mouseenter', async () => {
+    const placeholders = await fetchPlaceholders();
+    const reduceMotionTextExist = block.querySelector('.play-animation-text') && block.querySelector('.pause-animation-text');
+
+    if (!reduceMotionTextExist) {
+      const play = createTag('span', { class: 'play-animation-text' });
+      const pause = createTag('span', { class: 'pause-animation-text' });
+      play.textContent = placeholders['play-animation'] || 'play animation';
+      pause.textContent = placeholders['pause-animation'] || 'pause animation';
+
+      reduceMotionIconWrapper.prepend(play, pause);
+    }
+  }, { passive: true });
 }
 
 function createAnimation(animations, breakpointConfig) {
@@ -110,8 +124,10 @@ function adjustLayout(animations, parent, breakpointConfig) {
     if (newVideo) {
       parent.replaceChild(newVideo, parent.querySelector('video'));
       newVideo.addEventListener('canplay', () => {
-        newVideo.muted = true;
-        newVideo.play();
+        if (!preferenceStore.get('reduceMotion')) {
+          newVideo.muted = true;
+          newVideo.play();
+        }
       });
     }
   }
@@ -236,8 +252,10 @@ export default async function decorate(block) {
         videoWrapper.append(video);
         div.prepend(videoWrapper);
         video.addEventListener('canplay', () => {
-          video.muted = true;
-          video.play();
+          if (!preferenceStore.get('reduceMotion')) {
+            video.muted = true;
+            video.play();
+          }
         });
 
         window.addEventListener('resize', () => {
