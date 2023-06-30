@@ -19,8 +19,8 @@ import {
   getMetadata,
 } from '../../scripts/scripts.js';
 
-import useInputAutocomplete from './useInputAutocomplete.js';
 import { buildCarousel } from '../shared/carousel.js';
+import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 
 function handlelize(str) {
   return str.normalize('NFD')
@@ -29,6 +29,24 @@ function handlelize(str) {
     .replace(/--+/g, '-') // Replaces multiple hyphens by one hyphen
     .replace(/(^-+|-+$)/g, '') // Remove extra hyphens from beginning or end of the string
     .toLowerCase(); // To lowercase
+}
+
+function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/express/search-terms-log') {
+  if (form) {
+    const input = form.querySelector('input');
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        data: {
+          keyword: input.value,
+          locale: getLocale(window.location),
+          timestamp: Date.now(),
+          audience: document.body.dataset.device,
+        },
+      }),
+    });
+  }
 }
 
 function initSearchFunction(block) {
@@ -69,11 +87,11 @@ function initSearchFunction(block) {
   }, { passive: true });
 
   const redirectSearch = async () => {
-    const placeholders = await fetchPlaceholders().then((result) => result);
+    const placeholders = await fetchPlaceholders();
     const taskMap = JSON.parse(placeholders['task-name-mapping']);
 
     const format = getMetadata('placeholder-format');
-    let currentTasks = getMetadata('tasks');
+    let currentTasks = '';
     let searchInput = searchBar.value.toLowerCase() || getMetadata('topics');
 
     const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
@@ -95,8 +113,9 @@ function initSearchFunction(block) {
     const topicUrl = searchInput ? `/${searchInput}` : '';
     const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+    const allTemplatesMetadata = await fetchAllTemplatesMetadata();
     const pathMatch = (e) => e.url === targetPath;
-    if (window.templates?.data?.some(pathMatch)) {
+    if (allTemplatesMetadata.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
       const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
@@ -107,6 +126,7 @@ function initSearchFunction(block) {
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     searchBar.disabled = true;
+    logSearch(e.currentTarget);
     await redirectSearch();
   });
 
@@ -137,10 +157,12 @@ function initSearchFunction(block) {
     }
   };
 
-  const { inputHandler } = useInputAutocomplete(
-    suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
-  );
-  searchBar.addEventListener('input', inputHandler);
+  import('./use-input-autocomplete.js').then(({ default: useInputAutocomplete }) => {
+    const { inputHandler } = useInputAutocomplete(
+      suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
+    );
+    searchBar.addEventListener('input', inputHandler);
+  });
 }
 
 async function decorateSearchFunctions(block) {
@@ -154,10 +176,12 @@ async function decorateSearchFunctions(block) {
     enterKeyHint: placeholders.search ?? 'Search',
   });
 
-  // Tasks Dropdown
-
   searchForm.append(searchBar);
-  searchBarWrapper.append(getIconElement('search'), getIconElement('search-clear'));
+  const searchIcon = getIconElement('search');
+  searchIcon.loading = 'lazy';
+  const searchClearIcon = getIconElement('search-clear');
+  searchClearIcon.loading = 'lazy';
+  searchBarWrapper.append(searchIcon, searchClearIcon);
   searchBarWrapper.append(searchForm);
 
   block.append(searchBarWrapper);
@@ -175,6 +199,10 @@ function decorateBackground(block) {
       const splitArr = media.split('.');
 
       if (supportedImgFormat.includes(splitArr[splitArr.length - 1])) {
+        const dummyImg = createTag('img');
+        dummyImg.src = media;
+        dummyImg.style.display = 'none';
+        block.append(dummyImg);
         block.style.backgroundImage = `url(${media})`;
       }
 
@@ -206,11 +234,15 @@ async function buildSearchDropdown(block) {
 
     if (fromScratchLink) {
       const linkDiv = fromScratchLink.parentElement.parentElement;
-      fromScratchLink.prepend(getIconElement('template-free-accent'));
-      fromScratchLink.append(getIconElement('arrow-right'));
+      const templateFreeAccentIcon = getIconElement('template-free-accent');
+      templateFreeAccentIcon.loading = 'lazy';
+      const arrowRightIcon = getIconElement('arrow-right');
+      arrowRightIcon.loading = 'lazy';
+      fromScratchLink.prepend(templateFreeAccentIcon);
+      fromScratchLink.append(arrowRightIcon);
       fromScratchLink.classList.remove('button');
       fromScratchLink.classList.add('from-scratch-link');
-      fromScratchLink.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-marquee-from-scratch-link', getMetadata('search-marquee-from-scratch-link') || '/');
+      fromScratchLink.href = getMetadata('search-marquee-from-scratch-link') || '/';
       trendsContainer.append(fromScratchLink);
       linkDiv.remove();
     }
@@ -247,19 +279,28 @@ async function buildSearchDropdown(block) {
 function decorateLinkList(block) {
   const carouselItemsWrapper = block.querySelector(':scope > div:nth-of-type(2)');
   if (carouselItemsWrapper) {
-    if (['yes', 'true', 'on', 'Y'].includes(getMetadata('show-search-marquee-link-list'))) {
+    const showLinkList = getMetadata('show-search-marquee-link-list');
+    if ((showLinkList && !['yes', 'true', 'on', 'Y'].includes(showLinkList))
+      // no link list for templates root page
+      || window.location.pathname.endsWith('/express/templates/')
+      || window.location.pathname.endsWith('/express/templates')) {
+      carouselItemsWrapper.remove();
+    } else {
       buildCarousel(':scope > div > p', carouselItemsWrapper);
       const carousel = carouselItemsWrapper.querySelector('.carousel-container');
       block.append(carousel);
-    } else {
-      carouselItemsWrapper.remove();
     }
   }
 }
 
 export default async function decorate(block) {
-  await decorateSearchFunctions(block);
+  // desktop-only block
+  if (document.body.dataset?.device !== 'desktop') {
+    block.remove();
+    return;
+  }
   decorateBackground(block);
+  await decorateSearchFunctions(block);
   await buildSearchDropdown(block);
   initSearchFunction(block);
   decorateLinkList(block);
@@ -268,5 +309,8 @@ export default async function decorate(block) {
   if (blockLinks && blockLinks.length > 0) {
     const linksPopulated = new CustomEvent('linkspopulated', { detail: blockLinks });
     document.dispatchEvent(linksPopulated);
+  }
+  if (window.location.href.includes('/express/templates/')) {
+    import('../../scripts/ckg-link-list.js');
   }
 }

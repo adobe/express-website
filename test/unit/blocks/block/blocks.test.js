@@ -9,13 +9,14 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global expect */
 /* eslint-env mocha */
 /* eslint-disable no-unused-expressions */
 
+import { expect } from '@esm-bundle/chai';
+import { stub } from 'sinon';
 import TESTS from './blocks-test-list.js';
 
-const ROOT_PATH = '/blocks';
+const ROOT_PATH = '/test/unit/blocks/block';
 
 const getFragment = (html) => {
   document.body.innerHTML = html;
@@ -40,8 +41,43 @@ const fragmentToString = (fragment) => {
   });
   return trim(html);
 };
+window.placeholders = {};
+const offers = {
+  total: 1,
+  offset: 0,
+  limit: 1,
+  data: [
+    {
+      c: 'US',
+      p: 9.99,
+      o: '0EDBD95A29C6EE10FB2B323A041E3AEF',
+    },
+  ],
+};
+
+const ogFetch = window.fetch;
+window.fetch = stub();
+const stubFetch = () => {
+  window.fetch.withArgs('/express/system/offers-new.json').returns(
+    new Promise((resolve) => {
+      resolve({
+        ok: true,
+        json: () => offers,
+      });
+    }),
+  );
+};
+const restoreFetch = () => {
+  window.fetch = ogFetch;
+};
 
 describe('Block tests', () => {
+  before(() => {
+    stubFetch();
+  });
+  after(() => {
+    restoreFetch();
+  });
   window.isTestEnv = true;
   // check if there are tests with only: true
   let tests = TESTS.filter((t) => t.only);
@@ -52,13 +88,13 @@ describe('Block tests', () => {
       expect(test.input, 'Missing test "input" definition').to.exist;
       expect(test.expected, 'Missing test "expected" definition').to.exist;
 
-      let res = await fetch(`${ROOT_PATH}/${test.input}`);
+      let res = await ogFetch(`${ROOT_PATH}/${test.input}`);
       expect(res.ok, `Missing test "input" file: ${test.input}`).to.be.true;
 
       const htmlInput = await res.text();
       const doc = getFragment(htmlInput);
 
-      res = await fetch(`${ROOT_PATH}/${test.expected}`);
+      res = await ogFetch(`${ROOT_PATH}/${test.expected}`);
       expect(res.ok, `Missing test "expected" file: ${test.expected}`).to.be.true;
 
       const htmlExpected = await res.text();
@@ -73,7 +109,6 @@ describe('Block tests', () => {
 
       const classes = Array.from(block.classList.values());
       const blockName = classes[0];
-
       if (blockName) {
         const mod = await import(`/express/blocks/${blockName}/${blockName}.js`);
         await mod.default(block, blockName, doc);
