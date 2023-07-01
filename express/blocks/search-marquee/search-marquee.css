@@ -31,7 +31,7 @@ main .search-marquee .search-dropdown-container {
     width: 100%;
     box-sizing: border-box;
     left: 0;
-    z-index: 2;
+    z-index: 3;
 }
 
 main .search-marquee .search-dropdown-container .dropdown-title {
@@ -160,6 +160,10 @@ main .search-marquee.spreadsheet-powered .carousel-container {
 
 main .search-marquee.spreadsheet-powered .carousel-container.appear {
     visibility: unset;
+}
+
+main .search-marquee .carousel-container .carousel-platform {
+    margin: auto;
 }
 
 main .search-marquee .carousel-container .carousel-platform p.button-container {

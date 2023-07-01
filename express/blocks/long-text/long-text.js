@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Adobe. All rights reserved.
+ * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,19 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-env mocha */
-import { JSDOM } from 'jsdom';
-import { readBlockConfig } from '../../express/scripts/scripts.js';
 
-describe('scripts#readBlockConfig', () => {
-  it('readBlockConfig', () => {
-    const dom = JSDOM.fragment(
-      '',
-    );
-
-    readBlockConfig(dom.window.document);
-
-    // eslint-disable-next-line no-console
-    console.log(dom.window.document.body.innerHTML);
-  });
-});
+export default function decorate(block) {
+  if (block.textContent.trim() === '') {
+    if (block.parentElement.classList.contains('long-text-wrapper')) {
+      block.parentElement.remove();
+    } else {
+      block.remove();
+    }
+  }
+}
