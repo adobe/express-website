@@ -259,9 +259,9 @@ export default async function decorate(block) {
         });
 
         window.addEventListener('resize', () => {
-          adjustLayout(animations, div, breakpointConfig);
+          adjustLayout(animations, videoWrapper, breakpointConfig);
         }, { passive: true });
-        adjustLayout(animations, div, breakpointConfig);
+        adjustLayout(animations, videoWrapper, breakpointConfig);
 
         buildReduceMotionSwitch(block);
       } else {
