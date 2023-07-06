@@ -90,7 +90,7 @@ async function populateHeadingPlaceholder(locale, props) {
       grammarTemplate.split(' ').forEach((word, index, words) => {
         if (index + 1 < words.length) {
           if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            words.splice(index, 2, `d'${words[index + 1]}`);
             grammarTemplate = words.join(' ');
           }
         }
