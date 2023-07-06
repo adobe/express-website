@@ -18,14 +18,14 @@ import {
   decorateMain,
   fetchPlaceholders,
   getIconElement,
+  getLanguage,
   getLocale,
   getLottie,
-  lazyLoadLottiePlayer,
-  toClassName,
-  getLanguage,
   getMetadata,
-  transformLinkToAnimation,
+  lazyLoadLottiePlayer,
   titleCase,
+  toClassName,
+  transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -68,7 +68,10 @@ function isDarkOverlayReadable(colorString) {
 }
 
 async function fetchAndRenderTemplates(props) {
-  const [placeholders, { response, fallbackMsg }] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
+  const [placeholders, { response, fallbackMsg }] = await Promise.all([
+    fetchPlaceholders(),
+    fetchTemplates(props),
+  ]);
   if (!response || !response.items || !Array.isArray(response.items)) {
     return { templates: null };
   }
@@ -93,10 +96,10 @@ async function fetchAndRenderTemplates(props) {
 }
 
 async function processContentRow(block, props) {
-  // const placeholders = await fetchPlaceholders();
-
   const templateTitle = createTag('div', { class: 'template-title' });
-  templateTitle.innerHTML = props.contentRow.outerHTML;
+  const textWrapper = createTag('div', { class: 'text-wrapper' });
+  textWrapper.innerHTML = props.contentRow.outerHTML;
+  templateTitle.append(textWrapper);
 
   const aTags = templateTitle.querySelectorAll(':scope a');
 
@@ -104,9 +107,11 @@ async function processContentRow(block, props) {
     templateTitle.classList.add('with-link');
     aTags.forEach((aTag) => {
       aTag.className = 'template-title-link';
+
       const p = aTag.closest('p');
       if (p) {
-        p.classList.remove('button-container');
+        templateTitle.append(p);
+        p.className = 'view-all-link-wrapper';
       }
     });
   }
@@ -1392,6 +1397,17 @@ async function decorateBreadcrumbs(block) {
   if (breadcrumbs) block.prepend(breadcrumbs);
 }
 
+async function getTaskNameInMapping(text) {
+  const placeholders = await fetchPlaceholders();
+  const taskMap = JSON.parse(placeholders['x-task-name-mapping']);
+  return Object.entries(taskMap)
+    .filter((task) => task[1].some((word) => {
+      const searchValue = text.toLowerCase();
+      return searchValue.indexOf(word.toLowerCase()) >= 0;
+    }))
+    .sort((a, b) => b[0].length - a[0].length);
+}
+
 async function buildTemplateList(block, props, type = []) {
   if (type?.length > 0) {
     type.forEach((typeName) => {
@@ -1405,6 +1421,7 @@ async function buildTemplateList(block, props, type = []) {
   }
 
   const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
+
   if (templates) {
     if (fallbackMsg) {
       const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
@@ -1422,6 +1439,64 @@ async function buildTemplateList(block, props, type = []) {
   } else {
     // fixme: better error message.
     block.innerHTML = 'Oops. Our templates delivery got stolen. Please try refresh the page.';
+  }
+
+  if (templates && props.tabs) {
+    block.classList.add('tabbed');
+    const tabs = props.tabs.replace(/\s/g, '').split(',');
+    const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
+    const textWrapper = block.querySelector('.template-title .text-wrapper > div');
+    const tabsWrapper = createTag('div', { class: 'template-tabs' });
+
+    const promises = [];
+
+    for (const tab of tabs) {
+      promises.push(getTaskNameInMapping(tab));
+    }
+
+    const tasksFoundInInput = await Promise.all(promises);
+    if (tasksFoundInInput.length === tabs.length) {
+      tasksFoundInInput.forEach((taskObj, index) => {
+        const tabBtn = createTag('button', { class: 'template-tab-button' });
+        tabBtn.textContent = tabs[index];
+        tabsWrapper.append(tabBtn);
+
+        const [[task]] = taskObj;
+
+        if (props.filters.tasks === task) {
+          tabBtn.classList.add('active');
+        }
+
+        tabBtn.addEventListener('click', async () => {
+          templatesWrapper.style.opacity = 0;
+
+          if (tasksFoundInInput) {
+            const { templates: newTemplates } = await fetchAndRenderTemplates({
+              ...props,
+              filters: {
+                tasks: task,
+              },
+            });
+
+            templatesWrapper.innerHTML = '';
+            props.templates = newTemplates;
+            props.templates.forEach((template) => {
+              templatesWrapper.append(template);
+            });
+
+            await decorateTemplates(block, props);
+            buildCarousel(':scope > .template', templatesWrapper, false);
+            templatesWrapper.style.opacity = 1;
+            tabsWrapper.querySelectorAll('.template-tab-button').forEach((btn) => {
+              if (btn !== tabBtn) btn.classList.remove('active');
+            });
+            tabBtn.classList.add('active');
+          }
+        }, { passive: true });
+      });
+    }
+
+    textWrapper.append(tabsWrapper);
   }
 
   // templates are either finished rendering or API has crashed at this point.

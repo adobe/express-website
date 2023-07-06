@@ -2,19 +2,15 @@ main .template-x-horizontal {
     padding-top: 0;
 }
 
-main .template-x-wrapper.fullwidth,
 main .template-x-wrapper.fullwidth {
     max-width: none;
     padding: 0;
 }
 
-main .template-x > .default-content-wrapper,
 main .template-x > .default-content-wrapper {
     padding: 0 15px;
 }
 
-main .template-x .default-content-wrapper h2,
-main .template-x .default-content-wrapper p,
 main .template-x .default-content-wrapper h2,
 main .template-x .default-content-wrapper p {
     margin: 0;
@@ -50,6 +46,49 @@ main .template-x-horizontal-fullwidth-collaboration-container .default-content-w
     line-height: 24px;
 }
 
+main .template-x.horizontal .template-tabs {
+    margin-top: 24px;
+    display: flex;
+    overflow: auto;
+    max-width: 100%;
+}
+
+main .template-x.horizontal .template-tabs button.template-tab-button {
+    background: none;
+    border: none;
+    padding: 8px 4px 6px 4px;
+    margin: 0 16px;
+    font-family: var(--body-font-family);
+    cursor: pointer;
+    font-size: var(--body-font-size-s);
+    border-bottom: 2px solid transparent;
+}
+
+main .template-x.horizontal .template-tabs button.template-tab-button:first-of-type {
+    margin-left: 0;
+}
+
+main .template-x.horizontal .template-tabs button.template-tab-button.active,
+main .template-x.horizontal .template-tabs button.template-tab-button:hover {
+    border-bottom: 2px solid var(--color-black);
+}
+
+main .template-x.horizontal .template-tabs button.template-tab-button.active {
+    font-weight: 700;
+}
+
+main .template-x-wrapper .template-title.horizontal .text-wrapper * {
+    text-align: left;
+}
+
+main .template-x-wrapper .template-title.horizontal .text-wrapper p {
+    margin-bottom: 0;
+}
+
+main .template-x-wrapper .template-title.horizontal .text-wrapper > div {
+    width: 100%;
+}
+
 main .template-x-inner-wrapper {
     display: flex;
     justify-content: center;
@@ -67,6 +106,7 @@ main .template-x.fullwidth .template-x-inner-wrapper {
 
 main .template-x.horizontal .template-x-inner-wrapper {
     margin-top: 0;
+    transition: opacity 0.2s;
 }
 
 main .template-x.fullwidth.holiday .template-x-inner-wrapper {
@@ -151,6 +191,10 @@ main .template-x-wrapper .template-title.with-link > div {
 main .template-x-wrapper .template-title.horizontal > div > * {
     text-align: left;
     margin: 0;
+}
+
+main .template-x-wrapper .template-title.horizontal h2 {
+    font-size: var(--heading-font-size-m);
 }
 
 main .template-x-wrapper .template-title.horizontal.holiday .template-title,picture,a,h4,p {
@@ -324,6 +368,11 @@ main .template-x.horizontal.fullwidth:not(.holiday) {
     margin-left: auto;
 }
 
+main .template-x.horizontal.fullwidth.tabbed {
+    max-width: 1440px;
+    margin: auto;
+}
+
 main .template-x.horizontal.fullwidth.mini {
     padding: unset;
 }
@@ -331,7 +380,7 @@ main .template-x.horizontal.fullwidth.mini {
 main .template-x.horizontal .template {
     min-height: 200px;
     width: max-content;
-    margin: 12px;
+    margin: 24px 12px;
 }
 
 main .template-x.horizontal .template .still-wrapper img,
@@ -466,7 +515,6 @@ main .template-x.fullwidth .template:not(.placeholder) .template-link {
     will-change: opacity;
 }
 
-
 main .template-x.horizontal .template:hover:not(.placeholder) .button-container,
 main .template-x.horizontal .template:hover:not(.placeholder) .template-link,
 main .template-x.sixcols .template:hover:not(.placeholder) .button-container,
@@ -595,7 +643,7 @@ main .template-x.holiday.light-text svg {
 }
 
 main .template-x.holiday.dark-text svg {
-    fill: var(--color-gray-900);
+    fill: var(--color-gray-800);
 }
 
 main .template-x.fullwidth.sm-view .template.placeholder > div:first-of-type > img,
@@ -1665,13 +1713,16 @@ main .template-x-wrapper.horizontal {
 /* re-add max-width on elements that are not carousel */
 main .template-x-wrapper.horizontal > *:not(.template-x.horizontal),
 main .template-x-wrapper.horizontal:not(.holiday) > .template-x.horizontal > *:not(.carousel-container) {
-    max-width: 350px;
-    max-width: unset;  
+    max-width: unset;
     padding-left: 15px;
     padding-right: 15px;
     margin-right: auto;
     margin-left: auto;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+}
+
+main .template-x-wrapper.horizontal > .template-x.horizontal.tabbed > .template-title {
+    margin-bottom: 0;
 }
 
 main .template-x.horizontal .carousel-container {
@@ -1705,6 +1756,11 @@ main .template-x.horizontal .carousel-container .carousel-fader-right {
 
 main .template-x.horizontal .carousel-container .carousel-fader-left {
     background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+main .template-x.horizontal.tabbed .carousel-container .carousel-fader-right,
+main .template-x.horizontal.tabbed .carousel-container .carousel-fader-left {
+    background: none;
 }
 
 
@@ -1920,7 +1976,7 @@ main .template-x.horizontal.holiday.mobile .toggle-button {
     margin-left: 192px;
     padding: 0 0 16px 0;
     width: 110px;
-}    
+}
 
 main .template-x.horizontal.holiday.expanded.mobile .toggle-button {
     margin-left: 50%;
@@ -2071,7 +2127,7 @@ main .template-x .template .button-container:hover {
 }
 
 main .template-x.horizontal .template:not(.placeholder):first-of-type .button-container {
-    margin-left: 16px;
+    margin-left: 12px;
 }
 
 main .template-x .template .button-container .media-wrapper {
@@ -2175,7 +2231,7 @@ main nav ol.templates-breadcrumbs {
     margin: 0;
     padding: 0;
     display: flex;
-  }
+}
 
 main nav ol.templates-breadcrumbs li {
     display: flex;
@@ -2399,6 +2455,14 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
         justify-content: space-between;
     }
 
+    main .template-x-wrapper .template-x:not(.holiday) .template-title.horizontal .text-wrapper {
+        max-width: 600px;
+    }
+
+    main .template-x-wrapper .template-x:not(.holiday) .template-title.horizontal .view-all-link-wrapper {
+        margin: 0;
+    }
+
     main .template-x-wrapper .template-title.horizontal > div > * {
         text-align: left;
     }
@@ -2421,7 +2485,7 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
 
     main .template-x.sixcols .template:not(.placeholder),
     main .template-x.fullwidth .template:not(.placeholder) {
-        margin: 11px 11px 9px 11px; /* make up for 4px height overlap in first child div */
+        margin: 24px 11px 18px 11px; /* make up for 4px height overlap in first child div */
     }
 
     main .template-x.sixcols .template.placeholder,
@@ -2445,7 +2509,6 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
     }
 
     main .template-x.horizontal .carousel-container {
-        max-width: 1090px;
         margin-left: 12px;
         margin-right: 12px;
         max-width: none;
@@ -2515,6 +2578,12 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
 
     main .template-x-wrapper.fullwidth {
         max-width: none;
+    }
+
+    main .template-x .template-title.with-link.horizontal {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
     }
 
     /* template-x inside columns */
@@ -2660,9 +2729,9 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
         width: 170px;
     }
 
-    main .template-x.horizontal.fullwidth .carousel-container .carousel-fader-left {
-        background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-        width: 150px;
+    main .template-x.horizontal.fullwidth.tabbed .carousel-container .carousel-fader-left,
+    main .template-x.horizontal.fullwidth.tabbed .carousel-container .carousel-fader-right {
+        background: none;
     }
 
     main .template-x .api-templates-toolbar {
