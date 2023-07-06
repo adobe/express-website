@@ -80,6 +80,7 @@ function syncWithStoredIntent(block) {
     if (targetBtn) targetBtn.click();
   }
 }
+
 export default function decorate(block) {
   const enclosingMain = block.closest('main');
   if (enclosingMain) {
