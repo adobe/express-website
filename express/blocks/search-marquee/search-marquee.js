@@ -62,6 +62,16 @@ function initSearchFunction(block) {
 
   clearBtn.style.display = 'none';
 
+  const searchBarWatcher = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) {
+      searchBarWrapper.classList.add('sticking');
+    } else {
+      searchBarWrapper.classList.remove('sticking');
+    }
+  }, { rootMargin: '0px', threshold: 1 });
+
+  searchBarWatcher.observe(searchBarWrapper);
+
   searchBar.addEventListener('click', (e) => {
     e.stopPropagation();
     searchDropdown.classList.remove('hidden');

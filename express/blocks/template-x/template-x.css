@@ -113,21 +113,6 @@ main .template-x.with-categories-list .template-x.fullwidth {
     width: 100%;
 }
 
-main .template-x.sixcols > .template-x-inner-wrapper > .masonry-col,
-main .template-x.fullwidth > .template-x-inner-wrapper > .masonry-col {
-    max-width: 175px;
-}
-
-main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
-    max-width: 165px;
-    text-align: center;
-}
-
-main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
-    max-width: 258.5px;
-    text-align: center;
-}
-
 main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
     max-width: 352px;
     text-align: center;
@@ -542,6 +527,7 @@ main .template-x.fullwidth.sm-view .template.placeholder {
     max-width: 80%;
     max-height: 30vh;
     min-height: 120px;
+    z-index: 0;
 }
 
 main .template-x.fullwidth.lg-view .template.placeholder {
@@ -1031,13 +1017,6 @@ main .template-x .api-templates-toolbar {
     gap: 16px;
 }
 
-main .template-x .toolbar-wrapper.sticking .api-templates-toolbar {
-    box-sizing: border-box;
-    border-radius: 0;
-    padding: 16px;
-    width: 100%;
-}
-
 main .template-x .toolbar-wrapper.with-box-shadow {
     box-shadow: 0 4px 8px 2px rgb(102 102 102 / 10%);
 }
@@ -1050,11 +1029,6 @@ main .template-x .api-templates-toolbar .wrapper-content-search {
     gap: 16px;
     position: relative;
     flex-basis: 100%;
-}
-
-main .template-x .toolbar-wrapper.sticking .wrapper-content-search {
-    width: 100%;
-    padding-left: 48px;
 }
 
 main .template-x .api-templates-toolbar h2 {
@@ -1088,10 +1062,6 @@ main .template-x .search-bar-wrapper .icon-search-clear,
 main .template-x .search-bar-wrapper.sticky-search-bar.collapsed .icon-search-clear,
 main .template-x .search-bar-wrapper.sticky-search-bar.collapsed .search-dropdown {
     display: none;
-}
-
-main .template-x .toolbar-wrapper.sticking .search-bar-wrapper {
-    display: unset;
 }
 
 main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed {
@@ -1666,7 +1636,7 @@ main .template-x-wrapper.horizontal {
 main .template-x-wrapper.horizontal > *:not(.template-x.horizontal),
 main .template-x-wrapper.horizontal:not(.holiday) > .template-x.horizontal > *:not(.carousel-container) {
     max-width: 350px;
-    max-width: unset;  
+    max-width: unset;
     padding-left: 15px;
     padding-right: 15px;
     margin-right: auto;
@@ -1920,7 +1890,7 @@ main .template-x.horizontal.holiday.mobile .toggle-button {
     margin-left: 192px;
     padding: 0 0 16px 0;
     width: 110px;
-}    
+}
 
 main .template-x.horizontal.holiday.expanded.mobile .toggle-button {
     margin-left: 50%;
@@ -2300,7 +2270,7 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
     }
 
     main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 170px;
+        max-width: 158px;
         text-align: center;
     }
 
@@ -2320,13 +2290,6 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
 
     main .template-x .api-templates-toolbar .search-bar-wrapper .task-dropdown-list {
         left: 0;
-    }
-
-    main .template-x .toolbar-wrapper.sticking {
-        padding-left: 40px;
-        padding-right: 40px;
-        margin: 0;
-        border-radius: 0;
     }
 
     main .template-x .toolbar-wrapper {
@@ -2377,6 +2340,21 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
 @media (min-width: 900px) {
     main .template-x.fullwidth.md-view .template.placeholder {
         width: 258.5px;
+    }
+
+    main .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
+        max-width: 328px;
+        text-align: center;
+    }
+
+    main .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
+        max-width: 200px;
+        text-align: center;
+    }
+
+    main .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
+        max-width: 170px;
+        text-align: center;
     }
 
     main .template-x-container > div,
@@ -2445,7 +2423,6 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
     }
 
     main .template-x.horizontal .carousel-container {
-        max-width: 1090px;
         margin-left: 12px;
         margin-right: 12px;
         max-width: none;
@@ -2469,10 +2446,6 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
 
     main .template-x .api-templates-toolbar .wrapper-functions {
         flex-grow: 0;
-    }
-
-    main .template-x .toolbar-wrapper.sticking .wrapper-content-search {
-        width: auto;
     }
 
     main .template-x .api-templates-toolbar .wrapper-content-search .search-bar-wrapper {
@@ -2537,6 +2510,7 @@ main nav ol.templates-breadcrumbs li:not(:first-child):before {
 
     main .template-x.fullwidth.with-categories-list .template-x-inner-wrapper {
         padding-left: 40px;
+        padding-right: 0;
     }
 
     main .template-x.with-categories-list .category-list-wrapper {
