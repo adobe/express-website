@@ -21,6 +21,7 @@ import {
 
 import { buildCarousel } from '../shared/carousel.js';
 import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 function handlelize(str) {
   return str.normalize('NFD')
@@ -64,9 +65,15 @@ function initSearchFunction(block) {
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
-      searchBarWrapper.classList.add('sticking');
+      BlockMediator.set('stickySearchBar', {
+        element: searchBarWrapper.cloneNode(true),
+        loadSearchBar: true,
+      });
     } else {
-      searchBarWrapper.classList.remove('sticking');
+      BlockMediator.set('stickySearchBar', {
+        element: searchBarWrapper.cloneNode(true),
+        loadSearchBar: false,
+      });
     }
   }, { rootMargin: '0px', threshold: 1 });
 
