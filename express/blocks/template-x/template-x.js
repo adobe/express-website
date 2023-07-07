@@ -1451,6 +1451,11 @@ function importSearchBar(block) {
           if (target !== searchWrapper && !searchWrapper.contains(target)) {
             searchWrapper.classList.add('collapsed');
             searchDropdown.classList.add('hidden');
+            searchBar.value = '';
+            suggestionsList.innerHTML = '';
+            trendsContainer.classList.remove('hidden');
+            suggestionsContainer.classList.add('hidden');
+            clearBtn.style.display = 'none';
           }
         }, { passive: true });
 

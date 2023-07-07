@@ -834,6 +834,10 @@ main .template-x .search-bar-wrapper .search-bar:focus {
     outline: none;
 }
 
+main .template-x .search-bar-wrapper .search-bar:disabled {
+    background-color: var(--color-gray-100);
+}
+
 main .template-x .search-bar-wrapper .icon.icon-search {
     position: absolute;
     z-index: 1;
@@ -855,6 +859,10 @@ main .template-x .search-bar-wrapper .icon.icon-search-clear {
     top: 50%;
     transform: translateY(-50%);
     right: 40px;
+}
+
+main .template-x .api-templates-toolbar .search-bar-wrapper {
+    display: none;
 }
 
 main .template-x .api-templates-toolbar .search-bar-wrapper.show {
@@ -881,7 +889,7 @@ main .template-x .api-templates-toolbar .search-dropdown-container {
     z-index: 3;
 }
 
-main .template-x .api-templates-toolbar .search-dropdown-container.hidden,
+main .template-x .api-templates-toolbar .search-bar-wrapper .hidden,
 main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed .search-dropdown-container {
     display: none;
 }
