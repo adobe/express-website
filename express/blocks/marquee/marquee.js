@@ -42,7 +42,7 @@ function getAnimation(animations, breakpoint) {
 function buildReduceMotionSwitch(block) {
   const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
   const videoWrapper = block.querySelector('.video-background-wrapper');
-  reduceMotionIconWrapper.append(getIconElement('play-circle'), getIconElement('pause-circle'));
+  reduceMotionIconWrapper.append(getIconElement('play-video'), getIconElement('pause-video'));
 
   videoWrapper.append(reduceMotionIconWrapper);
 
