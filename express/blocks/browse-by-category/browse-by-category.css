@@ -160,7 +160,6 @@ main .browse-by-category-wrapper.fullwidth {
     object-fit: contain;
     max-width: 110px;
     max-height: 97px;
-    height: 100%;
     transform: matrix(1, -0.01, 0.01, 1, 0, 0);
     box-shadow: 0 0 6px #0000001f;
     border-radius: 8px;
