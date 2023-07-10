@@ -1414,7 +1414,7 @@ function importSearchBar(block) {
       const existingStickySearchBar = parent.querySelector('.search-bar-wrapper');
       if (e.newValue.loadSearchBar && !existingStickySearchBar) {
         const searchWrapper = e.newValue.element;
-        parent.prepend(e.newValue.element);
+        parent.prepend(searchWrapper);
         searchWrapper.classList.add('show');
         searchWrapper.classList.add('collapsed');
 
