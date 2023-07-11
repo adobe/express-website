@@ -354,6 +354,7 @@ main .marquee:not(.reduce-motion) .reduce-motion-wrapper:hover span.pause-animat
 @media (min-width: 1200px) {
   main .marquee:not(.wide) .marquee-foreground {
     height: 40vw;
+    max-height: 540px;
   }
 }
 
