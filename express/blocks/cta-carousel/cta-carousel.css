@@ -163,4 +163,9 @@ main .cta-carousel .card .text-wrapper .tag {
         flex-direction: row;
         align-items: flex-end;
     }
+
+    main .cta-carousel .carousel-container .carousel-fader-left,
+    main .cta-carousel .carousel-container .carousel-fader-right{
+        background: unset;
+    }
 }

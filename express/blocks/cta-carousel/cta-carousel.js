@@ -11,7 +11,8 @@
  */
 
 import {
-  createTag, transformLinkToAnimation,
+  createTag,
+  transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
