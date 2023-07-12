@@ -1718,6 +1718,8 @@ main .template-x-wrapper.horizontal:not(.holiday) > .template-x.horizontal > *:n
     padding-right: 15px;
     margin-right: auto;
     margin-left: auto;
+    margin-bottom: 24px;
+    margin-block: auto;
 }
 
 main .template-x-wrapper.horizontal > .template-x.horizontal.tabbed > .template-title {
