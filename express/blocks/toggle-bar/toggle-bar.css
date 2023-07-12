@@ -5,10 +5,23 @@ main .section .toggle-bar-wrapper {
     max-width: max-content;
 }
 
-main .block.toggle-bar {
+main .block.toggle-bar.float {
+    margin-top: -10%;
+}
+
+main .block.toggle-bar div[data-align="center"] {
+    margin: auto;
+}
+
+main .block.toggle-bar div[data-align="center"] * {
+    text-align: center;
+}
+
+main .block.toggle-bar > div:nth-of-type(2) {
     position: relative;
     width: max-content;
     display: flex;
+    background: var(--color-white);
     border-radius: 100px;
     box-shadow: 0 0 10px #00000029;
     box-sizing: border-box;
