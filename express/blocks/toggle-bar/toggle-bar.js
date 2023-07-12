@@ -70,7 +70,7 @@ function initButton(block, sections, index, props) {
     if (index === 0) {
       buttons[index].classList.add('active');
       props.activeTab = buttons[index].dataset.text;
-      props.activeSection = sections[0];
+      [props.activeSection] = sections;
     }
   }
 }
