@@ -1,7 +1,6 @@
 main .section .toggle-bar-wrapper {
     margin: 0 auto;
     padding: 0 16px;
-    overflow: auto;
     max-width: max-content;
 }
 
@@ -19,7 +18,6 @@ main .block.toggle-bar div[data-align="center"] * {
 
 main .block.toggle-bar > div:nth-of-type(2) {
     position: relative;
-    width: max-content;
     display: flex;
     background: var(--color-white);
     border-radius: 100px;
@@ -29,6 +27,16 @@ main .block.toggle-bar > div:nth-of-type(2) {
     margin-top: 32px;
     margin-bottom: 16px;
     height: 70px;
+    overflow: auto clip;
+}
+
+main .block.toggle-bar > div:nth-of-type(2)::-webkit-scrollbar {
+    display: none;
+}
+
+main .block.toggle-bar > div:nth-of-type(2) {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 main .block.toggle-bar > div {
