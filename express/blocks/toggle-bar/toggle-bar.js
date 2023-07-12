@@ -41,7 +41,7 @@ function decorateButton(block, toggle) {
   toggle.parentNode.replaceChild(button, toggle);
 }
 
-function initButton(block, sections, index) {
+function initButton(block, sections, index, props) {
   const enclosingMain = block.closest('main');
 
   if (enclosingMain) {
@@ -49,6 +49,7 @@ function initButton(block, sections, index) {
 
     buttons[index].addEventListener('click', () => {
       const activeButton = block.querySelector('button.active');
+      props.activeTab = buttons[index].dataset.text;
 
       localStorage.setItem('createIntent', buttons[index].dataset.text);
       if (activeButton !== buttons[index]) {
@@ -58,6 +59,7 @@ function initButton(block, sections, index) {
         sections.forEach((section) => {
           if (buttons[index].dataset.text === section.dataset.toggle.toLowerCase()) {
             section.style.display = 'block';
+            props.activeSection = section;
           } else {
             section.style.display = 'none';
           }
@@ -67,6 +69,8 @@ function initButton(block, sections, index) {
 
     if (index === 0) {
       buttons[index].classList.add('active');
+      props.activeTab = buttons[index].dataset.text;
+      props.activeSection = sections[0];
     }
   }
 }
@@ -81,7 +85,28 @@ function syncWithStoredIntent(block) {
   }
 }
 
+function initFloatBehavior(block, props) {
+  const toggleBar = block.querySelector('div:nth-of-type(2)');
+  if (toggleBar) {
+    document.addEventListener('scroll', () => {
+      const blockRect = block.getBoundingClientRect();
+      const sectionRect = props.activeSection.getBoundingClientRect();
+
+      if (sectionRect.bottom < 0) {
+        block.classList.add('hidden');
+      } else if (blockRect.top < -45) {
+        block.classList.remove('hidden');
+        block.classList.add('sticking');
+      } else if (blockRect.top >= -45) {
+        block.classList.remove('sticking');
+        block.classList.remove('hidden');
+      }
+    }, { passive: true });
+  }
+}
+
 export default function decorate(block) {
+  const props = { activeTab: '', activeSection: null };
   const enclosingMain = block.closest('main');
   if (enclosingMain) {
     const sections = enclosingMain.querySelectorAll('[data-toggle]');
@@ -89,7 +114,7 @@ export default function decorate(block) {
 
     toggles.forEach((toggle, index) => {
       decorateButton(block, toggle);
-      initButton(block, sections, index);
+      initButton(block, sections, index, props);
     });
 
     if (sections) {
@@ -101,5 +126,9 @@ export default function decorate(block) {
     }
 
     syncWithStoredIntent(block);
+
+    if (block.classList.contains('sticky')) {
+      initFloatBehavior(block, props);
+    }
   }
 }

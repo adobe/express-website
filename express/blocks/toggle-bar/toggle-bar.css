@@ -5,7 +5,11 @@ main .section .toggle-bar-wrapper {
 }
 
 main .block.toggle-bar.float {
-    margin-top: -10%;
+    margin-top: -72px;
+}
+
+main .block.toggle-bar.sticky {
+    min-height: 147px;
 }
 
 main .block.toggle-bar div[data-align="center"] {
@@ -28,6 +32,18 @@ main .block.toggle-bar > div:nth-of-type(2) {
     margin-bottom: 16px;
     height: 70px;
     overflow: auto clip;
+    transition: top 0.2s;
+}
+
+main .block.toggle-bar.sticky.sticking > div:nth-of-type(2) {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+main .block.toggle-bar.sticky.sticking.hidden > div:nth-of-type(2) {
+    top: -120px;
 }
 
 main .block.toggle-bar > div:nth-of-type(2)::-webkit-scrollbar {
