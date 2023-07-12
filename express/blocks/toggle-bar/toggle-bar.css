@@ -10,6 +10,8 @@ main .block.toggle-bar.float {
 
 main .block.toggle-bar.sticky {
     min-height: 147px;
+    position: relative;
+    z-index: 99;
 }
 
 main .block.toggle-bar div[data-align="center"] {
