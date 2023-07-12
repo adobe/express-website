@@ -93,8 +93,12 @@ function getCrumbsForSEOPage(templatesUrl, allTemplatesMetadata, taskCategories,
       }
       crumbs.push(segmentCrumb);
     });
+  const shortTitle = getMetadata('short-title');
+  if (!shortTitle) {
+    return crumbs;
+  }
   const lastCrumb = createTag('li');
-  lastCrumb.textContent = getMetadata('short-title');
+  lastCrumb.textContent = shortTitle;
   crumbs.push(lastCrumb);
   return crumbs;
 }

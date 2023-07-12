@@ -69,7 +69,12 @@ function loadIMS() {
     locale: getLocale(window.location),
     environment: 'prod',
   };
-  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
+  if (!['www.stage.adobe.com'].includes(window.location.hostname)) {
+    loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
+  } else {
+    loadScript('https://auth-stg1.services.adobe.com/imslib/imslib.min.js');
+    window.adobeid.environment = 'stg1';
+  }
 }
 
 async function loadFEDS() {
