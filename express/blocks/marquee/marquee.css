@@ -88,6 +88,7 @@ main .marquee .video-background-wrapper {
 }
 
 main .marquee video.marquee-background {
+  z-index: 0;
   object-fit: cover;
   width: 100%;
   min-height: 200px;
