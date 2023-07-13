@@ -159,6 +159,17 @@ function initSearchFunction(block) {
           await onSearchSubmit();
         });
 
+        li.addEventListener('keydown', async (e) => {
+          if (e.key === 'Enter' || e.keyCode === 13) {
+            if (item.query !== searchBar.value) {
+              searchBar.value = item.query;
+              searchBar.dispatchEvent(new Event('input'));
+            }
+
+            await onSearchSubmit();
+          }
+        });
+
         suggestionsList.append(li);
       });
     }
