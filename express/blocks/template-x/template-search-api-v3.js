@@ -105,10 +105,10 @@ const fetchSearchUrl = async ({
 
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
-  const fallBacktextTemplate = tasks ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
+  const fallbackTextTemplate = tasks ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
-  if (fallBacktextTemplate) {
-    return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
+  if (fallbackTextTemplate) {
+    return tasks ? fallbackTextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallbackTextTemplate;
   }
 
   return `Sorry we couldn't find any results for what you searched for, try some of these popular ${
@@ -126,12 +126,12 @@ export async function fetchTemplates(props, fallback = true) {
   }
   const { filters: { tasks, locales } } = props;
   if (tasks) {
-    response = await fetchSearchUrl({ ...props, filters: { tasks, locales, premium: 'false' } });
+    response = await fetchSearchUrl({ ...props, q: '', filters: { tasks, locales, premium: 'false' } });
     if (response?.metadata?.totalHits > 0) {
       return { response, fallbackMsg: await getFallbackMsg(tasks) };
     }
   }
-  response = await fetchSearchUrl({ ...props, filters: { locales, premium: 'false' } });
+  response = await fetchSearchUrl({ ...props, q: '', filters: { locales, premium: 'false' } });
   return { response, fallbackMsg: await getFallbackMsg() };
 }
 

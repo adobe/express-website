@@ -18,14 +18,14 @@ import {
   decorateMain,
   fetchPlaceholders,
   getIconElement,
+  getLanguage,
   getLocale,
   getLottie,
-  lazyLoadLottiePlayer,
-  toClassName,
-  getLanguage,
   getMetadata,
-  transformLinkToAnimation,
+  lazyLoadLottiePlayer,
   titleCase,
+  toClassName,
+  transformLinkToAnimation,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -93,8 +93,6 @@ async function fetchAndRenderTemplates(props) {
 }
 
 async function processContentRow(block, props) {
-  // const placeholders = await fetchPlaceholders();
-
   const templateTitle = createTag('div', { class: 'template-title' });
   templateTitle.innerHTML = props.contentRow.outerHTML;
 
@@ -117,40 +115,36 @@ async function processContentRow(block, props) {
 }
 
 async function formatHeadingPlaceholder(props) {
-  const heading = getMetadata('short-title');
   // special treatment for express/ root url
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
   const locale = getLocale(window.location);
   const lang = getLanguage(locale);
   const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
-  let grammarTemplate;
+  let toolBarHeading = props.templateStats;
 
   if (getMetadata('template-search-page') === 'Y') {
-    grammarTemplate = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
-  } else {
-    grammarTemplate = props.templateStats || placeholders['template-placeholder'];
+    toolBarHeading = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
   }
 
-  if (grammarTemplate) {
-    grammarTemplate = grammarTemplate
+  if (toolBarHeading) {
+    toolBarHeading = toolBarHeading
+      .replace('{{templates-count}}', templateCount)
       .replace('{{quantity}}', templateCount)
-      .replace('{{Type}}', heading)
-      .replace('{{type}}', camelHeading);
+      .replace('{{type}}', getMetadata('q'));
 
     if (locale === 'fr') {
-      grammarTemplate.split(' ').forEach((word, index, words) => {
+      toolBarHeading.split(' ').forEach((word, index, words) => {
         if (index + 1 < words.length) {
           if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
             words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-            grammarTemplate = words.join(' ');
+            toolBarHeading = words.join(' ');
           }
         }
       });
     }
   }
 
-  return grammarTemplate;
+  return toolBarHeading;
 }
 
 function constructProps(block) {
@@ -200,7 +194,7 @@ function constructProps(block) {
       }
     } else if (cols.length === 3) {
       if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
+        props[camelize(key)] = cols[2].textContent.trim();
       }
     } else if (cols.length === 4) {
       if (key === 'blank template') {
@@ -219,8 +213,7 @@ function constructProps(block) {
           props.backgroundColor = backgroundColor;
         }
         props.backgroundAnimation = backgroundAnimation || null;
-        const contrastingTextColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
-        props.textColor = contrastingTextColor;
+        props.textColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
       }
     }
   });
@@ -365,42 +358,6 @@ async function decorateLoadMoreButton(block, props) {
   });
 
   return loadMoreDiv;
-}
-
-async function insertTemplateStats(props) {
-  const locale = getLocale(window.location);
-  const lang = getLanguage(getLocale(window.location));
-  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
-  const heading = props.contentRow.textContent;
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
-  if (!heading) return null;
-
-  let grammarTemplate = await formatHeadingPlaceholder(props) || '';
-
-  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', templateCount);
-  }
-
-  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
-  }
-
-  if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', camelHeading);
-  }
-
-  if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
-        }
-      }
-    });
-  }
-
-  return grammarTemplate;
 }
 
 async function fetchBlueprint(pathname) {
@@ -1071,7 +1028,9 @@ async function decorateToolbar(block, props) {
   const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
   const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
-  sectionHeading.textContent = await insertTemplateStats(props);
+  if (props.templateStats) {
+    sectionHeading.textContent = await formatHeadingPlaceholder(props) || '';;
+  }
 
   block.prepend(tBarWrapper);
   tBarWrapper.append(tBar);
