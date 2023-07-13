@@ -1030,7 +1030,7 @@ async function decorateToolbar(block, props) {
   const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
   if (props.templateStats) {
-    sectionHeading.textContent = await formatHeadingPlaceholder(props) || '';;
+    sectionHeading.textContent = await formatHeadingPlaceholder(props) || '';
   }
 
   block.prepend(tBarWrapper);
