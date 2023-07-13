@@ -123,11 +123,15 @@ function initSearchFunction(block) {
     }
   };
 
+  const onSearchSubmit = async () => {
+    searchBar.disabled = true;
+    logSearch(searchForm);
+    await redirectSearch();
+  };
+
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    searchBar.disabled = true;
-    logSearch(e.currentTarget);
-    await redirectSearch();
+    await onSearchSubmit();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -146,10 +150,13 @@ function initSearchFunction(block) {
         const li = createTag('li', { tabindex: 0 });
         const valRegEx = new RegExp(searchBar.value, 'i');
         li.innerHTML = item.query.replace(valRegEx, `<b>${searchBarVal}</b>`);
-        li.addEventListener('click', () => {
-          if (item.query === searchBar.value) return;
-          searchBar.value = item.query;
-          searchBar.dispatchEvent(new Event('input'));
+        li.addEventListener('click', async () => {
+          if (item.query !== searchBar.value) {
+            searchBar.value = item.query;
+            searchBar.dispatchEvent(new Event('input'));
+          }
+
+          await onSearchSubmit();
         });
 
         suggestionsList.append(li);
