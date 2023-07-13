@@ -120,7 +120,7 @@ async function formatHeadingPlaceholder(props) {
   const locale = getLocale(window.location);
   const lang = getLanguage(locale);
   const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
-  let toolBarHeading = props.templateStats;
+  let toolBarHeading = getMetadata('toolbar-heading') ? props.templateStats : placeholders['template-placeholder'];
 
   if (getMetadata('template-search-page') === 'Y') {
     toolBarHeading = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
@@ -130,7 +130,8 @@ async function formatHeadingPlaceholder(props) {
     toolBarHeading = toolBarHeading
       .replace('{{templates-count}}', templateCount)
       .replace('{{quantity}}', templateCount)
-      .replace('{{type}}', getMetadata('q'));
+      .replace('{{Type}}', titleCase(getMetadata('q') || getMetadata('short-title')))
+      .replace('{{type}}', getMetadata('q') || getMetadata('short-title'));
 
     if (locale === 'fr') {
       toolBarHeading.split(' ').forEach((word, index, words) => {
