@@ -40,11 +40,17 @@ function wordStartsWithVowels(word) {
 }
 
 function camelize(str) {
-  return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
+  return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase()))
+    .replace(/\s+/g, '');
 }
 
 async function fetchAndRenderTemplates(props) {
-  const [placeholders, { response, fallbackMsg }] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
+  const [placeholders, {
+    response,
+    fallbackMsg,
+  }] = await Promise.all(
+    [fetchPlaceholders(), fetchTemplates(props)],
+  );
   if (!response || !response.items || !Array.isArray(response.items)) {
     return { templates: null };
   }
@@ -52,7 +58,8 @@ async function fetchAndRenderTemplates(props) {
   if ('_links' in response) {
     // eslint-disable-next-line no-underscore-dangle
     const nextQuery = response._links.next.href;
-    const starts = new URLSearchParams(nextQuery).get('start').split(',');
+    const starts = new URLSearchParams(nextQuery).get('start')
+      .split(',');
     props.start = starts.join(',');
   } else {
     props.start = '';
@@ -118,11 +125,13 @@ async function processContentRow(block, props) {
 async function formatHeadingPlaceholder(props) {
   const heading = getMetadata('short-title');
   // special treatment for express/ root url
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0)
+    .toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
   const locale = getLocale(window.location);
   const lang = getLanguage(locale);
-  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
+  const templateCount = lang === 'es-ES' ? props.total.toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   let grammarTemplate;
 
   if (getMetadata('template-search-page') === 'Y') {
@@ -138,14 +147,15 @@ async function formatHeadingPlaceholder(props) {
       .replace('{{type}}', camelHeading);
 
     if (locale === 'fr') {
-      grammarTemplate.split(' ').forEach((word, index, words) => {
-        if (index + 1 < words.length) {
-          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-            grammarTemplate = words.join(' ');
+      grammarTemplate.split(' ')
+        .forEach((word, index, words) => {
+          if (index + 1 < words.length) {
+            if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+              words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+              grammarTemplate = words.join(' ');
+            }
           }
-        }
-      });
+        });
     }
   }
 
@@ -175,42 +185,49 @@ function constructProps(block) {
     viewAllLink: null,
   };
 
-  Array.from(block.children).forEach((row) => {
-    const cols = row.querySelectorAll('div');
-    const key = cols[0].querySelector('strong')?.textContent.trim().toLowerCase();
-    if (cols.length === 1) {
-      [props.contentRow] = cols;
-    } else if (cols.length === 2) {
-      const value = cols[1].textContent.trim();
+  Array.from(block.children)
+    .forEach((row) => {
+      const cols = row.querySelectorAll('div');
+      const key = cols[0].querySelector('strong')
+        ?.textContent
+        .trim()
+        .toLowerCase();
+      if (cols.length === 1) {
+        [props.contentRow] = cols;
+      } else if (cols.length === 2) {
+        const value = cols[1].textContent.trim();
 
-      if (key && value) {
-        // FIXME: facebook-post
-        if (['tasks', 'topics', 'locales', 'behaviors'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
-          props.filters[camelize(key)] = value;
-        } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
-          props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
-        } else {
-          props[camelize(key)] = value;
+        if (key && value) {
+          // FIXME: facebook-post
+          if (['tasks', 'topics', 'locales', 'behaviors'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
+            props.filters[camelize(key)] = value;
+          } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
+            props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
+          } else {
+            props[camelize(key)] = value;
+          }
+        }
+      } else if (cols.length === 3) {
+        if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim()
+          .toLowerCase())) {
+          props[camelize(key)] = cols[2].textContent.trim()
+            .toLowerCase();
+        }
+
+        if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim()
+          .toLowerCase())) {
+          const graphic = cols[2].querySelector('picture');
+          if (graphic) {
+            props[camelize(key)] = graphic;
+          }
+        }
+      } else if (cols.length === 4) {
+        if (key === 'blank template') {
+          cols[0].remove();
+          props.templates.push(row);
         }
       }
-    } else if (cols.length === 3) {
-      if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
-      }
-
-      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        const graphic = cols[2].querySelector('picture');
-        if (graphic) {
-          props[camelize(key)] = graphic;
-        }
-      }
-    } else if (cols.length === 4) {
-      if (key === 'blank template') {
-        cols[0].remove();
-        props.templates.push(row);
-      }
-    }
-  });
+    });
 
   return props;
 }
@@ -257,7 +274,8 @@ function populateTemplates(block, props, templates) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep).map((e) => +e);
+          const ratios = option.split(sep)
+            .map((e) => +e);
           props.placeholderFormat = ratios;
           if (block.classList.contains('horizontal')) {
             const height = block.classList.contains('mini') ? 100 : 200;
@@ -357,9 +375,11 @@ async function decorateLoadMoreButton(block, props) {
 async function insertTemplateStats(props) {
   const locale = getLocale(window.location);
   const lang = getLanguage(getLocale(window.location));
-  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
+  const templateCount = lang === 'es-ES' ? props.total.toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   const heading = props.contentRow.textContent;
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0)
+    .toLowerCase() + heading.slice(1);
   if (!heading) return null;
 
   let grammarTemplate = await formatHeadingPlaceholder(props) || '';
@@ -377,14 +397,15 @@ async function insertTemplateStats(props) {
   }
 
   if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
+    grammarTemplate.split(' ')
+      .forEach((word, index, words) => {
+        if (index + 1 < words.length) {
+          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            grammarTemplate = words.join(' ');
+          }
         }
-      }
-    });
+      });
   }
 
   return grammarTemplate;
@@ -408,7 +429,8 @@ async function fetchBlueprint(pathname) {
 }
 
 async function attachFreeInAppPills(block) {
-  const freeInAppText = await fetchPlaceholders().then((json) => json['free-in-app']);
+  const freeInAppText = await fetchPlaceholders()
+    .then((json) => json['free-in-app']);
 
   const templateLinks = block.querySelectorAll('a.template');
   for (const templateLink of templateLinks) {
@@ -419,7 +441,8 @@ async function attachFreeInAppPills(block) {
       && freeInAppText) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       $freeInAppBadge.textContent = freeInAppText;
-      templateLink.querySelector('div').append($freeInAppBadge);
+      templateLink.querySelector('div')
+        .append($freeInAppBadge);
     }
   }
 }
@@ -429,50 +452,58 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '')
+        .split(','),
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '')
+        .split(','),
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort']),
       elements: {},
-      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-sort-icons'].replace(/\s/g, '')
+        .split(','),
     },
   };
 
-  Object.entries(functions).forEach((entry) => {
-    entry[1].elements.wrapper = createTag('div', {
-      class: `function-wrapper function-${entry[0]}`,
-      'data-param': entry[0],
-    });
+  Object.entries(functions)
+    .forEach((entry) => {
+      entry[1].elements.wrapper = createTag('div', {
+        class: `function-wrapper function-${entry[0]}`,
+        'data-param': entry[0],
+      });
 
-    entry[1].elements.wrapper.subElements = {
-      button: {
-        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
-        subElements: {
-          iconHolder: createTag('span', { class: 'icon-holder' }),
-          textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
-          chevIcon: getIconElement('drop-down-arrow'),
+      entry[1].elements.wrapper.subElements = {
+        button: {
+          wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
+          subElements: {
+            iconHolder: createTag('span', { class: 'icon-holder' }),
+            textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
+            chevIcon: getIconElement('drop-down-arrow'),
+          },
         },
-      },
-      options: {
-        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
-        subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
-          const icon = getIconElement(entry[1].icons[subIndex]);
-          const optionButton = createTag('div', { class: 'option-button', 'data-value': option[1] });
-          [optionButton.textContent] = option;
-          optionButton.prepend(icon);
-          return optionButton;
-        }),
-      },
-    };
+        options: {
+          wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
+          subElements: Object.entries(entry[1].placeholders)
+            .map((option, subIndex) => {
+              const icon = getIconElement(entry[1].icons[subIndex]);
+              const optionButton = createTag('div', {
+                class: 'option-button',
+                'data-value': option[1],
+              });
+              [optionButton.textContent] = option;
+              optionButton.prepend(icon);
+              return optionButton;
+            }),
+        },
+      };
 
-    const $span = entry[1].elements.wrapper.subElements.button.subElements.textSpan;
-    [[$span.textContent]] = Object.entries(entry[1].placeholders);
-  });
+      const $span = entry[1].elements.wrapper.subElements.button.subElements.textSpan;
+      [[$span.textContent]] = Object.entries(entry[1].placeholders);
+    });
 
   return functions;
 }
@@ -497,23 +528,26 @@ function decorateFunctionsContainer(block, functions, placeholders) {
   const functionsContainer = createTag('div', { class: 'functions-container' });
   const functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
-  Object.values(functions).forEach((filter) => {
-    const filterWrapper = filter.elements.wrapper;
+  Object.values(functions)
+    .forEach((filter) => {
+      const filterWrapper = filter.elements.wrapper;
 
-    Object.values(filterWrapper.subElements).forEach((part) => {
-      const innerWrapper = part.wrapper;
+      Object.values(filterWrapper.subElements)
+        .forEach((part) => {
+          const innerWrapper = part.wrapper;
 
-      Object.values(part.subElements).forEach((innerElement) => {
-        if (innerElement) {
-          innerWrapper.append(innerElement);
-        }
-      });
+          Object.values(part.subElements)
+            .forEach((innerElement) => {
+              if (innerElement) {
+                innerWrapper.append(innerElement);
+              }
+            });
 
-      filterWrapper.append(innerWrapper);
+          filterWrapper.append(innerWrapper);
+        });
+      functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
+      functionsContainer.append(filterWrapper);
     });
-    functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
-    functionsContainer.append(filterWrapper);
-  });
 
   // restructure drawer for mobile design
   const filterContainer = createTag('div', { class: 'filter-container-mobile' });
@@ -524,7 +558,10 @@ function decorateFunctionsContainer(block, functions, placeholders) {
   const drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
   const $closeButton = getIconElement('search-clear');
   const applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
-  const applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
+  const applyButton = createTag('a', {
+    class: 'apply-filter-button button gradient',
+    href: '#',
+  });
 
   $closeButton.classList.add('close-drawer');
   applyButton.textContent = placeholders['apply-filters'];
@@ -578,7 +615,10 @@ function decorateFunctionsContainer(block, functions, placeholders) {
     sortButton.className = 'filter-mobile-option-heading';
   }
 
-  return { mobile: functionContainerMobile, desktop: functionsContainer };
+  return {
+    mobile: functionContainerMobile,
+    desktop: functionsContainer,
+  };
 }
 
 function closeTaskDropdown(block) {
@@ -612,7 +652,8 @@ async function decorateCategoryList(block, props) {
   const mobileDrawerWrapper = block.querySelector('.filter-drawer-mobile');
   const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
   const categories = JSON.parse(placeholders['x-task-categories']);
-  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '')
+    .split(',');
   const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const categoriesToggle = getIconElement('drop-down-arrow');
@@ -621,41 +662,43 @@ async function decorateCategoryList(block, props) {
   categoriesToggleWrapper.append(categoriesToggle);
   categoriesDesktopWrapper.append(categoriesToggleWrapper, $categories);
 
-  Object.entries(categories).forEach((category, index) => {
-    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-    const targetTasks = category[1];
-    const currentTasks = props.filters.tasks ? props.filters.tasks : "''";
-    const currentTopic = props.filters.topics;
+  Object.entries(categories)
+    .forEach((category, index) => {
+      const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+      const targetTasks = category[1];
+      const currentTasks = props.filters.tasks ? props.filters.tasks : '\'\'';
+      const currentTopic = props.filters.topics;
 
-    const $listItem = createTag('li');
-    if (category[1] === currentTasks) {
-      $listItem.classList.add('active');
-    }
+      const $listItem = createTag('li');
+      if (category[1] === currentTasks) {
+        $listItem.classList.add('active');
+      }
 
-    let icon;
-    if (categoryIcons[index] && categoryIcons[index] !== '') {
-      icon = categoryIcons[index];
-    } else {
-      icon = 'template-static';
-    }
+      let icon;
+      if (categoryIcons[index] && categoryIcons[index] !== '') {
+        icon = categoryIcons[index];
+      } else {
+        icon = 'template-static';
+      }
 
-    const iconElement = getIconElement(icon);
-    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-    const $a = createTag('a', {
-      'data-tasks': targetTasks,
-      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+      const iconElement = getIconElement(icon);
+      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+      const $a = createTag('a', {
+        'data-tasks': targetTasks,
+        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || '\'\''}`,
+      });
+      [$a.textContent] = category;
+
+      $a.prepend(iconElement);
+      $listItem.append($a);
+      $categories.append($listItem);
     });
-    [$a.textContent] = category;
-
-    $a.prepend(iconElement);
-    $listItem.append($a);
-    $categories.append($listItem);
-  });
 
   const categoriesMobileWrapper = categoriesDesktopWrapper.cloneNode({ deep: true });
   const mobileCategoriesToggle = createTag('span', { class: 'category-list-toggle' });
   mobileCategoriesToggle.textContent = placeholders['jump-to-category'];
-  categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')?.replaceWith(mobileCategoriesToggle);
+  categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')
+    ?.replaceWith(mobileCategoriesToggle);
   const lottieArrows = createTag('a', { class: 'lottie-wrapper' });
   mobileDrawerWrapper.append(lottieArrows);
   drawerWrapper.append(categoriesMobileWrapper);
@@ -849,9 +892,10 @@ async function redrawTemplates(block, props, toolBar) {
   const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
   props.start = '';
-  block.querySelectorAll('.template:not(.placeholder)').forEach((card) => {
-    card.remove();
-  });
+  block.querySelectorAll('.template:not(.placeholder)')
+    .forEach((card) => {
+      card.remove();
+    });
 
   await decorateNewTemplates(block, props, { reDrawMasonry: true });
 
@@ -1068,11 +1112,20 @@ async function decorateToolbar(block, props) {
   if (tBar) {
     const viewsWrapper = createTag('div', { class: 'views' });
 
-    const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
+    const smView = createTag('a', {
+      class: 'view-toggle-button small-view',
+      'data-view': 'sm',
+    });
     smView.append(getIconElement('small_grid'));
-    const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
+    const mdView = createTag('a', {
+      class: 'view-toggle-button medium-view',
+      'data-view': 'md',
+    });
     mdView.append(getIconElement('medium_grid'));
-    const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
+    const lgView = createTag('a', {
+      class: 'view-toggle-button large-view',
+      'data-view': 'lg',
+    });
     lgView.append(getIconElement('large_grid'));
 
     const functionsObj = makeTemplateFunctions(placeholders);
@@ -1105,7 +1158,8 @@ async function decorateTemplates(block, props) {
         // single text directly in div
         : [block.firstElementChild.textContent.trim()]);
     block.innerHTML = '';
-    const tls = Array.from(block.closest('main').querySelectorAll('.template-x'));
+    const tls = Array.from(block.closest('main')
+      .querySelectorAll('.template-x'));
     const i = tls.indexOf(block);
 
     const bluePrint = await fetchBlueprint(window.location.pathname);
@@ -1173,10 +1227,14 @@ async function decorateTemplates(block, props) {
     }, { width: '750' }];
   }
 
-  block.querySelectorAll(':scope picture > img').forEach((img) => {
-    const { src, alt } = img;
-    img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
-  });
+  block.querySelectorAll(':scope picture > img')
+    .forEach((img) => {
+      const {
+        src,
+        alt,
+      } = img;
+      img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+    });
 
   // find the edit link and turn the template DIV into the A
   // A
@@ -1243,7 +1301,10 @@ async function appendCategoryTemplatesCount(block, props) {
 }
 
 async function getBreadcrumbs() {
-  const { origin, pathname } = window.location;
+  const {
+    origin,
+    pathname,
+  } = window.location;
   const regex = /(.*?\/express\/)templates(.*)/;
   // FIXME: remove gnav breadcrumbs!
   const matches = pathname.match(regex);
@@ -1275,8 +1336,10 @@ async function getBreadcrumbs() {
     const params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop) => searchParams.get(prop),
     });
-    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
-    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
+    const searchingTasks = titleCase(params.tasks)
+      .replace(/[$@%"]/g, '');
+    const searchingTopics = titleCase(params.topics)
+      .replace(/[$@%"]/g, '');
     const lastCrumb = createTag('li');
     lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
     breadcrumbs.append(lastCrumb);
@@ -1322,7 +1385,10 @@ async function buildTemplateList(block, props, type = []) {
     await processContentRow(block, props);
   }
 
-  const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
+  const {
+    templates,
+    fallbackMsg,
+  } = await fetchAndRenderTemplates(props);
   if (templates) {
     if (fallbackMsg) {
       const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });

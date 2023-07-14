@@ -21,14 +21,27 @@ const memoizedFetchAPI = memoize(fetchAPI, {
 
 export default function useInputAutocomplete(
   updateUIWithSuggestions,
-  { throttleDelay = 300, debounceDelay = 500, limit = 5 } = {},
+  {
+    throttleDelay = 300,
+    debounceDelay = 500,
+    limit = 5,
+  } = {},
 ) {
-  const state = { query: '', waitingFor: '' };
+  const state = {
+    query: '',
+    waitingFor: '',
+  };
 
   const fetchAndUpdateUI = async () => {
     const currentSearch = state.query;
     state.waitingFor = currentSearch;
-    const suggestions = await memoizedFetchAPI({ textQuery: currentSearch, limit, locale: getLanguage(getLocale(window.location)) });
+    const suggestions = await memoizedFetchAPI(
+      {
+        textQuery: currentSearch,
+        limit,
+        locale: getLanguage(getLocale(window.location)),
+      },
+    );
     if (state.waitingFor === currentSearch) {
       updateUIWithSuggestions(suggestions);
     }

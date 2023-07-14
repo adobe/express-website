@@ -11,6 +11,7 @@
  */
 
 import { memoize, throttle, debounce } from '../../scripts/utils.js';
+// eslint-disable-next-line import/no-unresolved
 import fetchAPI from './fetchAPI.js';
 
 const memoizedFetchAPI = memoize(fetchAPI, {
