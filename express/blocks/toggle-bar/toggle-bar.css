@@ -22,6 +22,10 @@ main .block.toggle-bar div[data-align="center"] * {
     text-align: center;
 }
 
+main .block.toggle-bar.dark div:first-of-type * {
+    color: var(--color-white);
+}
+
 main .block.toggle-bar > div:nth-of-type(2) {
     position: relative;
     display: flex;
