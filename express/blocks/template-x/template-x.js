@@ -24,6 +24,7 @@ import {
   toClassName,
   getLanguage,
   getMetadata,
+  transformLinkToAnimation,
   titleCase,
 } from '../../scripts/scripts.js';
 
@@ -40,17 +41,34 @@ function wordStartsWithVowels(word) {
 }
 
 function camelize(str) {
-  return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase()))
-    .replace(/\s+/g, '');
+  return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
+}
+
+function isDarkOverlayReadable(colorString) {
+  let r;
+  let g;
+  let b;
+
+  if (colorString.match(/^rgb/)) {
+    const colorValues = colorString.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    [r, g, b] = colorValues.slice(1);
+  } else {
+    const hexToRgb = +(`0x${colorString.slice(1).replace(colorString.length < 5 ? /./g : '', '$&$&')}`);
+    // eslint-disable-next-line no-bitwise
+    r = (hexToRgb >> 16) & 255;
+    // eslint-disable-next-line no-bitwise
+    g = (hexToRgb >> 8) & 255;
+    // eslint-disable-next-line no-bitwise
+    b = hexToRgb & 255;
+  }
+
+  const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+
+  return hsp > 127.5;
 }
 
 async function fetchAndRenderTemplates(props) {
-  const [placeholders, {
-    response,
-    fallbackMsg,
-  }] = await Promise.all(
-    [fetchPlaceholders(), fetchTemplates(props)],
-  );
+  const [placeholders, { response, fallbackMsg }] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
   if (!response || !response.items || !Array.isArray(response.items)) {
     return { templates: null };
   }
@@ -58,8 +76,7 @@ async function fetchAndRenderTemplates(props) {
   if ('_links' in response) {
     // eslint-disable-next-line no-underscore-dangle
     const nextQuery = response._links.next.href;
-    const starts = new URLSearchParams(nextQuery).get('start')
-      .split(',');
+    const starts = new URLSearchParams(nextQuery).get('start').split(',');
     props.start = starts.join(',');
   } else {
     props.start = '';
@@ -97,41 +114,16 @@ async function processContentRow(block, props) {
   block.prepend(templateTitle);
 
   if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
-
-  // todo: build collaboration and holiday variants
-  // if (block.classList.contains('collaboration')) {
-  //   const titleHeading = props.contentRow.querySelector('h3');
-  //   const anchorLink = createTag('a', {
-  //     class: 'collaboration-anchor',
-  //     href: `${document.URL.replace(/#.*$/, '')}#${titleHeading.id}`,
-  //   });
-  //   const clipboardTag = createTag('span', { class: 'clipboard-tag' });
-  //   clipboardTag.textContent = placeholders['tag-copied'];
-  //
-  //   anchorLink.addEventListener('click', (e) => {
-  //     e.preventDefault();
-  //     navigator.clipboard.writeText(anchorLink.href);
-  //     anchorLink.classList.add('copied');
-  //     setTimeout(() => {
-  //       anchorLink.classList.remove('copied');
-  //     }, 2000);
-  //   });
-  //
-  //   anchorLink.append(clipboardTag);
-  //   titleHeading.append(anchorLink);
-  // }
 }
 
 async function formatHeadingPlaceholder(props) {
   const heading = getMetadata('short-title');
   // special treatment for express/ root url
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0)
-    .toLowerCase() + heading.slice(1);
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
   const locale = getLocale(window.location);
   const lang = getLanguage(locale);
-  const templateCount = lang === 'es-ES' ? props.total.toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
+  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   let grammarTemplate;
 
   if (getMetadata('template-search-page') === 'Y') {
@@ -147,15 +139,14 @@ async function formatHeadingPlaceholder(props) {
       .replace('{{type}}', camelHeading);
 
     if (locale === 'fr') {
-      grammarTemplate.split(' ')
-        .forEach((word, index, words) => {
-          if (index + 1 < words.length) {
-            if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-              words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-              grammarTemplate = words.join(' ');
-            }
+      grammarTemplate.split(' ').forEach((word, index, words) => {
+        if (index + 1 < words.length) {
+          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            grammarTemplate = words.join(' ');
           }
-        });
+        }
+      });
     }
   }
 
@@ -183,51 +174,56 @@ function constructProps(block) {
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    holidayIcon: null,
+    backgroundColor: '#000B1D',
+    backgroundAnimation: null,
+    textColor: '#FFFFFF',
   };
 
-  Array.from(block.children)
-    .forEach((row) => {
-      const cols = row.querySelectorAll('div');
-      const key = cols[0].querySelector('strong')
-        ?.textContent
-        .trim()
-        .toLowerCase();
-      if (cols.length === 1) {
-        [props.contentRow] = cols;
-      } else if (cols.length === 2) {
-        const value = cols[1].textContent.trim();
+  Array.from(block.children).forEach((row) => {
+    const cols = row.querySelectorAll('div');
+    const key = cols[0].querySelector('strong')?.textContent.trim().toLowerCase();
+    if (cols.length === 1) {
+      [props.contentRow] = cols;
+    } else if (cols.length === 2) {
+      const value = cols[1].textContent.trim();
 
-        if (key && value) {
-          // FIXME: facebook-post
-          if (['tasks', 'topics', 'locales', 'behaviors'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
-            props.filters[camelize(key)] = value;
-          } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
-            props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
-          } else {
-            props[camelize(key)] = value;
-          }
-        }
-      } else if (cols.length === 3) {
-        if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim()
-          .toLowerCase())) {
-          props[camelize(key)] = cols[2].textContent.trim()
-            .toLowerCase();
-        }
-
-        if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim()
-          .toLowerCase())) {
-          const graphic = cols[2].querySelector('picture');
-          if (graphic) {
-            props[camelize(key)] = graphic;
-          }
-        }
-      } else if (cols.length === 4) {
-        if (key === 'blank template') {
-          cols[0].remove();
-          props.templates.push(row);
+      if (key && value) {
+        // FIXME: facebook-post
+        if (['tasks', 'topics', 'locales', 'behaviors'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
+          props.filters[camelize(key)] = value;
+        } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
+          props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
+        } else {
+          props[camelize(key)] = value;
         }
       }
-    });
+    } else if (cols.length === 3) {
+      if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
+      }
+    } else if (cols.length === 4) {
+      if (key === 'blank template') {
+        cols[0].remove();
+        props.templates.push(row);
+      }
+    } else if (cols.length === 5) {
+      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        const backgroundColor = cols[3].textContent.trim().toLowerCase();
+        const holidayIcon = cols[2].querySelector('picture');
+        const backgroundAnimation = cols[4].querySelector('a');
+
+        props.holidayBlock = true;
+        props.holidayIcon = holidayIcon || null;
+        if (backgroundColor) {
+          props.backgroundColor = backgroundColor;
+        }
+        props.backgroundAnimation = backgroundAnimation || null;
+        const contrastingTextColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
+        props.textColor = contrastingTextColor;
+      }
+    }
+  });
 
   return props;
 }
@@ -274,8 +270,7 @@ function populateTemplates(block, props, templates) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep)
-            .map((e) => +e);
+          const ratios = option.split(sep).map((e) => +e);
           props.placeholderFormat = ratios;
           if (block.classList.contains('horizontal')) {
             const height = block.classList.contains('mini') ? 100 : 200;
@@ -375,11 +370,9 @@ async function decorateLoadMoreButton(block, props) {
 async function insertTemplateStats(props) {
   const locale = getLocale(window.location);
   const lang = getLanguage(getLocale(window.location));
-  const templateCount = lang === 'es-ES' ? props.total.toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
+  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   const heading = props.contentRow.textContent;
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0)
-    .toLowerCase() + heading.slice(1);
+  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   if (!heading) return null;
 
   let grammarTemplate = await formatHeadingPlaceholder(props) || '';
@@ -397,15 +390,14 @@ async function insertTemplateStats(props) {
   }
 
   if (locale === 'fr') {
-    grammarTemplate.split(' ')
-      .forEach((word, index, words) => {
-        if (index + 1 < words.length) {
-          if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-            grammarTemplate = words.join(' ');
-          }
+    grammarTemplate.split(' ').forEach((word, index, words) => {
+      if (index + 1 < words.length) {
+        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
+          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+          grammarTemplate = words.join(' ');
         }
-      });
+      }
+    });
   }
 
   return grammarTemplate;
@@ -429,8 +421,7 @@ async function fetchBlueprint(pathname) {
 }
 
 async function attachFreeInAppPills(block) {
-  const freeInAppText = await fetchPlaceholders()
-    .then((json) => json['free-in-app']);
+  const freeInAppText = await fetchPlaceholders().then((json) => json['free-in-app']);
 
   const templateLinks = block.querySelectorAll('a.template');
   for (const templateLink of templateLinks) {
@@ -441,8 +432,7 @@ async function attachFreeInAppPills(block) {
       && freeInAppText) {
       const $freeInAppBadge = createTag('span', { class: 'icon icon-free-badge' });
       $freeInAppBadge.textContent = freeInAppText;
-      templateLink.querySelector('div')
-        .append($freeInAppBadge);
+      templateLink.querySelector('div').append($freeInAppBadge);
     }
   }
 }
@@ -452,58 +442,50 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium']),
       elements: {},
-      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '')
-        .split(','),
+      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated']),
       elements: {},
-      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '')
-        .split(','),
+      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort']),
       elements: {},
-      icons: placeholders['template-sort-icons'].replace(/\s/g, '')
-        .split(','),
+      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
     },
   };
 
-  Object.entries(functions)
-    .forEach((entry) => {
-      entry[1].elements.wrapper = createTag('div', {
-        class: `function-wrapper function-${entry[0]}`,
-        'data-param': entry[0],
-      });
-
-      entry[1].elements.wrapper.subElements = {
-        button: {
-          wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
-          subElements: {
-            iconHolder: createTag('span', { class: 'icon-holder' }),
-            textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
-            chevIcon: getIconElement('drop-down-arrow'),
-          },
-        },
-        options: {
-          wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
-          subElements: Object.entries(entry[1].placeholders)
-            .map((option, subIndex) => {
-              const icon = getIconElement(entry[1].icons[subIndex]);
-              const optionButton = createTag('div', {
-                class: 'option-button',
-                'data-value': option[1],
-              });
-              [optionButton.textContent] = option;
-              optionButton.prepend(icon);
-              return optionButton;
-            }),
-        },
-      };
-
-      const $span = entry[1].elements.wrapper.subElements.button.subElements.textSpan;
-      [[$span.textContent]] = Object.entries(entry[1].placeholders);
+  Object.entries(functions).forEach((entry) => {
+    entry[1].elements.wrapper = createTag('div', {
+      class: `function-wrapper function-${entry[0]}`,
+      'data-param': entry[0],
     });
+
+    entry[1].elements.wrapper.subElements = {
+      button: {
+        wrapper: createTag('div', { class: `button-wrapper button-wrapper-${entry[0]}` }),
+        subElements: {
+          iconHolder: createTag('span', { class: 'icon-holder' }),
+          textSpan: createTag('span', { class: `current-option current-option-${entry[0]}` }),
+          chevIcon: getIconElement('drop-down-arrow'),
+        },
+      },
+      options: {
+        wrapper: createTag('div', { class: `options-wrapper options-wrapper-${entry[0]}` }),
+        subElements: Object.entries(entry[1].placeholders).map((option, subIndex) => {
+          const icon = getIconElement(entry[1].icons[subIndex]);
+          const optionButton = createTag('div', { class: 'option-button', 'data-value': option[1] });
+          [optionButton.textContent] = option;
+          optionButton.prepend(icon);
+          return optionButton;
+        }),
+      },
+    };
+
+    const $span = entry[1].elements.wrapper.subElements.button.subElements.textSpan;
+    [[$span.textContent]] = Object.entries(entry[1].placeholders);
+  });
 
   return functions;
 }
@@ -528,26 +510,23 @@ function decorateFunctionsContainer(block, functions, placeholders) {
   const functionsContainer = createTag('div', { class: 'functions-container' });
   const functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
-  Object.values(functions)
-    .forEach((filter) => {
-      const filterWrapper = filter.elements.wrapper;
+  Object.values(functions).forEach((filter) => {
+    const filterWrapper = filter.elements.wrapper;
 
-      Object.values(filterWrapper.subElements)
-        .forEach((part) => {
-          const innerWrapper = part.wrapper;
+    Object.values(filterWrapper.subElements).forEach((part) => {
+      const innerWrapper = part.wrapper;
 
-          Object.values(part.subElements)
-            .forEach((innerElement) => {
-              if (innerElement) {
-                innerWrapper.append(innerElement);
-              }
-            });
+      Object.values(part.subElements).forEach((innerElement) => {
+        if (innerElement) {
+          innerWrapper.append(innerElement);
+        }
+      });
 
-          filterWrapper.append(innerWrapper);
-        });
-      functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
-      functionsContainer.append(filterWrapper);
+      filterWrapper.append(innerWrapper);
     });
+    functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
+    functionsContainer.append(filterWrapper);
+  });
 
   // restructure drawer for mobile design
   const filterContainer = createTag('div', { class: 'filter-container-mobile' });
@@ -558,10 +537,7 @@ function decorateFunctionsContainer(block, functions, placeholders) {
   const drawerBackground = createTag('div', { class: 'drawer-background hidden transparent' });
   const $closeButton = getIconElement('search-clear');
   const applyButtonWrapper = createTag('div', { class: 'apply-filter-button-wrapper hidden transparent' });
-  const applyButton = createTag('a', {
-    class: 'apply-filter-button button gradient',
-    href: '#',
-  });
+  const applyButton = createTag('a', { class: 'apply-filter-button button gradient', href: '#' });
 
   $closeButton.classList.add('close-drawer');
   applyButton.textContent = placeholders['apply-filters'];
@@ -615,10 +591,7 @@ function decorateFunctionsContainer(block, functions, placeholders) {
     sortButton.className = 'filter-mobile-option-heading';
   }
 
-  return {
-    mobile: functionContainerMobile,
-    desktop: functionsContainer,
-  };
+  return { mobile: functionContainerMobile, desktop: functionsContainer };
 }
 
 function closeTaskDropdown(block) {
@@ -652,8 +625,7 @@ async function decorateCategoryList(block, props) {
   const mobileDrawerWrapper = block.querySelector('.filter-drawer-mobile');
   const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
   const categories = JSON.parse(placeholders['x-task-categories']);
-  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '')
-    .split(',');
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
   const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const categoriesToggle = getIconElement('drop-down-arrow');
@@ -662,43 +634,41 @@ async function decorateCategoryList(block, props) {
   categoriesToggleWrapper.append(categoriesToggle);
   categoriesDesktopWrapper.append(categoriesToggleWrapper, $categories);
 
-  Object.entries(categories)
-    .forEach((category, index) => {
-      const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-      const targetTasks = category[1];
-      const currentTasks = props.filters.tasks ? props.filters.tasks : '\'\'';
-      const currentTopic = props.filters.topics;
+  Object.entries(categories).forEach((category, index) => {
+    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+    const targetTasks = category[1];
+    const currentTasks = props.filters.tasks ? props.filters.tasks : "''";
+    const currentTopic = props.filters.topics;
 
-      const $listItem = createTag('li');
-      if (category[1] === currentTasks) {
-        $listItem.classList.add('active');
-      }
+    const $listItem = createTag('li');
+    if (category[1] === currentTasks) {
+      $listItem.classList.add('active');
+    }
 
-      let icon;
-      if (categoryIcons[index] && categoryIcons[index] !== '') {
-        icon = categoryIcons[index];
-      } else {
-        icon = 'template-static';
-      }
+    let icon;
+    if (categoryIcons[index] && categoryIcons[index] !== '') {
+      icon = categoryIcons[index];
+    } else {
+      icon = 'template-static';
+    }
 
-      const iconElement = getIconElement(icon);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const $a = createTag('a', {
-        'data-tasks': targetTasks,
-        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || '\'\''}`,
-      });
-      [$a.textContent] = category;
-
-      $a.prepend(iconElement);
-      $listItem.append($a);
-      $categories.append($listItem);
+    const iconElement = getIconElement(icon);
+    const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+    const $a = createTag('a', {
+      'data-tasks': targetTasks,
+      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
     });
+    [$a.textContent] = category;
+
+    $a.prepend(iconElement);
+    $listItem.append($a);
+    $categories.append($listItem);
+  });
 
   const categoriesMobileWrapper = categoriesDesktopWrapper.cloneNode({ deep: true });
   const mobileCategoriesToggle = createTag('span', { class: 'category-list-toggle' });
   mobileCategoriesToggle.textContent = placeholders['jump-to-category'];
-  categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')
-    ?.replaceWith(mobileCategoriesToggle);
+  categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')?.replaceWith(mobileCategoriesToggle);
   const lottieArrows = createTag('a', { class: 'lottie-wrapper' });
   mobileDrawerWrapper.append(lottieArrows);
   drawerWrapper.append(categoriesMobileWrapper);
@@ -892,10 +862,9 @@ async function redrawTemplates(block, props, toolBar) {
   const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
   props.start = '';
-  block.querySelectorAll('.template:not(.placeholder)')
-    .forEach((card) => {
-      card.remove();
-    });
+  block.querySelectorAll('.template:not(.placeholder)').forEach((card) => {
+    card.remove();
+  });
 
   await decorateNewTemplates(block, props, { reDrawMasonry: true });
 
@@ -1112,20 +1081,11 @@ async function decorateToolbar(block, props) {
   if (tBar) {
     const viewsWrapper = createTag('div', { class: 'views' });
 
-    const smView = createTag('a', {
-      class: 'view-toggle-button small-view',
-      'data-view': 'sm',
-    });
+    const smView = createTag('a', { class: 'view-toggle-button small-view', 'data-view': 'sm' });
     smView.append(getIconElement('small_grid'));
-    const mdView = createTag('a', {
-      class: 'view-toggle-button medium-view',
-      'data-view': 'md',
-    });
+    const mdView = createTag('a', { class: 'view-toggle-button medium-view', 'data-view': 'md' });
     mdView.append(getIconElement('medium_grid'));
-    const lgView = createTag('a', {
-      class: 'view-toggle-button large-view',
-      'data-view': 'lg',
-    });
+    const lgView = createTag('a', { class: 'view-toggle-button large-view', 'data-view': 'lg' });
     lgView.append(getIconElement('large_grid'));
 
     const functionsObj = makeTemplateFunctions(placeholders);
@@ -1143,6 +1103,75 @@ async function decorateToolbar(block, props) {
   }
 }
 
+function initExpandCollapseToolbar(block, templateTitle, toggle, link) {
+  const chev = block.querySelector('.toggle-button-chev');
+  templateTitle.addEventListener('click', () => block.classList.toggle('expanded'));
+  chev.addEventListener('click', (e) => {
+    e.stopPropagation();
+    block.classList.toggle('expanded');
+  });
+
+  toggle.addEventListener('click', () => block.classList.toggle('expanded'));
+  link.addEventListener('click', (e) => e.stopPropagation());
+
+  setTimeout(() => {
+    if (!block.matches(':hover')) {
+      block.classList.toggle('expanded');
+    }
+  }, 3000);
+}
+
+function decorateHoliday(block, props) {
+  const mobileViewport = window.innerWidth < 901;
+  const templateTitle = block.querySelector('.template-title');
+  const toggleBar = templateTitle.querySelector('div');
+  const heading = templateTitle.querySelector('h4');
+  const subheading = templateTitle.querySelector('p');
+  const link = templateTitle.querySelector('.template-title-link');
+  const linkWrapper = link.closest('p');
+  const toggle = createTag('div', { class: 'expanded toggle-button' });
+  const topElements = createTag('div', { class: 'toggle-bar-top' });
+  const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
+  const toggleChev = createTag('div', { class: 'toggle-button-chev' });
+  const carouselFaderLeft = block.querySelector('.carousel-fader-left');
+  const carouselFaderRight = block.querySelector('.carousel-fader-right');
+
+  if (props.holidayIcon) topElements.append(props.holidayIcon);
+  if (props.backgroundAnimation) {
+    const animation = transformLinkToAnimation(props.backgroundAnimation);
+    block.classList.add('animated');
+    block.prepend(animation);
+  }
+
+  if (props.backgroundColor) {
+    if (props.backgroundAnimation) {
+      carouselFaderRight.style.backgroundImage = 'none';
+      carouselFaderLeft.style.backgroundImage = 'none';
+    } else {
+      carouselFaderRight.style.backgroundImage = `linear-gradient(to right, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+      carouselFaderLeft.style.backgroundImage = `linear-gradient(to left, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+    }
+  }
+
+  block.classList.add('expanded', props.textColor);
+  toggleBar.classList.add('toggle-bar');
+  topElements.append(heading);
+  toggle.append(link, toggleChev);
+  linkWrapper.remove();
+  bottomElements.append(subheading);
+  toggleBar.append(topElements, bottomElements);
+  block.style.backgroundColor = props.backgroundColor;
+
+  if (mobileViewport) {
+    block.classList.add('mobile');
+    block.append(toggle);
+  } else {
+    toggleBar.append(toggle);
+  }
+
+  initExpandCollapseToolbar(block, templateTitle, toggle, link);
+}
+
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
   const innerWrapper = block.querySelector('.template-x-inner-wrapper');
@@ -1158,8 +1187,7 @@ async function decorateTemplates(block, props) {
         // single text directly in div
         : [block.firstElementChild.textContent.trim()]);
     block.innerHTML = '';
-    const tls = Array.from(block.closest('main')
-      .querySelectorAll('.template-x'));
+    const tls = Array.from(block.closest('main').querySelectorAll('.template-x'));
     const i = tls.indexOf(block);
 
     const bluePrint = await fetchBlueprint(window.location.pathname);
@@ -1227,14 +1255,10 @@ async function decorateTemplates(block, props) {
     }, { width: '750' }];
   }
 
-  block.querySelectorAll(':scope picture > img')
-    .forEach((img) => {
-      const {
-        src,
-        alt,
-      } = img;
-      img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
-    });
+  block.querySelectorAll(':scope picture > img').forEach((img) => {
+    const { src, alt } = img;
+    img.parentNode.replaceWith(createOptimizedPicture(src, alt, true, breakpoints));
+  });
 
   // find the edit link and turn the template DIV into the A
   // A
@@ -1301,10 +1325,7 @@ async function appendCategoryTemplatesCount(block, props) {
 }
 
 async function getBreadcrumbs() {
-  const {
-    origin,
-    pathname,
-  } = window.location;
+  const { origin, pathname } = window.location;
   const regex = /(.*?\/express\/)templates(.*)/;
   // FIXME: remove gnav breadcrumbs!
   const matches = pathname.match(regex);
@@ -1336,10 +1357,8 @@ async function getBreadcrumbs() {
     const params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop) => searchParams.get(prop),
     });
-    const searchingTasks = titleCase(params.tasks)
-      .replace(/[$@%"]/g, '');
-    const searchingTopics = titleCase(params.topics)
-      .replace(/[$@%"]/g, '');
+    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
+    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
     const lastCrumb = createTag('li');
     lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
     breadcrumbs.append(lastCrumb);
@@ -1385,10 +1404,7 @@ async function buildTemplateList(block, props, type = []) {
     await processContentRow(block, props);
   }
 
-  const {
-    templates,
-    fallbackMsg,
-  } = await fetchAndRenderTemplates(props);
+  const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
   if (templates) {
     if (fallbackMsg) {
       const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
@@ -1433,6 +1449,10 @@ async function buildTemplateList(block, props, type = []) {
       block.remove();
     }
   }
+
+  if (props.holidayBlock) {
+    decorateHoliday(block, props);
+  }
 }
 
 function determineTemplateXType(props) {
@@ -1450,7 +1470,6 @@ function determineTemplateXType(props) {
 
   // use case aspect
   if (props.holidayBlock) type.push('holiday');
-  if (props.collaborationBlock) type.push('collaboration');
 
   return type;
 }
