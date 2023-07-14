@@ -42,7 +42,11 @@ function getAnimation(animations, breakpoint) {
 function buildReduceMotionSwitch(block) {
   const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
   const videoWrapper = block.querySelector('.video-background-wrapper');
-  reduceMotionIconWrapper.append(getIconElement('play-video'), getIconElement('pause-video'));
+  if (block.classList.contains('dark')) {
+    reduceMotionIconWrapper.append(getIconElement('play-video-light'), getIconElement('pause-video-light'));
+  } else {
+    reduceMotionIconWrapper.append(getIconElement('play-video'), getIconElement('pause-video'));
+  }
 
   videoWrapper.append(reduceMotionIconWrapper);
 
