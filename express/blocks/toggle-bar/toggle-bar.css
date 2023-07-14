@@ -22,7 +22,7 @@ main .block.toggle-bar div[data-align="center"] * {
     text-align: center;
 }
 
-main .block.toggle-bar.dark div:first-of-type * {
+main .block.toggle-bar.dark > div:first-of-type * {
     color: var(--color-white);
 }
 
