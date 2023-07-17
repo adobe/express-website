@@ -1443,7 +1443,7 @@ async function buildTemplateList(block, props, type = []) {
 
   if (templates && props.tabs) {
     block.classList.add('tabbed');
-    const tabs = props.tabs.replace(/\s/g, '').split(',');
+    const tabs = props.tabs.split(',');
     const templatesWrapper = block.querySelector('.template-x-inner-wrapper');
     const textWrapper = block.querySelector('.template-title .text-wrapper > div');
     const tabsWrapper = createTag('div', { class: 'template-tabs' });
