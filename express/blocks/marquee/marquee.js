@@ -35,10 +35,6 @@ function getBreakpoint(animations, config) {
   return breakpoint;
 }
 
-function getAnimation(animations, breakpoint) {
-  return animations[breakpoint];
-}
-
 function buildReduceMotionSwitch(block) {
   const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
   const videoWrapper = block.querySelector('.video-background-wrapper');
@@ -99,7 +95,7 @@ function createAnimation(animations, breakpointConfig) {
   });
 
   const breakpoint = getBreakpoint(animations, breakpointConfig);
-  const animation = getAnimation(animations, breakpoint);
+  const animation = animations[breakpoint];
 
   if (animation === undefined) return null;
 
@@ -121,7 +117,7 @@ function createAnimation(animations, breakpointConfig) {
 
 function adjustLayout(animations, parent, breakpointConfig) {
   const breakpoint = getBreakpoint(animations, breakpointConfig);
-  const animation = getAnimation(animations, breakpoint);
+  const animation = animations[breakpoint];
 
   if (animation && !animation.active) {
     const newVideo = createAnimation(animations, breakpointConfig);
@@ -256,6 +252,7 @@ export default async function decorate(block) {
         videoWrapper.append(video);
         div.prepend(videoWrapper);
         video.addEventListener('canplay', () => {
+          buildReduceMotionSwitch(block);
           if (!preferenceStore.get('reduceMotion')) {
             video.muted = true;
             video.play();
@@ -266,8 +263,6 @@ export default async function decorate(block) {
           adjustLayout(animations, videoWrapper, breakpointConfig);
         }, { passive: true });
         adjustLayout(animations, videoWrapper, breakpointConfig);
-
-        buildReduceMotionSwitch(block);
       } else {
         bg = createTag('div');
         bg.classList.add('marquee-background');
