@@ -497,6 +497,8 @@ export function decorateSections($main) {
           section.classList.add(...meta.style.split(', ').map(toClassName));
         } else if (key === 'anchor') {
           section.id = toClassName(meta.anchor);
+        } else if (key === 'background') {
+          section.style.background = meta.background;
         } else {
           section.dataset[key] = meta[key];
         }
