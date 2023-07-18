@@ -136,7 +136,7 @@ async function formatHeadingPlaceholder(props) {
 
   if (grammarTemplate) {
     grammarTemplate = grammarTemplate
-      .replace('{{quantity}}', templateCount)
+      .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
       .replace('{{Type}}', heading)
       .replace('{{type}}', camelHeading);
 
@@ -631,10 +631,12 @@ async function decorateCategoryList(block, props) {
   const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const categoriesToggle = getIconElement('drop-down-arrow');
-  const $categories = createTag('ul', { class: 'category-list' });
+  const categoriesListHeading = createTag('div', { class: 'category-list-heading' });
+  const categoriesList = createTag('ul', { class: 'category-list' });
 
+  categoriesListHeading.append(getIconElement('template-search'), placeholders['jump-to-category']);
   categoriesToggleWrapper.append(categoriesToggle);
-  categoriesDesktopWrapper.append(categoriesToggleWrapper, $categories);
+  categoriesDesktopWrapper.append(categoriesToggleWrapper, categoriesListHeading, categoriesList);
 
   Object.entries(categories).forEach((category, index) => {
     const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
@@ -642,9 +644,9 @@ async function decorateCategoryList(block, props) {
     const currentTasks = props.filters.tasks ? props.filters.tasks : "''";
     const currentTopic = props.filters.topics;
 
-    const $listItem = createTag('li');
+    const listItem = createTag('li');
     if (category[1] === currentTasks) {
-      $listItem.classList.add('active');
+      listItem.classList.add('active');
     }
 
     let icon;
@@ -656,15 +658,15 @@ async function decorateCategoryList(block, props) {
 
     const iconElement = getIconElement(icon);
     const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-    const $a = createTag('a', {
+    const a = createTag('a', {
       'data-tasks': targetTasks,
       href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
     });
-    [$a.textContent] = category;
+    [a.textContent] = category;
 
-    $a.prepend(iconElement);
-    $listItem.append($a);
-    $categories.append($listItem);
+    a.prepend(iconElement);
+    listItem.append(a);
+    categoriesList.append(listItem);
   });
 
   const categoriesMobileWrapper = categoriesDesktopWrapper.cloneNode({ deep: true });
@@ -1411,6 +1413,7 @@ async function buildTemplateList(block, props, type = []) {
     if (fallbackMsg) {
       const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
       fallbackMsgWrapper.textContent = fallbackMsg;
+      props.fallbackMsg = fallbackMsg;
       block.append(fallbackMsgWrapper);
     }
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
