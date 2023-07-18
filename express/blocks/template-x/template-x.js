@@ -93,10 +93,9 @@ function isDarkOverlayReadable(colorString) {
 }
 
 async function fetchAndRenderTemplates(props) {
-  const [
-    placeholders,
-    { response, fallbackMsg },
-  ] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
+  const [placeholders, { response, fallbackMsg }] = await Promise.all(
+    [fetchPlaceholders(), fetchTemplates(props)],
+  );
   if (!response || !response.items || !Array.isArray(response.items)) {
     return { templates: null };
   }
