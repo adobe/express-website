@@ -36,50 +36,52 @@ function getBreakpoint(animations, config) {
 }
 
 function buildReduceMotionSwitch(block) {
-  const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
-  const videoWrapper = block.querySelector('.video-background-wrapper');
-  if (block.classList.contains('dark')) {
-    reduceMotionIconWrapper.append(getIconElement('play-video-light'), getIconElement('pause-video-light'));
-  } else {
-    reduceMotionIconWrapper.append(getIconElement('play-video'), getIconElement('pause-video'));
-  }
+  if (!block.querySelector('.reduce-motion-wrapper')) {
+    const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
+    const videoWrapper = block.querySelector('.background-wrapper');
+    if (block.classList.contains('dark')) {
+      reduceMotionIconWrapper.append(getIconElement('play-video-light'), getIconElement('pause-video-light'));
+    } else {
+      reduceMotionIconWrapper.append(getIconElement('play-video'), getIconElement('pause-video'));
+    }
 
-  videoWrapper.append(reduceMotionIconWrapper);
+    videoWrapper.append(reduceMotionIconWrapper);
 
-  const initialValue = preferenceStore.init(preferenceNames.reduceMotion.name);
+    const initialValue = preferenceStore.init(preferenceNames.reduceMotion.name);
 
-  if (initialValue) {
-    block.classList.add('reduce-motion');
-    block.querySelector('video')?.pause();
-  }
-
-  preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
-    if (value) {
+    if (initialValue) {
       block.classList.add('reduce-motion');
       block.querySelector('video')?.pause();
-    } else {
-      block.classList.remove('reduce-motion');
-      block.querySelector('video')?.play();
     }
-  });
 
-  reduceMotionIconWrapper.addEventListener('click', () => {
-    preferenceStore.toggle(preferenceNames.reduceMotion.name);
-  }, { passive: true });
+    preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
+      if (value) {
+        block.classList.add('reduce-motion');
+        block.querySelector('video')?.pause();
+      } else {
+        block.classList.remove('reduce-motion');
+        block.querySelector('video')?.play();
+      }
+    });
 
-  reduceMotionIconWrapper.addEventListener('mouseenter', async () => {
-    const placeholders = await fetchPlaceholders();
-    const reduceMotionTextExist = block.querySelector('.play-animation-text') && block.querySelector('.pause-animation-text');
+    reduceMotionIconWrapper.addEventListener('click', () => {
+      preferenceStore.toggle(preferenceNames.reduceMotion.name);
+    }, { passive: true });
 
-    if (!reduceMotionTextExist) {
-      const play = createTag('span', { class: 'play-animation-text' });
-      const pause = createTag('span', { class: 'pause-animation-text' });
-      play.textContent = placeholders['play-animation'] || 'play animation';
-      pause.textContent = placeholders['pause-animation'] || 'pause animation';
+    reduceMotionIconWrapper.addEventListener('mouseenter', async () => {
+      const placeholders = await fetchPlaceholders();
+      const reduceMotionTextExist = block.querySelector('.play-animation-text') && block.querySelector('.pause-animation-text');
 
-      reduceMotionIconWrapper.prepend(play, pause);
-    }
-  }, { passive: true });
+      if (!reduceMotionTextExist) {
+        const play = createTag('span', { class: 'play-animation-text' });
+        const pause = createTag('span', { class: 'pause-animation-text' });
+        play.textContent = placeholders['play-animation'] || 'play animation';
+        pause.textContent = placeholders['pause-animation'] || 'pause animation';
+
+        reduceMotionIconWrapper.prepend(play, pause);
+      }
+    }, { passive: true });
+  }
 }
 
 function createAnimation(animations, breakpointConfig) {
@@ -244,7 +246,7 @@ export default async function decorate(block) {
     }
 
     if (rowType === 'content') {
-      const videoWrapper = createTag('div', { class: 'video-background-wrapper' });
+      const videoWrapper = createTag('div', { class: 'background-wrapper' });
       const video = createAnimation(animations, breakpointConfig);
       let bg;
       if (video) {

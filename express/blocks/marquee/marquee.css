@@ -83,7 +83,7 @@ main .marquee .marquee-background {
   box-sizing: border-box;
 }
 
-main .marquee .video-background-wrapper {
+main .marquee .background-wrapper {
   position: relative;
 }
 
@@ -246,7 +246,7 @@ main .marquee:not(.reduce-motion) .reduce-motion-wrapper:hover span.pause-animat
 }
 
 @media (min-width: 900px) {
-  main .marquee .video-background-wrapper {
+  main .marquee .background-wrapper {
     position: unset;
   }
 
