@@ -123,11 +123,23 @@ function initSearchFunction(block) {
     }
   };
 
+  const onSearchSubmit = async () => {
+    searchBar.disabled = true;
+    logSearch(searchForm);
+    await redirectSearch();
+  };
+
+  async function handleSubmitInteraction(item) {
+    if (item.query !== searchBar.value) {
+      searchBar.value = item.query;
+      searchBar.dispatchEvent(new Event('input'));
+    }
+    await onSearchSubmit();
+  }
+
   searchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    searchBar.disabled = true;
-    logSearch(e.currentTarget);
-    await redirectSearch();
+    await onSearchSubmit();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -146,10 +158,14 @@ function initSearchFunction(block) {
         const li = createTag('li', { tabindex: 0 });
         const valRegEx = new RegExp(searchBar.value, 'i');
         li.innerHTML = item.query.replace(valRegEx, `<b>${searchBarVal}</b>`);
-        li.addEventListener('click', () => {
-          if (item.query === searchBar.value) return;
-          searchBar.value = item.query;
-          searchBar.dispatchEvent(new Event('input'));
+        li.addEventListener('click', async () => {
+          await handleSubmitInteraction(item);
+        });
+
+        li.addEventListener('keydown', async (e) => {
+          if (e.key === 'Enter' || e.keyCode === 13) {
+            await handleSubmitInteraction(item);
+          }
         });
 
         suggestionsList.append(li);
