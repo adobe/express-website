@@ -25,7 +25,7 @@ import {
   displayVideoModal,
 } from '../shared/video.js';
 
-import preferenceStore, { preferenceNames } from '../../scripts/preference-store.js';
+import localStorage, { preferenceNames } from '../../scripts/preference-store.js';
 
 function getBreakpoint(animations, config) {
   let breakpoint = 'default';
@@ -47,14 +47,18 @@ function buildReduceMotionSwitch(block) {
 
     videoWrapper.append(reduceMotionIconWrapper);
 
-    const initialValue = preferenceStore.init(preferenceNames.reduceMotion.name);
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches) {
+      localStorage.setItem(name, ON);
+    }
+    const initialValue = localStorage.init(preferenceNames.reduceMotion.name);
 
     if (initialValue) {
       block.classList.add('reduce-motion');
       block.querySelector('video')?.pause();
     }
 
-    preferenceStore.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
+    localStorage.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
       if (value) {
         block.classList.add('reduce-motion');
         block.querySelector('video')?.pause();
@@ -65,7 +69,7 @@ function buildReduceMotionSwitch(block) {
     });
 
     reduceMotionIconWrapper.addEventListener('click', () => {
-      preferenceStore.toggle(preferenceNames.reduceMotion.name);
+      localStorage.toggle(preferenceNames.reduceMotion.name);
     }, { passive: true });
 
     reduceMotionIconWrapper.addEventListener('mouseenter', async () => {
@@ -126,7 +130,7 @@ function adjustLayout(animations, parent, breakpointConfig) {
     if (newVideo) {
       parent.replaceChild(newVideo, parent.querySelector('video'));
       newVideo.addEventListener('canplay', () => {
-        if (!preferenceStore.get('reduceMotion')) {
+        if (!localStorage.get('reduceMotion')) {
           newVideo.muted = true;
           newVideo.play();
         }
@@ -255,7 +259,7 @@ export default async function decorate(block) {
         div.prepend(videoWrapper);
         video.addEventListener('canplay', () => {
           buildReduceMotionSwitch(block);
-          if (!preferenceStore.get('reduceMotion')) {
+          if (!localStorage.get('reduceMotion')) {
             video.muted = true;
             video.play();
           }
