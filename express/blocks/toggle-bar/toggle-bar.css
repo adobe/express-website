@@ -4,6 +4,10 @@ main .section .toggle-bar-wrapper {
     max-width: max-content;
 }
 
+main .block.toggle-bar {
+    padding-top: 32px;
+}
+
 main .block.toggle-bar.float {
     margin-top: -72px;
 }
@@ -12,6 +16,10 @@ main .block.toggle-bar.sticky {
     min-height: 147px;
     position: relative;
     z-index: 9;
+}
+
+main .block.toggle-bar.sticky.sticking {
+    padding-top: unset;
 }
 
 main .block.toggle-bar div[data-align="center"] {
