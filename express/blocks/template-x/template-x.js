@@ -24,6 +24,8 @@ import {
   toClassName,
   getLanguage,
   getMetadata,
+  transformLinkToAnimation,
+  titleCase,
 } from '../../scripts/scripts.js';
 
 import { Masonry } from '../shared/masonry.js';
@@ -32,6 +34,7 @@ import { buildCarousel } from '../shared/carousel.js';
 
 import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
 import renderTemplate from './template-rendering.js';
+import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -39,6 +42,29 @@ function wordStartsWithVowels(word) {
 
 function camelize(str) {
   return str.replace(/^\w|[A-Z]|\b\w/g, (word, index) => (index === 0 ? word.toLowerCase() : word.toUpperCase())).replace(/\s+/g, '');
+}
+
+function isDarkOverlayReadable(colorString) {
+  let r;
+  let g;
+  let b;
+
+  if (colorString.match(/^rgb/)) {
+    const colorValues = colorString.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    [r, g, b] = colorValues.slice(1);
+  } else {
+    const hexToRgb = +(`0x${colorString.slice(1).replace(colorString.length < 5 ? /./g : '', '$&$&')}`);
+    // eslint-disable-next-line no-bitwise
+    r = (hexToRgb >> 16) & 255;
+    // eslint-disable-next-line no-bitwise
+    g = (hexToRgb >> 8) & 255;
+    // eslint-disable-next-line no-bitwise
+    b = hexToRgb & 255;
+  }
+
+  const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+
+  return hsp > 127.5;
 }
 
 async function fetchAndRenderTemplates(props) {
@@ -88,29 +114,6 @@ async function processContentRow(block, props) {
   block.prepend(templateTitle);
 
   if (props.orientation.toLowerCase() === 'horizontal') templateTitle.classList.add('horizontal');
-
-  // todo: build collaboration and holiday variants
-  // if (block.classList.contains('collaboration')) {
-  //   const titleHeading = props.contentRow.querySelector('h3');
-  //   const anchorLink = createTag('a', {
-  //     class: 'collaboration-anchor',
-  //     href: `${document.URL.replace(/#.*$/, '')}#${titleHeading.id}`,
-  //   });
-  //   const clipboardTag = createTag('span', { class: 'clipboard-tag' });
-  //   clipboardTag.textContent = placeholders['tag-copied'];
-  //
-  //   anchorLink.addEventListener('click', (e) => {
-  //     e.preventDefault();
-  //     navigator.clipboard.writeText(anchorLink.href);
-  //     anchorLink.classList.add('copied');
-  //     setTimeout(() => {
-  //       anchorLink.classList.remove('copied');
-  //     }, 2000);
-  //   });
-  //
-  //   anchorLink.append(clipboardTag);
-  //   titleHeading.append(anchorLink);
-  // }
 }
 
 async function formatHeadingPlaceholder(props) {
@@ -165,11 +168,16 @@ function constructProps(block) {
     limit: 70,
     total: 0,
     start: '',
-    sort: 'Most Viewed',
+    collectionId: 'urn:aaid:sc:VA6C2:25a82757-01de-4dd9-b0ee-bde51dd3b418',
+    sort: '',
     masonry: undefined,
     headingTitle: null,
     headingSlug: null,
     viewAllLink: null,
+    holidayIcon: null,
+    backgroundColor: '#000B1D',
+    backgroundAnimation: null,
+    textColor: '#FFFFFF',
   };
 
   Array.from(block.children).forEach((row) => {
@@ -182,7 +190,7 @@ function constructProps(block) {
 
       if (key && value) {
         // FIXME: facebook-post
-        if (['tasks', 'topics', 'locales'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
+        if (['tasks', 'topics', 'locales', 'behaviors'].includes(key) || (['premium', 'animated'].includes(key) && value.toLowerCase() !== 'all')) {
           props.filters[camelize(key)] = value;
         } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
           props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
@@ -194,17 +202,25 @@ function constructProps(block) {
       if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
         props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
       }
-
-      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        const graphic = cols[2].querySelector('picture');
-        if (graphic) {
-          props[camelize(key)] = graphic;
-        }
-      }
     } else if (cols.length === 4) {
       if (key === 'blank template') {
         cols[0].remove();
         props.templates.push(row);
+      }
+    } else if (cols.length === 5) {
+      if (key === 'holiday block' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
+        const backgroundColor = cols[3].textContent.trim().toLowerCase();
+        const holidayIcon = cols[2].querySelector('picture');
+        const backgroundAnimation = cols[4].querySelector('a');
+
+        props.holidayBlock = true;
+        props.holidayIcon = holidayIcon || null;
+        if (backgroundColor) {
+          props.backgroundColor = backgroundColor;
+        }
+        props.backgroundAnimation = backgroundAnimation || null;
+        const contrastingTextColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
+        props.textColor = contrastingTextColor;
       }
     }
   });
@@ -608,7 +624,7 @@ async function decorateCategoryList(block, props) {
   const locale = getLocale(window.location);
   const mobileDrawerWrapper = block.querySelector('.filter-drawer-mobile');
   const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
-  const categories = JSON.parse(placeholders['task-categories']);
+  const categories = JSON.parse(placeholders['x-task-categories']);
   const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
   const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
@@ -658,8 +674,6 @@ async function decorateCategoryList(block, props) {
   drawerWrapper.append(categoriesMobileWrapper);
   lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
   lazyLoadLottiePlayer();
-
-  categoriesDesktopWrapper.classList.add('desktop-only');
 
   block.prepend(categoriesDesktopWrapper);
   block.classList.add('with-categories-list');
@@ -1089,6 +1103,75 @@ async function decorateToolbar(block, props) {
   }
 }
 
+function initExpandCollapseToolbar(block, templateTitle, toggle, link) {
+  const chev = block.querySelector('.toggle-button-chev');
+  templateTitle.addEventListener('click', () => block.classList.toggle('expanded'));
+  chev.addEventListener('click', (e) => {
+    e.stopPropagation();
+    block.classList.toggle('expanded');
+  });
+
+  toggle.addEventListener('click', () => block.classList.toggle('expanded'));
+  link.addEventListener('click', (e) => e.stopPropagation());
+
+  setTimeout(() => {
+    if (!block.matches(':hover')) {
+      block.classList.toggle('expanded');
+    }
+  }, 3000);
+}
+
+function decorateHoliday(block, props) {
+  const mobileViewport = window.innerWidth < 901;
+  const templateTitle = block.querySelector('.template-title');
+  const toggleBar = templateTitle.querySelector('div');
+  const heading = templateTitle.querySelector('h4');
+  const subheading = templateTitle.querySelector('p');
+  const link = templateTitle.querySelector('.template-title-link');
+  const linkWrapper = link.closest('p');
+  const toggle = createTag('div', { class: 'expanded toggle-button' });
+  const topElements = createTag('div', { class: 'toggle-bar-top' });
+  const bottomElements = createTag('div', { class: 'toggle-bar-bottom' });
+  const toggleChev = createTag('div', { class: 'toggle-button-chev' });
+  const carouselFaderLeft = block.querySelector('.carousel-fader-left');
+  const carouselFaderRight = block.querySelector('.carousel-fader-right');
+
+  if (props.holidayIcon) topElements.append(props.holidayIcon);
+  if (props.backgroundAnimation) {
+    const animation = transformLinkToAnimation(props.backgroundAnimation);
+    block.classList.add('animated');
+    block.prepend(animation);
+  }
+
+  if (props.backgroundColor) {
+    if (props.backgroundAnimation) {
+      carouselFaderRight.style.backgroundImage = 'none';
+      carouselFaderLeft.style.backgroundImage = 'none';
+    } else {
+      carouselFaderRight.style.backgroundImage = `linear-gradient(to right, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+      carouselFaderLeft.style.backgroundImage = `linear-gradient(to left, rgba(0, 255, 255, 0), ${props.backgroundColor}`;
+    }
+  }
+
+  block.classList.add('expanded', props.textColor);
+  toggleBar.classList.add('toggle-bar');
+  topElements.append(heading);
+  toggle.append(link, toggleChev);
+  linkWrapper.remove();
+  bottomElements.append(subheading);
+  toggleBar.append(topElements, bottomElements);
+  block.style.backgroundColor = props.backgroundColor;
+
+  if (mobileViewport) {
+    block.classList.add('mobile');
+    block.append(toggle);
+  } else {
+    toggleBar.append(toggle);
+  }
+
+  initExpandCollapseToolbar(block, templateTitle, toggle, link);
+}
+
 async function decorateTemplates(block, props) {
   const locale = getLocale(window.location);
   const innerWrapper = block.querySelector('.template-x-inner-wrapper');
@@ -1241,6 +1324,74 @@ async function appendCategoryTemplatesCount(block, props) {
   }
 }
 
+async function getBreadcrumbs() {
+  const { origin, pathname } = window.location;
+  const regex = /(.*?\/express\/)templates(.*)/;
+  // FIXME: remove gnav breadcrumbs!
+  const matches = pathname.match(regex);
+  if (!matches) {
+    return null;
+  }
+  const [, rootPath, children] = matches;
+  const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
+  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
+  nav.append(breadcrumbs);
+  const rootCrumb = createTag('li');
+  const rootLink = createTag('a', { href: `${origin}${rootPath}` });
+  // FIXME: localize & placeholders??
+  rootLink.textContent = 'Home';
+  rootCrumb.append(rootLink);
+  breadcrumbs.append(rootCrumb);
+
+  const templatesCrumb = createTag('li');
+  const templatesUrl = `${rootPath}templates`;
+  const templatesLink = createTag('a', { href: templatesUrl });
+  templatesLink.textContent = 'Templates';
+  templatesCrumb.append(templatesLink);
+  breadcrumbs.append(templatesCrumb);
+
+  if (!children || children === '/') {
+    return nav;
+  }
+  if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
+    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
+    const lastCrumb = createTag('li');
+    lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
+    breadcrumbs.append(lastCrumb);
+    return nav;
+  }
+
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+  const segments = children.split('/');
+  segments.reduce((acc, cur, index) => {
+    if (!cur) return acc;
+    const appended = `${acc}/${cur}`;
+    const segmentCrumb = createTag('li');
+    if (allTemplatesMetadata.some((t) => t.url === appended) && index !== segments.length - 1) {
+      const segmentLink = createTag('a', { href: `${origin}${appended}` });
+      segmentLink.textContent = titleCase(cur);
+      segmentCrumb.append(segmentLink);
+    } else {
+      segmentCrumb.textContent = titleCase(cur);
+    }
+    breadcrumbs.append(segmentCrumb);
+    return appended;
+  }, templatesUrl);
+
+  return nav;
+}
+
+async function decorateBreadcrumbs(block) {
+  // breadcrumbs are desktop-only
+  if (document.body.dataset.device !== 'desktop') return;
+  const breadcrumbs = await getBreadcrumbs();
+  if (breadcrumbs) block.prepend(breadcrumbs);
+}
+
 async function buildTemplateList(block, props, type = []) {
   if (type?.length > 0) {
     type.forEach((typeName) => {
@@ -1288,6 +1439,8 @@ async function buildTemplateList(block, props, type = []) {
     appendCategoryTemplatesCount(block, props);
   }
 
+  await decorateBreadcrumbs(block);
+
   if (templates && props.orientation && props.orientation.toLowerCase() === 'horizontal') {
     const innerWrapper = block.querySelector('.template-x-inner-wrapper');
     if (innerWrapper) {
@@ -1295,6 +1448,10 @@ async function buildTemplateList(block, props, type = []) {
     } else {
       block.remove();
     }
+  }
+
+  if (props.holidayBlock) {
+    decorateHoliday(block, props);
   }
 }
 
@@ -1313,7 +1470,6 @@ function determineTemplateXType(props) {
 
   // use case aspect
   if (props.holidayBlock) type.push('holiday');
-  if (props.collaborationBlock) type.push('collaboration');
 
   return type;
 }

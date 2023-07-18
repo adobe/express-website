@@ -11,7 +11,14 @@ main .sticky-promo-bar {
     z-index: 10;
 }
 
-main .sticky-promo-bar a:any-link {
+body[data-device="mobile"] main .sticky-promo-bar.rounded {
+    border-radius: 10px;
+    margin: 11px 24px 16px 24px;
+    font-weight: 300;
+    padding: 12px 24px 17px 24px;
+}
+
+main .sticky-promo-bar:not(.rounded) a:any-link {
     color: white;
     border: 2px solid white;
     border-radius: 20px;
@@ -23,6 +30,20 @@ main .sticky-promo-bar a:any-link {
     white-space: nowrap;
     display: inline-block;
     margin-top: 5px;
+}
+
+main .sticky-promo-bar.rounded a:any-link {
+    color: white;
+    text-decoration: underline;
+    white-space: nowrap;
+    font-style: initial;
+}
+
+main .sticky-promo-bar.rounded p {
+    display: inline;
+    font-size: var(--body-font-size-m);
+    margin: 0;
+    line-height: normal;
 }
 
 main .sticky-promo-bar .close {
@@ -37,6 +58,10 @@ main .sticky-promo-bar .close {
     cursor: pointer;
     background: none;
     border: none;
+}
+
+main .sticky-promo-bar.rounded .close {
+    display: none;
 }
 
 main .sticky-promo-bar .close:before {

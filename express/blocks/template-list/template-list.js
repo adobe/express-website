@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable import/named, import/extensions */
+/* eslint-disable import/named, import/extensions, no-underscore-dangle */
 
 import {
   addAnimationToggle,
@@ -33,21 +33,9 @@ import {
 import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
-
-const props = {
-  templates: [],
-  filters: { locales: '(en)' },
-  tailButton: '',
-  limit: 70,
-  total: 0,
-  start: '',
-  sort: '-_score,-remixCount',
-  masonry: undefined,
-  authoringError: false,
-  headingTitle: null,
-  headingSlug: null,
-  viewAllLink: null,
-};
+import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
+import { memoize } from '../../scripts/utils.js';
+import getBreadcrumbs from './breadcrumbs.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -68,10 +56,19 @@ function trimFormattedFilterText(attr, capitalize) {
   return capitalize ? resultString.charAt(0).toUpperCase() + resultString.slice(1) : resultString;
 }
 
-async function populateHeadingPlaceholder(locale) {
+function loadBetterAssetInBackground(img) {
+  const updateImgRes = () => {
+    img.src = img.src.replace('width/size/151', 'width/size/400');
+    img.removeEventListener('load', updateImgRes);
+  };
+
+  img.addEventListener('load', updateImgRes);
+}
+
+async function populateHeadingPlaceholder(locale, props) {
   const heading = props.heading.replace("''", '');
   // special treatment for express/ root url
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
+  const lowerCaseHeading = heading === 'Adobe Express' ? heading : heading.toLowerCase();
   const placeholders = await fetchPlaceholders();
   const lang = getLanguage(getLocale(window.location));
   const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
@@ -85,9 +82,9 @@ async function populateHeadingPlaceholder(locale) {
 
   if (grammarTemplate) {
     grammarTemplate = grammarTemplate
-      .replace('{{quantity}}', templateCount)
+      .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
       .replace('{{Type}}', heading)
-      .replace('{{type}}', camelHeading);
+      .replace('{{type}}', lowerCaseHeading);
 
     if (locale === 'fr') {
       grammarTemplate.split(' ').forEach((word, index, words) => {
@@ -117,28 +114,54 @@ function formatSearchQuery(limit, start, sort, filters) {
   return `https://www.adobe.com/cc-express-search-api?limit=${limit}&start=${start}&orderBy=${sort}&filters=${filterString}`;
 }
 
-async function fetchTemplates() {
-  if (!props.authoringError && Object.keys(props.filters).length !== 0) {
-    props.queryString = formatSearchQuery(props.limit, props.start, props.sort, props.filters);
+const memoizedFetchUrl = memoize((url) => fetch(url).then((r) => (r.ok ? r.json() : null)), {
+  key: (q) => q,
+  ttl: 1000 * 60 * 60 * 24,
+});
 
-    const result = await fetch(props.queryString)
-      .then((response) => response.json())
-      .then((response) => response);
+async function getFallbackMsg(tasks = '') {
+  const placeholders = await fetchPlaceholders();
+  const fallBacktextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
-    // eslint-disable-next-line no-underscore-dangle
-    if (result._embedded.total > 0) {
-      return result;
-    } else {
-      // save fetch if search query returned 0 templates. "Bad result is better than no result"
-      return fetch(`https://www.adobe.com/cc-express-search-api?limit=${props.limit}&start=${props.start}&orderBy=${props.sort}&filters=locales:(${props.filters.locales})`)
-        .then((response) => response.json())
-        .then((response) => response);
-    }
+  if (fallBacktextTemplate) {
+    return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
   }
-  return null;
+
+  return `Sorry we couldn't find any results for what you searched for, try some of these popular ${
+    tasks ? ` ${tasks.toString()} ` : ''}templates instead.`;
 }
 
-function fetchTemplatesByTasks(tasks) {
+async function fetchTemplates(props) {
+  props.fallbackMsg = null;
+  if (props.authoringError || Object.keys(props.filters).length === 0) {
+    props.authoringError = true;
+    props.heading = 'Authoring error: first row must specify the template “type”';
+    return null;
+  }
+  const { limit, start, sort } = props;
+  props.queryString = formatSearchQuery(limit, start, sort, props.filters);
+
+  let result = await memoizedFetchUrl(props.queryString);
+
+  if (result?._embedded?.total) {
+    return result;
+  }
+  const { filters: { tasks, locales } } = props;
+  const tasksMatch = /\((.+)\)/.exec(tasks);
+  if (tasksMatch) {
+    props.queryString = formatSearchQuery(limit, start, sort, { locales, tasks });
+    result = await memoizedFetchUrl(props.queryString);
+    if (result?._embedded?.total) {
+      props.fallbackMsg = await getFallbackMsg(tasksMatch[1]);
+      return result;
+    }
+  }
+  props.queryString = formatSearchQuery(limit, start, sort, { locales });
+  props.fallbackMsg = await getFallbackMsg();
+  return memoizedFetchUrl(props.queryString);
+}
+
+function fetchTemplatesByTasks(tasks, props) {
   const tempFilters = { ...props.filters };
 
   if (tasks) {
@@ -146,46 +169,39 @@ function fetchTemplatesByTasks(tasks) {
   }
 
   if (!props.authoringError && Object.keys(tempFilters).length !== 0) {
-    const tempQ = formatSearchQuery(props.limit, '', props.sort, tempFilters);
+    const tempQ = formatSearchQuery(0, '', props.sort, tempFilters);
 
-    return fetch(tempQ)
-      .then((response) => response.json())
-      .then((response) => response);
+    return memoizedFetchUrl(tempQ);
   }
 
   return null;
 }
 
-async function appendCategoryTemplatesCount($section) {
+async function appendCategoryTemplatesCount($section, props) {
   const categories = $section.querySelectorAll('ul.category-list > li');
-  const currentTask = props.filters.tasks;
   const lang = getLanguage(getLocale(window.location));
 
   for (const li of categories) {
     const anchor = li.querySelector('a');
     if (anchor) {
       // eslint-disable-next-line no-await-in-loop
-      const json = await fetchTemplatesByTasks(anchor.dataset.tasks);
+      const json = await fetchTemplatesByTasks(anchor.dataset.tasks, props);
       const countSpan = createTag('span', { class: 'category-list-template-count' });
-      // eslint-disable-next-line no-underscore-dangle
-      countSpan.textContent = `(${json._embedded.total.toLocaleString(lang)})`;
+      countSpan.textContent = `(${json?._embedded?.total?.toLocaleString(lang) ?? 0})`;
       anchor.append(countSpan);
     }
   }
-
-  props.filters.tasks = currentTask;
 }
 
-async function processResponse() {
-  const placeholders = await fetchPlaceholders();
-  const response = await fetchTemplates();
-  let templateFetched;
-  if (response) {
-    // eslint-disable-next-line no-underscore-dangle
-    templateFetched = response._embedded.results;
+async function processResponse(props) {
+  const [placeholders, response] = await Promise.all([fetchPlaceholders(), fetchTemplates(props)]);
+  const { _embedded } = response || {};
+  let templateFetched = [];
+  if (_embedded) {
+    const { results, total } = _embedded;
+    templateFetched = results;
 
     if ('_links' in response) {
-      // eslint-disable-next-line no-underscore-dangle
       const nextQuery = response._links.next.href;
       const starts = new URLSearchParams(nextQuery).get('start').split(',');
       starts.pop();
@@ -194,25 +210,18 @@ async function processResponse() {
       props.start = '';
     }
 
-    // eslint-disable-next-line no-underscore-dangle
-    props.total = response._embedded.total;
+    props.total = total;
   }
-
-  const renditionParams = {
-    format: 'jpg',
-    dimension: 'width',
-    size: 400,
-  };
 
   if (templateFetched) {
     return templateFetched.map((template) => {
       const $template = createTag('div');
-      const $pictureWrapper = createTag('div');
+      const imgWrapper = createTag('div');
 
       ['format', 'dimension', 'size'].forEach((param) => {
-        template.rendition.href = template.rendition.href.replace(`{${param}}`, renditionParams[param]);
+        template.rendition.href = template.rendition.href.replace(`{${param}}`, props.renditionParams[param]);
       });
-      const $picture = createTag('img', {
+      const img = createTag('img', {
         src: template.rendition.href,
         alt: template.title,
       });
@@ -224,10 +233,10 @@ async function processResponse() {
       });
 
       $button.textContent = placeholders['edit-this-template'] ?? 'Edit this template';
-      $pictureWrapper.insertAdjacentElement('beforeend', $picture);
-      $buttonWrapper.insertAdjacentElement('beforeend', $button);
-      $template.insertAdjacentElement('beforeend', $pictureWrapper);
-      $template.insertAdjacentElement('beforeend', $buttonWrapper);
+      imgWrapper.append(img);
+      $buttonWrapper.append($button);
+      $template.append(imgWrapper, $buttonWrapper);
+      loadBetterAssetInBackground(img);
       return $template;
     });
   } else {
@@ -252,7 +261,7 @@ async function fetchBlueprint(pathname) {
   return ($main);
 }
 
-function populateTemplates($block, templates) {
+function populateTemplates($block, templates, props) {
   for (let $tmplt of templates) {
     const isPlaceholder = $tmplt.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg');
     const $linkContainer = $tmplt.querySelector(':scope > div:nth-of-type(2)');
@@ -292,11 +301,11 @@ function populateTemplates($block, templates) {
         if (isPlaceholder) {
           // add aspect ratio to template
           const sep = option.includes(':') ? ':' : 'x';
-          const ratios = option.split(sep).map((e) => +e);
+          const ratios = option.split(sep).map((str) => parseInt(str, 10));
           props.placeholderFormat = ratios;
           if ($block.classList.contains('horizontal')) {
             const height = $block.classList.contains('mini') ? 100 : 200;
-            if (ratios[1]) {
+            if (ratios?.length === 2) {
               const width = (ratios[0] / ratios[1]) * height;
               $tmplt.style = `width: ${width}px`;
               if (width / height > 1.3) {
@@ -423,7 +432,7 @@ async function attachFreeInAppPills($block) {
   }
 }
 
-async function readRowsFromBlock($block) {
+async function readRowsFromBlock($block, props) {
   if ($block.children.length > 0) {
     Array.from($block.children).forEach((row, index, array) => {
       const cells = row.querySelectorAll('div');
@@ -456,13 +465,12 @@ async function readRowsFromBlock($block) {
       }
     });
 
-    const fetchedTemplates = await processResponse();
+    const fetchedTemplates = await processResponse(props);
 
     if (fetchedTemplates) {
       props.templates = props.templates.concat(fetchedTemplates);
       props.templates.forEach((template) => {
-        const clone = template.cloneNode(true);
-        $block.append(clone);
+        $block.append(template);
       });
     }
   } else {
@@ -471,11 +479,45 @@ async function readRowsFromBlock($block) {
   }
 }
 
-async function redirectSearch($searchBar) {
-  const placeholders = await fetchPlaceholders().then((result) => result);
+function getRedirectUrl(tasks, topics, format, allTemplatesMetadata) {
+  const locale = getLocale(window.location);
+  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
+  const topicUrl = topics ? `/${topics}` : '';
+  const taskUrl = `/${handlelize(tasks.toLowerCase())}`;
+  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+  const pathMatch = (e) => e.path === targetPath;
+  if (allTemplatesMetadata.some(pathMatch)) {
+    return `${window.location.origin}${targetPath}`;
+  } else {
+    const searchUrlTemplate = `/express/templates/search?tasks=${tasks}&phformat=${format}&topics=${topics || "''"}`;
+    const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
+    return searchUrl;
+  }
+}
+
+function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/express/search-terms-log') {
+  if (form) {
+    const input = form.querySelector('input');
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        data: {
+          keyword: input.value,
+          locale: getLocale(window.location),
+          timestamp: Date.now(),
+          audience: document.body.dataset.device,
+        },
+      }),
+    });
+  }
+}
+
+async function redirectSearch($searchBar, props) {
+  const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['task-name-mapping']);
   if ($searchBar) {
-    const wrapper = $searchBar.closest('.search-bar-wrapper');
+    const wrapper = $searchBar.closest('.template-list-search-bar-wrapper');
     const $selectorTask = wrapper.querySelector('.task-dropdown-list > .option.active');
     props.filters.tasks = `(${$selectorTask.dataset.tasks})`;
   }
@@ -498,20 +540,9 @@ async function redirectSearch($searchBar) {
     searchInput = searchInput.trim();
     [[currentTasks]] = tasksFoundInInput;
   }
-
-  const locale = getLocale(window.location);
-  const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-  const topicUrl = searchInput ? `/${searchInput}` : '';
-  const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
-  const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}`;
-  const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
-  const searchUrl = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
-  const pathMatch = (e) => e.path === targetPath;
-  if (window.templates && window.templates.data.some(pathMatch)) {
-    window.location = `${window.location.origin}${targetPath}`;
-  } else {
-    window.location = searchUrl;
-  }
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
+  const redirectUrl = getRedirectUrl(currentTasks, searchInput, format, allTemplatesMetadata);
+  window.location = redirectUrl;
 }
 
 function makeTemplateFunctions(placeholders) {
@@ -569,6 +600,7 @@ function makeTemplateFunctions(placeholders) {
 
 function updateFilterIcon(block) {
   const section = block.closest('.section.template-list-fullwidth-apipowered-container');
+  if (!section) return;
   const functionWrapper = section.querySelectorAll('.function-wrapper');
   const optionsWrapper = section.querySelectorAll('.options-wrapper');
 
@@ -589,21 +621,21 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
   const $functionContainerMobile = createTag('div', { class: 'functions-drawer' });
 
   Object.values(functions).forEach((filter) => {
-    const $filterWrapper = filter.elements.wrapper;
+    const filterWrapper = filter.elements.wrapper;
 
-    Object.values($filterWrapper.subElements).forEach((part) => {
-      const $innerWrapper = part.wrapper;
+    Object.values(filterWrapper.subElements).forEach((part) => {
+      const innerWrapper = part.wrapper;
 
       Object.values(part.subElements).forEach((innerElement) => {
         if (innerElement) {
-          $innerWrapper.append(innerElement);
+          innerWrapper.append(innerElement);
         }
       });
 
-      $filterWrapper.append($innerWrapper);
+      filterWrapper.append(innerWrapper);
     });
-    $functionContainerMobile.append($filterWrapper.cloneNode({ deep: true }));
-    $functionsContainer.append($filterWrapper);
+    $functionContainerMobile.append(filterWrapper.cloneNode({ deep: true }));
+    $functionsContainer.append(filterWrapper);
   });
 
   // restructure drawer for mobile design
@@ -673,6 +705,7 @@ function decorateFunctionsContainer($block, $section, functions, placeholders) {
 }
 
 function resetTaskDropdowns($section) {
+  if (!$section) return;
   const $taskDropdowns = $section.querySelectorAll('.task-dropdown');
   const $taskDropdownLists = $section.querySelectorAll('.task-dropdown-list');
 
@@ -687,7 +720,7 @@ function resetTaskDropdowns($section) {
 
 function closeTaskDropdown($toolBar) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
-  const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  const $searchBarWrappers = $section.querySelectorAll('.template-list-search-bar-wrapper');
   $searchBarWrappers.forEach(($wrapper) => {
     const $taskDropdown = $wrapper.querySelector('.task-dropdown');
     const $taskDropdownList = $taskDropdown.querySelector('.task-dropdown-list');
@@ -696,10 +729,11 @@ function closeTaskDropdown($toolBar) {
   });
 }
 
-function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper) {
+function initSearchFunction($toolBar, $stickySearchBarWrapper, generatedSearchBar, props) {
   const $section = $toolBar.closest('.section.template-list-fullwidth-apipowered-container');
   const $stickySearchBar = $stickySearchBarWrapper.querySelector('input.search-bar');
-  const $searchBarWrappers = $section.querySelectorAll('.search-bar-wrapper');
+  const searchMarqueeSearchBar = document.querySelector('.search-marquee .search-bar-wrapper');
+  const $searchBarWrappers = document.querySelectorAll('.template-list-search-bar-wrapper');
   const $toolbarWrapper = $toolBar.parentElement;
 
   const searchBarWatcher = new IntersectionObserver((entries) => {
@@ -711,7 +745,10 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
     }
   }, { rootMargin: '0px', threshold: 1 });
 
-  searchBarWatcher.observe($searchBarWrapper);
+  // for backward compatibility
+  // TODO: consider removing !searchMarqueeSearchBar as it should always be there for desktop pages
+  const searchBarToWatch = (document.body.dataset.device === 'mobile' || !searchMarqueeSearchBar) ? generatedSearchBar : searchMarqueeSearchBar;
+  searchBarWatcher.observe(searchBarToWatch);
 
   $searchBarWrappers.forEach(($wrapper) => {
     const $searchForm = $wrapper.querySelector('.search-form');
@@ -737,7 +774,8 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
 
     $searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      await redirectSearch($searchBar);
+      logSearch(e.currentTarget);
+      await redirectSearch($searchBar, props);
     });
 
     $clear.addEventListener('click', () => {
@@ -808,14 +846,6 @@ function initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper
       }
     }, 500);
   }, { passive: true });
-
-  $stickySearchBarWrapper.addEventListener('mouseleave', () => {
-    if (!$stickySearchBar || $stickySearchBar !== document.activeElement) {
-      $stickySearchBarWrapper.classList.remove('ready');
-      $stickySearchBarWrapper.classList.add('collapsed');
-      resetTaskDropdowns($section);
-    }
-  }, { passive: true });
 }
 
 function updateLottieStatus($section) {
@@ -833,116 +863,117 @@ function updateLottieStatus($section) {
   }
 }
 
-function decorateCategoryList($block, $section, placeholders) {
-  const params = new Proxy(new URLSearchParams(window.location.search), {
-    get: (searchParams, prop) => searchParams.get(prop),
-  });
+async function decorateCategoryList(block, section, placeholders, props) {
+  const $blockWrapper = block.closest('.template-list-wrapper');
+  const $mobileDrawerWrapper = section.querySelector('.filter-drawer-mobile');
+  const $inWrapper = section.querySelector('.filter-drawer-mobile-inner-wrapper');
+  const categories = JSON.parse(placeholders['task-categories']);
+  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
+  const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
+  const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
+  const $desktopCategoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
+  const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
+  const desktopCategoriesToggle = getIconElement('drop-down-arrow');
+  const categoriesListHeading = createTag('div', { class: 'category-list-heading' });
+  const $categories = createTag('ul', { class: 'category-list' });
 
-  if (params.tasks) {
-    const locale = getLocale(window.location);
-    const $blockWrapper = $block.closest('.template-list-wrapper');
-    const $mobileDrawerWrapper = $section.querySelector('.filter-drawer-mobile');
-    const $inWrapper = $section.querySelector('.filter-drawer-mobile-inner-wrapper');
-    const categories = JSON.parse(placeholders['task-categories']);
-    const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
-    const $categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
-    const $categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
-    const $categoriesToggle = createTag('span', { class: 'category-list-toggle' });
-    const $categories = createTag('ul', { class: 'category-list' });
+  categoriesListHeading.append(getIconElement('template-search'), placeholders['jump-to-category']);
+  $categoriesToggle.textContent = placeholders['jump-to-category'];
+  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
 
-    $categoriesToggle.textContent = placeholders['jump-to-category'];
+  Object.entries(categories).forEach((category, index) => {
+    const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
+    const targetTasks = category[1];
+    const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
+    const currentTopic = trimFormattedFilterText(props.filters.topics);
 
-    $categoriesToggleWrapper.append($categoriesToggle);
-    $categoriesDesktopWrapper.append($categoriesToggleWrapper, $categories);
-
-    Object.entries(categories).forEach((category, index) => {
-      const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
-      const targetTasks = category[1];
-      const currentTasks = trimFormattedFilterText(props.filters.tasks) ? trimFormattedFilterText(props.filters.tasks) : "''";
-      const currentTopic = trimFormattedFilterText(props.filters.topics);
-
-      const $listItem = createTag('li');
-      if (category[1] === currentTasks) {
-        $listItem.classList.add('active');
-      }
-
-      let icon;
-      if (categoryIcons[index] && categoryIcons[index] !== '') {
-        icon = categoryIcons[index];
-      } else {
-        icon = 'template-static';
-      }
-
-      const iconElement = getIconElement(icon);
-      const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const $a = createTag('a', {
-        'data-tasks': targetTasks,
-        href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
-      });
-      [$a.textContent] = category;
-
-      $a.prepend(iconElement);
-      $listItem.append($a);
-      $categories.append($listItem);
-    });
-
-    const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
-
-    const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
-    $mobileDrawerWrapper.append($lottieArrows);
-    $inWrapper.append($categoriesMobileWrapper);
-    $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
-    lazyLoadLottiePlayer();
-
-    $categoriesDesktopWrapper.classList.add('desktop-only');
-
-    if ($blockWrapper) {
-      $blockWrapper.prepend($categoriesDesktopWrapper);
-      $blockWrapper.classList.add('with-categories-list');
+    const $listItem = createTag('li');
+    if (category[1] === currentTasks) {
+      $listItem.classList.add('active');
     }
 
-    const $toggleButton = $categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
-    $toggleButton.append(getIconElement('drop-down-arrow'));
-    $toggleButton.addEventListener('click', () => {
-      const $listWrapper = $toggleButton.parentElement;
-      $toggleButton.classList.toggle('collapsed');
-      if ($toggleButton.classList.contains('collapsed')) {
-        if ($listWrapper.classList.contains('desktop-only')) {
-          $listWrapper.classList.add('collapsed');
-          $listWrapper.style.maxHeight = '40px';
-        } else {
-          $listWrapper.classList.add('collapsed');
-          $listWrapper.style.maxHeight = '24px';
-        }
-      } else {
-        $listWrapper.classList.remove('collapsed');
-        $listWrapper.style.maxHeight = '1000px';
-      }
+    let icon;
+    if (categoryIcons[index] && categoryIcons[index] !== '') {
+      icon = categoryIcons[index];
+    } else {
+      icon = 'template-static';
+    }
 
-      setTimeout(() => {
-        if (!$listWrapper.classList.contains('desktop-only')) {
-          updateLottieStatus($section);
-        }
-      }, 510);
-    }, { passive: true });
+    const iconElement = getIconElement(icon);
+    const redirectUrl = getRedirectUrl(targetTasks, currentTopic, format, allTemplatesMetadata);
+    const $a = createTag('a', {
+      'data-tasks': targetTasks,
+      href: redirectUrl,
+    });
+    [$a.textContent] = category;
 
-    $lottieArrows.addEventListener('click', () => {
-      $inWrapper.scrollBy({
-        top: 300,
-        behavior: 'smooth',
-      });
-    }, { passive: true });
+    $a.prepend(iconElement);
+    $listItem.append($a);
+    $categories.append($listItem);
+  });
 
-    $inWrapper.addEventListener('scroll', () => {
-      updateLottieStatus($section);
-    }, { passive: true });
+  $categoriesToggleWrapper.append($categoriesToggle);
+  $categoriesDesktopWrapper.append($categories);
+  const $categoriesMobileWrapper = $categoriesDesktopWrapper.cloneNode({ deep: true });
+  $categoriesMobileWrapper.prepend($categoriesToggleWrapper);
+
+  $desktopCategoriesToggleWrapper.append(desktopCategoriesToggle);
+  $categoriesDesktopWrapper.prepend($desktopCategoriesToggleWrapper, categoriesListHeading);
+
+  const $lottieArrows = createTag('a', { class: 'lottie-wrapper' });
+  $mobileDrawerWrapper.append($lottieArrows);
+  $inWrapper.append($categoriesMobileWrapper);
+  $lottieArrows.innerHTML = getLottie('purple-arrows', '/express/icons/purple-arrows.json');
+  lazyLoadLottiePlayer();
+
+  $categoriesDesktopWrapper.classList.add('desktop-only');
+
+  if ($blockWrapper) {
+    $blockWrapper.prepend($categoriesDesktopWrapper);
+    $blockWrapper.classList.add('with-categories-list');
   }
+
+  const $toggleButton = $categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper');
+  $toggleButton.append(getIconElement('drop-down-arrow'));
+  $toggleButton.addEventListener('click', () => {
+    const $listWrapper = $toggleButton.parentElement;
+    $toggleButton.classList.toggle('collapsed');
+    if ($toggleButton.classList.contains('collapsed')) {
+      if ($listWrapper.classList.contains('desktop-only')) {
+        $listWrapper.classList.add('collapsed');
+        $listWrapper.style.maxHeight = '40px';
+      } else {
+        $listWrapper.classList.add('collapsed');
+        $listWrapper.style.maxHeight = '24px';
+      }
+    } else {
+      $listWrapper.classList.remove('collapsed');
+      $listWrapper.style.maxHeight = '1000px';
+    }
+
+    setTimeout(() => {
+      if (!$listWrapper.classList.contains('desktop-only')) {
+        updateLottieStatus(section);
+      }
+    }, 510);
+  }, { passive: true });
+
+  $lottieArrows.addEventListener('click', () => {
+    $inWrapper.scrollBy({
+      top: 300,
+      behavior: 'smooth',
+    });
+  }, { passive: true });
+
+  $inWrapper.addEventListener('scroll', () => {
+    updateLottieStatus(section);
+  }, { passive: true });
 }
 
-async function decorateSearchFunctions($toolBar, $section, placeholders) {
+async function decorateSearchFunctions($toolBar, $section, placeholders, props) {
   const $inBlockLocation = $toolBar.querySelector('.wrapper-content-search');
-  const $inSectionLocation = $section.querySelector('.link-list-wrapper');
-  const $searchBarWrapper = createTag('div', { class: 'search-bar-wrapper' });
+  const $linkListLocation = document.querySelector('.link-list-fullwidth-container');
+  const $searchBarWrapper = createTag('div', { class: 'template-list-search-bar-wrapper' });
   const $searchForm = createTag('form', { class: 'search-form' });
   const $searchBar = createTag('input', {
     class: 'search-bar',
@@ -994,9 +1025,15 @@ async function decorateSearchFunctions($toolBar, $section, placeholders) {
   $stickySearchBarWrapper.classList.add('sticky-search-bar');
   $stickySearchBarWrapper.classList.add('collapsed');
   $inBlockLocation.append($stickySearchBarWrapper);
-  $inSectionLocation.insertAdjacentElement('beforebegin', $searchBarWrapper);
-
-  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper);
+  if ($linkListLocation) {
+    const linkListWrapper = $linkListLocation.querySelector('.link-list-wrapper');
+    if (linkListWrapper) {
+      linkListWrapper.before($searchBarWrapper);
+    } else {
+      $linkListLocation.prepend($searchBarWrapper);
+    }
+  }
+  initSearchFunction($toolBar, $stickySearchBarWrapper, $searchBarWrapper, props);
 }
 
 function closeDrawer($toolBar) {
@@ -1015,7 +1052,7 @@ function closeDrawer($toolBar) {
   }, 500);
 }
 
-function updateOptionsStatus($block, $toolBar) {
+function updateOptionsStatus($block, $toolBar, props) {
   const $wrappers = $toolBar.querySelectorAll('.function-wrapper');
 
   $wrappers.forEach(($wrapper) => {
@@ -1054,7 +1091,7 @@ function updateOptionsStatus($block, $toolBar) {
   });
 }
 
-function initDrawer($block, $section, $toolBar) {
+function initDrawer($block, $section, $toolBar, props) {
   const $filterButton = $toolBar.querySelector('.filter-button-mobile-wrapper');
   const $drawerBackground = $toolBar.querySelector('.drawer-background');
   const $drawer = $toolBar.querySelector('.filter-drawer-mobile');
@@ -1090,7 +1127,7 @@ function initDrawer($block, $section, $toolBar) {
     $element.addEventListener('click', () => {
       props.filters = { ...currentFilters };
       closeDrawer($toolBar);
-      updateOptionsStatus($block, $toolBar);
+      updateOptionsStatus($block, $toolBar, props);
     }, { passive: true });
   });
 
@@ -1122,7 +1159,7 @@ function initDrawer($block, $section, $toolBar) {
   $drawer.classList.add('hidden');
 }
 
-function updateQueryURL(functionWrapper, option) {
+function updateQueryURL(functionWrapper, option, props) {
   const paramType = functionWrapper.dataset.param;
   const paramValue = option.dataset.value;
 
@@ -1145,7 +1182,7 @@ function updateQueryURL(functionWrapper, option) {
   }
 }
 
-function updateLoadMoreButton($block, $loadMore) {
+function updateLoadMoreButton($block, $loadMore, props) {
   if (props.start === '') {
     $loadMore.style.display = 'none';
   } else {
@@ -1153,12 +1190,12 @@ function updateLoadMoreButton($block, $loadMore) {
   }
 }
 
-async function decorateNewTemplates($block, options = { reDrawMasonry: false }) {
-  const newTemplates = await processResponse();
+async function decorateNewTemplates($block, props, options = { reDrawMasonry: false }) {
+  const newTemplates = await processResponse(props);
   const $loadMore = $block.parentElement.querySelector('.load-more');
 
   props.templates = props.templates.concat(newTemplates);
-  populateTemplates($block, newTemplates);
+  populateTemplates($block, newTemplates, props);
 
   const newCells = Array.from($block.querySelectorAll('.template:not(.appear)'));
 
@@ -1170,11 +1207,11 @@ async function decorateNewTemplates($block, options = { reDrawMasonry: false }) 
   props.masonry.draw(newCells);
 
   if ($loadMore) {
-    updateLoadMoreButton($block, $loadMore);
+    updateLoadMoreButton($block, $loadMore, props);
   }
 }
 
-async function redrawTemplates($block, $toolBar) {
+async function redrawTemplates($block, $toolBar, props) {
   const $heading = $toolBar.querySelector('h2');
   const lang = getLanguage(getLocale(window.location));
   const currentTotal = props.total.toLocaleString(lang);
@@ -1184,9 +1221,9 @@ async function redrawTemplates($block, $toolBar) {
     $card.remove();
   });
 
-  await decorateNewTemplates($block, { reDrawMasonry: true }).then(() => {
+  await decorateNewTemplates($block, props, { reDrawMasonry: true }).then(() => {
     $heading.textContent = $heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString(lang));
-    updateOptionsStatus($block, $toolBar);
+    updateOptionsStatus($block, $toolBar, props);
     if ($block.querySelectorAll('.template').length <= 0) {
       const $viewButtons = $toolBar.querySelectorAll('.view-toggle-button');
       $viewButtons.forEach(($button) => {
@@ -1199,7 +1236,7 @@ async function redrawTemplates($block, $toolBar) {
   });
 }
 
-async function toggleAnimatedText($block, $toolBar) {
+async function toggleAnimatedText($block, $toolBar, props) {
   const section = $block.closest('.section.template-list-fullwidth-apipowered-container');
   const $toolbarWrapper = $toolBar.parentElement;
 
@@ -1219,7 +1256,7 @@ async function toggleAnimatedText($block, $toolBar) {
   }
 }
 
-function initFilterSort($block, $toolBar) {
+function initFilterSort($block, $toolBar, props) {
   const $buttons = $toolBar.querySelectorAll('.button-wrapper');
   const $applyFilterButton = $toolBar.querySelector('.apply-filter-button');
 
@@ -1261,15 +1298,15 @@ function initFilterSort($block, $toolBar) {
           });
           $option.classList.add('active');
 
-          updateQueryURL($wrapper, $option);
+          updateQueryURL($wrapper, $option, props);
           updateFilterIcon($block);
 
           if (!$optionsList.classList.contains('in-drawer')) {
-            await toggleAnimatedText($block, $toolBar);
+            await toggleAnimatedText($block, $toolBar, props);
           }
 
           if (!$button.classList.contains('in-drawer')) {
-            await redrawTemplates($block, $toolBar);
+            await redrawTemplates($block, $toolBar, props);
           }
         };
 
@@ -1300,14 +1337,14 @@ function initFilterSort($block, $toolBar) {
     if ($applyFilterButton) {
       $applyFilterButton.addEventListener('click', async (e) => {
         e.preventDefault();
-        await redrawTemplates($block, $toolBar);
+        await redrawTemplates($block, $toolBar, props);
         closeDrawer($toolBar);
-        await toggleAnimatedText($block, $toolBar);
+        await toggleAnimatedText($block, $toolBar, props);
       });
     }
 
     // sync current filter & sorting method with toolbar current options
-    updateOptionsStatus($block, $toolBar);
+    updateOptionsStatus($block, $toolBar, props);
     updateFilterIcon($block);
   }
 }
@@ -1355,7 +1392,7 @@ function getPlaceholderWidth($block) {
   return width;
 }
 
-function toggleMasonryView($block, $button, $toggleButtons) {
+function toggleMasonryView($block, $button, $toggleButtons, props) {
   const $templatesToView = $block.querySelectorAll('.template:not(.placeholder)');
   const $blockWrapper = $block.closest('.template-list-wrapper');
   if (!$button.classList.contains('active') && $templatesToView.length > 0) {
@@ -1375,7 +1412,7 @@ function toggleMasonryView($block, $button, $toggleButtons) {
     $block.classList.add(`${$button.dataset.view}-view`);
     $blockWrapper.classList.add(`${$button.dataset.view}-view`);
 
-    props.masonry.draw();
+    props.masonry?.draw();
   } else {
     $button.classList.remove('active');
     ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
@@ -1383,14 +1420,14 @@ function toggleMasonryView($block, $button, $toggleButtons) {
       $blockWrapper.classList.remove(className);
     });
 
-    props.masonry.draw();
+    props.masonry?.draw();
   }
 
   const placeholder = $block.querySelector('.template.placeholder');
   const ratios = props.placeholderFormat;
   const width = getPlaceholderWidth($block);
 
-  if (ratios[1]) {
+  if (ratios?.length === 2) {
     const height = (ratios[1] / ratios[0]) * width;
     placeholder.style = `height: ${height - 21}px`;
     if (width / height > 1.3) {
@@ -1399,18 +1436,26 @@ function toggleMasonryView($block, $button, $toggleButtons) {
   }
 }
 
-function initViewToggle($block, $toolBar) {
+function initViewToggle($block, $toolBar, props) {
   const $toggleButtons = $toolBar.querySelectorAll('.view-toggle-button ');
 
   $toggleButtons.forEach(($button, index) => {
     if (index === 0) {
-      toggleMasonryView($block, $button, $toggleButtons);
+      toggleMasonryView($block, $button, $toggleButtons, props);
     }
 
     $button.addEventListener('click', () => {
-      toggleMasonryView($block, $button, $toggleButtons);
+      toggleMasonryView($block, $button, $toggleButtons, props);
     }, { passive: true });
   });
+}
+
+async function decorateBreadcrumbs(block) {
+  const parent = block.closest('.section');
+  // breadcrumbs are desktop-only
+  if (document.body.dataset.device !== 'desktop') return;
+  const breadcrumbs = await getBreadcrumbs();
+  if (breadcrumbs) parent.prepend(breadcrumbs);
 }
 
 function initToolbarShadow($block, $toolbar) {
@@ -1424,7 +1469,7 @@ function initToolbarShadow($block, $toolbar) {
   });
 }
 
-function decorateToolbar($block, $section, placeholders) {
+function decorateToolbar($block, $section, placeholders, props) {
   const $toolBar = $section.querySelector('.api-templates-toolbar');
 
   if ($toolBar) {
@@ -1448,19 +1493,19 @@ function decorateToolbar($block, $section, placeholders) {
 
     $toolBar.append(toolBarFirstWrapper, functionsWrapper, $functions.mobile);
 
-    decorateSearchFunctions($toolBar, $section, placeholders);
-    initDrawer($block, $section, $toolBar);
-    initFilterSort($block, $toolBar);
-    initViewToggle($block, $toolBar);
+    decorateSearchFunctions($toolBar, $section, placeholders, props);
+    initDrawer($block, $section, $toolBar, props);
+    initFilterSort($block, $toolBar, props);
+    initViewToggle($block, $toolBar, props);
     initToolbarShadow($block, $toolBar);
   }
 }
 
-export async function decorateTemplateList($block) {
+export async function decorateTemplateList($block, props) {
   const locale = getLocale(window.location);
-  const placeholders = await fetchPlaceholders().then((result) => result);
+  const placeholders = await fetchPlaceholders();
   if ($block.classList.contains('apipowered')) {
-    await readRowsFromBlock($block);
+    await readRowsFromBlock($block, props);
 
     const $parent = $block.closest('.section');
     if ($parent) {
@@ -1538,7 +1583,7 @@ export async function decorateTemplateList($block) {
           } else if (props.authoringError) {
             $sectionHeading.textContent = props.heading;
           } else {
-            $sectionHeading.textContent = await populateHeadingPlaceholder(locale) || '';
+            $sectionHeading.textContent = await populateHeadingPlaceholder(locale, props) || '';
           }
         }
 
@@ -1546,6 +1591,12 @@ export async function decorateTemplateList($block) {
         $toolBar.classList.remove('default-content-wrapper');
 
         $templateListWrapper.before($toolBarWrapper);
+        if (props.fallbackMsg) {
+          $templateListWrapper.classList.add('with-fallback-msg');
+          const fallbackMsgWrapper = createTag('div', { class: 'template-list-fallback-msg-wrapper' });
+          fallbackMsgWrapper.textContent = props.fallbackMsg;
+          $templateListWrapper.before(fallbackMsgWrapper);
+        }
         $toolBarWrapper.append($toolBar);
         $toolBar.append($contentWrapper, $functionsWrapper);
         $contentWrapper.append($sectionHeading);
@@ -1555,15 +1606,13 @@ export async function decorateTemplateList($block) {
         }
       }
 
-      const $linkList = $parent.querySelector('.link-list-wrapper');
-      if ($linkList
-        && $linkList.previousElementSibling.classList.contains('hero-animation-wrapper')
-        && placeholders['template-filter-premium']) {
-        document.addEventListener('linkspopulated', (e) => {
-          if (e.detail.length > 0 && e.detail[0].parentElement.classList.contains('template-list')) {
-            decorateToolbar($block, $parent, placeholders);
-            decorateCategoryList($block, $parent, placeholders);
-            appendCategoryTemplatesCount($parent);
+      if (placeholders['template-filter-premium'] && !$block.classList.contains('mini')) {
+        document.addEventListener('linkspopulated', async (e) => {
+          // desktop/mobile fires the same event
+          if ($parent.contains(e.detail[0])) {
+            decorateToolbar($block, $parent, placeholders, props);
+            await decorateCategoryList($block, $parent, placeholders, props);
+            appendCategoryTemplatesCount($parent, props);
           }
         });
       }
@@ -1710,7 +1759,7 @@ export async function decorateTemplateList($block) {
   //
   // make copy of children to avoid modifying list while looping
 
-  populateTemplates($block, templates);
+  populateTemplates($block, templates, props);
 
   if ($block.classList.contains('spreadsheet-powered')
     && !$block.classList.contains('apipowered')
@@ -1752,9 +1801,8 @@ export async function decorateTemplateList($block) {
   document.dispatchEvent(linksPopulated);
 }
 
-async function decorateLoadMoreButton($block) {
-  const placeholders = await fetchPlaceholders()
-    .then((result) => result);
+async function decorateLoadMoreButton($block, props) {
+  const placeholders = await fetchPlaceholders();
   const $loadMoreDiv = createTag('div', { class: 'load-more' });
   const $loadMoreButton = createTag('button', { class: 'load-more-button' });
   const $loadMoreText = createTag('p', { class: 'load-more-text' });
@@ -1766,7 +1814,7 @@ async function decorateLoadMoreButton($block) {
   $loadMoreButton.addEventListener('click', async () => {
     $loadMoreButton.classList.add('disabled');
     const scrollPosition = window.scrollY;
-    await decorateNewTemplates($block);
+    await decorateNewTemplates($block, props);
     window.scrollTo({
       top: scrollPosition,
       left: 0,
@@ -1778,11 +1826,11 @@ async function decorateLoadMoreButton($block) {
   return $loadMoreDiv;
 }
 
-async function decorateTailButton($block) {
+async function decorateTailButton($block, props) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
 
   if ($block.classList.contains('spreadsheet-powered')) {
-    const placeholders = await fetchPlaceholders().then((result) => result);
+    const placeholders = await fetchPlaceholders();
 
     if (placeholders['relevant-rows-view-all'] && (props.viewAllLink || placeholders['relevant-rows-view-all-link'])) {
       props.tailButton = createTag('a', { class: 'button accent tail-cta' });
@@ -1797,7 +1845,7 @@ async function decorateTailButton($block) {
   }
 }
 
-function cacheCreatedTemplate($block) {
+function cacheCreatedTemplate($block, props) {
   const lastRow = $block.children[$block.children.length - 1];
   if (lastRow && lastRow.querySelector(':scope > div:first-of-type > img[src*=".svg"], :scope > div:first-of-type > svg')) {
     props.templates.push(lastRow.cloneNode(true));
@@ -1823,7 +1871,7 @@ function addBackgroundAnimation($block, animationUrl) {
   }
 }
 
-async function replaceRRTemplateList($block) {
+async function replaceRRTemplateList($block, props) {
   const placeholders = await fetchPlaceholders();
   const relevantRowsData = await fetchRelevantRows(window.location.pathname);
   props.limit = parseInt(placeholders['relevant-rows-templates-limit'], 10) || 10;
@@ -1878,16 +1926,57 @@ async function replaceRRTemplateList($block) {
   }
 }
 
+function constructProps() {
+  const smScreen = window.matchMedia('(max-width: 900px)');
+  const mdScreen = window.matchMedia('(min-width: 901px) and (max-width: 1200px)');
+  const bgScreen = window.matchMedia('(max-width: 1440px)');
+  const ratioSeparator = getMetadata('placeholder-format').includes(':') ? ':' : 'x';
+  const ratioFromMetadata = getMetadata('placeholder-format')
+    .split(ratioSeparator)
+    .map((str) => parseInt(str, 10));
+
+  return {
+    templates: [],
+    filters: {
+      locales: getMetadata('locales') || '(en)',
+      tasks: getMetadata('tasks') || '',
+      topics: getMetadata('topics') || '',
+      premium: getMetadata('premium') || '',
+      animated: getMetadata('animated') || '',
+    },
+    tailButton: '',
+    // eslint-disable-next-line no-nested-ternary
+    limit: smScreen.matches ? 20 : mdScreen.matches ? 30 : bgScreen.matches ? 40 : 70,
+    total: 0,
+    start: '',
+    sort: '-_score,-remixCount',
+    masonry: undefined,
+    authoringError: false,
+    headingTitle: null,
+    headingSlug: null,
+    viewAllLink: null,
+    placeholderFormat: ratioFromMetadata,
+    renditionParams: {
+      format: 'jpg',
+      dimension: 'width',
+      size: 151,
+    },
+  };
+}
+
 export default async function decorate($block) {
+  const props = constructProps();
   if ($block.classList.contains('spreadsheet-powered')) {
-    await replaceRRTemplateList($block);
+    await replaceRRTemplateList($block, props);
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday')) {
-    cacheCreatedTemplate($block);
+    cacheCreatedTemplate($block, props);
   }
 
-  await decorateTemplateList($block);
+  await decorateBreadcrumbs($block);
+
+  await decorateTemplateList($block, props);
 
   if ($block.classList.contains('horizontal')) {
     const requireInfiniteScroll = !$block.classList.contains('mini') && !$block.classList.contains('collaboration');
@@ -1897,15 +1986,15 @@ export default async function decorate($block) {
   }
 
   if ($block.classList.contains('apipowered') && !$block.classList.contains('holiday') && !$block.classList.contains('mini')) {
-    const $loadMore = await decorateLoadMoreButton($block);
+    const $loadMore = await decorateLoadMoreButton($block, props);
 
     if ($loadMore) {
-      updateLoadMoreButton($block, $loadMore);
+      updateLoadMoreButton($block, $loadMore, props);
     }
   }
 
   if ($block.classList.contains('mini') || $block.classList.contains('apipowered')) {
-    await decorateTailButton($block);
+    await decorateTailButton($block, props);
   }
 
   if ($block.classList.contains('holiday') && props.backgroundAnimation) {

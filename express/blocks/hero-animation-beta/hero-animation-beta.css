@@ -1,0 +1,426 @@
+body.no-desktop-brand-header header {
+  background-image: url(/express/icons/cc-express-logo.svg);
+  height: auto;
+}
+
+main .hero-animation-beta-container,
+main .hero-animation-beta-wide-container {
+  padding-top: 0;
+}
+
+main .hero-animation-beta-wrapper {
+  position: relative;
+}
+
+main .hero-animation-beta-container > div,
+main .hero-animation-beta-wide-container > div {
+  max-width: unset;
+  padding: 0;
+}
+
+main .hero-animation-beta.appear {
+  opacity: 1;
+  height: unset;
+}
+
+main .hero-animation-beta p:first-child { /* p with icon above heading */
+  margin-bottom: 8px;
+}
+main .hero-animation-beta .hero-animation-beta-foreground > p:first-child img {
+  height: 32px;
+  width: unset;
+}
+
+main .hero-animation-beta h1 {
+  font-size: var(--heading-font-size-l);
+  margin: 0 0 8px 0;
+}
+
+main .hero-animation-beta p {
+  font-size: var(--body-font-size-m);
+  margin: 16px 0;
+}
+
+main .hero-animation-beta p.button-container {
+  text-align: left;
+  margin: 16px 0;
+}
+
+main .hero-animation-beta p.button-container a.button:any-link {
+  margin: 0;
+}
+
+main .hero-animation-beta .hero-animation-beta-foreground > :first-child {
+  margin-top: 0;
+}
+
+main .hero-animation-beta .hero-animation-beta-foreground > :last-child {
+  margin-bottom: 0;
+}
+
+main .hero-animation-beta {
+  text-align: left;
+  padding: 0;
+  margin: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+main .hero-animation-beta .hero-animation-beta-background {
+  box-sizing: border-box;
+}
+
+main .hero-animation-beta video.hero-animation-beta-background {
+  object-fit: cover;
+  width: 100%;
+  min-height: 200px;
+  max-height: 500px;
+  object-position: 100% 100%;
+}
+
+main .hero-animation-beta .hero-animation-beta-foreground {
+  padding: 32px 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+main .hero-animation-beta-dark-container[data-audience="mobile"] .hero-animation-beta-foreground {
+  padding-bottom: 0;
+}
+
+main .hero-animation-beta-dark-container[data-audience="mobile"] .columns  {
+  padding-bottom: 0;
+}
+
+main .hero-animation-beta.white-text,
+main .hero-animation-beta.white-text a:any-link {
+  color: var(--color-white);
+}
+
+@media (min-width: 600px) {
+  main .hero-animation-beta .hero-animation-beta-foreground {
+    margin: 0 auto;
+    width: 500px;
+  }
+
+  main .hero-animation-beta h1 {
+    max-width: calc(100% - 84px);
+  }
+}
+
+@media (min-width: 950px) {
+  main .hero-animation-beta .hero-animation-beta-background,
+  main .hero-animation-beta video.hero-animation-beta-background {
+    min-height: 500px;
+    max-height: unset;
+  }
+
+  main .hero-animation-beta.dark,
+  main .hero-animation-beta.dark a:any-link {
+    color: var(--color-white);
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 56px;
+    width: 380px;
+  }
+
+  body.no-desktop-brand-header header, body.no-brand-header header {
+    height: auto;
+    background-image: unset;
+  }
+}
+
+@media (min-width: 1400px) {
+
+  main .hero-animation-beta .hero-animation-beta-foreground {
+    width: 500px;
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground > p:first-child img.icon.icon-adobe-express {
+    height: 65px;
+  }
+
+  main .hero-animation-beta h1 {
+    font-size: var(--heading-font-size-xxl);
+    max-width: unset;
+  }
+
+  main .hero-animation-beta p {
+    font-size: var(--body-font-size-l);
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 10%;
+  }
+}
+
+@media (min-width: 1800px) {
+  main .hero-animation-beta .hero-animation-beta-foreground {
+    max-width: 30%;
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 15%;
+  }
+}
+
+@media (max-width: 399px) {
+  main .hero-animation-beta.has-desktop-animation:not(.has-mobile-animation) .hero-animation-beta-background {
+    display: none;
+  }
+}
+
+/* Wide option */
+
+@media (min-width: 600px) {
+  main .hero-animation-beta.wide {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  main .hero-animation-beta.wide.fullwidth {
+    max-width: unset;
+  }
+
+  main .hero-animation-beta.wide h1 {
+    font-size: var(--heading-font-size-l);
+  }
+
+  main .hero-animation-beta.wide p {
+    font-size: var(--body-font-size-m);
+    position: relative;
+    margin: 12px 0;
+  }
+
+  main .hero-animation-beta.wide .hero-animation-beta-foreground > p:first-child img.icon {
+    height: 30px;
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground > :first-child {
+    margin-top: 0;
+  }
+
+  main .hero-animation-beta .hero-animation-beta-foreground > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+main .hero-animation-beta.wide .hero-animation-beta-background {
+  min-height: unset;
+  max-height: unset;
+}
+
+main .hero-animation-beta.wide video.hero-animation-beta-background {
+  max-height: 200px;
+  min-height: 200px;
+  object-position: 75% 100%;
+}
+
+@media (min-width: 950px) {
+  main .hero-animation-beta.wide .hero-animation-beta-foreground {
+    position: relative;
+    top: unset;
+    left: unset;
+    transform: unset;
+    width: unset;
+    max-width: 550px;
+    box-sizing: border-box;
+    padding: 32px;
+    margin: 0;
+    min-height: 250px;
+  }
+
+  main .hero-animation-beta.wide video.hero-animation-beta-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: auto;
+    right: auto;
+    height: 100%;
+    width: 100%;
+    z-index: unset;
+    object-fit: cover;
+    max-height: unset;
+    min-height: 250px;
+    object-position: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  main .hero-animation-beta.wide.fullwidth .hero-animation-beta-foreground {
+    margin-left: calc(50vw - 600px);
+  }
+}
+
+/* shadow */
+
+main .hero-animation-beta .hero-shadow {
+  display: none;
+}
+
+main .hero-animation-beta .hero-shadow picture {
+  display: flex;
+}
+
+@media (min-width: 950px) {
+  main .hero-animation-beta .hero-shadow {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-15%);
+    z-index: 2;
+  }
+
+  main .hero-animation-beta p.button-container a.secondary {
+    background: rgba(255, 255, 255, 0);
+    border-color: var(--color-white);
+  }
+
+  main .hero-animation-beta p.button-container a.secondary:hover, main .hero-animation-beta p.button-container a.secondary:active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-white);
+  }
+
+  main .hero-animation-beta p.button-container a.secondary::before {
+    filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(172deg) brightness(110%) contrast(101%);
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1250px) {
+  main .hero-animation-beta .hero-shadow {
+    transform: translateX(-5%);
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1399px) {
+  main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+    left: 1%;
+  }
+}
+
+@media (min-width: 1450px) {
+  main .hero-animation-beta .hero-shadow {
+    transform: translate(-15%, -2px);
+  }
+}
+
+/* free plan widget */
+
+
+main .hero-animation-beta .button-container.free-plan-container {
+  justify-content: left;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+main .hero-animation-beta .free-plan-widget {
+  margin-top: 40px;
+  color: var(--body-color);
+}
+
+main .hero-animation-beta.wide .free-plan-widget {
+  margin: 0;
+  background-color: transparent;
+}
+
+main .hero-animation-beta.wide .free-plan-widget {
+  padding-left: 0;
+}
+
+/** button inline styles */
+main .hero-animation-beta .hero-animation-beta-foreground.display-style {
+  display: block;
+}
+
+main .hero-animation-beta p.button-container.button-inline {
+  display: inline-block;
+}
+
+@media (max-width: 949px) {
+  main .hero-animation-beta p.button-container a.secondary {
+    background: rgba(232, 232, 232, 0.1);
+  }
+
+  main .hero-animation-beta p.button-container a.secondary:hover,
+  main .hero-animation-beta p.button-container a.secondary:active,
+  main .hero-animation-beta p.button-container a.secondary:focus {
+    background: var(--color-info-secondary);
+    border-color: var(--color-info-secondary);
+    color: var(--color-black);
+  }
+}
+
+main .hero-animation-beta p.button-container a.secondary::before {
+  display: inline-block;
+  width: 18px;
+  height: 20px;
+  margin-right: 10px;
+  vertical-align: sub;
+  top: 1px;
+  position: relative;
+  content: url(/express/icons/play.svg);
+}
+
+main .hero-animation-beta p.underline a {
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+@media (min-width: 900px) {
+  main .hero-animation-beta.wide .button-container.free-plan-container {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  main .hero-animation-beta.wide .button-container.free-plan-container a.button {
+    margin-right: 24px;
+  }
+
+  main .hero-animation-beta.wide .button-container.free-plan-container.stacked {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  main .hero-animation-beta.wide .button-container.free-plan-container .free-plan-widget {
+    margin-top: 0;
+    padding: 16px 24px;
+  }
+
+  main .hero-animation-beta.wide .button-container.free-plan-container.stacked .free-plan-widget {
+    padding-left: 0;
+  }
+
+  main .hero-animation-beta p:nth-child(1 of .button-container) {
+    display: inline-block;
+  }
+
+  main .hero-animation-beta p.button-container a.secondary:any-link {
+    margin-left: 15px;
+  }
+}
+
+/* Japanese font sizing styles */
+
+:lang(ja) main .hero-animation-beta h1 {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation-beta h1.heading-long {
+  font-size: var(--heading-font-size-l);
+}
+
+:lang(ja) main .hero-animation-beta h1.heading-very-long {
+  font-size: var(--heading-font-size-m);
+}
+
+:lang(ja) main .hero-animation-beta h1.heading-x-long {
+  font-size: var(--heading-font-size-m);
+}

@@ -5,18 +5,13 @@ mountpoints:
 folders:
   /express/templates/: /express/templates/default
   /br/express/templates/: /br/express/templates/default
-  /cn/express/templates/: /cn/express/templates/default
   /de/express/templates/: /de/express/templates/default
-  /dk/express/templates/: /dk/express/templates/default
   /es/express/templates/: /es/express/templates/default
-  /fi/express/templates/: /fi/express/templates/default
   /fr/express/templates/: /fr/express/templates/default
   /it/express/templates/: /it/express/templates/default
   /jp/express/templates/: /jp/express/templates/default
   /kr/express/templates/: /kr/express/templates/default
   /nl/express/templates/: /nl/express/templates/default
-  /no/express/templates/: /no/express/templates/default
-  /se/express/templates/: /se/express/templates/default
   /tw/express/templates/: /tw/express/templates/default
   /express/colors/: /express/colors/default
   /br/express/colors/: /br/express/colors/default

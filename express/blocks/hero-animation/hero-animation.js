@@ -188,7 +188,7 @@ export default async function decorate($block) {
         const srcURL = new URL($poster.src);
         const srcUSP = new URLSearchParams(srcURL.search);
         srcUSP.set('format', 'webply');
-        srcUSP.set('width', typeHint === 'mobile' ? 750 : 2000);
+        srcUSP.set('width', typeHint === 'mobile' ? 750 : 4080);
         optimizedPosterSrc = `${srcURL.pathname}?${srcUSP.toString()}`;
       }
 

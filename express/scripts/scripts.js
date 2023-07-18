@@ -376,13 +376,13 @@ export function getIconElement(icons, size, alt, additionalClassName) {
   return ($div.firstElementChild);
 }
 
-export function transformLinkToAnimation($a, $videoLooping = 'yes') {
+export function transformLinkToAnimation($a, $videoLooping = true) {
   if (!$a || !$a.href.endsWith('.mp4')) {
     return null;
   }
   const params = new URL($a.href).searchParams;
   const attribs = {};
-  let dataAttr = ($videoLooping && $videoLooping === 'yes') ? ['playsinline', 'autoplay', 'loop', 'muted'] : ['playsinline', 'autoplay', 'muted'];
+  const dataAttr = $videoLooping ? ['playsinline', 'autoplay', 'loop', 'muted'] : ['playsinline', 'autoplay', 'muted'];
   dataAttr.forEach((p) => {
     if (params.get(p) !== 'false') attribs[p] = '';
   });
@@ -674,6 +674,7 @@ export function getLanguage(locale) {
   const langs = {
     us: 'en-US',
     fr: 'fr-FR',
+    in: 'en-IN',
     de: 'de-DE',
     it: 'it-IT',
     dk: 'da-DK',
@@ -800,6 +801,7 @@ export async function getOffer(offerId, countryOverride) {
     currency = 'USD';
   }
   const resp = await fetch('/express/system/offers-new.json');
+  if (!resp.ok) return {};
   const json = await resp.json();
   const upperCountry = country.toUpperCase();
   let offer = json.data.find((e) => (e.o === offerId) && (e.c === upperCountry));
@@ -1117,23 +1119,23 @@ export function getMetadata(name) {
  */
 
 export async function fetchPlaceholders() {
+  const requestPlaceholders = async (url) => {
+    const resp = await fetch(url);
+    if (resp.ok) {
+      const json = await resp.json();
+      window.placeholders = {};
+      json.data.forEach((placeholder) => {
+        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
+      });
+    }
+  };
   if (!window.placeholders) {
     try {
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
-      const resp = await fetch(`${urlPrefix}/express/placeholders.json`);
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
+      await requestPlaceholders(`${urlPrefix}/express/placeholders.json`);
     } catch {
-      const resp = await fetch('/express/placeholders.json');
-      const json = await resp.json();
-      window.placeholders = {};
-      json.data.forEach((placeholder) => {
-        window.placeholders[toClassName(placeholder.Key)] = placeholder.Text;
-      });
+      await requestPlaceholders('/express/placeholders.json');
     }
   }
   return window.placeholders;
@@ -1545,8 +1547,8 @@ async function decorateTesting() {
         console.log('run', config.run, config.audience);
 
         window.hlx = window.hlx || {};
-        window.hlx.experiment = config;
         if (config.run) {
+          window.hlx.experiment = config;
           if (forcedVariant && config.variantNames.includes(forcedVariant)) {
             config.selectedVariant = forcedVariant;
           } else {
@@ -1772,13 +1774,13 @@ export async function fetchFloatingCta(path) {
   }
 
   if (['yes', 'true', 'on'].includes(dev) && env && env.name === 'stage') {
-    spreadsheet = '/express/floating-cta-dev.json?limit=10000';
+    spreadsheet = '/express/floating-cta-dev.json?limit=100000';
   } else {
-    spreadsheet = '/express/floating-cta.json?limit=10000';
+    spreadsheet = '/express/floating-cta.json?limit=100000';
   }
 
   if (experimentStatus === 'active') {
-    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=10000';
+    const expSheet = '/express/experiments/floating-cta-experiments.json?limit=100000';
     floatingBtnData = await fetchFloatingBtnData(expSheet);
   }
 
@@ -1843,6 +1845,7 @@ async function buildAutoBlocks($main) {
   if (['yes', 'true', 'on'].includes(getMetadata('show-floating-cta').toLowerCase()) || ['yes', 'true', 'on'].includes(getMetadata('show-multifunction-button').toLowerCase())) {
     if (!window.floatingCtasLoaded) {
       const floatingCTAData = await fetchFloatingCta(window.location.pathname);
+      const validButtonVersion = ['floating-button', 'multifunction-button', 'bubble-ui-button', 'floating-panel'];
       let desktopButton;
       let mobileButton;
 
@@ -1852,13 +1855,15 @@ async function buildAutoBlocks($main) {
           mobile: floatingCTAData.mobile,
         };
 
-        desktopButton = buildBlock(buttonTypes.desktop, 'desktop');
-        mobileButton = buildBlock(buttonTypes.mobile, 'mobile');
+        desktopButton = validButtonVersion.includes(buttonTypes.desktop) ? buildBlock(buttonTypes.desktop, 'desktop') : null;
+        mobileButton = validButtonVersion.includes(buttonTypes.mobile) ? buildBlock(buttonTypes.mobile, 'mobile') : null;
 
         [desktopButton, mobileButton].forEach((button) => {
-          button.classList.add('spreadsheet-powered');
-          if ($lastDiv) {
-            $lastDiv.append(button);
+          if (button) {
+            button.classList.add('spreadsheet-powered');
+            if ($lastDiv) {
+              $lastDiv.append(button);
+            }
           }
         });
       }
@@ -2325,8 +2330,14 @@ async function loadEager() {
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
-  if (window.location.href.includes('/express/templates/')) {
-    await import('./templates.js');
+  // for backward compatibility
+  // TODO: remove the href check after we tag content with sheet-powered
+  if (getMetadata('sheet-powered') === 'Y' || window.location.href.includes('/express/templates/')) {
+    await import('./content-replace.js');
+  }
+
+  if (getMetadata('template-search-page') === 'Y') {
+    await import('./template-redirect.js');
   }
 
   if (main) {
@@ -2339,10 +2350,14 @@ async function loadEager() {
     displayOldLinkWarning();
     wordBreakJapanese();
 
-    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'collapsible-card'];
-    const block = document.querySelector('.block');
-    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(block, true);
+    const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'fullscreen-marquee-desktop', 'collapsible-card', 'search-marquee'];
+    const blocks = document.querySelectorAll('.block');
+    const firstVisualBlock = Array.from(blocks).find((b) => {
+      const { audience } = b.closest('.section')?.dataset || {};
+      return audience === document.body.dataset.device;
+    });
+    const hasLCPBlock = (firstVisualBlock && lcpBlocks.includes(firstVisualBlock.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(firstVisualBlock, true);
 
     document.querySelector('body').classList.add('appear');
 
@@ -2364,7 +2379,9 @@ async function loadEager() {
     await new Promise((resolve) => {
       if (lcpCandidate && !lcpCandidate.complete) {
         lcpCandidate.setAttribute('loading', 'eager');
-        lcpCandidate.addEventListener('load', () => resolve());
+        lcpCandidate.addEventListener('load', () => {
+          resolve();
+        });
         lcpCandidate.addEventListener('error', () => resolve());
       } else {
         resolve();
@@ -2395,38 +2412,7 @@ export async function buildStaticFreePlanWidget() {
     tagWrapper.append(checkMarkDiv, textDiv);
     widget.append(tagWrapper);
   }
-
   return widget;
-}
-
-export async function buildFreePlanHighlight(elem) {
-  const placeholders = await fetchPlaceholders();
-  const bullet = createTag('div', { class: 'free-plan-bullet' });
-
-  if (sessionStorage.getItem('highlight-optout')) {
-    elem.classList.add('highlight-optout');
-  }
-  const freePlanBulletContainer = createTag('div', { class: 'free-plan-bullet-container' });
-  const freePlanBulletTray = createTag('div', { class: 'free-plan-bullet-tray' });
-  const optoutButton = createTag('button', { class: 'free-plan-optout' });
-
-  optoutButton.append(getIconElement('close-black'));
-
-  for (let i = 0; i < 40; i += 1) {
-    const checkMarkColor = i % 2 === 0 ? '#c457f0' : '#f06dad';
-    const placeholder = i % 2 === 0 ? placeholders['free-plan-check-1'] : placeholders['free-plan-check-2'];
-    const tag = createTag('div', { class: 'free-plan-tag' });
-    const innerDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
-    tag.innerText = placeholder;
-    innerDiv.append(getIconElement('checkmark'));
-
-    tag.prepend(innerDiv);
-    freePlanBulletTray.append(tag);
-  }
-
-  freePlanBulletContainer.append(freePlanBulletTray);
-  bullet.append(freePlanBulletContainer);
-  elem.append(bullet, optoutButton);
 }
 
 export async function addFreePlanWidget(elem) {
@@ -2459,12 +2445,6 @@ export async function addFreePlanWidget(elem) {
     });
 
     elem.append(widget);
-
-    // add the free plan bullet if there's a CTA to attach to
-    if (elem.classList.contains('button-container')) {
-      await buildFreePlanHighlight(elem);
-    }
-
     elem.classList.add('free-plan-container');
   }
 }

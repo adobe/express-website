@@ -212,3 +212,10 @@ indices:
       - '/se/express/**'
       - '/se/education/express/**'
     target: /se/express/query-index.xlsx
+    
+  india:
+    <<: *website
+    include:
+      - '/in/express/**'
+      - '/in/education/express/**'
+    target: /in/express/query-index.xlsx
