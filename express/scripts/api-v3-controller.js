@@ -102,7 +102,7 @@ export async function fetchLinkListFromCKGApi() {
     };
 
     const env = getHelixEnv();
-    const result = await getData(env.name, dataRaw).then((data) => data);
+    const result = await getData(env.name, dataRaw);
     if (result.status.httpCode === 200) {
       return result;
     }

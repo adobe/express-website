@@ -1,0 +1,140 @@
+/* Future proofing wrapper deprecation. To be removed after milo migration */
+main .section .hero-color-wrapper {
+  max-width: unset;
+}
+
+main .hero-color {
+  max-width: unset;
+}
+
+main .hero-color .content-container .text {
+  display: none;
+}
+
+main .hero-color .content-container {
+  min-height: 200px;
+  max-width: 1440px;
+  margin: auto;
+}
+
+main .hero-color .description-container {
+margin: 16px 0 32px 0;
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+main .hero-color .text-container {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+}
+
+main .hero-color .text-container .text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 15px;
+  text-align: left;
+  color: var(--color-black);
+}
+
+main .hero-color .content-container h2,
+main .hero-color .text-container h2 {
+  margin: 0;
+  font-size: var(--heading-font-size-xl);
+  text-align: left;
+}
+
+main .hero-color .content-container p,
+main .hero-color .text-container p {
+  margin: 0;
+  font-size: var(--body-font-size-l);
+}
+
+main .hero-color .content-container .text .button-container,
+main .hero-color .text-container .text .button-container {
+  margin: 0;
+}
+
+main .hero-color .content-container .text .button-container .button,
+main .hero-color .text-container .button-container .button {
+  margin: 0;
+  padding: 12px 23px 14px 23px;
+  border-radius: 100px;
+  font-size: var(--body-font-size-m);
+}
+
+main .hero-color .content-container .color-svg-img {
+  height: 100%;
+  width: 200%;
+  margin: 0 0 0 15px;
+}
+
+main .hero-color.light-bg {
+  color: var(--color-black);
+}
+
+main .hero-color.dark-bg {
+  color: var(--color-white);
+}
+
+main .hero-color .hidden-svg {
+  display: none;
+}
+
+@media screen and (min-width: 600px) {
+  main .hero-color .text-container {
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  main .hero-color .text-container {
+    display: none;
+  }
+
+  main .hero-color .content-container {
+    min-height: 336px;
+    display: flex;
+    gap: 60px;
+  }
+
+  main .hero-color .content-container .color-svg {
+    position: relative;
+  }
+
+  main .hero-color .content-container .color-svg-img {
+    margin: 0;
+    width: 1424px;
+    height: 336px;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+  }
+
+  main .hero-color .content-container .text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 20px;
+    text-align: left;
+    min-width: 486px;
+    max-width: 486px;
+  }
+
+  main .hero-color.dark-bg .button,
+  main .hero-color.dark-bg .button:hover {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border-color: var(--color-white);
+  }
+
+  main .hero-color.light-bg .button,
+  main .hero-color.light-bg .button:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
+  }
+}

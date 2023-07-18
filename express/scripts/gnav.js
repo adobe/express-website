@@ -69,7 +69,12 @@ function loadIMS() {
     locale: getLocale(window.location),
     environment: 'prod',
   };
-  loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
+  if (!['www.stage.adobe.com'].includes(window.location.hostname)) {
+    loadScript('https://auth.services.adobe.com/imslib/imslib.min.js');
+  } else {
+    loadScript('https://auth-stg1.services.adobe.com/imslib/imslib.min.js');
+    window.adobeid.environment = 'stg1';
+  }
 }
 
 async function loadFEDS() {
@@ -153,7 +158,7 @@ async function loadFEDS() {
 
   async function buildBreadCrumbArray() {
     if (isHomepage || getMetadata('hide-breadcrumbs') === 'true') {
-      return undefined;
+      return null;
     }
     const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
     const buildBreadCrumb = (path, name, parentPath = '') => (
@@ -161,30 +166,26 @@ async function loadFEDS() {
     );
 
     const placeholders = await fetchPlaceholders();
-    const validCategories = ['create', 'feature', 'templates'];
-    const pathSegments = window.location.pathname.split('/')
-      .filter((element) => element !== '')
-      .filter((element) => element !== locale);
+    const validSecondPathSegments = ['create', 'feature'];
+    const pathSegments = window.location.pathname
+      .split('/')
+      .filter((e) => e !== locale);
     const localePath = locale === 'us' ? '' : `${locale}/`;
-    let category = pathSegments[1];
-    const secondPathSegment = category.toLowerCase();
-    const pagesShortNameElement = document.querySelector('meta[name="short-title"]');
-    const pagesShortName = pagesShortNameElement ? pagesShortNameElement.getAttribute('content') : null;
+    const secondPathSegment = pathSegments[1].toLowerCase();
+    const pagesShortNameElement = document.head.querySelector('meta[name="short-title"]');
+    const pagesShortName = pagesShortNameElement?.getAttribute('content') ?? null;
+    const replacedCategory = placeholders[`breadcrumbs-${secondPathSegment}`];
 
-    if ((!pagesShortName && pathSegments.length > 2)
-      || !placeholders[`breadcrumbs-${category}`]
+    if (!pagesShortName
+      || pathSegments.length <= 2
+      || !replacedCategory
+      || !validSecondPathSegments.includes(replacedCategory)
       || locale !== 'us') { // Remove this line once locale translations are complete
-      return undefined;
+      return null;
     }
-    category = capitalize(placeholders[`breadcrumbs-${category}`]);
-    validCategories.push(category);
 
-    const secondBreadCrumb = buildBreadCrumb(secondPathSegment, category, `${localePath}/express`);
+    const secondBreadCrumb = buildBreadCrumb(secondPathSegment, capitalize(replacedCategory), `${localePath}/express`);
     const breadCrumbList = [secondBreadCrumb];
-
-    if (!validCategories.includes(category)) {
-      return undefined;
-    }
 
     if (pathSegments.length >= 3) {
       const thirdBreadCrumb = buildBreadCrumb(pagesShortName, pagesShortName, secondBreadCrumb.url);

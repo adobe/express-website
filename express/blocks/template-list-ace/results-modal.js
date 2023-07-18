@@ -45,6 +45,7 @@ function getVoteHandler(result, category, feedbackState) {
       feedbackState.category = category;
       feedbackState.showThankyou();
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err);
     }
   };
@@ -365,6 +366,7 @@ export async function fetchResults(modalContent) {
         (searchPositionMap.get(query) + NUM_RESULTS) % (RESULTS_ROTATION * NUM_RESULTS));
     }
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
     fetchingState.results = 'error';
   } finally {

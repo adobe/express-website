@@ -11,13 +11,9 @@
  */
 /* eslint-disable import/named, import/extensions */
 
-import {
-  createTag,
-} from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
 
-import {
-  buildCarousel,
-} from '../shared/carousel.js';
+import { buildCarousel } from '../shared/carousel.js';
 
 export function decorateHeading(block, payload) {
   const headingSection = createTag('div', { class: 'browse-by-category-heading-section' });
@@ -85,11 +81,11 @@ export default async function decorate(block) {
   decorateCategories(block, payload);
   buildCarousel('.browse-by-category-card', block, false);
 
-  if(block.classList.contains('fullwidth')) {
+  if (block.classList.contains('fullwidth')) {
     const blockWrapper = block.parentNode;
 
-    if(blockWrapper && blockWrapper.classList.contains('browse-by-category-wrapper')) {
+    if (blockWrapper && blockWrapper.classList.contains('browse-by-category-wrapper')) {
       blockWrapper.classList.add('fullwidth');
     }
   }
-};
+}
