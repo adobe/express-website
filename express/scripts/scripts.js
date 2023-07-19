@@ -497,6 +497,8 @@ export function decorateSections($main) {
           section.classList.add(...meta.style.split(', ').map(toClassName));
         } else if (key === 'anchor') {
           section.id = toClassName(meta.anchor);
+        } else if (key === 'background') {
+          section.style.background = meta.background;
         } else {
           section.dataset[key] = meta[key];
         }
@@ -2590,6 +2592,7 @@ export async function trackBranchParameters($links) {
   const pageUrl = window.location.pathname;
   const sdid = rootUrlParameters.get('sdid');
   const mv = rootUrlParameters.get('mv');
+  const mv2 = rootUrlParameters.get('mv2');
   const sKwcId = rootUrlParameters.get('s_kwcid');
   const efId = rootUrlParameters.get('ef_id');
   const promoId = rootUrlParameters.get('promoid');
@@ -2627,6 +2630,10 @@ export async function trackBranchParameters($links) {
         urlParams.set('mv', mv);
       }
 
+      if (mv2) {
+        urlParams.set('mv2', mv2);
+      }
+
       if (efId) {
         urlParams.set('efid', efId);
       }
@@ -2648,7 +2655,7 @@ export async function trackBranchParameters($links) {
       }
 
       if (trackingId) {
-        urlParams.set('keywordid', trackingId);
+        urlParams.set('trackingid', trackingId);
       }
 
       if (cgen) {
@@ -2664,7 +2671,7 @@ export async function trackBranchParameters($links) {
       }
 
       btnUrl.search = urlParams.toString();
-      $a.href = btnUrl.toString();
+      $a.href = decodeURIComponent(btnUrl.toString());
     }
   });
 }
