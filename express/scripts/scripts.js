@@ -497,6 +497,8 @@ export function decorateSections($main) {
           section.classList.add(...meta.style.split(', ').map(toClassName));
         } else if (key === 'anchor') {
           section.id = toClassName(meta.anchor);
+        } else if (key === 'background') {
+          section.style.background = meta.background;
         } else {
           section.dataset[key] = meta[key];
         }
@@ -2402,21 +2404,16 @@ export async function buildStaticFreePlanWidget() {
   const placeholders = await fetchPlaceholders();
   const widget = createTag('div', { class: 'free-plan-widget' });
   for (let i = 1; i < 3; i += 1) {
-    const checkMarkColor = i % 2 !== 0 ? '#c457f0' : '#f06dad';
     const tagText = placeholders[`free-plan-check-${i}`];
-    const tagWrapper = createTag('div');
-    const checkMarkDiv = createTag('div', { style: `background-color: ${checkMarkColor}` });
     const textDiv = createTag('div');
-    checkMarkDiv.append(getIconElement('checkmark'));
     textDiv.textContent = tagText;
-    tagWrapper.append(checkMarkDiv, textDiv);
-    widget.append(tagWrapper);
+    widget.append(textDiv);
   }
   return widget;
 }
 
 export async function addFreePlanWidget(elem) {
-  if (elem && ['yes', 'true'].includes(getMetadata('show-free-plan').toLowerCase())) {
+  if (elem && ['yes', 'true', 'y', 'on'].includes(getMetadata('show-free-plan').toLowerCase())) {
     const placeholders = await fetchPlaceholders();
     const widget = await buildStaticFreePlanWidget();
 
