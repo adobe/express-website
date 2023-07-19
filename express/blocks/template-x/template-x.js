@@ -128,8 +128,8 @@ async function formatHeadingPlaceholder(props) {
 
   if (toolBarHeading) {
     toolBarHeading = toolBarHeading
-      .replace('{{templates-count}}', templateCount)
-      .replace('{{quantity}}', templateCount)
+      .replace('{{templates-count}}', props.fallbackMsg ? '0' : templateCount)
+      .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
       .replace('{{Type}}', titleCase(getMetadata('q') || getMetadata('short-title')))
       .replace('{{type}}', getMetadata('q') || getMetadata('short-title'));
 
