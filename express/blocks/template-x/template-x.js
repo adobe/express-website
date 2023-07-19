@@ -893,7 +893,8 @@ async function redrawTemplates(block, props, toolBar) {
 
   heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
   // await updateOptionsStatus(block, props, toolBar);
-  // fixme: toolbar now has issue syncing filter status with mobile view. Temporarily disabling the feature as block will be authored for each audience separately.
+  /* fixme: toolbar now has issue syncing filter status with mobile view.
+  Temporarily disabling the feature as block will be authored for each audience separately. */
   if (block.querySelectorAll('.template').length <= 0) {
     const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
     $viewButtons.forEach((button) => {
