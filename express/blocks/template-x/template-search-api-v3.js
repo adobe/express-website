@@ -105,7 +105,7 @@ const fetchSearchUrl = async ({
 
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
-  const fallBacktextTemplate = tasks ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
+  const fallBacktextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
   if (fallBacktextTemplate) {
     return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
@@ -126,12 +126,12 @@ export async function fetchTemplates(props, fallback = true) {
   }
   const { filters: { tasks, locales } } = props;
   if (tasks) {
-    response = await fetchSearchUrl({ ...props, filters: { tasks, locales, premium: 'false' } });
+    response = await fetchSearchUrl({ ...props, filters: { tasks, locales, premium: 'false' }, q: '' });
     if (response?.metadata?.totalHits > 0) {
       return { response, fallbackMsg: await getFallbackMsg(tasks) };
     }
   }
-  response = await fetchSearchUrl({ ...props, filters: { locales, premium: 'false' } });
+  response = await fetchSearchUrl({ ...props, filters: { locales, premium: 'false' }, q: '' });
   return { response, fallbackMsg: await getFallbackMsg() };
 }
 

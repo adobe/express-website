@@ -264,7 +264,7 @@ export default function decorate($block) {
   // variant for the colors pages
   if ($block.classList.contains('custom-color')) {
     const [primaryColor, accentColor] = $rows[1].querySelector('div').textContent.trim().split(',');
-    const [textCol, svgCol] = Array.from(($rows[0].querySelectorAll('div')))
+    const [textCol, svgCol] = Array.from(($rows[0].querySelectorAll('div')));
     const svgId = svgCol.textContent.trim();
     const svg = createTag('div', { class: 'img-wrapper' });
 
