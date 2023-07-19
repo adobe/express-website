@@ -166,6 +166,6 @@
 
 @media (min-width: 900px) {
     .block.toggle-bar {
-        display: initial;
+        display: block;
     }
 }
