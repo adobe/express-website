@@ -54,6 +54,7 @@
   --body-font-size-xl: 1.25rem;
   /* 20px */
   --body-font-size-l: 1.125rem;
+  --body-font-fluid-size-l: 1.125em;
   /* 18px */
   --body-font-size-m: 1rem;
   /* 16px */
@@ -72,6 +73,7 @@
   --heading-font-size-xl: 2.8125rem;
   /* 45px */
   --heading-font-size-l: 2.25rem;
+  --heading-font-fluid-size-l: 2.25rem;
   /* 36px */
   --heading-font-size-m: 1.75rem;
   /* 28px */

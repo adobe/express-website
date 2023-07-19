@@ -18,7 +18,6 @@ import {
   fixIcons,
   toClassName,
   createOptimizedPicture,
-  trackBranchParameters,
 } from '../../scripts/scripts.js';
 
 const PROMOTION_FOLDER = 'express/promotions';
