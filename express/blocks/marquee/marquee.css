@@ -53,12 +53,12 @@ body.no-desktop-brand-header header {
   margin-bottom: 0;
 }
 
-.marquee h1 {
+.marquee .content-wrapper h1 {
   font-size: clamp(var(--heading-font-size-l), 4vw, var(--heading-font-size-xxl));
   margin: 0 0 8px 0;
 }
 
-.marquee h2 {
+.marquee .content-wrapper h2 {
   font-size: clamp(var(--heading-font-size-s), 3vw, var(--heading-font-size-l));
   margin: 0 0 8px 0;
   text-align: left;
@@ -124,21 +124,27 @@ body.no-desktop-brand-header header {
   display: inline-block;
 }
 
-.marquee .button-container.free-plan-container {
+.marquee .content-wrapper .button-container.free-plan-container {
   display: flex;
   justify-content: left;
-  align-items: center;
+  align-items: flex-start;
 }
 
-.marquee .free-plan-widget {
+.marquee .button-container.button-inline.free-plan-container .free-plan-widget {
   color: var(--body-color);
   background: unset;
+  background-color: unset;
   margin: unset;
 }
 
-.marquee.dark .free-plan-widget {
+.marquee.dark .button-container.button-inline.free-plan-container .free-plan-widget {
   color: var(--color-white);
   background: unset;
+  background-color: unset;
+}
+
+.marquee .button-container.button-inline.free-plan-container + .button-container.button-inline > a {
+  margin-left: 0;
 }
 
 .marquee.wide .free-plan-widget {
@@ -311,16 +317,29 @@ body.no-desktop-brand-header header {
   }
 
   .marquee p.button-container a.secondary {
-    background: rgba(255, 255, 255, 0);
+    background: transparent;
+    border-color: var(--color-black);
+  }
+
+  .marquee.dark p.button-container a.secondary {
     border-color: var(--color-white);
   }
 
   .marquee p.button-container a.secondary:hover, .marquee p.button-container a.secondary:active {
     background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-black);
+  }
+
+  .marquee.dark p.button-container a.secondary:hover, .marquee.dark p.button-container a.secondary:active {
+    background: rgba(255, 255, 255, 0.1);
     border-color: var(--color-white);
   }
 
   .marquee p.button-container a.secondary::before {
+    filter: sepia(0%) saturate(1%) hue-rotate(172deg) brightness(110%) contrast(101%);
+  }
+
+  .marquee.dark p.button-container a.secondary::before {
     filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(172deg) brightness(110%) contrast(101%);
   }
 
@@ -336,6 +355,10 @@ body.no-desktop-brand-header header {
   .marquee.wide .button-container.free-plan-container.stacked {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .marquee .content-wrapper .button-container.free-plan-container {
+    align-items: center;
   }
 
   .marquee.wide .button-container.free-plan-container .free-plan-widget {

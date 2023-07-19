@@ -17,19 +17,32 @@ import {
   getLocale,
   addHeaderSizing,
   getIconElement,
-  addFreePlanWidget, fetchPlaceholders,
+  addFreePlanWidget,
+  fetchPlaceholders,
 } from '../../scripts/scripts.js';
 
-import {
-  isVideoLink,
-  displayVideoModal,
-} from '../shared/video.js';
+const breakpointConfig = [
+  {
+    typeHint: 'default',
+    minWidth: 0,
+  },
+  {
+    typeHint: 'mobile',
+    minWidth: 0,
+  },
+  {
+    typeHint: 'desktop',
+    minWidth: 400,
+  },
+  {
+    typeHint: 'hd',
+    minWidth: 1440,
+  },
+];
 
-import localStorage, { preferenceNames } from '../../scripts/preference-store.js';
-
-function getBreakpoint(animations, config) {
+function getBreakpoint(animations) {
   let breakpoint = 'default';
-  config.forEach((bp) => {
+  breakpointConfig.forEach((bp) => {
     if ((window.innerWidth > bp.minWidth) && animations[bp.typeHint]) breakpoint = bp.typeHint;
   });
   return breakpoint;
@@ -49,17 +62,21 @@ function buildReduceMotionSwitch(block) {
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) {
-      localStorage.setItem(name, ON);
+      localStorage.setItem('reduceMotion', 'on');
     }
-    const initialValue = localStorage.init(preferenceNames.reduceMotion.name);
+    const initialValue = localStorage.getItem('reduceMotion') === 'on';
 
     if (initialValue) {
       block.classList.add('reduce-motion');
       block.querySelector('video')?.pause();
     }
 
-    localStorage.subscribe(preferenceNames.reduceMotion.name, block, ({ value }) => {
-      if (value) {
+    mediaQuery.addEventListener('change', (e) => {
+      const browerValue = localStorage.getItem('reduceMotion') === 'on';
+      if (browerValue === e.matches) return;
+      localStorage.setItem('reduceMotion', e.matches ? 'on' : 'off');
+
+      if (localStorage.getItem('reduceMotion') === 'on') {
         block.classList.add('reduce-motion');
         block.querySelector('video')?.pause();
       } else {
@@ -69,7 +86,15 @@ function buildReduceMotionSwitch(block) {
     });
 
     reduceMotionIconWrapper.addEventListener('click', () => {
-      localStorage.toggle(preferenceNames.reduceMotion.name);
+      localStorage.setItem('reduceMotion', localStorage.getItem('reduceMotion') === 'on' ? 'off' : 'on');
+
+      if (localStorage.getItem('reduceMotion') === 'on') {
+        block.classList.add('reduce-motion');
+        block.querySelector('video')?.pause();
+      } else {
+        block.classList.remove('reduce-motion');
+        block.querySelector('video')?.play();
+      }
     }, { passive: true });
 
     reduceMotionIconWrapper.addEventListener('mouseenter', async () => {
@@ -88,7 +113,7 @@ function buildReduceMotionSwitch(block) {
   }
 }
 
-function createAnimation(animations, breakpointConfig) {
+function createAnimation(animations) {
   const attribs = {
     class: 'marquee-background',
     playsinline: '',
@@ -100,7 +125,7 @@ function createAnimation(animations, breakpointConfig) {
     animations[k].active = false;
   });
 
-  const breakpoint = getBreakpoint(animations, breakpointConfig);
+  const breakpoint = getBreakpoint(animations);
   const animation = animations[breakpoint];
 
   if (animation === undefined) return null;
@@ -121,16 +146,16 @@ function createAnimation(animations, breakpointConfig) {
   return video;
 }
 
-function adjustLayout(animations, parent, breakpointConfig) {
-  const breakpoint = getBreakpoint(animations, breakpointConfig);
+function adjustLayout(animations, parent) {
+  const breakpoint = getBreakpoint(animations);
   const animation = animations[breakpoint];
 
   if (animation && !animation.active) {
-    const newVideo = createAnimation(animations, breakpointConfig);
+    const newVideo = createAnimation(animations);
     if (newVideo) {
       parent.replaceChild(newVideo, parent.querySelector('video'));
       newVideo.addEventListener('canplay', () => {
-        if (!localStorage.get('reduceMotion')) {
+        if (!localStorage.getItem('reduceMotion') === 'on') {
           newVideo.muted = true;
           newVideo.play();
         }
@@ -139,7 +164,8 @@ function adjustLayout(animations, parent, breakpointConfig) {
   }
 }
 
-function transformToVideoLink(cell, a) {
+async function transformToVideoLink(cell, a) {
+  const { isVideoLink, displayVideoModal } = await import('../shared/video.js');
   a.addEventListener('click', (e) => {
     e.preventDefault();
   });
@@ -181,29 +207,11 @@ function transformToVideoLink(cell, a) {
 }
 
 export default async function decorate(block) {
-  const breakpointConfig = [
-    {
-      typeHint: 'default',
-      minWidth: 0,
-    },
-    {
-      typeHint: 'mobile',
-      minWidth: 0,
-    },
-    {
-      typeHint: 'desktop',
-      minWidth: 400,
-    },
-    {
-      typeHint: 'hd',
-      minWidth: 1440,
-    },
-  ];
-
   const possibleBreakpoints = breakpointConfig.map((bp) => bp.typeHint);
   const possibleOptions = ['shadow', 'background'];
   const animations = {};
   const rows = [...block.children];
+
   rows.forEach((div, index) => {
     let rowType = 'animation';
     let typeHint;
@@ -251,7 +259,7 @@ export default async function decorate(block) {
 
     if (rowType === 'content') {
       const videoWrapper = createTag('div', { class: 'background-wrapper' });
-      const video = createAnimation(animations, breakpointConfig);
+      const video = createAnimation(animations);
       let bg;
       if (video) {
         bg = videoWrapper;
@@ -259,16 +267,16 @@ export default async function decorate(block) {
         div.prepend(videoWrapper);
         video.addEventListener('canplay', () => {
           buildReduceMotionSwitch(block);
-          if (!localStorage.get('reduceMotion')) {
+          if (!localStorage.getItem('reduceMotion')) {
             video.muted = true;
             video.play();
           }
         });
 
         window.addEventListener('resize', () => {
-          adjustLayout(animations, videoWrapper, breakpointConfig);
+          adjustLayout(animations, videoWrapper);
         }, { passive: true });
-        adjustLayout(animations, videoWrapper, breakpointConfig);
+        adjustLayout(animations, videoWrapper);
       } else {
         bg = createTag('div');
         bg.classList.add('marquee-background');
@@ -287,7 +295,9 @@ export default async function decorate(block) {
       });
 
       // check for video link
-      const videoLink = [...div.querySelectorAll('a')].find((a) => isVideoLink(a.href));
+      const videoLink = [...div.querySelectorAll('a')].find((a) => a.href.includes('youtu')
+        || a.href.includes('vimeo')
+        || /.*\/media_.*(mp4|webm|m3u8)$/.test(new URL(a.href).pathname));
       if (videoLink) {
         transformToVideoLink(div, videoLink);
       }
