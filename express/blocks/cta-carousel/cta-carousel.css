@@ -1,14 +1,14 @@
-main .section .cta-carousel-wrapper {
+.section .cta-carousel-wrapper {
     max-width: none;
 }
 
-main .cta-carousel {
+.cta-carousel {
     padding: 0 28px;
     max-width: 1440px;
     margin: auto;
 }
 
-main .cta-carousel .cta-carousel-heading-section {
+.cta-carousel .cta-carousel-heading-section {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -16,31 +16,31 @@ main .cta-carousel .cta-carousel-heading-section {
     margin: auto auto 32px;
 }
 
-main .cta-carousel .cta-carousel-heading-section h2 {
+.cta-carousel .cta-carousel-heading-section h2 {
     text-align: left;
     max-width: 640px;
     margin-bottom: 8px;
     font-size: var(--heading-font-size-m);
 }
-main .cta-carousel .cta-carousel-heading-section p {
+.cta-carousel .cta-carousel-heading-section p {
     text-align: left;
     margin: 0;
     max-width: 640px;
 }
 
-main .cta-carousel .carousel-container .carousel-platform {
+.cta-carousel .carousel-container .carousel-platform {
     align-items: unset;
 }
 
-main .cta-carousel .card {
+.cta-carousel .card {
     margin: 0 8px;
 }
 
-main .cta-carousel .card:first-of-type {
+.cta-carousel .card:first-of-type {
     margin-left: 0;
 }
 
-main .cta-carousel .card .card-sleeve {
+.cta-carousel .card .card-sleeve {
     position: relative;
     height: 140px;
     width: 200px;
@@ -48,13 +48,13 @@ main .cta-carousel .card .card-sleeve {
     overflow: hidden;
 }
 
-main .cta-carousel .card .card-sleeve .media-wrapper {
+.cta-carousel .card .card-sleeve .media-wrapper {
     position: relative;
     height: 100%;
     width: 100%;
 }
 
-main .cta-carousel .card .card-sleeve .links-wrapper {
+.cta-carousel .card .card-sleeve .links-wrapper {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -68,16 +68,16 @@ main .cta-carousel .card .card-sleeve .links-wrapper {
     transition: opacity 0.2s;
 }
 
-main .cta-carousel .card:hover .card-sleeve .links-wrapper {
+.cta-carousel .card:hover .card-sleeve .links-wrapper {
     opacity: 1;
 }
 
-main .cta-carousel .card .card-sleeve .links-wrapper a {
+.cta-carousel .card .card-sleeve .links-wrapper a {
     margin: 4px auto;
     width: max-content;
 }
 
-main .cta-carousel.quick-action .card .card-sleeve .links-wrapper a.clickable-overlay {
+.cta-carousel.quick-action .card .card-sleeve .links-wrapper a.clickable-overlay {
     padding: 0;
     border-radius: 0;
     border: none;
@@ -87,19 +87,19 @@ main .cta-carousel.quick-action .card .card-sleeve .links-wrapper a.clickable-ov
     width: 100%;
 }
 
-main .cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(1) {
+.cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(1) {
     border: solid 2px var(--color-white);
     background-color: var(--color-white);
     color: var(--body-color);
 }
 
-main .cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(2) {
+.cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(2) {
     background-color: transparent;
     border: solid 2px var(--color-white);
 }
 
-main .cta-carousel .card .card-sleeve picture,
-main .cta-carousel .card .card-sleeve video {
+.cta-carousel .card .card-sleeve picture,
+.cta-carousel .card .card-sleeve video {
     position: absolute;
     display: block;
     height: 100%;
@@ -107,14 +107,14 @@ main .cta-carousel .card .card-sleeve video {
     object-fit: cover;
 }
 
-main .cta-carousel .card .card-sleeve picture img {
+.cta-carousel .card .card-sleeve picture img {
     position: absolute;
     display: block;
     height: 100%;
     width: 100%;
 }
 
-main .cta-carousel .card .card-sleeve .media-wrapper img.icon {
+.cta-carousel .card .card-sleeve .media-wrapper img.icon {
     position: absolute;
     display: block;
     height: 14px;
@@ -129,14 +129,14 @@ main .cta-carousel .card .card-sleeve .media-wrapper img.icon {
     z-index: 1;
 }
 
-main .cta-carousel .card .text-wrapper .cta-card-text {
+.cta-carousel .card .text-wrapper .cta-card-text {
     font-size: var(--body-font-size-s);
     font-weight: 700;
     text-align: left;
     margin: 8px 0 0;
 }
 
-main .cta-carousel .card .text-wrapper .subtext {
+.cta-carousel .card .text-wrapper .subtext {
     font-size: var(--body-font-size-s);
     text-align: left;
     margin: 0;
@@ -144,11 +144,11 @@ main .cta-carousel .card .text-wrapper .subtext {
     transition: opacity 0.2s;
 }
 
-main .cta-carousel .card:hover .text-wrapper .subtext {
+.cta-carousel .card:hover .text-wrapper .subtext {
     opacity: 1;
 }
 
-main .cta-carousel .card .text-wrapper .tag {
+.cta-carousel .card .text-wrapper .tag {
     font-size: 12px;
     padding: 0 4px;
     margin-left: 6px;
@@ -159,13 +159,13 @@ main .cta-carousel .card .text-wrapper .tag {
 }
 
 @media (min-width: 900px) {
-    main .cta-carousel .cta-carousel-heading-section {
+    .cta-carousel .cta-carousel-heading-section {
         flex-direction: row;
         align-items: flex-end;
     }
 
-    main .cta-carousel .carousel-container .carousel-fader-left,
-    main .cta-carousel .carousel-container .carousel-fader-right{
+    .cta-carousel .carousel-container .carousel-fader-left,
+    .cta-carousel .carousel-container .carousel-fader-right{
         background: unset;
     }
 }

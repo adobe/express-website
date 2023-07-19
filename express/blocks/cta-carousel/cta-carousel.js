@@ -113,6 +113,7 @@ export function decorateCards(block, payload) {
 
 function constructPayload(block) {
   const rows = Array.from(block.children);
+  block.innerHTML = '';
   const headingDiv = rows.shift();
 
   const payload = {
@@ -143,8 +144,6 @@ function constructPayload(block) {
 
 export default async function decorate(block) {
   const payload = constructPayload(block);
-
-  block.innerHTML = '';
 
   decorateHeading(block, payload);
   decorateCards(block, payload);
