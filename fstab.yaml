@@ -13,3 +13,18 @@ folders:
   /kr/express/templates/: /kr/express/templates/default
   /nl/express/templates/: /nl/express/templates/default
   /tw/express/templates/: /tw/express/templates/default
+  /express/colors/: /express/colors/default
+  /br/express/colors/: /br/express/colors/default
+  /cn/express/colors/: /cn/express/colors/default
+  /de/express/colors/: /de/express/colors/default
+  /dk/express/colors/: /dk/express/colors/default
+  /es/express/colors/: /es/express/colors/default
+  /fi/express/colors/: /fi/express/colors/default
+  /fr/express/colors/: /fr/express/colors/default
+  /it/express/colors/: /it/express/colors/default
+  /jp/express/colors/: /jp/express/colors/default
+  /kr/express/colors/: /kr/express/colors/default
+  /nl/express/colors/: /nl/express/colors/default
+  /no/express/colors/: /no/express/colors/default
+  /se/express/colors/: /se/express/colors/default
+  /tw/express/colors/: /tw/express/colors/default

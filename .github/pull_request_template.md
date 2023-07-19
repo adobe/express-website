@@ -1,6 +1,6 @@
-Please always provide the [JIRA issue(s)](https://jira.corp.adobe.com/secure/RapidBoard.jspa?rapidView=34618) your PR is for, as well as test URLs where your change can be observed (before and after):
+Describe your specific features or fixes
 
-Fix <jira-issue-id>
+Resolves: [MWPW-NUMBER](https://jira.corp.adobe.com/browse/MWPW-NUMBER)
 
 Test URLs:
 - Before: https://main--express--adobecom.hlx.page/express/
