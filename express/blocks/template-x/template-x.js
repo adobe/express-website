@@ -198,6 +198,8 @@ function constructProps(block) {
           props.filters[camelize(key)] = value;
         } else if (['yes', 'true', 'on', 'no', 'false', 'off'].includes(value.toLowerCase())) {
           props[camelize(key)] = ['yes', 'true', 'on'].includes(value.toLowerCase());
+        } else if (key === 'collection id') {
+          props[camelize(key)] = value.replaceAll('\\:', ':');
         } else {
           props[camelize(key)] = value;
         }
