@@ -1,40 +1,36 @@
-main .section .toggle-bar-wrapper {
+.section .toggle-bar-wrapper {
     margin: 0 auto;
     padding: 0 16px;
     max-width: max-content;
 }
 
-main .block.toggle-bar {
-    padding-top: 32px;
+.block.toggle-bar {
+    margin-top: 32px;
 }
 
-main .block.toggle-bar.float {
+.block.toggle-bar.float {
     margin-top: -72px;
 }
 
-main .block.toggle-bar.sticky {
+.block.toggle-bar.sticky {
     min-height: 147px;
     position: relative;
     z-index: 9;
 }
 
-main .block.toggle-bar.sticky.sticking {
-    padding-top: unset;
-}
-
-main .block.toggle-bar div[data-align="center"] {
+.block.toggle-bar div[data-align="center"] {
     margin: auto;
 }
 
-main .block.toggle-bar div[data-align="center"] * {
+.block.toggle-bar div[data-align="center"] * {
     text-align: center;
 }
 
-main .block.toggle-bar.dark > div:first-of-type * {
+.block.toggle-bar.dark > div:first-of-type * {
     color: var(--color-white);
 }
 
-main .block.toggle-bar > div:nth-of-type(2) {
+.block.toggle-bar > div:nth-of-type(2) {
     position: relative;
     display: flex;
     background: var(--color-white);
@@ -49,41 +45,41 @@ main .block.toggle-bar > div:nth-of-type(2) {
     transition: top 0.2s;
 }
 
-main .block.toggle-bar.sticky.sticking > div:nth-of-type(2) {
+.block.toggle-bar.sticky.sticking > div:nth-of-type(2) {
     position: fixed;
     top: 0;
     left: 50%;
     transform: translate(-50%, 0);
 }
 
-main .block.toggle-bar.sticky.sticking.hidden > div:nth-of-type(2) {
+.block.toggle-bar.sticky.sticking.hidden > div:nth-of-type(2) {
     top: -120px;
 }
 
-main .block.toggle-bar > div:nth-of-type(2)::-webkit-scrollbar {
+.block.toggle-bar > div:nth-of-type(2)::-webkit-scrollbar {
     display: none;
 }
 
-main .block.toggle-bar > div:nth-of-type(2) {
+.block.toggle-bar > div:nth-of-type(2) {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
-main .block.toggle-bar > div {
+.block.toggle-bar > div {
     display: flex;
     align-items: center;
     height: 100%;
 }
 
-main .block.toggle-bar > div > div {
+.block.toggle-bar > div > div {
     border-left: 2px solid #e8e8e8;
 }
 
-main .block.toggle-bar > div > div:nth-of-type(1) {
+.block.toggle-bar > div > div:nth-of-type(1) {
     border-left: unset;
 }
 
-main .block.toggle-bar ul {
+.block.toggle-bar ul {
     padding: 0;
     margin: 0;
     height: 100%;
@@ -91,7 +87,7 @@ main .block.toggle-bar ul {
     justify-content: center;
 }
 
-main .toggle-bar .toggle-bar-button {
+.toggle-bar .toggle-bar-button {
     position: relative;
     display: inline-block;
     list-style-type: none;
@@ -105,7 +101,7 @@ main .toggle-bar .toggle-bar-button {
     color: black;
 }
 
-main .toggle-bar .toggle-bar-button:after {
+.toggle-bar .toggle-bar-button:after {
     content: '';
     position: absolute;
     left: 50%;
@@ -120,13 +116,13 @@ main .toggle-bar .toggle-bar-button:after {
     transition: max-height .2s, opacity .2s;
 }
 
-main .toggle-bar .toggle-bar-button.active:after,
-main .toggle-bar .toggle-bar-button:hover:after {
+.toggle-bar .toggle-bar-button.active:after,
+.toggle-bar .toggle-bar-button:hover:after {
     max-height: 4px;
     opacity: 1;
 }
 
-main .toggle-bar .toggle-bar-button .text-wrapper {
+.toggle-bar .toggle-bar-button .text-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -134,27 +130,27 @@ main .toggle-bar .toggle-bar-button .text-wrapper {
     transition: color .3s, font-weight .3s;
 }
 
-main .toggle-bar .toggle-bar-button.active .text-wrapper {
+.toggle-bar .toggle-bar-button.active .text-wrapper {
     font-weight: 700;
     color: var(--color-info-accent);
 }
 
-main .toggle-bar .toggle-bar-button .icons-wrapper .icon {
+.toggle-bar .toggle-bar-button .icons-wrapper .icon {
     height: 18px;
     width: 18px;
 }
 
-main .toggle-bar .toggle-bar-button.active .icons-wrapper .icon:first-of-type,
-main .toggle-bar .toggle-bar-button .icons-wrapper .icon:nth-of-type(2) {
+.toggle-bar .toggle-bar-button.active .icons-wrapper .icon:first-of-type,
+.toggle-bar .toggle-bar-button .icons-wrapper .icon:nth-of-type(2) {
     display: none;
 }
 
-main .toggle-bar .toggle-bar-button .icons-wrapper .icon:first-of-type,
-main .toggle-bar .toggle-bar-button.active .icons-wrapper .icon:nth-of-type(2) {
+.toggle-bar .toggle-bar-button .icons-wrapper .icon:first-of-type,
+.toggle-bar .toggle-bar-button.active .icons-wrapper .icon:nth-of-type(2) {
     display: unset;
 }
 
-main .toggle-bar .tag {
+.toggle-bar .tag {
     display: flex;
     align-items: center;
     justify-content: center;
