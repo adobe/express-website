@@ -767,10 +767,10 @@ async function updateOptionsStatus(block, props, toolBar) {
       const paramType = wrapper.dataset.param;
       const paramValue = option.dataset.value;
       const propValue = props[paramType] ? props[paramType] : 'remove';
-      const filtervalue = props.filters[paramType] ? props[paramType] : 'remove';
+      const filterValue = props.filters[paramType] ? props[paramType] : 'remove';
 
       if (propValue === paramValue
-        || filtervalue === paramValue
+        || filterValue === paramValue
         || waysOfSort[props[paramType]] === paramValue) {
         if (currentOption) {
           currentOption.textContent = option.textContent;
@@ -781,6 +781,7 @@ async function updateOptionsStatus(block, props, toolBar) {
             o.classList.remove('active');
           }
         });
+
         option.classList.add('active');
       }
     });
@@ -824,7 +825,7 @@ function initDrawer(block, props, toolBar) {
     el.addEventListener('click', async () => {
       props.filters = { ...currentFilters };
       closeDrawer(toolBar);
-      updateOptionsStatus(block, props, toolBar);
+      await updateOptionsStatus(block, props, toolBar);
     }, { passive: true });
   });
 
@@ -891,7 +892,8 @@ async function redrawTemplates(block, props, toolBar) {
   await decorateNewTemplates(block, props, { reDrawMasonry: true });
 
   heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-  updateOptionsStatus(block, props, toolBar);
+  // await updateOptionsStatus(block, props, toolBar);
+  // fixme: toolbar now has issue syncing filter status with mobile view. Temporarily disabling the feature as block will be authored for each audience separately.
   if (block.querySelectorAll('.template').length <= 0) {
     const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
     $viewButtons.forEach((button) => {
@@ -903,7 +905,7 @@ async function redrawTemplates(block, props, toolBar) {
   }
 }
 
-function initFilterSort(block, props, toolBar) {
+async function initFilterSort(block, props, toolBar) {
   const buttons = toolBar.querySelectorAll('.button-wrapper');
   const applyFilterButton = toolBar.querySelector('.apply-filter-button');
 
@@ -974,8 +976,7 @@ function initFilterSort(block, props, toolBar) {
     }
 
     // sync current filter & sorting method with toolbar current options
-    updateOptionsStatus(block, props, toolBar);
-    updateFilterIcon(block);
+    await updateOptionsStatus(block, props, toolBar);
   }
 }
 
