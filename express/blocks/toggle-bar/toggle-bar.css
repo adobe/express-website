@@ -6,6 +6,7 @@
 
 .block.toggle-bar {
     margin-top: 32px;
+    display: none;
 }
 
 .block.toggle-bar.float {
@@ -161,4 +162,10 @@
     background-color: #DEDEF9;
     color: var(--color-info-accent);
     border-radius: 4px;
+}
+
+@media (min-width: 900px) {
+    .block.toggle-bar {
+        display: initial;
+    }
 }
