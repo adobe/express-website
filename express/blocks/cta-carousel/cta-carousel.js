@@ -17,6 +17,23 @@ import {
 
 import { buildCarousel } from '../shared/carousel.js';
 
+function sanitizeInput(string) {
+  const charMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;',
+  };
+
+  return string.replace(/[&<>"'`=/]/g, (s) => {
+    return charMap[s];
+  });
+}
+
 function decorateTextWithTag(textSource) {
   const text = createTag('p', { class: 'cta-card-text' });
   const tagText = textSource.match(/\[(.*?)]/);
@@ -106,7 +123,7 @@ export async function decorateCards(block, payload) {
         const handleGenAISubmit = () => {
           genAISubmit.disabled = true;
           const genAILinkTemplate = cta.ctaLinks[0].href || placeholders['gen-ai-link-template'];
-          const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', genAIInput.value.replaceAll(' ', '+'));
+          const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', sanitizeInput(genAIInput.value).replaceAll(' ', '+'));
           if (genAILink !== '') window.location.assign(genAILink);
         };
 
@@ -164,7 +181,7 @@ export async function decorateCards(block, payload) {
       const handleGenAISubmit = () => {
         genAISubmit.disabled = true;
         const genAILinkTemplate = placeholders['gen-ai-link-template'];
-        const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', genAIInput.value.replaceAll(' ', '+'));
+        const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', sanitizeInput(genAIInput.value).replaceAll(' ', '+'));
         if (genAILink !== '') window.location.assign(genAILink);
       };
 
