@@ -48,10 +48,67 @@
     overflow: hidden;
 }
 
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve {
+    width: 511px;
+    display: flex;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form {
+    position: relative;
+    background-color: var(--color-info-accent-light);
+    border-radius: 8px;
+    padding: 10px 16px 10px 40px;
+    margin-left: -24px;
+    width: 287px;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-input {
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 10px 16px;
+    border: 2px solid var(--color-info-accent);
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-m);
+    resize: none;
+    height: 100%;
+    width: 100%;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-input::placeholder {
+    font-style: italic;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-m);
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-submit {
+    position: absolute;
+    left: 56px;
+    bottom: 24px;
+    color: var(--color-white);
+    background-color: var(--color-info-accent);
+    border-style: none;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-s);
+    font-weight: 700;
+    padding: 10px 1.5em 10px 1.5em;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background-color .2s;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-submit:not(:disabled):hover {
+    background-color: var(--color-info-accent-hover);
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-submit:disabled {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-500);
+}
+
 .cta-carousel .card .card-sleeve .media-wrapper {
     position: relative;
     height: 100%;
-    width: 100%;
+    width: 200px;
 }
 
 .cta-carousel .card .card-sleeve .links-wrapper {
@@ -61,7 +118,7 @@
     justify-content: center;
     top: 0;
     height: 100%;
-    width: 100%;
+    width: 200px;
     background-color: #00000050;
     opacity: 0;
     z-index: 1;
@@ -112,6 +169,7 @@
     display: block;
     height: 100%;
     width: 100%;
+    border-radius: 8px;
 }
 
 .cta-carousel .card .card-sleeve .media-wrapper img.icon {
