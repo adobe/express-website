@@ -91,7 +91,7 @@ export async function decorateCards(block, payload) {
         const genAIInput = createTag('textarea', {
           class: 'gen-ai-input',
           placeholder: placeholders['gen-ai-input-placeholder'],
-          maxlength: 70,
+          maxlength: 56,
         });
         const genAISubmit = createTag('button', {
           class: 'gen-ai-submit',
