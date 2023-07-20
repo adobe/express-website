@@ -59,7 +59,7 @@ async function fetchLinkList() {
 }
 
 function matchCKGResult(ckgData, pageData) {
-  const ckgMatch = pageData.ckgID === ckgData.ckgID;
+  const ckgMatch = pageData.ckgid === ckgData.ckgID;
   const pageDataTasks = pageData.tasks ?? pageData.templateTasks;
   const taskMatch = ckgData.tasks?.toLowerCase() === pageDataTasks?.toLowerCase();
   const currentLocale = getLocale(window.location);
@@ -150,15 +150,15 @@ async function updateLinkList(container, linkPill, list) {
 
       if (pillsMapping) {
         const alternateText = pillsMapping.find((row) => window.location.pathname === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
-
-        if (alternateText && alternateText[`${localeColumnString}`]) {
+        const hasAlternateTextForLocale = alternateText && alternateText[`${localeColumnString}`];
+        if (hasAlternateTextForLocale) {
           displayText = alternateText[`${localeColumnString}`];
           if (templatePageData) {
             templatePageData.altShortTitle = displayText;
           }
         }
 
-        hideUntranslatedPill = !displayText && locale !== 'us';
+        hideUntranslatedPill = !hasAlternateTextForLocale && locale !== 'us';
       }
 
       if (templatePageData) {
