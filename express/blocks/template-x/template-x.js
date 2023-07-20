@@ -767,7 +767,7 @@ async function updateOptionsStatus(block, props, toolBar) {
       const paramType = wrapper.dataset.param;
       const paramValue = option.dataset.value;
       const propValue = props[paramType] ? props[paramType] : 'remove';
-      const filterValue = props.filters[paramType] ? props[paramType] : 'remove';
+      const filterValue = props.filters[paramType] ? props.filters[paramType] : 'remove';
 
       if (propValue === paramValue
         || filterValue === paramValue
