@@ -100,7 +100,7 @@ export async function decorateCards(block, payload) {
         });
 
         card.classList.add('gen-ai-action');
-        genAISubmit.textContent = cta.ctaLinks[0].textContent || placeholders['generate'];
+        genAISubmit.textContent = cta.ctaLinks[0].textContent || placeholders.generate;
         linksWrapper.remove();
 
         const handleGenAISubmit = () => {
@@ -108,7 +108,7 @@ export async function decorateCards(block, payload) {
           const genAILinkTemplate = cta.ctaLinks[0].href || placeholders['gen-ai-link-template'];
           const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', genAIInput.value.replaceAll(' ', '+'));
           if (genAILink !== '') window.location.assign(genAILink);
-        }
+        };
 
         genAIInput.addEventListener('keyup', (e) => {
           if (e.key === 'Enter') {
@@ -126,24 +126,6 @@ export async function decorateCards(block, payload) {
 
         genAIForm.append(genAIInput, genAISubmit);
         cardSleeve.append(genAIForm);
-      }
-
-      if (block.classList.contains('gen-ai') && !block.classList.contains('quick-action') {
-        const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
-        const genAIInput = createTag('textarea', {
-          class: 'gen-ai-input',
-          placeholder: placeholders['gen-ai-input-placeholder'],
-          maxlength: 70,
-        });
-        const genAISubmit = createTag('button', {
-          class: 'gen-ai-submit',
-          type: 'submit',
-          disabled: true,
-        });
-
-        card.classList.add('gen-ai-action');
-        genAISubmit.textContent = placeholders['generate'];
-        cards.prepend(genAIForm)
       }
 
       if (block.classList.contains('quick-action') && cta.ctaLinks.length === 1) {
@@ -164,6 +146,45 @@ export async function decorateCards(block, payload) {
       const subtext = createTag('p', { class: 'subtext' });
       subtext.textContent = cta.subtext;
       textWrapper.append(subtext);
+    }
+
+    if (block.classList.contains('gen-ai') && !block.classList.contains('quick-action') && index === 0) {
+      const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
+      const genAIInput = createTag('textarea', {
+        class: 'gen-ai-input',
+        placeholder: placeholders['gen-ai-input-placeholder'],
+        maxlength: 70,
+      });
+      const genAISubmit = createTag('button', {
+        class: 'gen-ai-submit',
+        type: 'submit',
+        disabled: true,
+      });
+
+      const handleGenAISubmit = () => {
+        genAISubmit.disabled = true;
+        const genAILinkTemplate = placeholders['gen-ai-link-template'];
+        const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', genAIInput.value.replaceAll(' ', '+'));
+        if (genAILink !== '') window.location.assign(genAILink);
+      };
+
+      genAIInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleGenAISubmit();
+        } else {
+          genAISubmit.disabled = genAIInput.value === '';
+        }
+      }, { passive: true });
+
+      genAIForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleGenAISubmit();
+      });
+
+      genAISubmit.textContent = placeholders.generate;
+      genAIForm.append(genAIInput, genAISubmit);
+      cards.prepend(genAIForm);
     }
 
     cards.append(card);
@@ -208,5 +229,5 @@ export default async function decorate(block) {
 
   decorateHeading(block, payload);
   await decorateCards(block, payload);
-  buildCarousel('.card, .gen-ai-input-form', block, false);
+  buildCarousel('', block.querySelector('.cta-carousel-cards'), false);
 }
