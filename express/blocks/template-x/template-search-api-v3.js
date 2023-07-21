@@ -105,7 +105,7 @@ const fetchSearchUrl = async ({
 
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
-  const fallBacktextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
+  const fallbackTextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
   if (fallbackTextTemplate) {
     return tasks ? fallbackTextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallbackTextTemplate;
