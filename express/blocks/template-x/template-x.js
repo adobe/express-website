@@ -38,7 +38,7 @@ function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
 }
 
-function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/express/search-terms-log') {
+function logSearch(form, url = '/express/search-terms-log') {
   if (form) {
     const input = form.querySelector('input');
     fetch(url, {
