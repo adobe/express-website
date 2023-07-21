@@ -37,6 +37,11 @@
     position: relative;
 }
 
+.cta-carousel .card.coming-soon {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .cta-carousel .card:first-of-type {
     margin-left: 0;
 }
@@ -60,7 +65,6 @@
 }
 
 .cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form {
-    position: relative;
     background-color: var(--color-info-accent-light);
     border-radius: 8px;
     box-sizing: border-box;
@@ -80,16 +84,34 @@
     height: 100%;
 }
 
+.cta-carousel.gen-ai .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-form-wrapper {
+    background: white;
+    padding: 12px;
+    gap: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 2px solid var(--color-info-accent);
+}
+
 .cta-carousel.gen-ai .gen-ai-input {
     box-sizing: border-box;
     border-radius: 8px;
-    padding: 16px;
-    border: 2px solid var(--color-info-accent);
+    border: none;
     font-family: var(--body-font-family);
     font-size: var(--body-font-size-m);
     resize: none;
     height: 100%;
     width: 100%;
+}
+
+.cta-carousel.gen-ai .gen-ai-input:active,
+.cta-carousel.gen-ai .gen-ai-input:focus-visible {
+    border: none;
+    outline: none;
 }
 
 .cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form .gen-ai-input::placeholder {
@@ -99,7 +121,6 @@
 }
 
 .cta-carousel.gen-ai .card .gen-ai-input-form .gen-ai-submit {
-    position: absolute;
     left: 40px;
     bottom: 40px;
     color: var(--color-white);
@@ -115,7 +136,6 @@
 }
 
 .cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-submit {
-    position: absolute;
     left: 56px;
     bottom: 24px;
 }
@@ -158,7 +178,7 @@
     width: max-content;
 }
 
-.cta-carousel.quick-action .card .card-sleeve .links-wrapper a.clickable-overlay {
+.cta-carousel .card .card-sleeve .links-wrapper a.clickable-overlay {
     padding: 0;
     border-radius: 0;
     border: none;
@@ -168,7 +188,7 @@
     width: 100%;
 }
 
-.cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(1) {
+.cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(1):not(.clickable-overlay) {
     border: solid 2px var(--color-white);
     background-color: var(--color-white);
     color: var(--body-color);
@@ -267,6 +287,14 @@
     background-color: #DEDEF9;
     color: var(--color-info-accent);
     border-radius: 4px;
+}
+
+.cta-carousel.create .carousel-container .carousel-fader-left a,
+.cta-carousel.create .carousel-container .carousel-fader-right a,
+.cta-carousel.quick-action .carousel-container .carousel-fader-left a,
+.cta-carousel.quick-action .carousel-container .carousel-fader-right a {
+    position: absolute;
+    top: 64px;
 }
 
 @media (min-width: 900px) {

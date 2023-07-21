@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, transformLinkToAnimation, } from '../../scripts/scripts.js';
+import { createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
@@ -26,9 +26,7 @@ function sanitizeInput(string) {
     '=': '&#x3D;',
   };
 
-  return string.replace(/[&<>"'`=/]/g, (s) => {
-    return charMap[s];
-  });
+  return string.replace(/[&<>"'`=/]/g, (s) => charMap[s]);
 }
 
 function decorateTextWithTag(textSource) {
@@ -87,10 +85,10 @@ function handleGenAISubmit(form, link) {
 
 function buildGenAIForm(ctaObj) {
   const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
+  const formWrapper = createTag('div', { class: 'gen-ai-form-wrapper' });
   const genAIInput = createTag('textarea', {
     class: 'gen-ai-input',
     placeholder: ctaObj.subtext || '',
-    maxlength: 56,
   });
   const genAISubmit = createTag('button', {
     class: 'gen-ai-submit',
@@ -98,7 +96,8 @@ function buildGenAIForm(ctaObj) {
     disabled: true,
   });
 
-  genAIForm.append(genAIInput, genAISubmit);
+  genAIForm.append(formWrapper);
+  formWrapper.append(genAIInput, genAISubmit);
 
   genAISubmit.textContent = ctaObj.ctaLinks[0].textContent;
   genAISubmit.disabled = genAIInput.value === '';
@@ -158,7 +157,7 @@ export async function decorateCards(block, payload) {
         linksWrapper.remove();
       }
 
-      if (block.classList.contains('quick-action') && cta.ctaLinks.length === 1) {
+      if ((block.classList.contains('quick-action') || block.classList.contains('gen-ai')) && cta.ctaLinks.length === 1) {
         cta.ctaLinks[0].textContent = '';
         cta.ctaLinks[0].classList.add('clickable-overlay');
       }
@@ -166,6 +165,8 @@ export async function decorateCards(block, payload) {
       cta.ctaLinks.forEach((a) => {
         linksWrapper.append(a);
       });
+    } else {
+      card.classList.add('coming-soon');
     }
 
     if (cta.text) {
@@ -204,7 +205,7 @@ function constructPayload(block) {
       image: row.querySelector(':scope > div:nth-of-type(1) picture'),
       videoLink: row.querySelector(':scope > div:nth-of-type(1) a'),
       icon: row.querySelector(':scope > div:nth-of-type(1) img.icon'),
-      text: row.querySelector(':scope > div:nth-of-type(2) p:not(.button-container)')?.textContent.trim(),
+      text: row.querySelector(':scope > div:nth-of-type(2) p:not(.button-container), :scope > div:nth-of-type(2) > *:first-of-type')?.textContent.trim(),
       subtext: row.querySelector(':scope > div:nth-of-type(2) p:not(.button-container) em')?.textContent.trim(),
       ctaLinks: row.querySelectorAll(':scope > div:nth-of-type(2) a'),
     };
