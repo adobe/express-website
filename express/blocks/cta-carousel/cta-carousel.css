@@ -236,7 +236,7 @@
     opacity: 0;
 }
 
-.cta-carousel.gen-ai:not(.quick-action) .card:hover .text-wrapper {
+.cta-carousel.gen-ai:not(.quick-action) .card:not(.gen-ai-action):hover .text-wrapper {
     opacity: 1;
 }
 
