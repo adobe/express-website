@@ -106,7 +106,7 @@ function buildGenAIForm(ctaObj) {
   genAIInput.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0]);
+      handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0].href);
     } else {
       genAISubmit.disabled = genAIInput.value === '';
     }
@@ -114,7 +114,7 @@ function buildGenAIForm(ctaObj) {
 
   genAIForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0]);
+    handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0].href);
   });
 
   return genAIForm;
