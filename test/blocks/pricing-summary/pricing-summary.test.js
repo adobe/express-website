@@ -12,10 +12,26 @@
 import { readFile } from '@web/test-runner-commands';
 import { expect } from '@esm-bundle/chai';
 
-const { default: init } = await import('../../express/blocks/pricing-summary/pricing-summary.js');
+const { default: decorate } = await import('../../../express/blocks/pricing-summary/pricing-summary.js');
+document.body.innerHTML = await readFile({ path: './mocks/body.html' });
 
 describe('Pricing Summary', () => {
+  before(() => {
+    window.isTestEnv = true;
+  });
+
   it('Pricing Summary exists', () => {
-    
-  })
+    const pricingSummary = document.body.querySelector('.pricing-summary');
+    decorate(pricingSummary);
+    expect(pricingSummary).to.exist;
+  });
+
+  it('Columns to be 2 or 3', () => {
+   const columns = document.body.querySelectorAll('.pricing-column');
+    expect(columns.length).to.be.oneOf([2, 3]);
+  });
+
+  it('Columns have correct elements', () => {
+    expect(document.body.querySelector('.pricing-header')).to.exist;
+  });
 });
