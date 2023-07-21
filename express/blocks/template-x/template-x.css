@@ -2395,8 +2395,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         margin-right: 20px;
     }
 
-    .template-x.sixcols .template:not(.placeholder),
-    .template-x.fullwidth .template:not(.placeholder) {
+    .template-x.horizontal.fullwidth .template:not(.placeholder) {
         margin: 24px 11px 18px 11px;
     }
 
