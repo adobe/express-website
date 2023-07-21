@@ -10,10 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag, fetchPlaceholders,
-  transformLinkToAnimation,
-} from '../../scripts/scripts.js';
+import { createTag, transformLinkToAnimation, } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
@@ -79,9 +76,52 @@ export function decorateHeading(block, payload) {
   block.append(headingSection);
 }
 
+function handleGenAISubmit(form, link) {
+  const btn = form.querySelector('.gen-ai-submit');
+  const input = form.querySelector('.gen-ai-input');
+
+  btn.disabled = true;
+  const genAILink = link.replace('%7B%7Bprompt-text%7D%7D', sanitizeInput(input.value).replaceAll(' ', '+'));
+  if (genAILink !== '') window.location.assign(genAILink);
+}
+
+function buildGenAIForm(ctaObj) {
+  const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
+  const genAIInput = createTag('textarea', {
+    class: 'gen-ai-input',
+    placeholder: ctaObj.subtext || '',
+    maxlength: 56,
+  });
+  const genAISubmit = createTag('button', {
+    class: 'gen-ai-submit',
+    type: 'submit',
+    disabled: true,
+  });
+
+  genAIForm.append(genAIInput, genAISubmit);
+
+  genAISubmit.textContent = ctaObj.ctaLinks[0].textContent;
+  genAISubmit.disabled = genAIInput.value === ''
+
+  genAIInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleGenAISubmit(genAIForm, genAISubmit.textContent);
+    } else {
+      genAISubmit.disabled = genAIInput.value === '';
+    }
+  }, { passive: true });
+
+  genAIForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleGenAISubmit(genAIForm, genAISubmit.textContent);
+  });
+
+  return genAIForm;
+}
+
 export async function decorateCards(block, payload) {
   const cards = createTag('div', { class: 'cta-carousel-cards' });
-  const placeholders = await fetchPlaceholders();
 
   payload.actions.forEach((cta, index) => {
     const card = createTag('div', { class: 'card' });
@@ -102,47 +142,20 @@ export async function decorateCards(block, payload) {
 
     if (cta.icon) mediaWrapper.append(cta.icon);
 
+    if (mediaWrapper.children.length === 0) {
+      mediaWrapper.remove();
+    }
+
+    // determine if Gen AI gets inserted after mediaWrapper has been concluded
+    const hasGenAIForm = (block.classList.contains('gen-ai') && block.classList.contains('quick-action') && index === 0)
+      || (block.classList.contains('gen-ai') && mediaWrapper.children.length === 0);
+
     if (cta.ctaLinks.length > 0) {
-      if (block.classList.contains('gen-ai') && block.classList.contains('quick-action') && index === 0) {
-        const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
-        const genAIInput = createTag('textarea', {
-          class: 'gen-ai-input',
-          placeholder: placeholders['gen-ai-input-placeholder'],
-          maxlength: 56,
-        });
-        const genAISubmit = createTag('button', {
-          class: 'gen-ai-submit',
-          type: 'submit',
-          disabled: true,
-        });
-
+      if (hasGenAIForm) {
+        const genAIForm = buildGenAIForm(cta);
         card.classList.add('gen-ai-action');
-        genAISubmit.textContent = cta.ctaLinks[0].textContent || placeholders.generate;
-        linksWrapper.remove();
-
-        const handleGenAISubmit = () => {
-          genAISubmit.disabled = true;
-          const genAILinkTemplate = cta.ctaLinks[0].href || placeholders['gen-ai-link-template'];
-          const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', sanitizeInput(genAIInput.value).replaceAll(' ', '+'));
-          if (genAILink !== '') window.location.assign(genAILink);
-        };
-
-        genAIInput.addEventListener('keyup', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            handleGenAISubmit();
-          } else {
-            genAISubmit.disabled = genAIInput.value === '';
-          }
-        }, { passive: true });
-
-        genAIForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          handleGenAISubmit();
-        });
-
-        genAIForm.append(genAIInput, genAISubmit);
         cardSleeve.append(genAIForm);
+        linksWrapper.remove();
       }
 
       if (block.classList.contains('quick-action') && cta.ctaLinks.length === 1) {
@@ -159,49 +172,10 @@ export async function decorateCards(block, payload) {
       textWrapper.append(decorateTextWithTag(cta.text));
     }
 
-    if (cta.subtext) {
+    if (cta.subtext && !hasGenAIForm) {
       const subtext = createTag('p', { class: 'subtext' });
       subtext.textContent = cta.subtext;
       textWrapper.append(subtext);
-    }
-
-    if (block.classList.contains('gen-ai') && !block.classList.contains('quick-action') && index === 0) {
-      const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
-      const genAIInput = createTag('textarea', {
-        class: 'gen-ai-input',
-        placeholder: placeholders['gen-ai-input-placeholder'],
-        maxlength: 70,
-      });
-      const genAISubmit = createTag('button', {
-        class: 'gen-ai-submit',
-        type: 'submit',
-        disabled: true,
-      });
-
-      const handleGenAISubmit = () => {
-        genAISubmit.disabled = true;
-        const genAILinkTemplate = placeholders['gen-ai-link-template'];
-        const genAILink = genAILinkTemplate.replace('%7B%7Bprompt-text%7D%7D', sanitizeInput(genAIInput.value).replaceAll(' ', '+'));
-        if (genAILink !== '') window.location.assign(genAILink);
-      };
-
-      genAIInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          handleGenAISubmit();
-        } else {
-          genAISubmit.disabled = genAIInput.value === '';
-        }
-      }, { passive: true });
-
-      genAIForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        handleGenAISubmit();
-      });
-
-      genAISubmit.textContent = placeholders.generate;
-      genAIForm.append(genAIInput, genAISubmit);
-      cards.prepend(genAIForm);
     }
 
     cards.append(card);

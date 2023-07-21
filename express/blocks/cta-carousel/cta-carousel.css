@@ -59,8 +59,7 @@
     display: flex;
 }
 
-.cta-carousel.gen-ai .gen-ai-input-form,
-.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form {
+.cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form {
     position: relative;
     background-color: var(--color-info-accent-light);
     border-radius: 8px;
@@ -72,7 +71,6 @@
     width: 305px;
     height: 200px;
     padding: 24px;
-    margin: 0 16px 0 0;
 }
 
 .cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form {
@@ -82,7 +80,7 @@
     height: 100%;
 }
 
-.cta-carousel .gen-ai-input {
+.cta-carousel.gen-ai .gen-ai-input {
     box-sizing: border-box;
     border-radius: 8px;
     padding: 16px;
@@ -94,13 +92,13 @@
     width: 100%;
 }
 
-.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-input::placeholder {
+.cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form .gen-ai-input::placeholder {
     font-style: italic;
     font-family: var(--body-font-family);
     font-size: var(--body-font-size-m);
 }
 
-.cta-carousel.gen-ai .gen-ai-input-form .gen-ai-submit {
+.cta-carousel.gen-ai .card .gen-ai-input-form .gen-ai-submit {
     position: absolute;
     left: 40px;
     bottom: 40px;
@@ -120,24 +118,13 @@
     position: absolute;
     left: 56px;
     bottom: 24px;
-    color: var(--color-white);
-    background-color: var(--color-info-accent);
-    border-style: none;
-    font-family: var(--body-font-family);
-    font-size: var(--body-font-size-s);
-    font-weight: 700;
-    padding: 10px 1.5em 10px 1.5em;
-    border-radius: 22px;
-    cursor: pointer;
-    transition: background-color .2s;
 }
 
-.cta-carousel .gen-ai-input-form .gen-ai-submit:not(:disabled):hover {
+.cta-carousel.gen-ai .gen-ai-input-form .gen-ai-submit:not(:disabled):hover {
     background-color: var(--color-info-accent-hover);
 }
 
-.cta-carousel .gen-ai-input-form .gen-ai-submit:disabled,
-.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-submit:disabled {
+.cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form .gen-ai-submit:disabled {
     background-color: var(--color-gray-200);
     color: var(--color-gray-500);
 }
