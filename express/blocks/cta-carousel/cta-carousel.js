@@ -101,12 +101,12 @@ function buildGenAIForm(ctaObj) {
   genAIForm.append(genAIInput, genAISubmit);
 
   genAISubmit.textContent = ctaObj.ctaLinks[0].textContent;
-  genAISubmit.disabled = genAIInput.value === ''
+  genAISubmit.disabled = genAIInput.value === '';
 
   genAIInput.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleGenAISubmit(genAIForm, genAISubmit.textContent);
+      handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0]);
     } else {
       genAISubmit.disabled = genAIInput.value === '';
     }
@@ -114,7 +114,7 @@ function buildGenAIForm(ctaObj) {
 
   genAIForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    handleGenAISubmit(genAIForm, genAISubmit.textContent);
+    handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0]);
   });
 
   return genAIForm;
