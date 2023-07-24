@@ -6,6 +6,11 @@
   align-items: center;
 }
 
+.feature-grid-desktop.block.dark .grid-item,
+.feature-grid-desktop.block.dark .grid-item a {
+  color: var(--color-white);
+}
+
 .feature-grid-desktop .heading {
   text-align: left;
   align-self: flex-start;
