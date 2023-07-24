@@ -1411,6 +1411,19 @@ async function getTaskNameInMapping(text) {
     .sort((a, b) => b[0].length - a[0].length);
 }
 
+function renderFallbackMsgWrapper(block, { fallbackMsg }) {
+  let fallbackMsgWrapper = block.querySelector('.template-x-fallback-msg-wrapper');
+  if (!fallbackMsgWrapper) {
+    fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
+    block.append(fallbackMsgWrapper);
+  }
+  if (!fallbackMsg) {
+    fallbackMsgWrapper.textContent = '';
+  } else {
+    fallbackMsgWrapper.textContent = fallbackMsg;
+  }
+}
+
 async function buildTemplateList(block, props, type = []) {
   if (type?.length > 0) {
     type.forEach((typeName) => {
@@ -1426,12 +1439,8 @@ async function buildTemplateList(block, props, type = []) {
   const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
 
   if (templates) {
-    if (fallbackMsg) {
-      const fallbackMsgWrapper = createTag('div', { class: 'template-x-fallback-msg-wrapper' });
-      fallbackMsgWrapper.textContent = fallbackMsg;
-      props.fallbackMsg = fallbackMsg;
-      block.append(fallbackMsgWrapper);
-    }
+    props.fallbackMsg = fallbackMsg;
+    renderFallbackMsgWrapper(block, props);
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
     block.append(blockInnerWrapper);
     props.templates = props.templates.concat(templates);
@@ -1475,12 +1484,19 @@ async function buildTemplateList(block, props, type = []) {
           templatesWrapper.style.opacity = 0;
 
           if (tasksFoundInInput) {
-            const { templates: newTemplates } = await fetchAndRenderTemplates({
+            const {
+              templates: newTemplates,
+              fallbackMsg: newFallbackMsg,
+            } = await fetchAndRenderTemplates({
               ...props,
+              start: '',
               filters: {
+                ...props.filters,
                 tasks: task,
               },
             });
+            props.fallbackMsg = newFallbackMsg;
+            renderFallbackMsgWrapper(block, props);
 
             templatesWrapper.innerHTML = '';
             props.templates = newTemplates;
