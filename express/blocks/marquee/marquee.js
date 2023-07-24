@@ -52,6 +52,8 @@ function buildReduceMotionSwitch(block) {
   if (!block.querySelector('.reduce-motion-wrapper')) {
     const reduceMotionIconWrapper = createTag('div', { class: 'reduce-motion-wrapper' });
     const videoWrapper = block.querySelector('.background-wrapper');
+    const video = videoWrapper.querySelector('video');
+
     if (block.classList.contains('dark')) {
       reduceMotionIconWrapper.append(getIconElement('play-video-light'), getIconElement('pause-video-light'));
     } else {
@@ -66,14 +68,20 @@ function buildReduceMotionSwitch(block) {
     }
     const initialValue = localStorage.getItem('reduceMotion') === 'on';
 
-    if (initialValue) {
-      block.classList.add('reduce-motion');
-      block.querySelector('video')?.pause();
+    if (video) {
+      if (initialValue) {
+        block.classList.add('reduce-motion');
+        video.currentTime = Math.floor(video.duration) / 2;
+        video.pause();
+      } else {
+        video.muted = true;
+        video.play();
+      }
     }
 
     mediaQuery.addEventListener('change', (e) => {
-      const browerValue = localStorage.getItem('reduceMotion') === 'on';
-      if (browerValue === e.matches) return;
+      const broswerValue = localStorage.getItem('reduceMotion') === 'on';
+      if (broswerValue === e.matches) return;
       localStorage.setItem('reduceMotion', e.matches ? 'on' : 'off');
 
       if (localStorage.getItem('reduceMotion') === 'on') {
@@ -267,10 +275,6 @@ export default async function decorate(block) {
         div.prepend(videoWrapper);
         video.addEventListener('canplay', () => {
           buildReduceMotionSwitch(block);
-          if (!localStorage.getItem('reduceMotion')) {
-            video.muted = true;
-            video.play();
-          }
         });
 
         window.addEventListener('resize', () => {

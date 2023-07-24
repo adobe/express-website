@@ -18,14 +18,14 @@
 
 .cta-carousel .cta-carousel-heading-section h2 {
     text-align: left;
-    max-width: 640px;
+    max-width: 800px;
     margin-bottom: 8px;
     font-size: var(--heading-font-size-m);
 }
 .cta-carousel .cta-carousel-heading-section p {
     text-align: left;
     margin: 0;
-    max-width: 640px;
+    max-width: 800px;
 }
 
 .cta-carousel .carousel-container .carousel-platform {
@@ -258,6 +258,8 @@
 
 .cta-carousel.gen-ai:not(.quick-action) .card:not(.gen-ai-action):hover .text-wrapper {
     opacity: 1;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .cta-carousel .card .text-wrapper .cta-card-text {
