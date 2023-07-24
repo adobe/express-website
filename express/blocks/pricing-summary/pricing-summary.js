@@ -135,12 +135,6 @@ export default function decorate(block) {
 
   pricingContainer.classList.add('pricing-container');
 
-  Array.from(block.children)?.forEach((child) => {
-    if (child.children[0]?.childNodes.length === 0) {
-      child.children[0]?.remove();
-    }
-  });
-
   const columnsContainer = createTag('div', { class: 'columns-container' });
 
   const columns = Array.from(pricingContainer.children);
