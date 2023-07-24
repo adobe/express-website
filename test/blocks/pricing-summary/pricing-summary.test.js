@@ -33,5 +33,15 @@ describe('Pricing Summary', () => {
 
   it('Columns have correct elements', () => {
     expect(document.body.querySelector('.pricing-header')).to.exist;
+    expect(document.body.querySelector('.pricing-description')).to.exist;
+    expect(document.body.querySelector('.pricing-plan')).to.exist;
+    expect(document.body.querySelector('.pricing-price')).to.exist;
+  });
+
+
+  it('Should open link pop up when cta are clicked', () => {
+   
   });
 });
+
+
