@@ -1412,8 +1412,8 @@ async function decorateBreadcrumbs(block) {
   if (breadcrumbs) block.prepend(breadcrumbs);
 }
 
-function importSearchBar(block) {
-  BlockMediator.subscribe('stickySearchBar', (e) => {
+function importSearchBar(block, blockMediator) {
+  blockMediator.subscribe('stickySearchBar', (e) => {
     const parent = block.querySelector('.api-templates-toolbar .wrapper-content-search');
     if (parent) {
       const existingStickySearchBar = parent.querySelector('.search-bar-wrapper');
@@ -1690,7 +1690,8 @@ async function buildTemplateList(block, props, type = []) {
   }
 
   if (props.toolBar && props.searchBar) {
-    importSearchBar(block, props);
+    const { blockMediator } = import('../../scripts/block-mediator.js');
+    importSearchBar(block, blockMediator);
   }
 
   await decorateBreadcrumbs(block);
