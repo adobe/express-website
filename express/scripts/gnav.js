@@ -153,8 +153,8 @@ async function loadFEDS() {
     || window.location.pathname.startsWith('/education')
     || window.location.pathname.startsWith('/drafts');
   const fedsExp = isMegaNav
-    ? `adobe-express/ax-gnav${isHomepage ? '-homepage' : ''}-beta`
-    : 'cc-express/cc-express-gnav';
+    ? 'adobe-express/ax-gnav-x'
+    : 'adobe-express/ax-gnav-x-row';
 
   async function buildBreadCrumbArray() {
     if (isHomepage || getMetadata('hide-breadcrumbs') === 'true') {
