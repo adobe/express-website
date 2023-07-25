@@ -32,7 +32,6 @@ import { buildCarousel } from '../shared/carousel.js';
 import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
 import renderTemplate from './template-rendering.js';
 import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
-import BlockMediator from '../../scripts/block-mediator.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -1690,8 +1689,9 @@ async function buildTemplateList(block, props, type = []) {
   }
 
   if (props.toolBar && props.searchBar) {
-    const { blockMediator } = import('../../scripts/block-mediator.js');
-    importSearchBar(block, blockMediator);
+    import('../../scripts/block-mediator.js').then(({ default: blockMediator }) => {
+      importSearchBar(block, blockMediator);
+    });
   }
 
   await decorateBreadcrumbs(block);
