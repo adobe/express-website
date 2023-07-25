@@ -50,8 +50,13 @@ export default async function decorate(block) {
     const fragmentSection = fragment.querySelector(':scope .section');
 
     if (fragmentSection) {
-      if (fragmentSection.dataset.audience) {
-        block.closest('.section').dataset.audience = fragmentSection.dataset.audience;
+      const audience = fragmentSection.dataset?.audience;
+      if (audience) {
+        if (audience !== document.body.dataset?.device) {
+          block.closest('.section').remove();
+          return;
+        }
+        block.closest('.section').dataset.audience = audience;
       }
 
       block.closest('.section').classList.add(...fragmentSection.classList);

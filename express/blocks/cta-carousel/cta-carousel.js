@@ -10,12 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag,
-  transformLinkToAnimation,
-} from '../../scripts/scripts.js';
+import { createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
+
+function sanitizeInput(string) {
+  const charMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;',
+  };
+
+  return string.replace(/[&<>"'`=/]/g, (s) => charMap[s]);
+}
 
 function decorateTextWithTag(textSource) {
   const text = createTag('p', { class: 'cta-card-text' });
@@ -62,10 +74,55 @@ export function decorateHeading(block, payload) {
   block.append(headingSection);
 }
 
-export function decorateCards(block, payload) {
+function handleGenAISubmit(form, link) {
+  const btn = form.querySelector('.gen-ai-submit');
+  const input = form.querySelector('.gen-ai-input');
+
+  btn.disabled = true;
+  const genAILink = link.replace('%7B%7Bprompt-text%7D%7D', sanitizeInput(input.value).replaceAll(' ', '+'));
+  if (genAILink !== '') window.location.assign(genAILink);
+}
+
+function buildGenAIForm(ctaObj) {
+  const genAIForm = createTag('form', { class: 'gen-ai-input-form' });
+  const formWrapper = createTag('div', { class: 'gen-ai-form-wrapper' });
+  const genAIInput = createTag('textarea', {
+    class: 'gen-ai-input',
+    placeholder: ctaObj.subtext || '',
+  });
+  const genAISubmit = createTag('button', {
+    class: 'gen-ai-submit',
+    type: 'submit',
+    disabled: true,
+  });
+
+  genAIForm.append(formWrapper);
+  formWrapper.append(genAIInput, genAISubmit);
+
+  genAISubmit.textContent = ctaObj.ctaLinks[0].textContent;
+  genAISubmit.disabled = genAIInput.value === '';
+
+  genAIInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0].href);
+    } else {
+      genAISubmit.disabled = genAIInput.value === '';
+    }
+  }, { passive: true });
+
+  genAIForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleGenAISubmit(genAIForm, ctaObj.ctaLinks[0].href);
+  });
+
+  return genAIForm;
+}
+
+export async function decorateCards(block, payload) {
   const cards = createTag('div', { class: 'cta-carousel-cards' });
 
-  payload.actions.forEach((cta) => {
+  payload.actions.forEach((cta, index) => {
     const card = createTag('div', { class: 'card' });
     const cardSleeve = createTag('div', { class: 'card-sleeve' });
     const linksWrapper = createTag('div', { class: 'links-wrapper' });
@@ -84,22 +141,44 @@ export function decorateCards(block, payload) {
 
     if (cta.icon) mediaWrapper.append(cta.icon);
 
+    if (mediaWrapper.children.length === 0) {
+      mediaWrapper.remove();
+    }
+
+    // determine if Gen AI gets inserted after mediaWrapper has been concluded
+    const hasGenAIForm = (block.classList.contains('gen-ai') && block.classList.contains('quick-action') && index === 0)
+      || (block.classList.contains('gen-ai') && mediaWrapper.children.length === 0);
+
     if (cta.ctaLinks.length > 0) {
-      if (block.classList.contains('quick-action') && cta.ctaLinks.length === 1) {
+      if (hasGenAIForm) {
+        const genAIForm = buildGenAIForm(cta);
+        card.classList.add('gen-ai-action');
+        cardSleeve.append(genAIForm);
+        linksWrapper.remove();
+      }
+
+      if ((block.classList.contains('quick-action') || block.classList.contains('gen-ai')) && cta.ctaLinks.length === 1) {
         cta.ctaLinks[0].textContent = '';
         cta.ctaLinks[0].classList.add('clickable-overlay');
       }
 
       cta.ctaLinks.forEach((a) => {
+        if (a.href && a.href.match('adobesparkpost.app.link')) {
+          const btnUrl = new URL(a.href);
+          btnUrl.searchParams.set('search', cta.text);
+          a.href = decodeURIComponent(btnUrl.toString());
+        }
         linksWrapper.append(a);
       });
+    } else {
+      card.classList.add('coming-soon');
     }
 
     if (cta.text) {
       textWrapper.append(decorateTextWithTag(cta.text));
     }
 
-    if (cta.subtext) {
+    if (cta.subtext && !hasGenAIForm) {
       const subtext = createTag('p', { class: 'subtext' });
       subtext.textContent = cta.subtext;
       textWrapper.append(subtext);
@@ -131,7 +210,7 @@ function constructPayload(block) {
       image: row.querySelector(':scope > div:nth-of-type(1) picture'),
       videoLink: row.querySelector(':scope > div:nth-of-type(1) a'),
       icon: row.querySelector(':scope > div:nth-of-type(1) img.icon'),
-      text: row.querySelector(':scope > div:nth-of-type(2) p:not(.button-container)')?.textContent.trim(),
+      text: row.querySelector(':scope > div:nth-of-type(2) p:not(.button-container), :scope > div:nth-of-type(2) > *:last-of-type')?.textContent.trim(),
       subtext: row.querySelector(':scope > div:nth-of-type(2) p:not(.button-container) em')?.textContent.trim(),
       ctaLinks: row.querySelectorAll(':scope > div:nth-of-type(2) a'),
     };
@@ -146,6 +225,6 @@ export default async function decorate(block) {
   const payload = constructPayload(block);
 
   decorateHeading(block, payload);
-  decorateCards(block, payload);
-  buildCarousel('.card', block, false);
+  await decorateCards(block, payload);
+  buildCarousel('', block.querySelector('.cta-carousel-cards'), false);
 }

@@ -63,6 +63,7 @@
     cursor: pointer;
     font-size: var(--body-font-size-s);
     border-bottom: 2px solid transparent;
+    white-space: nowrap;
 }
 
 .template-x.horizontal .template-tabs button.template-tab-button:first-of-type {
@@ -2546,14 +2547,10 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         justify-content: space-between;
         align-items: flex-end;
     }
-  
+
     .template-x-wrapper .template-title.with-link > div {
         flex-direction: row;
         justify-content: space-between;
-    }
-
-    .template-x-wrapper .template-x:not(.holiday) .template-title.horizontal .text-wrapper {
-        max-width: 600px;
     }
 
     .template-x-wrapper .template-x:not(.holiday) .template-title.horizontal .view-all-link-wrapper {
@@ -3012,7 +3009,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
         width: 170px;
     }
-  
+
     .template-x.horizontal.fullwidth.tabbed .carousel-container .carousel-fader-left,
     .template-x.horizontal.fullwidth.tabbed .carousel-container .carousel-fader-right {
         background: none;

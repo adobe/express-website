@@ -6,6 +6,11 @@
   align-items: center;
 }
 
+.feature-grid-desktop.block.dark .grid-item,
+.feature-grid-desktop.block.dark .grid-item a {
+  color: var(--color-white);
+}
+
 .feature-grid-desktop .heading {
   text-align: left;
   align-self: flex-start;
@@ -40,7 +45,7 @@
   align-items: flex-start;
   border-radius: 20px;
   padding: 2rem 2.5rem 2rem 1.5rem;
-  background-image: linear-gradient(30deg, #7C84F3, #FF4DD2, #7C84F3, #FF4DD2, #7C84F3);
+  background-image: linear-gradient(150deg, #D9418A, #D94F4B, #E9A840, #D9418A, #D94F4B, #E9A840);
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 400% 400%;

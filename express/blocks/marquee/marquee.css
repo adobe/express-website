@@ -69,6 +69,11 @@ body.no-desktop-brand-header header {
   margin: 16px 0;
 }
 
+.marquee p > a {
+  color: var(--color-black);
+  text-decoration: underline;
+}
+
 .marquee p.button-container {
   text-align: left;
   margin: 16px 0;
@@ -93,7 +98,7 @@ body.no-desktop-brand-header header {
   width: 100%;
   min-height: 200px;
   max-height: 500px;
-  object-position: 100% 100%;
+  object-position: center;
 }
 
 .marquee.white-text,
