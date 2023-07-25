@@ -32,7 +32,7 @@ describe('Pricing Summary', () => {
     expect(columns.length).to.be.oneOf([2, 3]);
   });
 
-  it('Columns have correct elements', () =>{
+  it('Columns have correct elements', () => {
     expect(document.querySelector('.pricing-header')).to.exist;
     expect(document.querySelector('.pricing-description')).to.exist;
     expect(document.querySelector('.pricing-plan')).to.exist;
@@ -63,7 +63,7 @@ describe('Pricing Summary', () => {
     expect(premiumDescription.textContent).to.include('premium features');
   });
 
-  it('Should contain the correct billing notice', () =>{
+  it('Should contain the correct billing notice', () => {
     const billingNotice = document.querySelector('.pricing-summary > div:last-child div');
     expect(billingNotice.textContent.includes('Billing begins when your free trial ends')).to.be.true;
   });
