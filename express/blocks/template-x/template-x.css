@@ -492,6 +492,7 @@
     text-align: center;
     transition: opacity .3s ease-in-out;
     will-change: opacity;
+    z-index: 1;
 }
 
 .template-x.horizontal .template:not(.placeholder) .button-container {
@@ -2546,7 +2547,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         justify-content: space-between;
         align-items: flex-end;
     }
-  
+
     .template-x-wrapper .template-title.with-link > div {
         flex-direction: row;
         justify-content: space-between;
@@ -3012,7 +3013,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
         width: 170px;
     }
-  
+
     .template-x.horizontal.fullwidth.tabbed .carousel-container .carousel-fader-left,
     .template-x.horizontal.fullwidth.tabbed .carousel-container .carousel-fader-right {
         background: none;

@@ -161,7 +161,7 @@ await (async function updateMetadataForTemplates() {
 
 // metadata -> dom blades
 (function autoUpdatePage() {
-  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}', '{{templates-count}}'];
+  const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
   // FIXME: deprecate wl
   const main = document.querySelector('main');
   if (!main) return;
