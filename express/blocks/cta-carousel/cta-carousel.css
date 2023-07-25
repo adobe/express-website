@@ -1,0 +1,312 @@
+.section .cta-carousel-wrapper {
+    max-width: none;
+}
+
+.cta-carousel {
+    padding: 0 28px;
+    max-width: 1440px;
+    margin: auto;
+}
+
+.cta-carousel .cta-carousel-heading-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: auto auto 32px;
+}
+
+.cta-carousel .cta-carousel-heading-section h2 {
+    text-align: left;
+    max-width: 800px;
+    margin-bottom: 8px;
+    font-size: var(--heading-font-size-m);
+}
+.cta-carousel .cta-carousel-heading-section p {
+    text-align: left;
+    margin: 0;
+    max-width: 800px;
+}
+
+.cta-carousel .carousel-container .carousel-platform {
+    align-items: unset;
+}
+
+.cta-carousel .card {
+    margin: 0 8px;
+    position: relative;
+}
+
+.cta-carousel .card.coming-soon {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.cta-carousel .card:first-of-type {
+    margin-left: 0;
+}
+
+.cta-carousel .card .card-sleeve {
+    position: relative;
+    height: 140px;
+    width: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve {
+    height: 200px;
+    width: unset;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve {
+    width: 511px;
+    display: flex;
+}
+
+.cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form {
+    background-color: var(--color-info-accent-light);
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.cta-carousel.gen-ai .gen-ai-input-form {
+    width: 305px;
+    height: 200px;
+    padding: 24px;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form {
+    margin-left: -24px;
+    width: 335px;
+    padding: 10px 16px 10px 40px;
+    height: 100%;
+}
+
+.cta-carousel.gen-ai .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-form-wrapper {
+    background: white;
+    padding: 12px;
+    gap: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 2px solid var(--color-info-accent);
+}
+
+.cta-carousel.gen-ai .gen-ai-input {
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: none;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-m);
+    resize: none;
+    height: 100%;
+    width: 100%;
+}
+
+.cta-carousel.gen-ai .gen-ai-input:active,
+.cta-carousel.gen-ai .gen-ai-input:focus-visible {
+    border: none;
+    outline: none;
+}
+
+.cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form .gen-ai-input::placeholder {
+    font-style: italic;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-m);
+}
+
+.cta-carousel.gen-ai .card .gen-ai-input-form .gen-ai-submit {
+    left: 40px;
+    bottom: 40px;
+    color: var(--color-white);
+    background-color: var(--color-info-accent);
+    border-style: none;
+    font-family: var(--body-font-family);
+    font-size: var(--body-font-size-s);
+    font-weight: 700;
+    padding: 10px 1.5em 10px 1.5em;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background-color .2s;
+}
+
+.cta-carousel.quick-action .card.gen-ai-action .card-sleeve .gen-ai-input-form .gen-ai-submit {
+    left: 56px;
+    bottom: 24px;
+}
+
+.cta-carousel.gen-ai .gen-ai-input-form .gen-ai-submit:not(:disabled):hover {
+    background-color: var(--color-info-accent-hover);
+}
+
+.cta-carousel.gen-ai .card .card-sleeve .gen-ai-input-form .gen-ai-submit:disabled {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-500);
+}
+
+.cta-carousel .card .card-sleeve .media-wrapper {
+    position: relative;
+    height: 100%;
+    width: 200px;
+}
+
+.cta-carousel .card .card-sleeve .links-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    top: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #00000050;
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.2s;
+}
+
+.cta-carousel .card:hover .card-sleeve .links-wrapper {
+    opacity: 1;
+}
+
+.cta-carousel .card .card-sleeve .links-wrapper a {
+    margin: 4px auto;
+    width: max-content;
+}
+
+.cta-carousel .card .card-sleeve .links-wrapper a.clickable-overlay {
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background-color: #00000020;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(1):not(.clickable-overlay) {
+    border: solid 2px var(--color-white);
+    background-color: var(--color-white);
+    color: var(--body-color);
+}
+
+.cta-carousel .card .card-sleeve .links-wrapper a:nth-of-type(2) {
+    background-color: transparent;
+    border: solid 2px var(--color-white);
+}
+
+.cta-carousel .card .card-sleeve picture,
+.cta-carousel .card .card-sleeve video {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.cta-carousel .card .card-sleeve picture img {
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve {
+    width: auto;
+}
+
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve .media-wrapper,
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve .links-wrapper {
+    width: 100%;
+}
+
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve picture,
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve picture img,
+.cta-carousel.gen-ai:not(.quick-action) .card .card-sleeve video {
+    position: static;
+    width: auto;
+}
+
+.cta-carousel .card .card-sleeve .media-wrapper img.icon {
+    position: absolute;
+    display: block;
+    height: 14px;
+    width: 14px;
+    padding: 8px;
+    overflow: visible;;
+    border-radius: 24px;
+    background-color: var(--color-white);
+    box-shadow: 0 0 10px #00000029;
+    bottom: 12px;
+    left: 12px;
+    z-index: 1;
+}
+
+.cta-carousel.gen-ai:not(.quick-action) .cta-carousel-cards .text-wrapper {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    color: var(--color-white);
+    transition: opacity .2s;
+    opacity: 0;
+}
+
+.cta-carousel.gen-ai:not(.quick-action) .card:not(.gen-ai-action):hover .text-wrapper {
+    opacity: 1;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.cta-carousel .card .text-wrapper .cta-card-text {
+    font-size: var(--body-font-size-s);
+    font-weight: 700;
+    text-align: left;
+    margin: 8px 0 0;
+}
+
+.cta-carousel .card .text-wrapper .subtext {
+    font-size: var(--body-font-size-s);
+    text-align: left;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.cta-carousel .card:hover .text-wrapper .subtext {
+    opacity: 1;
+}
+
+.cta-carousel .card .text-wrapper .tag {
+    font-size: 12px;
+    padding: 0 4px;
+    margin-left: 6px;
+    font-weight: 700;
+    background-color: #DEDEF9;
+    color: var(--color-info-accent);
+    border-radius: 4px;
+}
+
+.cta-carousel.create .carousel-container .carousel-fader-left a,
+.cta-carousel.create .carousel-container .carousel-fader-right a,
+.cta-carousel.quick-action .carousel-container .carousel-fader-left a,
+.cta-carousel.quick-action .carousel-container .carousel-fader-right a {
+    position: absolute;
+    top: 64px;
+}
+
+@media (min-width: 900px) {
+    .cta-carousel .cta-carousel-heading-section {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .cta-carousel .carousel-container .carousel-fader-left,
+    .cta-carousel .carousel-container .carousel-fader-right{
+        background: unset;
+    }
+}
