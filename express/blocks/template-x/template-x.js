@@ -1536,7 +1536,7 @@ function importSearchBar(block) {
           }
         };
 
-        import('./use-input-autocomplete.js').then(({ default: useInputAutocomplete }) => {
+        import('../../scripts/autocomplete-api-v3.js').then(({ default: useInputAutocomplete }) => {
           const { inputHandler } = useInputAutocomplete(
             suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
           );
