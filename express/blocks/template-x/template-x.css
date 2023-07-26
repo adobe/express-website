@@ -492,7 +492,6 @@
     text-align: center;
     transition: opacity .3s ease-in-out;
     will-change: opacity;
-    z-index: 1;
 }
 
 .template-x.horizontal .template:not(.placeholder) .button-container {
@@ -527,6 +526,7 @@
 .template-x.fullwidth .template:hover:not(.placeholder) .template-link {
     opacity: 1;
     cursor: pointer;
+    z-index: 1;
 }
 
 .template-x.horizontal .template:not(.placeholder) .template-link,
