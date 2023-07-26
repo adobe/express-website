@@ -36,6 +36,7 @@ async function getReplacementsFromSearch() {
   });
   const {
     tasks,
+    tasksx,
     phformat,
     topics,
     q,
@@ -56,6 +57,7 @@ async function getReplacementsFromSearch() {
   return {
     '{{queryTasks}}': sanitizedTasks || '',
     '{{QueryTasks}}': titleCase(sanitizedTasks || ''),
+    '{{queryTasksX}}': tasksx,
     '{{translatedTasks}}': translatedTasks || '',
     '{{TranslatedTasks}}': titleCase(translatedTasks || ''),
     '{{placeholderRatio}}': phformat || '',
