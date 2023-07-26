@@ -527,6 +527,7 @@
 .template-x.fullwidth .template:hover:not(.placeholder) .template-link {
     opacity: 1;
     cursor: pointer;
+    z-index: 1;
 }
 
 .template-x.horizontal .template:not(.placeholder) .template-link,

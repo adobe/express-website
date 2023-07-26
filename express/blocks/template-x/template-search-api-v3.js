@@ -105,10 +105,10 @@ const fetchSearchUrl = async ({
 
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
-  const fallBacktextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
+  const fallbackTextTemplate = tasks && tasks !== "''" ? placeholders['templates-fallback-with-tasks'] : placeholders['templates-fallback-without-tasks'];
 
-  if (fallBacktextTemplate) {
-    return tasks ? fallBacktextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallBacktextTemplate;
+  if (fallbackTextTemplate) {
+    return tasks ? fallbackTextTemplate.replaceAll('{{tasks}}', tasks.toString()) : fallbackTextTemplate;
   }
 
   return `Sorry we couldn't find any results for what you searched for, try some of these popular ${

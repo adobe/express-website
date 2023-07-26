@@ -92,7 +92,7 @@ function initSearchFunction(block) {
 
     const format = getMetadata('placeholder-format');
     let currentTasks = '';
-    let searchInput = searchBar.value.toLowerCase() || getMetadata('topics');
+    let searchInput = searchBar.value || getMetadata('topics');
 
     const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
       const searchValue = searchBar.value.toLowerCase();
