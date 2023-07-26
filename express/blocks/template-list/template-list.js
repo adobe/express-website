@@ -90,7 +90,7 @@ async function populateHeadingPlaceholder(locale, props) {
       grammarTemplate.split(' ').forEach((word, index, words) => {
         if (index + 1 < words.length) {
           if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-            words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
+            words.splice(index, 2, `d'${words[index + 1]}`);
             grammarTemplate = words.join(' ');
           }
         }
@@ -214,7 +214,7 @@ async function processResponse(props) {
   }
 
   if (templateFetched) {
-    return templateFetched.map((template) => {
+    return templateFetched.filter((template) => !!template.branchURL).map((template) => {
       const $template = createTag('div');
       const imgWrapper = createTag('div');
 
@@ -1236,26 +1236,6 @@ async function redrawTemplates($block, $toolBar, props) {
   });
 }
 
-async function toggleAnimatedText($block, $toolBar, props) {
-  const section = $block.closest('.section.template-list-fullwidth-apipowered-container');
-  const $toolbarWrapper = $toolBar.parentElement;
-
-  if (section) {
-    const placeholders = await fetchPlaceholders();
-    const existingText = section.querySelector('.animated-template-text');
-    const animatedTemplateText = createTag('h5', { class: 'animated-template-text' });
-    animatedTemplateText.textContent = placeholders['open-to-see-animation'];
-
-    if (existingText) {
-      existingText.remove();
-    }
-
-    if (props.filters.animated === '(true)') {
-      $toolbarWrapper.insertAdjacentElement('afterend', animatedTemplateText);
-    }
-  }
-}
-
 function initFilterSort($block, $toolBar, props) {
   const $buttons = $toolBar.querySelectorAll('.button-wrapper');
   const $applyFilterButton = $toolBar.querySelector('.apply-filter-button');
@@ -1301,10 +1281,6 @@ function initFilterSort($block, $toolBar, props) {
           updateQueryURL($wrapper, $option, props);
           updateFilterIcon($block);
 
-          if (!$optionsList.classList.contains('in-drawer')) {
-            await toggleAnimatedText($block, $toolBar, props);
-          }
-
           if (!$button.classList.contains('in-drawer')) {
             await redrawTemplates($block, $toolBar, props);
           }
@@ -1339,7 +1315,6 @@ function initFilterSort($block, $toolBar, props) {
         e.preventDefault();
         await redrawTemplates($block, $toolBar, props);
         closeDrawer($toolBar);
-        await toggleAnimatedText($block, $toolBar, props);
       });
     }
 

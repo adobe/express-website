@@ -195,12 +195,23 @@ export function toClassName(name) {
     : '';
 }
 
-export function createTag(name, attrs) {
-  const el = document.createElement(name);
-  if (typeof attrs === 'object') {
-    for (const [key, value] of Object.entries(attrs)) {
-      el.setAttribute(key, value);
+export function createTag(tag, attributes, html) {
+  const el = document.createElement(tag);
+  if (html) {
+    if (html instanceof HTMLElement
+      || html instanceof SVGElement
+      || html instanceof DocumentFragment) {
+      el.append(html);
+    } else if (Array.isArray(html)) {
+      el.append(...html);
+    } else {
+      el.insertAdjacentHTML('beforeend', html);
     }
+  }
+  if (attributes) {
+    Object.entries(attributes).forEach(([key, val]) => {
+      el.setAttribute(key, val);
+    });
   }
   return el;
 }
@@ -347,6 +358,20 @@ export function getIcon(icons, alt, size = 44) {
     'star',
     'star-half',
     'star-empty',
+    'pricing-gen-ai',
+    'pricing-features',
+    'pricing-import',
+    'pricing-motion',
+    'pricing-stock',
+    'pricing-one-click',
+    'pricing-collaborate',
+    'pricing-premium-plan',
+    'pricing-sync',
+    'pricing-brand',
+    'pricing-calendar',
+    'pricing-fonts',
+    'pricing-libraries',
+    'pricing-cloud',
   ];
 
   const size22Icons = [
@@ -442,7 +467,7 @@ export function readBlockConfig($block) {
       if ($cols[1]) {
         const $value = $cols[1];
         const name = toClassName($cols[0].textContent.trim());
-        let value = '';
+        let value;
         if ($value.querySelector('a')) {
           const $as = [...$value.querySelectorAll('a')];
           if ($as.length === 1) {
@@ -465,11 +490,23 @@ export function readBlockConfig($block) {
   return config;
 }
 
+function removeIrrelevantSections(main) {
+  main.querySelectorAll(':scope > div').forEach((section) => {
+    const sectionMeta = section.querySelector('div.section-metadata');
+    if (sectionMeta) {
+      const meta = readBlockConfig(sectionMeta);
+      if (meta.audience && meta.audience !== document.body.dataset?.device) {
+        section.remove();
+      }
+    }
+  });
+}
+
 /**
  * Decorates all sections in a container element.
  * @param {Element} $main The container element
  */
-export function decorateSections($main) {
+function decorateSections($main) {
   let noAudienceFound = false;
   $main.querySelectorAll(':scope > div').forEach((section) => {
     const wrappers = [];
@@ -851,20 +888,25 @@ export function addBlockClasses($block, classNames) {
 // }
 
 function decorateHeaderAndFooter() {
-  const $header = document.querySelector('header');
+  const header = document.querySelector('header');
 
-  $header.addEventListener('click', (event) => {
+  header.addEventListener('click', (event) => {
     if (event.target.id === 'feds-topnav') {
       const root = window.location.href.split('/express/')[0];
       window.location.href = `${root}/express/`;
     }
   });
 
-  $header.innerHTML = '<div id="feds-header"></div>';
-
-  document.querySelector('footer').innerHTML = `
-    <div id="feds-footer"></div>
-  `;
+  const headerMeta = getMeta('header');
+  if (headerMeta !== 'off') header.innerHTML = '<div id="feds-header"></div>';
+  else header.remove();
+  const footerMeta = getMeta('footer');
+  const footer = document.querySelector('footer');
+  if (footerMeta !== 'off') {
+    footer.innerHTML = `
+      <div id="feds-footer"></div>
+    `;
+  } else footer.remove();
 }
 
 /**
@@ -963,7 +1005,7 @@ export function decorateBlock(block) {
  * Decorates all blocks in a container element.
  * @param {Element} main The container element
  */
-export function decorateBlocks(main) {
+function decorateBlocks(main) {
   main
     .querySelectorAll('div.section > div > div')
     .forEach((block) => decorateBlock(block));
@@ -1652,7 +1694,7 @@ export async function fixIcons(block = document) {
   });
 }
 
-export function unwrapBlock($block) {
+function unwrapBlock($block) {
   const $section = $block.parentNode;
   const $elems = [...$section.children];
   const $blockSection = createTag('div');
@@ -1848,26 +1890,12 @@ async function buildAutoBlocks($main) {
     if (!window.floatingCtasLoaded) {
       const floatingCTAData = await fetchFloatingCta(window.location.pathname);
       const validButtonVersion = ['floating-button', 'multifunction-button', 'bubble-ui-button', 'floating-panel'];
-      let desktopButton;
-      let mobileButton;
-
-      if (floatingCTAData) {
-        const buttonTypes = {
-          desktop: floatingCTAData.desktop,
-          mobile: floatingCTAData.mobile,
-        };
-
-        desktopButton = validButtonVersion.includes(buttonTypes.desktop) ? buildBlock(buttonTypes.desktop, 'desktop') : null;
-        mobileButton = validButtonVersion.includes(buttonTypes.mobile) ? buildBlock(buttonTypes.mobile, 'mobile') : null;
-
-        [desktopButton, mobileButton].forEach((button) => {
-          if (button) {
-            button.classList.add('spreadsheet-powered');
-            if ($lastDiv) {
-              $lastDiv.append(button);
-            }
-          }
-        });
+      const device = document.body.dataset?.device;
+      const blockName = floatingCTAData?.[device];
+      if (validButtonVersion.includes(blockName) && $lastDiv) {
+        const button = buildBlock(blockName, device);
+        button.classList.add('spreadsheet-powered');
+        $lastDiv.append(button);
       }
 
       window.floatingCtasLoaded = true;
@@ -1916,15 +1944,15 @@ function setTheme() {
     // mega nav, suppress brand header
     theme = 'no-brand-header';
   }
-  const $body = document.body;
+  const { body } = document;
   if (theme) {
     let themeClass = toClassName(theme);
     /* backwards compatibility can be removed again */
     if (themeClass === 'nobrand') themeClass = 'no-desktop-brand-header';
-    $body.classList.add(themeClass);
-    if (themeClass === 'blog') $body.classList.add('no-brand-header');
+    body.classList.add(themeClass);
+    if (themeClass === 'blog') body.classList.add('no-brand-header');
   }
-  $body.dataset.device = navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop';
+  body.dataset.device = navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop';
 }
 
 function decorateLinkedPictures($main) {
@@ -2132,18 +2160,19 @@ function decoratePictures(main) {
   });
 }
 
-export async function decorateMain($main) {
-  await buildAutoBlocks($main);
-  splitSections($main);
-  decorateSections($main);
-  decorateButtons($main);
-  decorateBlocks($main);
-  decorateMarqueeColumns($main);
-  await fixIcons($main);
-  decoratePictures($main);
-  decorateLinkedPictures($main);
-  decorateSocialIcons($main);
-  makeRelativeLinks($main);
+export async function decorateMain(main) {
+  removeIrrelevantSections(main);
+  await buildAutoBlocks(main);
+  splitSections(main);
+  decorateSections(main);
+  decorateButtons(main);
+  decorateBlocks(main);
+  decorateMarqueeColumns(main);
+  await fixIcons(main);
+  decoratePictures(main);
+  decorateLinkedPictures(main);
+  decorateSocialIcons(main);
+  makeRelativeLinks(main);
 }
 
 const usp = new URLSearchParams(window.location.search);
@@ -2320,9 +2349,8 @@ function decorateLegalCopy(main) {
 /**
  * loads everything needed to get to LCP.
  */
-async function loadEager() {
+async function loadEager(main) {
   setTheme();
-  const main = document.querySelector('main');
   if (main) {
     const language = getLanguage(getLocale(window.location));
     const langSplits = language.split('-');
@@ -2353,13 +2381,9 @@ async function loadEager() {
     wordBreakJapanese();
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'fullscreen-marquee-desktop', 'collapsible-card', 'search-marquee'];
-    const blocks = document.querySelectorAll('.block');
-    const firstVisualBlock = Array.from(blocks).find((b) => {
-      const { audience } = b.closest('.section')?.dataset || {};
-      return audience === document.body.dataset.device;
-    });
-    const hasLCPBlock = (firstVisualBlock && lcpBlocks.includes(firstVisualBlock.getAttribute('data-block-name')));
-    if (hasLCPBlock) await loadBlock(firstVisualBlock, true);
+    const block = document.querySelector('.block');
+    const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
+    if (hasLCPBlock) await loadBlock(block, true);
 
     document.querySelector('body').classList.add('appear');
 
@@ -2449,9 +2473,7 @@ export async function addFreePlanWidget(elem) {
 /**
  * loads everything that doesn't need to be delayed.
  */
-async function loadLazy() {
-  const main = document.querySelector('main');
-
+async function loadLazy(main) {
   // post LCP actions go here
   sampleRUM('lcp');
 
@@ -2482,8 +2504,9 @@ async function decoratePage() {
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
   window.hlx.init = true;
 
-  await loadEager();
-  loadLazy();
+  const main = document.querySelector('main');
+  await loadEager(main);
+  loadLazy(main);
   loadGnav();
   if (window.location.hostname.endsWith('hlx.page') || window.location.hostname === ('localhost')) {
     import('../../tools/preview/preview.js');

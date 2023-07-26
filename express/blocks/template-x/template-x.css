@@ -63,6 +63,7 @@
     cursor: pointer;
     font-size: var(--body-font-size-s);
     border-bottom: 2px solid transparent;
+    white-space: nowrap;
 }
 
 .template-x.horizontal .template-tabs button.template-tab-button:first-of-type {
@@ -2551,10 +2552,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
     .template-x-wrapper .template-title.with-link > div {
         flex-direction: row;
         justify-content: space-between;
-    }
-
-    .template-x-wrapper .template-x:not(.holiday) .template-title.horizontal .text-wrapper {
-        max-width: 600px;
     }
 
     .template-x-wrapper .template-x:not(.holiday) .template-title.horizontal .view-all-link-wrapper {

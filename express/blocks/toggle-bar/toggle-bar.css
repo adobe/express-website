@@ -53,6 +53,10 @@
     transform: translate(-50%, 0);
 }
 
+.block.toggle-bar.sticky.sticking.bumped-by-gnav > div:nth-of-type(2) {
+    top: 66px;
+}
+
 .block.toggle-bar.sticky.sticking.hidden > div:nth-of-type(2) {
     top: -120px;
 }
