@@ -1326,7 +1326,6 @@ async function getBreadcrumbs() {
     const params = new Proxy(new URLSearchParams(window.location.search), {
       get: (searchParams, prop) => searchParams.get(prop),
     });
-    console.log(params)
     const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
     const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
     const lastCrumb = createTag('li');

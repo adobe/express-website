@@ -137,7 +137,7 @@ function initSearchFunction(block) {
     if (allTemplatesMetadata.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
-      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks.xCore}&tasks-x=${currentTasks.content}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
+      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks.xCore}&tasksx=${currentTasks.content}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
       window.location = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
     }
   };
