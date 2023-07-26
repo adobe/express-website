@@ -86,39 +86,58 @@ function initSearchFunction(block) {
     }
   }, { passive: true });
 
+  const trimInput = (tasks, input) => {
+    let alteredInput = input;
+    tasks[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
+      alteredInput = alteredInput.toLowerCase().replace(word.toLowerCase(), '');
+    });
+
+    return alteredInput.trim();
+  };
+
+  const findTask = (map) => Object.entries(map).filter((task) => task[1].some((word) => {
+    const searchValue = searchBar.value.toLowerCase();
+    return searchValue.indexOf(word.toLowerCase()) >= 0;
+  })).sort((a, b) => b[0].length - a[0].length);
+
   const redirectSearch = async () => {
     const placeholders = await fetchPlaceholders();
     const taskMap = JSON.parse(placeholders['task-name-mapping']);
+    const taskXMap = JSON.parse(placeholders['x-task-name-mapping']);
 
     const format = getMetadata('placeholder-format');
-    let currentTasks = '';
+    const currentTasks = {
+      xCore: '',
+      content: '',
+    };
     let searchInput = searchBar.value || getMetadata('topics');
 
-    const tasksFoundInInput = Object.entries(taskMap).filter((task) => task[1].some((word) => {
-      const searchValue = searchBar.value.toLowerCase();
-      return searchValue.indexOf(word.toLowerCase()) >= 0;
-    })).sort((a, b) => b[0].length - a[0].length);
+    const tasksFoundInInput = findTask(taskMap);
+    const tasksXFoundInInput = findTask(taskXMap);
 
     if (tasksFoundInInput.length > 0) {
-      tasksFoundInInput[0][1].sort((a, b) => b.length - a.length).forEach((word) => {
-        searchInput = searchInput.toLowerCase().replace(word.toLowerCase(), '');
-      });
+      searchInput = trimInput(tasksFoundInInput, searchInput);
+      [[currentTasks.xCore]] = tasksFoundInInput;
+    }
 
-      searchInput = searchInput.trim();
-      [[currentTasks]] = tasksFoundInInput;
+    if (tasksXFoundInInput.length > 0) {
+      searchInput = trimInput(tasksXFoundInInput, searchInput);
+      [[currentTasks.content]] = tasksXFoundInInput;
     }
 
     const locale = getLocale(window.location);
     const urlPrefix = locale === 'us' ? '' : `/${locale}`;
     const topicUrl = searchInput ? `/${searchInput}` : '';
-    const taskUrl = `/${handlelize(currentTasks.toLowerCase())}`;
+    const taskUrl = `/${handlelize(currentTasks.xCore.toLowerCase())}`;
+    const taskXUrl = `/${handlelize(currentTasks.content.toLowerCase())}`;
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
+    const targetPathX = `${urlPrefix}/express/templates${taskXUrl}${topicUrl}`;
     const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-    const pathMatch = (e) => e.url === targetPath;
+    const pathMatch = (e) => e.url === targetPath || e.url === targetPathX;
     if (allTemplatesMetadata.some(pathMatch)) {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
-      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
+      const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks.xCore}&tasks-x=${currentTasks.content}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
       window.location = `${window.location.origin}${urlPrefix}${searchUrlTemplate}`;
     }
   };
