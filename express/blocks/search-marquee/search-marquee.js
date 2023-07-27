@@ -139,8 +139,11 @@ function initSearchFunction(block) {
     const targetPath = `${urlPrefix}/express/templates${taskUrl}${topicUrl}`;
     const targetPathX = `${urlPrefix}/express/templates${taskXUrl}${topicUrl}`;
     const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-    const pathMatch = (e) => e.url === targetPath || e.url === targetPathX;
-    if (allTemplatesMetadata.some(pathMatch)) {
+    const pathMatch = (e) => e.url === targetPath;
+    const pathMatchX = (e) => e.url === targetPathX;
+    if (allTemplatesMetadata.some(pathMatchX) && document.body.dataset.device !== 'mobile') {
+      window.location = `${window.location.origin}${targetPathX}`;
+    } else if (allTemplatesMetadata.some(pathMatch) && document.body.dataset.device !== 'desktop') {
       window.location = `${window.location.origin}${targetPath}`;
     } else {
       const searchUrlTemplate = `/express/templates/search?tasks=${currentTasks.xCore}&tasksx=${currentTasks.content}&phformat=${format}&topics=${searchInput || "''"}&q=${searchInput || "''"}`;
