@@ -417,7 +417,7 @@ function makeTemplateFunctions(placeholders) {
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort']),
       elements: {},
-      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-x-sort-icons'].replace(/\s/g, '').split(','),
     },
   };
 
