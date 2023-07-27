@@ -33,7 +33,7 @@ function getCrumbsForSearch(templatesUrl, allTemplatesMetadata, taskCategories) 
     return crumbs;
   }
   const shortTitle = getMetadata('short-title');
-  if (!shortTitle) {
+  if (!shortTitle?.trim()) {
     return crumbs;
   }
 
@@ -90,7 +90,7 @@ function getCrumbsForSEOPage(templatesUrl, allTemplatesMetadata, taskCategories,
       crumbs.push(segmentCrumb);
     });
   const shortTitle = getMetadata('short-title');
-  if (!shortTitle) {
+  if (!shortTitle?.trim()) {
     return crumbs;
   }
   const lastCrumb = createTag('li');
