@@ -17,7 +17,7 @@ function customReporter() {
 export default {
   coverageConfig: {
     include: [
-      '**/express/blocks**',
+      '**/express/blocks/**',
       '**/express/scripts/**',
     ],
     exclude: [
