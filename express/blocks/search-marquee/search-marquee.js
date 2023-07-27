@@ -49,6 +49,12 @@ function logSearch(form, url = 'https://main--express-website--adobe.hlx.page/ex
   }
 }
 
+function wordExistsInString(word, inputString) {
+  const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regexPattern = new RegExp(`(?:^|\\s|[.,!?()'"\\-])${escapedWord}(?:$|\\s|[.,!?()'"\\-])`, 'i');
+  return regexPattern.test(inputString);
+}
+
 function initSearchFunction(block) {
   const searchBarWrapper = block.querySelector('.search-bar-wrapper');
 
@@ -97,7 +103,7 @@ function initSearchFunction(block) {
 
   const findTask = (map) => Object.entries(map).filter((task) => task[1].some((word) => {
     const searchValue = searchBar.value.toLowerCase();
-    return searchValue.indexOf(word.toLowerCase()) >= 0;
+    return wordExistsInString(word.toLowerCase(), searchValue);
   })).sort((a, b) => b[0].length - a[0].length);
 
   const redirectSearch = async () => {
