@@ -2630,6 +2630,9 @@ export async function trackBranchParameters($links) {
           .split(',')
           .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
         urlParams.set('search', templateSearchTag);
+        urlParams.set('q', templateSearchTag);
+        urlParams.set('category', 'templates');
+        urlParams.set('searchCategory', 'templates');
       }
 
       if (referrer) {
