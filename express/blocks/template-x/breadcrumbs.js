@@ -23,13 +23,13 @@ function sanitize(str) {
 
 function getCrumbsForSearch(templatesUrl, allTemplatesMetadata, taskCategories) {
   const { search, origin } = window.location;
-  let { tasks, q } = new Proxy(new URLSearchParams(search), {
+  const { tasksx, q } = new Proxy(new URLSearchParams(search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-  tasks = sanitize(tasks);
-  q = sanitize(q);
+  const tasks = sanitize(tasksx);
   const crumbs = [];
-  if (!tasks && !q) {
+  // won't have meaningful short-title with no tasks and no q
+  if (!tasks && !sanitize(q)) {
     return crumbs;
   }
   const shortTitle = getMetadata('short-title');
@@ -63,12 +63,8 @@ function getCrumbsForSearch(templatesUrl, allTemplatesMetadata, taskCategories) 
 }
 
 function getCrumbsForSEOPage(templatesUrl, allTemplatesMetadata, taskCategories, segments) {
-  const { origin, pathname } = window.location;
-  const tasks = getMetadata('tasks')
-  // TODO: remove templateTasks and allTemplatesMetadata here after all content are updated
-    ?? getMetadata('templateTasks')
-    ?? allTemplatesMetadata[pathname]?.tasks
-    ?? allTemplatesMetadata[pathname]?.templateTasks;
+  const { origin } = window.location;
+  const tasks = getMetadata('tasks-x');
   const translatedTasks = Object.entries(taskCategories)
     .find(([_, t]) => t === tasks || t === tasks.replace(/-/g, ' '))
     ?.[0]?.toLowerCase() ?? tasks;
