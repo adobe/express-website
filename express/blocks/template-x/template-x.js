@@ -1297,7 +1297,7 @@ async function decorateBreadcrumbs(block) {
   if (document.body.dataset.device !== 'desktop') return;
   const { default: getBreadcrumbs } = await import('./breadcrumbs.js');
   const breadcrumbs = await getBreadcrumbs();
-  if (breadcrumbs) block.parentElement.prepend(breadcrumbs);
+  if (breadcrumbs) block.prepend(breadcrumbs);
 }
 
 async function getTaskNameInMapping(text) {
