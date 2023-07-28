@@ -59,7 +59,7 @@ async function getReplacementsFromSearch() {
 
   let translatedTasks;
   if (document.body.dataset.device === 'desktop') {
-    translatedTasks = xTasksPair ? tasksPair[0].toLowerCase() : tasksx;
+    translatedTasks = xTasksPair ? xTasksPair[0].toLowerCase() : tasksx;
   } else {
     translatedTasks = tasksPair ? tasksPair[0].toLowerCase() : tasks;
   }
