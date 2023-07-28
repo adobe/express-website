@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="_01-AX_EDU_poster_icon_22" data-name="01-AX_EDU_poster_icon_22" transform="translate(11 11)">
+    <g id="SXmock_Poster_22_N" transform="translate(-11 -11)">
+      <rect id="Canvas" width="22" height="22" fill="#fff" opacity="0"/>
+      <path id="Path_602488" data-name="Path 602488" d="M15.98,3.1A.9.9,0,0,0,16,3V1a1,1,0,1,0-2,0V3H8V1A1,1,0,1,0,6,1V3a.9.9,0,0,0,.02.1A5.007,5.007,0,0,0,2,8v9a5.006,5.006,0,0,0,5,5h8a5.006,5.006,0,0,0,5-5V8a5.007,5.007,0,0,0-4.02-4.9ZM18,17a3,3,0,0,1-3,3H7a3,3,0,0,1-3-3V8A3,3,0,0,1,7,5h8a3,3,0,0,1,3,3Z" fill="#fff"/>
+      <path id="Path_602489" data-name="Path 602489" d="M15,13H7a1,1,0,0,0,0,2h8a1,1,0,0,0,0-2Z" fill="#fff"/>
+      <path id="Path_602490" data-name="Path 602490" d="M13,16H9a1,1,0,0,0,0,2h4a1,1,0,0,0,0-2Z" fill="#fff"/>
+      <path id="Path_602491" data-name="Path 602491" d="M6.655,11h8.689c.583,0,.874-.579.462-.917L13.462,8.157a.759.759,0,0,0-.925,0L11.166,9.284l-1.7-2.126a.759.759,0,0,0-.925,0L6.193,10.083C5.781,10.421,6.073,11,6.655,11Z" fill="#fff"/>
+    </g>
+  </g>
+</svg>
