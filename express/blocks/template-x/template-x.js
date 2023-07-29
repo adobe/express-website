@@ -32,7 +32,7 @@ import { Masonry } from '../shared/masonry.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
-import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
+import { fetchTemplates, isValidTemplate, fetchTemplatesCategoryCount } from './template-search-api-v3.js';
 import renderTemplate from './template-rendering.js';
 
 function wordStartsWithVowels(word) {
@@ -1279,14 +1279,9 @@ async function appendCategoryTemplatesCount(block, props) {
     const anchor = li.querySelector('a');
     if (anchor) {
       const countSpan = createTag('span', { class: 'category-list-template-count' });
-      tempProps.filters.tasks = anchor.dataset.tasks;
       // eslint-disable-next-line no-await-in-loop
-      const { response } = await fetchTemplates(tempProps, false);
-      if (!response?.metadata?.totalHits) {
-        countSpan.textContent = '(0)';
-      } else {
-        countSpan.textContent = `(${response.metadata.totalHits.toLocaleString(lang)})`;
-      }
+      const cnt = await fetchTemplatesCategoryCount(props, anchor.dataset.tasks);
+      countSpan.textContent = `(${cnt.toLocaleString(lang)})`;
       anchor.append(countSpan);
     }
   }
