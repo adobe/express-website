@@ -2080,7 +2080,7 @@ main .template-x.horizontal.tabbed .carousel-container .carousel-fader-left {
     padding: 20px 0;
 }
 
-> .template-x-container .template-x-wrapper.horizontal.holiday > .template-x.horizontal > .template-title {
+.template-x-container .template-x-wrapper.horizontal.holiday > .template-x.horizontal > .template-title {
     margin: 0;
     padding: 0 30px 0 30px;
 }

@@ -34,7 +34,6 @@ import { buildCarousel } from '../shared/carousel.js';
 
 import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
 import renderTemplate from './template-rendering.js';
-import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -1293,70 +1292,10 @@ async function appendCategoryTemplatesCount(block, props) {
   }
 }
 
-async function getBreadcrumbs() {
-  const { origin, pathname } = window.location;
-  const regex = /(.*?\/express\/)templates(.*)/;
-  // FIXME: remove gnav breadcrumbs!
-  const matches = pathname.match(regex);
-  if (!matches) {
-    return null;
-  }
-  const [, rootPath, children] = matches;
-  const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
-  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
-  nav.append(breadcrumbs);
-  const rootCrumb = createTag('li');
-  const rootLink = createTag('a', { href: `${origin}${rootPath}` });
-  // FIXME: localize & placeholders??
-  rootLink.textContent = 'Home';
-  rootCrumb.append(rootLink);
-  breadcrumbs.append(rootCrumb);
-
-  const templatesCrumb = createTag('li');
-  const templatesUrl = `${rootPath}templates`;
-  const templatesLink = createTag('a', { href: templatesUrl });
-  templatesLink.textContent = 'Templates';
-  templatesCrumb.append(templatesLink);
-  breadcrumbs.append(templatesCrumb);
-
-  if (!children || children === '/') {
-    return nav;
-  }
-  if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
-    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
-    const lastCrumb = createTag('li');
-    lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
-    breadcrumbs.append(lastCrumb);
-    return nav;
-  }
-
-  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  const segments = children.split('/');
-  segments.reduce((acc, cur, index) => {
-    if (!cur) return acc;
-    const appended = `${acc}/${cur}`;
-    const segmentCrumb = createTag('li');
-    if (allTemplatesMetadata.some((t) => t.url === appended) && index !== segments.length - 1) {
-      const segmentLink = createTag('a', { href: `${origin}${appended}` });
-      segmentLink.textContent = titleCase(cur);
-      segmentCrumb.append(segmentLink);
-    } else {
-      segmentCrumb.textContent = titleCase(cur);
-    }
-    breadcrumbs.append(segmentCrumb);
-    return appended;
-  }, templatesUrl);
-
-  return nav;
-}
-
 async function decorateBreadcrumbs(block) {
   // breadcrumbs are desktop-only
   if (document.body.dataset.device !== 'desktop') return;
+  const { default: getBreadcrumbs } = await import('./breadcrumbs.js');
   const breadcrumbs = await getBreadcrumbs();
   if (breadcrumbs) block.prepend(breadcrumbs);
 }
