@@ -176,6 +176,12 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor {
   transform: translate3d(0px, 0px, 15px);
 }
 
+main .fullscreen-marquee-desktop.image .fullscreen-marquee-desktop-app-editor {
+  top: 46px;
+  left: 52px;
+  width: 220px;
+}
+
 main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-app-editor img {
   border-radius: initial;
 }
