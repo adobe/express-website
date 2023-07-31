@@ -1086,11 +1086,13 @@ main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed .search-dr
 .template-x .api-templates-toolbar .functions-drawer .category-list-wrapper .category-list li > a {
     font-size: 14px;
     font-family: var(--body-font-family);
-    line-height: 24px;
+    line-height: 18px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 4px 8px;
+    text-align: left;
+    padding: 7px 16px 7px 8px;
+    word-break: keep-all;
     transition: background-color 0.2s, color 0.2s;
 }
 

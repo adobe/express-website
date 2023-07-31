@@ -726,10 +726,11 @@ async function updateOptionsStatus(block, props, toolBar) {
       const paramValue = option.dataset.value;
       const propValue = props[paramType] ? props[paramType] : 'remove';
       const filterValue = props.filters[paramType] ? props.filters[paramType] : 'remove';
+      const sortValue = waysOfSort[props[paramType]] || '';
 
       if (propValue === paramValue
         || filterValue === paramValue
-        || waysOfSort[props[paramType]] === paramValue) {
+        || sortValue === paramValue) {
         if (currentOption) {
           currentOption.textContent = option.textContent;
         }
