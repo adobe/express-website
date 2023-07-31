@@ -1718,6 +1718,9 @@ function unwrapBlock($block) {
   if (!$postBlockSection.hasChildNodes()) {
     $postBlockSection.remove();
   }
+
+  // fixme: technically $section can become empty too after unwrapping.
+  //  This function currently leaves empty section after the generation of relevant rows
 }
 
 export function normalizeHeadings(block, allowedHeadings) {
@@ -1856,11 +1859,11 @@ async function buildAutoBlocks($main) {
       const relevantRowsData = await fetchRelevantRows(window.location.pathname);
 
       if (relevantRowsData) {
-        const $relevantRowsSection = createTag('div');
-        const $fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default-v2');
-        $relevantRowsSection.dataset.audience = 'mobile';
-        $relevantRowsSection.append($fragment);
-        $main.insertBefore($relevantRowsSection, $main.firstElementChild.nextSibling);
+        const relevantRowsSection = createTag('div');
+        const fragment = buildBlock('fragment', '/express/fragments/relevant-rows-default-v2');
+        relevantRowsSection.dataset.audience = 'mobile';
+        relevantRowsSection.append(fragment);
+        $main.prepend(relevantRowsSection);
         window.relevantRowsLoaded = true;
       }
     }
