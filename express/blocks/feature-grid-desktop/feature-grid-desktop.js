@@ -56,12 +56,12 @@ function renderGridNode({
   return gridItem;
 }
 
-const decorateLoadMoreButton = (block, gradient) => {
+const decorateLoadMoreSection = (block, loadMoreInfo) => {
   const loadMoreWrapper = createTag('div', { class: 'load-more-div' });
   const loadMoreButton = createTag('button', { class: 'load-more-button' });
   const toggleChev = createTag('div', { class: 'load-more-chev' });
 
-  loadMoreWrapper.style.background = gradient;
+  loadMoreWrapper.style.background = loadMoreInfo.color;
   loadMoreButton.append(toggleChev);
   loadMoreWrapper.append(loadMoreButton);
   block.append(loadMoreWrapper);
@@ -72,16 +72,18 @@ const decorateLoadMoreButton = (block, gradient) => {
 };
 
 const getGradient = (children) => {
+  const gradientText = children.at(-1).textContent;
+  children.pop();
   // eslint-disable-next-line no-useless-escape
   const regex = /linear-gradient\(([^\)]+)\)/;
-  let linearGradient = 'linear-gradient(#ffffff00, #FCFAFF, #FCFAFF)';
-  const gradientRow = children.findIndex((row) => row.textContent.match(regex));
+  const gradientColorRow = children.findIndex((row) => row.textContent.match(regex));
+  const gradientInfo = { color: 'linear-gradient(#ffffff00, #FCFAFF, #FCFAFF)', text: gradientText };
 
-  if (gradientRow !== -1) {
-    linearGradient = children[gradientRow].textContent;
-    children.splice(gradientRow, 1);
+  if (gradientColorRow !== -1) {
+    gradientInfo.color = children[gradientColorRow].textContent;
+    children.splice(gradientColorRow, 1);
   }
-  return linearGradient;
+  return gradientInfo;
 };
 
 export default function decorate(block) {
@@ -89,7 +91,7 @@ export default function decorate(block) {
   block.innerHTML = '';
   const children = Array.from(inputRows);
   const heading = children.shift();
-  const gradient = getGradient(children);
+  const loadMoreSection = children.length > 4 ? getGradient(children) : '';
   const gridProps = children.map((child) => {
     const subText = child.querySelector('p');
     const media = child.querySelector('p:last-of-type > a, p:last-of-type > picture');
@@ -103,6 +105,12 @@ export default function decorate(block) {
     };
   });
 
+  if (gridProps.length > 12) {
+    throw new Error(
+      `Authoring issue: Feature Grid Fixed block should have 12 children. Received: ${gridProps.length}`,
+    );
+  }
+
   const gridContainer = createTag('div', { class: 'grid-container' });
   const gridItems = gridProps.map((props, index) => renderGridNode(props, index));
   heading.classList.add('heading');
@@ -111,10 +119,9 @@ export default function decorate(block) {
     gridContainer.append(gridItem);
   });
 
-  block.append(heading);
-  block.append(gridContainer);
+  block.append(heading, gridContainer);
 
   if (gridProps.length > 4) {
-    decorateLoadMoreButton(block, gradient);
+    decorateLoadMoreSection(block, loadMoreSection);
   }
 }
