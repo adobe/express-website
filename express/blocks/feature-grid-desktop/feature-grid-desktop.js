@@ -71,32 +71,31 @@ const decorateLoadMoreSection = (block, loadMoreInfo) => {
   });
 };
 
-const getGradient = (children) => {
-  const gradientText = children.at(-1).textContent;
-  children.pop();
+const getGradient = (rows) => {
+  const gradientText = rows.pop().textContent;
   // eslint-disable-next-line no-useless-escape
   const regex = /linear-gradient\(([^\)]+)\)/;
-  const gradientColorRow = children.findIndex((row) => row.textContent.match(regex));
-  const gradientInfo = { color: 'linear-gradient(#ffffff00, #FCFAFF, #FCFAFF)', text: gradientText };
+  const gradientColorRow = rows.findIndex((row) => row.textContent.match(regex));
+  const loadMore = { text: gradientText };
 
   if (gradientColorRow !== -1) {
-    gradientInfo.color = children[gradientColorRow].textContent;
-    children.splice(gradientColorRow, 1);
+    loadMore.color = rows[gradientColorRow].textContent;
+    rows.splice(gradientColorRow, 1);
   }
-  return gradientInfo;
+  return loadMore;
 };
 
 export default function decorate(block) {
   const inputRows = block.querySelectorAll(':scope > div > div');
   block.innerHTML = '';
-  const children = Array.from(inputRows);
-  const heading = children.shift();
-  const loadMoreSection = children.length > 4 ? getGradient(children) : '';
-  const gridProps = children.map((child) => {
-    const subText = child.querySelector('p');
-    const media = child.querySelector('p:last-of-type > a, p:last-of-type > picture');
-    const title = child.querySelector('h2');
-    const cta = child.querySelector('a');
+  const rows = Array.from(inputRows);
+  const heading = rows.shift();
+  const loadMoreSection = rows.length > 4 ? getGradient(rows) : '';
+  const gridProps = rows.map((row) => {
+    const subText = row.querySelector('p');
+    const media = row.querySelector('p:last-of-type > a, p:last-of-type > picture');
+    const title = row.querySelector('h2');
+    const cta = row.querySelector('a');
     return {
       media,
       title,

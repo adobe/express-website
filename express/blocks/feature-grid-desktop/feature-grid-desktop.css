@@ -111,11 +111,11 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
+  background: linear-gradient(#ffffff00, #FCFAFF, #FCFAFF)
 }
 
 .feature-grid-desktop.expanded .load-more-div {
   margin-top: 80px;
-  background: none !important;
 }
 
 .feature-grid-desktop .load-more-button {
