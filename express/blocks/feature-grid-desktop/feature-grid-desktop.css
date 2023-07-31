@@ -115,6 +115,7 @@
 
 .feature-grid-desktop.expanded .load-more-div {
   margin-top: 80px;
+  background: none !important;
 }
 
 .feature-grid-desktop .load-more-button {
