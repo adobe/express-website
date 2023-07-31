@@ -24,6 +24,7 @@ module.exports = {
     'import/extensions': ['error', {
       js: 'always',
     }],
+    'no-unused-expressions': 0,
   },
   settings: {
     'import/resolver': {
