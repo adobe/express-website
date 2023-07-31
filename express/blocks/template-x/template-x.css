@@ -207,8 +207,6 @@
     display: flex;
 }
 
-.template-x-wrapper:not(.holiday) .template-link::after,
-.template-x-wrapper:not(.holiday) .template-title-link::after,
 .holiday.template-x-wrapper .toggle-button-chev {
     display: flex;
     width: 6px;
@@ -235,10 +233,6 @@
 .template-x-wrapper .template-title-link {
     padding: 0;
     white-space: nowrap;
-}
-
-.template-x-wrapper:not(.holiday) .template-title-link::after {
-    margin-top: 7px;
 }
 
 .template-x .template p {
