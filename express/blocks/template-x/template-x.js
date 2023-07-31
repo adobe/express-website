@@ -29,9 +29,8 @@ import {
 } from '../../scripts/scripts.js';
 import { Masonry } from '../shared/masonry.js';
 import { buildCarousel } from '../shared/carousel.js';
-import { fetchTemplates, isValidTemplate } from './template-search-api-v3.js';
+import { fetchTemplates, isValidTemplate, fetchTemplatesCategoryCount } from './template-search-api-v3.js';
 import renderTemplate from './template-rendering.js';
-import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 
 function wordStartsWithVowels(word) {
   return word.match('^[aieouâêîôûäëïöüàéèùœAIEOUÂÊÎÔÛÄËÏÖÜÀÉÈÙŒ].*');
@@ -145,40 +144,36 @@ async function processContentRow(block, props) {
 }
 
 async function formatHeadingPlaceholder(props) {
-  const heading = getMetadata('short-title');
   // special treatment for express/ root url
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
   const placeholders = await fetchPlaceholders();
   const locale = getLocale(window.location);
   const lang = getLanguage(locale);
   const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
-  let grammarTemplate;
+  let toolBarHeading = getMetadata('toolbar-heading') ? props.templateStats : placeholders['template-placeholder'];
 
   if (getMetadata('template-search-page') === 'Y') {
-    grammarTemplate = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
-  } else {
-    grammarTemplate = props.templateStats || placeholders['template-placeholder'];
+    toolBarHeading = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
   }
 
-  if (grammarTemplate) {
-    grammarTemplate = grammarTemplate
+  if (toolBarHeading) {
+    toolBarHeading = toolBarHeading
       .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
-      .replace('{{Type}}', heading)
-      .replace('{{type}}', camelHeading);
+      .replace('{{Type}}', titleCase(getMetadata('q') || getMetadata('short-title')))
+      .replace('{{type}}', getMetadata('q') || getMetadata('short-title'));
 
     if (locale === 'fr') {
-      grammarTemplate.split(' ').forEach((word, index, words) => {
+      toolBarHeading.split(' ').forEach((word, index, words) => {
         if (index + 1 < words.length) {
           if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
             words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-            grammarTemplate = words.join(' ');
+            toolBarHeading = words.join(' ');
           }
         }
       });
     }
   }
 
-  return grammarTemplate;
+  return toolBarHeading;
 }
 
 function constructProps(block) {
@@ -230,7 +225,7 @@ function constructProps(block) {
       }
     } else if (cols.length === 3) {
       if (key === 'template stats' && ['yes', 'true', 'on'].includes(cols[1].textContent.trim().toLowerCase())) {
-        props[camelize(key)] = cols[2].textContent.trim().toLowerCase();
+        props[camelize(key)] = cols[2].textContent.trim();
       }
     } else if (cols.length === 4) {
       if (key === 'blank template') {
@@ -249,8 +244,7 @@ function constructProps(block) {
           props.backgroundColor = backgroundColor;
         }
         props.backgroundAnimation = backgroundAnimation || null;
-        const contrastingTextColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
-        props.textColor = contrastingTextColor;
+        props.textColor = isDarkOverlayReadable(backgroundColor) ? 'dark-text' : 'light-text';
       }
     }
   });
@@ -397,42 +391,6 @@ async function decorateLoadMoreButton(block, props) {
   return loadMoreDiv;
 }
 
-async function insertTemplateStats(props) {
-  const locale = getLocale(window.location);
-  const lang = getLanguage(getLocale(window.location));
-  const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
-  const heading = props.contentRow.textContent;
-  const camelHeading = heading === 'Adobe Express' ? heading : heading.charAt(0).toLowerCase() + heading.slice(1);
-  if (!heading) return null;
-
-  let grammarTemplate = await formatHeadingPlaceholder(props) || '';
-
-  if (grammarTemplate.indexOf('{{quantity}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{quantity}}', templateCount);
-  }
-
-  if (grammarTemplate.indexOf('{{Type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{Type}}', heading);
-  }
-
-  if (grammarTemplate.indexOf('{{type}}') >= 0) {
-    grammarTemplate = grammarTemplate.replace('{{type}}', camelHeading);
-  }
-
-  if (locale === 'fr') {
-    grammarTemplate.split(' ').forEach((word, index, words) => {
-      if (index + 1 < words.length) {
-        if (word === 'de' && wordStartsWithVowels(words[index + 1])) {
-          words.splice(index, 2, `d'${words[index + 1].toLowerCase()}`);
-          grammarTemplate = words.join(' ');
-        }
-      }
-    });
-  }
-
-  return grammarTemplate;
-}
-
 async function fetchBlueprint(pathname) {
   if (window.spark.bluePrint) {
     return (window.spark.bluePrint);
@@ -482,7 +440,7 @@ function makeTemplateFunctions(placeholders) {
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort']),
       elements: {},
-      icons: placeholders['template-sort-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-x-sort-icons'].replace(/\s/g, '').split(','),
     },
   };
 
@@ -1090,7 +1048,9 @@ async function decorateToolbar(block, props) {
   const contentWrapper = createTag('div', { class: 'wrapper-content-search' });
   const functionsWrapper = createTag('div', { class: 'wrapper-functions' });
 
-  sectionHeading.textContent = await insertTemplateStats(props);
+  if (props.templateStats) {
+    sectionHeading.textContent = await formatHeadingPlaceholder(props) || '';
+  }
 
   block.prepend(tBarWrapper);
   tBarWrapper.append(tBar);
@@ -1330,83 +1290,18 @@ async function appendCategoryTemplatesCount(block, props) {
     const anchor = li.querySelector('a');
     if (anchor) {
       const countSpan = createTag('span', { class: 'category-list-template-count' });
-      tempProps.filters.tasks = anchor.dataset.tasks;
       // eslint-disable-next-line no-await-in-loop
-      const { response } = await fetchTemplates(tempProps, false);
-      if (!response?.metadata?.totalHits) {
-        countSpan.textContent = '(0)';
-      } else {
-        countSpan.textContent = `(${response.metadata.totalHits.toLocaleString(lang)})`;
-      }
+      const cnt = await fetchTemplatesCategoryCount(props, anchor.dataset.tasks);
+      countSpan.textContent = `(${cnt.toLocaleString(lang)})`;
       anchor.append(countSpan);
     }
   }
 }
 
-async function getBreadcrumbs() {
-  const { origin, pathname } = window.location;
-  const regex = /(.*?\/express\/)templates(.*)/;
-  // FIXME: remove gnav breadcrumbs!
-  const matches = pathname.match(regex);
-  if (!matches) {
-    return null;
-  }
-  const [, rootPath, children] = matches;
-  const nav = createTag('nav', { 'aria-label': 'Breadcrumb' });
-  const breadcrumbs = createTag('ol', { class: 'templates-breadcrumbs' });
-  nav.append(breadcrumbs);
-  const rootCrumb = createTag('li');
-  const rootLink = createTag('a', { href: `${origin}${rootPath}` });
-  // FIXME: localize & placeholders??
-  rootLink.textContent = 'Home';
-  rootCrumb.append(rootLink);
-  breadcrumbs.append(rootCrumb);
-
-  const templatesCrumb = createTag('li');
-  const templatesUrl = `${rootPath}templates`;
-  const templatesLink = createTag('a', { href: templatesUrl });
-  templatesLink.textContent = 'Templates';
-  templatesCrumb.append(templatesLink);
-  breadcrumbs.append(templatesCrumb);
-
-  if (!children || children === '/') {
-    return nav;
-  }
-  if (children.startsWith('/search?') || getMetadata('template-search-page') === 'Y') {
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-    const searchingTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
-    const searchingTopics = titleCase(params.topics).replace(/[$@%"]/g, '');
-    const lastCrumb = createTag('li');
-    lastCrumb.textContent = `${searchingTasks} ${searchingTopics}`;
-    breadcrumbs.append(lastCrumb);
-    return nav;
-  }
-
-  const allTemplatesMetadata = await fetchAllTemplatesMetadata();
-  const segments = children.split('/');
-  segments.reduce((acc, cur, index) => {
-    if (!cur) return acc;
-    const appended = `${acc}/${cur}`;
-    const segmentCrumb = createTag('li');
-    if (allTemplatesMetadata.some((t) => t.url === appended) && index !== segments.length - 1) {
-      const segmentLink = createTag('a', { href: `${origin}${appended}` });
-      segmentLink.textContent = titleCase(cur);
-      segmentCrumb.append(segmentLink);
-    } else {
-      segmentCrumb.textContent = titleCase(cur);
-    }
-    breadcrumbs.append(segmentCrumb);
-    return appended;
-  }, templatesUrl);
-
-  return nav;
-}
-
 async function decorateBreadcrumbs(block) {
   // breadcrumbs are desktop-only
   if (document.body.dataset.device !== 'desktop') return;
+  const { default: getBreadcrumbs } = await import('./breadcrumbs.js');
   const breadcrumbs = await getBreadcrumbs();
   if (breadcrumbs) block.prepend(breadcrumbs);
 }

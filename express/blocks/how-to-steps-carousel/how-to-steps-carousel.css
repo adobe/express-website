@@ -151,11 +151,6 @@ main .how-to-steps-carousel-container .icon {
   height: 56px;
 }
 
-main .how-to-steps-carousel-container > div {
-  margin: 0 20px;
-  padding: 80px 88px;
-}
-
 main .how-to-steps-carousel-container > picture > img {
   margin-bottom: 80px;
   width: calc(100% - 40px);
@@ -184,6 +179,7 @@ main .how-to-steps-carousel-container > picture > img {
 
   main .how-to-steps-carousel-container > div {
     max-width: 600px;
+    padding: 80px 88px;
   }
 }
 
@@ -193,8 +189,7 @@ main .how-to-steps-carousel-container > picture > img {
   }
 
   main .how-to-steps-carousel-container > div p.button-container {
-    margin: 0;
-    margin-top: 40px;
+    margin: 40px 0 0;
   }
 }
 

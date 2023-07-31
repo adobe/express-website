@@ -195,12 +195,23 @@ export function toClassName(name) {
     : '';
 }
 
-export function createTag(name, attrs) {
-  const el = document.createElement(name);
-  if (typeof attrs === 'object') {
-    for (const [key, value] of Object.entries(attrs)) {
-      el.setAttribute(key, value);
+export function createTag(tag, attributes, html) {
+  const el = document.createElement(tag);
+  if (html) {
+    if (html instanceof HTMLElement
+      || html instanceof SVGElement
+      || html instanceof DocumentFragment) {
+      el.append(html);
+    } else if (Array.isArray(html)) {
+      el.append(...html);
+    } else {
+      el.insertAdjacentHTML('beforeend', html);
     }
+  }
+  if (attributes) {
+    Object.entries(attributes).forEach(([key, val]) => {
+      el.setAttribute(key, val);
+    });
   }
   return el;
 }
@@ -347,6 +358,20 @@ export function getIcon(icons, alt, size = 44) {
     'star',
     'star-half',
     'star-empty',
+    'pricing-gen-ai',
+    'pricing-features',
+    'pricing-import',
+    'pricing-motion',
+    'pricing-stock',
+    'pricing-one-click',
+    'pricing-collaborate',
+    'pricing-premium-plan',
+    'pricing-sync',
+    'pricing-brand',
+    'pricing-calendar',
+    'pricing-fonts',
+    'pricing-libraries',
+    'pricing-cloud',
   ];
 
   const size22Icons = [
@@ -442,7 +467,7 @@ export function readBlockConfig($block) {
       if ($cols[1]) {
         const $value = $cols[1];
         const name = toClassName($cols[0].textContent.trim());
-        let value = '';
+        let value;
         if ($value.querySelector('a')) {
           const $as = [...$value.querySelectorAll('a')];
           if ($as.length === 1) {
@@ -863,20 +888,25 @@ export function addBlockClasses($block, classNames) {
 // }
 
 function decorateHeaderAndFooter() {
-  const $header = document.querySelector('header');
+  const header = document.querySelector('header');
 
-  $header.addEventListener('click', (event) => {
+  header.addEventListener('click', (event) => {
     if (event.target.id === 'feds-topnav') {
       const root = window.location.href.split('/express/')[0];
       window.location.href = `${root}/express/`;
     }
   });
 
-  $header.innerHTML = '<div id="feds-header"></div>';
-
-  document.querySelector('footer').innerHTML = `
-    <div id="feds-footer"></div>
-  `;
+  const headerMeta = getMeta('header');
+  if (headerMeta !== 'off') header.innerHTML = '<div id="feds-header"></div>';
+  else header.remove();
+  const footerMeta = getMeta('footer');
+  const footer = document.querySelector('footer');
+  if (footerMeta !== 'off') {
+    footer.innerHTML = `
+      <div id="feds-footer"></div>
+    `;
+  } else footer.remove();
 }
 
 /**
@@ -2600,6 +2630,9 @@ export async function trackBranchParameters($links) {
           .split(',')
           .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
         urlParams.set('search', templateSearchTag);
+        urlParams.set('q', templateSearchTag);
+        urlParams.set('category', 'templates');
+        urlParams.set('searchCategory', 'templates');
       }
 
       if (referrer) {

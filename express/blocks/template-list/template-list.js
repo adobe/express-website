@@ -214,7 +214,7 @@ async function processResponse(props) {
   }
 
   if (templateFetched) {
-    return templateFetched.map((template) => {
+    return templateFetched.filter((template) => !!template.branchURL).map((template) => {
       const $template = createTag('div');
       const imgWrapper = createTag('div');
 
