@@ -21,6 +21,7 @@ import {
 
 import { buildCarousel } from '../shared/carousel.js';
 import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
+import BlockMediator from '../../scripts/block-mediator.js';
 
 function handlelize(str) {
   return str.normalize('NFD')
@@ -67,6 +68,22 @@ function initSearchFunction(block) {
   const suggestionsList = searchBarWrapper.querySelector('.suggestions-list');
 
   clearBtn.style.display = 'none';
+
+  const searchBarWatcher = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) {
+      BlockMediator.set('stickySearchBar', {
+        element: searchBarWrapper.cloneNode(true),
+        loadSearchBar: true,
+      });
+    } else {
+      BlockMediator.set('stickySearchBar', {
+        element: searchBarWrapper.cloneNode(true),
+        loadSearchBar: false,
+      });
+    }
+  }, { rootMargin: '0px', threshold: 1 });
+
+  searchBarWatcher.observe(searchBarWrapper);
 
   searchBar.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -201,7 +218,7 @@ function initSearchFunction(block) {
     }
   };
 
-  import('./use-input-autocomplete.js').then(({ default: useInputAutocomplete }) => {
+  import('../../scripts/autocomplete-api-v3.js').then(({ default: useInputAutocomplete }) => {
     const { inputHandler } = useInputAutocomplete(
       suggestionsListUIUpdateCB, { throttleDelay: 300, debounceDelay: 500, limit: 7 },
     );

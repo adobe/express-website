@@ -10,16 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLocale, getLanguage } from './scripts.js';
+import { memoize, throttle, debounce } from './utils.js';
+
 const url = 'https://adobesearch-atc.adobe.io/uss/v3/autocomplete';
 const experienceId = 'default-templates-autocomplete-v1';
-const scopeEntities = [
-  'HzTemplate',
-  // 'HzTextLockup', 'Icon', 'Photo', 'DesignAsset', 'Background'
-];
-const wlLocales = ['en-US', 'fr-FR', 'de-DE', 'ja-JP'];
+const scopeEntities = ['HzTemplate'];
 const emptyRes = { queryResults: [{ items: [] }] };
-export default async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' }) {
-  if (!textQuery || !wlLocales.includes(locale)) {
+
+async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' }) {
+  if (!textQuery) {
     return [];
   }
 
@@ -52,4 +52,42 @@ export default async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' 
       return emptyRes;
     });
   return res.queryResults[0].items;
+}
+
+const memoizedFetchAPI = memoize(fetchAPI, {
+  key: (options) => options.textQuery,
+  ttl: 30 * 1000,
+});
+
+export default function useInputAutocomplete(
+  updateUIWithSuggestions,
+  { throttleDelay = 300, debounceDelay = 500, limit = 5 } = {},
+) {
+  const state = { query: '', waitingFor: '' };
+
+  const fetchAndUpdateUI = async () => {
+    const currentSearch = state.query;
+    state.waitingFor = currentSearch;
+    const suggestions = await memoizedFetchAPI({
+      textQuery: currentSearch,
+      limit,
+      locale: getLanguage(getLocale(window.location)),
+    });
+    if (state.waitingFor === currentSearch) {
+      updateUIWithSuggestions(suggestions);
+    }
+  };
+
+  const throttledFetchAndUpdateUI = throttle(fetchAndUpdateUI, throttleDelay, { trailing: true });
+  const debouncedFetchAndUpdateUI = debounce(fetchAndUpdateUI, debounceDelay);
+
+  const inputHandler = (e) => {
+    state.query = e.target.value;
+    if (state.query.length < 4 || state.query.endsWith(' ')) {
+      throttledFetchAndUpdateUI();
+    } else {
+      debouncedFetchAndUpdateUI();
+    }
+  };
+  return { inputHandler };
 }
