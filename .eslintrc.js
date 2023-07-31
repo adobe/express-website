@@ -15,6 +15,7 @@ module.exports = {
   extends: '@adobe/helix',
   env: {
     browser: true,
+    mocha: true,
   },
   rules: {
     // allow reassigning param
