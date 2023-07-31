@@ -30,6 +30,7 @@ import {
 import { Masonry } from '../shared/masonry.js';
 import { buildCarousel } from '../shared/carousel.js';
 import { fetchTemplates, isValidTemplate, fetchTemplatesCategoryCount } from './template-search-api-v3.js';
+import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';
 import renderTemplate from './template-rendering.js';
 
 function wordStartsWithVowels(word) {
