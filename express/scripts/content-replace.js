@@ -59,9 +59,9 @@ async function getReplacementsFromSearch() {
 
   let translatedTasks;
   if (document.body.dataset.device === 'desktop') {
-    translatedTasks = xTasksPair ? xTasksPair[0].toLowerCase() : tasksx;
+    translatedTasks = xTasksPair && xTasksPair[1] ? xTasksPair[0].toLowerCase() : tasksx;
   } else {
-    translatedTasks = tasksPair ? tasksPair[0].toLowerCase() : tasks;
+    translatedTasks = tasksPair && xTasksPair[1] ? tasksPair[0].toLowerCase() : tasks;
   }
   return {
     '{{queryTasks}}': sanitizedTasks || '',

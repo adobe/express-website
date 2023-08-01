@@ -2005,6 +2005,7 @@ main .template-x.horizontal.tabbed .carousel-container .carousel-fader-left {
     height: 12px;
     padding: 4px;
     background-color: white;
+    overflow: visible;
 }
 
 .template-x .template .button-container .media-wrapper .share-icon-wrapper {
@@ -2274,27 +2275,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         left: 0;
     }
 
-    .template-x .toolbar-wrapper {
-        border-radius: 12px;
-    }
-
-    .template-x.with-categories-list .category-list::before {
-        content: '';
-        z-index: 0;
-        position: absolute;
-        height: 100%;
-        transition: opacity 0.2s;
-        background: linear-gradient(180deg, #FFFFFF00 0%, #FFFFFF 59%);
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:not(:hover) .category-list::before {
-        width: 100%;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover .category-list::before {
-        width: 0;
-    }
-
     .template-x.with-categories-list .category-list-wrapper:hover::before {
         content: '';
         opacity: 1;
@@ -2304,18 +2284,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         width: 100%;
         transition: opacity 0.2s;
         background: linear-gradient(90deg, #ffffff 50%, #ffffff9B 88%, #ffffff00 100%);
-    }
-
-    .template-x.with-categories-list .category-list-wrapper .category-list-toggle-wrapper {
-        padding: 4px 8px;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper .category-list-toggle-wrapper .icon {
-        transition: transform 0.2s;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover .category-list-toggle-wrapper .icon {
-        transform: rotate(180deg);
     }
 }
 
@@ -2408,11 +2376,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         display: none;
     }
 
-    .template-x.with-categories-list .category-list-wrapper {
-        text-align: left;
-        padding-top: 32px;
-    }
-
     .template-x.horizontal .carousel-container {
         margin-left: 12px;
         margin-right: 12px;
@@ -2478,7 +2441,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         background: transparent;
         position: absolute;
         left: 0;
-        top: 100px;
+        top: 120px;
         height: calc(100% - 64px);
         max-height: unset;
         overflow: hidden;
@@ -2694,20 +2657,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
     .template-x.fullwidth.with-categories-list .template-x-inner-wrapper {
         padding-left: 40px;
         padding-right: 0;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper {
-        display: unset;
-        background: transparent;
-        position: absolute;
-        left: 0;
-        top: 100px;
-        height: calc(100% - 64px);
-        max-height: unset;
-        overflow: hidden;
-        min-width: unset;
-        max-width: 32px;
-        z-index: 1;
     }
 
     .template-x.with-categories-list .category-list-wrapper ul {

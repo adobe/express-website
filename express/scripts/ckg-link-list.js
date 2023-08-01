@@ -88,7 +88,7 @@ async function updateSEOLinkList(container, linkPill, list) {
       const templatePageData = templatePages.find((p) => {
         const targetLocale = /^[a-z]{2}$/.test(p.url.split('/')[1]) ? p.url.split('/')[1] : 'us';
         const isLive = p.live === 'Y';
-        const titleMatch = p['short-title'].toLowerCase() === d.childSibling.toLowerCase();
+        const titleMatch = p['short-title']?.toLowerCase() === d.childSibling?.toLowerCase();
         const localeMatch = currentLocale === targetLocale;
 
         return isLive && titleMatch && localeMatch;
