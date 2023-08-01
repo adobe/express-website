@@ -166,7 +166,11 @@ await (async function updateMetadataForTemplates() {
   if (head) {
     const replacements = await getReplacementsFromSearch();
     if (!replacements) return;
-    head.innerHTML = replaceBladesInStr(head.innerHTML, replacements);
+    const title = head.getElementsByTagName('title')[0];
+    title.innerText = replaceBladesInStr(title.innerText, replacements);
+    [...head.getElementsByTagName('meta')].forEach((meta) => {
+      meta.setAttribute('content', replaceBladesInStr(meta.getAttribute('content'), replacements));
+    });
   }
 }());
 

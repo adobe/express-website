@@ -2164,7 +2164,6 @@ function decoratePictures(main) {
 }
 
 export async function decorateMain(main) {
-  removeIrrelevantSections(main);
   await buildAutoBlocks(main);
   splitSections(main);
   decorateSections(main);
@@ -2360,6 +2359,8 @@ async function loadEager(main) {
     langSplits.pop();
     const htmlLang = langSplits.join('-');
     document.documentElement.setAttribute('lang', htmlLang);
+
+    removeIrrelevantSections(main);
   }
   if (!window.hlx.lighthouse) await decorateTesting();
 
