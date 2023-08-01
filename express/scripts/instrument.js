@@ -512,6 +512,21 @@ loadScript(martechURL, () => {
     let adobeEventName = 'adobe.com:express:cta:';
     let sparkEventName;
     let sparkButtonId;
+    let hemingwayAssetId;
+    let hemingwayAssetPath;
+    let hemingwayAssetPosition;
+
+    const hemingwayAsset = $a.querySelector('picture,video,audio,img');
+    if (hemingwayAsset) {
+      // Get asset details
+      const assetPath = hemingwayAsset.currentSrc // the active source in the element
+        || hemingwayAsset.src; // the source for an image/video/iframe
+      hemingwayAssetPath = new URL(assetPath).pathname;
+      const match = assetPath.match(/media_([a-f0-9]+)\.\w+/);
+      hemingwayAssetId = match ? match[0] : assetPath;
+      const siblings = [...$a.closest('.block').querySelectorAll(`.${$a.className.split(' ').join('.')}`)];
+      hemingwayAssetPosition = siblings.indexOf($a);
+    }
 
     const $templateContainer = $a.closest('.template-list');
     const $tutorialContainer = $a.closest('.tutorial-card');
@@ -727,6 +742,15 @@ loadScript(martechURL, () => {
                   sendTimestamp: new Date().getTime(),
                 },
               },
+              ...(hemingwayAsset
+                ? {
+                  hemingway: {
+                    assetId: hemingwayAssetId,
+                    assetPath: hemingwayAssetPath,
+                    assetPosition: hemingwayAssetPosition,
+                  },
+                }
+                : {}),
             },
           },
         },
