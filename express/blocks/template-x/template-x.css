@@ -1099,12 +1099,17 @@ main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed .search-dr
     margin-left: 4px;
 }
 
+
+.template-x .api-templates-toolbar .function-wrapper .options-wrapper .option-button.active {
+    font-weight: 700;
+    color: var(--color-info-accent);
+}
+
 .template-x .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover,
 .template-x .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
 .template-x .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active
 {
     background-color: var(--color-gray-200);
-    color: var(--color-info-accent);
 }
 
 .template-x .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
