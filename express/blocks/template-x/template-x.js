@@ -152,16 +152,17 @@ async function formatHeadingPlaceholder(props) {
   const templateCount = lang === 'es-ES' ? props.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : props.total.toLocaleString(lang);
   let toolBarHeading = getMetadata('toolbar-heading') ? props.templateStats : placeholders['template-placeholder'];
 
-  if (getMetadata('template-search-page') === 'Y') {
+  if (getMetadata('template-search-page') === 'Y'
+    && placeholders['template-search-heading-singular']
+    && placeholders['template-search-heading-plural']) {
     toolBarHeading = props.total === 1 ? placeholders['template-search-heading-singular'] : placeholders['template-search-heading-plural'];
   }
 
   if (toolBarHeading) {
     toolBarHeading = toolBarHeading
       .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
-      .replace('{{Type}}', titleCase(getMetadata('q') || getMetadata('short-title')))
-      .replace('{{type}}', getMetadata('q') || getMetadata('short-title'));
-
+      .replace('{{Type}}', titleCase(getMetadata('q') || getMetadata('short-title') || getMetadata('topics')))
+      .replace('{{type}}', getMetadata('q') || getMetadata('short-title')) || getMetadata('topics');
     if (locale === 'fr') {
       toolBarHeading.split(' ').forEach((word, index, words) => {
         if (index + 1 < words.length) {
@@ -172,6 +173,8 @@ async function formatHeadingPlaceholder(props) {
         }
       });
     }
+
+
   }
 
   return toolBarHeading;
@@ -619,7 +622,7 @@ async function decorateCategoryList(block, props) {
     const format = `${props.placeholderFormat[0]}:${props.placeholderFormat[1]}`;
     const targetTasks = category[1];
     const currentTasks = props.filters.tasks ? props.filters.tasks : "''";
-    const currentTopic = props.filters.topics;
+    const currentTopic = props.filters.topics || props.q;
 
     const listItem = createTag('li');
     if (category[1] === currentTasks) {
@@ -637,7 +640,7 @@ async function decorateCategoryList(block, props) {
     const urlPrefix = locale === 'us' ? '' : `/${locale}`;
     const a = createTag('a', {
       'data-tasks': targetTasks,
-      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}`,
+      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&tasksx=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}&&q=${currentTopic}`,
     });
     [a.textContent] = category;
 

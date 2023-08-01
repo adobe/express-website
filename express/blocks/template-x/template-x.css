@@ -2005,6 +2005,7 @@ main .template-x.horizontal.tabbed .carousel-container .carousel-fader-left {
     height: 12px;
     padding: 4px;
     background-color: white;
+    overflow: visible;
 }
 
 .template-x .template .button-container .media-wrapper .share-icon-wrapper {
