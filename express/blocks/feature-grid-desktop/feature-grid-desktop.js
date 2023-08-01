@@ -59,23 +59,29 @@ function renderGridNode({
 const decorateLoadMoreSection = (block, loadMoreInfo) => {
   const loadMoreWrapper = createTag('div', { class: 'load-more-div' });
   const loadMoreButton = createTag('button', { class: 'load-more-button' });
+  const loadMoreText = createTag('span', { class: 'load-more-text' });
   const toggleChev = createTag('div', { class: 'load-more-chev' });
 
-  loadMoreWrapper.style.background = loadMoreInfo.color;
-  loadMoreButton.append(toggleChev);
+  if (loadMoreInfo.color) loadMoreWrapper.style.background = loadMoreInfo.color;
+  [loadMoreText.textContent] = loadMoreInfo.text;
+  loadMoreButton.append(loadMoreText, toggleChev);
   loadMoreWrapper.append(loadMoreButton);
   block.append(loadMoreWrapper);
 
   loadMoreButton.addEventListener('click', () => {
     block.classList.toggle('expanded');
-    if (block.classList.contains('expanded')) {
+    if (block.classList.contains('expanded') && loadMoreInfo.color) {
+      [, loadMoreText.textContent] = loadMoreInfo.text;
       loadMoreWrapper.style.background = 'none';
+    } else if (loadMoreInfo.color) {
+      [loadMoreText.textContent] = loadMoreInfo.text;
+      loadMoreWrapper.style.background = loadMoreInfo.color;
     }
   });
 };
 
 const getGradient = (rows) => {
-  const gradientText = rows.pop().textContent;
+  const gradientText = rows.pop().textContent.split('|').map((item) => item.trim());
   // eslint-disable-next-line no-useless-escape
   const regex = /linear-gradient\(([^\)]+)\)/;
   const gradientColorRow = rows.findIndex((row) => row.textContent.match(regex));
