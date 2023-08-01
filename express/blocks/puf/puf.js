@@ -327,10 +327,11 @@ function updatePUFCarousel($block) {
   const $carouselPlatform = $block.querySelector('.carousel-platform');
   let $leftCard = $block.querySelector('.puf-left');
   let $rightCard = $block.querySelector('.puf-right');
+  let priceSet = $block.querySelector('.puf-pricing-header').textContent;
   $carouselContainer.classList.add('slide-1-selected');
   const slideFunctionality = () => {
     $carouselPlatform.scrollLeft = $carouselPlatform.offsetWidth;
-    $carouselContainer.style.minHeight = `${$leftCard.clientHeight + 140}px`;
+    $carouselContainer.style.minHeight = `${$leftCard.clientHeight + 40}px`;
     const $rightArrow = $carouselContainer.querySelector('.carousel-fader-right');
     const $leftArrow = $carouselContainer.querySelector('.carousel-fader-left');
     const changeSlide = (index) => {
@@ -344,6 +345,7 @@ function updatePUFCarousel($block) {
         $carouselContainer.style.minHeight = `${$rightCard.clientHeight + 110}px`;
       }
     };
+
     $leftArrow.addEventListener('click', () => changeSlide(0));
     $rightArrow.addEventListener('click', () => changeSlide(1));
     $block.addEventListener('keyup', (e) => {
@@ -378,14 +380,20 @@ function updatePUFCarousel($block) {
     };
     $block.addEventListener('touchstart', startTouch, false);
     $block.addEventListener('touchmove', moveTouch, false);
+    const mediaQuery = window.matchMedia('(min-width: 900px)');
+    mediaQuery.onchange = () => {
+      $carouselContainer.style.minHeight = `${$leftCard.clientHeight + 40}px`;
+    };
   };
+
   const waitForCardsToLoad = setInterval(() => {
-    if (!$leftCard && !$rightCard) {
-      $leftCard = $block.querySelector('.puf-left');
-      $rightCard = $block.querySelector('.puf-right');
-    } else {
+    if ($leftCard && $rightCard && priceSet) {
       clearInterval(waitForCardsToLoad);
       slideFunctionality();
+    } else {
+      $leftCard = $block.querySelector('.puf-left');
+      $rightCard = $block.querySelector('.puf-right');
+      priceSet = $block.querySelector('.puf-pricing-header').textContent;
     }
   }, 400);
 }

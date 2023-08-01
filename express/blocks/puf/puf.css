@@ -18,7 +18,7 @@ main .puf.block .carousel-container .carousel-fader-right {
 }
 
 main .puf.block .carousel-container a.button.carousel-arrow {
-  margin-top: calc(100vh / 2);
+  margin-top: 50vh;
   position: sticky;
 }
 
@@ -254,7 +254,7 @@ main .block.puf .puf-highlighted-text {
   padding: 16px;
   border-radius: 12px;
   margin-top: 0;
-  margin-bottom: 24px;
+  margin-bottom: 44px;
 }
 
 main .block.puf .puf-pricing-footer {
@@ -271,7 +271,6 @@ main .block.puf .puf-card-banner.recommended {
 main .block.puf .puf-card-container:not(:has(.recommended)) {
   flex: 1;
   align-self: stretch;
-  z-index: -1;
   border-top: 1px #e5e5e5 solid;
   border-left: 1px #e5e5e5 solid;
   border-bottom: 1px #e5e5e5 solid;
@@ -286,6 +285,7 @@ main .block.puf .puf-card-container:has(.recommended) {
   padding: 48px 8px 8px 8px;
   margin-top: 20px;
   height: auto;
+  z-index: 0;
 }
 
 main .block.puf .puf-card .puf-card-banner {
@@ -302,10 +302,6 @@ main .block.puf .puf-card .puf-card-banner {
 
 
 @media (min-width: 900px) {
-  main .puf.block {
-    margin-bottom: 40px;
-  }
-
   main .puf.block .carousel-container {
     max-width: none;
     max-height: none !important;
@@ -333,8 +329,12 @@ main .block.puf .puf-card .puf-card-banner {
   main .block.puf .carousel-platform {
     max-height: unset;
     margin: 0 auto;
-    padding: 14px 24px 42px 24px;
+    padding: 14px 24px 0 24px;
     margin-top: -14px;
+  }
+
+  main .block.puf .carousel-container:has(+ .puf-pricing-footer) .carousel-platform {
+    padding-bottom: 24px;
   }
 
   main .block.puf .puf-card {
@@ -434,11 +434,15 @@ main .block.puf .puf-card .puf-card-banner {
 }
 
 @media (max-width: 899px) {
+  main .section.puf-container {
+    padding-bottom: 0;
+  }
+
   main .block.puf .carousel-container {
     position: relative;
     overflow: hidden;
     margin-bottom: 0;
-    padding: 0 12px;
+    padding: 0 12px 12px 0;
   }
 
   main .block.puf .puf-card .puf-card-top .puf-card-plans {
@@ -464,8 +468,14 @@ main .block.puf .puf-card .puf-card-banner {
     pointer-events: none;
   }
 
-  main .block.puf .carousel-container.slide-1-selected .carousel-fader-right,
+  main .block.puf .carousel-container.slide-1-selected .carousel-fader-right {
+    right: 1rem;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   main .block.puf .carousel-container.slide-2-selected .carousel-fader-left {
+    left: 0.7rem;    
     opacity: 1;
     pointer-events: auto;
   }

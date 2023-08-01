@@ -65,6 +65,13 @@ function initButton(block, sections, index, props) {
           }
         });
       }
+
+      if (!block.classList.contains('sticky')) {
+        window.scrollTo({
+          top: Math.round(window.scrollY + block.getBoundingClientRect().top),
+          behavior: 'smooth',
+        });
+      }
     });
 
     if (index === 0) {

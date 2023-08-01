@@ -31,11 +31,13 @@ async function replaceDefaultPlaceholders(template) {
 }
 
 async function getReplacementsFromSearch() {
+  // FIXME: tasks and tasksx split to be removed after mobile GA
   const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
   const {
     tasks,
+    tasksx,
     phformat,
     topics,
     q,
@@ -45,17 +47,26 @@ async function getReplacementsFromSearch() {
   }
   const placeholders = await fetchPlaceholders();
   const categories = JSON.parse(placeholders['task-categories']);
+  const xCategories = JSON.parse(placeholders['x-task-categories']);
   if (!categories) {
     return null;
   }
   const tasksPair = Object.entries(categories).find((cat) => cat[1] === tasks);
+  const xTasksPair = Object.entries(xCategories).find((cat) => cat[1] === tasksx);
   const sanitizedTasks = tasks === "''" ? '' : tasks;
   const sanitizedTopics = topics === "''" ? '' : topics;
   const sanitizedQuery = q === "''" ? '' : q;
-  const translatedTasks = tasksPair ? tasksPair[0].toLowerCase() : tasks;
+
+  let translatedTasks;
+  if (document.body.dataset.device === 'desktop') {
+    translatedTasks = xTasksPair ? xTasksPair[0].toLowerCase() : tasksx;
+  } else {
+    translatedTasks = tasksPair ? tasksPair[0].toLowerCase() : tasks;
+  }
   return {
     '{{queryTasks}}': sanitizedTasks || '',
     '{{QueryTasks}}': titleCase(sanitizedTasks || ''),
+    '{{queryTasksX}}': tasksx,
     '{{translatedTasks}}': translatedTasks || '',
     '{{TranslatedTasks}}': titleCase(translatedTasks || ''),
     '{{placeholderRatio}}': phformat || '',

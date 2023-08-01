@@ -22,6 +22,9 @@ function extractFilterTerms(input) {
       .replaceAll(' ', '')
       .toLowerCase());
 }
+function extractLangs(locales) {
+  return locales.toLowerCase().split(' or ').map((l) => l.trim());
+}
 function formatFilterString(filters) {
   const {
     animated,
@@ -33,18 +36,10 @@ function formatFilterString(filters) {
   } = filters;
   let str = '';
   if (premium && premium !== 'all') {
-    if (premium.toLowerCase() === 'false') {
-      str += '&filters=licensingCategory==free';
-    } else {
-      str += '&filters=licensingCategory==premium';
-    }
+    str += `&filters=licensingCategory==${premium.toLowerCase() === 'false' ? 'free' : 'premium'}`;
   }
   if (animated && animated !== 'all' && !behaviors) {
-    if (animated.toLowerCase() === 'false') {
-      str += '&filters=behaviors==still';
-    } else {
-      str += '&filters=behaviors==animated';
-    }
+    str += `&filters=behaviors==${animated.toLowerCase() === 'false' ? 'still' : 'animated'}`;
   }
   if (behaviors) {
     extractFilterTerms(behaviors).forEach((b) => {
@@ -58,29 +53,26 @@ function formatFilterString(filters) {
     str += `&filters=topics==${t}`;
   });
   // locale needs backward compatibility with old api
-  const cleanedLocales = locales?.toLowerCase();
-  if (cleanedLocales) {
-    str += `&filters=language==${
-      cleanedLocales.split(' or ').map((l) => getLanguage(l.trim())).toString()
-    }`;
+  if (locales) {
+    const langFilter = extractLangs(locales).map((l) => getLanguage(l)).join(',');
+    str += `&filters=language==${langFilter}`;
   }
 
   return str;
 }
 
-const fetchSearchUrl = async ({
+async function fetchSearchUrl({
   limit, start, filters, sort, q, collectionId,
-}) => {
+}) {
   const base = 'https://spark-search.adobe.io/v3/content';
   const collectionIdParam = `collectionId=${collectionId}`;
-  // const queryType = 'assets';
-  const queryType = 'search'; // TODO: this has been back and forth. Needs finalization
+  const queryType = 'search';
   const queryParam = `&queryType=${queryType}`;
   const filterStr = formatFilterString(filters);
   const limitParam = limit || limit === 0 ? `&limit=${limit}` : '';
   const startParam = start ? `&start=${start}` : '';
-  // FIXME: Can't use orderBy param. Need to work with API team on this.
   const sortParam = {
+    'Most Relevant': '',
     'Most Viewed': '&orderBy=-remixCount',
     'Rare & Original': '&orderBy=remixCount',
     'Newest to Oldest': '&orderBy=-availabilityDate',
@@ -95,13 +87,16 @@ const fetchSearchUrl = async ({
     'x-api-key': 'projectx_marketing_web',
   };
 
-  const cleanedLocales = filters?.locales?.toLowerCase();
-  if (cleanedLocales) {
-    const prefLang = getLanguage(cleanedLocales.split(' or ')?.[0]?.trim() || '');
-    if (prefLang) headers['x-express-pref-lang'] = prefLang;
+  const langs = extractLangs(filters.locales);
+  if (langs.length > 0) headers['x-express-pref-lang'] = getLanguage(langs[0]);
+  const res = await fetch(url, { headers }).then((response) => response.json());
+  if (langs.length > 1) {
+    res.items = [
+      ...res.items.filter(({ language }) => language === getLanguage(langs[0])),
+      ...res.items.filter(({ language }) => language !== getLanguage(langs[0]))];
   }
-  return fetch(url, { headers }).then((response) => response.json());
-};
+  return res;
+}
 
 async function getFallbackMsg(tasks = '') {
   const placeholders = await fetchPlaceholders();
@@ -115,14 +110,49 @@ async function getFallbackMsg(tasks = '') {
     tasks ? ` ${tasks.toString()} ` : ''}templates instead.`;
 }
 
-export async function fetchTemplates(props, fallback = true) {
+async function fetchTemplatesNoToolbar(props) {
+  const { filters, limit } = props;
+  const langs = extractLangs(filters.locales);
+  if (langs.length <= 1) {
+    return { response: await fetchSearchUrl(props) };
+  }
+  const [prefLangPromise, backupLangPromise] = [
+    fetchSearchUrl({
+      ...props,
+      filters: {
+        ...filters,
+        locales: langs[0],
+      },
+    }),
+    fetchSearchUrl({
+      ...props,
+      filters: {
+        ...filters,
+        locales: langs.slice(1).join(' or '),
+      },
+    })];
+  const prefLangRes = await prefLangPromise;
+  if (prefLangRes.items?.length >= limit) return { response: prefLangRes };
+
+  const backupLangRes = await backupLangPromise;
+  const mergedItems = [...prefLangRes.items, ...backupLangRes.items].slice(0, limit);
+  return {
+    response: {
+      metadata: {
+        totalHits: mergedItems.length,
+        start: '0',
+        limit,
+      },
+      items: mergedItems,
+    },
+  };
+}
+
+async function fetchTemplatesWithToolbar(props) {
   let response = await fetchSearchUrl(props);
 
   if (response?.metadata?.totalHits > 0) {
     return { response };
-  }
-  if (!fallback) {
-    return { response: null };
   }
   const { filters: { tasks, locales } } = props;
   if (tasks) {
@@ -149,4 +179,22 @@ export function isValidTemplate(template) {
     && template._links?.['http://ns.adobe.com/adobecloud/rel/rendition']?.href?.replace
     && template._links?.['http://ns.adobe.com/adobecloud/rel/component']?.href?.replace
     && isValidBehaviors(template.behaviors));
+}
+
+export async function fetchTemplatesCategoryCount(props, tasks) {
+  const res = await fetchSearchUrl({
+    ...props,
+    limit: 0,
+    filters: {
+      ...props.filters,
+      tasks,
+    },
+  });
+  return res?.metadata?.totalHits || 0;
+}
+
+export async function fetchTemplates(props) {
+  // different strategies w/o toolBar
+  if (props.toolBar) return fetchTemplatesWithToolbar(props);
+  return fetchTemplatesNoToolbar(props);
 }

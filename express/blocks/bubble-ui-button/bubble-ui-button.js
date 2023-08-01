@@ -351,7 +351,7 @@ function initNotchDragAction($wrapper, data) {
   }, { passive: true });
 
   $notch.addEventListener('touchmove', (e) => {
-    $toolBox.style.maxHeight = `${initialHeight - (e.changedTouches[0].clientY - touchStart)}px`;
+    $toolBox.style.maxHeight = `${(initialHeight + 24) - (e.changedTouches[0].clientY - touchStart)}px`;
   }, { passive: true });
 
   $notch.addEventListener('touchend', (e) => {
