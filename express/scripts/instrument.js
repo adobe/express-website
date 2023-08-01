@@ -18,11 +18,136 @@ import {
   getLanguage,
   getMetadata,
   checkTesting,
-  trackBranchParameters,
+  fetchPlaceholders,
 // eslint-disable-next-line import/no-unresolved
 } from './scripts.js';
 
 import BlockMediator from './block-mediator.js';
+
+function getPlacement(btn) {
+  const parentBlock = btn.closest('.block');
+  let placement = 'outside-blocks';
+
+  if (parentBlock) {
+    const blockName = parentBlock.dataset.blockName || parentBlock.classList[0];
+    const sameBlocks = btn.closest('main')?.querySelectorAll(`.${blockName}`);
+
+    if (sameBlocks && sameBlocks.length > 1) {
+      sameBlocks.forEach((b, i) => {
+        if (b === parentBlock) {
+          placement = `${blockName}-${i + 1}`;
+        }
+      });
+    } else {
+      placement = blockName;
+    }
+
+    if (['template-list', 'template-x'].includes(blockName) && btn.classList.contains('placeholder')) {
+      placement = 'blank-template-cta';
+    }
+  }
+
+  return placement;
+}
+
+async function trackBranchParameters($links) {
+  const placeholders = await fetchPlaceholders();
+  const rootUrl = new URL(window.location.href);
+  const rootUrlParameters = rootUrl.searchParams;
+
+  const { experiment } = window.hlx;
+  const { referrer } = window.document;
+  const experimentStatus = experiment ? experiment.status.toLocaleLowerCase() : null;
+  const templateSearchTag = getMetadata('short-title');
+  const pageUrl = window.location.pathname;
+  const sdid = rootUrlParameters.get('sdid');
+  const mv = rootUrlParameters.get('mv');
+  const mv2 = rootUrlParameters.get('mv2');
+  const sKwcId = rootUrlParameters.get('s_kwcid');
+  const efId = rootUrlParameters.get('ef_id');
+  const promoId = rootUrlParameters.get('promoid');
+  const trackingId = rootUrlParameters.get('trackingid');
+  const cgen = rootUrlParameters.get('cgen');
+
+  $links.forEach(($a) => {
+    if ($a.href && $a.href.match('adobesparkpost.app.link')) {
+      const btnUrl = new URL($a.href);
+      const urlParams = btnUrl.searchParams;
+      const placement = getPlacement($a);
+
+      if (templateSearchTag
+        && placeholders['search-branch-links']
+        && placeholders['search-branch-links']
+          .replace(/\s/g, '')
+          .split(',')
+          .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
+        urlParams.set('search', templateSearchTag);
+        urlParams.set('q', templateSearchTag);
+        urlParams.set('category', 'templates');
+        urlParams.set('searchCategory', 'templates');
+      }
+
+      if (referrer) {
+        urlParams.set('referrer', referrer);
+      }
+
+      if (pageUrl) {
+        urlParams.set('url', pageUrl);
+      }
+
+      if (sdid) {
+        urlParams.set('sdid', sdid);
+      }
+
+      if (mv) {
+        urlParams.set('mv', mv);
+      }
+
+      if (mv2) {
+        urlParams.set('mv2', mv2);
+      }
+
+      if (efId) {
+        urlParams.set('efid', efId);
+      }
+
+      if (sKwcId) {
+        const sKwcIdParameters = sKwcId.split('!');
+
+        if (typeof sKwcIdParameters[2] !== 'undefined' && sKwcIdParameters[2] === '3') {
+          urlParams.set('customer_placement', 'Google%20AdWords');
+        }
+
+        if (typeof sKwcIdParameters[8] !== 'undefined' && sKwcIdParameters[8] !== '') {
+          urlParams.set('keyword', sKwcIdParameters[8]);
+        }
+      }
+
+      if (promoId) {
+        urlParams.set('promoid', promoId);
+      }
+
+      if (trackingId) {
+        urlParams.set('trackingid', trackingId);
+      }
+
+      if (cgen) {
+        urlParams.set('cgen', cgen);
+      }
+
+      if (experimentStatus === 'active') {
+        urlParams.set('expid', `${experiment.id}-${experiment.selectedVariant}`);
+      }
+
+      if (placement) {
+        urlParams.set('ctaid', placement);
+      }
+
+      btnUrl.search = urlParams.toString();
+      $a.href = decodeURIComponent(btnUrl.toString());
+    }
+  });
+}
 
 // this saves on file size when this file gets minified...
 const w = window;
