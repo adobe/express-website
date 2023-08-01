@@ -68,6 +68,9 @@ const decorateLoadMoreSection = (block, loadMoreInfo) => {
 
   loadMoreButton.addEventListener('click', () => {
     block.classList.toggle('expanded');
+    if (block.classList.contains('expanded')) {
+      loadMoreWrapper.style.background = 'none';
+    }
   });
 };
 
