@@ -11,13 +11,13 @@
  */
 
 import {
-  buildStaticFreePlanWidget,
   createTag,
   fetchPlaceholders,
   getIconElement,
   getLocale,
   getMetadata,
 } from '../../scripts/scripts.js';
+import { buildStaticFreePlanWidget } from '../../scripts/utils/free-plan.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 import fetchAllTemplatesMetadata from '../../scripts/all-templates-metadata.js';

@@ -14,8 +14,8 @@ import {
   createTag,
   transformLinkToAnimation,
   createOptimizedPicture,
-  addFreePlanWidget,
 } from '../../scripts/scripts.js';
+import { addFreePlanWidget } from '../../scripts/utils/free-plan.js';
 
 function styleBackgroundWithScroll($section) {
   const $background = createTag('div', { class: 'marquee-background' });
