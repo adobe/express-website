@@ -638,7 +638,7 @@ async function decorateCategoryList(block, props) {
     const urlPrefix = locale === 'us' ? '' : `/${locale}`;
     const a = createTag('a', {
       'data-tasks': targetTasks,
-      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&tasksx=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}&&q=${currentTopic}`,
+      href: `${urlPrefix}/express/templates/search?tasks=${targetTasks}&tasksx=${targetTasks}&phformat=${format}&topics=${currentTopic || "''"}&&q=${currentTopic || ''}`,
     });
     [a.textContent] = category;
 
