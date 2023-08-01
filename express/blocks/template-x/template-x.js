@@ -173,8 +173,6 @@ async function formatHeadingPlaceholder(props) {
         }
       });
     }
-
-
   }
 
   return toolBarHeading;
