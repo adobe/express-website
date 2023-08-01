@@ -1,13 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-  <g id="_06_SXmock_Presentation_Black_Circle_22_N" data-name="06_SXmock_Presentation_Black_Circle_22_N" transform="translate(-912.625 -676)">
-    <g id="Group_310447" data-name="Group 310447" transform="translate(434.625 167)">
-      <circle id="Ellipse_25570" data-name="Ellipse 25570" cx="24" cy="24" r="24" transform="translate(478 509)" fill="#242424"/>
-    </g>
-    <g id="SXmock_Presentation_22_N" transform="translate(937.125 700)">
-      <g id="Group_767" data-name="Group 767" transform="translate(-11 -11)">
-        <rect id="SX_Presentation_22_N" width="22" height="22" fill="#fff" opacity="0"/>
-        <path id="Path_602487" data-name="Path 602487" d="M17,0H5A5.006,5.006,0,0,0,0,5v7a5.006,5.006,0,0,0,5,5H9.234L7.143,20.485a1,1,0,1,0,1.714,1.03L11,17.944l2.143,3.571a1,1,0,1,0,1.714-1.03L12.766,17H17a5.006,5.006,0,0,0,5-5V5A5.006,5.006,0,0,0,17,0ZM5,2H17a3,3,0,0,1,2.816,2H2.184A3,3,0,0,1,5,2ZM17,15H5a3,3,0,0,1-3-3V6H20v6A3,3,0,0,1,17,15ZM4,9A1,1,0,0,1,5,8H8.75a1,1,0,0,1,0,2H5A1,1,0,0,1,4,9Zm10.75,3a1,1,0,0,1-1,1H5a1,1,0,0,1,0-2h8.75A1,1,0,0,1,14.75,12Z" fill="#fff"/>
-      </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="SXmock_Presentation_22_N" transform="translate(11 11)">
+    <g id="Group_767" data-name="Group 767" transform="translate(-11 -11)">
+      <rect id="SX_Presentation_22_N" width="22" height="22" fill="#fff" opacity="0"/>
+      <path id="Path_602487" data-name="Path 602487" d="M17,0H5A5.006,5.006,0,0,0,0,5v7a5.006,5.006,0,0,0,5,5H9.234L7.143,20.485a1,1,0,1,0,1.714,1.03L11,17.944l2.143,3.571a1,1,0,1,0,1.714-1.03L12.766,17H17a5.006,5.006,0,0,0,5-5V5A5.006,5.006,0,0,0,17,0ZM5,2H17a3,3,0,0,1,2.816,2H2.184A3,3,0,0,1,5,2ZM17,15H5a3,3,0,0,1-3-3V6H20v6A3,3,0,0,1,17,15ZM4,9A1,1,0,0,1,5,8H8.75a1,1,0,0,1,0,2H5A1,1,0,0,1,4,9Zm10.75,3a1,1,0,0,1-1,1H5a1,1,0,0,1,0-2h8.75A1,1,0,0,1,14.75,12Z" fill="#fff"/>
     </g>
   </g>
 </svg>
