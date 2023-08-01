@@ -1260,6 +1260,7 @@ loadScript(martechURL, () => {
                   hemingway: {
                     assetId: evt.assetId,
                     assetPath: evt.assetPath,
+                    assetPosition: evt.assetPosition,
                   },
                 },
               },

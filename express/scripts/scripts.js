@@ -129,10 +129,14 @@ function trackViewedAssetsInDataLayer(assetsSelector = 'img[src*="/media_"]') {
         assetPath = new URL(assetPath).pathname;
         const match = assetPath.match(/media_([a-f0-9]+)\.\w+/);
         const assetFilename = match ? match[0] : assetPath;
+        const siblings = el.className
+          ? [...el.closest('.block').querySelectorAll(`.${el.className.split(' ').join('.')}`)]
+          : [];
         const details = {
           event: 'viewasset',
           assetId: assetFilename,
           assetPath,
+          assetPosition: siblings.indexOf(el),
         };
 
         // Add experiment details
