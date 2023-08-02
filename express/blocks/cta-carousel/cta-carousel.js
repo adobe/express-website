@@ -167,6 +167,7 @@ export async function decorateCards(block, payload) {
           const btnUrl = new URL(a.href);
           btnUrl.searchParams.set('search', cta.text);
           a.href = decodeURIComponent(btnUrl.toString());
+          a.removeAttribute('title');
         }
         linksWrapper.append(a);
       });
