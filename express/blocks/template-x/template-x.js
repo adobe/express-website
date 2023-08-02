@@ -161,8 +161,8 @@ async function formatHeadingPlaceholder(props) {
   if (toolBarHeading) {
     toolBarHeading = toolBarHeading
       .replace('{{quantity}}', props.fallbackMsg ? '0' : templateCount)
-      .replace('{{Type}}', titleCase(getMetadata('q') || getMetadata('short-title') || getMetadata('topics')))
-      .replace('{{type}}', getMetadata('q') || getMetadata('short-title')) || getMetadata('topics');
+      .replace('{{Type}}', titleCase(getMetadata('short-title') || getMetadata('q') || getMetadata('topics')))
+      .replace('{{type}}', getMetadata('short-title') || getMetadata('q') || getMetadata('topics'));
     if (locale === 'fr') {
       toolBarHeading.split(' ').forEach((word, index, words) => {
         if (index + 1 < words.length) {

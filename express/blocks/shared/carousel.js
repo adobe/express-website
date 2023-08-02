@@ -92,6 +92,10 @@ export function buildCarousel(selector = ':scope > *', $parent, infinityScrollEn
     if (x > 15) clearInterval(refreshArrows);
   }, 200);
 
+  $parent.closest('.block')?.addEventListener('carouselloaded', () => {
+    toggleControls();
+  }, { passive: true });
+
   // Scroll the carousel by clicking on the controls
   const moveCarousel = (increment) => {
     $platform.scrollLeft -= increment;
