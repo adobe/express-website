@@ -17,9 +17,9 @@ import {
   addAnimationToggle,
   toClassName,
   getIconElement,
-  addFreePlanWidget,
   addHeaderSizing,
 } from '../../scripts/scripts.js';
+import { addFreePlanWidget } from '../../scripts/utils/free-plan.js';
 
 import {
   displayVideoModal,

@@ -12,13 +12,13 @@
 
 import {
   addAnimationToggle,
-  addFreePlanWidget,
   createTag,
   toClassName,
   getLocale,
   addHeaderSizing,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+import { addFreePlanWidget } from '../../scripts/utils/free-plan.js';
 
 import {
   isVideoLink,

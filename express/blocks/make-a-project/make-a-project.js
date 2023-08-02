@@ -10,11 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag,
-  addFreePlanWidget,
-} from '../../scripts/scripts.js';
-
+import { createTag } from '../../scripts/scripts.js';
+import { addFreePlanWidget } from '../../scripts/utils/free-plan.js';
 import { buildCarousel } from '../shared/carousel.js';
 
 export default function decorate($block) {

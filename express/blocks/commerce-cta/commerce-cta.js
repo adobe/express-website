@@ -12,9 +12,6 @@
 
 import {
   createTag,
-  getOffer,
-  getCurrency,
-  formatPrice,
   addPublishDependencies,
 // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
@@ -23,6 +20,7 @@ import {
   buildPlans,
 // eslint-disable-next-line import/no-unresolved
 } from '../pricing/pricing.js';
+import { getOffer, formatPrice, getCurrency } from '../../scripts/utils/pricing.js';
 
 async function decorateCommerceCTA($block) {
   const $rows = Array.from($block.children);

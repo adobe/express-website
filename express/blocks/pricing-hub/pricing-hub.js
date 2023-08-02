@@ -16,9 +16,9 @@ import {
   getHelixEnv,
   getLottie,
   lazyLoadLottiePlayer,
-  getOffer,
   getIconElement, fetchPlaceholders,
 } from '../../scripts/scripts.js';
+import { getOffer } from '../../scripts/utils/pricing.js';
 
 /* eslint-disable import/named, import/extensions */
 import {
