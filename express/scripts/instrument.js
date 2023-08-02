@@ -76,11 +76,7 @@ async function trackBranchParameters($links) {
       const placement = getPlacement($a);
 
       if (templateSearchTag
-        && placeholders['search-branch-links']
-        && placeholders['search-branch-links']
-          .replace(/\s/g, '')
-          .split(',')
-          .includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
+        && placeholders['search-branch-links']?.replace(/\s/g, '').split(',').includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
         urlParams.set('search', templateSearchTag);
         urlParams.set('q', templateSearchTag);
         urlParams.set('category', 'templates');
