@@ -242,7 +242,8 @@ async function lazyLoadSEOLinkList() {
       const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
       await updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
-      topTemplatesContainer.style.visibility = 'visible';
+      const builtCarousel = seoNav.querySelector('.carousel-container');
+      if (builtCarousel) builtCarousel.parentElement.style.visibility = 'visible';
     } else {
       topTemplatesContainer.innerHTML = '';
     }
