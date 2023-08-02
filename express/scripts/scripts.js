@@ -2194,7 +2194,8 @@ async function loadEager(main) {
   }
 
   if (getMetadata('template-search-page') === 'Y') {
-    await import('./template-redirect.js');
+    const { default: redirect } = await import('./template-redirect.js');
+    await redirect();
   }
 
   if (main) {
