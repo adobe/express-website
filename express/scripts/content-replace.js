@@ -66,7 +66,7 @@ async function getReplacementsFromSearch() {
   return {
     '{{queryTasks}}': sanitizedTasks || '',
     '{{QueryTasks}}': titleCase(sanitizedTasks || ''),
-    '{{queryTasksX}}': tasksx,
+    '{{queryTasksX}}': tasksx || '',
     '{{translatedTasks}}': translatedTasks || '',
     '{{TranslatedTasks}}': titleCase(translatedTasks || ''),
     '{{placeholderRatio}}': phformat || '',
