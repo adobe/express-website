@@ -166,7 +166,8 @@ async function updateLinkList(container, linkPill, list) {
         pageLinks.push(clone);
       } else if (d.ckgID && !hideUntranslatedPill) {
         const currentTasks = getMetadata('tasks') ? getMetadata('tasks').replace(/[$@%"]/g, '') : ' ';
-        const searchParams = `tasks=${currentTasks}&phformat=${getMetadata('placeholder-format')}&topics=${topicsQuery}&ckgid=${d.ckgID}`;
+        const currentTasksX = getMetadata('tasks-x') || '';
+        const searchParams = `tasks=${currentTasks}&tasksx=${currentTasksX}&phformat=${getMetadata('placeholder-format')}&topics=${topicsQuery}&q=${topicsQuery}&ckgid=${d.ckgID}`;
         const clone = linkPill.cloneNode(true);
 
         clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `${urlPrefix}/express/templates/search?${searchParams}`);
@@ -241,7 +242,8 @@ async function lazyLoadSEOLinkList() {
       const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
       await updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
-      topTemplatesContainer.style.visibility = 'visible';
+      const builtCarousel = seoNav.querySelector('.carousel-container');
+      if (builtCarousel) builtCarousel.parentElement.style.visibility = 'visible';
     } else {
       topTemplatesContainer.innerHTML = '';
     }
@@ -272,6 +274,7 @@ async function lazyLoadSearchMarqueeLinklist() {
       }
 
       await updateLinkList(linkListContainer, linkListTemplate, linkListData);
+      searchMarquee.dispatchEvent(new CustomEvent('carouselloaded'));
       linkListContainer.parentElement.classList.add('appear');
     }
   }

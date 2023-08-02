@@ -160,6 +160,7 @@ export async function decorateCards(block, payload) {
       if ((block.classList.contains('quick-action') || block.classList.contains('gen-ai')) && cta.ctaLinks.length === 1) {
         cta.ctaLinks[0].textContent = '';
         cta.ctaLinks[0].classList.add('clickable-overlay');
+        cta.ctaLinks[0].removeAttribute('title');
       }
 
       cta.ctaLinks.forEach((a) => {
@@ -167,6 +168,7 @@ export async function decorateCards(block, payload) {
           const btnUrl = new URL(a.href);
           btnUrl.searchParams.set('search', cta.text);
           a.href = decodeURIComponent(btnUrl.toString());
+          a.removeAttribute('title');
         }
         linksWrapper.append(a);
       });
