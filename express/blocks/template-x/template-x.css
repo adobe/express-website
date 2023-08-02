@@ -2266,16 +2266,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         width: 258.5px;
     }
 
-    .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 328px;
-        text-align: center;
-    }
-
-    .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 200px;
-        text-align: center;
-    }
-
     .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
         max-width: 170px;
         text-align: center;
