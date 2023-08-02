@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createTag, transformLinkToAnimation } from '../../scripts/scripts.js';
+import { createTag, fetchPlaceholders, transformLinkToAnimation } from '../../scripts/scripts.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 
@@ -121,6 +121,7 @@ function buildGenAIForm(ctaObj) {
 
 export async function decorateCards(block, payload) {
   const cards = createTag('div', { class: 'cta-carousel-cards' });
+  const placeholders = await fetchPlaceholders();
 
   payload.actions.forEach((cta, index) => {
     const card = createTag('div', { class: 'card' });
@@ -166,8 +167,11 @@ export async function decorateCards(block, payload) {
       cta.ctaLinks.forEach((a) => {
         if (a.href && a.href.match('adobesparkpost.app.link')) {
           const btnUrl = new URL(a.href);
-          btnUrl.searchParams.set('search', cta.text);
-          a.href = decodeURIComponent(btnUrl.toString());
+          if (placeholders['search-branch-links']?.replace(/\s/g, '').split(',').includes(`${btnUrl.origin}${btnUrl.pathname}`)) {
+            btnUrl.searchParams.set('search', cta.text);
+            btnUrl.searchParams.set('q', cta.text);
+            a.href = decodeURIComponent(btnUrl.toString());
+          }
           a.removeAttribute('title');
         }
         linksWrapper.append(a);
