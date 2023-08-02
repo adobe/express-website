@@ -133,6 +133,7 @@
   background-color: transparent;
   font-size: var(--body-font-size-m);
   font-family: var(--body-font-family);
+  font-weight: bold;
 }
 
 .feature-grid-desktop .load-more-chev {
