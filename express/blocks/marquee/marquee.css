@@ -382,8 +382,8 @@ body.no-desktop-brand-header header {
 
 @media (min-width: 1200px) {
   .marquee:not(.wide) .marquee-foreground {
-    height: 40vw;
-    max-height: 540px;
+    min-height: 400px;
+    padding: 56px 20px;
   }
 }
 

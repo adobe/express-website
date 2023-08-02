@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="39" height="39" viewBox="0 0 39 39">
+  <g id="SXmock_Content-Scheduler_44" transform="translate(-771 -1392.751)">
+    <g id="Group_310900" data-name="Group 310900" transform="translate(657 -17.249)">
+      <g id="Rectangle_303177" data-name="Rectangle 303177" transform="translate(114 1413)" fill="#fff" stroke="#444" stroke-width="3">
+        <rect width="39" height="36" rx="7" stroke="none"/>
+        <rect x="1.5" y="1.5" width="36" height="33" rx="5.5" fill="none"/>
+      </g>
+      <line id="Line_84997" data-name="Line 84997" x2="37" transform="translate(114.5 1427.5)" fill="none" stroke="#444" stroke-width="3"/>
+    </g>
+    <g id="Group_310901" data-name="Group 310901" transform="translate(657 -17.249)">
+      <rect id="Rectangle_303179" data-name="Rectangle 303179" width="3" height="3" rx="1" transform="translate(122 1432)" fill="#444"/>
+      <rect id="Rectangle_303180" data-name="Rectangle 303180" width="3" height="3" rx="1" transform="translate(132 1432)" fill="#444"/>
+      <rect id="Rectangle_303181" data-name="Rectangle 303181" width="3" height="3" rx="1" transform="translate(142 1432)" fill="#444"/>
+    </g>
+    <g id="Group_310902" data-name="Group 310902" transform="translate(657 -11.249)">
+      <rect id="Rectangle_303179-2" data-name="Rectangle 303179" width="3" height="3" rx="1" transform="translate(122 1432)" fill="#444"/>
+      <rect id="Rectangle_303180-2" data-name="Rectangle 303180" width="3" height="3" rx="1" transform="translate(132 1432)" fill="#444"/>
+      <rect id="Rectangle_303181-2" data-name="Rectangle 303181" width="3" height="3" rx="1" transform="translate(142 1432)" fill="#444"/>
+    </g>
+    <line id="Line_84998" data-name="Line 84998" y2="7" transform="translate(785.5 1394.251)" fill="none" stroke="#444" stroke-linecap="round" stroke-width="3"/>
+    <line id="Line_84999" data-name="Line 84999" y2="7" transform="translate(795.5 1394.251)" fill="none" stroke="#444" stroke-linecap="round" stroke-width="3"/>
+  </g>
+</svg>

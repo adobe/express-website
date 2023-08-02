@@ -56,45 +56,55 @@ function renderGridNode({
   return gridItem;
 }
 
-const decorateLoadMoreButton = (block, gradient) => {
+const decorateLoadMoreSection = (block, loadMoreInfo) => {
   const loadMoreWrapper = createTag('div', { class: 'load-more-div' });
   const loadMoreButton = createTag('button', { class: 'load-more-button' });
+  const loadMoreText = createTag('span', { class: 'load-more-text' });
   const toggleChev = createTag('div', { class: 'load-more-chev' });
 
-  loadMoreWrapper.style.background = gradient;
-  loadMoreButton.append(toggleChev);
+  if (loadMoreInfo.color) loadMoreWrapper.style.background = loadMoreInfo.color;
+  [loadMoreText.textContent] = loadMoreInfo.text;
+  loadMoreButton.append(loadMoreText, toggleChev);
   loadMoreWrapper.append(loadMoreButton);
   block.append(loadMoreWrapper);
 
   loadMoreButton.addEventListener('click', () => {
     block.classList.toggle('expanded');
+    if (block.classList.contains('expanded') && loadMoreInfo.color) {
+      [, loadMoreText.textContent] = loadMoreInfo.text;
+      loadMoreWrapper.style.background = 'none';
+    } else if (loadMoreInfo.color) {
+      [loadMoreText.textContent] = loadMoreInfo.text;
+      loadMoreWrapper.style.background = loadMoreInfo.color;
+    }
   });
 };
 
-const getGradient = (children) => {
+const getGradient = (rows) => {
+  const gradientText = rows.pop().textContent.split('|').map((item) => item.trim());
   // eslint-disable-next-line no-useless-escape
   const regex = /linear-gradient\(([^\)]+)\)/;
-  let linearGradient = 'linear-gradient(#ffffff00, #FCFAFF, #FCFAFF)';
-  const gradientRow = children.findIndex((row) => row.textContent.match(regex));
+  const gradientColorRow = rows.findIndex((row) => row.textContent.match(regex));
+  const loadMore = { text: gradientText };
 
-  if (gradientRow !== -1) {
-    linearGradient = children[gradientRow].textContent;
-    children.splice(gradientRow, 1);
+  if (gradientColorRow !== -1) {
+    loadMore.color = rows[gradientColorRow].textContent;
+    rows.splice(gradientColorRow, 1);
   }
-  return linearGradient;
+  return loadMore;
 };
 
 export default function decorate(block) {
   const inputRows = block.querySelectorAll(':scope > div > div');
   block.innerHTML = '';
-  const children = Array.from(inputRows);
-  const heading = children.shift();
-  const gradient = getGradient(children);
-  const gridProps = children.map((child) => {
-    const subText = child.querySelector('p');
-    const media = child.querySelector('p:last-of-type > a, p:last-of-type > picture');
-    const title = child.querySelector('h2');
-    const cta = child.querySelector('a');
+  const rows = Array.from(inputRows);
+  const heading = rows.shift();
+  const loadMoreSection = rows.length > 4 ? getGradient(rows) : '';
+  const gridProps = rows.map((row) => {
+    const subText = row.querySelector('p');
+    const media = row.querySelector('p:last-of-type > a, p:last-of-type > picture');
+    const title = row.querySelector('h2');
+    const cta = row.querySelector('a');
     return {
       media,
       title,
@@ -102,6 +112,12 @@ export default function decorate(block) {
       cta,
     };
   });
+
+  if (gridProps.length > 12) {
+    throw new Error(
+      `Authoring issue: Feature Grid Fixed block should have 12 children. Received: ${gridProps.length}`,
+    );
+  }
 
   const gridContainer = createTag('div', { class: 'grid-container' });
   const gridItems = gridProps.map((props, index) => renderGridNode(props, index));
@@ -111,10 +127,9 @@ export default function decorate(block) {
     gridContainer.append(gridItem);
   });
 
-  block.append(heading);
-  block.append(gridContainer);
+  block.append(heading, gridContainer);
 
   if (gridProps.length > 4) {
-    decorateLoadMoreButton(block, gradient);
+    decorateLoadMoreSection(block, loadMoreSection);
   }
 }

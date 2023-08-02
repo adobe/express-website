@@ -114,6 +114,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
+  background: linear-gradient(#ffffff00, #FCFAFF, #FCFAFF)
 }
 
 .feature-grid-desktop.expanded .load-more-div {
@@ -122,26 +123,22 @@
 
 .feature-grid-desktop .load-more-button {
   display: flex;
+  height: 40px;
+  padding: 16px;
+  color: var(--color-gray-800);
+  align-items: center;
   cursor: pointer;
   border: 2px solid #242424;
   border-radius: 100px;
   background-color: transparent;
-}
-
-.feature-grid-desktop .load-more-button::before {
-  content: 'Explore more Adobe Express features';
   font-size: var(--body-font-size-m);
+  font-family: var(--body-font-family);
   font-weight: bold;
-  padding: 8px 8px 8px 24px;
-  margin: 0;
-}
-
-.feature-grid-desktop.expanded .load-more-button::before {
-  content: 'View less';
 }
 
 .feature-grid-desktop .load-more-chev {
   display: flex;
+  color: var(--color-gray-800);
   width: 6px;
   height: 6px;
   border-top-width: 0;
@@ -151,15 +148,14 @@
   border-style: solid;
   transform-origin: 75% 75%;
   transform: rotate(45deg);
-  margin-top: 12px;
-  margin-right: 16px;
+  margin-left: 8px;
   transition: transform 0.2s;
   cursor: pointer;
 }
 
 .feature-grid-desktop.expanded .load-more-chev {
   transform: rotate(-135deg);
-  margin-top: 10px;
+  margin: -4px 0 0 6px;
 }
 
 @container (width > 600px) {
@@ -413,7 +409,7 @@
   }
 
   .feature-grid-desktop.expanded .grid-container {
-    height: 3064px;
+    height: 2920px;
   }
 
   .feature-grid-desktop .grid-item:nth-of-type(-n+4) {

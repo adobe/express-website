@@ -10,10 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  createTag,
-  getOffer,
-} from '../../scripts/scripts.js';
+import { createTag } from '../../scripts/scripts.js';
+import { getOffer } from '../../scripts/utils/pricing.js';
 
 async function fetchPlan(planUrl) {
   if (!window.pricingPlans) {

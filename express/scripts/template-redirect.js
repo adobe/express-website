@@ -18,17 +18,19 @@ async function existsTemplatePage(url) {
   return allTemplatesMetadata.some((e) => e.url === url);
 }
 
-(async function redirectToExistingPage() {
+export default async function redirectToExistingPage() {
   // TODO: check if the search query points to an existing page. If so, redirect.
-  const params = new Proxy(new URLSearchParams(window.location.search), {
+  const { topics, tasks } = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
   });
-  if (params.topics) {
-    const targetPath = `/express/templates/${params.tasks}`.concat(params.topics ? `/${params.topics}` : '');
-    const locale = getLocale(window.location);
-    const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
-    if (await existsTemplatePage(pathToMatch)) {
-      window.location.replace(`${window.location.origin}${pathToMatch}`);
-    }
+  const sanitizedTopics = topics && topics !== "''" ? `/${topics}` : '';
+  const sanitizedTasks = tasks && tasks !== "''" ? `/${tasks}` : '';
+  const slash = !sanitizedTasks && !sanitizedTopics ? '/' : '';
+  const targetPath = `/express/templates${slash}${sanitizedTasks}${sanitizedTopics}`;
+  const locale = getLocale(window.location);
+  const pathToMatch = locale === 'us' ? targetPath : `/${locale}${targetPath}`;
+  if (await existsTemplatePage(pathToMatch)) {
+    window.location.assign(`${window.location.origin}${pathToMatch}`);
+    document.body.style.display = 'none'; // hide the page until the redirect happens
   }
-}());
+}

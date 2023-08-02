@@ -13,9 +13,9 @@ import {
   addPublishDependencies,
   createTag,
   getHelixEnv,
-  getOffer,
   // eslint-disable-next-line import/no-unresolved
 } from '../../scripts/scripts.js';
+import { getOffer } from '../../scripts/utils/pricing.js';
 
 import { buildCarousel } from '../shared/carousel.js';
 

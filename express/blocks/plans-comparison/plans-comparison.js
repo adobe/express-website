@@ -14,9 +14,9 @@ import {
   createTag,
   fixIcons,
   getIconElement,
-  getOffer,
   fetchPlainBlockFromFragment,
 } from '../../scripts/scripts.js';
+import { getOffer } from '../../scripts/utils/pricing.js';
 
 async function fetchPlan(planUrl) {
   if (!window.pricingPlans) {

@@ -472,6 +472,8 @@
     text-align: center;
     transition: opacity .3s ease-in-out;
     will-change: opacity;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .template-x.horizontal .template:not(.placeholder) .button-container {
@@ -505,8 +507,8 @@
 .template-x.fullwidth .template:hover:not(.placeholder) .button-container,
 .template-x.fullwidth .template:hover:not(.placeholder) .template-link {
     opacity: 1;
-    cursor: pointer;
-    z-index: 1;
+    pointer-events: initial;
+    z-index: 2;
 }
 
 .template-x.horizontal .template:not(.placeholder) .template-link,
@@ -1048,7 +1050,7 @@ main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed .search-dr
     display: none;
     flex-direction: column;
     align-items: stretch;
-    bottom: -160px;
+    bottom: -190px;
     right: 50%;
     transform: translateX(50%);
     background: var(--color-white);
@@ -1099,12 +1101,17 @@ main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed .search-dr
     margin-left: 4px;
 }
 
+
+.template-x .api-templates-toolbar .function-wrapper .options-wrapper .option-button.active {
+    font-weight: 700;
+    color: var(--color-info-accent);
+}
+
 .template-x .api-templates-toolbar .wrapper-functions .functions-container .options-wrapper .option-button:hover,
 .template-x .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
 .template-x .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button.active
 {
     background-color: var(--color-gray-200);
-    color: var(--color-info-accent);
 }
 
 .template-x .api-templates-toolbar .functions-drawer .function-wrapper .options-wrapper .option-button:hover,
@@ -1515,6 +1522,12 @@ main .template-x .api-templates-toolbar .search-bar-wrapper.collapsed .search-dr
     height: 80px;
     background: linear-gradient(#ffffff00, #ffffff90, #ffffff);
     bottom: 100%;
+}
+
+.template-x.with-categories-list .category-list-wrapper ul > li:hover {
+    background-color: var(--color-gray-200);
+    color: var(--color-info-accent);
+    border-radius: 8px;
 }
 
 @media (min-width: 900px) {
@@ -2005,6 +2018,7 @@ main .template-x.horizontal.tabbed .carousel-container .carousel-fader-left {
     height: 12px;
     padding: 4px;
     background-color: white;
+    overflow: visible;
 }
 
 .template-x .template .button-container .media-wrapper .share-icon-wrapper {
@@ -2160,34 +2174,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         border-radius: 12px;
     }
 
-    .template-x.with-categories-list .category-list::before {
-        content: '';
-        z-index: 0;
-        position: absolute;
-        height: 100%;
-        transition: opacity 0.2s;
-        background: linear-gradient(180deg, #FFFFFF00 0%, #FFFFFF 59%);
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:not(:hover) .category-list::before {
-        width: 100%;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover .category-list::before {
-        width: 0;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover::before {
-        content: '';
-        opacity: 1;
-        z-index: -1;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        transition: opacity 0.2s;
-        background: linear-gradient(90deg, #fff 50%, #ffffff9B 88%, #ffffff00 100%);
-    }
-
     .template-x.with-categories-list .category-list-wrapper .category-list-toggle-wrapper {
         padding: 4px 8px;
     }
@@ -2273,65 +2259,11 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
     .template-x .api-templates-toolbar .search-bar-wrapper .task-dropdown-list {
         left: 0;
     }
-
-    .template-x .toolbar-wrapper {
-        border-radius: 12px;
-    }
-
-    .template-x.with-categories-list .category-list::before {
-        content: '';
-        z-index: 0;
-        position: absolute;
-        height: 100%;
-        transition: opacity 0.2s;
-        background: linear-gradient(180deg, #FFFFFF00 0%, #FFFFFF 59%);
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:not(:hover) .category-list::before {
-        width: 100%;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover .category-list::before {
-        width: 0;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover::before {
-        content: '';
-        opacity: 1;
-        z-index: -1;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        transition: opacity 0.2s;
-        background: linear-gradient(90deg, #ffffff 50%, #ffffff9B 88%, #ffffff00 100%);
-    }
-
-    .template-x.with-categories-list .category-list-wrapper .category-list-toggle-wrapper {
-        padding: 4px 8px;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper .category-list-toggle-wrapper .icon {
-        transition: transform 0.2s;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover .category-list-toggle-wrapper .icon {
-        transform: rotate(180deg);
-    }
 }
 
 @media (min-width: 900px) {
     .template-x.fullwidth.md-view .template.placeholder {
         width: 258.5px;
-    }
-
-    .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 328px;
-        text-align: center;
-    }
-
-    .template-x.fullwidth.md-view > .template-x-inner-wrapper > .masonry-col {
-        max-width: 200px;
-        text-align: center;
     }
 
     .template-x.fullwidth.sm-view > .template-x-inner-wrapper > .masonry-col {
@@ -2408,11 +2340,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         display: none;
     }
 
-    .template-x.with-categories-list .category-list-wrapper {
-        text-align: left;
-        padding-top: 32px;
-    }
-
     .template-x.horizontal .carousel-container {
         margin-left: 12px;
         margin-right: 12px;
@@ -2478,7 +2405,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         background: transparent;
         position: absolute;
         left: 0;
-        top: 100px;
+        top: 120px;
         height: calc(100% - 64px);
         max-height: unset;
         overflow: hidden;
@@ -2542,6 +2469,34 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         font-family: var(--body-font-family);
         margin-left: 2px;
         font-size: 14px;
+    }
+
+    .template-x.with-categories-list .category-list::before {
+        content: '';
+        z-index: 0;
+        position: absolute;
+        height: 100%;
+        transition: opacity 0.2s;
+        background: linear-gradient(180deg, #FFFFFF00 0%, #FFFFFF 59%);
+    }
+
+    .template-x.with-categories-list .category-list-wrapper:not(:hover) .category-list::before {
+        width: 100%;
+    }
+
+    .template-x.with-categories-list .category-list-wrapper:hover .category-list::before {
+        width: 0;
+    }
+
+    .template-x.with-categories-list .category-list-wrapper:hover::before {
+        content: '';
+        opacity: 1;
+        z-index: -1;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        transition: opacity 0.2s;
+        background: linear-gradient(90deg, #fff 50%, #ffffff9B 88%, #ffffff00 100%);
     }
 
     .template-x.with-categories-list .category-list-wrapper:hover {
@@ -2696,20 +2651,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         padding-right: 0;
     }
 
-    .template-x.with-categories-list .category-list-wrapper {
-        display: unset;
-        background: transparent;
-        position: absolute;
-        left: 0;
-        top: 100px;
-        height: calc(100% - 64px);
-        max-height: unset;
-        overflow: hidden;
-        min-width: unset;
-        max-width: 32px;
-        z-index: 1;
-    }
-
     .template-x.with-categories-list .category-list-wrapper ul {
         position: relative;
         list-style: none;
@@ -2727,11 +2668,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
 
     .template-x.with-categories-list .category-list-wrapper ul > li {
         padding: 4px 8px;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper ul > li:hover {
-        background-color: var(--color-gray-200);
-        color: var(--color-info-accent);
     }
 
     .template-x.with-categories-list .category-list-wrapper ul > li.active > a {
@@ -2764,12 +2700,6 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         font-family: var(--body-font-family);
         margin-left: 2px;
         font-size: 14px;
-    }
-
-    .template-x.with-categories-list .category-list-wrapper:hover {
-        min-width: max-content;
-        padding-right: 160px;
-        overflow: visible;
     }
 
     .template-x.horizontal .carousel-container.controls-hidden .carousel-fader-left,
