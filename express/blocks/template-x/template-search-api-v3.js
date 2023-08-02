@@ -64,7 +64,7 @@ function formatFilterString(filters) {
 async function fetchSearchUrl({
   limit, start, filters, sort, q, collectionId,
 }) {
-  const base = 'https://spark-search.adobe.io/v3/content';
+  const base = 'https://www.adobe.com/express-search-api-v3';
   const collectionIdParam = `collectionId=${collectionId}`;
   const queryType = 'search';
   const queryParam = `&queryType=${queryType}`;
