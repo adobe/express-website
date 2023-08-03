@@ -34,16 +34,25 @@ function getCountry() {
 }
 
 export function formatPrice(price, currency) {
+  const customSymbols = {
+    SAR: 'SR',
+    CA: 'CAD',
+  };
   const locale = ['USD', 'TWD'].includes(currency)
     ? 'en-GB' // use en-GB for intl $ symbol formatting
     : getLanguage(getCountry());
   const currencyDisplay = getCurrencyDisplay(currency);
-  return new Intl.NumberFormat(locale, {
+  let formattedPrice = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     currencyDisplay,
-  }).format(price)
-    .replace('SAR', 'SR'); // custom currency symbol for SAR
+  }).format(price);
+
+  Object.entries(customSymbols).forEach(([symbol, replacement]) => {
+    formattedPrice = formattedPrice.replace(symbol, replacement);
+  });
+
+  return formattedPrice;
 }
 
 export function getCurrency(locale) {
@@ -164,7 +173,6 @@ export async function getOffer(offerId, countryOverride) {
   if (!offer) offer = json.data.find((e) => (e.o === offerId) && (e.c === 'US'));
 
   if (offer) {
-    // console.log(offer);
     const lang = getLanguage(getLocale(window.location)).split('-')[0];
     const unitPrice = offer.p;
     const unitPriceCurrencyFormatted = formatPrice(unitPrice, currency);
