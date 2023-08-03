@@ -11,6 +11,7 @@
  */
 /* eslint-disable no-underscore-dangle */
 import { fetchPlaceholders, getLanguage } from '../../scripts/scripts.js';
+import { memoize } from '../../scripts/utils.js';
 
 function extractFilterTerms(input) {
   if (!input || typeof input !== 'string') {
@@ -61,6 +62,10 @@ function formatFilterString(filters) {
   return str;
 }
 
+const memoizedFetch = memoize(
+  (url, headers) => fetch(url, headers).then((r) => (r.ok ? r.json() : null)), { ttl: 30 * 1000 },
+);
+
 async function fetchSearchUrl({
   limit, start, filters, sort, q, collectionId,
 }) {
@@ -83,13 +88,12 @@ async function fetchSearchUrl({
     `${base}?${collectionIdParam}${queryParam}${qParam}${limitParam}${startParam}${sortParam}${filterStr}`,
   );
 
-  const headers = {
-    'x-api-key': 'projectx_marketing_web',
-  };
+  const headers = {};
 
   const langs = extractLangs(filters.locales);
   if (langs.length > 0) headers['x-express-pref-lang'] = getLanguage(langs[0]);
-  const res = await fetch(url, { headers }).then((response) => response.json());
+  const res = await memoizedFetch(url, { headers });
+  if (!res) return res;
   if (langs.length > 1) {
     res.items = [
       ...res.items.filter(({ language }) => language === getLanguage(langs[0])),
@@ -132,6 +136,7 @@ async function fetchTemplatesNoToolbar(props) {
       },
     })];
   const prefLangRes = await prefLangPromise;
+  if (!prefLangRes) return { response: prefLangRes };
   if (prefLangRes.items?.length >= limit) return { response: prefLangRes };
 
   const backupLangRes = await backupLangPromise;

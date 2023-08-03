@@ -85,21 +85,6 @@ main .template-list.fullwidth > .masonry-col {
   max-width: 175px;
 }
 
-main .template-list.fullwidth.sm-view > .masonry-col {
-  max-width: 170px;
-  text-align: center;
-}
-
-main .template-list.fullwidth.md-view > .masonry-col {
-  max-width: 258.5px;
-  text-align: center;
-}
-
-main .template-list.fullwidth.lg-view > .masonry-col {
-  max-width: 352px;
-  text-align: center;
-}
-
 main .template-list .template-title {
   margin: 0 12px 20px 12px;
 }
@@ -612,12 +597,12 @@ main .template-list.fullwidth.lg-view > .masonry-col {
 }
 
 main .template-list.fullwidth.md-view > .masonry-col {
-  max-width: 165.5px;
+  max-width: 144px;
   text-align: center;
 }
 
 main .template-list.fullwidth.sm-view > .masonry-col {
-  max-width: 106.33px;
+  max-width: 101px;
   text-align: center;
 }
 
@@ -2028,7 +2013,7 @@ main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs 
   }
 
   main .template-list.fullwidth.lg-view > .masonry-col {
-    max-width: 328px;
+    max-width: 320px;
     text-align: center;
   }
 
@@ -2166,7 +2151,7 @@ main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs 
   }
 
   main .template-list.fullwidth.md-view > .masonry-col {
-    max-width: 258.5px;
+    max-width: 240px;
     text-align: center;
   }
 
@@ -2398,7 +2383,7 @@ main .template-list-fullwidth-apipowered-container nav ol.templates-breadcrumbs 
   }
 
   main .template-list.fullwidth.md-view > .masonry-col {
-    max-width: 250px;
+    max-width: 233px;
   }
 
   main .section.template-list-horizontal-container > div {

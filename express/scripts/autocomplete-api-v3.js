@@ -16,17 +16,18 @@ import { memoize, throttle, debounce } from './utils.js';
 const url = 'https://adobesearch-atc.adobe.io/uss/v3/autocomplete';
 const experienceId = 'default-templates-autocomplete-v1';
 const scopeEntities = ['HzTemplate'];
+const wlLocales = ['en-US', 'fr-FR', 'de-DE', 'ja-JP'];
 const emptyRes = { queryResults: [{ items: [] }] };
 
 async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' }) {
-  if (!textQuery) {
+  if (!textQuery || !wlLocales.includes(locale)) {
     return [];
   }
 
   const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'x-api-key': 'projectx_marketing_web',
+      'x-api-key': atob('cHJvamVjdHhfbWFya2V0aW5nX3dlYg=='),
       'content-type': 'application/json',
     },
     body: JSON.stringify({
