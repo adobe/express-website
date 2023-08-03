@@ -1452,13 +1452,19 @@ function importSearchBar(block, blockMediator) {
   });
 }
 
+function wordExistsInString(word, inputString) {
+  const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regexPattern = new RegExp(`(?:^|\\s|[.,!?()'"\\-])${escapedWord}(?:$|\\s|[.,!?()'"\\-])`, 'i');
+  return regexPattern.test(inputString);
+}
+
 async function getTaskNameInMapping(text) {
   const placeholders = await fetchPlaceholders();
   const taskMap = JSON.parse(placeholders['x-task-name-mapping']);
   return Object.entries(taskMap)
     .filter((task) => task[1].some((word) => {
       const searchValue = text.toLowerCase();
-      return searchValue.indexOf(word.toLowerCase()) >= 0;
+      return wordExistsInString(word.toLowerCase(), searchValue);
     }))
     .sort((a, b) => b[0].length - a[0].length);
 }
@@ -1522,6 +1528,7 @@ async function buildTemplateList(block, props, type = []) {
     const tasksFoundInInput = await Promise.all(promises);
     if (tasksFoundInInput.length === tabs.length) {
       tasksFoundInInput.forEach((taskObj, index) => {
+        if (taskObj.length === 0) return;
         const tabBtn = createTag('button', { class: 'template-tab-button' });
         tabBtn.textContent = tabs[index];
         tabsWrapper.append(tabBtn);
