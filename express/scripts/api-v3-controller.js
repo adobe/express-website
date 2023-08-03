@@ -16,19 +16,19 @@ const endpoints = {
   dev: {
     cdn: 'https://uss-templates-dev.adobe.io/uss/v3/query',
     url: 'https://uss-templates-dev.adobe.io/uss/v3/query',
-    token: 'cd1823ed-0104-492f-ba91-25f4195d5f6c',
+    token: atob('Y2QxODIzZWQtMDEwNC00OTJmLWJhOTEtMjVmNDE5NWQ1ZjZj'),
   },
   stage: {
     cdn: 'https://www.stage.adobe.com/ax-uss-api/',
     url: 'https://uss-templates-stage.adobe.io/uss/v3/query',
-    token: 'db7a3d14-5aaa-4a3d-99c3-52a0f0dbb459',
-    key: 'express-ckg-stage',
+    token: atob('ZGI3YTNkMTQtNWFhYS00YTNkLTk5YzMtNTJhMGYwZGJiNDU5'),
+    key: atob('ZXhwcmVzcy1ja2ctc3RhZ2U='),
   },
   prod: {
     cdn: 'https://www.adobe.com/ax-uss-api/',
     url: 'https://uss-templates.adobe.io/uss/v3/query',
-    token: '2e0199f4-c4e2-4025-8229-df4ca5397605',
-    key: 'template-list-linklist-facet',
+    token: atob('MmUwMTk5ZjQtYzRlMi00MDI1LTgyMjktZGY0Y2E1Mzk3NjA1'),
+    key: atob('dGVtcGxhdGUtbGlzdC1saW5rbGlzdC1mYWNldA=='),
   },
 };
 

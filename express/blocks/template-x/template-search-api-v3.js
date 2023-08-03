@@ -62,9 +62,12 @@ function formatFilterString(filters) {
   return str;
 }
 
-const memoizedFetch = memoize((url) => fetch(url).then((r) => (r.ok ? r.json() : null)), {
-  ttl: 30 * 1000,
-});
+const memoizedFetch = memoize(
+  (url, headers) => fetch(url, headers).then((r) => (r.ok ? r.json() : null)), {
+    key: (args) => args[0],
+    ttl: 30 * 1000,
+  },
+);
 
 async function fetchSearchUrl({
   limit, start, filters, sort, q, collectionId,
@@ -88,9 +91,7 @@ async function fetchSearchUrl({
     `${base}?${collectionIdParam}${queryParam}${qParam}${limitParam}${startParam}${sortParam}${filterStr}`,
   );
 
-  const headers = {
-    'x-api-key': 'projectx_marketing_web',
-  };
+  const headers = {};
 
   const langs = extractLangs(filters.locales);
   if (langs.length > 0) headers['x-express-pref-lang'] = getLanguage(langs[0]);

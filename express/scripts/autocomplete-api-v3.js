@@ -27,7 +27,7 @@ async function fetchAPI({ limit = 5, textQuery, locale = 'en-US' }) {
   const res = await fetch(url, {
     method: 'POST',
     headers: {
-      'x-api-key': 'projectx_marketing_web',
+      'x-api-key': atob('cHJvamVjdHhfbWFya2V0aW5nX3dlYg=='),
       'content-type': 'application/json',
     },
     body: JSON.stringify({
