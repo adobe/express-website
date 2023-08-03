@@ -879,11 +879,6 @@ main .block.template-list[data-block-status='initialized']>div {
   display: none;
 }
 
-main .template-list.sixcols,
-main .template-x.sixcols .template-x-inner-wrapper {
-  min-height: 700px;
-}
-
 main .columns.columns-marquee {
   min-height: 650px;
 }

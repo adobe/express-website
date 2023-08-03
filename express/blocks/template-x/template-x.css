@@ -151,8 +151,8 @@
     padding: 0;
 }
 
-.template-x.with-categories-list .template-x.fullwidth {
-    width: 100%;
+.template-x.with-categories-list .template-x-inner-wrapper {
+    min-height: 700px;
 }
 
 .template-x.fullwidth.lg-view > .template-x-inner-wrapper > .masonry-col {
