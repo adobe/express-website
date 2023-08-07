@@ -79,8 +79,8 @@ function replaceLinkPill(linkPill, data) {
 }
 
 async function updateSEOLinkList(container, linkPill, list) {
-  const templatePages = await fetchAllTemplatesMetadata();
   container.innerHTML = '';
+  const templatePages = await fetchAllTemplatesMetadata();
 
   if (list && templatePages) {
     list.forEach((d) => {
@@ -242,8 +242,8 @@ async function lazyLoadSEOLinkList() {
       const topTemplatesData = topTemplates.split(', ').map((cs) => ({ childSibling: cs }));
 
       await updateSEOLinkList(topTemplatesContainer, topTemplatesTemplate, topTemplatesData);
-      const builtCarousel = seoNav.querySelector('.carousel-container');
-      if (builtCarousel) builtCarousel.parentElement.style.visibility = 'visible';
+      const hiddenDiv = seoNav.querySelector('div[style="visibility: hidden;"]');
+      if (hiddenDiv) hiddenDiv.style.visibility = 'visible';
     } else {
       topTemplatesContainer.innerHTML = '';
     }
