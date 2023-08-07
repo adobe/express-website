@@ -2493,7 +2493,7 @@ nav ol.templates-breadcrumbs li:not(:first-child):before {
         opacity: 1;
         z-index: -1;
         position: absolute;
-        height: 100%;
+        height: calc(100% - 120px);
         width: 100%;
         transition: opacity 0.2s;
         background: linear-gradient(90deg, #fff 50%, #ffffff9B 88%, #ffffff00 100%);
