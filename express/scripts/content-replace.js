@@ -90,7 +90,7 @@ function replaceBladesInStr(str, replacements) {
 // for backwards compatibility
 // TODO: remove this func after all content is updated
 // legacy json -> metadata & dom blades
-await (async function updateLegacyContent() {
+async function updateLegacyContent() {
   const searchMarquee = document.querySelector('.search-marquee');
   if (searchMarquee) {
     // not legacy
@@ -155,10 +155,10 @@ await (async function updateLegacyContent() {
       templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
     }
   }
-}());
+}
 
 // searchbar -> metadata blades
-await (async function updateMetadataForTemplates() {
+async function updateMetadataForTemplates() {
   if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     return;
   }
@@ -172,10 +172,10 @@ await (async function updateMetadataForTemplates() {
       meta.setAttribute('content', replaceBladesInStr(meta.getAttribute('content'), replacements));
     });
   }
-}());
+}
 
 // metadata -> dom blades
-(function autoUpdatePage() {
+function autoUpdatePage() {
   const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
   // FIXME: deprecate wl
   const main = document.querySelector('main');
@@ -187,10 +187,10 @@ await (async function updateMetadataForTemplates() {
     }
     return match;
   });
-}());
+}
 
 // cleanup remaining dom blades
-(async function updateNonBladeContent() {
+async function updateNonBladeContent() {
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const templateX = document.querySelector('.template-x');
@@ -230,9 +230,9 @@ await (async function updateMetadataForTemplates() {
   if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
     browseByCat.remove();
   }
-}());
+}
 
-(function validatePage() {
+function validatePage() {
   const env = getHelixEnv();
   const title = document.querySelector('title');
   if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
@@ -246,4 +246,12 @@ await (async function updateMetadataForTemplates() {
   if (env && env.name !== 'stage' && window.location.pathname.endsWith('/express/templates/default')) {
     window.location.replace('/404');
   }
-}());
+}
+
+export default async function replaceContent() {
+  await updateLegacyContent();
+  await updateMetadataForTemplates();
+  autoUpdatePage();
+  await updateNonBladeContent();
+  validatePage();
+}
