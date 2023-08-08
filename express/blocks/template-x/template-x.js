@@ -1554,18 +1554,21 @@ async function buildTemplateList(block, props, type = []) {
                 tasks: task,
               },
             });
-            props.fallbackMsg = newFallbackMsg;
-            renderFallbackMsgWrapper(block, props);
+            if (newTemplates?.length > 0) {
+              props.fallbackMsg = newFallbackMsg;
+              renderFallbackMsgWrapper(block, props);
 
-            templatesWrapper.innerHTML = '';
-            props.templates = newTemplates;
-            props.templates.forEach((template) => {
-              templatesWrapper.append(template);
-            });
+              templatesWrapper.innerHTML = '';
+              props.templates = newTemplates;
+              props.templates.forEach((template) => {
+                templatesWrapper.append(template);
+              });
 
-            await decorateTemplates(block, props);
-            buildCarousel(':scope > .template', templatesWrapper, false);
-            templatesWrapper.style.opacity = 1;
+              await decorateTemplates(block, props);
+              buildCarousel(':scope > .template', templatesWrapper, false);
+              templatesWrapper.style.opacity = 1;
+            }
+
             tabsWrapper.querySelectorAll('.template-tab-button').forEach((btn) => {
               if (btn !== tabBtn) btn.classList.remove('active');
             });
