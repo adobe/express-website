@@ -1496,7 +1496,7 @@ async function buildTemplateList(block, props, type = []) {
 
   const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
 
-  if (templates) {
+  if (templates?.length > 0) {
     props.fallbackMsg = fallbackMsg;
     renderFallbackMsgWrapper(block, props);
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
