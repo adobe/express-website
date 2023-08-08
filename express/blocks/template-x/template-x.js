@@ -432,17 +432,17 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '')?.split(',') || [],
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '')?.split(',') || [],
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '').split(','),
+      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '')?.split(',') || [],
     },
   };
 
