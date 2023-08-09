@@ -125,8 +125,8 @@ function initSearchFunction(block) {
 
   const redirectSearch = async () => {
     const placeholders = await fetchPlaceholders();
-    const taskMap = JSON.parse(placeholders['task-name-mapping']);
-    const taskXMap = JSON.parse(placeholders['x-task-name-mapping']);
+    const taskMap = placeholders['task-name-mapping'] ? JSON.parse(placeholders['task-name-mapping']) : {};
+    const taskXMap = placeholders['x-task-name-mapping'] ? JSON.parse(placeholders['x-task-name-mapping']) : {};
 
     const format = getMetadata('placeholder-format');
     const currentTasks = {
@@ -326,7 +326,7 @@ async function buildSearchDropdown(block) {
       trendsContainer.append(trendsWrapper);
     }
 
-    suggestionsTitle.textContent = placeholders['search-suggestions-title'];
+    suggestionsTitle.textContent = placeholders['search-suggestions-title'] ?? '';
     suggestionsContainer.append(suggestionsTitle, suggestionsList);
 
     const freePlanTags = await buildStaticFreePlanWidget();
