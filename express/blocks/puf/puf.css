@@ -119,12 +119,8 @@ main .block.puf .puf-card .puf-card-top .puf-card-plans > div span {
   color: var(--color-gray-800);
 }
 
-main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong {
-  -webkit-text-stroke-width: 0.6px;
-  -webkit-text-stroke-color: var(--color-info-accent);
-}
-
 main .block.puf .puf-card .puf-card-top .puf-card-plans > div.strong span {
+  -webkit-text-stroke-width: 0.6px;
   -webkit-text-stroke-color: var(--color-gray-800);
 }
 
@@ -482,7 +478,7 @@ main .block.puf .puf-card .puf-card-banner {
   }
 
   main .block.puf .carousel-container.slide-2-selected .carousel-fader-left {
-    left: 0.7rem;    
+    left: 0.7rem;
     opacity: 1;
     pointer-events: auto;
   }
