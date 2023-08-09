@@ -150,6 +150,7 @@ async function loadFEDS() {
   window.addEventListener('adobePrivacy:PrivacyCustom', handleConsentSettings);
 
   const isMegaNav = window.location.pathname.startsWith('/express')
+    || window.location.pathname.startsWith('/in/express')
     || window.location.pathname.startsWith('/education')
     || window.location.pathname.startsWith('/drafts');
   const fedsExp = isMegaNav
