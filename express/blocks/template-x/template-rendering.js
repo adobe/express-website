@@ -350,13 +350,17 @@ function renderStillWrapper(template) {
 
   const freeTag = createTag('span', { class: 'free-tag' });
 
-  if (isFree) {
-    freeTag.append('Free');
-    imgWrapper.append(freeTag);
-  } else {
-    const premiumIcon = getIconElement('premium');
-    imgWrapper.append(premiumIcon);
-  }
+  img.onload = (e) => {
+    if (e.eventPhase >= 2) {
+      if (isFree) {
+        freeTag.append('Free');
+        imgWrapper.append(freeTag);
+      } else {
+        const premiumIcon = getIconElement('premium');
+        imgWrapper.append(premiumIcon);
+      }
+    }
+  };
 
   let videoIcon = '';
   if (containsVideo(template.pages) && template.pages.length === 1) {
