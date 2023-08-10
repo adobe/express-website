@@ -138,39 +138,39 @@ sitemaps:
         source: /br/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: pt
-        alternate: /br/{url}
+        alternate: /br/{path}
       france:
         source: /fr/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: fr
-        alternate: /fr/{url}
+        alternate: /fr/{path}
       germany:
         source: /de/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: de
-        alternate: /de/{url}
+        alternate: /de/{path}
       italy:
         source: /it/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: it
-        alternate: /it/{url}
+        alternate: /it/{path}
       japan:
         source: /jp/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: ja
-        alternate: /jp/{url}
+        alternate: /jp/{path}
       korea:
         source: /kr/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: ko
-        alternate: /kr/{url}
+        alternate: /kr/{path}
       spain:
         source: /es/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: es
-        alternate: /es/{url}
+        alternate: /es/{path}
       taiwan:
         source: /tw/express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: zh-Hant
-        alternate: /tw/{url}
+        alternate: /tw/{path}
