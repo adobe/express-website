@@ -345,19 +345,16 @@ function renderStillWrapper(template) {
     alt: templateTitle,
   });
   imgWrapper.append(img);
+  const getFreeSpanTag = () => {
+    const t = createTag('span', { class: 'free-tag' });
+    t.append('Free');
+    return t;
+  };
 
-  const isFree = template.licensingCategory === 'free';
-
-  const freeTag = createTag('span', { class: 'free-tag' });
-  freeTag.append('Free');
-  const premiumIcon = getIconElement('premium');
+  const tag = template.licensingCategory === 'free' ? getFreeSpanTag() : getIconElement('premium');
   img.onload = (e) => {
     if (e.eventPhase >= Event.AT_TARGET) {
-      if (isFree) {
-        imgWrapper.append(freeTag);
-      } else {
-        imgWrapper.append(premiumIcon);
-      }
+      imgWrapper.append(tag);
     }
   };
 
