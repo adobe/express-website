@@ -844,28 +844,27 @@ function updateQuery(functionWrapper, props, option) {
 }
 
 async function redrawTemplates(block, existingProps, props, toolBar) {
-  if (JSON.stringify(props) !== JSON.stringify(existingProps)) {
-    const heading = toolBar.querySelector('h2');
-    const currentTotal = props.total.toLocaleString('en-US');
-    props.templates = [props.templates[0]];
-    props.start = '';
-    block.querySelectorAll('.template:not(.placeholder)').forEach((card) => {
-      card.remove();
+  if (JSON.stringify(props) === JSON.stringify(existingProps)) return;
+  const heading = toolBar.querySelector('h2');
+  const currentTotal = props.total.toLocaleString('en-US');
+  props.templates = [props.templates[0]];
+  props.start = '';
+  block.querySelectorAll('.template:not(.placeholder)').forEach((card) => {
+    card.remove();
+  });
+
+  await decorateNewTemplates(block, props, { reDrawMasonry: true });
+
+  heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
+  await updateOptionsStatus(block, props, toolBar);
+  if (block.querySelectorAll('.template').length <= 0) {
+    const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
+    $viewButtons.forEach((button) => {
+      button.classList.remove('active');
     });
-
-    await decorateNewTemplates(block, props, { reDrawMasonry: true });
-
-    heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-    await updateOptionsStatus(block, props, toolBar);
-    if (block.querySelectorAll('.template').length <= 0) {
-      const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
-      $viewButtons.forEach((button) => {
-        button.classList.remove('active');
-      });
-      ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
-        block.classList.remove(className);
-      });
-    }
+    ['sm-view', 'md-view', 'lg-view'].forEach((className) => {
+      block.classList.remove(className);
+    });
   }
 }
 
