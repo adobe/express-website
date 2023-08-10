@@ -130,7 +130,7 @@ sitemaps:
     origin: https://www.adobe.com
     languages:
       default:
-        source: /express/express/templates/default/metadata.json?sheet=sitemap
+        source: /express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: en
         alternate: /{path}
