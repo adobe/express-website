@@ -432,17 +432,20 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-premium-and-free', 'template-free', 'template-premium'],
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-static-and-animated', 'template-static', 'template-animated'],
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '').split(','),
+      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '')?.split(',')
+        || ['sort', 'visibility-on', 'visibility-off', 'order-dsc', 'order-asc'],
     },
   };
 
@@ -1496,7 +1499,7 @@ async function buildTemplateList(block, props, type = []) {
 
   const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
 
-  if (templates) {
+  if (templates?.length > 0) {
     props.fallbackMsg = fallbackMsg;
     renderFallbackMsgWrapper(block, props);
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
@@ -1554,18 +1557,21 @@ async function buildTemplateList(block, props, type = []) {
                 tasks: task,
               },
             });
-            props.fallbackMsg = newFallbackMsg;
-            renderFallbackMsgWrapper(block, props);
+            if (newTemplates?.length > 0) {
+              props.fallbackMsg = newFallbackMsg;
+              renderFallbackMsgWrapper(block, props);
 
-            templatesWrapper.innerHTML = '';
-            props.templates = newTemplates;
-            props.templates.forEach((template) => {
-              templatesWrapper.append(template);
-            });
+              templatesWrapper.innerHTML = '';
+              props.templates = newTemplates;
+              props.templates.forEach((template) => {
+                templatesWrapper.append(template);
+              });
 
-            await decorateTemplates(block, props);
-            buildCarousel(':scope > .template', templatesWrapper, false);
-            templatesWrapper.style.opacity = 1;
+              await decorateTemplates(block, props);
+              buildCarousel(':scope > .template', templatesWrapper, false);
+              templatesWrapper.style.opacity = 1;
+            }
+
             tabsWrapper.querySelectorAll('.template-tab-button').forEach((btn) => {
               if (btn !== tabBtn) btn.classList.remove('active');
             });
