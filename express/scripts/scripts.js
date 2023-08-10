@@ -2190,7 +2190,8 @@ async function loadEager(main) {
   // for backward compatibility
   // TODO: remove the href check after we tag content with sheet-powered
   if (getMetadata('sheet-powered') === 'Y' || window.location.href.includes('/express/templates/')) {
-    await import('./content-replace.js');
+    const { default: replaceContent } = await import('./content-replace.js');
+    await replaceContent();
   }
 
   if (getMetadata('template-search-page') === 'Y') {
@@ -2209,6 +2210,7 @@ async function loadEager(main) {
     wordBreakJapanese();
 
     const lcpBlocks = ['columns', 'hero-animation', 'hero-3d', 'template-list', 'template-x', 'floating-button', 'fullscreen-marquee', 'fullscreen-marquee-desktop', 'collapsible-card', 'search-marquee'];
+    if (getMetadata('show-relevant-rows') === 'yes') lcpBlocks.push('fragment');
     const block = document.querySelector('.block');
     const hasLCPBlock = (block && lcpBlocks.includes(block.getAttribute('data-block-name')));
     if (hasLCPBlock) await loadBlock(block, true);
@@ -2259,11 +2261,10 @@ async function loadLazy(main) {
   // post LCP actions go here
   sampleRUM('lcp');
 
-  loadBlocks(main);
+  loadBlocks(main).then(() => addPromotion());
   loadCSS('/express/styles/lazy-styles.css');
   scrollToHash();
   resolveFragments();
-  addPromotion();
   removeMetadata();
   addFavIcon('/express/icons/cc-express.svg');
   if (!window.hlx.lighthouse) loadMartech();

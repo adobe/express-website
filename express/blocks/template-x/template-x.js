@@ -374,7 +374,7 @@ async function decorateLoadMoreButton(block, props) {
   const loadMoreButton = createTag('button', { class: 'load-more-button' });
   const loadMoreText = createTag('p', { class: 'load-more-text' });
   loadMoreDiv.append(loadMoreButton, loadMoreText);
-  loadMoreText.textContent = placeholders['load-more'];
+  loadMoreText.textContent = placeholders['load-more'] ?? '';
   block.append(loadMoreDiv);
   loadMoreButton.append(getIconElement('plus-icon'));
 
@@ -430,19 +430,22 @@ async function attachFreeInAppPills(block) {
 function makeTemplateFunctions(placeholders) {
   const functions = {
     premium: {
-      placeholders: JSON.parse(placeholders['template-filter-premium']),
+      placeholders: JSON.parse(placeholders['template-filter-premium'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-premium-and-free', 'template-free', 'template-premium'],
     },
     animated: {
-      placeholders: JSON.parse(placeholders['template-filter-animated']),
+      placeholders: JSON.parse(placeholders['template-filter-animated'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-static-and-animated', 'template-static', 'template-animated'],
     },
     sort: {
-      placeholders: JSON.parse(placeholders['template-x-sort']),
+      placeholders: JSON.parse(placeholders['template-x-sort'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-x-sort-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '')?.split(',')
+        || ['sort', 'visibility-on', 'visibility-off', 'order-dsc', 'order-asc'],
     },
   };
 
@@ -604,8 +607,8 @@ async function decorateCategoryList(block, props) {
   const locale = getLocale(window.location);
   const mobileDrawerWrapper = block.querySelector('.filter-drawer-mobile');
   const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
-  const categories = JSON.parse(placeholders['x-task-categories']);
-  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
+  const categories = placeholders['x-task-categories'] ? JSON.parse(placeholders['x-task-categories']) : {};
+  const categoryIcons = placeholders['task-category-icons']?.replace(/\s/g, '')?.split(',');
   const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const categoriesToggle = getIconElement('drop-down-arrow');
@@ -649,7 +652,7 @@ async function decorateCategoryList(block, props) {
 
   const categoriesMobileWrapper = categoriesDesktopWrapper.cloneNode({ deep: true });
   const mobileCategoriesToggle = createTag('span', { class: 'category-list-toggle' });
-  mobileCategoriesToggle.textContent = placeholders['jump-to-category'];
+  mobileCategoriesToggle.textContent = placeholders['jump-to-category'] ?? '';
   categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')?.replaceWith(mobileCategoriesToggle);
   const lottieArrows = createTag('a', { class: 'lottie-wrapper' });
   mobileDrawerWrapper.append(lottieArrows);
@@ -716,7 +719,7 @@ function closeDrawer(toolBar) {
 async function updateOptionsStatus(block, props, toolBar) {
   const wrappers = toolBar.querySelectorAll('.function-wrapper');
   const placeholders = await fetchPlaceholders();
-  const waysOfSort = JSON.parse(placeholders['template-x-sort']);
+  const waysOfSort = placeholders['template-x-sort'] ? JSON.parse(placeholders['template-x-sort']) : {};
 
   wrappers.forEach((wrapper) => {
     const currentOption = wrapper.querySelector('.current-option');
@@ -1363,7 +1366,7 @@ function importSearchBar(block, blockMediator) {
 
         const redirectSearch = async () => {
           const placeholders = await fetchPlaceholders();
-          const taskMap = JSON.parse(placeholders['task-name-mapping']);
+          const taskMap = placeholders['task-name-mapping'] ? JSON.parse(placeholders['task-name-mapping']) : {};
 
           const format = getMetadata('placeholder-format');
           let currentTasks = '';
@@ -1460,7 +1463,7 @@ function wordExistsInString(word, inputString) {
 
 async function getTaskNameInMapping(text) {
   const placeholders = await fetchPlaceholders();
-  const taskMap = JSON.parse(placeholders['x-task-name-mapping']);
+  const taskMap = placeholders['x-task-name-mapping'] ? JSON.parse(placeholders['x-task-name-mapping']) : {};
   return Object.entries(taskMap)
     .filter((task) => task[1].some((word) => {
       const searchValue = text.toLowerCase();
@@ -1496,7 +1499,7 @@ async function buildTemplateList(block, props, type = []) {
 
   const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
 
-  if (templates) {
+  if (templates?.length > 0) {
     props.fallbackMsg = fallbackMsg;
     renderFallbackMsgWrapper(block, props);
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
@@ -1554,18 +1557,21 @@ async function buildTemplateList(block, props, type = []) {
                 tasks: task,
               },
             });
-            props.fallbackMsg = newFallbackMsg;
-            renderFallbackMsgWrapper(block, props);
+            if (newTemplates?.length > 0) {
+              props.fallbackMsg = newFallbackMsg;
+              renderFallbackMsgWrapper(block, props);
 
-            templatesWrapper.innerHTML = '';
-            props.templates = newTemplates;
-            props.templates.forEach((template) => {
-              templatesWrapper.append(template);
-            });
+              templatesWrapper.innerHTML = '';
+              props.templates = newTemplates;
+              props.templates.forEach((template) => {
+                templatesWrapper.append(template);
+              });
 
-            await decorateTemplates(block, props);
-            buildCarousel(':scope > .template', templatesWrapper, false);
-            templatesWrapper.style.opacity = 1;
+              await decorateTemplates(block, props);
+              buildCarousel(':scope > .template', templatesWrapper, false);
+              templatesWrapper.style.opacity = 1;
+            }
+
             tabsWrapper.querySelectorAll('.template-tab-button').forEach((btn) => {
               if (btn !== tabBtn) btn.classList.remove('active');
             });
