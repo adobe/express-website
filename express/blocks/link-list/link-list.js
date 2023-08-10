@@ -73,6 +73,7 @@ export default async function decorate($block) {
   }
 
   if (window.location.href.includes('/express/templates/')) {
-    await import('../../scripts/ckg-link-list.js');
+    const { default: updateAsyncBlocks } = await import('../../scripts/ckg-link-list.js');
+    await updateAsyncBlocks();
   }
 }

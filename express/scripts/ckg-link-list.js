@@ -33,10 +33,7 @@ async function fetchLinkList() {
         window.linkLists.ckgData = response.queryResults[0].facets[0].buckets.map((ckgItem) => {
           let formattedTasks;
           if (getMetadata('template-search-page') === 'Y') {
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-              get: (searchParams, prop) => searchParams.get(prop),
-            });
-            formattedTasks = titleCase(params.tasks).replace(/[$@%"]/g, '');
+            return {};
           } else {
             formattedTasks = titleCase(getMetadata('tasks')).replace(/[$@%"]/g, '');
           }
@@ -136,17 +133,12 @@ async function updateLinkList(container, linkPill, list) {
 
   if (list && templatePages) {
     list.forEach((d) => {
-      const topics = getMetadata('topics') !== '" "' ? `${getMetadata('topics').replace(/[$@%"]/g, '')}` : '';
       const templatePageData = templatePages.find((p) => p.live === 'Y' && matchCKGResult(d, p));
-      const topicsQuery = `${topics ?? topics} ${d.displayValue}`.split(' ')
-        .filter((item, i, allItems) => i === allItems.indexOf(item))
-        .join(' ').trim();
       let displayText = formatLinkPillText(d);
 
       const locale = getLocale(window.location);
       const urlPrefix = locale === 'us' ? '' : `/${locale}`;
       const localeColumnString = locale === 'us' ? 'EN' : locale.toUpperCase();
-      let hideUntranslatedPill = false;
 
       if (pillsMapping) {
         const alternateText = pillsMapping.find((row) => window.location.pathname === `${urlPrefix}${row['Express SEO URL']}` && d.ckgID === row['CKG Pill ID']);
@@ -157,22 +149,11 @@ async function updateLinkList(container, linkPill, list) {
             templatePageData.altShortTitle = displayText;
           }
         }
-
-        hideUntranslatedPill = !hasAlternateTextForLocale && locale !== 'us';
       }
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
         pageLinks.push(clone);
-      } else if (d.ckgID && !hideUntranslatedPill) {
-        const currentTasks = getMetadata('tasks') ? getMetadata('tasks').replace(/[$@%"]/g, '') : ' ';
-        const currentTasksX = getMetadata('tasks-x') || '';
-        const searchParams = `tasks=${currentTasks}&tasksx=${currentTasksX}&phformat=${getMetadata('placeholder-format')}&topics=${topicsQuery}&q=${topicsQuery}&ckgid=${d.ckgID}`;
-        const clone = linkPill.cloneNode(true);
-
-        clone.innerHTML = clone.innerHTML.replace('/express/templates/default', `${urlPrefix}/express/templates/search?${searchParams}`);
-        clone.innerHTML = clone.innerHTML.replaceAll('Default', displayText);
-        searchLinks.push(clone);
       }
     });
 
@@ -294,7 +275,7 @@ function hideAsyncBlocks() {
   }
 }
 
-(async function updateAsyncBlocks() {
+export default async function updateAsyncBlocks() {
   hideAsyncBlocks();
   // TODO: integrate memoization
   const showSearchMarqueeLinkList = getMetadata('show-search-marquee-link-list');
@@ -303,4 +284,4 @@ function hideAsyncBlocks() {
   }
   await lazyLoadLinklist();
   await lazyLoadSEOLinkList();
-}());
+}
