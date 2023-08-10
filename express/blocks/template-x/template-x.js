@@ -432,17 +432,20 @@ function makeTemplateFunctions(placeholders) {
     premium: {
       placeholders: JSON.parse(placeholders['template-filter-premium'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '')?.split(',') || [],
+      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-premium-and-free', 'template-free', 'template-premium'],
     },
     animated: {
       placeholders: JSON.parse(placeholders['template-filter-animated'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '')?.split(',') || [],
+      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-static-and-animated', 'template-static', 'template-animated'],
     },
     sort: {
       placeholders: JSON.parse(placeholders['template-x-sort'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '')?.split(',') || [],
+      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '')?.split(',')
+        || ['sort', 'visibility-on', 'visibility-off', 'order-dsc', 'order-asc'],
     },
   };
 
