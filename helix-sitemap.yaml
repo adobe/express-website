@@ -133,5 +133,5 @@ sitemaps:
         source: /express/templates/default/metadata.json?sheet=sitemap
         destination: /express/sitemap-seo-templates.xml
         hreflang: en
-        alternate: /{url}
+        alternate: /{path}
 
