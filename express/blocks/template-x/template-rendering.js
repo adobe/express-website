@@ -349,14 +349,13 @@ function renderStillWrapper(template) {
   const isFree = template.licensingCategory === 'free';
 
   const freeTag = createTag('span', { class: 'free-tag' });
-
+  freeTag.append('Free');
+  const premiumIcon = getIconElement('premium');
   img.onload = (e) => {
     if (e.eventPhase >= Event.AT_TARGET) {
       if (isFree) {
-        freeTag.append('Free');
         imgWrapper.append(freeTag);
       } else {
-        const premiumIcon = getIconElement('premium');
         imgWrapper.append(premiumIcon);
       }
     }
