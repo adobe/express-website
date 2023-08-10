@@ -351,7 +351,7 @@ function renderStillWrapper(template) {
   const freeTag = createTag('span', { class: 'free-tag' });
 
   img.onload = (e) => {
-    if (e.eventPhase >= 2) {
+    if (e.eventPhase >= Event.AT_TARGET) {
       if (isFree) {
         freeTag.append('Free');
         imgWrapper.append(freeTag);
