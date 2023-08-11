@@ -716,10 +716,15 @@ function closeDrawer(toolBar) {
   }, 500);
 }
 
-async function updateOptionsStatus(block, props, toolBar) {
+function updateOptionsStatus(block, props, toolBar) {
   const wrappers = toolBar.querySelectorAll('.function-wrapper');
-  const placeholders = await fetchPlaceholders();
-  const waysOfSort = placeholders['template-x-sort'] ? JSON.parse(placeholders['template-x-sort']) : {};
+  const waysOfSort = {
+    'Most Relevant': '',
+    'Most Viewed': '&orderBy=-remixCount',
+    'Rare & Original': '&orderBy=remixCount',
+    'Newest to Oldest': '&orderBy=-availabilityDate',
+    'Oldest to Newest': '&orderBy=availabilityDate',
+  };
 
   wrappers.forEach((wrapper) => {
     const currentOption = wrapper.querySelector('.current-option');
@@ -728,13 +733,10 @@ async function updateOptionsStatus(block, props, toolBar) {
     options.forEach((option) => {
       const paramType = wrapper.dataset.param;
       const paramValue = option.dataset.value;
-      const propValue = props[paramType] ? props[paramType] : 'remove';
       const filterValue = props.filters[paramType] ? props.filters[paramType] : 'remove';
-      const sortValue = waysOfSort[props[paramType]] || '';
+      const sortValue = waysOfSort[props[paramType]] || props[paramType];
 
-      if (propValue === paramValue
-        || filterValue === paramValue
-        || sortValue === paramValue) {
+      if (filterValue === paramValue || sortValue === paramValue) {
         if (currentOption) {
           currentOption.textContent = option.textContent;
         }
@@ -788,7 +790,7 @@ function initDrawer(block, props, toolBar) {
     el.addEventListener('click', async () => {
       props.filters = { ...currentFilters };
       closeDrawer(toolBar);
-      await updateOptionsStatus(block, props, toolBar);
+      updateOptionsStatus(block, props, toolBar);
     }, { passive: true });
   });
 
@@ -855,7 +857,7 @@ async function redrawTemplates(block, props, toolBar) {
   await decorateNewTemplates(block, props, { reDrawMasonry: true });
 
   heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-  await updateOptionsStatus(block, props, toolBar);
+  updateOptionsStatus(block, props, toolBar);
   if (block.querySelectorAll('.template').length <= 0) {
     const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
     $viewButtons.forEach((button) => {
@@ -938,7 +940,7 @@ async function initFilterSort(block, props, toolBar) {
     }
 
     // sync current filter & sorting method with toolbar current options
-    await updateOptionsStatus(block, props, toolBar);
+    updateOptionsStatus(block, props, toolBar);
   }
 }
 
