@@ -51,6 +51,12 @@ main .fullscreen-marquee-desktop .fullscreen-marquee-desktop-heading .button-con
   align-items: center;
 }
 
+main .fullscreen-marquee-desktop-heading h1.budoux {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 main .fullscreen-marquee-desktop-heading h1 em {
   font-style: normal;
   background: linear-gradient(320deg, #7C84F3, #FF4DD2, #FF993B, #FF4DD2, #7C84F3, #FF4DD2, #FF993B);
