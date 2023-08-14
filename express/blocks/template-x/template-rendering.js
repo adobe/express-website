@@ -383,7 +383,7 @@ function renderStillWrapper(template) {
 export default function renderTemplate(template, placeholders, props) {
   const tmpltEl = createTag('div');
   tmpltEl.append(renderStillWrapper(template, props));
-  tmpltEl.append(renderHoverWrapper(template, placeholders, props));
+  tmpltEl.append(renderHoverWrapper(template, placeholders));
 
   return tmpltEl;
 }
