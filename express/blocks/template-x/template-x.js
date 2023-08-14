@@ -845,7 +845,8 @@ function updateQuery(functionWrapper, props, option) {
   }
 }
 
-async function redrawTemplates(block, props, toolBar) {
+async function redrawTemplates(block, existingProps, props, toolBar) {
+  if (JSON.stringify(props) === JSON.stringify(existingProps)) return;
   const heading = toolBar.querySelector('h2');
   const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
@@ -872,6 +873,7 @@ async function redrawTemplates(block, props, toolBar) {
 async function initFilterSort(block, props, toolBar) {
   const buttons = toolBar.querySelectorAll('.button-wrapper');
   const applyFilterButton = toolBar.querySelector('.apply-filter-button');
+  let existingProps = { ...props, filters: { ...props.filters } };
 
   if (buttons.length > 0) {
     buttons.forEach((button) => {
@@ -881,6 +883,7 @@ async function initFilterSort(block, props, toolBar) {
       const options = optionsList.querySelectorAll('.option-button');
 
       button.addEventListener('click', () => {
+        existingProps = { ...props, filters: { ...props.filters } };
         if (!button.classList.contains('in-drawer')) {
           buttons.forEach((b) => {
             if (button !== b) {
@@ -893,7 +896,7 @@ async function initFilterSort(block, props, toolBar) {
       }, { passive: true });
 
       options.forEach((option) => {
-        const updateOptions = async () => {
+        const updateOptions = () => {
           buttons.forEach((b) => {
             b.parentElement.classList.remove('opened');
           });
@@ -908,18 +911,17 @@ async function initFilterSort(block, props, toolBar) {
             }
           });
           option.classList.add('active');
-
-          updateQuery(wrapper, props, option);
-          updateFilterIcon(block);
-
-          if (!button.classList.contains('in-drawer')) {
-            await redrawTemplates(block, props, toolBar);
-          }
         };
 
         option.addEventListener('click', async (e) => {
           e.stopPropagation();
-          await updateOptions();
+          updateOptions();
+          updateQuery(wrapper, props, option);
+          updateFilterIcon(block);
+
+          if (!button.classList.contains('in-drawer')) {
+            await redrawTemplates(block, existingProps, props, toolBar);
+          }
         }, { passive: true });
       });
 
@@ -934,7 +936,7 @@ async function initFilterSort(block, props, toolBar) {
     if (applyFilterButton) {
       applyFilterButton.addEventListener('click', async (e) => {
         e.preventDefault();
-        await redrawTemplates(block, props, toolBar);
+        await redrawTemplates(block, existingProps, props, toolBar);
         closeDrawer(toolBar);
       });
     }
