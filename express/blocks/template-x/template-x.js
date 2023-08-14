@@ -114,7 +114,7 @@ async function fetchAndRenderTemplates(props) {
     fallbackMsg,
     templates: response.items
       .filter((item) => isValidTemplate(item))
-      .map((template) => renderTemplate(template, placeholders, props)),
+      .map((template) => renderTemplate(template, placeholders)),
   };
 }
 
