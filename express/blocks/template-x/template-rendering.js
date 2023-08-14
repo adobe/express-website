@@ -93,8 +93,8 @@ async function getVideoUrls(renditionLinkHref, componentLinkHref, page) {
   }
 }
 
-function renderShareWrapper(branchUrl) {
-  const text = 'Copied to clipboard';
+function renderShareWrapper(branchUrl, placeholders) {
+  const text = placeholders['tag-copied'] ?? 'Copied to clipboard';
   const wrapper = createTag('div', { class: 'share-icon-wrapper' });
   const shareIcon = getIconElement('share-arrow');
   const tooltip = createTag('div', {
@@ -277,7 +277,7 @@ async function renderRotatingMedias(wrapper,
   return { cleanup, hover: playMedia };
 }
 
-function renderMediaWrapper(template) {
+function renderMediaWrapper(template, placeholders) {
   const mediaWrapper = createTag('div', { class: 'media-wrapper' });
 
   // TODO: reduce memory with LRU cache or memoization with ttl
@@ -299,7 +299,7 @@ function renderMediaWrapper(template) {
     e.stopPropagation();
     if (!renderedMedia) {
       renderedMedia = await renderRotatingMedias(mediaWrapper, template.pages, templateInfo);
-      mediaWrapper.append(renderShareWrapper(branchUrl));
+      mediaWrapper.append(renderShareWrapper(branchUrl, placeholders));
     }
     renderedMedia.hover();
   };
@@ -310,10 +310,10 @@ function renderMediaWrapper(template) {
   return { mediaWrapper, enterHandler, leaveHandler };
 }
 
-function renderHoverWrapper(template, placeholders, props) {
+function renderHoverWrapper(template, placeholders) {
   const btnContainer = createTag('div', { class: 'button-container' });
 
-  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template, props);
+  const { mediaWrapper, enterHandler, leaveHandler } = renderMediaWrapper(template, placeholders);
 
   btnContainer.append(mediaWrapper);
   btnContainer.addEventListener('mouseenter', enterHandler);
