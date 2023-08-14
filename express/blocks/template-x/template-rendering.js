@@ -325,10 +325,28 @@ function renderHoverWrapper(template, placeholders, props) {
   return btnContainer;
 }
 
-function getFreeSpanTag() {
-  const t = createTag('span', { class: 'free-tag' });
-  t.append('Free');
-  return t;
+function getStillWrapperIcons(template) {
+  let planIcon = null;
+  if (template.licensingCategory === 'free') {
+    planIcon = createTag('span', { class: 'free-tag' });
+    planIcon.append('Free');
+  } else {
+    planIcon = getIconElement('premium');
+  }
+  let videoIcon = '';
+  if (!containsVideo(template.pages) && template.pages.length > 1) {
+    videoIcon = getIconElement('multipage-static-badge');
+  }
+
+  if (containsVideo(template.pages) && template.pages.length === 1) {
+    videoIcon = getIconElement('video-badge');
+  }
+
+  if (containsVideo(template.pages) && template.pages.length > 1) {
+    videoIcon = getIconElement('multipage-video-badge');
+  }
+  if (videoIcon) videoIcon.classList.add('media-type-icon');
+  return { planIcon, videoIcon };
 }
 
 function renderStillWrapper(template) {
@@ -352,30 +370,13 @@ function renderStillWrapper(template) {
   });
   imgWrapper.append(img);
 
-  const tag = template.licensingCategory === 'free' ? getFreeSpanTag() : getIconElement('premium');
+  const { planIcon, videoIcon } = getStillWrapperIcons(template);
   img.onload = (e) => {
     if (e.eventPhase >= Event.AT_TARGET) {
-      imgWrapper.append(tag);
+      imgWrapper.append(planIcon);
+      imgWrapper.append(videoIcon);
     }
   };
-
-  let videoIcon = '';
-  if (containsVideo(template.pages) && template.pages.length === 1) {
-    videoIcon = getIconElement('video-badge');
-  }
-
-  if (!containsVideo(template.pages) && template.pages.length > 1) {
-    videoIcon = getIconElement('multipage-static-badge');
-  }
-
-  if (containsVideo(template.pages) && template.pages.length > 1) {
-    videoIcon = getIconElement('multipage-video-badge');
-  }
-
-  if (videoIcon) {
-    videoIcon.classList.add('media-type-icon');
-    imgWrapper.append(videoIcon);
-  }
 
   stillWrapper.append(imgWrapper);
   return stillWrapper;
