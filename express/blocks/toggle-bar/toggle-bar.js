@@ -41,6 +41,16 @@ function decorateButton(block, toggle) {
   toggle.parentNode.replaceChild(button, toggle);
 }
 
+function awakeNestedCarousels(section) {
+  const carousels = section.querySelectorAll('.carousel-container');
+
+  if (carousels.length === 0) return;
+
+  Array.from(carousels).forEach((c) => {
+    c.closest('.block')?.dispatchEvent(new CustomEvent('carouselloaded'));
+  });
+}
+
 function initButton(block, sections, index, props) {
   const enclosingMain = block.closest('main');
 
@@ -60,6 +70,7 @@ function initButton(block, sections, index, props) {
           if (buttons[index].dataset.text === section.dataset.toggle.toLowerCase()) {
             section.style.display = 'block';
             props.activeSection = section;
+            awakeNestedCarousels(section);
           } else {
             section.style.display = 'none';
           }
