@@ -325,6 +325,12 @@ function renderHoverWrapper(template, placeholders, props) {
   return btnContainer;
 }
 
+function getFreeSpanTag() {
+  const t = createTag('span', { class: 'free-tag' });
+  t.append('Free');
+  return t;
+}
+
 function renderStillWrapper(template) {
   const stillWrapper = createTag('div', { class: 'still-wrapper' });
 
@@ -345,11 +351,6 @@ function renderStillWrapper(template) {
     alt: templateTitle,
   });
   imgWrapper.append(img);
-  const getFreeSpanTag = () => {
-    const t = createTag('span', { class: 'free-tag' });
-    t.append('Free');
-    return t;
-  };
 
   const tag = template.licensingCategory === 'free' ? getFreeSpanTag() : getIconElement('premium');
   img.onload = (e) => {
