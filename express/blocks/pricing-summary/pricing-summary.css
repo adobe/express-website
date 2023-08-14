@@ -40,7 +40,7 @@ main .pricing-summary .pricing-header {
 }
 
 main .pricing-summary .pricing-description {
-  max-width: 297px;
+  max-width: 330px;
   display: flex;
   flex-direction: column;
   margin: 17px 0 0 0;
@@ -64,6 +64,7 @@ main .pricing-summary .pricing-plan {
   flex-direction: column;
   justify-content: center;
   margin: 10px 0 30px 0;
+  max-width: 330px;
   gap: 15px;
 }
 
@@ -131,5 +132,6 @@ main .pricing-summary > div:last-of-type > div {
   main .pricing-summary .pricing-container .columns-container {
     display: flex;
     flex-direction: row;
+    align-items: stretch;
   }
 }

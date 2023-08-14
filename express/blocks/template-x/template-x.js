@@ -374,7 +374,7 @@ async function decorateLoadMoreButton(block, props) {
   const loadMoreButton = createTag('button', { class: 'load-more-button' });
   const loadMoreText = createTag('p', { class: 'load-more-text' });
   loadMoreDiv.append(loadMoreButton, loadMoreText);
-  loadMoreText.textContent = placeholders['load-more'];
+  loadMoreText.textContent = placeholders['load-more'] ?? '';
   block.append(loadMoreDiv);
   loadMoreButton.append(getIconElement('plus-icon'));
 
@@ -430,19 +430,22 @@ async function attachFreeInAppPills(block) {
 function makeTemplateFunctions(placeholders) {
   const functions = {
     premium: {
-      placeholders: JSON.parse(placeholders['template-filter-premium']),
+      placeholders: JSON.parse(placeholders['template-filter-premium'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-premium-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-premium-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-premium-and-free', 'template-free', 'template-premium'],
     },
     animated: {
-      placeholders: JSON.parse(placeholders['template-filter-animated']),
+      placeholders: JSON.parse(placeholders['template-filter-animated'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-filter-animated-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-filter-animated-icons']?.replace(/\s/g, '')?.split(',')
+        || ['template-static-and-animated', 'template-static', 'template-animated'],
     },
     sort: {
-      placeholders: JSON.parse(placeholders['template-x-sort']),
+      placeholders: JSON.parse(placeholders['template-x-sort'] ?? '{}'),
       elements: {},
-      icons: placeholders['template-x-sort-icons'].replace(/\s/g, '').split(','),
+      icons: placeholders['template-x-sort-icons']?.replace(/\s/g, '')?.split(',')
+        || ['sort', 'visibility-on', 'visibility-off', 'order-dsc', 'order-asc'],
     },
   };
 
@@ -604,8 +607,8 @@ async function decorateCategoryList(block, props) {
   const locale = getLocale(window.location);
   const mobileDrawerWrapper = block.querySelector('.filter-drawer-mobile');
   const drawerWrapper = block.querySelector('.filter-drawer-mobile-inner-wrapper');
-  const categories = JSON.parse(placeholders['x-task-categories']);
-  const categoryIcons = placeholders['task-category-icons'].replace(/\s/g, '').split(',');
+  const categories = placeholders['x-task-categories'] ? JSON.parse(placeholders['x-task-categories']) : {};
+  const categoryIcons = placeholders['task-category-icons']?.replace(/\s/g, '')?.split(',');
   const categoriesDesktopWrapper = createTag('div', { class: 'category-list-wrapper' });
   const categoriesToggleWrapper = createTag('div', { class: 'category-list-toggle-wrapper' });
   const categoriesToggle = getIconElement('drop-down-arrow');
@@ -649,7 +652,7 @@ async function decorateCategoryList(block, props) {
 
   const categoriesMobileWrapper = categoriesDesktopWrapper.cloneNode({ deep: true });
   const mobileCategoriesToggle = createTag('span', { class: 'category-list-toggle' });
-  mobileCategoriesToggle.textContent = placeholders['jump-to-category'];
+  mobileCategoriesToggle.textContent = placeholders['jump-to-category'] ?? '';
   categoriesMobileWrapper.querySelector('.category-list-toggle-wrapper > .icon')?.replaceWith(mobileCategoriesToggle);
   const lottieArrows = createTag('a', { class: 'lottie-wrapper' });
   mobileDrawerWrapper.append(lottieArrows);
@@ -713,10 +716,15 @@ function closeDrawer(toolBar) {
   }, 500);
 }
 
-async function updateOptionsStatus(block, props, toolBar) {
+function updateOptionsStatus(block, props, toolBar) {
   const wrappers = toolBar.querySelectorAll('.function-wrapper');
-  const placeholders = await fetchPlaceholders();
-  const waysOfSort = JSON.parse(placeholders['template-x-sort']);
+  const waysOfSort = {
+    'Most Relevant': '',
+    'Most Viewed': '&orderBy=-remixCount',
+    'Rare & Original': '&orderBy=remixCount',
+    'Newest to Oldest': '&orderBy=-availabilityDate',
+    'Oldest to Newest': '&orderBy=availabilityDate',
+  };
 
   wrappers.forEach((wrapper) => {
     const currentOption = wrapper.querySelector('.current-option');
@@ -725,13 +733,10 @@ async function updateOptionsStatus(block, props, toolBar) {
     options.forEach((option) => {
       const paramType = wrapper.dataset.param;
       const paramValue = option.dataset.value;
-      const propValue = props[paramType] ? props[paramType] : 'remove';
       const filterValue = props.filters[paramType] ? props.filters[paramType] : 'remove';
-      const sortValue = waysOfSort[props[paramType]] || '';
+      const sortValue = waysOfSort[props[paramType]] || props[paramType];
 
-      if (propValue === paramValue
-        || filterValue === paramValue
-        || sortValue === paramValue) {
+      if (filterValue === paramValue || sortValue === paramValue) {
         if (currentOption) {
           currentOption.textContent = option.textContent;
         }
@@ -785,7 +790,7 @@ function initDrawer(block, props, toolBar) {
     el.addEventListener('click', async () => {
       props.filters = { ...currentFilters };
       closeDrawer(toolBar);
-      await updateOptionsStatus(block, props, toolBar);
+      updateOptionsStatus(block, props, toolBar);
     }, { passive: true });
   });
 
@@ -840,7 +845,8 @@ function updateQuery(functionWrapper, props, option) {
   }
 }
 
-async function redrawTemplates(block, props, toolBar) {
+async function redrawTemplates(block, existingProps, props, toolBar) {
+  if (JSON.stringify(props) === JSON.stringify(existingProps)) return;
   const heading = toolBar.querySelector('h2');
   const currentTotal = props.total.toLocaleString('en-US');
   props.templates = [props.templates[0]];
@@ -852,7 +858,7 @@ async function redrawTemplates(block, props, toolBar) {
   await decorateNewTemplates(block, props, { reDrawMasonry: true });
 
   heading.textContent = heading.textContent.replace(`${currentTotal}`, props.total.toLocaleString('en-US'));
-  await updateOptionsStatus(block, props, toolBar);
+  updateOptionsStatus(block, props, toolBar);
   if (block.querySelectorAll('.template').length <= 0) {
     const $viewButtons = toolBar.querySelectorAll('.view-toggle-button');
     $viewButtons.forEach((button) => {
@@ -867,6 +873,7 @@ async function redrawTemplates(block, props, toolBar) {
 async function initFilterSort(block, props, toolBar) {
   const buttons = toolBar.querySelectorAll('.button-wrapper');
   const applyFilterButton = toolBar.querySelector('.apply-filter-button');
+  let existingProps = { ...props, filters: { ...props.filters } };
 
   if (buttons.length > 0) {
     buttons.forEach((button) => {
@@ -876,6 +883,7 @@ async function initFilterSort(block, props, toolBar) {
       const options = optionsList.querySelectorAll('.option-button');
 
       button.addEventListener('click', () => {
+        existingProps = { ...props, filters: { ...props.filters } };
         if (!button.classList.contains('in-drawer')) {
           buttons.forEach((b) => {
             if (button !== b) {
@@ -888,7 +896,7 @@ async function initFilterSort(block, props, toolBar) {
       }, { passive: true });
 
       options.forEach((option) => {
-        const updateOptions = async () => {
+        const updateOptions = () => {
           buttons.forEach((b) => {
             b.parentElement.classList.remove('opened');
           });
@@ -903,18 +911,17 @@ async function initFilterSort(block, props, toolBar) {
             }
           });
           option.classList.add('active');
-
-          updateQuery(wrapper, props, option);
-          updateFilterIcon(block);
-
-          if (!button.classList.contains('in-drawer')) {
-            await redrawTemplates(block, props, toolBar);
-          }
         };
 
         option.addEventListener('click', async (e) => {
           e.stopPropagation();
-          await updateOptions();
+          updateOptions();
+          updateQuery(wrapper, props, option);
+          updateFilterIcon(block);
+
+          if (!button.classList.contains('in-drawer')) {
+            await redrawTemplates(block, existingProps, props, toolBar);
+          }
         }, { passive: true });
       });
 
@@ -929,13 +936,13 @@ async function initFilterSort(block, props, toolBar) {
     if (applyFilterButton) {
       applyFilterButton.addEventListener('click', async (e) => {
         e.preventDefault();
-        await redrawTemplates(block, props, toolBar);
+        await redrawTemplates(block, existingProps, props, toolBar);
         closeDrawer(toolBar);
       });
     }
 
     // sync current filter & sorting method with toolbar current options
-    await updateOptionsStatus(block, props, toolBar);
+    updateOptionsStatus(block, props, toolBar);
   }
 }
 
@@ -1363,7 +1370,7 @@ function importSearchBar(block, blockMediator) {
 
         const redirectSearch = async () => {
           const placeholders = await fetchPlaceholders();
-          const taskMap = JSON.parse(placeholders['task-name-mapping']);
+          const taskMap = placeholders['task-name-mapping'] ? JSON.parse(placeholders['task-name-mapping']) : {};
 
           const format = getMetadata('placeholder-format');
           let currentTasks = '';
@@ -1460,7 +1467,7 @@ function wordExistsInString(word, inputString) {
 
 async function getTaskNameInMapping(text) {
   const placeholders = await fetchPlaceholders();
-  const taskMap = JSON.parse(placeholders['x-task-name-mapping']);
+  const taskMap = placeholders['x-task-name-mapping'] ? JSON.parse(placeholders['x-task-name-mapping']) : {};
   return Object.entries(taskMap)
     .filter((task) => task[1].some((word) => {
       const searchValue = text.toLowerCase();
@@ -1496,7 +1503,7 @@ async function buildTemplateList(block, props, type = []) {
 
   const { templates, fallbackMsg } = await fetchAndRenderTemplates(props);
 
-  if (templates) {
+  if (templates?.length > 0) {
     props.fallbackMsg = fallbackMsg;
     renderFallbackMsgWrapper(block, props);
     const blockInnerWrapper = createTag('div', { class: 'template-x-inner-wrapper' });
@@ -1554,18 +1561,21 @@ async function buildTemplateList(block, props, type = []) {
                 tasks: task,
               },
             });
-            props.fallbackMsg = newFallbackMsg;
-            renderFallbackMsgWrapper(block, props);
+            if (newTemplates?.length > 0) {
+              props.fallbackMsg = newFallbackMsg;
+              renderFallbackMsgWrapper(block, props);
 
-            templatesWrapper.innerHTML = '';
-            props.templates = newTemplates;
-            props.templates.forEach((template) => {
-              templatesWrapper.append(template);
-            });
+              templatesWrapper.innerHTML = '';
+              props.templates = newTemplates;
+              props.templates.forEach((template) => {
+                templatesWrapper.append(template);
+              });
 
-            await decorateTemplates(block, props);
-            buildCarousel(':scope > .template', templatesWrapper, false);
-            templatesWrapper.style.opacity = 1;
+              await decorateTemplates(block, props);
+              buildCarousel(':scope > .template', templatesWrapper, false);
+              templatesWrapper.style.opacity = 1;
+            }
+
             tabsWrapper.querySelectorAll('.template-tab-button').forEach((btn) => {
               if (btn !== tabBtn) btn.classList.remove('active');
             });

@@ -194,8 +194,8 @@ if (useAlloy) {
             (window.spark && window.spark.hostname === 'www.stage.adobe.com')
             || martech === 'alloy-qa'
           )
-            ? '0f6221fd-db23-4376-8ad7-8dc7c799032f'
-            : 'b2e000b1-98ab-4ade-8c4f-5823d84cf015'
+            ? '8d2805dd-85bf-4748-82eb-f99fdad117a6'
+            : '2cba807b-7430-41ae-9aac-db2b0da742d5'
         ),
       },
       target: checkTesting(),

@@ -14,19 +14,17 @@ import {
   fetchPlaceholders,
   getMetadata,
   titleCase,
-  createTag,
   getHelixEnv,
 } from './scripts.js';
-import fetchAllTemplatesMetadata from './all-templates-metadata.js';
 
-async function replaceDefaultPlaceholders(template) {
-  template.innerHTML = template.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', getMetadata('create-link') || '/');
+async function replaceDefaultPlaceholders(block, components) {
+  block.innerHTML = block.innerHTML.replaceAll('https://www.adobe.com/express/templates/default-create-link', components.link);
 
-  if (getMetadata('tasks') === '') {
+  if (components.tasks === '') {
     const placeholders = await fetchPlaceholders();
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
+    block.innerHTML = block.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
   } else {
-    template.innerHTML = template.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
+    block.innerHTML = block.innerHTML.replaceAll('default-create-link-text', getMetadata('create-text') || '');
   }
 }
 
@@ -87,78 +85,7 @@ function replaceBladesInStr(str, replacements) {
   });
 }
 
-// for backwards compatibility
-// TODO: remove this func after all content is updated
-// legacy json -> metadata & dom blades
-await (async function updateLegacyContent() {
-  const searchMarquee = document.querySelector('.search-marquee');
-  if (searchMarquee) {
-    // not legacy
-    return;
-  }
-  const legacyAllTemplatesMetadata = await fetchAllTemplatesMetadata();
-  const data = legacyAllTemplatesMetadata.find((p) => p.url === window.location.pathname);
-  if (!data) return;
-  if (['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
-    const replacements = await getReplacementsFromSearch();
-    if (!replacements) return;
-    for (const key of Object.keys(data)) {
-      data[key] = replaceBladesInStr(data[key], replacements);
-    }
-  }
-
-  const heroAnimation = document.querySelector('.hero-animation.wide');
-  const templateList = document.querySelector('.template-list.fullwidth.apipowered');
-
-  const head = document.querySelector('head');
-  Object.keys(data).forEach((metadataKey) => {
-    const existingMetadataTag = head.querySelector(`meta[name=${metadataKey}]`);
-    if (existingMetadataTag) {
-      existingMetadataTag.setAttribute('content', data[metadataKey]);
-    } else {
-      head.append(createTag('meta', { name: `${metadataKey}`, content: data[metadataKey] }));
-    }
-  });
-
-  if (heroAnimation) {
-    if (data.heroAnimationTitle) {
-      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template title', data.heroAnimationTitle);
-    }
-
-    if (data.heroAnimationText) {
-      heroAnimation.innerHTML = heroAnimation.innerHTML.replace('Default template text', data.heroAnimationText);
-    }
-  }
-
-  if (templateList) {
-    const regex = /default-[a-zA-Z_-]+/g;
-    const replacements = {
-      'default-title': data.shortTitle || '',
-      'default-tasks': data.templateTasks || '',
-      'default-topics': data.templateTopics || '',
-      'default-locale': data.templateLocale || 'en',
-      'default-premium': data.templatePremium || '',
-      'default-animated': data.templateAnimated || '',
-      'default-format': data.placeholderFormat || '',
-    };
-    templateList.innerHTML = templateList.innerHTML.replaceAll(regex, (match) => {
-      if (match in replacements) {
-        return replacements[match];
-      }
-      return match;
-    }).replaceAll('https://www.adobe.com/express/templates/default-create-link', data.createLink || '/');
-
-    if (data.templateTasks === '') {
-      const placeholders = await fetchPlaceholders();
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', placeholders['start-from-scratch'] || '');
-    } else {
-      templateList.innerHTML = templateList.innerHTML.replaceAll('default-create-link-text', data.createText || '');
-    }
-  }
-}());
-
-// searchbar -> metadata blades
-await (async function updateMetadataForTemplates() {
+async function updateMetadataForTemplates() {
   if (!['yes', 'true', 'on', 'Y'].includes(getMetadata('template-search-page'))) {
     return;
   }
@@ -172,10 +99,10 @@ await (async function updateMetadataForTemplates() {
       meta.setAttribute('content', replaceBladesInStr(meta.getAttribute('content'), replacements));
     });
   }
-}());
+}
 
 // metadata -> dom blades
-(function autoUpdatePage() {
+function autoUpdatePage() {
   const wl = ['{{heading_placeholder}}', '{{type}}', '{{quantity}}'];
   // FIXME: deprecate wl
   const main = document.querySelector('main');
@@ -187,10 +114,10 @@ await (async function updateMetadataForTemplates() {
     }
     return match;
   });
-}());
+}
 
 // cleanup remaining dom blades
-(async function updateNonBladeContent() {
+async function updateNonBladeContent() {
   const heroAnimation = document.querySelector('.hero-animation.wide');
   const templateList = document.querySelector('.template-list.fullwidth.apipowered');
   const templateX = document.querySelector('.template-x');
@@ -208,11 +135,17 @@ await (async function updateMetadataForTemplates() {
   }
 
   if (templateList) {
-    await replaceDefaultPlaceholders(templateList);
+    await replaceDefaultPlaceholders(templateList, {
+      link: getMetadata('create-link') || '/',
+      tasks: getMetadata('tasks'),
+    });
   }
 
   if (templateX) {
-    await replaceDefaultPlaceholders(templateX);
+    await replaceDefaultPlaceholders(templateX, {
+      link: getMetadata('create-link-x') || getMetadata('create-link') || '/',
+      tasks: getMetadata('tasks-x'),
+    });
   }
 
   if (seoNav) {
@@ -230,9 +163,9 @@ await (async function updateMetadataForTemplates() {
   if (browseByCat && !['yes', 'true', 'on', 'Y'].includes(getMetadata('show-browse-by-category'))) {
     browseByCat.remove();
   }
-}());
+}
 
-(function validatePage() {
+function validatePage() {
   const env = getHelixEnv();
   const title = document.querySelector('title');
   if ((env && env.name !== 'stage') && getMetadata('live') === 'N') {
@@ -246,4 +179,11 @@ await (async function updateMetadataForTemplates() {
   if (env && env.name !== 'stage' && window.location.pathname.endsWith('/express/templates/default')) {
     window.location.replace('/404');
   }
-}());
+}
+
+export default async function replaceContent() {
+  await updateMetadataForTemplates();
+  autoUpdatePage();
+  await updateNonBladeContent();
+  validatePage();
+}

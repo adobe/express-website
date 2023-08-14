@@ -167,6 +167,11 @@ async function fetchTemplatesWithToolbar(props) {
     }
   }
   response = await fetchSearchUrl({ ...props, filters: { locales, premium: 'false' }, q: '' });
+  if (response?.metadata?.totalHits > 0) {
+    return { response, fallbackMsg: await getFallbackMsg() };
+  }
+  // ultimate fallback in case no fallback locale is authored
+  response = await fetchSearchUrl({ ...props, filters: {}, q: '' });
   return { response, fallbackMsg: await getFallbackMsg() };
 }
 

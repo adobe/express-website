@@ -325,6 +325,30 @@ function renderHoverWrapper(template, placeholders) {
   return btnContainer;
 }
 
+function getStillWrapperIcons(template, placeholders) {
+  let planIcon = null;
+  if (template.licensingCategory === 'free') {
+    planIcon = createTag('span', { class: 'free-tag' });
+    planIcon.append(placeholders.free ?? 'Free');
+  } else {
+    planIcon = getIconElement('premium');
+  }
+  let videoIcon = '';
+  if (!containsVideo(template.pages) && template.pages.length > 1) {
+    videoIcon = getIconElement('multipage-static-badge');
+  }
+
+  if (containsVideo(template.pages) && template.pages.length === 1) {
+    videoIcon = getIconElement('video-badge');
+  }
+
+  if (containsVideo(template.pages) && template.pages.length > 1) {
+    videoIcon = getIconElement('multipage-video-badge');
+  }
+  if (videoIcon) videoIcon.classList.add('media-type-icon');
+  return { planIcon, videoIcon };
+}
+
 function renderStillWrapper(template, placeholders) {
   const stillWrapper = createTag('div', { class: 'still-wrapper' });
 
@@ -346,35 +370,13 @@ function renderStillWrapper(template, placeholders) {
   });
   imgWrapper.append(img);
 
-  const isFree = template.licensingCategory === 'free';
-
-  const freeTag = createTag('span', { class: 'free-tag' });
-
-  if (isFree) {
-    freeTag.append(placeholders.free ?? 'Free');
-    imgWrapper.append(freeTag);
-  } else {
-    const premiumIcon = getIconElement('premium');
-    imgWrapper.append(premiumIcon);
-  }
-
-  let videoIcon = '';
-  if (containsVideo(template.pages) && template.pages.length === 1) {
-    videoIcon = getIconElement('video-badge');
-  }
-
-  if (!containsVideo(template.pages) && template.pages.length > 1) {
-    videoIcon = getIconElement('multipage-static-badge');
-  }
-
-  if (containsVideo(template.pages) && template.pages.length > 1) {
-    videoIcon = getIconElement('multipage-video-badge');
-  }
-
-  if (videoIcon) {
-    videoIcon.classList.add('media-type-icon');
-    imgWrapper.append(videoIcon);
-  }
+  const { planIcon, videoIcon } = getStillWrapperIcons(template, placeholders);
+  img.onload = (e) => {
+    if (e.eventPhase >= Event.AT_TARGET) {
+      imgWrapper.append(planIcon);
+      imgWrapper.append(videoIcon);
+    }
+  };
 
   stillWrapper.append(imgWrapper);
   return stillWrapper;
