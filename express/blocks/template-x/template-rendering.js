@@ -325,7 +325,7 @@ function renderHoverWrapper(template, placeholders) {
   return btnContainer;
 }
 
-function renderStillWrapper(template) {
+function renderStillWrapper(template, placeholders) {
   const stillWrapper = createTag('div', { class: 'still-wrapper' });
 
   const templateTitle = getTemplateTitle(template);
@@ -351,7 +351,7 @@ function renderStillWrapper(template) {
   const freeTag = createTag('span', { class: 'free-tag' });
 
   if (isFree) {
-    freeTag.append('Free');
+    freeTag.append(placeholders.free ?? 'Free');
     imgWrapper.append(freeTag);
   } else {
     const premiumIcon = getIconElement('premium');
@@ -380,9 +380,9 @@ function renderStillWrapper(template) {
   return stillWrapper;
 }
 
-export default function renderTemplate(template, placeholders, props) {
+export default function renderTemplate(template, placeholders) {
   const tmpltEl = createTag('div');
-  tmpltEl.append(renderStillWrapper(template, props));
+  tmpltEl.append(renderStillWrapper(template, placeholders));
   tmpltEl.append(renderHoverWrapper(template, placeholders));
 
   return tmpltEl;
