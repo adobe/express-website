@@ -174,3 +174,8 @@ sitemaps:
         destination: /express/sitemap-seo-templates.xml
         hreflang: zh-Hant
         alternate: /tw/{path}
+      netherlands:
+        source: /nl/express/templates/default/metadata.json?sheet=sitemap
+        destination: /express/sitemap-seo-templates.xml
+        hreflang: nl
+        alternate: /nl/{path}
