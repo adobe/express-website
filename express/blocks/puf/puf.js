@@ -137,7 +137,7 @@ async function fetchPlan(planUrl) {
     plan.symbol = '$';
 
     // TODO: Remove '/sp/ once confirmed with stakeholders
-    const allowedHosts = ['new.express.adobe.com', 'express.adobe.com'];
+    const allowedHosts = ['new.express.adobe.com', 'express.adobe.com', 'adobesparkpost.app.link'];
     const { host } = new URL(planUrl);
     if (allowedHosts.includes(host) || planUrl.includes('/sp/')) {
       plan.offerId = 'FREE0';
