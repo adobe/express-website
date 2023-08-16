@@ -66,11 +66,15 @@ function matchCKGResult(ckgData, pageData) {
   return sameLocale && ckgMatch && taskMatch;
 }
 
+const defaultRegex = /\/express\/templates\/default/;
 function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
     clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
+  }
+  if (defaultRegex.test(clone.innerHTML)) {
+    return null;
   }
   return clone;
 }
@@ -93,7 +97,7 @@ async function updateSEOLinkList(container, linkPill, list) {
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
-        container.append(clone);
+        if (clone) container.append(clone);
       }
     });
   }
@@ -153,7 +157,7 @@ async function updateLinkList(container, linkPill, list) {
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
-        pageLinks.push(clone);
+        if (clone) pageLinks.push(clone);
       }
     });
 
@@ -177,7 +181,7 @@ async function updateLinkList(container, linkPill, list) {
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
         const clone = replaceLinkPill(linkPill, templatePageData);
-        container.append(clone);
+        if (clone) container.append(clone);
       });
     }
   }
