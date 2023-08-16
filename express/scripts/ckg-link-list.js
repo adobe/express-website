@@ -68,9 +68,13 @@ function matchCKGResult(ckgData, pageData) {
 
 function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
-  if (!data) return null;
-  clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
-  clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
+  if (data) {
+    clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
+    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
+  }
+  if (clone.innerHTML.contains('/express/templates/default')) {
+    return null;
+  }
   return clone;
 }
 
@@ -92,7 +96,7 @@ async function updateSEOLinkList(container, linkPill, list) {
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
-        container.append(clone);
+        if (clone) container.append(clone);
       }
     });
   }
@@ -152,7 +156,7 @@ async function updateLinkList(container, linkPill, list) {
 
       if (templatePageData) {
         const clone = replaceLinkPill(linkPill, templatePageData);
-        pageLinks.push(clone);
+        if (clone) pageLinks.push(clone);
       }
     });
 
