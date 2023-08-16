@@ -66,13 +66,14 @@ function matchCKGResult(ckgData, pageData) {
   return sameLocale && ckgMatch && taskMatch;
 }
 
+const defaultRegex = /\/express\/templates\/default/;
 function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
   if (data) {
     clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
     clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
   }
-  if (clone.innerHTML.contains('/express/templates/default')) {
+  if (defaultRegex.test(clone.innerHTML)) {
     return null;
   }
   return clone;
