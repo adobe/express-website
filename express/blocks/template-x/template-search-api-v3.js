@@ -91,13 +91,18 @@ async function fetchSearchUrl({
   const headers = {};
 
   const langs = extractLangs(filters.locales);
-  if (langs.length > 0) headers['x-express-pref-lang'] = getLanguage(langs[0]);
+  let prefLang;
+  if (langs.length > 0) {
+    [prefLang] = langs;
+    headers['x-express-pref-lang'] = getLanguage(prefLang);
+    headers['x-express-ims-region-code'] = prefLang.toUpperCase();
+  }
   const res = await memoizedFetch(url, { headers });
   if (!res) return res;
   if (langs.length > 1) {
     res.items = [
-      ...res.items.filter(({ language }) => language === getLanguage(langs[0])),
-      ...res.items.filter(({ language }) => language !== getLanguage(langs[0]))];
+      ...res.items.filter(({ language }) => language === getLanguage(prefLang)),
+      ...res.items.filter(({ language }) => language !== getLanguage(prefLang))];
   }
   return res;
 }
