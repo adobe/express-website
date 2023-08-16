@@ -215,7 +215,9 @@ export default function decorate($block) {
       });
 
       $cell.classList.add('column');
-      if ($cell.firstElementChild && $cell.firstElementChild.tagName === 'PICTURE') {
+      const childEls = [...$cell.children];
+      const isPictureColumn = childEls.every((el) => ['BR', 'PICTURE'].includes(el.tagName)) && childEls.length > 0;
+      if (isPictureColumn) {
         $cell.classList.add('column-picture');
       }
 
