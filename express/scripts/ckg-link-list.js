@@ -68,10 +68,9 @@ function matchCKGResult(ckgData, pageData) {
 
 function replaceLinkPill(linkPill, data) {
   const clone = linkPill.cloneNode(true);
-  if (data) {
-    clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
-    clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
-  }
+  if (!data) return null;
+  clone.innerHTML = clone.innerHTML.replace('/express/templates/default', data.url);
+  clone.innerHTML = clone.innerHTML.replaceAll('Default', data.altShortTitle || data['short-title']);
   return clone;
 }
 
@@ -177,7 +176,7 @@ async function updateLinkList(container, linkPill, list) {
       linkListData.forEach((d) => {
         const templatePageData = templatePages.find((p) => p.live === 'Y' && p.shortTitle === d.childSibling);
         const clone = replaceLinkPill(linkPill, templatePageData);
-        container.append(clone);
+        if (clone) container.append(clone);
       });
     }
   }
