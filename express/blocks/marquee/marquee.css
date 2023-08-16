@@ -174,7 +174,7 @@ body.no-desktop-brand-header header {
 }
 
 .marquee .reduce-motion-wrapper {
-  z-index: 10;
+  z-index: 9;
   position: absolute;
   white-space: nowrap;
   right: 16px;
