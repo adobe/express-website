@@ -208,8 +208,10 @@ main .block.puf .puf-card .puf-card-bottom {
 main .block.puf .puf-card .puf-card-bottom h3 {
   font-size: var(--body-font-size-xl);
   font-weight: 600;
-  padding: 16px;
-  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 main .block.puf .puf-card .puf-card-bottom p {
@@ -250,6 +252,7 @@ main .block.puf .puf-highlighted-text {
   border-radius: 12px;
   margin-top: 0;
   box-sizing: border-box;
+  padding: 10px;
 }
 
 main .block.puf .puf-pricing-footer {
@@ -299,7 +302,6 @@ main .block.puf .puf-card .puf-card-banner {
   border-radius: 20px 20px 0 0;
 }
 
-
 @media (min-width: 900px) {
   main .puf.block .carousel-container {
     max-width: none;
@@ -332,7 +334,10 @@ main .block.puf .puf-card .puf-card-banner {
     margin-top: -14px;
   }
 
-  main .block.puf .carousel-container:has(+ .puf-pricing-footer) .carousel-platform {
+  main
+    .block.puf
+    .carousel-container:has(+ .puf-pricing-footer)
+    .carousel-platform {
     padding-bottom: 24px;
   }
 
@@ -498,9 +503,15 @@ main .block.puf .puf-card .puf-card-banner {
     box-shadow: 0px 0px 20px #00000029;
   }
 
-  main .block.puf .puf-card-banner.recommended ~ .puf-card-bottom .puf-highlighted-text {
-  margin-bottom: 40px;
-}
+  main
+    .block.puf
+    .puf-card-banner.recommended
+    ~ .puf-card-bottom
+    .puf-highlighted-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   main
     .block.puf

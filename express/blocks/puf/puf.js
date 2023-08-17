@@ -442,6 +442,64 @@ function highlightText($block) {
   });
 }
 
+function alignP($block) {
+  const cardLeftQuery = '.puf-card.puf-left > .puf-card-top > p:last-of-type';
+  const cardRightQuery = '.puf-card.puf-right > .puf-card-top > p:last-of-type';
+
+  const card1 = $block.querySelector(cardLeftQuery);
+  const card2 = $block.querySelector(cardRightQuery);
+
+  const adjustHeight = () => {
+      card1.style.height = 'auto';
+      card2.style.height = 'auto';
+
+      const maxHeight = Math.max(
+          card1.getBoundingClientRect().height,
+          card2.getBoundingClientRect().height,
+      );
+
+      card1.style.height = `${maxHeight}px`;
+      card2.style.height = `${maxHeight}px`;
+  };
+
+  const ro = new ResizeObserver(() => adjustHeight());
+
+  ro.observe(card1);
+  ro.observe(card2);
+
+  adjustHeight();
+}
+
+function alignHighlights($block) {
+  const cardLeftTitle = '.puf-card.puf-left > .puf-card-bottom > h3';
+  const cardRightTitle= '.puf-card.puf-right > .puf-card-bottom > h3';
+
+  const cardLeft = $block.querySelector(cardLeftTitle);
+  const cardRight= $block.querySelector(cardRightTitle);
+
+  const adjustHeight = () => {
+    cardLeft.style.height = 'auto';
+    cardRight.style.height = 'auto';
+
+    const maxHeightTitle = Math.max(
+      cardLeft.getBoundingClientRect().height,
+      cardRight.getBoundingClientRect().height
+    );
+
+
+    cardLeft.style.height = `${maxHeightTitle}px`;
+    cardRight.style.height = `${maxHeightTitle}px`;
+  };
+
+  const ro = new ResizeObserver(() => adjustHeight());
+
+  ro.observe(cardLeft);
+  ro.observe(cardRight);
+
+  adjustHeight();
+}
+
+
 function decorateFooter($block) {
   if ($block?.children?.[3]) {
     const $footer = createTag('div', { class: 'puf-pricing-footer' });
@@ -464,7 +522,9 @@ export default function decorate($block) {
   updatePUFCarousel($block);
   addPublishDependencies('/express/system/offers-new.json');
   wrapTextAndSup($block);
-
-  $block.append($footer);
+  alignP($block);
   highlightText($block);
+  alignHighlights($block);
+  
+  $block.append($footer);
 }
